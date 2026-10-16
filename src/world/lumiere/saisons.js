@@ -3,30 +3,43 @@
 // passe sur la terre, une poignée de feuilles qui tournoie et file avec le vent (world/lumiere/vent.js : gustAt) ; et
 // certains matins, une brume basse qui traîne autour du lever du soleil et se lève dans la matinée (elle passe par les
 // bancs de brume du temps : scene.js, drawWeatherMonde ; la météo elle-même, que le serveur refait, n'en sait rien).
+// Le printemps : un tapis de pétales roses et blancs sous les arbres fleuris, les mêmes tourbillons, en pétales, et la
+// rosée des matins clairs, de petits éclats bleutés dans l'herbe qui sèchent dans la matinée. L'hiver (choix de
+// l'auteur, 16 oct.) : la pluie tombe en neige (celle des cimes : climates.js, drawFlocons) ; les nuits
+// claires, l'herbe se givre, pâlit et scintille, puis le givre fond dans la matinée. Pour les essais : ?saison=hiver.
 // Tout est posé dans le monde et se déduit du temps.
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
+import { drawFlocons } from '../climates';
 import { lisse } from '../maths';
-import { texture } from '../textures';
-import { selonQualite } from '../perf';
-import { gustAt, leafTones } from './vent';
+import { texture, rond } from '../textures';
+import { selonQualite, qualiteFx } from '../perf';
+import { gustAt, leafTones, herbMask, casesVues } from './vent';
+import { worldOf, TW, TH } from '../terrain';
 
-const AUTOMNE = leafTones('automne');
-// Des feuilles déjà tombées : plus sombres et plus brunes que celles qui volent
-const TOMBEES = [...AUTOMNE, '#B4532E', '#C98A3A'];
+// Ce qui est tombé au pied des arbres, par saison : des feuilles rousses (plus sombres et plus brunes que celles qui
+// volent) en automne, des pétales roses et blancs au printemps ; rien les autres saisons
+const TOMBEES = {
+  automne: [...leafTones('automne'), '#B4532E', '#C98A3A'],
+  printemps: [...leafTones('printemps'), '#F2A9C0', '#F6B8CB']
+};
+// La saison a-t-elle son tapis au pied des arbres, et ses tourbillons aux rafales ?
+export const aTapis = saison => Boolean(TOMBEES[saison]);
+export const aTourbillons = aTapis;
 
-/* ---------- Le tapis de feuilles ---------- */
+/* ---------- Le tapis de feuilles (ou de pétales) ---------- */
 
-// Le tapis d'un arbre (une de trois variantes) : des feuilles éparses dans une ellipse posée au sol, plus denses près du
-// tronc, dessinées une fois. 72 × 32 unités du monde, centré sur le pied de l'arbre
+// Le tapis d'un arbre (une de trois variantes par saison) : des feuilles éparses dans une ellipse posée au sol, plus
+// denses près du tronc, dessinées une fois. 72 × 32 unités du monde, centré sur le pied de l'arbre
 export const TAPIS = { w: 72, h: 32 };
-export const tapisImg = v => texture(`tapis-automne:${v}`, TAPIS.w * 2, TAPIS.h * 2, g => {
+export const tapisImg = (saison, v) => texture(`tapis-${saison}:${v}`, TAPIS.w * 2, TAPIS.h * 2, g => {
+  const tons = TOMBEES[saison];
   g.scale(2, 2);
   for (let i = 0; i < 38; i++) {
     const a = hash(v * 31 + i, 3) * Math.PI * 2, d = Math.sqrt(hash(v * 31 + i, 4)) * 0.92;
     const x = TAPIS.w / 2 + Math.cos(a) * d * (TAPIS.w / 2 - 3), y = TAPIS.h / 2 + Math.sin(a) * d * (TAPIS.h / 2 - 2);
     g.globalAlpha = 0.55 + 0.4 * hash(v * 31 + i, 5);
-    g.fillStyle = TOMBEES[Math.floor(hash(v * 31 + i, 6) * TOMBEES.length)];
+    g.fillStyle = tons[Math.floor(hash(v * 31 + i, 6) * tons.length)];
     g.beginPath();
     g.ellipse(x, y, 2.6, 1.2, hash(v * 31 + i, 7) * Math.PI, 0, Math.PI * 2);
     g.fill();
@@ -35,9 +48,9 @@ export const tapisImg = v => texture(`tapis-automne:${v}`, TAPIS.w * 2, TAPIS.h 
 // La variante d'un arbre (sa case)
 export const tapisDe = (x, y) => Math.floor(hash(x * 3.1 + 7, y * 1.7 + 11) * 3);
 
-// Le tapis sous un arbre (wx, wy : son pied dans le monde), juste avant l'arbre
-export function drawTapis(ctx, wx, wy, x, y) {
-  ctx.drawImage(tapisImg(tapisDe(x, y)), wx - TAPIS.w / 2, wy - TAPIS.h / 2 + 3, TAPIS.w, TAPIS.h);
+// Le tapis sous un arbre (wx, wy : son pied dans le monde ; x, y : sa case), juste avant l'arbre
+export function drawTapis(ctx, saison, wx, wy, x, y) {
+  ctx.drawImage(tapisImg(saison, tapisDe(x, y)), wx - TAPIS.w / 2, wy - TAPIS.h / 2 + 3, TAPIS.w, TAPIS.h);
 }
 
 /* ---------- Les tourbillons de feuilles ---------- */
@@ -79,13 +92,14 @@ export function tourbillonsOf(view, t, force, surTerre) {
   }
   return out;
 }
-// Les feuilles des tourbillons, dans la transformation du monde
-export function drawTourbillons(ctx, feuilles) {
-  if (!feuilles.length) return;
+// Les feuilles (ou les pétales) des tourbillons, dans la transformation du monde, aux couleurs de la saison
+export function drawTourbillons(ctx, feuilles, saison) {
+  const tons = leafTones(saison);
+  if (!feuilles.length || !tons) return;
   ctx.save();
   for (const f of feuilles) {
     ctx.globalAlpha = f.a;
-    ctx.fillStyle = f.tone < 0.5 ? AUTOMNE[0] : AUTOMNE[1];
+    ctx.fillStyle = f.tone < 0.5 ? tons[0] : tons[1];
     ctx.beginPath();
     ctx.ellipse(f.x, f.y, 3.2, 1.6, f.rot, 0, Math.PI * 2);
     ctx.fill();
@@ -111,3 +125,70 @@ export function brumeAutomne(phase, date, saison) {
 export function tourbillonForce(phase, s) {
   return (1 - 0.7 * phase.night) * (1 - Math.min(1, phase.weather.rain * 4)) * lisse((s - 0.5) / 0.2);
 }
+
+/* ---------- L'hiver ---------- */
+
+// La neige à la place de la pluie : les flocons des cimes, partout (sur la terre et sur la mer), autant que la pluie
+// ressentie (force : 0 à 1 ; loop.js, rainFelt) ; plus nombreux de près (dens : la qualité et le zoom, comme la pluie)
+export function drawNeige(ctx, view, t, force, dens = 1) {
+  if (force <= 0.02) return;
+  for (const T of tuilesOf(view, 150)) drawFlocons(ctx, T, t, () => true, Math.min(1, 0.5 + force), 90 * force * dens);
+}
+
+// La force du givre (0 à 1) : en hiver, par ciel assez clair et sans pluie, il prend pendant la nuit, culmine à l'aube et
+// fond dans la matinée (rien l'après-midi ni le soir)
+export function givreOf(phase, saison) {
+  if (saison !== 'hiver') return 0;
+  const { hour, rise, night, weather } = phase;
+  const fond = 1 - lisse((hour - (rise + 0.8)) / 1.8);
+  const tot = hour < rise + 3 ? fond : 0;
+  const nuit = Math.max(night, tot);
+  return nuit * (1 - Math.min(1, weather.rain * 4)) * (1 - 0.7 * weather.cover);
+}
+
+// La force de la rosée (0 à 1) : au printemps, les matins sans pluie, elle perle à l'aube et sèche dans la matinée ;
+// moins sous un ciel couvert
+export function roseeOf(phase, saison) {
+  if (saison !== 'printemps') return 0;
+  const { hour, rise, weather } = phase;
+  const matin = lisse((hour - (rise - 0.6)) / 0.6) * (1 - lisse((hour - (rise + 1.2)) / 1.4));
+  return matin * (1 - Math.min(1, weather.rain * 4)) * (1 - 0.6 * weather.cover);
+}
+
+// Une tache de givre : pâle, bleutée, au bord fondu (les taches se chevauchent : aucun trait de case ne se voit)
+const tacheGivre = () => rond('givre', 64, [[0, 'rgba(234,243,255,1)'], [0.55, 'rgba(234,243,255,0.75)'], [1, 'rgba(234,243,255,0)']]);
+
+// Le givre sur l'herbe de la vue, au sol (avant ce qui s'y tient) : l'herbe pâlit (une tache douce sur une case sur deux,
+// en quinconce, assez large pour couvrir ses voisines), et sur une case sur trois environ un éclat s'allume et s'éteint à
+// son rythme. M : l'île ; shown(x, y) : 0 à 1, ce qui se voit de la case (le Voile : loop.js, lightGate) ; k : givreOf.
+// opts : { voile (la force de la pâleur ; 0 : aucune), teinte (des éclats), part (des cases qui ont un éclat), scintille
+// (plus petit : chaque éclat reste allumé plus longtemps) }
+export function drawGivre(ctx, M, view, t, k, shown, { voile = 0.3, teinte = '255,255,255', part: partPleine = 0.35, scintille = 6 } = {}) {
+  if (k <= 0.02) return;
+  const mask = herbMask(M), n = M.n;
+  const { x0, x1, y0, y1 } = casesVues(view, n);
+  const img = tacheGivre(), eclats = new Path2D();
+  const part = partPleine * qualiteFx();
+  ctx.save();
+  ctx.globalAlpha = voile * k;
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      if (!mask[y * n + x] || shown(x, y) < 0.5) continue;
+      const c = worldOf(x, y, M.surface(x, y));
+      if (voile > 0 && (x + y) % 2 === 0) ctx.drawImage(img, c.x - TW * 1.05, c.y - TH * 1.05, TW * 2.1, TH * 2.1);
+      if (hash(x, y * 3.7) > part) continue;
+      const eclat = Math.max(0, Math.sin(t * (1.5 + hash(x, y)) + hash(y, x) * 6)) ** scintille;
+      if (eclat < 0.05) continue;
+      const ex = c.x + (hash(x + 1, y) - 0.5) * TW * 0.6, ey = c.y + (hash(x, y + 1) - 0.5) * TH * 0.6, r = 1.6 + 1.8 * eclat;
+      eclats.moveTo(ex - r, ey); eclats.lineTo(ex + r, ey);
+      eclats.moveTo(ex, ey - r * 0.6); eclats.lineTo(ex, ey + r * 0.6);
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = `rgba(${teinte},${(0.9 * k).toFixed(3)})`;
+  ctx.lineWidth = 1;
+  ctx.stroke(eclats);
+  ctx.restore();
+}
+// La rosée : les éclats du givre, bleutés et plus nombreux, sans pâlir l'herbe (k : roseeOf)
+export const drawRosee = (ctx, M, view, t, k, shown) => drawGivre(ctx, M, view, t, k, shown, { voile: 0, teinte: '214,236,255', part: 0.8, scintille: 3 });

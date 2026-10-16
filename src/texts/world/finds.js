@@ -7,7 +7,9 @@ export const DEPOSIT_NAMES = {
   glace: ['Cristaux de glace', 'les détacher'], laine: ['Moutons à tondre', 'les tondre'], roseau: ['Roseaux', 'les couper'],
   sel: ['Croûte de sel', 'la gratter'], fruits: ['Arbre à fruits', 'le cueillir'], obsidienne: ['Éclats d’obsidienne', 'les ramasser'],
   // Ce que la mer rend sur la plage de Brumelune (pickups : bois, vivres, pierre pour les réserves)
-  bois: ['Bois flotté', 'le ramasser'], coquillage: ['Coquillages', 'les ramasser'], galet: ['Galets', 'les ramasser']
+  bois: ['Bois flotté', 'le ramasser'], coquillage: ['Coquillages', 'les ramasser'], galet: ['Galets', 'les ramasser'],
+  // (les débris de l'Hirondelle, sur l'ancienne butte devant le Feu)
+  planche: ['Planches de l’Hirondelle', 'les ramasser'], ferraille: ['Ferraille de l’Hirondelle', 'la ramasser']
 };
 // Le verrou parlant d'une trouvaille (name : son nom ; key : sa clé ; pages : les pages jusqu'à elle) : « Laine : il
 // faut d'abord connaître « Falaise » — à écrire au Grimoire, 5 pages. »

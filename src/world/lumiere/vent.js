@@ -98,14 +98,21 @@ export function drawLeaves(ctx, season, leaves) {
 
 // Les vagues à l'écran (view : le rectangle du monde) ; k : leur force (le jour, le beau temps) ; shown(x, y) : 0 où
 // rien ne doit briller (un quartier pas encore à soi : draw/air.js, lightGate)
+// Les cases sous le rectangle de la vue (île de n × n cases), relief compris : une case haute se dessine plus haut que
+// sa place ; { x0, x1, y0, y1 } (bornes comprises)
+export function casesVues(view, n) {
+  const grid = (wx, wy) => [wy / TH + wx / TW, wy / TH - wx / TW];
+  const pts = [grid(view.x, view.y), grid(view.x + view.w, view.y), grid(view.x, view.y + view.h + 6 * HS), grid(view.x + view.w, view.y + view.h + 6 * HS)];
+  return {
+    x0: Math.max(0, Math.floor(Math.min(...pts.map(p => p[0]))) - 2), x1: Math.min(n - 1, Math.ceil(Math.max(...pts.map(p => p[0]))) + 2),
+    y0: Math.max(0, Math.floor(Math.min(...pts.map(p => p[1]))) - 2), y1: Math.min(n - 1, Math.ceil(Math.max(...pts.map(p => p[1]))) + 2)
+  };
+}
+
 export function drawSheen(ctx, M, view, t, k, shown) {
   if (k < 0.01) return;
   const mask = herbMask(M), n = M.n;
-  // (les cases sous le rectangle de l'écran, relief compris : une case haute se dessine plus haut que sa place)
-  const grid = (wx, wy) => [wy / TH + wx / TW, wy / TH - wx / TW];
-  const pts = [grid(view.x, view.y), grid(view.x + view.w, view.y), grid(view.x, view.y + view.h + 6 * HS), grid(view.x + view.w, view.y + view.h + 6 * HS)];
-  const x0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p[0]))) - 2), x1 = Math.min(n - 1, Math.ceil(Math.max(...pts.map(p => p[0]))) + 2);
-  const y0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p[1]))) - 2), y1 = Math.min(n - 1, Math.ceil(Math.max(...pts.map(p => p[1]))) + 2);
+  const { x0, x1, y0, y1 } = casesVues(view, n);
   const img = lueur(SHEEN);
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';

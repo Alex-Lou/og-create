@@ -83,7 +83,7 @@ export default {
     const ground = at.spot.y;
     return [
       { x: at.x, y: at.y, r: 34 * k, k: 0.45 * breath, color, pool: false, gy: ground },
-      { x: at.spot.x, y: ground - 8 * k, r: 24 * k, k: 0.35 * breath, color, pool: true, gy: ground }
+      { x: at.spot.x, y: ground - 8 * k, r: 24 * k, k: 0.35 * breath, color, pool: true, gy: ground, sol: true }
     ];
   },
   // La couleur de sa lueur (« r,g,b ») : celle de son stade, dorée quand la récompense attend

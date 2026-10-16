@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -275,6 +275,7 @@ export default {
       const img = phareRefletImage(this.phareLook(date, this.wetOf(date)).vide, this.reduced() ? 0 : t, this.repaintSoon);
       if (img) drawPhareReflet(ctx, img, phare.x, phare.y, refletDuPhare(phase, glitterOf(phase, date), orage, this.wetOf(date)), this.reduced() ? 0 : t);
     }
+    this.drawCampReflets(ctx, view, phase, date, t, orage);
     // (le reflet de l'étoile filante, sur la mer : dans le monde, son ciel figé à son départ)
     if (file) drawFilante(ctx, cielDe(file.cycle, view), refletOf(file), ciel, t);
     // Le Géant des profondeurs glisse sous la mer (faune/geant.js ; pas en mouvement réduit) ; ses lueurs de nuit et son
@@ -413,7 +414,7 @@ export default {
       const grow = raise ? shadowOf(now - raise.at, raise.from ? Math.max(18, -crestOf(site.id, raise.from)[1]) / h : 0.35) : 1;
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
       return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
-    }).concat(this.feuxShadows()), shadowLight(phase, date, orage));
+    }).concat(this.feuxShadows(), this.campShadows()), shadowLight(phase, date, orage));
     // (l'ombre du phare des Anciens, toute sa hauteur, sur son îlot et sur la mer)
     if (phareSeen) drawPhareOmbre(ctx, phare.x, phare.y, shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
@@ -468,6 +469,15 @@ export default {
     // (rien à chercher tant qu'aucun quartier connu n'a de climat qui remplit l'air)
     const climats = !this.reduced() && climatsPresents(zones);
     if (climats) drawClimatMonde(ctx, 'sol', view, t, climatOf, phase.night, s);
+    // En hiver, les nuits claires givrent l'herbe : elle pâlit et des éclats y scintillent, au sol ; le givre fond dans la
+    // matinée (lumiere/saisons.js ; l'herbe : celle de la lueur du vent, vent.js)
+    // (au printemps, la rosée des matins : ses éclats seulement)
+    const givre = givreOf(phase, SEASON), rosee = roseeOf(phase, SEASON);
+    if (givre > 0.02 || rosee > 0.02) {
+      const gate = this.lightGate(now), tg = this.reduced() ? 0 : t;
+      drawGivre(ctx, this.M, view, tg, givre, gate);
+      drawRosee(ctx, this.M, view, tg, rosee, gate);
+    }
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)
       spriteGroup(item.critter || item.ferry ? 'vivants' : item.prop ? 'decor' : 'batiments');
@@ -531,14 +541,15 @@ export default {
     this.drawSmoke(ctx, t, phase);
     // Les aigrettes de pissenlit que le vent emporte, le jour (lumiere/petiteVie.js ; pas en mouvement réduit)
     if (!this.reduced()) drawAigrettes(ctx, view, t, phase, s);
-    // En automne, à chaque rafale qui passe sur la terre à soi (là où poussent les arbres ; pas sous la brume d'un
-    // quartier), une poignée de feuilles tournoie et file avec le vent (lumiere/saisons.js ; pas en mouvement réduit)
-    if (SEASON === 'automne' && !this.reduced()) {
+    // En automne et au printemps, à chaque rafale qui passe sur la terre à soi (là où poussent les arbres ; pas sous la
+    // brume d'un quartier), une poignée de feuilles ou de pétales tournoie et file avec le vent (lumiere/saisons.js ; pas
+    // en mouvement réduit)
+    if (aTourbillons(SEASON) && !this.reduced()) {
       const surTerre = (x, y) => {
         const c = this.cellAt(x, y), cx = Math.round(c.x), cy = Math.round(c.y);
         return this.M.land(cx, cy) && !this.lockedAt(cx, cy) && !this.hiddenCell(cx, cy);
       };
-      drawTourbillons(ctx, tourbillonsOf(view, t, tourbillonForce(phase, s), surTerre));
+      drawTourbillons(ctx, tourbillonsOf(view, t, tourbillonForce(phase, s), surTerre), SEASON);
     }
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     if (kraken) drawBras(ctx, kraken, t);
@@ -554,7 +565,10 @@ export default {
     if (climats) drawClimatMonde(ctx, 'air', view, t, climatOf, phase.night, s);
     // La pluie, dans le monde : chaque goutte tombe jusqu'à son point de chute et y éclabousse ; la lumière de l'heure la
     // prend ensuite (une goutte s'allume dans le halo d'une lanterne). De loin, moins de gouttes (lumiere/pluie.js)
-    if (phase.weather.rain > 0.02) drawPluie(ctx, view, t, rainK, phase.night, flash, { slant: slantOf(t), dens: this.fxQ * Math.min(1, (s / 0.8) ** 2) });
+    // (en hiver, elle tombe en neige : lumiere/saisons.js)
+    const densPluie = this.fxQ * Math.min(1, (s / 0.8) ** 2);
+    if (phase.weather.rain > 0.02 && SEASON === 'hiver') drawNeige(ctx, view, t, rainK, densPluie);
+    else if (phase.weather.rain > 0.02) drawPluie(ctx, view, t, rainK, phase.night, flash, { slant: slantOf(t), dens: densPluie });
     const sources = [];
     this.drawLights(ctx, t, phase, view, sources);
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
@@ -588,7 +602,7 @@ export default {
     drawEclair(ctx, view, orage);
     drawWeatherMonde(ctx, view, t, phase, this.terrain.bounds, brumeAutomne(phase, date, SEASON));
     drawGolden(ctx, view, phase, this.terrain.bounds);
-    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights);
+    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights, s);
     drawRays(ctx, view, t, phase);
     // Une nuit d'aurore, ses rideaux pendent haut au-dessus des sommets, verts et violets, et se plissent lentement
     // (immobiles en mouvement réduit : lumiere/aurore.js)
