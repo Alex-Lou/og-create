@@ -10,15 +10,16 @@
 const { OUT, P, E, L, r2, frame, zee, arm } = require('./troupe');
 const { brumeFrame } = require('./brume');
 const { sleepFrame, seated, POSES: DORT, jar, rod } = require('./dormeurs');
-const { CAST } = require('./naufrages');
+const { CAST_REFONTE, image } = require('./troupe_refonte');
 const { ZEDS, avecReparer } = require('./gestes');
 const { torche } = require('./torche');
 const { village, devantAvatar } = require('./veillee');
 const { separer, sansVif } = require('./figer');
 
 const W = 400;
-// les quatre fondateurs, en tenue (base) et en naufragés (nau)
-const T = Object.fromEntries(CAST.filter(({ base }) => ['Cannelle', 'Rivet', 'Aster', 'Ondin'].includes(base.name)).map(({ base, nau }) => [base.name, { base, nau }]));
+// les quatre fondateurs, en tenue (base) et en naufragés (nau) : refondus (troupe_refonte.js ; leur marche est la leur,
+// les autres poses sont celles du kit sur leur corps refondu)
+const T = Object.fromEntries(CAST_REFONTE.filter(({ base }) => ['Cannelle', 'Rivet', 'Aster', 'Ondin'].includes(base.name)).map(({ base, nau }) => [base.name, { base, nau }]));
 
 // ---- les palettes : la nuit, l'aube, le jour ----
 const NUIT = { ciel: '#16213F', cielBas: '#2C3D63', mer: '#1E3552', merH: '#2E4E72', ecume: '#8FA9C4', sable: '#5E5B57', roche: '#3E4352', rocheH: '#545B6E', brume: '220,230,242' };
@@ -313,7 +314,7 @@ S('06_silhouette', {
 S('07_cannelle', {
   titre: 'Cannelle sort de la brume', etapes: ['7a'], images: 4, ms: 260,
   fond: f => ciel('ca', AUBE, 230) + lueur(330, 214, 90, '255,210,170', 0.4) + mer(180, 230, f, AUBE) + sable(230, AUBE) + feu(150, 336, 1.2, f, 1)
-    + poser(frame(T.Cannelle.nau, 'se', 'marche', f * 2), 296, 326, 2.8) + nappe(276, 0.34 - f * 0.05, f, 1.2, AUBE),
+    + poser(image(T.Cannelle.nau, 'se', 'marche', f * 2), 296, 326, 2.8) + nappe(276, 0.34 - f * 0.05, f, 1.2, AUBE),
   avatar: { x: 92, y: 392, echelle: 3, vue: 'avant', pose: 'salut', naufrage: true }
 });
 // Étape 7b — elle tend les mains vers le feu ; un éclat doré : son souvenir revient, et sa tenue de cuisinière
@@ -334,7 +335,7 @@ S('09_rivet', {
     s += P('M150,330 L300,330 L292,346 L160,346 Z', 'rgba(60,50,30,.16)', 0) + L([300, 336], [272, 150], OUT, 7) + L([300, 336], [272, 150], '#C9A26E', 4.4)
       + P(`M272,152 Q${206 + f * 5},${176 - f * 3} 142,${250 + f * 3} L156,336 L300,336 Z`, '#F0E6D0', 2.4) + trait('M186,206 L244,300', '#D8CCB0', 2) + L([142, 250 + f * 3], [120, 340], '#B8A888', 1.4);
     // Rivet assis, la valise ouverte et ses vis rangées par taille
-    s += poser(frame(T.Rivet.nau, 'front', 'action', f), 222, 338, 2.4);
+    s += poser(T.Rivet.nau.refonte.a('trier', 'front', f * 2), 222, 338, 2.4);
     s += P('M176,374 L268,374 L262,348 L182,348 Z', '#7A4E2C', 2) + P('M182,348 L262,348 L256,330 L188,330 Z', '#5A3A24', 2)
       + [[194, 2.2], [210, 2.6], [228, 3], [246, 3.4]].map(([x, r], i) => E(x, 362, r, r * 0.6, '#B8BCC4', 0.8) + E(x, 366 - (i % 2), r * 0.8, r * 0.5, '#9AA0A8', 0.8)).join('');
     return s;
@@ -347,7 +348,7 @@ S('09_rivet', {
 S('10_aster', {
   titre: 'Aster tire une caisse des vagues', etapes: ['10b'], images: 3, ms: 360,
   fond: f => {
-    let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(frame(T.Aster.nau, 'se', 'marche', f * 2, 'soulage'), 262, 332, 2.6);
+    let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(image(T.Aster.nau, 'se', 'marche', f * 2, 'soulagee'), 262, 332, 2.6);
     s += trait(`M166,${262 + f} Q206,${252 - f * 2} 236,262`, '#D8C08A', 2.6)
       + `<g transform="translate(${144 + f * 4} ${264 + [0, 3, 0][f]}) rotate(${[-6, 4, -2][f]})"><rect x="-24" y="-20" width="48" height="34" fill="#9A6E44" stroke="${OUT}" stroke-width="2.2"/>${[-8, 4].map(y => L([-24, y], [24, y], '#7A5434', 2)).join('')}</g>`;
     // l'eau jusqu'à la taille, l'écume, puis le sable au premier plan

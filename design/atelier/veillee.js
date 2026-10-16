@@ -16,7 +16,7 @@
 const { frame } = require('./troupe');
 const { assis } = require('./assis');
 const { tendre } = require('./gestes');
-const { CAST } = require('./naufrages');
+const { CAST_REFONTE } = require('./troupe_refonte');
 const { CAMP } = require('./camp.mjs');
 const { lookAt } = require('./port/src/world/looks.js');
 const { torche } = require('./torche');
@@ -27,7 +27,7 @@ const { ombrePapier, plan, grain, pantinAssis } = require('./papier');
 const { vif } = require('./figer');
 
 const W = 400;
-const T = Object.fromEntries(CAST.filter(({ base }) => ['Cannelle', 'Rivet', 'Aster', 'Ondin'].includes(base.name)).map(({ base }) => [base.name, base]));
+const T = Object.fromEntries(CAST_REFONTE.filter(({ base }) => ['Cannelle', 'Rivet', 'Aster', 'Ondin'].includes(base.name)).map(({ base }) => [base.name, base]));
 const K = 1.25;
 const NUIT_PAPIER = '#070B1C';
 const inner = svg => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
