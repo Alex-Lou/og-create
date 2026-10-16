@@ -6,7 +6,7 @@
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
 import { frac, lisse } from '../maths';
-import { texture } from '../textures';
+import { texture, rond } from '../textures';
 
 // Trois sortes de gouttes : fines et pâles, moyennes, longues et nettes (longueur, épaisseur, force)
 const SORTES = [{ len: 10, w: 0.8, a: 0.3 }, { len: 16, w: 1.1, a: 0.45 }, { len: 26, w: 1.5, a: 0.6 }];
@@ -92,10 +92,32 @@ const refletImg = color => texture(`reflet-pluie:${color}`, 32, 128, g => {
   g.fill();
 });
 
+// Sous la neige, la lumière ne se reflète pas en traînée (la neige n'est pas un miroir) : elle se pose au pied de la
+// lumière en une flaque ronde et douce, à plat, où quelques cristaux scintillent tour à tour (toujours aux mêmes places
+// pour une même lumière). La flaque est dessinée une fois par couleur
+const lueurNeigeImg = color => rond(`lueur-neige:${color}`, 64, [[0, `rgba(${color},0.5)`], [0.55, `rgba(${color},0.16)`], [1, `rgba(${color},0)`]]);
+const CRISTAUX = 5;
+function lueurNeige(ctx, l, y, t, a) {
+  const rx = l.r * 0.9, ry = rx * 0.42;
+  ctx.globalAlpha = a;
+  ctx.drawImage(lueurNeigeImg(l.color), l.x - rx, y - ry, rx * 2, ry * 2);
+  const g = hash(l.x * 0.13, y * 0.07);
+  ctx.fillStyle = 'rgb(255,250,240)';
+  for (let j = 0; j < CRISTAUX; j++) {
+    const eclat = Math.max(0, Math.sin(t * 1.6 + j * 2.4 + g * 40)) ** 6;
+    if (eclat < 0.05) continue;
+    const ang = (g + j / CRISTAUX) * Math.PI * 2, d = 0.25 + 0.6 * hash(g * 31 + j, 3);
+    ctx.globalAlpha = Math.min(1, a * eclat * 1.6);
+    ctx.beginPath();
+    ctx.arc(l.x + Math.cos(ang) * rx * d, y + Math.sin(ang) * ry * d, 1.1, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 // La nuit, sous la pluie : chaque lumière se reflète sur le sol mouillé en une traînée qui ondule, posée à son pied
 // (lights : les sources de la carte de lumière, { x, gy, r, k, color, pool }), dans la transformation du monde, après
-// la lumière de l'heure
-export function drawRefletsPluie(ctx, view, t, rain, night, lights, s = 1) {
+// la lumière de l'heure. neige : en hiver, une flaque de lumière sur la neige au lieu de la traînée (lueurNeige)
+export function drawRefletsPluie(ctx, view, t, rain, night, lights, s = 1, neige = false) {
   // (un reflet est un détail de près : vu de loin, il s'efface)
   const pres = lisse((s - 0.35) / 0.3);
   if (rain <= 0.02 || night <= 0.2 || pres <= 0.02 || !lights || !lights.length) return;
@@ -106,6 +128,10 @@ export function drawRefletsPluie(ctx, view, t, rain, night, lights, s = 1) {
     // (seulement d'une lumière dont le pied est connu : sinon le reflet partirait de la flamme, en l'air ; air.js, emit)
     if (l.pool === false || !l.sol || l.k < 0.05) continue;
     const y = l.gy;
+    if (neige) {
+      if (l.x + l.r > view.x && l.x - l.r < view.x + view.w && y + l.r > view.y && y - l.r < view.y + view.h) lueurNeige(ctx, l, y, t, base * Math.min(1, l.k * rain));
+      continue;
+    }
     const len = l.r * 2, wid = Math.max(3, l.r * 0.32);
     if (l.x < view.x - wid || l.x > view.x + view.w + wid || y > view.y + view.h || y + len < view.y) continue;
     const sway = Math.sin(t * 2.3 + i) * wid * 0.25;
