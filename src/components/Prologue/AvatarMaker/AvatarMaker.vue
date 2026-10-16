@@ -99,6 +99,9 @@ import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
 import { MAKER } from '@/texts/ui/prologue';
 
+// L'icône d'un onglet sans pièce (le sac) : par son adresse livrée (la bibliothèque n'est pas servie telle quelle)
+const SAC_ICONE = Object.values(import.meta.glob('/design/bibliotheque/svg/interface/sac_icone.svg', { query: '?url', import: 'default', eager: true }))[0];
+
 const TABS = [
   { id: 'corps', label: 'Corps', icon: 'pied', rows: ['genre', 'age', 'taille', 'silhouette', 'peau'] },
   { id: 'visage', label: 'Visage', icon: 'tete', rows: ['expression', 'visage', 'menton', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain', 'cicatrice'] },
@@ -383,7 +386,7 @@ export default {
       return this.thumbs[`${opt.crop}|${JSON.stringify(opt.choices)}`] || this.lastThumb[opt.slot] || null;
     },
     tabIcon(t) {
-      if (!t.icon) return '/design/bibliotheque/svg/interface/sac_icone.svg';
+      if (!t.icon) return SAC_ICONE;
       return this.thumbs[`${t.icon}|${JSON.stringify(bareHead(this.modelValue, t.icon))}`] || this.lastThumb[`onglet|${t.id}`] || null;
     },
     // Dessine les vignettes qui manquent, PAINT_MS par image au plus ; puis oublie celles qui ne servent plus

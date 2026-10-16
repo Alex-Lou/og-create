@@ -50,7 +50,7 @@
         @pointerdown="onDown"
         @pointermove="onMove"
         @pointerup="onUp"
-        @pointercancel="onUp"
+        @pointercancel="onCancel"
       >
         <!-- La scène : les tuiles, la chaîne, les éclats et les mots du coup (harvestScene.js), débordant un peu du plateau -->
         <canvas ref="stage" class="harvest__stage" :style="{ '--m': `${MARGIN}px` }" aria-hidden="true"></canvas>
@@ -260,6 +260,12 @@ export default {
         return;
       }
       this.commit(path);
+    },
+    // Un geste du système (bord de l'écran, notification) interrompt le doigt : la chaîne s'annule, elle ne se joue pas
+    onCancel(event) {
+      if (this.pointer !== event.pointerId) return;
+      this.pointer = null;
+      this.path = [];
     },
     // Le gain d'une chaîne, comme le moteur le compte (streak : son rang dans la série si elle était jouée)
     chainGain(path, streak = streakAfter(this.streak, path.length)) {

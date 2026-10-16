@@ -31,6 +31,7 @@ import { vibrate, reducedMotion } from '@/utils/fx';
 import { PICKING_HINT } from '@/texts/world/screens/games';
 import { gamePiece } from '@/game/minigameArt';
 import { BERRY_FX, FALL_WORDS, nth, nextPick, tierOfPicks } from '@/game/pickFx';
+import { horlogeDePartie } from '@/game/stage/horloge';
 import { createPickScene, MARGIN } from './pickScene';
 
 const CELLS = Array.from({ length: PICKING.cols * PICKING.rows }, (_, i) => i);
@@ -68,8 +69,8 @@ export default {
   },
   watch: {
     playing(on) {
-      if (on && !this.started) {
-        this.started = performance.now();
+      if (on && !this.horloge.started) {
+        this.horloge.start();
         this.scene.wake();
       }
     }
@@ -80,7 +81,8 @@ export default {
     this.picked = new Set();
     this.picks = [];
     this.stunned = 0;
-    this.started = 0;
+    // (le temps de jeu : en pause quand la page est cachée)
+    this.horloge = horlogeDePartie();
     this.streak = 0;
     this.said = {};
   },
@@ -95,19 +97,20 @@ export default {
     });
   },
   beforeUnmount() {
+    this.horloge.stop();
     clearTimeout(this.fxTimer);
     if (this.scene) this.scene.destroy();
   },
   methods: {
     elapsed() {
-      return this.started ? Math.min(this.span, Math.round(performance.now() - this.started)) : 0;
+      return Math.min(this.span, Math.round(this.horloge.elapsed()));
     },
     // Ce que la scène dessine à cette image ; la barre (les secondes) ne se met à jour qu'une fois par seconde
     frame() {
       const t = this.elapsed();
       if (Math.floor(t / 1000) !== Math.floor(this.now / 1000) || t >= this.span) this.now = t;
-      if (this.started && !this.ended && t >= this.span) this.finish();
-      return { now: t, events: this.events, picked: this.picked, playing: Boolean(this.started) && !this.ended };
+      if (this.horloge.started && !this.ended && t >= this.span) this.finish();
+      return { now: t, events: this.events, picked: this.picked, playing: this.horloge.started && !this.ended };
     },
     pick(cell) {
       if (!this.playing || this.ended) return;
