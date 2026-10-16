@@ -317,17 +317,17 @@ export default {
     if (wet > 0.04 || rainK > 0.03) {
       if (!this.rainSpots || this.rainSpots.fresh !== this.fresh) {
         const puddles = puddlesOf(this.M);
-        this.rainSpots = { fresh: this.fresh, puddles, spots: rippleSpotsOf(this.fresh.cells, this.sea.shallow[0], puddles) };
+        this.rainSpots = { fresh: this.fresh, puddles, spots: rippleSpotsOf(this.fresh.cells, this.sea.shallow[0]) };
       }
       // (pas de flaque sous la brume : le sol n'y est pas encore découvert)
       const open = p => this.veilAt(p.x, p.y) < 0.05 && !this.hiddenCell(p.x, p.y);
       // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js) : toute la terre découverte
       // (sous la brume, les cases voilées restent pâles ; au bord, le mouillé s'efface)
       drawWetGround(ctx, this.M, view, wet, t, (x, y) => (this.hiddenCell(x, y) ? 0 : (1 - this.veilAt(x, y)) ** 3));
-      // (en hiver, les flaques sont gelées et la neige ne fait pas de ronds)
+      // (en hiver, les flaques sont gelées et la neige ne fait pas de ronds ; sous la pluie, les flaques ont les leurs)
       const gel = SEASON === 'hiver';
-      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open, { flash, arc }, gel);
-      if (!gel) drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ, wet, open);
+      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open, { flash, arc }, { gel, pluie: rainK > 0.03, t });
+      if (!gel) drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true, agite);
