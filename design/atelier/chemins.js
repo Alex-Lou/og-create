@@ -257,11 +257,16 @@ function chemin(m, id, v = 0) {
 // ——— le chemin pavé : des pavés posés en perspective dans une bordure de pierres, les joints, un peu de mousse ———
 const PAVE = { w: 0.19, ond: 0.012, rugueux: 0.012 };
 const PAVES = [['#D6D0C4', '#B3AC9F'], ['#CEC6B6', '#A9A090'], ['#DCD6CC', '#BDB6AA'], ['#C9C2B4', '#9E978A'], ['#D8CCB6', '#B5A68C'], ['#C4C9CC', '#9AA0A4']];
-function pave(m, id) {
+// (neige : l'hiver, le pavé déblayé ; la neige couvre la case et s'entasse en bourrelets contre la bordure, un peu de
+// givre sur les pavés, de la neige dans les joints ; le blanc de la case est celui de la neige au sol)
+function pave(m, id, neige = false) {
   const g = rnd(m * 13 + 3), F = champ(m, { ...PAVE, seed: m * 11 + 5 });
-  let s = herbe(id + 'h', m + 41);
+  let s = neige ? `<defs><clipPath id="${id}hc"><path d="${LOSANGE}"/></clipPath></defs><path d="${LOSANGE}" fill="${NEIGE}"/>` : herbe(id + 'h', m + 41);
   s += `<defs><clipPath id="${id}k"><path d="${dDe(contours(F, -0.026))}"/></clipPath></defs><g clip-path="url(#${id}hc)">`;
-  s += forme(F, 0.03, '#5E8A3A', { o: 0.3 });
+  if (neige) {
+    // la neige poussée de part et d'autre : son ombre bleue en bas à droite, puis son dessus éclatant
+    s += forme(F, 0.08, '#D3DEEC', { dx: 0.5, dy: 0.8 }) + forme(F, 0.08, '#FAFCFF');
+  } else s += forme(F, 0.03, '#5E8A3A', { o: 0.3 });
   // les joints (le lit de sable et de terre sous les pavés)
   s += forme(F, 0, '#6E6457');
   // les pavés : une grille alignée sur la case (les cases voisines s'y raccordent), des pavés simples ou doubles
@@ -302,6 +307,16 @@ function pave(m, id) {
       const [x0, y0] = iso(a1 - na * 0.016, b1 - nb * 0.016), [x1, y1] = iso(a1 + na * 0.016, b1 + nb * 0.016);
       s += `<path d="M${f(x0)},${f(y0)} L${f(x1)},${f(y1)}" stroke="#5E554A" stroke-width="0.35" stroke-linecap="round" opacity=".8"/>`;
     }
+  }
+  if (neige) {
+    // le givre sur les pavés, la neige restée dans les joints et tassée contre la bordure, quelques éclats
+    s += forme(F, -0.026, '#E6EEF7', { o: 0.22 });
+    s += `<g clip-path="url(#${id}k)">`;
+    for (const [a, b] of dedans(F, g, 26, -0.03)) { const [x, y] = iso(a, b); s += op(E(x, y, 0.45 + g() * 0.5, 0.16 + g() * 0.1, WHITE), 0.85); }
+    s += `</g>`;
+    s += anneau(F, 0.034, 0.006, '#F4F8FC', 0.95);
+    for (let i = 0; i < 4; i++) { const a = (g() - 0.5) * 0.8, b = (g() - 0.5) * 0.8; if (auBord(a, b) < 0.06 || F(a, b) < 0.09) continue; const [x, y] = iso(a, b); s += `<path d="M${f(x)},${f(y - 0.9)} L${f(x)},${f(y + 0.9)} M${f(x - 0.9)},${f(y)} L${f(x + 0.9)},${f(y)}" stroke="${WHITE}" stroke-width="0.3" stroke-linecap="round"/>`; }
+    return s + `</g>`;
   }
   // l'herbe et la mousse qui reprennent au pied de la bordure
   const deco = [];
@@ -459,6 +474,7 @@ for (let m = 0; m < 16; m++) piece(fichierDe(m), `Le chemin de terre ${vers(m)}`
 for (let m = 0; m < 16; m++) piece(fichierDe(m, 1), `Le chemin de terre ${vers(m)}, seconde variante`, CASE, () => chemin(m, `cb${m}`, 1), null, null, m);
 for (let m = 0; m < 16; m++) piece(`pave_${nomSens(m)}`, `Le chemin pavé ${vers(m)}`, CASE, () => pave(m, `pv${m}`), null, null, m);
 for (let m = 0; m < 16; m++) piece(`neige_${nomSens(m)}`, `Le chemin sous la neige ${vers(m)}`, CASE, () => neige(m, `ng${m}`), null, null, m);
+for (let m = 0; m < 16; m++) piece(`pave-neige_${nomSens(m)}`, `Le chemin pavé déblayé sous la neige ${vers(m)}`, CASE, () => pave(m, `pn${m}`, true), null, null, m);
 const ETAPES = ['le tracé marqué (craie, piquets et ficelle)', 'l\'herbe coupée ras', 'les mottes soulevées', 'la tranchée (terre fraîche, terre rejetée)', 'le gravier étalé, les pierres du bord posées'];
 for (let e = 0; e < 5; e++) for (let m = 0; m < 16; m++) piece(`etape-${e + 1}_${nomSens(m)}`, `Le creusement, étape ${e + 1} : ${ETAPES[e]} ; ${vers(m)}`, CASE, () => creuse(e, m, `cr${e}x${m}`), null, null, m);
 for (let k = 0; k < 4; k++) piece(`mottes_${k + 1}`, 'Les mottes du coup de bêche', EFFET, () => mottes(k), 'mottes', 90);

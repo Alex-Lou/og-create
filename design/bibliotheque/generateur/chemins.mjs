@@ -336,11 +336,13 @@ var require_chemins = __commonJS({
     __name(chemin2, "chemin");
     var PAVE = { w: 0.19, ond: 0.012, rugueux: 0.012 };
     var PAVES = [["#D6D0C4", "#B3AC9F"], ["#CEC6B6", "#A9A090"], ["#DCD6CC", "#BDB6AA"], ["#C9C2B4", "#9E978A"], ["#D8CCB6", "#B5A68C"], ["#C4C9CC", "#9AA0A4"]];
-    function pave(m, id) {
+    function pave(m, id, neige2 = false) {
       const g = rnd(m * 13 + 3), F = champ(m, { ...PAVE, seed: m * 11 + 5 });
-      let s = herbe(id + "h", m + 41);
+      let s = neige2 ? `<defs><clipPath id="${id}hc"><path d="${LOSANGE}"/></clipPath></defs><path d="${LOSANGE}" fill="${NEIGE}"/>` : herbe(id + "h", m + 41);
       s += `<defs><clipPath id="${id}k"><path d="${dDe(contours(F, -0.026))}"/></clipPath></defs><g clip-path="url(#${id}hc)">`;
-      s += forme(F, 0.03, "#5E8A3A", { o: 0.3 });
+      if (neige2) {
+        s += forme(F, 0.08, "#D3DEEC", { dx: 0.5, dy: 0.8 }) + forme(F, 0.08, "#FAFCFF");
+      } else s += forme(F, 0.03, "#5E8A3A", { o: 0.3 });
       s += forme(F, 0, "#6E6457");
       const G = 1 / 12, gap = 55e-4, pris = /* @__PURE__ */ new Set();
       s += `<g clip-path="url(#${id}k)">`;
@@ -385,6 +387,23 @@ var require_chemins = __commonJS({
           const [x0, y0] = iso(a1 - na * 0.016, b1 - nb * 0.016), [x1, y1] = iso(a1 + na * 0.016, b1 + nb * 0.016);
           s += `<path d="M${f(x0)},${f(y0)} L${f(x1)},${f(y1)}" stroke="#5E554A" stroke-width="0.35" stroke-linecap="round" opacity=".8"/>`;
         }
+      }
+      if (neige2) {
+        s += forme(F, -0.026, "#E6EEF7", { o: 0.22 });
+        s += `<g clip-path="url(#${id}k)">`;
+        for (const [a, b] of dedans(F, g, 26, -0.03)) {
+          const [x, y] = iso(a, b);
+          s += op(E(x, y, 0.45 + g() * 0.5, 0.16 + g() * 0.1, WHITE), 0.85);
+        }
+        s += `</g>`;
+        s += anneau(F, 0.034, 6e-3, "#F4F8FC", 0.95);
+        for (let i = 0; i < 4; i++) {
+          const a = (g() - 0.5) * 0.8, b = (g() - 0.5) * 0.8;
+          if (auBord(a, b) < 0.06 || F(a, b) < 0.09) continue;
+          const [x, y] = iso(a, b);
+          s += `<path d="M${f(x)},${f(y - 0.9)} L${f(x)},${f(y + 0.9)} M${f(x - 0.9)},${f(y)} L${f(x + 0.9)},${f(y)}" stroke="${WHITE}" stroke-width="0.3" stroke-linecap="round"/>`;
+        }
+        return s + `</g>`;
       }
       const deco = [];
       lisiere(F, g, 4).forEach(([a, b, na, nb]) => {
@@ -588,6 +607,7 @@ var require_chemins = __commonJS({
     for (let m = 0; m < 16; m++) piece(fichierDe(m, 1), `Le chemin de terre ${vers(m)}, seconde variante`, CASE, () => chemin2(m, `cb${m}`, 1), null, null, m);
     for (let m = 0; m < 16; m++) piece(`pave_${nomSens(m)}`, `Le chemin pavé ${vers(m)}`, CASE, () => pave(m, `pv${m}`), null, null, m);
     for (let m = 0; m < 16; m++) piece(`neige_${nomSens(m)}`, `Le chemin sous la neige ${vers(m)}`, CASE, () => neige(m, `ng${m}`), null, null, m);
+    for (let m = 0; m < 16; m++) piece(`pave-neige_${nomSens(m)}`, `Le chemin pavé déblayé sous la neige ${vers(m)}`, CASE, () => pave(m, `pn${m}`, true), null, null, m);
     var ETAPES = ["le tracé marqué (craie, piquets et ficelle)", "l'herbe coupée ras", "les mottes soulevées", "la tranchée (terre fraîche, terre rejetée)", "le gravier étalé, les pierres du bord posées"];
     for (let e = 0; e < 5; e++) for (let m = 0; m < 16; m++) piece(`etape-${e + 1}_${nomSens(m)}`, `Le creusement, étape ${e + 1} : ${ETAPES[e]} ; ${vers(m)}`, CASE, () => creuse(e, m, `cr${e}x${m}`), null, null, m);
     for (let k = 0; k < 4; k++) piece(`mottes_${k + 1}`, "Les mottes du coup de bêche", EFFET, () => mottes(k), "mottes", 90);
@@ -612,6 +632,7 @@ __name(chemin, "chemin");
 var cheminDeMasque = /* @__PURE__ */ __name((masque, variante = 0) => import_chemins.default.fichierDe(masque & 15, variante ? 1 : 0), "cheminDeMasque");
 var paveDeMasque = /* @__PURE__ */ __name((masque) => `pave_${import_chemins.default.nomSens(masque & 15)}`, "paveDeMasque");
 var neigeDeMasque = /* @__PURE__ */ __name((masque) => `neige_${import_chemins.default.nomSens(masque & 15)}`, "neigeDeMasque");
+var paveNeigeDeMasque = /* @__PURE__ */ __name((masque) => `pave-neige_${import_chemins.default.nomSens(masque & 15)}`, "paveNeigeDeMasque");
 var etapeDeMasque = /* @__PURE__ */ __name((etape, masque) => {
   if (!(etape >= 1 && etape <= 6)) throw new Error(`étape ${etape} : de 1 à 6`);
   return etape === 6 ? cheminDeMasque(masque) : `etape-${etape}_${import_chemins.default.nomSens(masque & 15)}`;
@@ -628,5 +649,6 @@ export {
   etapeDeMasque,
   liste,
   neigeDeMasque,
-  paveDeMasque
+  paveDeMasque,
+  paveNeigeDeMasque
 };

@@ -26,8 +26,8 @@ const loaded = () => {
   timer = setTimeout(() => listener && listener(), 120);
 };
 
-// Le dessin d'un masque (alt : la seconde variante de terre)
-export const pathFile = (mask, alt = false) => DATA.raccords[mask] && DATA.raccords[mask][alt ? 'terre_b' : 'terre'];
+// Le dessin d'un masque (alt : la seconde variante de terre ; pave : le chemin pavé)
+export const pathFile = (mask, alt = false, pave = false) => DATA.raccords[mask] && DATA.raccords[mask][pave ? 'pave' : alt ? 'terre_b' : 'terre'];
 // Le creusement d'un masque, étape 1 à 5 (la 6e est le chemin de terre)
 export const digFile = (stage, mask) => DATA.raccords[mask] && DATA.raccords[mask][`etape_${stage}`];
 // L'image d'un effet (mottes, poussière, cailloux, pose-pierre) ms après son début, ou null (fini, ou pas encore lue).
@@ -65,12 +65,13 @@ export function pathImage(file, grass) {
   return img.complete && img.naturalWidth ? img : null;
 }
 
-// Le chemin sous la neige (la case entière, couverte, et la trace damée du chemin) à la place d'un dessin de chemin de
-// terre (pathDraws) : { key, make } pour le cache des sprites (spriteCache.js : drawSprite), ancré au centre de la case
+// Le chemin sous la neige (la case entière, couverte, et la trace damée du chemin ; le pavé, déblayé) à la place d'un
+// dessin de chemin (pathDraws) : { key, make } pour le cache des sprites (spriteCache.js : drawSprite), ancré au centre de la case
 // (64 × 32 : TW × TH), ou null
 const snowSprites = new Map();
 export function snowPathSprite(file) {
-  const snow = file && file.replace(/^chemin_/, 'neige_').replace(/_b\.svg$/, '.svg');
+  // (le pavé, déblayé : chemins.json, pave_neige)
+  const snow = file && file.replace(/^chemin_/, 'neige_').replace(/^pave_/, 'pave-neige_').replace(/_b\.svg$/, '.svg');
   if (!snow || !FILES[ROOT + snow]) return null;
   if (!snowSprites.has(snow)) snowSprites.set(snow, { key: `chemin-${snow}`, make: librarySprite(FILES[ROOT + snow], { x: -32, y: -16, w: 64, h: 32 }) });
   return snowSprites.get(snow);

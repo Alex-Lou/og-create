@@ -3,6 +3,7 @@
 // 12 oct. : Lorena, au tutoriel, debout sur une case de l'épave, cachée par elle)
 import { describe, it, expect } from 'vitest';
 import { gridOf, nearestWalk, route } from '@/world/village/paths';
+import { stepsOf, PAVE_PACE } from '@/world/village/residents';
 
 const N = 8;
 const M = { ground: () => 's', height: () => 0, zone: () => 0 };
@@ -39,5 +40,30 @@ describe('les portes d’enclos', () => {
   it('sans porte, la clôture ne se traverse pas', () => {
     const closed = fence.map(c => ({ ...c, craft: 'cloture' }));
     expect(route(gridOf({ ...base, crafts: closed }), { x: 1, y: 6 }, { x: 7, y: 6 })).toBe(null);
+  });
+});
+
+// Le pavé (choix de l'auteur, 16 oct.) : on le préfère à la terre, la terre à l'herbe ; on y marche plus vite
+describe('le pavé', () => {
+  // (deux chemins de (0, 3) à (7, 3) : la ligne droite en terre, y = 3 ; un détour pavé par y = 2, deux pas de plus)
+  const pathCells = new Set();
+  for (let x = 0; x < N; x++) pathCells.add(`${x},3`);
+  for (let x = 0; x < N; x++) pathCells.add(`${x},2`);
+  const paved = new Set([...pathCells].filter(k => k.endsWith(',2')));
+  const PM = { ground: (x, y) => (pathCells.has(`${x},${y}`) ? 'p' : 'g'), height: () => 0, zone: () => 0 };
+  it('un détour pavé un peu plus long passe avant la ligne droite en terre ; sans pavé, la ligne droite', () => {
+    const grid = gridOf({ ...base, M: { ...PM, isPaved: (x, y) => paved.has(`${x},${y}`) } });
+    expect(route(grid, { x: 0, y: 3 }, { x: 7, y: 3 }).some(c => c.y === 2)).toBe(true);
+    expect(route(gridOf({ ...base, M: PM }), { x: 0, y: 3 }, { x: 7, y: 3 }).every(c => c.y === 3)).toBe(true);
+  });
+  it('la marche est plus courte sur le pavé, d’une case pavée à l’autre seulement', () => {
+    const M2 = { isPaved: (x, y) => y === 1 };
+    const line = y => Array.from({ length: 5 }, (_, x) => ({ x, y }));
+    expect(stepsOf(line(3), M2)).toEqual({ span: 4, steps: null });
+    const fast = stepsOf(line(1), M2);
+    expect(fast.span).toBeCloseTo(4 / PAVE_PACE);
+    expect(fast.steps).toHaveLength(5);
+    // (de la terre au pavé : le pas qui y entre est encore un pas de terre)
+    expect(stepsOf([{ x: 0, y: 2 }, { x: 0, y: 1 }, { x: 1, y: 1 }], M2).span).toBeCloseTo(1 + 1 / PAVE_PACE);
   });
 });

@@ -158651,6 +158651,278 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/pave-neige_ne",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-so",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_no",
+   "rubrique": "chemins",
+   "titre": "Pave neige no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se",
+   "rubrique": "chemins",
+   "titre": "Pave neige se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se-so",
+   "rubrique": "chemins",
+   "titre": "Pave neige se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_seul",
+   "rubrique": "chemins",
+   "titre": "Pave neige seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_so",
+   "rubrique": "chemins",
+   "titre": "Pave neige so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/pave_ne",
    "rubrique": "chemins",
    "titre": "Pave ne",
@@ -161339,6 +161611,23 @@
    "images": 1,
    "fichiers": [
     "svg/meteo/sol/neige_fondante_b.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/neige_fondante_c",
+   "rubrique": "meteo",
+   "titre": "Neige fondante (c)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/neige_fondante_c.svg"
    ],
    "cadre": [
     -40,

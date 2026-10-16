@@ -11,8 +11,26 @@ import { plankAt, PLANK_SPRITE, PLANK_LIFT } from './plank';
 import { momentOf, visitOf, HOURS } from './agenda';
 import { coach } from '@/game/coach';
 import { SEASON } from '../plants';
+import { pavedAt } from '../terrain';
 
 const SPEED = 0.8; // cases par seconde, à pied
+// Le pavé (choix de l'auteur, 16 oct.) : on y marche PAVE_PACE fois plus vite, d'une case pavée à l'autre
+export const PAVE_PACE = 1.35;
+// La durée d'une marche le long de path, en pas de terre (un pas d'une case pavée à une autre en compte moins) :
+// { span, steps } ; steps : quand on passe chaque case, de 0 à span, ou null si aucun pas n'est pavé (le pas régulier).
+// M : la carte (terrain.js, pavedAt)
+export function stepsOf(path, M) {
+  const steps = [0];
+  let span = 0, fast = false;
+  for (let i = 1; i < path.length; i++) {
+    const a = path[i - 1], b = path[i];
+    const pace = M && pavedAt(M, Math.round(a.x), Math.round(a.y)) && pavedAt(M, b.x, b.y) ? PAVE_PACE : 1;
+    if (pace !== 1) fast = true;
+    span += 1 / pace;
+    steps.push(span);
+  }
+  return { span, steps: fast ? steps : null };
+}
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
 // Sans leur bâtiment, Lorena (Ponton) et Nathan (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
 const CAMP = ['ponton', 'atelier'];
@@ -172,8 +190,9 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
     let total = 0;
     for (const [to, pause, act] of seq) {
       const path = routeOf(at, to) || [to];
-      const walk = (path.length - 1) / speed;
-      legs.push({ path, walk, pause, act, start: total });
+      const { span, steps } = stepsOf(path, grid.M);
+      const walk = span / speed;
+      legs.push({ path, walk, steps, pause, act, start: total });
       total += walk + pause;
       at = to;
     }
@@ -192,8 +211,9 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
     const from = grid.walkable.reduce((best, c) => (!best || d(c) < d(best) ? c : best), null) || wreck;
     const to = spotOf(r, r.work, 0);
     const path = routeOf(from, to) || [from, to];
-    const walk = (path.length - 1) / ARRIVE_SPEED;
-    const intro = { legs: [{ path, walk, pause: ARRIVE_PAUSE, act: 'idle', start: 0 }], total: walk + ARRIVE_PAUSE, speed: ARRIVE_SPEED, lane: 0, rest: { x: 0, y: 0 }, offset: 0 };
+    const { span, steps } = stepsOf(path, grid.M);
+    const walk = span / ARRIVE_SPEED;
+    const intro = { legs: [{ path, walk, steps, pause: ARRIVE_PAUSE, act: 'idle', start: 0 }], total: walk + ARRIVE_PAUSE, speed: ARRIVE_SPEED, lane: 0, rest: { x: 0, y: 0 }, offset: 0 };
     intros.set(r.id, intro);
     return intro;
   };
@@ -227,9 +247,10 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
       const from = move && move.last;
       const to = onPlan(target, t);
       const path = from && Math.hypot(from.x - to.x, from.y - to.y) > 0.6 ? routeOf({ x: Math.round(from.x), y: Math.round(from.y) }, { x: Math.round(to.x), y: Math.round(to.y) }) : null;
-      const walk = path && path.length > 1 ? (path.length - 1) / speedOf(r) : 0;
+      const pace = path && path.length > 1 ? stepsOf(path, grid.M) : null;
+      const walk = pace ? pace.span / speedOf(r) : 0;
       // (le chemin part de là où il se tient, pas du milieu de sa case)
-      const trip = walk ? { legs: [{ path: [{ x: from.x, y: from.y }, ...path.slice(1)], walk, pause: 0, act: 'idle', start: 0 }], total: walk, speed: speedOf(r), lane: target.lane, rest: target.rest, offset: 0 } : null;
+      const trip = walk ? { legs: [{ path: [{ x: from.x, y: from.y }, ...path.slice(1)], walk, steps: pace.steps, pause: 0, act: 'idle', start: 0 }], total: walk, speed: speedOf(r), lane: target.lane, rest: target.rest, offset: 0 } : null;
       move = { mode: m.mode, day, at: t, walk, trip, target, last: from };
       moves.set(r.id, move);
     }
@@ -261,8 +282,16 @@ export function onPlan(plan, t) {
   const last = leg.path[leg.path.length - 1];
   if (into >= leg.walk || leg.path.length < 2) return { x: last.x + plan.rest.x, y: last.y + plan.rest.y, pose: leg.act, view: leg.view || null, back: false, flip: false };
   const d = into * plan.speed;
-  const i = Math.min(leg.path.length - 2, Math.floor(d));
-  const k = d - i;
+  // (le pas : régulier, ou plus court d'une case pavée à l'autre : stepsOf)
+  let i, k;
+  if (leg.steps) {
+    i = 0;
+    while (i < leg.path.length - 2 && leg.steps[i + 1] <= d) i++;
+    k = Math.min(1, (d - leg.steps[i]) / (leg.steps[i + 1] - leg.steps[i]));
+  } else {
+    i = Math.min(leg.path.length - 2, Math.floor(d));
+    k = d - i;
+  }
   const [a, b] = [leg.path[i], leg.path[i + 1]];
   const dx = b.x - a.x;
   const dy = b.y - a.y;
