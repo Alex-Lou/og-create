@@ -7,36 +7,36 @@
 // sort en miroir, comme dans la bibliothèque. Le premier dessin d'un personnage prépare toutes ses poses.
 import T from './troupe.js';
 import A from '../personnages/avatar.js';
-import D from './dormeurs.js';
 import Tn from './tenues.js';
-import { CAST } from './naufrages.js';
+import { CAST_REFONTE, image } from './troupe_refonte.js';
 import Q from './troupe_liste.js';
 import R from './noms_personnages.js';
 
 const r2 = n => Math.round(n * 100) / 100;
 const svgOf = (vb, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(vb[2])}" height="${r2(vb[3])}" viewBox="${vb.join(' ')}">${body}</svg>`;
-const CURL = [0, 0, 64, 48];
 const VUES = new Set(['face', 'avant', 'dos', 'profil']);
 const n2 = [0, 1], nR = [...Array(T.IMAGES.repos).keys()], nM = [...Array(T.IMAGES.marche).keys()];
 
-// Les poses d'un maître ou de son naufragé : [nom, cadre, images]
+// Les poses d'un maître ou de son naufragé : [nom, cadre, images]. Les maîtres sont refondus (troupe_refonte.js) : ses
+// animations là où il en a (c.refonte), les gestes du kit sur son corps refondu ailleurs
 function posesMaitre(base, c, naufrage) {
+  const R = c.refonte;
   const s = Q.slug(base.name);
   const avecLanterne = !naufrage || s === 'aster' || s === 'rivet';
   const don = !(naufrage && c.sansDon);
   const out = Q.poses(c, naufrage
     ? { travail: don, lanterne: avecLanterne, couverture: Q.VOILE, parapluie: '#8E8A80' }
     : { travail: true, lanterne: true, couverture: Q.COUVERTURES[s] }).map(([pose, , vb, images]) => [pose, vb, images]);
-  if (don) out.push([base.action[0], Q.STD, n2.map(n => T.frame(c, base.action[1], 'action', n))]);
-  for (const x of T.EXPRS) out.push([`expr_${x}`, Q.STD, nR.map(n => T.frame(c, 'front', 'repos', n, x))]);
-  out.push(['dort', D.isCurled(c) ? CURL : Q.STD, n2.map(n => D.sleepFrame(c, n))]);
-  for (const x of Q.MOODS[base.name]) out.push([`avant_marche_${x}`, Q.STD, nM.map(n => T.frame(c, 'se', 'marche', n, x))]);
+  if (don) out.push([base.action[0], Q.STD, R.action()]);
+  for (const x of T.EXPRS) out.push([`expr_${x}`, Q.STD, nR.map(n => image(c, 'front', 'repos', n, x))]);
+  out.push(['dort', Q.STD, n2.map(n => R.dort(n))]);
+  for (const x of Q.MOODS[base.name]) out.push([`avant_marche_${x}`, Q.STD, nM.map(n => image(c, 'se', 'marche', n, x))]);
   if (!naufrage) {
-    for (const [saison, habiller] of [['hiver', Tn.enHiver], ['pluie', Tn.sousLaPluie]]) {
-      const h = habiller(base);
+    // l'hiver : le style du kit (tenues.js) sur son corps ; la pluie : sa tenue de pluie s'il en a une, sinon le ciré du kit
+    for (const [saison, h] of [['hiver', Tn.enHiver(base)], ['pluie', R.pluie() || Tn.sousLaPluie(base)]]) {
       for (const v of ['front', 'se', 'ne']) {
-        out.push([`${Q.VUE[v]}_repos_${saison}`, Q.STD, nR.map(n => T.frame(h, v, 'repos', n))]);
-        out.push([`${Q.VUE[v]}_marche_${saison}`, Q.STD, nM.map(n => T.frame(h, v, 'marche', n))]);
+        out.push([`${Q.VUE[v]}_repos_${saison}`, Q.STD, nR.map(n => image(c, v, 'repos', n, undefined, h))]);
+        out.push([`${Q.VUE[v]}_marche_${saison}`, Q.STD, nM.map(n => image(c, v, 'marche', n, undefined, h))]);
       }
     }
   }
@@ -46,7 +46,7 @@ function posesMaitre(base, c, naufrage) {
 // Les personnages : groupe -> clé -> { dossier, prefixe, poses() } (les poses se dessinent à la première demande)
 const memo = f => { let v; return () => (v ??= f()); };
 const GROUPES = { maitre: {}, naufrage: {}, visiteur: {}, arrivant: {} };
-for (const { base, nau } of CAST) {
+for (const { base, nau } of CAST_REFONTE) {
   const s = Q.slug(base.name);
   GROUPES.maitre[s] = { dossier: `maitres/${s}`, prefixe: s, poses: memo(() => posesMaitre(base, base, false)) };
   GROUPES.naufrage[s] = { dossier: `naufrages/${s}`, prefixe: `${s}-naufrage`, poses: memo(() => posesMaitre(base, nau, true)) };

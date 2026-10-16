@@ -83,7 +83,7 @@ const ANIMS = {
   dodoCouche: {
     nom: 'Dodo, couché', images: 2, dt: 1.1, dirs: ['face'], cadre: G.CADRE_COUCHE, contexte: 'La nuit, au camp, sous une couverture bleue rayée de crème (cadre couché 64 × 48).',
     // (couché, le pompon de son bonnet monte juste sous les « z » : ils partent un peu plus à droite, au-dessus de la couverture)
-    img: (c, v, n) => G.couche(c, n, { fond: '#3E5A8C', motif: '#F4EEDF' }).replace(ZEDS_FIN, z => `<g transform="translate(4.6 0)">${z}</g>`)
+    img: (c, v, n) => G.couche(c, n, c.couverture || { fond: '#3E5A8C', motif: '#F4EEDF' }).replace(ZEDS_FIN, z => `<g transform="translate(4.6 0)">${z}</g>`)
   }
 };
 // Les poses de la troupe (lorena_poses.js), décalées de HY : ses épaules et sa tête sont plus bas que celles de Lorena,
