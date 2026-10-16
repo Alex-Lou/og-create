@@ -19,11 +19,11 @@ describe('le coût d’une scène du tutoriel', () => {
     // (une scène en plans : ScenePlans peint ses plans, une fois chacun ; l'avatar dans son canvas, le calque anime tel quel)
     expect(plans.match(/<canvas ref="over"/g)).toHaveLength(1);
     expect(plans.match(/v-for="\(href, k\) in data\.live"/g)).toHaveLength(1);
-    expect(read('ScenePlans.vue')).toMatch(/<canvas v-else/);
+    expect(read('ScenePlans.js')).toMatch(/h\('canvas'/);
   });
   it('rien n’est flouté', () => {
     expect(CSS).not.toMatch(/blur\(/);
-    expect(read('ScenePlans.vue')).not.toMatch(/blur\(/);
+    expect(read('ScenePlans.js')).not.toMatch(/blur\(/);
     expect(TEMPLATE).not.toMatch(/sa__backdrop|sa__edge/);
   });
 });

@@ -45,9 +45,11 @@ describe('les scènes en plans : des plans immobiles, une partition', () => {
         expect((svg.match(ANIMATIONS) || []).length).toBeLessThanOrEqual(30);
       } else {
         const m = plan.marge || 0;
-        expect(svg).toMatch(new RegExp(`^<svg [^>]*viewBox="${-m} ${-m} ${400 + 2 * m} ${400 + 2 * m}"`));
+        expect(svg).toMatch(new RegExp(`^<svg [^>]*viewBox="${(plan.cadre || [-m, -m, 400 + 2 * m, 400 + 2 * m]).join(' ')}"`));
         expect(svg.match(ANIMATIONS)).toBeNull();
       }
+      // (une pièce attachée l'est à une pièce de la scène, posée avant elle)
+      if (plan.dans) expect(ids.slice(0, ids.indexOf(plan.id))).toContain(plan.dans);
     }
     expect(partition.temps.length).toBeGreaterThan(0);
     for (const temps of partition.temps) {
@@ -58,6 +60,12 @@ describe('les scènes en plans : des plans immobiles, une partition', () => {
         expect(croissant(cles)).toBe(true);
         expect(cles[cles.length - 1][0]).toBeLessThanOrEqual(temps.duree);
       }
+    }
+    // (le démontage, quand la scène s'en va)
+    for (const [plan, cles] of Object.entries((partition.sortie && partition.sortie.pistes) || {})) {
+      expect(ids).toContain(plan);
+      expect(croissant(cles)).toBe(true);
+      expect(cles[cles.length - 1][0]).toBeLessThanOrEqual(partition.sortie.duree);
     }
   });
 });

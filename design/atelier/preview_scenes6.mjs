@@ -58,17 +58,19 @@ for (const [id, sc] of Object.entries(SCENES)) {
     const plans = sc.plans.map(q => {
       const o = { id: q.id };
       if (q.dessin) { o.fichier = `${id}/${id}_plan-${q.id}_1.svg`; write(path.join(LIB, o.fichier), scene(id, `plan-${q.id}`).svg); count++; }
-      return Object.assign(o, { profondeur: q.profondeur || 0 }, q.marge ? { marge: q.marge } : {}, q.flou ? { flou: q.flou } : {}, q.pivot ? { pivot: q.pivot } : {});
+      return Object.assign(o, { profondeur: q.profondeur || 0 }, q.marge ? { marge: q.marge } : {}, q.flou ? { flou: q.flou } : {}, q.pivot ? { pivot: q.pivot } : {}, q.cadre ? { cadre: q.cadre } : {}, q.dans ? { dans: q.dans } : {}, q.derriere ? { derriere: true } : {});
     });
     index.scenes[id] = { nom, etape, cadre: [0, 0, W, W], images: 1, ms_par_image: sc.ms, avatar: sc.avatar, plans, partition: sc.partition, calques: {} };
     const temps = sc.partition.temps[sc.partition.temps.length - 1];
     const fin = q => { const cles = temps.pistes && temps.pistes[q.id]; return cles ? cles[cles.length - 1][1] : {}; };
-    const image = unique(sc.plans.map(q => {
-      if (q.id === 'avatar') return avatarPose(sc.avatar, 0, `${id}0`);
-      if (!q.dessin) return '';
+    // (une pièce attachée se pose dans le cadre de celle qui la porte, devant ou derrière elle)
+    const piece = q => {
+      const kids = sc.plans.filter(k => k.dans === q.id), sous = kids.filter(k => k.derriere).map(piece).join(''), sur = kids.filter(k => !k.derriere).map(piece).join('');
+      const corps = q.id === 'avatar' ? avatarPose(sc.avatar, 0, `${id}0`) : q.dessin ? q.dessin() : '';
       const { x = 0, y = 0, s = 1, r = 0, o = 1 } = fin(q), [px, py] = q.pivot || [W / 2, W / 2];
-      return o > 0 ? `<g transform="translate(${r2(x + px)} ${r2(y + py)}) rotate(${r}) scale(${s}) translate(${-px} ${-py})" opacity="${o}">${q.dessin()}</g>` : '';
-    }).join(''));
+      return o > 0 ? `<g transform="translate(${r2(x + px)} ${r2(y + py)}) rotate(${r}) scale(${s}) translate(${-px} ${-py})" opacity="${o}">${sous}${corps}${sur}</g>` : '';
+    };
+    const image = unique(sc.plans.filter(q => !q.dans).map(piece).join(''));
     parties[+id.slice(0, 2) >= 5 ? 1 : 0].push(row(`${etape} — ${sc.titre}`, [[svgOf(image, 0.46), 'fin de l\'entrée']]));
     anim.push({ label: `${etape} — ${sc.titre}`, frames: [svgOf(image, 0.6)], timings: [sc.ms], w: r2(W * 0.6), h: r2(W * 0.6) });
     continue;

@@ -11,7 +11,7 @@
        (léger, livré à part par la bibliothèque) se joue tel quel. Par-dessus, le temps qu'il fait (meteo) : le ciel qui
        s'assombrit, la pluie.
        Une seule racine : la scène l'anime en fondu -->
-  <div class="sa" :style="fillStyle" aria-hidden="true">
+  <div :class="['sa', { 'sa--plans': data && data.plans }]" :style="fillStyle" aria-hidden="true">
     <template v-if="data">
       <div class="sa__stage">
         <div ref="square" :class="['sa__square', { 'sa__square--tall': squareStyle, 'sa__square--plans': data.plans }]" :style="squareStyle">
@@ -45,7 +45,7 @@
 import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
 import { reducedMotion } from '@/utils/fx';
 import { layerRaster, edgeColors, MAX_DPR, ART } from './raster';
-import ScenePlans from './ScenePlans.vue';
+import ScenePlans from './ScenePlans';
 // La pluie (meteo.pluie, de 0 à 1) : ses gouttes au plus, leur pente, la vitesse à laquelle elle forcit ou faiblit (par
 // seconde) ; la finesse de son image au plus
 const DROPS = 150;

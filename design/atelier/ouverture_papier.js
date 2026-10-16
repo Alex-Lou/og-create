@@ -668,22 +668,19 @@ function carte01() {
   };
 }
 
-// la main du steward, gantée de blanc, sa manche bleu marine galonnée d'or, et le tampon de bois qu'elle tient (vus d'en
-// haut, posés sur la carte : le jeu les fait descendre de plus haut, plus grands)
+// le tampon de bois, seul (vu d'en haut, posé sur la carte : le jeu le fait descendre de plus haut, plus grand) : son
+// bloc, son caoutchouc rouge qui dépasse, son col et son pommeau tourné
 const TAMPON_ICI = (() => { const a = (CARTE.a * Math.PI) / 180, x = (196 - 160) * CARTE.k, y = (176 - 105) * CARTE.k; return [CARTE.x + x * Math.cos(a) - y * Math.sin(a), CARTE.y + x * Math.sin(a) + y * Math.cos(a)]; })();
-function mainTampon(p) {
+function outilTampon(p) {
   const D = Defs(`${p}h`), [tx, ty] = TAMPON_ICI;
   let s = `<g transform="translate(${f(tx)} ${f(ty)}) rotate(${CARTE.a - 11})">`;
-  s += decoupe(D, [[-38, -15], [38, -15], [38, 15], [-38, 15]], '#6A4430', { seed: 700, amp: 0.5, texture: `${p}hbois`, bord: '#9A6E50', bordN: 2, dx: 4, dy: 6, ombre: 0.4 });
-  s += piece(D, [[-38, 12], [38, 12], [38, 16], [-38, 16]], '#C8463A', { seed: 701, amp: 0.3, encre: 0.8 });
-  s += decoupe(D, ovale(0, -2, 14, 13, 14), '#8A5A3A', { seed: 702, amp: 0.4 });
-  s += '</g>';
-  // la manche, depuis le haut à droite ; le poing ganté sur le pommeau
-  s += decoupe(D, [[tx + 70, G - 30], [D_ + 30, G - 30], [D_ + 30, 40], [tx + 34, ty - 18], [tx + 4, ty - 40]], '#22346A', { seed: 703, amp: 0.8, bord: '#3E5494', bordN: 2, dx: 5, dy: 7 });
-  s += piece(D, [[tx + 22, ty - 52], [tx + 52, ty - 26], [tx + 46, ty - 18], [tx + 14, ty - 44]], '#E8B84A', { seed: 704, amp: 0.4, encre: 1 }) + piece(D, [[tx + 32, ty - 62], [tx + 62, ty - 36], [tx + 58, ty - 30], [tx + 26, ty - 56]], '#E8B84A', { seed: 705, amp: 0.4, encre: 1 });
-  s += decoupe(D, courbe(t => { const a = t * Math.PI * 2, r = 1 + 0.08 * Math.max(0, Math.sin(a * 4)) * (Math.sin(a) > 0 ? 1 : 0); return [tx + 6 + 24 * r * Math.cos(a), ty - 15 + 19 * r * Math.sin(a)]; }, 28).slice(0, -1), '#F6F2EA', { seed: 706, amp: 0.4, bord: '#FFFFFF', bordN: 12 });
-  s += `<path d="M${f(tx - 10)},${f(ty - 14)} q10,-4 18,2 M${f(tx - 12)},${f(ty - 6)} q12,-4 22,2 M${f(tx - 10)},${f(ty + 1)} q10,-3 18,1" fill="none" stroke="#B8B0A4" stroke-width="1.2" stroke-linecap="round"/>`;
-  return D.out(s);
+  s += piece(D, [[-40, -14], [40, -14], [40, 18], [-40, 18]], '#C8463A', { seed: 701, amp: 0.4, encre: 1 });
+  s += decoupe(D, [[-38, -17], [38, -17], [38, 14], [-38, 14]], '#6A4430', { seed: 700, amp: 0.5, texture: `${p}hbois`, bord: '#A47656', bordN: 2, dx: 5, dy: 7, ombre: 0.45 });
+  s += `<path d="M-30,-6 L30,-6 M-30,4 L30,4" stroke="#4A2C1E" stroke-width="0.8" opacity="0.6"/>`;
+  s += decoupe(D, ovale(0, -2, 12, 11, 14), '#7E5034', { seed: 702, amp: 0.4, dx: 3, dy: 4 });
+  s += decoupe(D, ovale(-2, -6, 19, 17, 18), '#9A6A44', { seed: 703, amp: 0.5, bord: '#C89A6E', bordN: 8, texture: `${p}hbois`, dx: 4, dy: 6 });
+  s += `<path d="M-12,-14 q8,-6 16,-2" fill="none" stroke="#E8C49A" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>`;
+  return D.out(s + '</g>');
 }
 // le vent du large : des traits et des volutes qui filent, du sable soulevé
 function vivantVent() {
@@ -696,7 +693,7 @@ function vivantVent() {
   return s;
 }
 
-// 00_tampon — sur le sable, la carte qu'on a remplie : la main du steward descend, le tampon claque « EMBARQUÉ » ; puis
+// 00_tampon — sur le sable, la carte qu'on a remplie : le tampon descend et claque « EMBARQUÉ » ; puis
 // le vent du large la soulève et l'emporte au loin ; il reste sa trace humide dans le sable
 function tampon00() {
   const p = 'tam', HIT = 560;
@@ -708,7 +705,7 @@ function tampon00() {
       { id: 'sable-pres', profondeur: 0.2, marge: MARGE, dessin: () => sablePres(p, true) },
       { id: 'carte', profondeur: 0.2, marge: MARGE, pivot: [CARTE.x, CARTE.y], dessin: () => carteSable() },
       { id: 'encre', profondeur: 0.2, marge: MARGE, pivot: [CARTE.x, CARTE.y], dessin: () => surCarte(CE.tampon()) },
-      { id: 'main', profondeur: 0.35, marge: MARGE, pivot: TAMPON_ICI, dessin: () => mainTampon(p) },
+      { id: 'tampon', profondeur: 0.35, marge: MARGE, pivot: TAMPON_ICI, dessin: () => outilTampon(p) },
       { id: 'anime', profondeur: 0.3, dessin: () => vivantVent() },
       { id: 'regard', profondeur: 0, marge: MARGE, dessin: () => regard(p) }
     ],
@@ -717,7 +714,7 @@ function tampon00() {
         duree: 3600,
         camera: [[0, cam], ...secousse(HIT, cam, 4, 4), [1500, cam], [3600, { x: 10, y: -14, z: 1.08 }]],
         pistes: {
-          main: [[0, { y: -300, x: 60, s: 1.8 }], [HIT, { y: 0, x: 0, s: 1, e: 'linear' }], [HIT + 160, { s: 0.98 }], [HIT + 320, { s: 1, e: 'ease-in' }], [1350, { y: -320, x: 80, s: 1.8 }], [3600, { y: -320, x: 80, s: 1.8 }]],
+          tampon: [[0, { y: -300, x: 60, s: 1.8 }], [HIT, { y: 0, x: 0, s: 1, e: 'linear' }], [HIT + 160, { s: 0.98 }], [HIT + 320, { s: 1, e: 'ease-in' }], [1350, { y: -320, x: 80, s: 1.8 }], [3600, { y: -320, x: 80, s: 1.8 }]],
           carte: [...coup.slice(0, -1), ...vol.slice(1)],
           encre: [[0, { o: 0 }], [HIT, { o: 0, e: 'linear' }], [HIT + 40, { o: 1, y: 2.4 }], [HIT + 220, { o: 1 }], ...vol.slice(1).map(([t, c]) => [t, { ...c, o: 1 }])],
           anime: [[0, { o: 0 }], [1400, { o: 0 }], [1900, { o: 1 }], [3600, { o: 1 }]]

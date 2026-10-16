@@ -10,8 +10,10 @@ const r2 = n => Math.round(n * 100) / 100;
 const W = S6.W;
 const CADRE = [0, 0, W, W];
 const svgOf = body => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(W)}" height="${r2(W)}" viewBox="0 0 ${W} ${W}">${body}</svg>`;
-// (un plan d'une scène en plans déborde du carré de sa marge m, de chaque côté : la caméra ne découvre pas ses bords)
-const svgPlan = (body, m) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(W + 2 * m)}" height="${r2(W + 2 * m)}" viewBox="${-m} ${-m} ${W + 2 * m} ${W + 2 * m}">${body}</svg>`;
+// (une pièce d'une scène en plans couvre son cadre [x, y, w, h] ; un plan, le carré et sa marge m, de chaque côté : la
+// caméra ne découvre pas ses bords)
+const svgPlan = (body, [x, y, w, h]) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(w)}" height="${r2(h)}" viewBox="${x} ${y} ${w} ${h}">${body}</svg>`;
+const cadrePlan = p => p.cadre || [-(p.marge || 0), -(p.marge || 0), W + 2 * (p.marge || 0), W + 2 * (p.marge || 0)];
 const plansDessines = sc => (sc.plans || []).filter(p => p.dessin);
 
 // Ce qu'on peut demander : chaque scène, ses étapes, son titre, ses images, sa vitesse, ses calques, la place de l'avatar
@@ -23,15 +25,15 @@ export const CADRE_PHOTO = S6.CADRE_PHOTO;
 
 // Un calque d'une scène : 'fond' (derrière l'avatar), 'anime' (ce qui vit par-dessus le fond figé d'une scène lourde,
 // s'il y en a un) ou 'devant' (devant l'avatar, s'il y en a un), image n ; d'une scène en plans (game/scenePlans.js) :
-// 'plan-<id>', l'un de ses plans, avec sa marge
+// 'plan-<id>', l'une de ses pièces, dans son cadre (ou avec sa marge)
 export function scene(id, calque, n = 1) {
   const sc = S6.SCENES[id];
   if (!sc) throw new Error(`scène inconnue : ${id} (${Object.keys(S6.SCENES).join(', ')})`);
   if (!SCENES[id].calques.includes(calque)) throw new Error(`calque inconnu : ${calque} (${SCENES[id].calques.join(', ')})`);
   if (!(n >= 1 && n <= sc.images)) throw new Error(`image ${n} : de 1 à ${sc.images}`);
   if (sc.plans) {
-    const p = plansDessines(sc).find(q => `plan-${q.id}` === calque), m = p.marge || 0;
-    return { svg: svgPlan(p.dessin(), m), cadre: [-m, -m, W + 2 * m, W + 2 * m], ms_par_image: null };
+    const p = plansDessines(sc).find(q => `plan-${q.id}` === calque), cadre = cadrePlan(p);
+    return { svg: svgPlan(p.dessin(), cadre), cadre, ms_par_image: null };
   }
   // une scène en animation continue (une seule image) n'a pas de vitesse d'images : elle bouge d'elle-même (SMIL)
   return { svg: svgOf(sc[calque](n - 1)), cadre: CADRE, ms_par_image: sc.images > 1 ? sc.ms : null };
