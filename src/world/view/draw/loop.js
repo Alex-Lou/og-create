@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, givreOf, drawGivre } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -468,6 +468,9 @@ export default {
     // (rien à chercher tant qu'aucun quartier connu n'a de climat qui remplit l'air)
     const climats = !this.reduced() && climatsPresents(zones);
     if (climats) drawClimatMonde(ctx, 'sol', view, t, climatOf, phase.night, s);
+    // En hiver, les nuits claires givrent l'herbe : elle pâlit et des éclats y scintillent, au sol ; le givre fond dans la
+    // matinée (lumiere/saisons.js ; l'herbe : celle de la lueur du vent, vent.js)
+    drawGivre(ctx, this.M, view, this.reduced() ? 0 : t, givreOf(phase, SEASON), this.lightGate(now));
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)
       spriteGroup(item.critter || item.ferry ? 'vivants' : item.prop ? 'decor' : 'batiments');
@@ -554,7 +557,10 @@ export default {
     if (climats) drawClimatMonde(ctx, 'air', view, t, climatOf, phase.night, s);
     // La pluie, dans le monde : chaque goutte tombe jusqu'à son point de chute et y éclabousse ; la lumière de l'heure la
     // prend ensuite (une goutte s'allume dans le halo d'une lanterne). De loin, moins de gouttes (lumiere/pluie.js)
-    if (phase.weather.rain > 0.02) drawPluie(ctx, view, t, rainK, phase.night, flash, { slant: slantOf(t), dens: this.fxQ * Math.min(1, (s / 0.8) ** 2) });
+    // (en hiver, elle tombe en neige : lumiere/saisons.js)
+    const densPluie = this.fxQ * Math.min(1, (s / 0.8) ** 2);
+    if (phase.weather.rain > 0.02 && SEASON === 'hiver') drawNeige(ctx, view, t, rainK, densPluie);
+    else if (phase.weather.rain > 0.02) drawPluie(ctx, view, t, rainK, phase.night, flash, { slant: slantOf(t), dens: densPluie });
     const sources = [];
     this.drawLights(ctx, t, phase, view, sources);
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));

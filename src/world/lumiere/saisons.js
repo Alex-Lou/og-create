@@ -3,13 +3,17 @@
 // passe sur la terre, une poignée de feuilles qui tournoie et file avec le vent (world/lumiere/vent.js : gustAt) ; et
 // certains matins, une brume basse qui traîne autour du lever du soleil et se lève dans la matinée (elle passe par les
 // bancs de brume du temps : scene.js, drawWeatherMonde ; la météo elle-même, que le serveur refait, n'en sait rien).
+// L'hiver (choix de l'auteur, 16 oct.) : la pluie tombe en neige (celle des cimes : climates.js, drawFlocons) ; les nuits
+// claires, l'herbe se givre, pâlit et scintille, puis le givre fond dans la matinée. Pour les essais : ?saison=hiver.
 // Tout est posé dans le monde et se déduit du temps.
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
+import { drawFlocons } from '../climates';
 import { lisse } from '../maths';
-import { texture } from '../textures';
-import { selonQualite } from '../perf';
-import { gustAt, leafTones } from './vent';
+import { texture, rond } from '../textures';
+import { selonQualite, qualiteFx } from '../perf';
+import { gustAt, leafTones, herbMask, casesVues } from './vent';
+import { worldOf, TW, TH } from '../terrain';
 
 const AUTOMNE = leafTones('automne');
 // Des feuilles déjà tombées : plus sombres et plus brunes que celles qui volent
@@ -110,4 +114,58 @@ export function brumeAutomne(phase, date, saison) {
 // La force des tourbillons à cette heure : pleine le jour, faible la nuit, rien sous la pluie, rien vu de loin
 export function tourbillonForce(phase, s) {
   return (1 - 0.7 * phase.night) * (1 - Math.min(1, phase.weather.rain * 4)) * lisse((s - 0.5) / 0.2);
+}
+
+/* ---------- L'hiver ---------- */
+
+// La neige à la place de la pluie : les flocons des cimes, partout (sur la terre et sur la mer), autant que la pluie
+// ressentie (force : 0 à 1 ; loop.js, rainFelt) ; plus nombreux de près (dens : la qualité et le zoom, comme la pluie)
+export function drawNeige(ctx, view, t, force, dens = 1) {
+  if (force <= 0.02) return;
+  for (const T of tuilesOf(view, 150)) drawFlocons(ctx, T, t, () => true, Math.min(1, 0.5 + force), 90 * force * dens);
+}
+
+// La force du givre (0 à 1) : en hiver, par ciel assez clair et sans pluie, il prend pendant la nuit, culmine à l'aube et
+// fond dans la matinée (rien l'après-midi ni le soir)
+export function givreOf(phase, saison) {
+  if (saison !== 'hiver') return 0;
+  const { hour, rise, night, weather } = phase;
+  const fond = 1 - lisse((hour - (rise + 0.8)) / 1.8);
+  const tot = hour < rise + 3 ? fond : 0;
+  const nuit = Math.max(night, tot);
+  return nuit * (1 - Math.min(1, weather.rain * 4)) * (1 - 0.7 * weather.cover);
+}
+
+// Une tache de givre : pâle, bleutée, au bord fondu (les taches se chevauchent : aucun trait de case ne se voit)
+const tacheGivre = () => rond('givre', 64, [[0, 'rgba(234,243,255,1)'], [0.55, 'rgba(234,243,255,0.75)'], [1, 'rgba(234,243,255,0)']]);
+
+// Le givre sur l'herbe de la vue, au sol (avant ce qui s'y tient) : l'herbe pâlit (une tache douce sur une case sur deux,
+// en quinconce, assez large pour couvrir ses voisines), et sur une case sur trois environ un éclat s'allume et s'éteint à
+// son rythme. M : l'île ; shown(x, y) : 0 à 1, ce qui se voit de la case (le Voile : loop.js, lightGate) ; k : givreOf
+export function drawGivre(ctx, M, view, t, k, shown) {
+  if (k <= 0.02) return;
+  const mask = herbMask(M), n = M.n;
+  const { x0, x1, y0, y1 } = casesVues(view, n);
+  const img = tacheGivre(), eclats = new Path2D();
+  const part = 0.35 * qualiteFx();
+  ctx.save();
+  ctx.globalAlpha = 0.3 * k;
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      if (!mask[y * n + x] || shown(x, y) < 0.5) continue;
+      const c = worldOf(x, y, M.surface(x, y));
+      if ((x + y) % 2 === 0) ctx.drawImage(img, c.x - TW * 1.05, c.y - TH * 1.05, TW * 2.1, TH * 2.1);
+      if (hash(x, y * 3.7) > part) continue;
+      const eclat = Math.max(0, Math.sin(t * (1.5 + hash(x, y)) + hash(y, x) * 6)) ** 6;
+      if (eclat < 0.05) continue;
+      const ex = c.x + (hash(x + 1, y) - 0.5) * TW * 0.6, ey = c.y + (hash(x, y + 1) - 0.5) * TH * 0.6, r = 1.6 + 1.8 * eclat;
+      eclats.moveTo(ex - r, ey); eclats.lineTo(ex + r, ey);
+      eclats.moveTo(ex, ey - r * 0.6); eclats.lineTo(ex, ey + r * 0.6);
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = `rgba(255,255,255,${(0.9 * k).toFixed(3)})`;
+  ctx.lineWidth = 1;
+  ctx.stroke(eclats);
+  ctx.restore();
 }

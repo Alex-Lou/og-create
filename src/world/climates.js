@@ -80,6 +80,25 @@ const nappeImg = () => texture('nappe-du-marais', 128, 64, g => {
   g.drawImage(rond('nappe-ronde', 128, [[0, 'rgba(236,242,236,1)'], [0.5, 'rgba(236,242,236,.5)'], [1, 'rgba(236,242,236,0)']]), 0, 0);
 });
 
+// La neige qui tombe sur un carreau (celle des cimes, et celle de l'hiver : lumiere/saisons.js) : n flocons à pleine
+// qualité, chacun sa place au sol (ici(x, y) : il tombe là), qui descendent en se balançant et dérivent un peu avec le
+// vent ; a : leur force
+export function drawFlocons(ctx, T, t, ici, a, n) {
+  ctx.fillStyle = `rgba(255,255,255,${(0.9 * a).toFixed(3)})`;
+  ctx.beginPath();
+  for (let k = 0, nb = selonQualite(n); k < nb; k++) {
+    const x0 = T.X + hash(T.n + k, 1) * TUILE, y0 = T.Y + hash(T.n + k, 2) * TUILE;
+    if (!ici(x0, y0)) continue;
+    const ph = frac(t / (5 + hash(T.n + k, 3) * 4) + hash(T.n + k, 4));
+    const z = 150 * (1 - ph);
+    const x = x0 + Math.sin(t * 0.9 + k) * 6 + ph * 18;
+    const r = 1.1 + hash(T.n + k, 5) * 1.4;
+    ctx.moveTo(x + r, y0 - z);
+    ctx.arc(x, y0 - z, r, 0, Math.PI * 2);
+  }
+  ctx.fill();
+}
+
 // Le dégradé d'un rai de la canopée (de 220 au-dessus du sol jusqu'au sol), fait une fois par contexte de dessin
 const rais = new WeakMap();
 function degradeRai(ctx) {
@@ -99,19 +118,7 @@ function degradeRai(ctx) {
 const AIR = {
   cimes: {
     air(ctx, T, t, ici, nuit, a) {
-      ctx.fillStyle = `rgba(255,255,255,${(0.9 * a).toFixed(3)})`;
-      ctx.beginPath();
-      for (let k = 0, nb = selonQualite(60); k < nb; k++) {
-        const x0 = T.X + hash(T.n + k, 1) * TUILE, y0 = T.Y + hash(T.n + k, 2) * TUILE;
-        if (!ici(x0, y0)) continue;
-        const ph = frac(t / (5 + hash(T.n + k, 3) * 4) + hash(T.n + k, 4));
-        const z = 150 * (1 - ph);
-        const x = x0 + Math.sin(t * 0.9 + k) * 6 + ph * 18;
-        const r = 1.1 + hash(T.n + k, 5) * 1.4;
-        ctx.moveTo(x + r, y0 - z);
-        ctx.arc(x, y0 - z, r, 0, Math.PI * 2);
-      }
-      ctx.fill();
+      drawFlocons(ctx, T, t, ici, a, 60);
     }
   },
   landes: {
