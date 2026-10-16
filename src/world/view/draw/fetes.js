@@ -11,9 +11,10 @@ import { GLYPH } from '@/game/resources';
 import { CLIMATE_NAMES } from '@/world/climates';
 
 export default {
-  // Un bâtiment vient de gagner un palier (de from à site.level) : sa fête, à son tour
-  celebrate(site, from) {
-    const fete = { id: `${site.id}:${site.level}`, kind: kindOf(site.level), site: site.id, from, level: site.level, name: site.name };
+  // Un bâtiment vient de gagner un palier (de from à site.level ; fromLook : le dessin qu'il portait, le pré-ponton) : sa
+  // fête, à son tour
+  celebrate(site, from, fromLook) {
+    const fete = { id: `${site.id}:${site.level}`, kind: kindOf(site.level), site: site.id, from, fromLook, level: site.level, name: site.name };
     enqueue(this.fetes, fete, performance.now()).forEach(f => this.startFete(f));
   },
   // Une découverte (un quartier, un lieu : l'id commence par « quartier: » ou « lieu: », il choisit le mot), à un point
@@ -38,7 +39,7 @@ export default {
       return;
     }
     if (!fete.site) return;
-    this.raises.set(fete.site, { at: fete.start, from: fete.from });
+    this.raises.set(fete.site, { at: fete.start, from: fete.from, look: fete.fromLook });
     if (fete.kind === 'grand') {
       const at = this.feteAt(fete);
       if (at) this.glideTo({ x: at.x, y: at.y - at.top * 0.4, s: Math.max(this.cam.s, 1.25) }, 900);

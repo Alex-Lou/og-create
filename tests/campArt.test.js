@@ -1,7 +1,7 @@
 // Le camp des naufragés (design/bibliotheque/svg/decor/camp, camp.json) dans le jeu : chaque dessin que le serveur peut
 // envoyer (world/camp.js : art) existe, au cadre du jeu × 1,25 ; un dessin animé change d'image à sa cadence
 import { describe, it, expect } from 'vitest';
-import { campLayer, campLayers, campLights, campPerches, campShadow, campName, eggLayer, campHearth } from '@/world/campArt';
+import { campLayer, campLayers, campLights, campPerches, campShadow, campName, eggLayer, campHearth, siteLook } from '@/world/campArt';
 import CAMP from '../design/bibliotheque/svg/decor/camp/camp.json';
 import POULES from '../design/bibliotheque/svg/decor/camp/poules/poules.json';
 
@@ -37,6 +37,17 @@ describe('camp des naufragés', () => {
     }
     expect(campHearth('cannelle_debris')).toEqual({ x: 3 * 1.3, y: -9.5 * 1.3, r: 36 * 1.3 });
     expect([campHearth('hirondelle'), campHearth('aster_debris'), campHearth('cage_ouverte')]).toEqual([null, null, null]);
+  });
+
+  it('le Ponton au palier I d’une île à la plage porte le pré-ponton de Lorena (state.sites : look) : son dessin animé, sa vignette', () => {
+    const look = siteLook('preponton');
+    expect(look.art).toBe('aster_preponton');
+    expect(look.thumb).toMatch(/aster_preponton_1\.svg/);
+    const [x, y, w, h] = CAMP.objets.aster_preponton.cadre;
+    expect(campLayer(look.art).make().box).toEqual({ x: x / 1.25, y: y / 1.25, w: w / 1.25, h: h / 1.25 });
+    // (8 images, 160 ms chacune)
+    expect(new Set(Array.from({ length: 8 }, (_, i) => campLayer(look.art, i * 0.16 + 0.01).key)).size).toBe(8);
+    expect([siteLook(undefined), siteLook('autre')]).toEqual([null, null]);
   });
 
   it('un dessin animé suit sa cadence ; un dessin inconnu ne donne rien', () => {

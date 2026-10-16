@@ -129,10 +129,10 @@ export default {
       }
       // Un niveau gagné depuis le dernier état : c'est la fête (le bâtiment s'élève sous les yeux du joueur : fetes.js)
       if (this.state) {
-        const before = new Map(this.state.sites.map(site => [site.id, site.level]));
+        const before = new Map(this.state.sites.map(site => [site.id, site]));
         state.sites.forEach(site => {
-          const from = before.get(site.id);
-          if (from !== undefined && site.level > from) this.celebrate(site, from);
+          const was = before.get(site.id);
+          if (was && site.level > was.level) this.celebrate(site, was.level, was.look);
         });
       }
       // Expédition revenue : le quartier qu'elle a découvert se dévoile (nom, climat, relief)

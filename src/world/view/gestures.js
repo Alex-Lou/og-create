@@ -10,7 +10,7 @@ import { askOf } from '@/world/needs';
 import { LABEL } from '@/game/resources';
 import { roman } from '@/utils/roman';
 import { buildingThumb } from '@/world/buildingArt';
-import { campInfo, campScale } from '@/world/campArt';
+import { campInfo, campScale, siteLook } from '@/world/campArt';
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
 import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
@@ -717,8 +717,10 @@ export default {
     return { x: rect.left + x, y: rect.top + y };
   },
   // Vignette d'un bâtiment (son dessin actuel) pour sa fiche : celui de la bibliothèque, sous son skin, sa teinte ou sa
-  // pièce rare
+  // pièce rare ; le dessin du camp qu'il porte (le pré-ponton : campArt.js, siteLook)
   artOf(site) {
+    const camp = site.level ? siteLook(site.look) : null;
+    if (camp) return camp.thumb;
     return buildingThumb(site.id, site.level, site.level ? 0 : this.stageOf(site), site.level ? site.skin || '' : '');
   }
 };

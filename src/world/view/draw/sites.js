@@ -23,7 +23,7 @@ import { craftLayers } from '@/world/craftSprites';
 import { WALL_LOOKS } from '@/world/wallSprites';
 import { depositWait, lockOf } from '@/world/finds';
 import { depositLayer } from '@/world/depositSprites';
-import { campLayers, hasLayers, campShadow, campReflet } from '@/world/campArt';
+import { campLayer, campLayers, hasLayers, campShadow, campReflet, siteLook } from '@/world/campArt';
 import { refletDuPhare, drawPhareReflet } from '@/world/phareLumiere';
 import { glitterOf } from '@/world/rivage';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
@@ -111,7 +111,9 @@ export default {
     // Le dessin de la bibliothèque (partie fixe, bloc qui bouge, voilier), sous un skin dessiné, une teinte ou celle
     // d'une pièce rare (son accessoire animé : drawItems)
     const art = buildingArt(site.id, site.level, skin);
-    const body = this.siteBody(site.id, site.level, skin);
+    const body = this.siteBody(site.id, site.level, skin, site.look);
+    // (le pré-ponton de Lorena : le dessin de son camp, animé, à la place de celui du bâtiment : campArt.js, siteLook)
+    const camp = siteLook(site.look);
     const span = site.w / 2;
     if (ms < RAISE_END) {
       // Le chantier vivant (world/fetes.js) : l'échafaudage se monte autour de l'ancien état qui tremble et se tasse,
@@ -121,7 +123,7 @@ export default {
       const { hw, hh, top } = this.siteAt(site);
       const seed = site.id.length * 13 + site.level;
       drawScaffold(ctx, c.x, c.y, hw, hh, top, ms, 'back');
-      const was = shape.old ? this.siteBody(site.id, raise.from || 0, skin) : null;
+      const was = shape.old ? this.siteBody(site.id, raise.from || 0, skin, raise.look) : null;
       const sprite = shape.old ? was : body;
       if (sprite) {
         ctx.save();
@@ -142,13 +144,17 @@ export default {
     }
     // Articles de la boutique : ceux de derrière avant le bâtiment, les autres après lui
     this.drawItems(ctx, site, c, t, now, repaint, true);
-    if (body) this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windOf(t, site.x, site.y), repaint, `site:${site.id}`, true);
-    // Parties vivantes du palier (flamme, jets d'eau, ailes de moulin, roue…), puis le voilier bercé du Ponton
-    if (art && art.anim) {
+    if (camp) {
+      const layer = campLayer(camp.art, this.reduced() ? 0 : t);
+      if (layer) drawSprite(ctx, layer.key, layer.make, c.x, c.y, repaint, `site:${site.id}`);
+    } else if (body) this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windOf(t, site.x, site.y), repaint, `site:${site.id}`, true);
+    // Parties vivantes du palier (flamme, jets d'eau, ailes de moulin, roue…), puis le voilier bercé du Ponton (pas
+    // avant que le Bateau soit écrit : site.boat)
+    if (!camp && art && art.anim) {
       const frame = art.anim.frame(Math.floor((t * 1000) / art.anim.ms) % art.anim.n);
       drawSprite(ctx, frame.key, frame.make, c.x, c.y, repaint, `site:${site.id}:anim`);
     }
-    if (look.boat && art && art.boat) {
+    if (!camp && look.boat && art && art.boat && site.boat !== false) {
       const [bx, by] = P(...look.boat, 0);
       ctx.save();
       ctx.translate(c.x + bx, c.y + by + Math.sin(t * 1.4) * 1.6);
@@ -161,9 +167,12 @@ export default {
     if (pose) ctx.restore();
   },
   // Corps d'un bâtiment à un palier (0 : le chantier tout prêt), { key, make } pour le cache des sprites : la partie fixe
-  // du dessin de la bibliothèque (sous un skin dessiné, une teinte ou celle d'une pièce rare) ; null si elle ne l'a pas
-  siteBody(siteId, level, skin) {
+  // du dessin de la bibliothèque (sous un skin dessiné, une teinte ou celle d'une pièce rare), ou la première image du
+  // dessin du camp qu'il porte (look : le pré-ponton) ; null si elle ne l'a pas
+  siteBody(siteId, level, skin, look) {
     if (!level) return chantierArt(2);
+    const camp = siteLook(look);
+    if (camp) return campLayer(camp.art);
     const art = buildingArt(siteId, level, skin);
     return art ? art.base : null;
   },

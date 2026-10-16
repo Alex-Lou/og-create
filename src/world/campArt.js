@@ -5,6 +5,7 @@
 // coincée sous les rochers (elle remue), puis ouverte ; l'œuf au sol, près de la poule qui l'a pondu.
 import CAMP from '../../design/bibliotheque/svg/decor/camp/camp.json';
 import POULES from '../../design/bibliotheque/svg/decor/camp/poules/poules.json';
+import PREPONTON_THUMB from '../../design/bibliotheque/svg/decor/camp/coins/aster/aster_preponton_1.svg?url';
 import { librarySprite, frameAt } from './library';
 import { NAMES, LIBRARY_NAMES } from './faces';
 import { CAMP_LINES } from '@/texts/world/camp';
@@ -41,6 +42,11 @@ export function campLayer(art, t = 0) {
   if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], boxOf(entry.cadre, scaleOf(art))));
   return { key: `camp-${art}-${f}`, make: makes.get(path) };
 }
+// Le dessin du camp qu'un bâtiment porte à la place du sien (state.sites : look ; choix de l'auteur, 16 oct. : au palier I
+// d'une île à la plage, le Ponton est le pré-ponton que Lorena bricole seule avant que Nathan ne l'aide) : { art, thumb }
+// (thumb : sa vignette, pour la fiche du bâtiment), ou null
+const SITE_LOOKS = { preponton: { art: 'aster_preponton', thumb: PREPONTON_THUMB } };
+export const siteLook = look => SITE_LOOKS[look] || null;
 // Le foyer d'un élément du camp, à sa taille sur l'île : { x, y } (le cœur de la flamme, depuis l'ancre), r (le rayon
 // de sa lumière) ; null s'il n'a pas de feu
 export function campHearth(art) {
