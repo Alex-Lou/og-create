@@ -74,66 +74,81 @@ const pt = q => `${r2(q[0])},${r2(q[1])}`;
 const decaler = (d, kx, ky = 0) => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(+x + kx)},${r2(+y + ky)}`);
 
 // ---- les bras ----
-// Le bras : de l'épaule a à la main h, deux os (le bras, l'avant-bras) de longueur fixe ; le coude plie du côté s (+1 /
-// -1). Un membre effilé, souple (la ligne de membres.js), cerné ; la peau, l'ombre du côté du corps, une veine de lumière.
-// main : 'repos' (la main longue, les doigts joints), 'paume' (ouverte, vers nous), 'coupe' (au creux, vers le haut),
-// 'tendue' (vers l'avant) ou du SVG ; voile : le voile qui pend du bras
-const L1 = 16.2, L2 = 15.6;
+// Le bras d'elfe, gracieux : de l'épaule a à la main h, deux os (le bras, l'avant-bras) de longueur fixe ; le coude plie
+// du côté s (+1 / -1). Un membre galbé et fin : son contour suit une courbe douce (pas une ligne brisée), le haut du
+// bras rond, le coude adouci, l'avant-bras qui s'affine jusqu'au poignet ; la peau, l'ombre du côté du corps, une veine
+// de lumière, un fil d'argent au poignet.
+// main : 'repos' (la main longue, les doigts joints, un peu courbés), 'paume' (ouverte, les doigts vers le haut), 'coupe'
+// (au creux, vers le haut), 'tendue' (vers l'avant) ou du SVG ; voile : la manche d'ange, une étoffe transparente qui
+// tombe de l'avant-bras, par son poids (vers le bas, quelle que soit la pose)
+const L1 = 13, L2 = 12.4;
+// une courbe douce par une suite de points : des quadratiques par les milieux
+const courbe = (pts, debut = 'M') => {
+  let d = `${debut}${pt(pts[0])}`;
+  for (let i = 1; i < pts.length - 1; i++) d += ` Q${pt(pts[i])} ${pt([(pts[i][0] + pts[i + 1][0]) / 2, (pts[i][1] + pts[i + 1][1]) / 2])}`;
+  return d + ` L${pt(pts[pts.length - 1])}`;
+};
 function bras(K, a, h, s, { main = 'repos', voile = true, vivante = true, nuit = 0 } = {}) {
   const r = ik(a, h, L1, L2, s), e = r.milieu, b = r.bout;
   const pts = ligneBras(a, e, b);
-  // la ligne, ses longueurs cumulées, ses normales
+  // la ligne, ses longueurs cumulées, sa largeur : le haut du bras rond (3,5), le coude (2,6), le gras de l'avant-bras
+  // (2,7), le poignet fin (1,7)
   const cum = [0];
   for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
-  const tot = cum[cum.length - 1] || 1;
-  const larg = t => (t < 0.5 ? 3.8 - t * 1.6 : 3 - (t - 0.5) * 1.4);
+  const tot = cum[cum.length - 1] || 1, tc = L1 / (L1 + L2);
+  const larg = t => (t < tc ? 3.5 - (t / tc) * 0.9 : (() => { const u = (t - tc) / (1 - tc); return u < 0.3 ? 2.6 + u / 0.3 * 0.1 : 2.7 - (u - 0.3) / 0.7 * 1; })());
   const gauche = [], droite = [];
   pts.forEach((q, i) => {
     const p = pts[Math.max(0, i - 1)], n = pts[Math.min(pts.length - 1, i + 1)], dx = n[0] - p[0], dy = n[1] - p[1], d = Math.hypot(dx, dy) || 1;
     const w = larg(cum[i] / tot) / 2;
     gauche.push([q[0] - dy / d * w, q[1] + dx / d * w]); droite.push([q[0] + dy / d * w, q[1] - dx / d * w]);
   });
-  const contour = `M${gauche.map(pt).join(' L')} L${droite.reverse().map(pt).join(' L')} Z`;
-  // le voile : une manche ample et transparente, qui part du coude et s'évase jusque sous la main, en flottant (on voit
-  // le bras au travers) ; dessinée par-dessus le bras
+  const bordG = courbe(gauche), bordD = courbe([...droite].reverse());
+  const contour = `${bordG} ${bordD.replace(/^M/, 'L')} Z`;
+  // la manche d'ange : elle part du milieu de l'avant-bras, s'élargit et tombe sous le poignet, par son poids ; son bord
+  // ondule. Dessinée derrière le bras (on voit le bras devant, l'étoffe au travers de laquelle passe la lumière)
   let sv = '';
   if (voile) {
-    const sx = a[0] < 40 ? -1 : 1, ux = b[0] - e[0], uy = b[1] - e[1], d = Math.hypot(ux, uy) || 1, nx = -uy / d, ny = ux / d;
-    const o = (q, k, w) => [q[0] + ux / d * k + nx * w, q[1] + uy / d * k + ny * w];
-    const forme = f => `M${pt(o(e, -0.6, 2))} Q${pt(o(e, d * 0.5, 2.6 + f))} ${pt(o(b, 3.2, 4.2 + f))} Q${pt(o(b, 5.6, 1.4 + f))} ${pt(o(b, 6.4, -1.6 + f * 0.4))} Q${pt(o(b, 3.6, -3.6))} ${pt(o(b, 1.6, -4.4 - f * 0.6))} Q${pt(o(e, d * 0.5, -2.8))} ${pt(o(e, -0.6, -2))} Z`;
-    const va = forme(0), vb = forme(sx * 0.9);
-    sv = `<path d="${va}" fill="${K.veil}" fill-opacity=".32" stroke="${K.silverS}" stroke-width="0.45" stroke-linejoin="round">${vivante ? ondule(va, vb, '4.4s') : ''}</path>`
-      + `<path d="M${pt(o(b, 4.4, 3.2))} Q${pt(o(b, 6, 0))} ${pt(o(b, 2.4, -3.4))}" fill="none" stroke="${K.silver}" stroke-width="0.5" opacity=".9"/>`;
+    const sx = b[0] < e[0] ? -1 : b[0] > e[0] + 0.5 ? 1 : (a[0] < 40 ? -1 : 1);
+    const m = [(e[0] + b[0]) / 2, (e[1] + b[1]) / 2], low = Math.max(b[1], m[1]) + 9;
+    const forme = f => `M${pt([e[0] + (b[0] - e[0]) * 0.25, e[1] + (b[1] - e[1]) * 0.25])} Q${pt([m[0] - sx * 2.6, m[1] + 3])} ${pt([m[0] - sx * (3.4 + f), low - 1])} Q${pt([m[0] + sx * 0.4, low + 1.6 + f * 0.6])} ${pt([b[0] + sx * (2.2 - f * 0.4), low - 0.4])} Q${pt([b[0] + sx * 1.2, (b[1] + low) / 2])} ${pt(b)} Z`;
+    const va = forme(0), vb = forme(1);
+    sv = `<path d="${va}" fill="${K.veil}" fill-opacity=".42" stroke="${K.silverS}" stroke-width="0.4" stroke-linejoin="round">${vivante ? ondule(va, vb, '4.4s') : ''}</path>`;
   }
-  // l'ombre du côté du corps, la veine de lumière sur l'avant-bras
-  const ombre = `<path d="M${pts.map(q => pt([q[0] + (a[0] < 40 ? 0.7 : -0.7), q[1]])).join(' L')}" fill="none" stroke="${K.skinS}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`;
-  const veine = lueur(`M${pt(e)} Q${pt([(e[0] + b[0]) / 2 + 0.4, (e[1] + b[1]) / 2])} ${pt([b[0], b[1] - 0.6])}`, K.vein, 0.35, nuit ? 0 : 0.8);
-  const bracelet = (() => { const q = pts[pts.length - 3] || b; return E(q[0], q[1], 1.5, 0.75, K.silver, 0.5); })();
-  // le bras cerné sur ses deux bords seulement (pas de coupe à l'épaule : le mancheron la couvre)
-  const bords = `M${gauche.map(pt).join(' L')} L${droite.map(pt).join(' L')}`;
-  // le mancheron de la robe : il arrondit l'épaule et descend un peu sur le bras, bordé d'argent
+  // l'ombre du côté du corps, la veine de lumière sur l'avant-bras, le fil d'argent au poignet
+  const ombre = `<path d="${courbe(pts.map(q => [q[0] + (a[0] < 40 ? 0.6 : -0.6), q[1]]))}" fill="none" stroke="${K.skinS}" stroke-width="1" stroke-linecap="round" opacity=".6"/>`;
+  const veine = lueur(`M${pt(e)} Q${pt([(e[0] + b[0]) / 2 + 0.4, (e[1] + b[1]) / 2])} ${pt([b[0], b[1] - 0.6])}`, K.vein, 0.3, nuit ? 0 : 0.75);
+  const qw = pts[pts.length - 2] || b, aw = Math.atan2(b[1] - qw[1], b[0] - qw[0]) * 180 / Math.PI;
+  const poignet = `<g transform="translate(${r2(b[0] + (qw[0] - b[0]) * 0.3)} ${r2(b[1] + (qw[1] - b[1]) * 0.3)}) rotate(${r2(aw + 90)})">${E(0, 0, 1.15, 0.42, K.silver, 0.45)}</g>`;
+  // le mancheron de la robe : il arrondit l'épaule, bordé d'argent
   const u0 = [pts[1][0] - a[0], pts[1][1] - a[1]], d0 = Math.hypot(u0[0], u0[1]) || 1, ux0 = u0[0] / d0, uy0 = u0[1] / d0;
   const q = (k, m) => [a[0] + ux0 * k - uy0 * m, a[1] + uy0 * k + ux0 * m], w0 = larg(0) / 2;
-  const manch = `M${pt(q(-1.4, -(w0 + 0.5)))} Q${pt(q(-3.6, 0))} ${pt(q(-1.4, w0 + 0.5))} L${pt(q(4.4, w0 + 1.1))} Q${pt(q(5.4, 0))} ${pt(q(4.4, -(w0 + 1.1)))} Z`;
-  const mancheron = P(manch, K.gown, 0.8) + `<path d="M${pt(q(4.4, w0 + 1.1))} Q${pt(q(5.4, 0))} ${pt(q(4.4, -(w0 + 1.1)))}" fill="none" stroke="${K.silverS}" stroke-width="0.7"/>`
-    + `<path d="M${pt(q(-0.6, -w0 * 0.4))} Q${pt(q(1.6, -w0 * 0.6))} ${pt(q(3.4, -w0 * 0.3))}" fill="none" stroke="${K.gownH}" stroke-width="0.6" stroke-linecap="round"/>`;
-  return `<path d="${contour}" fill="${K.skin}"/><path d="${bords}" fill="none" stroke="${OUT}" stroke-width="0.85" stroke-linejoin="round"/>` + ombre + veine + bracelet + mainDe(K, b, e, main) + sv + mancheron;
+  const manch = `M${pt(q(-1.2, -(w0 + 0.4)))} Q${pt(q(-3.2, 0))} ${pt(q(-1.2, w0 + 0.4))} Q${pt(q(1.6, w0 + 1.2))} ${pt(q(3.6, w0 + 0.7))} Q${pt(q(4.4, 0))} ${pt(q(3.6, -(w0 + 0.7)))} Q${pt(q(1.6, -(w0 + 1.2)))} ${pt(q(-1.2, -(w0 + 0.4)))} Z`;
+  const mancheron = P(manch, K.gown, 0.75) + `<path d="M${pt(q(3.6, w0 + 0.7))} Q${pt(q(4.4, 0))} ${pt(q(3.6, -(w0 + 0.7)))}" fill="none" stroke="${K.silverS}" stroke-width="0.6"/>`;
+  return sv + `<path d="${contour}" fill="${K.skin}"/><path d="${bordG} ${bordD.replace(/^M/, 'L')}" fill="none" stroke="${OUT}" stroke-width="0.75" stroke-linejoin="round"/>`
+    + ombre + veine + mainDe(K, b, qw, main) + poignet + mancheron;
 }
-// La main d'elfe : longue, les doigts fins ; orientée selon l'avant-bras (de e vers b)
+// La main d'elfe : longue et fine, les doigts effilés ; orientée selon la fin de l'avant-bras (de e vers b)
 function mainDe(K, b, e, kind) {
   if (typeof kind === 'string' && kind.startsWith('<')) return kind;
   const a = Math.atan2(b[1] - e[1], b[0] - e[0]) * 180 / Math.PI - 90;
   let s;
   if (kind === 'paume') {
-    s = P('M-1.4,-1.2 Q-1.6,1.2 -1.1,2.4 L-1.1,4.6 Q-0.8,5.2 -0.5,4.6 L-0.4,2.9 L-0.2,5.2 Q0.1,5.8 0.4,5.2 L0.5,2.9 L0.8,4.8 Q1.1,5.3 1.4,4.7 L1.3,2.4 Q1.8,1.4 2.2,0.6 Q2.4,-0.2 1.8,-0.4 L1.2,0.4 L1.4,-1.2 Z', K.skin, 0.6);
-  } else if (kind === 'coupe') {
-    s = P('M-1.6,-0.8 Q-2.2,2.2 0,2.8 Q2.2,2.2 1.6,-0.8 Q0,0.4 -1.6,-0.8 Z', K.skin, 0.6);
-  } else if (kind === 'tendue') {
-    s = P('M-1.2,-1 Q-1.5,2 -0.9,4.4 Q0,5.4 0.9,4.4 Q1.5,2 1.2,-1 Z', K.skin, 0.6) + L([-0.3, 2.4], [-0.3, 4.4], K.skinS, 0.3) + L([0.35, 2.4], [0.35, 4.4], K.skinS, 0.3);
-  } else {
-    s = P('M-1.1,-1 Q-1.4,1.6 -0.8,3.9 Q0,4.8 0.8,3.9 Q1.4,1.6 1.1,-1 Z', K.skin, 0.6) + L([0, 2.2], [0, 3.9], K.skinS, 0.3);
+    // ouverte, les doigts vers le haut, un peu écartés, le pouce de côté
+    s = P('M-1.2,0.6 Q-1.5,-1.4 -1.1,-2.6 L-1.15,-4.6 Q-0.9,-5.3 -0.6,-4.6 L-0.45,-3 L-0.3,-5.3 Q0,-5.9 0.3,-5.3 L0.4,-3 L0.65,-5 Q0.95,-5.5 1.2,-4.9 L1.15,-2.5 Q1.7,-2.4 2.3,-3.2 Q2.6,-2.8 2,-1.6 Q1.5,-0.4 1.2,0.6 Z', K.skin, 0.55);
+    return `<g transform="translate(${r2(b[0])} ${r2(b[1] + 0.4)})">${s}</g>`;
   }
-  return `<g transform="translate(${r2(b[0])} ${r2(b[1])}) rotate(${r2(kind === 'paume' ? 180 : a)})">${s}</g>`;
+  if (kind === 'coupe') {
+    s = P('M-1.7,-0.6 Q-2.2,2 -0.6,2.9 Q0.6,3.3 1.7,2.4 Q2.4,1.2 1.7,-0.6 Q0.2,0.5 -1.7,-0.6 Z', K.skin, 0.55) + `<path d="M-1,1.4 Q0,2 1,1.3" fill="none" stroke="${K.skinS}" stroke-width="0.3"/>`;
+  } else if (kind === 'tendue') {
+    s = P('M-1,-0.6 Q-1.3,2 -0.8,4.6 Q0,5.6 0.8,4.6 Q1.3,2 1,-0.6 Z', K.skin, 0.55) + L([-0.25, 2.6], [-0.25, 4.6], K.skinS, 0.28) + L([0.3, 2.6], [0.3, 4.6], K.skinS, 0.28);
+  } else {
+    // au repos : la paume, les doigts joints qui s'effilent et se courbent un peu, le pouce
+    s = P('M-0.95,-0.6 Q-1.25,1.4 -0.9,2.8 Q-0.7,4.2 0,5.2 Q0.5,4.4 0.8,3 Q1.25,1.4 0.95,-0.6 Z', K.skin, 0.55)
+      + `<path d="M-0.15,2.6 Q0,3.8 0.2,4.6" fill="none" stroke="${K.skinS}" stroke-width="0.28" stroke-linecap="round"/>`
+      + P('M0.85,0.8 Q1.7,1.6 1.4,2.6 Q1,2.4 0.8,1.8 Z', K.skin, 0.45);
+  }
+  return `<g transform="translate(${r2(b[0])} ${r2(b[1])}) rotate(${r2(a)})">${s}</g>`;
 }
 
 // ---- la chevelure ----
@@ -366,7 +381,7 @@ function lierre(K, eclos = 0, k = 1, dos = false) {
 //   mains, à gauche et à droite de l'écran ; un 4e terme false : sans le voile du bras) ; o.under, o.over : ce que le geste dessine derrière, devant ; o.glow : la
 //   lueur (0 → 1.4) ; o.pierre : 0 → 1 (le gris de la statue, l'éveil) ; o.lierre : 0 → 1, la mousse et le lierre du
 //   Voile (o.eclos : 0 → 1, ses fleurs s'ouvrent) ; o.fleurs : les fleurs au sol ;
-//   o.brasDevant : les bras par-dessus les mèches et le visage (un geste qui les lève devant elle)
+//   o.brasDevant : false, les bras sous les mèches (ils passent par-dessus, sinon)
 function anya(c, view, o = {}) {
   const S = SAISONS[c.saison || 'ete'], nuit = o.pierre >= 0.99, voilee = (o.pierre || 0) > 0;
   const base = { ...C, ...(c.pal || {}) };
@@ -392,7 +407,10 @@ function anya(c, view, o = {}) {
   // le corps, qui flotte (et se penche)
   let g = '';
   const shL = [31.2 + kb, 48.6], shR = [48.8 + kb * (se ? 1.5 : 1), 48.6];
-  const repos = { g: [[26.4 + kb, 79.4], -1, 'repos'], d: [[53.6 + kb, 79.4], 1, 'repos'] };
+  // au repos, les mains jointes devant elle, à la taille ; les bras passent par-dessus les mèches (o.brasDevant false :
+  // dessous)
+  const repos = { g: [[38.4 + kb, 69.6], 1, 'repos'], d: [[41.6 + kb, 69.6], -1, 'repos'] };
+  const devant = o.brasDevant !== false;
   const B = { ...repos, ...(o.bras || {}) };
   const unBras = ([h, sgn, forme, voile = true], a) => bras(K, a, h, sgn, { main: forme, voile, vivante, nuit });
   if (dos) {
@@ -410,11 +428,10 @@ function anya(c, view, o = {}) {
     g += robe(K, id, kb, sw, vivante, false) + cou(K, kx * 0.6, nuit);
     if (o.lierre) g += lierre(K, o.eclos || 0, o.lierre);
     if (se) g += unBras(B.d, shR);
-    g += (o.brasDevant ? '' : unBras(B.g, shL) + (se ? '' : unBras(B.d, shR)));
-    g += mechesDevant(K, V.X, sw, vivante);
+    const lesBras = unBras(B.g, shL) + (se ? '' : unBras(B.d, shR));
+    g += (devant ? '' : lesBras) + mechesDevant(K, V.X, sw, vivante) + (devant ? lesBras : '');
     g += oreilles(K, view) + tete(c, K, view, o.blink && expr === 'veille' ? 'cligne' : expr, o.n || 0, nuit);
     g += couronne(K, kx, mir ? -1 : 1, nuit, o.n || 0);
-    if (o.brasDevant) g += unBras(B.g, shL) + (se ? '' : unBras(B.d, shR));
   }
   g += o.over || '';
   const lean = o.lean ? ` rotate(${r2(o.lean)} 40 90)` : '';

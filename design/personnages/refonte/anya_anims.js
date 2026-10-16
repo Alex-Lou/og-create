@@ -22,8 +22,8 @@ const lerp = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
 const kbOf = vue => (vue === 'se' ? -0.8 : 0);
 // vers l'avant, selon la vue : de trois quarts avant elle va vers la gauche de l'écran, de dos vers la droite
 const avant = vue => (vue === 'se' ? -1 : vue === 'ne' ? 1 : 0);
-// les mains au repos (anya_refonte.js : repos)
-const REPOS = { g: [26.4, 79.4], d: [53.6, 79.4] };
+// les mains au repos, jointes devant elle (anya_refonte.js : repos)
+const REPOS = { g: [38.4, 69.6], d: [41.6, 69.6] };
 // une image d'Anya : la saison de c, les réglages de l'image (l'état est celui de l'animation : etat, ci-dessous)
 const image = (c, v, n, o = {}) => anya(c, v, { n, lev: 2, ...o });
 
@@ -46,6 +46,31 @@ const onde = (k, y = 66) => `<circle cx="40" cy="${y}" r="${r2(8 + k * 28)}" fil
 // les fleurs qui éclosent au sol (k : leur ouverture), à des places fixes
 const fleursSol = (places, k) => places.map(([x, y, r], i) => (k[i] > 0.05 ? fleur(x, y, r * (0.5 + 0.5 * k[i]), i % 2 ? '#FFFFFF' : '#CFE3FF', '#FFE7A3') : '')).join('');
 
+// Son écriture de lune (choix de l'auteur, 16 oct.) : des glyphes inventés pour elle, une écriture d'elfe très ancienne
+// que personne ne sait lire ; chacun fait d'un croissant, d'arcs, de points et de petites étoiles reliées. Trois
+// phrases (BULLES), chacune de quelques glyphes
+const ENCRE = '#3E5A86';
+const GLYPHES = [
+  x => `<path d="M${r2(x - 1)},-2.2 A2.2,2.2 0 1,0 ${r2(x - 1)},2.2 A1.7,2.2 0 1,1 ${r2(x - 1)},-2.2 Z" fill="${ENCRE}"/>` + E(x + 1.6, -1.4, 0.45, 0.45, ENCRE, 0),
+  x => `<path d="M${r2(x - 2)},1.6 Q${r2(x)},-3 ${r2(x + 2)},1.6" fill="none" stroke="${ENCRE}" stroke-width="0.7" stroke-linecap="round"/>` + E(x, 2.2, 0.5, 0.5, ENCRE, 0),
+  x => `<path d="M${r2(x - 1.8)},-1.8 L${r2(x)},0.6 L${r2(x + 1.8)},-1.2 M${r2(x)},0.6 L${r2(x)},2.4" fill="none" stroke="${ENCRE}" stroke-width="0.55" stroke-linecap="round"/>` + [[x - 1.8, -1.8], [x + 1.8, -1.2], [x, 2.4]].map(([a, b]) => E(a, b, 0.45, 0.45, ENCRE, 0)).join(''),
+  x => `<circle cx="${r2(x)}" cy="0" r="1.7" fill="none" stroke="${ENCRE}" stroke-width="0.6"/>` + E(x, 0, 0.5, 0.5, ENCRE, 0) + `<path d="M${r2(x)},-1.7 L${r2(x)},-3" stroke="${ENCRE}" stroke-width="0.55" stroke-linecap="round"/>`,
+  x => `<path d="M${r2(x - 2)},-0.4 Q${r2(x - 1)},-2.4 ${r2(x)},-0.4 Q${r2(x + 1)},1.6 ${r2(x + 2)},-0.4" fill="none" stroke="${ENCRE}" stroke-width="0.6" stroke-linecap="round"/>` + E(x, -2.4, 0.4, 0.4, ENCRE, 0) + E(x, 1.8, 0.4, 0.4, ENCRE, 0),
+  x => etoile(x, -0.2, 1.8, ENCRE) + `<path d="M${r2(x - 2.2)},2.2 L${r2(x + 2.2)},2.2" stroke="${ENCRE}" stroke-width="0.5" stroke-linecap="round"/>`,
+  x => `<path d="M${r2(x + 1)},-2.2 A2.2,2.2 0 1,1 ${r2(x + 1)},2.2 A1.7,2.2 0 1,0 ${r2(x + 1)},-2.2 Z" fill="${ENCRE}"/>` + `<path d="M${r2(x - 1.6)},-2 L${r2(x - 1.6)},2" stroke="${ENCRE}" stroke-width="0.55" stroke-linecap="round"/>`
+];
+const BULLES = [[0, 2, 4], [3, 1, 6, 5], [6, 4, 0]];
+// La bulle de son murmure : à côté de sa tête, tournée vers elle (sa pointe vers sa bouche) ; la phrase v, k glyphes
+// écrits (elle les dit l'un après l'autre) ; e : l'échelle (la bulle qui s'ouvre)
+function bulle(v, k, e = 1) {
+  const g = BULLES[v % BULLES.length], w = g.length * 5.6 + 4, x0 = 77 - w, y0 = 34;
+  const forme = `M${r2(x0 + 3)},${y0} L${r2(x0 + w - 3)},${y0} Q${r2(x0 + w)},${y0} ${r2(x0 + w)},${y0 + 3} L${r2(x0 + w)},${y0 + 8} Q${r2(x0 + w)},${y0 + 11} ${r2(x0 + w - 3)},${y0 + 11} L${r2(x0 + 6)},${y0 + 11} L${r2(x0 + 1)},${y0 + 14.6} L${r2(x0 + 3)},${y0 + 11} Q${r2(x0)},${y0 + 11} ${r2(x0)},${y0 + 8} L${r2(x0)},${y0 + 3} Q${r2(x0)},${y0} ${r2(x0 + 3)},${y0} Z`;
+  const glyphes = g.slice(0, k).map((gi, i) => GLYPHES[gi](x0 + 4.8 + i * 5.6)).join('');
+  return `<g transform="translate(${r2(x0)} ${y0 + 14.6}) scale(${r2(e)}) translate(${r2(-x0)} ${-(y0 + 14.6)})">`
+    + `<path d="${forme}" fill="#F4F8FF" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`
+    + `<g transform="translate(0 ${y0 + 5.6})">${glyphes}</g>` + (k >= g.length ? etoile(x0 + w - 1.4, y0 + 1.2, 1.2, '#BFE6FF') : '') + '</g>';
+}
+
 // Les animations : leurs images, la durée d'une image (s), les directions où elles se jouent, l'état où elles se jouent
 // (endormie sous le Voile : voile, et l'éveil qui en sort ; éveillée : toutes les autres), le contexte en jeu
 const ANIMS = {
@@ -65,7 +90,7 @@ const ANIMS = {
       const glow = [0, 0, 0.2, 0.5, 0.9, 1.4, 1.2, 1][n];
       const expr = n < 5 ? 'recueillie' : n === 5 ? 'veille' : 'bienveillante';
       const kb = kbOf(v), ouvre = [0, 0, 0, 0, 0, 0.6, 1, 0.3][n];
-      const bras = ouvre ? { g: [lerp([REPOS.g[0] + kb, REPOS.g[1]], [17 + kb, 68], ouvre), -1, ouvre > 0.5 ? 'paume' : 'repos'], d: [lerp([REPOS.d[0] + kb, REPOS.d[1]], [63 + kb, 68], ouvre), 1, ouvre > 0.5 ? 'paume' : 'repos'] } : undefined;
+      const bras = ouvre ? { g: [lerp([REPOS.g[0] + kb, REPOS.g[1]], [18 + kb, 70], ouvre), -1, ouvre > 0.5 ? 'paume' : 'repos'], d: [lerp([REPOS.d[0] + kb, REPOS.d[1]], [62 + kb, 70], ouvre), 1, ouvre > 0.5 ? 'paume' : 'repos'] } : undefined;
       // le Cercle fleurit sous elle, l'onde de lumière quand la couleur revient, des pétales qui tombent
       const fleurs = fleursSol([[24, 123.4, 1.4], [32, 124.8, 1.2], [48, 124.8, 1.2], [56, 123.4, 1.4], [40, 125.2, 1.5], [17, 122, 1.1], [63, 122, 1.1]], [0, 1, 2, 3, 4, 5, 6].map(i => Math.max(0, Math.min(1, (n - 1 - i * 0.5) / 2))));
       const s = image(c, v, n, { pierre, lierre, lev, eclos, glow, expr, bras, fleurs });
@@ -96,7 +121,7 @@ const ANIMS = {
     contexte: 'Elle lève la main : une lumière, des pétales qui montent. Sa Bénédiction sur l\'île (HISTOIRE.md § 6.14).',
     img: (c, v, n) => {
       const k = [0.35, 1, 1, 0.5][n], kb = kbOf(v);
-      const h = lerp([REPOS.g[0] + kb, REPOS.g[1]], [15 + kb, 56], k);
+      const h = lerp([REPOS.g[0] + kb, REPOS.g[1]], [11.6 + kb, 41], k);
       const over = k > 0.6 ? lumiere(h[0], h[1] - 4.6, 1 + n * 0.3) + [[-2.6, -9], [2.2, -11], [0, -14]].map(([dx, dy], i) => petale(h[0] + dx + (n - 1) * (i - 1), h[1] + dy - (n - 1) * 3, n * 50 + i * 90, i % 2 ? '#FFFFFF' : '#F7D6E6')).join('') + luciole(h[0] + 4, h[1] - 8 - n, 0.8) : '';
       return image(c, v, n, { lev: 2.4, expr: 'bienveillante', bras: { g: [h, -1, k > 0.6 ? 'paume' : 'repos'] }, over });
     }
@@ -105,13 +130,13 @@ const ANIMS = {
     nom: 'Créer', images: 4, dt: 0.5, dirs: DEVANT,
     contexte: 'Elle crée : ses mains en coupe, une lumière y naît, une pousse y fleurit, puis un petit oiseau bleu s\'envole. Ses créatures n\'existent qu\'avec elle.',
     img: (c, v, n) => {
-      const kb = kbOf(v), mx = 40 + kb, k = 1;
-      const g = lerp([REPOS.g[0] + kb, REPOS.g[1]], [36.8 + kb, 73], k), d = lerp([REPOS.d[0] + kb, REPOS.d[1]], [43.2 + kb, 73], k);
+      const kb = kbOf(v), mx = 40 + kb;
+      const g = [37.4 + kb, 64.6], d = [42.6 + kb, 64.6];
       let over = '';
-      if (n === 1) over = lumiere(mx, 70.4, 1.6);
-      if (n === 2) over = lumiere(mx, 71.2, 1.1) + pousse(mx, 71.6, 1);
-      if (n === 3) over = pousse(mx, 71.6, 1) + oiseau(mx + 9, 54, 1, 1) + etoile(mx + 3.4, 63, 0.8, '#FFFFFF') + etoile(mx + 6.2, 58.6, 0.6, '#FFFFFF');
-      return image(c, v, n, { lev: 2.2, expr: n < 2 ? 'recueillie' : 'bienveillante', brasDevant: true, bras: { g: [g, 1, 'coupe', false], d: [d, -1, 'coupe', false] }, over });
+      if (n === 1) over = lumiere(mx, 62, 1.6);
+      if (n === 2) over = lumiere(mx, 62.8, 1.1) + pousse(mx, 63.2, 1);
+      if (n === 3) over = pousse(mx, 63.2, 1) + oiseau(mx + 9, 46, 1, 1) + etoile(mx + 3.4, 55, 0.8, '#FFFFFF') + etoile(mx + 6.2, 50.6, 0.6, '#FFFFFF');
+      return image(c, v, n, { lev: 2.2, expr: n < 2 ? 'recueillie' : 'bienveillante', bras: { g: [g, 1, 'coupe'], d: [d, -1, 'coupe'] }, over });
     }
   },
   parler: {
@@ -119,7 +144,7 @@ const ANIMS = {
     contexte: 'Elle parle, doucement ; une main ouverte accompagne ses mots (« L\'île le sent. »).',
     img: (c, v, n) => {
       const kb = kbOf(v), k = [0, 0.7, 1, 0.4][n];
-      const bras = v === 'ne' ? undefined : { d: [lerp([REPOS.d[0] + kb, REPOS.d[1]], [56 + kb, 66], k), 1, k > 0.5 ? 'paume' : 'repos'] };
+      const bras = v === 'ne' ? undefined : { d: [lerp([REPOS.d[0] + kb, REPOS.d[1]], [57 + kb, 64], k), 1, k > 0.5 ? 'paume' : 'repos'] };
       return image(c, v, n, { lev: [2, 2.3, 2.5, 2.3][n], expr: n % 2 ? 'parle' : 'bienveillante', bras });
     }
   },
@@ -127,17 +152,23 @@ const ANIMS = {
     nom: 'Souffler', images: 4, dt: 0.4, dirs: DEVANT,
     contexte: 'Elle souffle sur le Grimoire (la Révélation), ou donne son Souffle quand on la croise : ses paumes ouvertes devant elle, elle souffle dessus, un souffle de lumière et de pétales part.',
     img: (c, v, n) => {
-      const kb = kbOf(v), k = 1, a = avant(v);
-      const g = lerp([REPOS.g[0] + kb, REPOS.g[1]], [37.2 + kb, 52.6], k), d = lerp([REPOS.d[0] + kb, REPOS.d[1]], [42.8 + kb, 52.6], k);
+      const kb = kbOf(v), a = avant(v);
+      const g = [37.6 + kb, 51.6], d = [42.4 + kb, 51.6];
       // le souffle part devant elle : vers nous de face (il descend et s'ouvre), vers la gauche de trois quarts
-      const sx = 40 + kb + a * 4, sy = 50;
+      const sx = 40 + kb + a * 4, sy = 47;
       const souffle = n >= 2 ? [0, 1, 2, 3, 4].map(i => {
         const p = (i + (n - 2) * 2.5) / 7;
         const x = sx + (a ? a * p * 26 : (i - 2) * p * 9), y = sy + (a ? (i - 2) * p * 4 : p * 18);
         return i % 2 ? petale(x, y, i * 70 + n * 30, i % 4 ? '#FFFFFF' : '#F7D6E6') : etoile(x, y, 0.9 - p * 0.3, '#FFFFFF');
       }).join('') + lueur(a ? `M${r2(sx)},${sy} Q${r2(sx + a * 12)},${sy - 2} ${r2(sx + a * 24)},${sy + 1}` : `M${r2(sx)},${sy} Q${r2(sx - 3)},${sy + 8} ${r2(sx)},${sy + 16}`, '#DCEEFF', 0.5, n === 2 ? 0.9 : 0.5) : '';
-      return image(c, v, n, { lev: 2.2, expr: n === 1 ? 'recueillie' : n === 2 ? 'parle' : 'bienveillante', brasDevant: true, bras: { g: [g, 1, 'coupe', false], d: [d, -1, 'coupe', false] }, over: souffle });
+      return image(c, v, n, { lev: 2.2, expr: n === 1 ? 'recueillie' : n === 2 ? 'parle' : 'bienveillante', bras: { g: [g, 1, 'coupe', false], d: [d, -1, 'coupe', false] }, over: souffle });
     }
+  },
+  murmure: {
+    nom: 'Le murmure', images: 4, dt: 0.42, dirs: TOUTES,
+    contexte: 'Rarement, quand on la touche pendant qu\'elle flotte : une bulle de son écriture de lune, que personne ne sait lire (trois phrases, c.murmure ; la règle est à brancher).',
+    img: (c, v, n) => image(c, v, n, { lev: [2.2, 2.5, 2.7, 2.5][n], expr: n % 2 ? 'parle' : 'bienveillante' })
+      + bulle(c.murmure || 0, [0, 1, 2, 4][n], n ? 1 : 0.6)
   },
   apparaitre: {
     nom: 'Apparaître', images: 6, dt: 0.26, dirs: TOUTES,
@@ -174,4 +205,4 @@ function dessiner(c, anim, direction, n) {
 
 for (const A of Object.values(ANIMS)) A.etat = A.etat || 'eveillee';
 
-module.exports = { ANIMS, DIRECTIONS, dessiner };
+module.exports = { ANIMS, DIRECTIONS, BULLES, dessiner };

@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { habiller, SAISONS } = require('./anya_tenues');
-const { ANIMS, DIRECTIONS, dessiner } = require('./anya_anims');
+const { ANIMS, DIRECTIONS, BULLES, dessiner } = require('./anya_anims');
 const { cerfLune } = require('./cerf_lune');
 
 let uid = 0;
@@ -20,12 +20,14 @@ const carte = (titre, svg, sous = '') => `<figure class="card">${svg}<figcaption
 
 const GROUPES = [
   ['La Révélation', ['voile', 'eveil', 'parler', 'souffler']],
-  ['Son errance', ['apparaitre', 'repos', 'flotter', 'benediction', 'creer', 'disparaitre']]
+  ['Son errance', ['apparaitre', 'repos', 'murmure', 'flotter', 'benediction', 'creer', 'disparaitre']]
 ];
 const ligne = nom => {
   const A = ANIMS[nom], c = habiller('ete', A.etat);
+  // (le murmure : ses trois phrases, de face, après ses directions)
+  const phrases = nom === 'murmure' ? `<div class="row">${BULLES.map((b, i) => carte(`Phrase ${i + 1}`, anim({ ...c, murmure: i }, nom, 'face'), `${b.length} glyphes`)).join('')}</div>` : '';
   return `<div class="anim"><div class="head"><h3>${A.nom}</h3><p>${A.contexte}</p><span class="mono">${A.images} images · ${Math.round(1 / A.dt)} images/s</span></div>`
-    + `<div class="row">${A.dirs.map(d => carte(DIRECTIONS[d].nom, anim(c, nom, d))).join('')}</div></div>`;
+    + `<div class="row">${A.dirs.map(d => carte(DIRECTIONS[d].nom, anim(c, nom, d))).join('')}</div>${phrases}</div>`;
 };
 const contexte = [
   ['Avant la Révélation : au centre du Cercle de menhirs', 'Endormie sous le Voile', '5 vues'],
@@ -34,6 +36,7 @@ const contexte = [
   ['La Révélation : elle souffle sur le Grimoire ; plus tard, son Souffle', 'Souffler', 'de face, trois quarts'],
   ['Son errance : à l\'aube ou au crépuscule, pour un court moment', 'Apparaître, puis Disparaître', '5 vues'],
   ['On la croise : elle attend', 'Repos', '5 vues'],
+  ['Rarement, quand on la touche pendant qu\'elle flotte', 'Le murmure : une bulle de son écriture de lune', '5 vues'],
   ['Elle va sur l\'île, des fleurs s\'ouvrent sur son chemin', 'Se déplacer, en flottant', '4 directions'],
   ['Sa Bénédiction sur l\'île', 'La bénédiction', 'de face, trois quarts'],
   ['Ses créatures, qui n\'existent qu\'avec elle', 'Créer', 'de face, trois quarts'],
