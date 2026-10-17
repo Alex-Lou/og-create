@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const { OUT, P, E, L, arm, frame } = require('./troupe');
-const { anyaVeille, cerfVeille, outils: { eclairer } } = require('./splash_anya');
+const { anyaVeille, cerfVeille, etincelle, outils: { eclairer, rayonne } } = require('./splash_anya');
 const { brumeHeroine } = require('./splash_brume');
 const { ileVivante } = require('./splash_ile');
 const { avatar } = require('../personnages/avatar.js');
@@ -55,39 +55,76 @@ const nuage = (id, x, y, k, a, dur, dx, begin = 0) => `<defs>${rad(id, [[0, '#C9
   + [[-90, 6, 120, 34], [0, -12, 150, 46], [100, 0, 130, 38], [190, 12, 90, 26], [-170, 14, 80, 22]].map(([cx, cy, rx, ry]) => `<ellipse cx="${f(x + cx * k)}" cy="${f(y + cy * k)}" rx="${f(rx * k)}" ry="${f(ry * k)}" fill="url(#${id})"/>`).join('') + '</g>';
 // Un îlot lointain, à l'horizon : une silhouette bleutée, presque fondue dans la brume
 const ilot = (d, couleur) => P(d, couleur, 0);
-// Une luciole qui tourne autour d'un point, sur une ellipse, et scintille
-const luciole = (cx, cy, rx, ry, dur, begin, r = 2.2) => `<g data-mouvant=""><animateMotion dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite" path="M${f(cx + rx)},${f(cy)} A${f(rx)},${f(ry)} 0 1,1 ${f(cx - rx)},${f(cy)} A${f(rx)},${f(ry)} 0 1,1 ${f(cx + rx)},${f(cy)}"/>`
-  + `<circle r="${f(r * 3)}" fill="rgb(255,236,150)" opacity=".28">${palpite('opacity', '0.1;0.4;0.1', f(dur / 3), begin)}</circle><circle r="${f(r)}" fill="#FFF6C0">${palpite('opacity', '0.4;1;0.4', f(dur / 3), begin)}</circle></g>`;
+// Les rayons de la lune : des pointes de lumière très douces qui partent d'elle, plus longues vers le bas (vers la mer et
+// l'île) ; chacune en trois épaisseurs posées l'une sur l'autre (son bord s'adoucit sans flou), toutes dans le même
+// dégradé qui s'éteint en s'éloignant. [angle (0 : vers la droite, 90 : vers le bas), largeur en degrés, longueur]
+const RAYONS = [[-150, 6, 0.5], [-118, 4, 0.45], [-84, 5, 0.5], [-50, 4, 0.45], [-18, 6, 0.55], [12, 5, 0.75], [34, 8, 0.9], [56, 4, 0.8],
+  [76, 9, 1], [94, 5, 0.95], [112, 10, 1], [134, 4, 0.85], [156, 8, 0.9], [190, 5, 0.7]];
+function rayonsLune(cx, cy) {
+  const L = 620;
+  return `<defs>${rayonne('spRayL', cx, cy, L, [[0, '#FFF6D8', 0], [0.19, '#FFF6D8', 0.075], [0.5, '#FFF0C8', 0.03], [1, '#FFF0C8', 0]])}</defs>`
+    + RAYONS.map(([a, w, k]) => [1, 0.6, 0.28].map(e => {
+      const p = da => { const t = (a + da) * Math.PI / 180; return `${f(cx + Math.cos(t) * L * k)},${f(cy + Math.sin(t) * L * k)}`; };
+      return `<path d="M${cx},${cy} L${p(-w * e / 2)} L${p(w * e / 2)} Z" fill="url(#spRayL)"/>`;
+    }).join('')).join('');
+}
+// Des poussières de lumière autour d'un point, sur une ellipse : des points clairs, de temps en temps une étincelle
+function poussieres(cx, cy, rx, ry, seed, n = 30) {
+  const g = rnd(seed);
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const t = g() * Math.PI * 2, d = Math.sqrt(g()), x = cx + Math.cos(t) * rx * d, y = cy + Math.sin(t) * ry * d, a = 0.35 + g() * 0.6;
+    const c = g() < 0.6 ? '#FFF4C8' : '#DDF2FF';
+    s += i % 4 === 0 ? etincelle(x, y, 2.4 + g() * 3, a, c) : `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.8 + g() * 1.4)}" fill="${c}" opacity="${f(a)}"/>`;
+  }
+  return s;
+}
+// La brume qui monte devant Anya et son cerf, derrière l'île : des nappes claires, larges et plates, qui se recouvrent
+function brumeDevant(cx, y) {
+  return `<defs>${rad('spVoile', [[0, '#DCEAF6', 0.6], [0.55, '#C4D8EC', 0.24], [1, '#C4D8EC', 0]])}</defs>`
+    + [[-380, 14, 190, 30], [-210, 4, 230, 38], [-30, -8, 260, 44], [150, -10, 220, 50], [330, 4, 210, 40]]
+      .map(([dx, dy, rx, ry]) => `<ellipse cx="${f(cx + dx)}" cy="${f(y + dy)}" rx="${rx}" ry="${ry}" fill="url(#spVoile)"/>`).join('');
+}
 
 function fond() {
   const [W, H] = FOND, HZ = 430, CX = 800;
+  const LUNE = 0.8; // la lune, un peu plus petite que son halo : l'auréole d'Anya, son visage au centre
   let s = `<defs>${lin('spCiel', [[0, '#050C22'], [0.42, '#0F2246'], [0.8, '#2A4874'], [1, '#5B789E']])}`
     + `${rad('spAube', [[0, '#FFC9A0', 0.32], [0.5, '#E89A7A', 0.1], [1, '#E89A7A', 0]])}`
     + `${rad('spLune', [[0, '#FFFDF2'], [0.55, '#F7E7B0'], [1, '#D9B060']], 0.38, 0.32, 0.75)}`
     + `${rad('spHaloL', [[0, '#FFF2B8', 0.5], [0.4, '#DCEBFF', 0.16], [1, '#B9E2F0', 0]])}`
-    + `${rad('spAura', [[0, '#FFF3B0', 0.6], [0.45, '#FFD86A', 0.2], [1, '#FFD86A', 0]])}`
+    + `${rad('spAura', [[0, '#F4F0E0', 0.3], [0.5, '#D2E2F2', 0.11], [1, '#D2E2F2', 0]])}`
+    + `${rad('spMainsIle', [[0, '#FFE9B0', 0.46], [0.6, '#FFE0A0', 0.14], [1, '#FFE0A0', 0]])}`
     + `${lin('spHaut', [[0, '#030814', 0.75], [1, '#030814', 0]])}`
     + `${lin('spBas', [[0, '#030814', 0], [1, '#030814', 0.6]])}</defs>`;
   // le ciel, une lueur d'aube derrière l'île, la lune et son halo qui respire
   s += `<rect width="${W}" height="${HZ + 4}" fill="url(#spCiel)"/><ellipse cx="${CX}" cy="${HZ}" rx="700" ry="170" fill="url(#spAube)"/>` + ciel();
   s += `<circle cx="${CX}" cy="245" r="320" fill="url(#spHaloL)">${palpite('r', '280;320;280', 7)}</circle>`
-    + `<g>${vaVient('translate', '0 0', '0 -4', 12)}<circle cx="${CX}" cy="245" r="120" fill="url(#spLune)" stroke="#FFF0B6" stroke-opacity=".6" stroke-width="3"/>`
-    + [[728, 200, 20], [880, 280, 14], [742, 310, 10], [870, 180, 8]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#D2A458" opacity=".18"/><path d="M${x - r * 0.7},${y + r * 0.5} a${r},${r} 0 0,0 ${r * 1.4},0" fill="none" stroke="#FFF8DA" stroke-width="1.6" opacity=".35"/>`).join('') + '</g>';
+    + `<g transform="translate(${CX} 245) scale(${LUNE}) translate(${-CX} -245)"><g>${vaVient('translate', '0 0', '0 -4', 12)}<circle cx="${CX}" cy="245" r="120" fill="url(#spLune)" stroke="#FFF0B6" stroke-opacity=".6" stroke-width="3"/>`
+    + [[728, 200, 20], [880, 280, 14], [742, 310, 10], [870, 180, 8]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#D2A458" opacity=".18"/><path d="M${x - r * 0.7},${y + r * 0.5} a${r},${r} 0 0,0 ${r * 1.4},0" fill="none" stroke="#FFF8DA" stroke-width="1.6" opacity=".35"/>`).join('') + '</g></g>';
   s += nuage('spN1', 300, 150, 1.1, 0.22, 46, 60) + nuage('spN2', 1290, 110, 1.3, 0.18, 58, 70, 20) + nuage('spN3', 1080, 330, 0.9, 0.2, 40, 50, 9) + nuage('spN4', 470, 340, 0.8, 0.16, 52, 55, 30);
   // la mer (une houle de 400 de large, étirée sur toute la largeur) et deux îlots au loin
   s += `<g transform="scale(4 1)">${houle('spMer', HZ, H, { haut: '#2E5878', bas: '#081A35', vague: '#3E719A', ecume: '#CFE6F2' }, { vitesse: 0.55, lum: { x: 200, rgb: '255,236,180', a: 0.55 } })}</g>`;
   s += ilot(`M60,${HZ + 2} Q120,${HZ - 34} 200,${HZ - 26} Q270,${HZ - 52} 350,${HZ - 18} Q400,${HZ - 6} 430,${HZ + 2} Z`, '#24405F')
     + ilot(`M1190,${HZ + 2} Q1250,${HZ - 30} 1330,${HZ - 34} Q1420,${HZ - 58} 1490,${HZ - 20} Q1540,${HZ - 8} 1580,${HZ + 2} Z`, '#203A58');
   s += `<g transform="scale(4 1)">${nappeDouce('spB1', HZ - 6, 0.3, 24, 10, 0.8, '210,226,242', 3)}</g>`;
-  // Anya, immense, derrière l'île : la gardienne qui veille, les mains ouvertes, son cerf de lune à côté d'elle ; son aura
-  // respire, des lucioles tournent autour d'elle
-  const ka = 3.2;
-  s += `<ellipse cx="${CX}" cy="300" rx="250" ry="280" fill="url(#spAura)">${palpite('rx', '235;265;235', 5.2)}${palpite('ry', '265;295;265', 5.2)}</ellipse>`
-    + `<g transform="translate(${f(CX + 170 - 60 * ka)} ${f(176 - 4 * ka + (123 - 141) * ka)}) scale(${ka})">${cerfVeille()}</g>`
-    + `<g transform="translate(${f(CX - 40 * ka)} ${f(176 - 4 * ka)}) scale(${ka})">${anyaVeille()}</g>`
-    + [[CX, 260, 190, 70, 11, 0], [CX, 330, 230, 50, 14, 3], [CX, 220, 140, 110, 12, 5], [CX - 20, 380, 250, 40, 16, 7], [CX + 30, 200, 110, 60, 9, 2]].map(([cx, cy, rx, ry, d, b]) => luciole(cx, cy, rx, ry, d, b)).join('');
-  // l'île des naufragés, dessinée pour cet écran (splash_ile.js), devant elle
+  // Anya et son cerf de lune, derrière l'île, à contre-jour : la lune se lève juste derrière sa tête (son auréole), ses
+  // rayons s'étirent sur la nuit et la mer ; un halo d'argent autour d'eux, des poussières de lumière ; la brume monte
+  // devant eux (le bas de leur corps s'y efface), puis l'île, où tombe la lumière chaude de ses mains ouvertes
+  // (elle mesure les deux tiers de l'île de haut ; le cerf, 80 % d'elle, comme sur l'île : ses bois arrivent à sa
+  // couronne ; à sa droite, tourné vers elle, son museau près de sa main)
+  const LY = 245, ka = 2.1, kc = ka * 0.8, ax = CX;
+  s += rayonsLune(CX, LY)
+    // deux cercles de lumière autour de la lune : son auréole
+    + `<circle cx="${CX}" cy="${LY}" r="${f(120 * LUNE + 9)}" fill="none" stroke="#FFF6D8" stroke-width="1.6" opacity=".45"/>`
+    + `<circle cx="${CX}" cy="${LY}" r="${f(120 * LUNE + 17)}" fill="none" stroke="#FFF6D8" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="0.1 9" opacity=".6"/>`;
+  s += `<ellipse cx="${ax + 20}" cy="300" rx="230" ry="170" fill="url(#spAura)"/>`
+    + `<g transform="translate(${f(ax + 72 - 38 * kc)} ${f(422 - 141 * kc)}) scale(${f(kc)})">${cerfVeille()}</g>`
+    + `<g transform="translate(${f(ax - 40 * ka)} ${f(LY - 34 * ka)}) scale(${ka})">${anyaVeille()}</g>`
+    + poussieres(ax + 20, 290, 270, 170, 11) + brumeDevant(CX, 404);
+  // l'île des naufragés, dessinée pour cet écran (splash_ile.js), devant elle ; la lumière de ses mains y tombe
   s += `<g transform="translate(${CX} 470) scale(.78)">${ileVivante()}</g>`;
+  s += `<ellipse cx="${ax}" cy="412" rx="170" ry="44" fill="url(#spMainsIle)"/>` + poussieres(ax, 380, 90, 26, 5, 9);
   // la brume devant l'île, puis le voile du haut (le logo s'y lit) et du bas (l'avant-plan s'y pose)
   s += `<g transform="scale(4 1)">${nappeDouce('spB2', 640, 0.24, 20, 12, 1, '214,232,244', 5)}${nappeDouce('spB3', 780, 0.18, 26, 10, 1.3, '200,220,238', 7)}</g>`;
   s += `<rect width="${W}" height="220" fill="url(#spHaut)"/><rect y="${H - 300}" width="${W}" height="300" fill="url(#spBas)"/>`;
@@ -158,20 +195,35 @@ const sceaux = (cx, cy, rx, ry, dur) => SCEAUX.map((c, i) => `<g><animateMotion 
 const etincelles = (x, y) => [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const dx = (i % 2 ? 1 : -1) * (30 + i * 9), d = 3 + (i % 3) * 0.6; return `<g opacity="0"><animateMotion dur="${d}s" begin="${f(-i * 0.47)}s" repeatCount="indefinite" path="M${x + dx * 0.3},${y} Q${x + dx},${y - 120} ${x + dx * 0.4},${y - 260}"/>`
   + `<animate attributeName="opacity" values="0;1;0" keyTimes="0;0.3;1" dur="${d}s" begin="${f(-i * 0.47)}s" repeatCount="indefinite"/>`
   + P('M0,-5 Q0.8,-0.8 5,0 Q0.8,0.8 0,5 Q-0.8,0.8 -5,0 Q-0.8,-0.8 0,-5 Z', i % 3 ? '#FFF3B0' : '#BFEFFF', 0) + '</g>'; }).join('');
-// Un maître de la bibliothèque, debout, qui respire, éclairé comme tout l'écran (eclairer : contre-jour, modelé) ; son
-// ombre au sol ; plus il est loin, plus la nuit le voile. (qui et pose, x et y des pieds, échelle, voile, décalage)
-function maitre([qui, pose], x, y, k, voile, begin) {
-  const rel = `personnages/maitres/${qui}/${qui}_${pose}_1.svg`, id = `sp${qui}`, cote = x < 450 ? 1 : -1;
-  const corps = eclairer(corpsDe(rel, id), `${id}e`, [0, 0, 48, 64], cote, 1, '#CFEFFF');
+// Un maître, debout, qui respire, éclairé comme tout l'écran (eclairer : contre-jour, modelé) ; son ombre au sol ; plus
+// il est loin, plus la nuit le voile. Son dessin : celui de la bibliothèque (troupe_refonte.js : sa pose, la 1re image ;
+// le trois quarts avant en miroir, comme la bibliothèque), dans l'expression qu'on lui donne ici (chacun la sienne :
+// choix de l'auteur, 16 oct.). (qui, pose et expression ; x et y des pieds, échelle, voile, décalage)
+const TR = require('./troupe_refonte');
+const G = require('./gestes.js');
+const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+function dessinMaitre(qui, pose, expr, prefixe) {
+  const c = TR.CAST_REFONTE[TR.MAITRES.findIndex(m => slug(m.name) === qui)].base;
+  const [vue, geste] = pose.split('_'), v = vue === 'avant' ? 'se' : 'front';
+  const corps = geste === 'salut' ? (c.refonte.a('salut', v, 0, expr) || frame(c, v, 'salut', 0, expr))
+    : frame(geste === 'applaudir' ? G.avecApplaudir(c) : G.avecMainsTendues(c), v, 'action', 0, expr);
+  return (v === 'se' ? `<g transform="translate(48 0) scale(-1 1)">${corps}</g>` : corps)
+    .replace(/id="([^"]+)"/g, `id="${prefixe}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${prefixe}$1)`).replace(/href="#([^"]+)"/g, `href="#${prefixe}$1"`);
+}
+function maitre([qui, pose, expr], x, y, k, voile, begin) {
+  const id = `sp${qui}`, cote = x < 450 ? 1 : -1;
+  const corps = eclairer(dessinMaitre(qui, pose, expr, id), `${id}e`, [0, 0, 48, 64], cote, 1, '#CFEFFF');
   const brume = voile ? `<rect x="-4" y="-4" width="56" height="72" fill="#152A50" opacity="${voile}" mask="url(#${id}eM)"/>` : '';
   return `<defs>${rad(`${id}O`, [[0, '#020817', 0.6], [1, '#020817', 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y - k)}" rx="${f(k * 15)}" ry="${f(k * 3.4)}" fill="url(#${id}O)"/>`
     + `<g transform="translate(${f(x - 24 * k)} ${f(y - 62 * k)}) scale(${f(k)})">${corps}${brume}</g>`;
 }
-// Les maîtres, en trois rangs de chaque côté (le plus proche, le plus grand), tournés vers le centre
+// Les maîtres, en trois rangs de chaque côté (le plus proche, le plus grand), tournés vers le centre ; chacun son
+// expression (deux voisins n'ont jamais la même)
 const TROUPE = [
-  [['ondin', 'avant_salut'], 190, 640, 4.2, 0.4, 0.4], [['sylve', 'avant_mains-tendues'], 310, 600, 3.8, 0.42, 1.3], [['cannelle', 'face_mains-tendues'], 600, 600, 3.8, 0.42, 2.1],
-  [['galet', 'avant_applaudir'], 230, 780, 5.4, 0.2, 0.8], [['melisse', 'face_applaudir'], 680, 780, 5.4, 0.2, 1.7],
-  [['aster', 'avant_salut'], 110, 990, 6.4, 0, 2.6], [['rivet', 'face_salut'], 800, 990, 6.4, 0, 0.2]
+  [['ondin', 'avant_salut', 'surpris'], 190, 640, 4.2, 0.4, 0.4], [['sylve', 'avant_mains-tendues', 'sourire'], 310, 600, 3.8, 0.42, 1.3],
+  [['cannelle', 'face_mains-tendues', 'fier'], 600, 600, 3.8, 0.42, 2.1],
+  [['galet', 'avant_applaudir', 'content'], 230, 780, 5.4, 0.2, 0.8], [['melisse', 'face_applaudir', 'emerveillee'], 680, 780, 5.4, 0.2, 1.7],
+  [['aster', 'avant_salut', 'clin'], 110, 990, 6.4, 0, 2.6], [['rivet', 'face_salut', 'rire'], 800, 990, 6.4, 0, 0.2]
 ];
 
 // L'affiche, en deux calques pour rester fluide sur téléphone (un SVG animé se redessine en entier à chaque image) :

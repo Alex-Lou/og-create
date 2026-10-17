@@ -2,9 +2,9 @@
 // produit, posé à côté de lui, vide, à moitié ou plein (plein : deux images, elle brille). Au cadre du jeu × 1,25,
 // autour de l'ancre (le centre de la case)
 import DATA from '../../design/bibliotheque/svg/batiments/reserves/reserves.json';
-import { librarySprite, frameAt } from './library';
+import { librarySprite, frameAt, textsOf } from './library';
 
-const FILES = import.meta.glob('/design/bibliotheque/svg/batiments/reserves/*/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/batiments/reserves/*/*.svg', { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/batiments/reserves/';
 const SCALE = 1.25;
 const boxOf = ([x, y, w, h]) => ({ x: x / SCALE, y: y / SCALE, w: w / SCALE, h: h / SCALE });

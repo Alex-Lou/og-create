@@ -1,6 +1,7 @@
 // L'île : la carte, case par case. Ce qui pousse (nature, forêt, plage, rochers), terre et quartiers, brume, rivage,
 // vent. Mixin de WorldView.vue : ses méthodes s'ajoutent à celles de l'île.
 
+import { toRaw } from 'vue';
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
 import { drawSprite, readyImage } from '@/world/spriteCache';
@@ -173,15 +174,18 @@ export default {
     // L'île se découvre peu à peu (world/reveal.js) : ce quartier reste-t-il sous la brume épaisse ?
     // (pendant un dessin, la réponse est gardée pour l'image : chaque objet du décor pose la question de son quartier ;
     // draw/loop.js : thickMemo, vidé à la fin de l'image)
+    // (l'état brut, celui que lit le voile, et l'état réactif sont les mêmes données : une même réponse, gardée sous le
+    // quartier brut)
     zoneThick(zone, state = this.state) {
       if (!zone || zone.owned || !state) return false;
-      const memo = state === this.state ? this.thickMemo : null;
-      if (memo && memo.has(zone)) return memo.get(zone);
+      const memo = toRaw(state) === toRaw(this.state) ? this.thickMemo : null;
+      const key = toRaw(zone);
+      if (memo && memo.has(key)) return memo.get(key);
       const index = state.map.zones.indexOf(zone);
       const near = this.zoneNeighbors() && this.zoneNeighbors().get(index);
       const touchesOwned = Boolean(near && [...near].some(i => state.map.zones[i] && state.map.zones[i].owned));
       const thick = zoneThick({ zone, brume: state.brume, prologue: this.thickMist(state), touchesOwned });
-      if (memo) memo.set(zone, thick);
+      if (memo) memo.set(key, thick);
       return thick;
     },
     // Les quartiers qui se touchent, gardés pour la carte en cours (M change avec la carte)
@@ -198,11 +202,14 @@ export default {
       return this.zoneThick(zone) ? 0.9 : base;
     },
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
+    // (lu sur l'état brut : le sol le demande pour chaque case de chaque carré, et passer par l'état réactif en coûtait
+    // plus de la moitié ; seul le dessin le lit, hors de tout suivi de Vue)
     veilAt(x, y) {
-      const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
+      const state = toRaw(this.state);
+      const zone = state && state.map.zones[this.M.zone(x, y)];
       if (!zone) return 0;
       if (zone.owned) return this.hiddenCell(x, y) ? 0.9 : 0;
-      return this.zoneThick(zone) ? 0.9 : zone.known === false ? 0.35 : 0.62;
+      return this.zoneThick(zone, state) ? 0.9 : zone.known === false ? 0.35 : 0.62;
     },
     // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant (sur un pont, avec la
     // bosse de son tablier : world/pontRiviere.js)

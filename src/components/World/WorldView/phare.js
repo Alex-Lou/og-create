@@ -16,6 +16,7 @@ import { prefetchSprite } from '@/world/spriteCache';
 import { sunTimes } from '@/world/sky';
 import { load, save } from '@/utils/storage';
 import { NEAR_SCALE, PAN_SCALE } from '@/world/view/constants';
+import { STALE_GAP_MS } from '@/world/terrain';
 import { arcMomentsOf, fireLinesOf } from '@/world/arc';
 import { FLOATING_ZONE } from '@/world/islets';
 import { FAILED } from '@/texts/world/screens/alerts';
@@ -38,9 +39,16 @@ const AIM = 0.32;
 const LOWER_MS = 520;
 // La pluie du conseil, retenue sur l'appareil jusqu'au matin du jeu (WorldView, sky.js : skyAt)
 const RAIN_KEY = 'oc_pluie_conseil';
-// La préparation du trajet : tant de vues le long du vol, un carré du sol par moment de répit
+// La préparation du trajet : tant de vues le long du vol, ses carrés du sol peints par morceaux dans les moments de
+// répit (SLICE_MS au moins chacun, loin d'une longue tâche) ; ses carrés à refaire se refont jusqu'au vol, RETOUCH_MS au
+// plus
 const PREPARE_STEPS = 8;
-const idle = fn => (window.requestIdleCallback ? { idle: requestIdleCallback(fn, { timeout: 200 }) } : { timer: setTimeout(fn, 32) });
+const SLICE_MS = 16;
+const RETOUCH_MS = 120000;
+// (un moment de répit attendu IDLE_MS au plus : pendant que la scène s'anime, le navigateur n'en a presque jamais, et
+// chaque morceau de la préparation ne fait que SLICE_MS)
+const IDLE_MS = 50;
+const idle = fn => (window.requestIdleCallback ? { idle: requestIdleCallback(fn, { timeout: IDLE_MS }) } : { timer: setTimeout(fn, 32) });
 const cancelIdle = task => {
   if (task && task.idle) cancelIdleCallback(task.idle);
   else if (task) clearTimeout(task.timer);
@@ -93,12 +101,15 @@ export default {
       return { pts: [{ x: this.cam.x, y: this.cam.y }, aim], back: { x: home.x, y: home.y, s: this.cam.s }, from: this.cam.s };
     },
     // Le vol se prépare pendant qu'on lit le conseil (App : la scène s'ouvre ; le dessin de l'île est à l'arrêt dessous) :
-    // les carrés du sol de son trajet, aller et retour, à l'échelle où ils seront peints, un par moment de répit ; et
+    // les carrés du sol de son trajet, aller et retour, à l'échelle où ils seront peints, par morceaux dans les moments
+    // de répit (gardés jusqu'au vol, refaits si un chemin ou un dessin du décor arrive d'ici là : world/terrain.js) ; et
     // toutes les images de la tour, sous la pluie du conseil (lues à son apparition, une toutes les 380 ms, elle
     // manquait à l'arrivée et le vol saccadait)
     prepareLighthouse() {
       cancelIdle(this.prepareTask);
       this.prepareTask = null;
+      // (une préparation d'avant n'a plus à être gardée)
+      if (this.terrain) this.terrain.release();
       const route = this.flightRoute();
       if (!route || !this.terrain || !this.geo) return;
       const { width, height, dpr } = this.geo;
@@ -113,10 +124,17 @@ export default {
       // (et l'arrêt sur la tour, où le sol reprend sa finesse : peint à l'arrivée, il saccadait)
       const end = route.pts[1];
       views.push({ view: { x: end.x - width / FLIGHT_SCALE / 2, y: end.y - height / FLIGHT_SCALE / 2, w: width / FLIGHT_SCALE, h: height / FLIGHT_SCALE }, scale: FLIGHT_SCALE * dpr, bake: FLIGHT_SCALE < NEAR_SCALE });
-      const next = () => {
+      // (le trajet prêt, ses carrés à refaire se refont jusqu'au départ, un chemin ou un dessin du décor arrivé depuis ;
+      // pas au-delà de RETOUCH_MS, si le vol ne vient pas)
+      const retouchEnd = performance.now() + RETOUCH_MS;
+      // (chaque moment de répit peint le carré en cours le temps qu'il a de libre, SLICE_MS au moins : pendant que la
+      // scène s'anime, il en a peu, et le trajet n'avançait plus)
+      const next = deadline => {
         this.prepareTask = null;
-        while (views.length && !this.terrain.prepare(views[0].view, views[0].scale, views[0].bake)) views.shift();
-        if (views.length) this.prepareTask = idle(next);
+        const until = performance.now() + Math.max(SLICE_MS, deadline && deadline.timeRemaining ? deadline.timeRemaining() : 0);
+        while (views.length && !this.terrain.prepare(views[0].view, views[0].scale, views[0].bake, until)) views.shift();
+        if (views.length || this.terrain.retouch(until)) this.prepareTask = idle(next);
+        else if (performance.now() < retouchEnd) this.prepareTask = { timer: setTimeout(() => { this.prepareTask = idle(next); }, STALE_GAP_MS) };
       };
       this.prepareTask = idle(next);
     },
@@ -223,7 +241,14 @@ export default {
       this.flightRelease = null;
       const done = this.flightDone;
       this.flightDone = null;
-      if (done) done();
+      // (le vol passé, sa préparation s'arrête et les carrés de son trajet redeviennent des carrés comme les autres ; pas
+      // à l'arrêt qui précède un vol, quand aucun n'était en cours)
+      if (done) {
+        cancelIdle(this.prepareTask);
+        this.prepareTask = null;
+        if (this.terrain) this.terrain.release();
+        done();
+      }
     },
     // (le démontage, ou un nouveau vol : tout s'arrête, la promesse est tenue)
     stopFlight() {

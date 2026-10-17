@@ -6,11 +6,11 @@
 import CAMP from '../../design/bibliotheque/svg/decor/camp/camp.json';
 import POULES from '../../design/bibliotheque/svg/decor/camp/poules/poules.json';
 import PREPONTON_THUMB from '../../design/bibliotheque/svg/decor/camp/coins/aster/aster_preponton_1.svg?url';
-import { librarySprite, frameAt } from './library';
+import { librarySprite, frameAt, textsOf } from './library';
 import { NAMES, LIBRARY_NAMES } from './faces';
 import { CAMP_LINES } from '@/texts/world/camp';
 
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/camp/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/decor/camp/**/*.svg', { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/decor/camp/';
 const SCALE = 1.25;
 // La taille d'un dessin du camp sur l'île (son cadre grandit autour de l'ancre, net : le SVG est redessiné à cette

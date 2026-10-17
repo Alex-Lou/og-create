@@ -3,11 +3,11 @@
 // tirée de sa place, d'une visite à l'autre. Une sorte sans dessin dans la bibliothèque garde son dessin par code.
 import { PROP_BOX } from './palette';
 import { hash } from './scene';
-import { librarySprite } from './library';
+import { librarySprite, textsOf } from './library';
 import SEASONS from '../../design/bibliotheque/svg/plantes/saisons.json';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui pousse sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/plantes/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/plantes/*.svg', { query: '?url', import: 'default', eager: true }));
 const DIR = '/design/bibliotheque/svg/plantes/';
 
 // Sorte du jeu → son dessin dans la bibliothèque. Ses variantes sont les fichiers « <dessin>_<mots> » : un dessin

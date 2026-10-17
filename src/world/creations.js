@@ -6,10 +6,10 @@ import { reactive } from 'vue';
 import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import DEFENSES from '../../design/bibliotheque/svg/decor/defenses/defenses.json';
 import { PROP_BOX } from './palette';
-import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
+import { librarySprite, cropTo, paintedBox, BLANK, frameAt, textsOf } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{creations,defenses}/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/decor/{creations,defenses}/*.svg', { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/decor/';
 // Le dessin d'une création : { fichiers (chemins sous ROOT), ms_par_image }, ou null. Celui de decor.json, sinon celui
 // des défenses (la torche de Nathan, allumée : choix de l'auteur, 13 oct.)

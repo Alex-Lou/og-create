@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import { TRACES, TRACE_COUNT, traceDue, traceFrames, tracesOf, seenOf, PRESENTIMENTS, revelationFrames, anyaHere, anyaSceneOf, anyaVisitClock } from '@/game/anya';
 import { anyaPath, anyaPose } from '@/world/village/anya';
-import { anyaArt, cerfArt } from '@/world/anyaArt';
+import { anyaArt, cerfArt, frameOf, durationOf, ANYA_POSES } from '@/world/anyaArt';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { landmarkLayers } from '@/world/landmarkSprites';
@@ -176,7 +176,19 @@ describe('Anya sur l’île', () => {
     expect(anyaArt('repos', 'face', 1, { season: 'hiver' }).key).toBe('lib-anya_face_repos_hiver_1');
     expect(anyaArt('marche', 'face', 1)).toBe(null);
     for (const view of ['face', 'avant', 'dos']) expect(cerfArt('marche', view, 8)).not.toBe(null);
-    const { box } = cerfArt('debout', 'avant', 1).make();
-    expect(box.h).toBeGreaterThan(100);
+    // (le cerf un peu plus petit qu'elle : ses bois arrivent à sa couronne)
+    const cerf = cerfArt('debout', 'avant', 1).make().box, dame = anyaArt('repos', 'face', 1).make().box;
+    expect(cerf.h).toBeLessThan(dame.h);
+    expect(cerf.h).toBeGreaterThan(dame.h * 0.8);
+  });
+  it('ses animations aux images de durées différentes (son repos : elle respire, cligne à la 4e)', () => {
+    const repos = ANYA_POSES.repos;
+    expect(durationOf(repos)).toBeCloseTo(3.28);
+    expect([0, 1.05, 1.1, 2.0, 3.1, 3.27, 3.28, 4.4].map(s => frameOf(repos, s))).toEqual([1, 1, 2, 3, 4, 4, 1, 2]);
+    // (jouée une fois, elle reste sur sa dernière image)
+    expect(frameOf(ANYA_POSES.eveil, 0.69, true)).toBe(1);
+    expect(frameOf(ANYA_POSES.eveil, 0.71, true)).toBe(2);
+    expect(frameOf(ANYA_POSES.eveil, 40, true)).toBe(2);
+    expect(frameOf(ANYA_POSES.apparaitre, 0.53, true)).toBe(3);
   });
 });

@@ -37,9 +37,9 @@ sudo systemd-run --quiet --wait --pipe --uid=brumelune --gid=brumelune \
   /usr/bin/node db/setup.js
 sudo systemctl restart brumelune-api
 
-# L'API répond-elle ? (quelques secondes pour démarrer)
+# L'API répond-elle ? (quelques secondes pour démarrer : les essais d'avant se taisent, seul l'échec final se dit)
 for _ in $(seq 1 15); do
-  if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
+  if curl -fs http://127.0.0.1:3000/api/health > /dev/null; then
     echo "✓ Brumelune est à jour"
     exit 0
   fi

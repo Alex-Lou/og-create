@@ -954,13 +954,22 @@ export function drawCell(ctx, M, x, y, veil = 0) {
 
 // Sol de l'île en carrés gardés en images, alignés sur l'écran (aucun chevauchement) : un carré fait TILE_PX pixels
 // de côté, quelle que soit la résolution, et couvre donc TILE_PX / res unités du monde. Les carrés à l'écran ne
-// sont jamais jetés ; au-delà de MAX_TILES, les plus anciens hors de l'écran partent d'abord. Vue de toute l'île :
+// sont jamais jetés ; au-delà de MAX_TILES, les plus anciens hors de l'écran partent d'abord (sauf ceux d'un trajet
+// préparé d'avance : prepare, jusqu'à release). Vue de toute l'île :
 // une seule image basse résolution (la vue d'ensemble), qui sert aussi en attendant un carré pas encore prêt.
 // veilOf(x, y) : voile de brume d'une case (0 si son quartier est à soi) ; standOf(ctx, x, y) : peint le décor fixe
 // d'une case, vrai si tout était prêt (les carrés cuits avant que tous les dessins soient chargés seront refaits)
 // Un carré pas encore prêt (une image du décor manque) : refait STALE_TRIES fois au plus, à STALE_GAP_MS d'écart
 const STALE_TRIES = 8;
-const STALE_GAP_MS = 300;
+export const STALE_GAP_MS = 300;
+// (une image du décor qui ne vient pas ne le fait pas refaire à chaque image, sans fin)
+const retryable = (tile, now) => tile.stale && (tile.tries || 0) < STALE_TRIES && now - (tile.at || 0) > STALE_GAP_MS;
+// Une peinture par pas (painting, rendering), déroulée d'un trait : son résultat
+const finish = steps => {
+  let step = steps.next();
+  while (!step.done) step = steps.next();
+  return step.value;
+};
 
 // Le voile s'épaissit avec la distance à la terre dégagée la plus proche, sur FEATHER cases (choix de l'auteur,
 // 15 oct. : la brume froide, légère au bord, pleine au loin) ; relu à chaque préparation d'un carré (le voile change
@@ -1001,6 +1010,14 @@ export class TerrainCache {
     this.veilOf = veilOf;
     this.standOf = standOf;
     this.tiles = new Map();
+    // Les carrés d'un trajet préparé d'avance (prepare : clé → où les repeindre) : gardés au-delà de MAX_TILES jusqu'à
+    // release (le vol du conseil en prépare une quarantaine ; jetés dès ses premières images, ils étaient repeints
+    // pendant qu'il passait)
+    this.kept = new Map();
+    // Le carré du trajet en cours de préparation, peint par morceaux ({ key, steps, version }) ; version : comptée à
+    // chaque changement du sol ou du décor (un carré peint pendant l'un d'eux se refera)
+    this.job = null;
+    this.version = 0;
     this.overview = null;
     const n = M.n;
     // Rectangle du monde où il y a du sol (au-delà, la mer)
@@ -1009,6 +1026,7 @@ export class TerrainCache {
 
   // Le décor fixe a changé : les carrés où il est cuit et la vue d'ensemble seront refaits
   restand() {
+    this.version++;
     for (const tile of this.tiles.values()) {
       if (!tile.bake) continue;
       tile.stale = true;
@@ -1021,7 +1039,15 @@ export class TerrainCache {
   // à droite) ; le canvas ou la découpe coupe ce qui dépasse. stand : avec le décor fixe de chaque case. Renvoie le
   // nombre de cases peintes (this.ready dit si tout le décor était prêt)
   paint(ctx, r, stand = false) {
-    this.ready = true;
+    const { count, ready } = finish(this.painting(ctx, r, stand));
+    this.ready = ready;
+    return count;
+  }
+
+  // Les mêmes cases, une diagonale à chaque pas (la préparation d'un trajet s'arrête entre deux : prepare) ; à la fin,
+  // { count, ready }
+  *painting(ctx, r, stand = false) {
+    let ready = true;
     const M = this.M, n = M.n;
     // Centre d'une case : ((x - y) · TW/2, (x + y) · TH/2) ; d = x + y, u = x - y
     // (cases qui touchent le rectangle sur plus qu'un bord ; avec le décor, aussi celles dont un arbre y dépasse)
@@ -1046,23 +1072,30 @@ export class TerrainCache {
         if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
         if ((d * TH) / 2 - aboveOf(M, x, y) - above >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
         drawCell(ctx, M, x, y, veil(x, y));
-        if (stand && !this.standOf(ctx, x, y)) this.ready = false;
+        if (stand && !this.standOf(ctx, x, y)) ready = false;
         count++;
       }
+      yield;
     }
-    return count;
+    return { count, ready };
   }
 
   // Un carré : sa case de la grille à cette résolution, avec une marge de PAD_PX pixels qui recouvre ses voisins
   // (aucune couture entre deux carrés). Un carré de pleine mer ne garde pas d'image
   render(tx, ty, res, bake = false) {
+    return finish(this.rendering(tx, ty, res, bake));
+  }
+
+  // Le même carré, une diagonale de cases à chaque pas (prepare)
+  *rendering(tx, ty, res, bake = false) {
     const size = TILE_PX / res, pad = PAD_PX / res;
     const r = { x: tx * size - pad, y: ty * size - pad, w: size + 2 * pad, h: size + 2 * pad };
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = TILE_PX + 2 * PAD_PX;
     const ctx = canvas.getContext('2d');
     ctx.setTransform(res, 0, 0, res, -r.x * res, -r.y * res);
-    if (this.paint(ctx, r, bake)) return { canvas, r, res, bake, stale: bake && !this.ready };
+    const { count, ready } = yield* this.painting(ctx, r, bake);
+    if (count) return { canvas, r, res, bake, stale: bake && !ready };
     canvas.width = canvas.height = 0;
     return { canvas: null, r, res, bake };
   }
@@ -1110,10 +1143,8 @@ export class TerrainCache {
         const key = `${tag}:${tx},${ty}`;
         seen.add(key);
         let tile = this.tiles.get(key);
-        // (un carré pas encore prêt est refait quelques fois, espacées : une image du décor qui ne vient pas ne le fait
-        // pas refaire à chaque image, sans fin)
-        const retry = tile && tile.stale && (tile.tries || 0) < STALE_TRIES && start - (tile.at || 0) > STALE_GAP_MS;
-        if ((!tile || retry) && (all || !rendered || performance.now() - start < budget)) {
+        // (un carré pas encore prêt est refait quelques fois, espacées)
+        if ((!tile || retryable(tile, start)) && (all || !rendered || performance.now() - start < budget)) {
           const tries = tile ? (tile.tries || 0) + 1 : 0;
           if (tile && tile.canvas) tile.canvas.width = tile.canvas.height = 0;
           tile = this.render(tx, ty, res, bake);
@@ -1136,7 +1167,7 @@ export class TerrainCache {
     if (!missing && this.tiles.size < MAX_TILES && performance.now() - start < budget) this.ahead(res, bake, x0 - 1, y0 - 1, x1 + 1, y1 + 1);
     for (const [key, tile] of this.tiles) {
       if (this.tiles.size <= MAX_TILES) break;
-      if (seen.has(key)) continue;
+      if (seen.has(key) || this.kept.has(key)) continue;
       if (tile.canvas) tile.canvas.width = tile.canvas.height = 0;
       this.tiles.delete(key);
     }
@@ -1145,9 +1176,11 @@ export class TerrainCache {
     return missing;
   }
 
-  // Un carré manquant d'une vue du monde à cette échelle, préparé d'avance (le vol du conseil : WorldView, phare.js) :
-  // true s'il en a préparé un, false quand la vue est toute prête
-  prepare(view, scale, bake = false) {
+  // Un carré manquant d'une vue du monde à cette échelle, préparé d'avance (le vol du conseil : WorldView, phare.js),
+  // peint par morceaux jusqu'à until (performance.now(), au moins une diagonale de cases) : true s'il a peint, false
+  // quand la vue est toute prête. Le carré commencé se finit d'abord
+  prepare(view, scale, bake = false, until = Infinity) {
+    if (this.job) return this.advance(until);
     const res = resOf(scale);
     if (res <= OVERVIEW_RES) return false;
     bake = bake && Boolean(this.standOf);
@@ -1157,12 +1190,52 @@ export class TerrainCache {
     for (let ty = y0; ty <= y1; ty++) {
       for (let tx = x0; tx <= x1; tx++) {
         const key = `${res}${bake ? 'b' : ''}:${tx},${ty}`;
+        this.kept.set(key, { tx, ty, res, bake });
         if (this.tiles.has(key)) continue;
-        this.tiles.set(key, this.render(tx, ty, res, bake));
-        return true;
+        this.job = { key, steps: this.rendering(tx, ty, res, bake), version: this.version };
+        return this.advance(until);
       }
     }
     return false;
+  }
+
+  // Un carré du trajet préparé à refaire (un chemin ou un dessin du décor arrivé depuis), refait à son tour, comme à
+  // l'écran, et par morceaux comme prepare : true s'il a peint (repeint pendant le vol, il le faisait saccader)
+  retouch(until = Infinity) {
+    if (this.job) return this.advance(until);
+    const now = performance.now();
+    for (const [key, { tx, ty, res, bake }] of this.kept) {
+      const tile = this.tiles.get(key);
+      if (!tile || !retryable(tile, now)) continue;
+      this.job = { key, steps: this.rendering(tx, ty, res, bake), version: this.version };
+      return this.advance(until);
+    }
+    return false;
+  }
+
+  // Le carré en cours, peint jusqu'à until (au moins une diagonale) ; fini, il prend sa place : l'image qu'il remplace
+  // est libérée, et un carré refait compte ses essais. Toujours true (il y avait à peindre)
+  advance(until) {
+    const job = this.job;
+    let step;
+    do step = job.steps.next(); while (!step.done && performance.now() < until);
+    if (!step.done) return true;
+    this.job = null;
+    const tile = step.value;
+    // (le sol ou le décor a changé pendant qu'il se peignait : il se refera)
+    if (job.version !== this.version) tile.stale = true;
+    const old = this.tiles.get(job.key);
+    if (old && old.canvas) old.canvas.width = old.canvas.height = 0;
+    tile.tries = old ? (old.tries || 0) + 1 : 0;
+    tile.at = performance.now();
+    this.tiles.set(job.key, tile);
+    return true;
+  }
+
+  // Le trajet préparé est passé : ses carrés redeviennent des carrés comme les autres
+  release() {
+    this.kept.clear();
+    this.job = null;
   }
 
   // Un carré pas encore prêt autour de l'écran (sur l'île), préparé d'avance
@@ -1203,6 +1276,7 @@ export class TerrainCache {
   // cases chez ses voisins)
   invalidate(cells, pad = 0) {
     if (!cells.length) return;
+    this.version++;
     const box = cellsBox(this.M, cells);
     const r = { x: box.x - pad * TW, y: box.y - pad * TH, w: box.w + 2 * pad * TW, h: box.h + 2 * pad * TH };
     for (const tile of this.tiles.values()) {
@@ -1228,6 +1302,8 @@ export class TerrainCache {
   clear() {
     for (const tile of this.tiles.values()) if (tile.canvas) tile.canvas.width = tile.canvas.height = 0;
     this.tiles.clear();
+    this.kept.clear();
+    this.job = null;
     if (this.overview) this.overview.canvas.width = this.overview.canvas.height = 0;
     this.overview = null;
   }

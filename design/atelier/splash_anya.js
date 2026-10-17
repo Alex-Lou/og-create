@@ -1,13 +1,12 @@
-// Anya, immense, pour l'écran de démarrage (splash.js) : son dessin refondu (refonte/anya_anims.js, « éveil », les bras
-// ouverts, choix de l'auteur, 16 oct.), et son cerf de lune à côté d'elle (refonte/cerf_lune.js),
-// sans rien changer à sa forme, avec un rendu d'illustration posé dessus : le contre-jour doré de la lune, le modelé
-// (plus sombre sur les bords, chaud au centre), un reflet qui la parcourt lentement, la lumière de ses mains ouvertes ;
-// elle flotte, respire et cligne doucement des yeux. Le bas de sa robe s'efface dans la brume (derrière l'île).
-// Repère : celui de son dessin (80 × 128, son ombre au sol en (40, 123)) ; le cerf : 120 × 144, le sabot en (60, 141).
-const AA = require('../personnages/refonte/anya_anims');
-const AT = require('../personnages/refonte/anya_tenues');
+// Anya, derrière l'île, pour l'écran de démarrage (splash.js) : l'initiale, la chevelure argentée (anya.js, son éveil, les
+// bras ouverts ; choix de l'auteur, 16 oct.), et son cerf de lune à côté d'elle (refonte/cerf_lune.js), sans rien changer à
+// leur forme, avec un rendu d'illustration posé dessus : la lune se lève juste derrière eux (contre-jour : le liseré de
+// lune sur leurs bords, une ombre fraîche qui gagne le bas), la lumière chaude de ses mains ouvertes, des étincelles.
+// Le bas de leur corps s'efface dans la brume (derrière l'île). Le fond est publié immobile (preview_splash.js).
+// Repère : celui de son dessin (80 × 128, ses pieds en (40, 125)) ; le cerf : 120 × 144, le sabot en (60, 141).
+const A = require('./anya');
 const CL = require('../personnages/refonte/cerf_lune');
-const { f, vaVient, palpite } = require('./scenes7').outils;
+const { f, rnd } = require('./scenes7').outils;
 
 const SPLINE = '0.45 0 0.55 1'; // l'adoucissement de chaque étape
 
@@ -40,62 +39,89 @@ function eclairer(corps, id, [x, y, w, h], cote = 1, force = 1, contreJour = '#F
     + corps + aplat(`url(#${id}V)`) + aplat(`url(#${id}L)`);
 }
 
-// ═══ Anya ═══
-// Sa silhouette (pour le masque des lumières) : son dessin sans ses lueurs ni ses lucioles (les formes transparentes ou
-// en dégradé), chaque forme en blanc plein
-const silhouette = svg => svg.replace(/<(path|circle|ellipse|rect)\b[^>]*(opacity|rgba|url\(#)[^>]*\/>/g, '')
-  .replace(/<(path|circle|ellipse|rect)\b[^>]*(opacity|rgba|url\(#)[^>]*>[\s\S]*?<\/\1>/g, '')
-  .replace(/fill="(?!none)[^"]*"/g, 'fill="#FFFFFF"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="#FFFFFF"');
-// Son éveil, l'image où ses bras s'ouvrent (la 7e) ; expr : une autre expression (les yeux clos) ; uid : ses ids
-const eveil = (uid, expr) => AA.dessiner({ ...AT.habiller('ete', 'voilee'), uid, ...(expr ? { expr } : {}) }, 'eveil', 'face', 6);
+// ═══ Anya et son cerf, devant la lune ═══
+// Leur silhouette (pour les masques des lumières) : le dessin sans ses lueurs ni ses lucioles (les formes transparentes
+// ou en dégradé rayonnant), chaque forme pleine de la couleur courante (currentColor) : posée en blanc, elle ajoute à un
+// masque ; en noir, elle en retire. Les formes peintes d'un dégradé linéaire (la lumière de la troupe, troupe.js :
+// peau, chevelure, manteau) en font partie.
+function silhouette(svg) {
+  const peints = new Set([...svg.matchAll(/<linearGradient[^>]*id="([^"]+)"/g)].map(m => m[1]));
+  return svg.replace(/(fill|stroke)="url\(#([^)]+)\)"/g, (m, a, id) => (peints.has(id) ? `${a}="currentColor"` : m))
+    .replace(/<(path|circle|ellipse|rect)\b[^>]*(opacity|rgba|url\(#)[^>]*\/>/g, '')
+    .replace(/<(path|circle|ellipse|rect)\b[^>]*(opacity|rgba|url\(#)[^>]*>[\s\S]*?<\/\1>/g, '')
+    .replace(/fill="(?!none)[^"]*"/g, 'fill="currentColor"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="currentColor"');
+}
 
-function anyaVeille() {
-  const ouverte = eveil('sa');
-  const fermee = eveil('sz', 'recueillie');
-  const sil = silhouette(eveil('sm'));
-  const defs = '<defs>'
-    + `<mask id="saSil">${sil}</mask>`
-    + `<mask id="saFondu"><rect x="-40" y="-40" width="160" height="220" fill="url(#saFonduG)"/></mask>`
-    + degrade('saFonduG', 0, 88, 0, 112, [[0, '#FFFFFF'], [1, '#FFFFFF', 0]])
-    // le modelé : chaud et clair au centre, plus sombre et froid sur les bords et vers le bas
-    + rayonne('saModele', 40, 44, 52, [[0, '#FFF4D0', 0.22], [0.5, '#FFF4D0', 0], [0.85, '#1E2A5A', 0.22], [1, '#1E2A5A', 0.4]])
-    // le reflet qui la parcourt : une bande de lumière en biais
-    + degrade('saReflet', -30, 0, 0, 30, [[0, '#FFFFFF', 0], [0.5, '#FFFFFF', 0.45], [1, '#FFFFFF', 0]])
-    + rayonne('saMain', 0, 0, 12, [[0, '#FFFBE0', 0.95], [0.4, '#FFE58A', 0.45], [1, '#FFE58A', 0]])
-    + rayonne('saYeux', 40, 31, 13, [[0, '#FFFFFF'], [0.7, '#FFFFFF'], [1, '#FFFFFF', 0]])
-    + `<mask id="saYeuxM"><ellipse cx="40" cy="31" rx="14" ry="7" fill="url(#saYeux)"/></mask>`
+// Le contre-jour de lune : la lune se lève juste derrière eux. Le dessin reste tel quel ; derrière lui, sa silhouette
+// claire, un peu plus grande (le bord qui rayonne sur la nuit) ; par-dessus, découpés à sa silhouette : un voile de
+// lumière en haut, une ombre fraîche qui gagne le bas (le bas du corps rejoint la nuit et la brume), puis le liseré de lune, la lumière
+// qui déborde des bords tournés vers elle (la silhouette, moins elle-même décalée à l'opposé : une ligne fine le long du
+// bord), vif en haut, éteint à la hauteur haut. dessin(uid) : le dessin, avec ces identifiants (ses découpes) ; box : [x, y, w, h], son cadre ; liseré : son épaisseur ;
+// cote : d'où vient la lune quand elle n'est pas juste derrière (1 : de la droite, -1 : de la gauche ; le côté opposé
+// s'assombrit).
+function contreJour(dessin, id, [x, y, w, h], haut, lisere = 1.2, cote = 0) {
+  const corps = dessin(id);
+  const zone = `maskUnits="userSpaceOnUse" x="${x - w}" y="${y - h}" width="${3 * w}" height="${3 * h}"`;
+  const sil = (c, extra = '') => `<use href="#${id}B" color="${c}"${extra}/>`;
+  const moins = (nom, [dx, dy]) => `<mask id="${id}${nom}" ${zone}>${sil('#FFFFFF')}${sil('#000000', ` transform="translate(${f(dx * lisere)} ${f(dy * lisere)})"`)}</mask>`;
+  const defs = `<defs><g id="${id}B">${silhouette(dessin(`${id}b`))}</g>`
+    + `<mask id="${id}S" ${zone}>${sil('#FFFFFF')}</mask>`
+    + moins('H', [0, 1]) + moins('G', [0.8, 0.4]) + moins('D', [-0.8, 0.4])
+    + degrade(`${id}O`, 0, y, 0, y + h, [[0, '#1C2C66', 0], [0.55, '#1C2C66', 0], [0.8, '#182A60', 0.26], [1, '#0E1838', 0.5]])
+    + degrade(`${id}C`, 0, y, 0, y + h, [[0, '#FFFFFF', 0.16], [0.5, '#FFFFFF', 0.05], [0.7, '#FFFFFF', 0]])
+    + degrade(`${id}L`, 0, y, 0, y + haut, [[0, '#FFF8DE'], [0.55, '#FFF6E0', 0.85], [1, '#F2F6FF', 0]])
+    + (cote ? degrade(`${id}T`, cote > 0 ? x + w : x, 0, cote > 0 ? x : x + w, 0, [[0, '#1C2C66', 0], [0.35, '#1C2C66', 0], [1, '#1C2C66', 0.34]]) : '')
     + '</defs>';
-  const aplat = peinture => `<rect x="-10" y="-10" width="100" height="150" fill="${peinture}" mask="url(#saSil)"/>`;
-  let s = '';
-  // le contre-jour doré : sa silhouette, un peu plus haut et de chaque côté, derrière elle
-  s += [[-0.7, -0.6], [0.7, -0.6], [0, -1]].map(([dx, dy]) => `<g transform="translate(${dx} ${dy})" opacity=".55">${aplat('#FFF0B0')}</g>`).join('');
-  // son dessin, tel quel ; les yeux qui se ferment doucement de temps en temps (même dessin, les yeux clos, en fondu bref)
-  s += ouverte;
-  s += `<g mask="url(#saYeuxM)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.88;0.9;0.94;0.96;1" dur="7s" repeatCount="indefinite"/>${fermee}</g>`;
-  // le modelé, puis le reflet qui passe (toutes les 7 s), découpés à sa silhouette
-  s += aplat('url(#saModele)');
-  s += `<g mask="url(#saSil)"><rect x="-30" y="-10" width="30" height="150" fill="url(#saReflet)" transform="skewX(-20)">`
-    + `<animateTransform attributeName="transform" type="translate" values="-40 0;-40 0;140 0" keyTimes="0;0.55;1" calcMode="spline" keySplines="0 0 1 1;${SPLINE}" dur="7s" repeatCount="indefinite" additive="sum"/></rect></g>`;
-  // la lumière de ses mains ouvertes, et des étincelles qui en montent
-  s += [[18, 70], [62, 70]].map(([x, y], k) => `<g transform="translate(${x} ${y})"><circle r="10" fill="url(#saMain)">${palpite('r', '8;12;8', 2.6, k)}</circle>`
-    + [0, 1, 2].map(i => `<circle cx="${(i - 1) * 2}" cy="-2" r=".7" fill="#FFF6C8" opacity="0"><animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 2 : -2} -12;${i % 2 ? -1 : 1} -24" dur="${f(2.6 + i * 0.4)}s" begin="${f(-i * 0.9 - k)}s" repeatCount="indefinite"/>`
-      + `<animate attributeName="opacity" values="0;1;0" dur="${f(2.6 + i * 0.4)}s" begin="${f(-i * 0.9 - k)}s" repeatCount="indefinite"/></circle>`).join('') + '</g>').join('');
-  // elle flotte et respire ; le bas de sa robe s'efface
-  return defs + `<g mask="url(#saFondu)"><g>${vaVient('translate', '0 0', '0 -1.6', 6)}<g>`
-    + `<animateTransform attributeName="transform" type="scale" values="1 1;1.006 1.01;1 1" keyTimes="0;0.5;1" calcMode="spline" keySplines="${SPLINE};${SPLINE}" dur="5s" repeatCount="indefinite"/>`
-    + s + '</g></g></g>';
+  const aplat = (peinture, m, o = 1) => `<rect x="${x - 4}" y="${y - 4}" width="${w + 8}" height="${h + 8}" fill="${peinture}" mask="url(#${id}${m})"${o < 1 ? ` opacity="${f(o)}"` : ''}/>`;
+  const bord = [[-1, -0.5], [1, -0.5], [0, -1.2], [-0.7, 0.4], [0.7, 0.4]].map(([dx, dy]) => sil('#FFFFFF', ` transform="translate(${f(dx * lisere)} ${f(dy * lisere)})"`)).join('');
+  return defs + `<g opacity=".38">${bord}</g>` + corps + aplat(`url(#${id}C)`, 'S') + aplat(`url(#${id}O)`, 'S') + (cote ? aplat(`url(#${id}T)`, 'S') : '') + aplat(`url(#${id}L)`, 'H') + aplat(`url(#${id}L)`, 'G', 0.7) + aplat(`url(#${id}L)`, 'D', 0.7);
 }
 
-// Le cerf de lune, debout, de trois quarts avant, retourné (vers le bas à gauche : vers elle, quand il est à sa droite),
-// éclairé comme l'écran (eclairer : la lune derrière elle, à sa gauche à lui)
-// (sa lueur, derrière lui, reste hors de l'éclairage : sinon le contre-jour la prendrait pour sa silhouette)
+// Une étincelle : une croix de lumière fine autour d'un point clair
+const etincelle = (x, y, r, a = 1, c = '#FFF8DC') => `<g opacity="${f(a)}"><path d="M${f(x)},${f(y - r)} Q${f(x + r * 0.12)},${f(y - r * 0.12)} ${f(x + r)},${f(y)} Q${f(x + r * 0.12)},${f(y + r * 0.12)} ${f(x)},${f(y + r)} Q${f(x - r * 0.12)},${f(y + r * 0.12)} ${f(x - r)},${f(y)} Q${f(x - r * 0.12)},${f(y - r * 0.12)} ${f(x)},${f(y - r)} Z" fill="${c}"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 0.22)}" fill="#FFFFFF"/></g>`;
+
+// Anya (l'initiale, la chevelure argentée : anya.js), dans son éveil, les bras ouverts (sa 2e image), à contre-jour ;
+// la lumière chaude de ses mains ouvertes éclaire le devant de sa robe et son visage par en dessous ; des étincelles
+// montent de ses mains. Le bas de sa robe s'efface (sous la brume, derrière l'île). uid : le préfixe de ses
+// identifiants (chacun de ses exemplaires a les siens)
+const eveil = uid => A.anyaFrame('front', 'action', 1, 'content')
+  .replace(/id="([^"]+)"/g, `id="${uid}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${uid}$1)`).replace(/href="#([^"]+)"/g, `href="#${uid}$1"`);
+const MAINS = [[14.4, 69], [65.6, 69]];
+function anyaVeille() {
+  const defs = '<defs>'
+    + `<mask id="saFondu"><rect x="-40" y="-40" width="160" height="220" fill="url(#saFonduG)"/></mask>`
+    + degrade('saFonduG', 0, 84, 0, 114, [[0, '#FFFFFF'], [0.5, '#FFFFFF', 0.55], [1, '#FFFFFF', 0]])
+    // la lumière de ses mains sur elle : chaude, par en dessous
+    + rayonne('saChaud', 40, 70, 40, [[0, '#FFE7A0', 0.4], [0.5, '#FFD978', 0.14], [1, '#FFD978', 0]])
+    + rayonne('saMain', 0, 0, 16, [[0, '#FFFDF0'], [0.18, '#FFF4C0', 0.9], [0.5, '#FFE08A', 0.32], [1, '#FFE08A', 0]])
+    + '</defs>';
+  let s = contreJour(eveil, 'sa', [0, 0, 80, 128], 70, 1.15);
+  s += `<rect x="-4" y="20" width="88" height="100" fill="url(#saChaud)" mask="url(#saS)"/>`;
+  s += MAINS.map(([x, y]) => `<circle transform="translate(${x} ${y})" r="16" fill="url(#saMain)"/>`).join('');
+  // les étincelles qui montent de ses mains, de plus en plus petites
+  const g = rnd(7);
+  MAINS.forEach(([x, y], k) => {
+    for (let i = 0; i < 6; i++) {
+      const t = (i + 1) / 6, dx = (k ? 1 : -1) * (2 + t * 9) + (g() - 0.5) * 4;
+      s += i % 2 ? `<circle cx="${f(x + dx)}" cy="${f(y - 4 - t * 26)}" r="${f(0.9 - t * 0.4)}" fill="#FFF6C8" opacity="${f(0.95 - t * 0.5)}"/>`
+        : etincelle(x + dx, y - 4 - t * 26, 2.6 - t * 1.4, 0.95 - t * 0.45);
+    }
+  });
+  return defs + `<g mask="url(#saFondu)">${s}</g>`;
+}
+
+// Le cerf de lune, debout, de trois quarts avant, retourné (sa tête vers la gauche : vers elle, quand il est à sa
+// droite), à contre-jour comme elle ; sa lueur, derrière lui, reste hors de la lumière ; le bas de ses pattes s'efface
+// dans la brume, comme la robe d'Anya.
 function cerfVeille() {
-  const corps = CL.cerfLune('se', 'debout', 0, { id: 'scl' });
-  const lueur = (corps.match(/<ellipse cx="60" cy="72"[^>]*>[\s\S]*?<\/ellipse>/) || [''])[0];
-  // (le bas de ses pattes s'efface dans la brume, comme la robe d'Anya : il se tient derrière l'île)
-  const fondu = `<defs>${degrade('sclFG', 0, 96, 0, 128, [[0, '#FFFFFF'], [1, '#FFFFFF', 0]])}</defs><mask id="sclF"><rect x="-20" y="-20" width="160" height="190" fill="url(#sclFG)"/></mask>`;
-  const tourne = `<g transform="translate(120 0) scale(-1 1)">${corps.replace(lueur, '')}</g>`;
-  return fondu + `<g mask="url(#sclF)">${lueur}${eclairer(tourne, 'sclE', [0, 0, 120, 144], -1, 0.9, '#CFEFFF')}</g>`;
+  const dessin = id => {
+    const corps = CL.cerfLune('se', 'debout', 0, { id });
+    const lueur = (corps.match(/<ellipse cx="60" cy="72"[^>]*>[\s\S]*?<\/ellipse>/) || [''])[0];
+    return `<g transform="translate(120 0) scale(-1 1)">${corps.replace(lueur, '')}</g>`;
+  };
+  const lueur = (CL.cerfLune('se', 'debout', 0, { id: 'scl' }).match(/<ellipse cx="60" cy="72"[^>]*>[\s\S]*?<\/ellipse>/) || [''])[0];
+  const fondu = `<defs>${degrade('sclFG', 0, 84, 0, 124, [[0, '#FFFFFF'], [0.5, '#FFFFFF', 0.55], [1, '#FFFFFF', 0]])}</defs><mask id="sclF"><rect x="-20" y="-20" width="160" height="190" fill="url(#sclFG)"/></mask>`;
+  return fondu + `<g mask="url(#sclF)">${lueur}${contreJour(dessin, 'sc', [0, 0, 120, 144], 84, 1, -1)}</g>`;
 }
 
-module.exports = { anyaVeille, cerfVeille, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };
+module.exports = { anyaVeille, cerfVeille, etincelle, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };

@@ -130255,58 +130255,6 @@
    "statut": "ok"
   },
   {
-   "id": "vivants/anya/anya_avant_benediction",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "avant",
-   "pose": "benediction",
-   "titre": "Anya, trois quarts avant, bénédiction",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_avant_benediction_1.svg",
-    "svg/vivants/anya/anya_avant_benediction_2.svg",
-    "svg/vivants/anya/anya_avant_benediction_3.svg",
-    "svg/vivants/anya/anya_avant_benediction_4.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 360,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
-   "id": "vivants/anya/anya_avant_creer",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "avant",
-   "pose": "creer",
-   "titre": "Anya, trois quarts avant, creer",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_avant_creer_1.svg",
-    "svg/vivants/anya/anya_avant_creer_2.svg",
-    "svg/vivants/anya/anya_avant_creer_3.svg",
-    "svg/vivants/anya/anya_avant_creer_4.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 500,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
    "id": "vivants/anya/anya_avant_disparaitre",
    "rubrique": "vivants",
    "sujet": "anya",
@@ -130422,36 +130370,6 @@
    "statut": "ok"
   },
   {
-   "id": "vivants/anya/anya_avant_eveil",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "avant",
-   "pose": "eveil",
-   "titre": "Anya, trois quarts avant, éveil",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 8,
-   "fichiers": [
-    "svg/vivants/anya/anya_avant_eveil_1.svg",
-    "svg/vivants/anya/anya_avant_eveil_2.svg",
-    "svg/vivants/anya/anya_avant_eveil_3.svg",
-    "svg/vivants/anya/anya_avant_eveil_4.svg",
-    "svg/vivants/anya/anya_avant_eveil_5.svg",
-    "svg/vivants/anya/anya_avant_eveil_6.svg",
-    "svg/vivants/anya/anya_avant_eveil_7.svg",
-    "svg/vivants/anya/anya_avant_eveil_8.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 320,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
    "id": "vivants/anya/anya_avant_marche",
    "rubrique": "vivants",
    "sujet": "anya",
@@ -130477,7 +130395,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -130508,7 +130426,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -130539,7 +130457,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -130570,7 +130488,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -130896,32 +130814,6 @@
    "statut": "ok"
   },
   {
-   "id": "vivants/anya/anya_avant_parler",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "avant",
-   "pose": "parler",
-   "titre": "Anya, trois quarts avant, parler",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_avant_parler_1.svg",
-    "svg/vivants/anya/anya_avant_parler_2.svg",
-    "svg/vivants/anya/anya_avant_parler_3.svg",
-    "svg/vivants/anya/anya_avant_parler_4.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 300,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
    "id": "vivants/anya/anya_avant_repos",
    "rubrique": "vivants",
    "sujet": "anya",
@@ -130943,7 +130835,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -130970,7 +130867,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -130997,7 +130899,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131024,57 +130931,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
-   "id": "vivants/anya/anya_avant_souffler",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "avant",
-   "pose": "souffler",
-   "titre": "Anya, trois quarts avant, souffler",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_avant_souffler_1.svg",
-    "svg/vivants/anya/anya_avant_souffler_2.svg",
-    "svg/vivants/anya/anya_avant_souffler_3.svg",
-    "svg/vivants/anya/anya_avant_souffler_4.svg"
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
    ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 400,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
-   "id": "vivants/anya/anya_avant_voile",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "avant",
-   "pose": "voile",
-   "titre": "Anya, trois quarts avant, voile",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/anya/anya_avant_voile_1.svg",
-    "svg/vivants/anya/anya_avant_voile_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 1400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131334,7 +131196,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131365,7 +131227,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131396,7 +131258,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131427,7 +131289,7 @@
     80,
     128
    ],
-   "ms_par_image": 160,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131753,32 +131615,6 @@
    "statut": "ok"
   },
   {
-   "id": "vivants/anya/anya_dos_parler",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "dos",
-   "pose": "parler",
-   "titre": "Anya, trois quarts dos, parler",
-   "regarde": "haut-droite",
-   "miroir": true,
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_dos_parler_1.svg",
-    "svg/vivants/anya/anya_dos_parler_2.svg",
-    "svg/vivants/anya/anya_dos_parler_3.svg",
-    "svg/vivants/anya/anya_dos_parler_4.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 300,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
    "id": "vivants/anya/anya_dos_repos",
    "rubrique": "vivants",
    "sujet": "anya",
@@ -131800,7 +131636,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131827,7 +131668,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131854,7 +131700,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131881,31 +131732,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
-   "id": "vivants/anya/anya_dos_voile",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "dos",
-   "pose": "voile",
-   "titre": "Anya, trois quarts dos, voile",
-   "regarde": "haut-droite",
-   "miroir": true,
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/anya/anya_dos_voile_1.svg",
-    "svg/vivants/anya/anya_dos_voile_2.svg"
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
    ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 1400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131929,7 +131761,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131953,7 +131790,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -131977,7 +131819,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132001,7 +131848,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132025,7 +131877,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132049,7 +131906,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132073,7 +131935,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132097,7 +131964,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132121,7 +131993,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132145,7 +132022,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132169,7 +132051,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132193,7 +132080,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132217,7 +132109,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132241,7 +132138,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132265,7 +132167,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132289,7 +132196,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132425,7 +132337,7 @@
     80,
     128
    ],
-   "ms_par_image": 360,
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132451,7 +132363,7 @@
     80,
     128
    ],
-   "ms_par_image": 360,
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132477,7 +132389,7 @@
     80,
     128
    ],
-   "ms_par_image": 360,
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132503,32 +132415,7 @@
     80,
     128
    ],
-   "ms_par_image": 360,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
-   "id": "vivants/anya/anya_face_creer",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "face",
-   "pose": "creer",
-   "titre": "Anya, de face, creer",
-   "regarde": "face",
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_face_creer_1.svg",
-    "svg/vivants/anya/anya_face_creer_2.svg",
-    "svg/vivants/anya/anya_face_creer_3.svg",
-    "svg/vivants/anya/anya_face_creer_4.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 500,
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132651,16 +132538,10 @@
    "pose": "eveil",
    "titre": "Anya, de face, éveil",
    "regarde": "face",
-   "images": 8,
+   "images": 2,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_1.svg",
-    "svg/vivants/anya/anya_face_eveil_2.svg",
-    "svg/vivants/anya/anya_face_eveil_3.svg",
-    "svg/vivants/anya/anya_face_eveil_4.svg",
-    "svg/vivants/anya/anya_face_eveil_5.svg",
-    "svg/vivants/anya/anya_face_eveil_6.svg",
-    "svg/vivants/anya/anya_face_eveil_7.svg",
-    "svg/vivants/anya/anya_face_eveil_8.svg"
+    "svg/vivants/anya/anya_face_eveil_2.svg"
    ],
    "cadre": [
     0,
@@ -132668,7 +132549,10 @@
     80,
     128
    ],
-   "ms_par_image": 320,
+   "ms_par_image": [
+    700,
+    900
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132681,16 +132565,10 @@
    "variante": "automne",
    "titre": "Anya, de face, éveil, automne",
    "regarde": "face",
-   "images": 8,
+   "images": 2,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_automne_1.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_2.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_3.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_4.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_5.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_6.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_7.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_8.svg"
+    "svg/vivants/anya/anya_face_eveil_automne_2.svg"
    ],
    "cadre": [
     0,
@@ -132698,7 +132576,10 @@
     80,
     128
    ],
-   "ms_par_image": 320,
+   "ms_par_image": [
+    700,
+    900
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132711,16 +132592,10 @@
    "variante": "hiver",
    "titre": "Anya, de face, éveil, hiver",
    "regarde": "face",
-   "images": 8,
+   "images": 2,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_hiver_1.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_2.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_3.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_4.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_5.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_6.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_7.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_8.svg"
+    "svg/vivants/anya/anya_face_eveil_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -132728,7 +132603,10 @@
     80,
     128
    ],
-   "ms_par_image": 320,
+   "ms_par_image": [
+    700,
+    900
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -132741,16 +132619,10 @@
    "variante": "printemps",
    "titre": "Anya, de face, éveil, printemps",
    "regarde": "face",
-   "images": 8,
+   "images": 2,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_printemps_1.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_2.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_3.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_4.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_5.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_6.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_7.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_8.svg"
+    "svg/vivants/anya/anya_face_eveil_printemps_2.svg"
    ],
    "cadre": [
     0,
@@ -132758,7 +132630,10 @@
     80,
     128
    ],
-   "ms_par_image": 320,
+   "ms_par_image": [
+    700,
+    900
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -133072,31 +132947,6 @@
    "statut": "ok"
   },
   {
-   "id": "vivants/anya/anya_face_parler",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "face",
-   "pose": "parler",
-   "titre": "Anya, de face, parler",
-   "regarde": "face",
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_face_parler_1.svg",
-    "svg/vivants/anya/anya_face_parler_2.svg",
-    "svg/vivants/anya/anya_face_parler_3.svg",
-    "svg/vivants/anya/anya_face_parler_4.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 300,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
    "id": "vivants/anya/anya_face_repos",
    "rubrique": "vivants",
    "sujet": "anya",
@@ -133117,7 +132967,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -133143,7 +132998,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -133169,7 +133029,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -133195,55 +133060,12 @@
     80,
     128
    ],
-   "ms_par_image": 600,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
-   "id": "vivants/anya/anya_face_souffler",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "face",
-   "pose": "souffler",
-   "titre": "Anya, de face, souffler",
-   "regarde": "face",
-   "images": 4,
-   "fichiers": [
-    "svg/vivants/anya/anya_face_souffler_1.svg",
-    "svg/vivants/anya/anya_face_souffler_2.svg",
-    "svg/vivants/anya/anya_face_souffler_3.svg",
-    "svg/vivants/anya/anya_face_souffler_4.svg"
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
    ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 400,
-   "parcours": "revelation",
-   "statut": "ok"
-  },
-  {
-   "id": "vivants/anya/anya_face_voile",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "vue": "face",
-   "pose": "voile",
-   "titre": "Anya, de face, voile",
-   "regarde": "face",
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/anya/anya_face_voile_1.svg",
-    "svg/vivants/anya/anya_face_voile_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": 1400,
    "parcours": "revelation",
    "statut": "ok"
   },

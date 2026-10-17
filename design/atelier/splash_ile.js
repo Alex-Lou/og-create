@@ -3,7 +3,8 @@
 // et le blé, le poulailler et ses poules, des moutons et une chèvre ; des arbres, des buissons fleuris, le linge qui
 // sèche ; la plage, la barque échouée, l'écume. Repère : (0, 0) au centre de l'herbe ; l'île fait 580 de large, de
 // y = -60 (le fond) à y = 130 (la plage devant). Contours teintés, lumière froide d'en haut, chaude des fenêtres et du feu.
-const { degrade, rayonne, forme, trait, balance, eclairer } = require('./splash_anya').outils;
+const { degrade, rayonne, forme, trait, balance } = require('./splash_anya').outils;
+const { vernis } = require('./vernis');
 const { f, rnd, vaVient, palpite } = require('./scenes7').outils;
 
 const fs = require('fs');
@@ -12,14 +13,27 @@ const path = require('path');
 const SPL = '0.45 0 0.55 1';
 const BIB = path.join(__dirname, '..', 'bibliotheque', 'svg');
 // Un dessin de la bibliothèque posé sur l'île : son ancrage (0, 0, le sol) en (x, y), à l'échelle k ; ses identifiants
-// préfixés (deux dessins ne partagent jamais un identifiant)
-// préfixés (deux dessins ne partagent jamais un identifiant) ; éclairé par la lumière de l'écran (Anya, au centre)
-function poser(rel, prefixe, x, y, k) {
-  const src = fs.readFileSync(path.join(BIB, rel), 'utf8');
+// préfixés (deux dessins ne partagent jamais un identifiant) ; verni (vernis.js : contour, volume, reflets de lune ;
+// o : ses lumières, ses étincelles…), la lune derrière Anya, au centre
+const lire = rel => fs.readFileSync(path.join(BIB, rel), 'utf8');
+// (sansSol : sans sa grande ombre au sol, l'ovale transparent de son emprise ; sans : d'autres formes à retirer)
+function poser(rel, prefixe, x, y, k, o = {}) {
+  let src = lire(rel);
+  if (o.sansSol) src = src.replace(/<ellipse [^>]*fill="rgba\(40,55,20,[^"]*"\/>/, '');
+  if (o.sans) src = src.replace(o.sans, '');
   const box = src.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
   const corps = src.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
     .replace(/id="([^"]+)"/g, `id="${prefixe}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${prefixe}$1)`).replace(/href="#([^"]+)"/g, `href="#${prefixe}$1"`);
-  return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${eclairer(corps, `${prefixe}e`, box, x < 0 ? 1 : -1, 0.9)}</g>`;
+  return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${vernis(corps, `${prefixe}v`, box, { cote: x < 0 ? 1 : -1, trapu: 0.04, ...o })}</g>`;
+}
+// Une construction à son dernier palier (batiments.json : son dessin, ses lumières de nuit), posée et vernie ; ses
+// lumières allumées (la case (u, v), la hauteur z : à l'écran, comme le jeu, iso.js, à l'échelle de la bibliothèque)
+const BATIMENTS = JSON.parse(lire('batiments/batiments.json')).paliers;
+function batiment(nom, prefixe, x, y, k, eclats, sans) {
+  const cle = Object.keys(BATIMENTS).filter(c => c.startsWith(`${nom}_palier`)).sort().pop();
+  const P = BATIMENTS[cle];
+  const lumieres = (P.lumieres || []).map(l => [40 * (l.u - l.v), 20 * (l.u + l.v) - l.z, l.rayon * 0.8, 20 * (l.u + l.v)]);
+  return poser(`batiments/${P.fichiers[0]}`, prefixe, x, y, k, { sol: P.cadre[2] * 0.16, lumieres, eclats, sansSol: true, sans });
 }
 const ovale = (cx, cy, rx, ry, fill, stroke = 'none', w = 0, extra = '') => `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${stroke !== 'none' ? ` stroke="${stroke}" stroke-width="${w}"` : ''}${extra}/>`;
 const ombre = (x, y, rx) => ovale(x, y, rx, rx * 0.28, 'url(#ilOmbre)');
@@ -258,26 +272,30 @@ function ileVivante() {
   // le chemin de la plage au feu, et vers les cabanes
   s += forme('M-10,92 Q-22,70 -6,54 Q8,42 -2,30 L10,30 Q18,44 6,56 Q-6,72 8,92 Z', 'url(#ilChemin)', '#B08A5A', 1.4);
   s += trait('M2,30 Q-40,12 -96,4 M4,30 Q60,14 112,4', '#D8BC88', 7, ' opacity=".8"');
-  // tout ce qui est posé sur l'île : les dessins du jeu (le campement, les cultures, le verger, les bêtes), du fond
-  // vers l'avant (triés sur y) ; les bêtes respirent d'un rien
-  const C = 'decor/camp/coins/', B = 'animaux/ferme/';
+  // tout ce qui est posé sur l'île : les sept constructions du jeu à leur dernier palier (choix de l'auteur, 16 oct. :
+  // l'aperçu de ce qu'on atteint), les hautes au fond, sur les côtés (le centre reste dégagé sous les mains d'Anya, la
+  // Fontaine au milieu) ; devant, le Potager ; le Ponton s'avance sur la mer, au bord de la plage ; les vergers, les cultures, les bêtes. Tout à la
+  // même échelle (K : celle du jeu entre eux), du fond vers l'avant (triés sur y) ; les bêtes respirent d'un rien
+  const K = 0.55, B = 'animaux/ferme/';
+  // (le Ponton s'avance sur la mer : sans le bassin d'eau claire où le jeu le pose, ses ovales autour de son ancrage)
+  const BASSIN = /<ellipse cx="-2\.4" [^>]*\/>/g;
+  const CONSTRUCTIONS = [['atelier', -212, -12, 8], ['carriere', -110, -36, 4], ['puits', 0, -44, 12], ['bosquet', 108, -36, 8],
+    ['foyer', 206, -12, 5], ['potager', -128, 52, 10], ['ponton', 246, 126, 4, BASSIN]];
   const POSES = [
-    ['decor/verger/pommier/verger_pommier_mur_1.svg', -120, -52, 0.85], ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', 140, -54, 0.85],
-    ['decor/verger/pommier/verger_pommier_mur_1.svg', 250, -6, 0.75], ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', -252, -4, 0.75],
-    [`${C}aster/aster_cabanon_2.svg`, -170, -22, 1.15], [`${C}sylve/sylve_cabanon_1.svg`, -52, -40, 1], [`${C}melisse/melisse_cabanon_1.svg`, 66, -38, 1.05],
-    [`${C}rivet/rivet_cabanon_1.svg`, 178, -20, 1.1], [`${C}ondin/ondin_cabanon_2.svg`, -236, 30, 0.95], [`${C}galet/galet_debris_1.svg`, 236, 30, 0.95],
-    [`${C}cannelle/cannelle_debris_3.svg`, 0, 22, 1.15], ['decor/camp/objets/etendoir_2.svg', -92, 24, 0.95], ['decor/camp/objets/caisses_1.svg', 96, 14, 0.85],
-    ['decor/camp/objets/torche_1.svg', -36, 58, 0.75], ['decor/camp/objets/torche_1.svg', 40, 58, 0.75],
-    ['decor/cultures/ble/culture_ble_croissance_3.svg', 128, 54, 1.05], ['decor/cultures/choux/culture_choux_croissance_3.svg', -170, 64, 0.95],
-    ['decor/cultures/carottes/culture_carottes_croissance_3.svg', 214, 74, 0.85],
-    [`${B}poule-rousse/poule-rousse_avant_repos.svg`, -62, 60, 1.1, 1], [`${B}poule-blanche/poule-blanche_avant_repos.svg`, -42, 70, 1.05, 1],
-    [`${B}mouton/mouton_avant_repos.svg`, 64, 70, 1.2, 1], [`${B}chevre/chevre_avant_repos.svg`, 28, 78, 1.1, 1], [`${B}vache/vache_avant_repos.svg`, -112, 76, 1, 1],
-    [`${B}chat/chat_avant_assis_1.svg`, -8, 80, 1.1, 1],
-    ['decor/camp/epave/hirondelle_1.svg', -190, 150, 0.7]
+    ['decor/verger/pommier/verger_pommier_mur_1.svg', -256, 26, K], ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', 258, 30, K],
+    ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', -46, -50, K * 0.9], ['decor/verger/pommier/verger_pommier_mur_1.svg', 50, -52, K * 0.9],
+    ['decor/cultures/ble/culture_ble_croissance_3.svg', 52, 44, K], ['decor/cultures/choux/culture_choux_croissance_3.svg', 96, 58, K],
+    ['decor/cultures/carottes/culture_carottes_croissance_3.svg', 66, 76, K],
+    [`${B}poule-rousse/poule-rousse_avant_repos.svg`, -46, 62, K * 1.6, 1], [`${B}poule-blanche/poule-blanche_avant_repos.svg`, -30, 72, K * 1.6, 1],
+    [`${B}mouton/mouton_avant_repos.svg`, 18, 70, K * 1.6, 1], [`${B}chevre/chevre_avant_repos.svg`, 130, 82, K * 1.6, 1], [`${B}vache/vache_avant_repos.svg`, -60, 86, K * 1.6, 1],
+    [`${B}chat/chat_avant_assis_1.svg`, -4, 88, K * 1.6, 1],
+    ['decor/camp/epave/hirondelle_petite_1.svg', -206, 124, K]
   ];
-  s += POSES.map((o, i) => ({ y: o[2], i, o })).sort((a, b) => a.y - b.y || a.i - b.i).map(({ o: [rel, x, y, k, vit], i }) => {
-    const dessin = poser(rel, `il${i}`, x, y, k);
-    return vit ? `<g>${vaVient('translate', '0 0', '0 -1.2', 2.4 + (i % 3) * 0.4, i * 0.3)}${dessin}</g>` : dessin;
+  const items = [...CONSTRUCTIONS.map(([nom, x, y, e, sans], i) => ({ y, i, dessin: () => batiment(nom, `ib${i}`, x, y, K, e, sans) })),
+    ...POSES.map(([rel, x, y, k, vit], i) => ({ y, i: i + 10, vit, dessin: () => poser(rel, `il${i}`, x, y, k) }))];
+  s += items.sort((a, b) => a.y - b.y || a.i - b.i).map(({ dessin, vit, i }) => {
+    const d = dessin();
+    return vit ? `<g>${vaVient('translate', '0 0', '0 -1.2', 2.4 + (i % 3) * 0.4, i * 0.3)}${d}</g>` : d;
   }).join('');
   return s;
 }

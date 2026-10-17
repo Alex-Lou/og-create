@@ -7,6 +7,29 @@ export function fitTo(svg, box) {
   return svg.replace(/width="[\d.]+" height="[\d.]+"/, `width="${box.w}" height="${box.h}"`);
 }
 
+// Les dessins de la bibliothèque lus en texte (le cache des sprites, les recadrages, les teintes) : la table d'adresses
+// d'un import.meta.glob (?url : le build émet chaque fichier tel quel, dans img/) devient une table de lecteurs, aux
+// mêmes clés. Un dessin n'est lu qu'une fois ; un échec ne se retient pas, il se relira à la prochaine demande. (Lus en
+// modules ?raw, chacun devenait un fichier de code : plus de 5 000, et le build manquait de mémoire sur le serveur)
+const texts = new Map();
+function textAt(url) {
+  if (!texts.has(url)) {
+    const text = fetch(url).then(response => {
+      // (un fichier absent répond 404 ; un serveur qui renverrait la page du jeu à sa place ne donne pas un dessin)
+      if (!response.ok || (response.headers.get('content-type') || '').includes('text/html')) throw new Error(`Dessin introuvable : ${url}`);
+      return response.text();
+    });
+    text.catch(() => {
+      if (texts.get(url) === text) texts.delete(url);
+    });
+    texts.set(url, text);
+  }
+  return texts.get(url);
+}
+export function textsOf(urls) {
+  return Object.fromEntries(Object.entries(urls).map(([key, url]) => [key, () => textAt(url)]));
+}
+
 // Le sprite d'un fichier de la bibliothèque, pour le cache des sprites : son cadre tout de suite, son dessin à la demande
 export function librarySprite(loader, box) {
   return () => ({ box, load: () => loader().then(svg => fitTo(svg, box)) });

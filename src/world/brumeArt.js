@@ -3,12 +3,12 @@
 // récompense prête (pret, sa pastille « ! ») ; quatre images à 220 ms (la cadence des vivants de la bibliothèque). Cadre
 // 40 × 48, le centre du bas de la flamme en (20, 32), rayon 9. Ce que la bibliothèque n'a pas garde le feu follet par
 // code (brume.js).
-import { librarySprite, frameAt } from './library';
+import { librarySprite, frameAt, textsOf } from './library';
 import { drawSprite } from './spriteCache';
 
 const ROOT = '/design/bibliotheque/svg/vivants/brume/';
-const FILES = import.meta.glob('/design/bibliotheque/svg/vivants/brume/brume_*.svg', { query: '?raw', import: 'default' });
 const URLS = import.meta.glob('/design/bibliotheque/svg/vivants/brume/brume_*.svg', { query: '?url', import: 'default', eager: true });
+const FILES = textsOf(URLS);
 
 export const BRUME_FRAMES = 4;
 export const BRUME_MS = 220;

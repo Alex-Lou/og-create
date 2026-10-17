@@ -7,10 +7,10 @@
 import { reactive } from 'vue';
 import DATA from '../../design/bibliotheque/svg/batiments/batiments.json';
 import { P } from './iso';
-import { fitTo, BLANK } from './library';
+import { fitTo, BLANK, textsOf } from './library';
 import { itemLayers } from './shopSprites';
 
-const FILES = import.meta.glob('/design/bibliotheque/svg/batiments/objets/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/batiments/objets/**/*.svg', { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/batiments/';
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 // La bibliothèque est à l'échelle du jeu × 1,25

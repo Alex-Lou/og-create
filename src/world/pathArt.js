@@ -5,10 +5,10 @@
 // peint d'un seul tenant (terrain.js, drawCell) : une image pas encore lue laisse l'ancien chemin, et le sol des
 // chemins est repeint dès qu'elle l'est (onPathsLoaded)
 import DATA from '../../design/bibliotheque/svg/chemins/chemins.json';
-import { librarySprite } from './library';
+import { librarySprite, textsOf } from './library';
 
 // (les raccords, le creusement et ses effets : lus à la demande)
-const FILES = import.meta.glob('/design/bibliotheque/svg/chemins/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/chemins/*.svg', { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/chemins/';
 // L'herbe des dessins (un dégradé), remplacée par celle de la case ; ou laissée transparente (CLEAR_GRASS : l'herbe
 // peinte de la case passe dessous, terrain.js)

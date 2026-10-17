@@ -3,12 +3,12 @@
 // bibliothèque les note : l'égaré à ses pieds, la brume au centre de l'emprise du bâtiment, le petit nuage à son pied.
 import EGARES from '../../design/bibliotheque/svg/egares/egares.json';
 import EMBRUME from '../../design/bibliotheque/svg/decor/embrume/embrume.json';
-import { librarySprite, frameAt } from './library';
+import { librarySprite, frameAt, textsOf } from './library';
 
-const FILES = {
-  ...import.meta.glob('/design/bibliotheque/svg/egares/**/*.svg', { query: '?raw', import: 'default' }),
-  ...import.meta.glob('/design/bibliotheque/svg/decor/embrume/*.svg', { query: '?raw', import: 'default' })
-};
+const FILES = textsOf({
+  ...import.meta.glob('/design/bibliotheque/svg/egares/**/*.svg', { query: '?url', import: 'default', eager: true }),
+  ...import.meta.glob('/design/bibliotheque/svg/decor/embrume/*.svg', { query: '?url', import: 'default', eager: true })
+});
 const URLS = import.meta.glob('/design/bibliotheque/svg/decor/embrume/reparer_icone.svg', { query: '?url', import: 'default', eager: true });
 const STRAYS = '/design/bibliotheque/svg/egares/';
 const MIST = '/design/bibliotheque/svg/decor/embrume/';

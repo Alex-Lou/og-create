@@ -3,8 +3,9 @@
 // - Fichiers du build (js, css, images, icônes) : cache d'abord ; leurs noms changent à chaque version.
 // - Le reste (API, polices externes) n'est jamais intercepté.
 // Changer de nom vide l'ancien cache (icônes et fichiers à nom fixe). v3 : vide aussi les pages HTML gardées par erreur
-// à la place d'un fichier du build (voir plus bas)
-const CACHE = 'origins-v3';
+// à la place d'un fichier du build (voir plus bas). v4 : vide les dessins de l'île gardés en fichiers de code (js/), un
+// par dessin, que le jeu ne demande plus (il les lit dans img/ : src/world/library.js)
+const CACHE = 'origins-v4';
 const STATIC_PREFIXES = ['/js/', '/css/', '/img/', '/fonts/', '/icons/'];
 
 self.addEventListener('install', () => self.skipWaiting());

@@ -3,9 +3,9 @@
 // × 1,25), ancrée en son centre : une case du jeu, pour le cache des sprites (spriteCache.js : drawSprite). Lus à la
 // demande, un fichier à la fois.
 import METEO from '../../../design/bibliotheque/svg/meteo/meteo.json';
-import { librarySprite, frameAt } from '../library';
+import { librarySprite, frameAt, textsOf } from '../library';
 
-const FILES = import.meta.glob('/design/bibliotheque/svg/meteo/sol/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/meteo/sol/*.svg', { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/meteo/';
 const SCALE = 1.25;
 const sprites = new Map();
