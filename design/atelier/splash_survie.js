@@ -45,16 +45,21 @@ const ARMES = {
   fourche: { a: 12, d: () => forme('M-0.8,10 L0.8,10 L0.8,-30 L-0.8,-30 Z', '#9B6B3E', 0.5)
     + forme('M-3.4,-30 L3.4,-30 Q3.6,-32 3.2,-33 L-3.2,-33 Q-3.6,-32 -3.4,-30 Z', '#7E8792', 0.5)
     + [-2.8, 0, 2.8].map(x => forme(`M${x - 0.5},-33 L${x + 0.5},-33 L${x + 0.2},-40.4 L${x},-41.2 L${x - 0.2},-40.4 Z`, '#B4BEC8', 0.4)).join('') },
-  // le pistolet de marine : la crosse de bois dans la main, le canon d'acier levé, ses bagues de laiton, le chien
-  pistolet: { a: 24, k: 1.7, d: () => forme('M-1.6,3.4 Q-2.6,0 -1.2,-2.4 L1.6,-2.4 Q2.4,0.4 1.4,3.6 Z', '#7A4A2A', 0.5)
-    + forme('M-1.1,-2.4 L1.3,-2.4 L1.1,-15 L-0.9,-15 Z', '#7E8792', 0.5) + forme('M-1.4,-15 L1.6,-15 L1.5,-16.4 L-1.3,-16.4 Z', '#5A636C', 0.4)
-    + [-6, -11].map(y => forme(`M-1.3,${y} L1.5,${y} L1.5,${y - 1} L-1.3,${y - 1} Z`, '#C9A04A', 0.3)).join('')
-    + forme('M1.3,-3.6 L3.4,-5 L3.8,-4.2 L2.2,-2.6 Z', '#3D3A36', 0.4) },
-  // la fusée de détresse : un pistolet orange levé, la fusée qui flambe au bout du canon
-  fusee: { a: 18, k: 1.55, d: () => `<circle cx="0" cy="-17" r="9" fill="url(#svFlamme)"/>`
-    + forme('M-1.8,3.6 Q-2.6,0.4 -1.4,-2.4 L1.8,-2.4 Q2.6,0.6 1.6,3.8 Z', '#E8762C', 0.5) + forme('M-2,-2.4 L2.2,-2.4 L2,-13 L-1.8,-13 Z', '#F0913C', 0.5)
-    + forme('M-2.4,-13 L2.6,-13 L2.4,-14.6 L-2.2,-14.6 Z', '#C2561E', 0.4) + rond(0.1, -16.4, 1.6, '#FFF2C8', 0.3)
-    + [[-2.6, -20, 0.7], [2.4, -21.4, 0.6], [0.4, -23.4, 0.5], [-1.4, -24.6, 0.4]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFE08A"/>`).join('') }
+  // le pistolet de marine : la crosse de bois recourbée dans la main, la platine et son chien, le pontet, le long
+  // canon d'acier levé, son fût de bois dessous, sa bouche évasée
+  pistolet: { a: 22, k: 1.6, d: () => forme('M-1.8,4.6 Q-3,1.6 -1.6,-1.4 L1.8,-2.6 Q2.6,0.4 1,3.2 Q0,4.8 -1.8,4.6 Z', '#7A4A2A', 0.5)
+    + forme('M-1.4,-1.2 L1.9,-2.6 L1.6,-9.4 L-1.2,-8.2 Z', '#8A5A34', 0.5)
+    + forme('M-0.6,-6 L0.9,-6.4 L0.7,-17.2 L-0.5,-17 Z', '#8E98A4', 0.45) + forme('M-1.1,-17 L1.2,-17.4 L1.3,-18.6 L-1.2,-18.2 Z', '#5A636C', 0.4)
+    + forme('M-1.2,-1.6 L1.2,-2.4 L1.3,-4.2 L-1.1,-3.6 Z', '#C9A04A', 0.4) + forme('M1.4,-2.8 L3.6,-4.8 L4.1,-4 L2.4,-2 Z', '#3D3A36', 0.4)
+    + trait('M-1.2,0.4 Q-2.8,1.8 -1.6,3.2', '#C9A04A', 0.6) + trait('M0.2,-7 L0.2,-16.4', '#D8E0E8', 0.3, ' opacity=".8"') },
+  // la fusée de détresse : un pistolet orange trapu, son gros canon levé, la fusée qui jaillit en gerbe de feu
+  fusee: { a: 16, k: 1.5, d: () => `<circle cx="0" cy="-15.6" r="10" fill="url(#svFlamme)"/>`
+    + forme('M-2,4.4 Q-2.8,1.4 -1.6,-1.6 L2,-1.6 Q2.6,1.2 1.4,4.4 Z', '#D9621E', 0.5) + forme('M-2.6,-1.6 L2.8,-1.6 L2.8,-4 L-2.6,-4 Z', '#F08A34', 0.5)
+    + forme('M-2.1,-4 L2.3,-4 L2.2,-11.4 L-2,-11.4 Z', '#F49A3C', 0.5) + `<ellipse cx="0.1" cy="-11.4" rx="2.2" ry="0.8" fill="#3A2016" stroke="${OUT}" stroke-width="0.4"/>`
+    + trait('M-1.2,-4.6 L-1.2,-10.6', '#FFD08A', 0.5, ' opacity=".8"')
+    + forme('M0,-12.4 L1.6,-15 L3.8,-14.6 L2,-16.8 L3.2,-19.4 L0.4,-17.8 L-1.4,-20.6 L-1.2,-17.4 L-3.8,-16.6 L-1.6,-15.2 Z', '#FFB43C', 0.4)
+    + forme('M0,-13.4 L0.9,-15.2 L2.2,-15.4 L1,-16.6 L1.4,-18.2 L0.2,-17.2 L-0.8,-18.6 L-0.7,-16.8 L-2.2,-16 L-0.9,-15.2 Z', '#FFF2C8', 0.3)
+    + [[-3.6, -21, 0.7], [3.4, -22.4, 0.6], [0.6, -24.6, 0.55], [-1.8, -26, 0.45], [2.4, -26.8, 0.4]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFE08A"/>`).join('') }
 };
 const arme = (nom, flip) => (cc, h) => {
   const A = ARMES[nom], k = A.k || 1;
@@ -89,7 +94,9 @@ const MARQUES = {
   nez: ey => forme(`M22.2,${f(ey + 1.6)} L25.8,${f(ey + 0.6)} L26.2,${f(ey + 1.8)} L22.6,${f(ey + 2.8)} Z`, '#F0D6B0', 0.4)
     + forme(`M23.4,${f(ey + 0.2)} L24.6,${f(ey - 0.1)} L25,${f(ey + 3.2)} L23.8,${f(ey + 3.5)} Z`, '#F0D6B0', 0.4),
   // une petite cicatrice au menton
-  menton: ey => couture(25.4, ey + 7.6, 27.4, ey + 9.4, 2)
+  menton: ey => couture(25.4, ey + 7.6, 27.4, ey + 9.4, 2),
+  // de la suie sous les yeux, comme un fard de guerre : le regard plus dur
+  suie: ey => [19.4, 28.6].map(x => `<path d="M${f(x - 2.6)},${f(ey + 2.4)} Q${f(x)},${f(ey + 4.4)} ${f(x + 2.6)},${f(ey + 2.4)} Q${f(x)},${f(ey + 3.2)} ${f(x - 2.6)},${f(ey + 2.4)} Z" fill="#2A2228" opacity=".45"/>`).join('')
 };
 const EQUIPEMENT = {
   // une bandoulière de cuir en travers du buste, ses cartouches de laiton
@@ -115,13 +122,13 @@ function dessinSurvivant(qui, pose, expr, prefixe, o = {}) {
 // La troupe de la survie : les places de l'affiche du jeu (splash.js, TROUPE), tous de face ; chacun son regard, ses
 // marques, son arme (deux voisins jamais le même regard)
 const TROUPE_SURVIE = [
-  [['ondin', 'face_repos', 'colere', { arme: 'barre', marques: ['nez'], equipement: ['bandouliere'] }], 112, 640, 4, 0.4, 0.4],
+  [['ondin', 'face_repos', 'colere', { arme: 'barre', marques: ['nez', 'suie'], equipement: ['bandouliere'] }], 112, 640, 4, 0.4, 0.4],
   [['sylve', 'face_repos', 'ironique', { arme: 'poignard', marques: ['griffures'] }], 268, 610, 3.8, 0.42, 1.3],
   [['cannelle', 'face_repos', 'mefiante', { arme: 'couperet', marques: ['bandeau'] }], 640, 600, 3.6, 0.42, 2.1],
   [['galet', 'face_repos', 'mefiante', { arme: 'massue', marques: ['cache-oeil'], equipement: ['epauliere'] }], 250, 790, 5.2, 0.2, 0.8],
   [['melisse', 'face_repos', 'decidee', { arme: 'fourche', marques: ['menton'] }], 655, 790, 5.2, 0.2, 1.7],
-  [['aster', 'face_repos', 'decidee', { arme: 'fusee', marques: ['sourcil'], equipement: ['bandouliere'] }], 158, 995, 6.4, 0, 2.6],
-  [['rivet', 'face_repos', 'ironique', { arme: 'pistolet', marques: ['joue'], equipement: ['epauliere'] }], 744, 995, 6.4, 0, 0.2]
+  [['aster', 'face_repos', 'decidee', { arme: 'fusee', marques: ['sourcil', 'suie'], equipement: ['bandouliere'] }], 158, 995, 6.4, 0, 2.6],
+  [['rivet', 'face_repos', 'ironique', { arme: 'pistolet', marques: ['joue', 'suie'], equipement: ['epauliere'] }], 744, 995, 6.4, 0, 0.2]
 ];
 // la flamme de la fusée : ses dégradés, une fois pour toute l'affiche
 const DEFS_AFFICHE = '<defs><radialGradient id="svFlamme"><stop offset="0" stop-color="#FFF4C8"/><stop offset=".25" stop-color="#FF8A3A" stop-opacity=".9"/>'
@@ -140,9 +147,12 @@ function poser(rel, prefixe, x, y, k, { miroir = false, voile = 1 } = {}) {
 }
 // Les égarés, à demi sortis de la brume sur la mer, de chaque côté de l'île, entre elle et les tentacules (ils flottent :
 // leur pied se perd dans la brume du large) : [qui, x, y, échelle, miroir, voile]
-const EGARES = [['fantome', 640, 452, 1.5, false, 0.95], ['noye-de-l-hirondelle', 600, 470, 1.1, false, 0.8], ['zombie', 688, 470, 1.15, false, 0.88],
-  ['esprit-sylvestre', 962, 452, 1.45, true, 0.95], ['racine-errante', 1000, 474, 1.15, true, 0.85], ['zombie', 912, 474, 1.05, true, 0.8]];
-const egares = () => EGARES.map(([qui, x, y, k, miroir, voile], i) => poser(`egares/${qui}/${qui}_avant_brume_1.svg`, `sve${i}`, x, y, k, { miroir, voile })).join('');
+const EGARES = [['fantome', 636, 456, 1.95, false, 1], ['noye-de-l-hirondelle', 588, 476, 1.4, false, 0.92], ['zombie', 690, 478, 1.5, false, 1],
+  ['esprit-sylvestre', 966, 456, 1.9, true, 1], ['racine-errante', 1006, 480, 1.5, true, 0.95], ['zombie', 912, 480, 1.4, true, 0.92]];
+// (leur halo : une lueur froide derrière chacun, qui les détache de la nuit)
+const HALO_EGARE = '<defs><radialGradient id="sveHalo"><stop offset="0" stop-color="#BDF2FF" stop-opacity=".55"/><stop offset=".55" stop-color="#7FD8F0" stop-opacity=".18"/><stop offset="1" stop-color="#7FD8F0" stop-opacity="0"/></radialGradient></defs>';
+const egares = () => HALO_EGARE + EGARES.map(([qui, x, y, k, miroir, voile], i) => `<ellipse cx="${x}" cy="${f(y - 40 * k)}" rx="${f(34 * k)}" ry="${f(46 * k)}" fill="url(#sveHalo)"/>`
+  + poser(`egares/${qui}/${qui}_avant_brume_1.svg`, `sve${i}`, x, y, k, { miroir, voile })).join('');
 
 // Un tentacule du kraken (la couleur de celui du Ponton) : il sort de l'eau en (x, y) et monte, sa pointe s'enroule
 // (cote : 1 vers la droite, -1 vers la gauche) ; long : sa longueur, large : son épaisseur à la base. Son contour, son
