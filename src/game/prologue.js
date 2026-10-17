@@ -534,7 +534,7 @@ export function islandStep({ state, quest }) {
     if (!seen.has('longue-vue')) return { phase: 'lines', lines: [], lesson: 'longue-vue' };
     return quest.done ? { phase: 'lines', lines: ['chaine', 'bois-ponton'] } : { phase: 'harvest', lines: ['rivage'] };
   }
-  if (quest.id === 'premier-ponton') return { phase: 'lines', lines: quest.done ? ['ponton-tient', 'ponton-promesse'] : ['ponton-bois'] };
+  if (quest.id === 'premier-ponton') return { phase: 'lines', lines: quest.done ? ['ponton-tient', 'ponton-promesse', 'ponton-moyens'] : ['ponton-bois'] };
   // Le chemin entre son camp et le nôtre
   if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
   // Ses quatre piquets, en travers du passage des égarés (BARRAGE) : Brume vous dit à quoi ils servent
