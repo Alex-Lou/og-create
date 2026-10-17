@@ -32,7 +32,7 @@ export default {
     // La largeur du carré à l'écran (pixels CSS)
     width: { type: Number, default: 0 }
   },
-  emits: ['edges'],
+  emits: ['edges', 'temps'],
   data() {
     // (la scène paraît quand toutes ses pièces sont peintes)
     return { visible: false };
@@ -150,6 +150,8 @@ export default {
       const temps = tempsDe(this.partition, n);
       if (!temps) return;
       this.stop();
+      // (le temps commence : l'avatar joue le sien en même temps, SceneArt)
+      this.$emit('temps', n);
       if (reducedMotion()) {
         this.pose(temps, 'fin');
         return;

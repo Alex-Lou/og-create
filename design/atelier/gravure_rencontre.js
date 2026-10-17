@@ -125,6 +125,19 @@ const brumeDevant = p => [
   { id: 'filets2', profondeur: 0.9, cadre: [-100, 336, 600, 90], dessin: () => filets(p, 2, [[-60, 362, 250, 5, 11], [210, 374, 250, 6, 12]]) }
 ];
 const lecheeVa = D => [[0, { y: -10 }], [D * 0.4, { y: 8, e: 'ease-in-out' }], [D * 0.8, { y: -6, e: 'ease-in-out' }], [D, { y: 2 }]];
+// ——— le jeu de l'avatar (src/game/acteur.js : le jeu en dessine les images avec le kit, gravées à la lumière de la
+// scène) : un clip [t, anim, direction, expression] ; ses pas et ses cadrages sont les pistes du plan « avatar » ———
+const joue = (...clips) => clips.map(([t, anim, dir, expr]) => [t, expr ? { anim, dir, expr } : { anim, dir }]);
+// (la lumière qui le grave : le contre-jour du couchant ; puis la lumière froide de Brume, à droite)
+const COUCHANT = { teinte: '#2A140A', force: 0.24, cote: 1 }, FROIDE = { teinte: '#1C2242', force: 0.26, cote: -1 };
+// un temps qui tient tout où le précédent l'a laissé (la caméra, chaque piste), le temps que l'avatar joue
+const derniere = cles => { const { e, ...c } = cles[cles.length - 1][1]; return c; };
+const tenir = (prec, D, acteur, pistes = {}) => ({
+  duree: D,
+  camera: [[0, derniere(prec.camera)], [D, derniere(prec.camera)]],
+  pistes: { ...Object.fromEntries(Object.entries(prec.pistes).map(([id, cles]) => [id, [[0, derniere(cles)], [D, derniere(cles)]]])), ...pistes },
+  acteur
+});
 
 // ——— 02_plage : de dos, face à la mer, au couchant ; à chaque pensée, le soleil descend, la brume monte du large ———
 const PIEDS_PLAGE = [144, 376];
@@ -135,7 +148,7 @@ function plage02() {
     { id: 'anime', profondeur: 0.3, dessin: () => vivant() },
     { id: 'debris', profondeur: 0.62, marge: MARGE, dessin: () => debris(p) },
     { id: 'ombre', profondeur: 0.66, marge: MARGE, dessin: () => ombreLongue(p, PIEDS_PLAGE) },
-    { id: 'avatar', profondeur: 0.66 },
+    { id: 'avatar', profondeur: 0.66, pivot: PIEDS_PLAGE },
     { id: 'contre-jour', profondeur: 0.66, marge: MARGE, dessin: () => contreJour(p, PIEDS_PLAGE) },
     ...brumeDevant(p),
     { id: 'premier', profondeur: 1, marge: MARGE, flou: 0.3, dessin: () => premier(p) },
@@ -143,9 +156,20 @@ function plage02() {
   ];
   // (une pensée par temps : le soir de k0 à k1 ; la caméra s'approche, puis dérive à peine ; les reflets s'éteignent)
   const SOIR = [[0, 0.06, 6000], [0.06, 0.16, 5000], [0.16, 0.3, 5000], [0.3, 0.44, 5000], [0.44, 0.6, 5000]];
-  const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -3, y: 1, z: 1.07 }, { x: -2, y: 1, z: 1.075 }, { x: 0, y: 0, z: 1.08 }];
-  const temps = SOIR.map(([k0, k1, D], n) => unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? 'ease-in-out' : 'ease-out' }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), rocher: [[0, ROC_LOIN], [D, ROC_LOIN]], anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]] }));
-  return { plans, partition: { temps, repos: { duree: 9000, camera: { x: -5, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
+  // (la caméra : le plan large, puis on se rapproche de lui quand il se retourne et grelotte, puis on le laisse partir)
+  const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -40, y: 22, z: 1.22 }, { x: -34, y: 18, z: 1.2 }, { x: -6, y: 2, z: 1.1 }];
+  // (son jeu, une pensée après l'autre : il regarde la mer ; le long de la plage, puis la mer ; il se retourne et
+  // grelotte ; il scrute le rivage, la main en visière ; il se décide et marche vers le rocher, au loin)
+  const ACTEUR = [
+    joue([0, 'repos', 'haut_droite']),
+    joue([0, 'repos', 'haut_droite'], [1400, 'repos', 'haut_gauche'], [3400, 'repos', 'haut_droite']),
+    joue([0, 'repos', 'haut_droite'], [500, 'repos', 'bas_droite', 'froid'], [900, 'pose_frisson', 'bas_droite']),
+    joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'bas_droite', 'mefiante'], [1000, 'pose_visiere', 'bas_droite']),
+    joue([0, 'repos', 'bas_droite', 'decidee'], [600, 'repos', 'haut_droite'], [1000, 'marche', 'haut_droite'], [3000, 'repos', 'haut_droite'])
+  ];
+  const pas = D => [[0, { x: 0, y: 0, s: 1 }], [1000, { x: 0, y: 0, s: 1 }], [3000, { x: 46, y: -34, s: 0.8, e: 'linear' }], [D, { x: 46, y: -34, s: 0.8 }]];
+  const temps = SOIR.map(([k0, k1, D], n) => ({ ...unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? 'ease-in-out' : 'ease-out' }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), rocher: [[0, ROC_LOIN], [D, ROC_LOIN]], anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]], ...(n === 4 ? { avatar: pas(D) } : {}) }), acteur: ACTEUR[n] }));
+  return { plans, partition: { lumiere: COUCHANT, temps, repos: { duree: 9000, camera: { x: -5, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
 }
 
 // ——— Brume ———
@@ -176,7 +200,7 @@ const spirales = () => [[70, 56, 8, 1, 6, 0], [190, 34, 6, -1, 7, 2.5], [340, 64
 
 // ——— 02_lueur : l'avatar a avancé jusqu'au rocher (vu au loin dans 02_plage) ; le soleil finit de se coucher, la
 // brume monte ; au large, un point de lumière palpite, dérive vers la plage en grandissant, hésite, et se pose au-dessus du sable, à côté du rocher : Brume
-const PRES_ROCHER = [352, 262];
+const PRES_ROCHER = [352, 262], PIEDS_LUEUR = [120, 384];
 // (posée : elle flotte, tremble, cligne des yeux ; sa lumière sur le sable ; le repos la balance doucement)
 function lueurVive(p) {
   const [x, y] = PRES_ROCHER;
@@ -191,7 +215,7 @@ function lueur02() {
     { id: 'reflet', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => reflet(p, ARETE_DROITE) },
     { id: 'venue', profondeur: 0.6, marge: MARGE, pivot: PRES_ROCHER, dessin: () => brumePiece(`${p}w`, PRES_ROCHER, 1.4, 'curieuse') },
     { id: 'anime', profondeur: 0.6, dessin: () => lueurVive(p) },
-    { id: 'avatar', profondeur: 0.7 },
+    { id: 'avatar', profondeur: 0.7, pivot: PIEDS_LUEUR },
     { id: 'lumiere', profondeur: 0, marge: MARGE, dessin: () => lumiereFroide(p, PRES_ROCHER) },
     ...brumeDevant(p),
     { id: 'teinte', profondeur: 0, marge: MARGE, dessin: () => teinte(p) }
@@ -201,11 +225,16 @@ function lueur02() {
   const venue = [[0, { x: -64, y: -66, s: 0.18, o: 0 }], [300, { x: -64, y: -66, s: 0.18, o: 0, e: 'ease-out' }], [600, { x: -64, y: -66, s: 0.22, o: 1 }], [950, { x: -62, y: -64, s: 0.18, o: 0.5 }], [1300, { x: -58, y: -62, s: 0.24, o: 1 }],
     [2000, { x: -38, y: -46, s: 0.36, o: 1, e: 'ease-in-out' }], [2450, { x: -14, y: -26, s: 0.62, e: 'ease-out' }], [2800, { x: -24, y: -22, s: 0.6, e: 'ease-in-out' }], [POSE, { x: 0, y: 0, s: 1, o: 1, e: 'ease-in-out' }], [D0 - 1, { x: 0, y: 0, s: 1, o: 1, e: 'linear' }], [D0, { o: 0 }]];
   const pose = [[0, { o: 0 }], [D0 - 1, { o: 0, e: 'linear' }], [D0, { o: 1 }]], luit = [[0, { o: 0 }], [1300, { o: 0, e: 'ease-in' }], [POSE, { o: 1 }], [D0, { o: 1 }]], reste = D => [[0, { o: 1 }], [D, { o: 1 }]];
+  // (il arrive du fond de la plage en marchant vers nous, s'arrête ; le point de lumière grandit : il sursaute, recule
+  // d'un pas, les mains aux tempes ; puis il la montre du doigt : une étoile ?)
+  const marche = [[0, { x: -70, y: -16, s: 0.88 }], [1500, { x: 0, y: 0, s: 1, e: 'linear' }], [2150, { x: 0, y: 0, s: 1 }], [2300, { x: -3, y: -7, s: 1, e: 'ease-out' }], [2500, { x: -9, y: 0, s: 1, e: 'ease-in' }], [D0, { x: -9, y: 0, s: 1 }]];
   const temps = [
-    unTemps(D0, [[0, c0], [D0, { ...c1, e: 'ease-in-out' }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit }),
-    unTemps(D1, [[0, c1], [D1, { ...c2, e: 'ease-in-out' }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1) })
+    { ...unTemps(D0, [[0, c0], [D0, { ...c1, e: 'ease-in-out' }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit, avatar: marche }),
+      acteur: joue([0, 'marche', 'bas_droite'], [1500, 'arret', 'bas_droite'], [2020, 'repos', 'bas_droite'], [2150, 'pose_sursaut', 'bas_droite'], [2700, 'pose_tete', 'face']) },
+    { ...unTemps(D1, [[0, c1], [D1, { ...c2, e: 'ease-in-out' }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [D1, { x: -9 }]] }),
+      acteur: joue([0, 'repos', 'bas_droite', 'surprise'], [500, 'pose_pointe', 'bas_droite'], [2600, 'repos', 'bas_droite', 'surprise']) }
   ];
-  return { plans, partition: { temps, repos: { duree: 10000, camera: { x: 5, y: -2, z: 0.02 }, pistes: { anime: [6000, { x: -10, y: -5 }], filets0: [12000, { x: 14 }], filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+  return { plans, partition: { lumiere: FROIDE, temps, repos: { duree: 10000, camera: { x: 5, y: -2, z: 0.02 }, pistes: { anime: [6000, { x: -10, y: -5 }], filets0: [12000, { x: 14 }], filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
 }
 
 // ——— 02_approche : elle fonce sur l'avatar à travers la brume, qui s'écarte ; elle s'arrête tout près, devant le
@@ -218,7 +247,7 @@ function approche02() {
     { id: 'reflet', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => reflet(p, ARETE_HAUT) },
     { id: 'flaque', profondeur: 0.62, marge: MARGE, pivot: [TOUT_PRES[0], 316], dessin: () => { const A = atelier(`${p}q`); return A.out(flaque(`${p}q`, [TOUT_PRES[0], 316], 70)); } },
     { id: 'brume', profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: () => brumePiece(`${p}b`, TOUT_PRES, 3, 'curieuse') },
-    { id: 'avatar', profondeur: 0.7 },
+    { id: 'avatar', profondeur: 0.7, pivot: [108, 376] },
     { id: 'lumiere', profondeur: 0, marge: MARGE, dessin: () => lumiereFroide(p, [TOUT_PRES[0], 260]) },
     ...brumeDevant(p),
     { id: 'teinte', profondeur: 0, marge: MARGE, dessin: () => teinte(p) }
@@ -234,10 +263,13 @@ function approche02() {
     voile1: [[0, { o: 1 }], [140, { o: 1, e: 'ease-out' }], [ARRIVE + 200, { o: 0.45 }], [D, { o: 0.6 }]],
     filets3: [[0, { ...soir(1).filets3 }], [140, { ...soir(1).filets3, e: 'ease-out' }], [ARRIVE + 200, { o: 0.3, x: 50 }], [D, { o: 0.45, x: 36 }]],
     reflet: [[0, { o: 0 }], [ARRIVE, { o: 0, e: 'ease-out' }], [D, { o: 1 }]],
-    lechee: lecheeVa(D)
+    lechee: lecheeVa(D),
+    // (il recule d'un bond quand elle arrive sur lui)
+    avatar: [[0, { x: 4, y: 0 }], [ARRIVE - 80, { x: 4, y: 0, e: 'ease-out' }], [ARRIVE + 120, { x: -12, y: -10 }], [ARRIVE + 300, { x: -18, y: 0, e: 'ease-in' }], [D, { x: -18, y: 0 }]]
   };
   const cam = { x: 4, y: 2, z: 1.12 }, arrivee = { x: 0, y: 6, z: 1.2 };
-  return { plans, partition: { temps: [unTemps(D, [[0, cam], [ARRIVE, { ...arrivee, e: 'ease-out' }], ...secoue(ARRIVE + 10, arrivee, 3, 4), [D, arrivee]], P)], repos: { duree: 9000, camera: { x: -3, y: 2, z: 0.02 } } } };
+  const acteur = joue([0, 'repos', 'bas_droite', 'surprise'], [ARRIVE - 80, 'pose_sursaut', 'bas_droite'], [ARRIVE + 420, 'pose_tete', 'face']);
+  return { plans, partition: { lumiere: FROIDE, temps: [{ ...unTemps(D, [[0, cam], [ARRIVE, { ...arrivee, e: 'ease-out' }], ...secoue(ARRIVE + 10, arrivee, 3, 4), [D, arrivee]], P), acteur }], repos: { duree: 9000, camera: { x: -3, y: 2, z: 0.02 } } } };
 }
 
 // ——— 02_rocher : Brume sursaute aussi, bondit par-dessus le rocher et retombe derrière ; puis elle passe la tête ———
@@ -256,7 +288,7 @@ function rocher02() {
     { id: 'brume', profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: () => brumePiece(`${p}b`, TOUT_PRES, 3, 'surpris') },
     // (le rocher, encore, devant Brume qui retombe : elle passe derrière lui)
     { id: 'rocher-devant', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => rocher(`${p}d`) },
-    { id: 'avatar', profondeur: 0.7 },
+    { id: 'avatar', profondeur: 0.7, pivot: [116, 366] },
     { id: 'lumiere', profondeur: 0, marge: MARGE, dessin: () => lumiereFroide(p, [CACHEE[0], 210]) },
     ...brumeDevant(p),
     { id: 'teinte', profondeur: 0, marge: MARGE, dessin: () => teinte(p) }
@@ -270,10 +302,22 @@ function rocher02() {
     // (puis, derrière, vivante : elle remonte et passe la tête)
     anime: [[0, { o: 0, y: 60 }], [1100, { o: 0, y: 60, e: 'linear' }], [1101, { o: 1, y: 60 }], [1500, { o: 1, y: 60, e: 'cubic-bezier(.3,0,.4,1)' }], [2200, { o: 1, y: 0 }], [D, { o: 1, y: 0 }]],
     reflet: [[0, { o: 0.4 }], [1500, { o: 0.4, e: 'ease-out' }], [2200, { o: 1 }], [D, { o: 1 }]],
-    lechee: lecheeVa(D)
+    lechee: lecheeVa(D),
+    avatar: [[0, { x: -10 }], [D, { x: -10 }]]
   };
   const cam = { x: 0, y: 6, z: 1.2 }, fin = { x: 0, y: 2, z: 1.14 };
-  return { plans, partition: { temps: [unTemps(D, [[0, cam], [D, { ...fin, e: 'ease-in-out' }]], P)], repos: { duree: 10000, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+  // (une bulle par temps : il sursaute avec elle, les mains aux tempes ; il la montre du doigt (« Tu es vivant ? ») ;
+  // corrigé, il hausse les épaules ; il attend ; il s'approche du rocher (« T'approcher ») ; les poings sur les
+  // hanches (« C'est toi qui nous as fait naufrager ? ») ; les bras croisés ; il l'écoute)
+  const t0 = { ...unTemps(D, [[0, cam], [D, { ...fin, e: 'ease-in-out' }]], P), acteur: joue([0, 'pose_sursaut', 'bas_droite'], [700, 'pose_tete', 'face'], [1700, 'repos', 'bas_droite', 'surprise']) };
+  const t1 = tenir(t0, 2600, joue([0, 'pose_pointe', 'bas_droite'], [1900, 'repos', 'bas_droite', 'surprise']));
+  const t2 = tenir(t1, 2600, joue([0, 'repos', 'bas_droite', 'surprise'], [700, 'pose_hausse', 'bas_droite']));
+  const t3 = tenir(t2, 2000, joue([0, 'repos', 'bas_droite']));
+  const t4 = tenir(t3, 2400, joue([0, 'marche', 'bas_droite'], [1300, 'arret', 'bas_droite'], [1820, 'repos', 'bas_droite']), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: 'linear' }], [2400, { x: 40, y: -12, s: 0.96 }]] });
+  const t5 = tenir(t4, 2600, joue([0, 'pose_poings', 'bas_droite']));
+  const t6 = tenir(t5, 2600, joue([0, 'pose_croises', 'bas_droite'], [1800, 'repos', 'bas_droite']));
+  const t7 = tenir(t6, 2600, joue([0, 'repos', 'bas_droite', 'froid']));
+  return { plans, partition: { lumiere: FROIDE, temps: [t0, t1, t2, t3, t4, t5, t6, t7], repos: { duree: 10000, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
 }
 
 module.exports = { plage02, lueur02, approche02, rocher02 };

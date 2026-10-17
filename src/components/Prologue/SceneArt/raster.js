@@ -3,6 +3,8 @@
 // l'écran (la scène du conseil ramait) ; une image toute prête ne fait plus que se recopier. Les dernières lues restent
 // (les images d'une scène et de son avatar, ou les pièces de deux scènes en plans, celle qui joue et la suivante, lue
 // d'avance ; au-delà, la plus ancienne part : une image d'un grand écran pèse lourd)
+import { avatarBox } from '@/game/sceneArt';
+import { acteurImages } from '@/game/avatarKit';
 const KEEP = 160;
 const cache = new Map();
 // Un grand dessin se peint par bandes, une à chaque image de l'écran, chacune d'au plus SLICE_MS : peint d'un bloc, le
@@ -112,6 +114,21 @@ export function preparePlans(data) {
   if (!data || !data.plans) return;
   const px = planPx();
   for (const plan of data.plans) if (plan.href) rasterOf(plan.href, ...planSize(plan, px));
+}
+
+// La taille (pixels) où se lisent les images que joue l'avatar (game/acteur.js), à sa place (box, en unités du carré) :
+// celle des pièces des plans, qui ne dépend que de l'écran ; elles peuvent ainsi se lire avant que la scène s'ouvre
+export function acteurPx(box) {
+  const k = planPx() / ART;
+  return [Math.max(1, Math.round(box.w * k)), Math.max(1, Math.round(box.h * k))];
+}
+// Les images que l'avatar joue au premier temps d'une scène en plans, lues d'avance (PrologueScene : la scène qui vient)
+export function prepareActeur(data, look) {
+  const temps = data && data.plans && data.avatar && data.partition ? data.partition.temps : null;
+  const acteur = temps && temps[0] && temps[0].acteur;
+  if (!acteur) return;
+  const size = acteurPx(avatarBox(data.avatar));
+  for (const [, clip] of acteur) acteurImages(look, clip, { naufrage: data.avatar.naufrage !== false, lumiere: data.partition.lumiere || {} }).forEach(href => rasterOf(href, ...size));
 }
 
 // La couleur moyenne d'une bande de lignes d'une image (canvas), en « rgb(r, g, b) »

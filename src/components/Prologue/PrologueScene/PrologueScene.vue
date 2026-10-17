@@ -40,7 +40,7 @@ import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
 import { TOUCH_TO_GO_ON } from '@/texts/ui/common';
 import { sceneOf } from '@/game/sceneArt';
-import { preparePlans } from '../SceneArt/raster';
+import { preparePlans, prepareActeur } from '../SceneArt/raster';
 
 export default {
   name: 'PrologueScene',
@@ -128,7 +128,10 @@ export default {
     // La prochaine scène en plans, lue d'avance pendant que celle-ci joue : elle s'ouvrira toute peinte, sans trou noir
     prepareNext() {
       const next = this.list.slice(this.k + 1).find(f => f.scene && f.scene !== this.frame.scene);
-      if (next) preparePlans(sceneOf(next.scene));
+      if (!next) return;
+      preparePlans(sceneOf(next.scene));
+      // (et ce que l'avatar y joue d'abord)
+      if (!next.alone) prepareActeur(sceneOf(next.scene), this.look);
     },
     // Une image qui avance seule (la tempête) ; avec le mouvement réduit, elle attend un toucher
     arm() {

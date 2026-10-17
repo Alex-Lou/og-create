@@ -15,7 +15,7 @@
     <template v-if="data">
       <div class="sa__stage">
         <div ref="square" :class="['sa__square', { 'sa__square--tall': squareStyle, 'sa__square--plans': data.plans }]" :style="squareStyle">
-          <ScenePlans v-if="data.plans" :plans="data.plans" :partition="data.partition" :beat="beat" :width="cssWidth" @edges="onEdges">
+          <ScenePlans v-if="data.plans" :plans="data.plans" :partition="data.partition" :beat="beat" :width="cssWidth" @edges="onEdges" @temps="onTemps">
             <template #avatar>
               <canvas ref="over" class="sa__paint" />
             </template>
@@ -43,8 +43,10 @@
 
 <script>
 import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
+import { acteurImages, mouvementsKit } from '@/game/avatarKit';
+import { clipA, imageA, prochain } from '@/game/acteur';
 import { reducedMotion } from '@/utils/fx';
-import { layerRaster, edgeColors, MAX_DPR, ART } from './raster';
+import { layerRaster, rasterOf, acteurPx, edgeColors, MAX_DPR, ART } from './raster';
 import ScenePlans from './ScenePlans';
 // La pluie (meteo.pluie, de 0 à 1) : ses gouttes au plus, leur pente, la vitesse à laquelle elle forcit ou faiblit (par
 // seconde) ; la finesse de son image au plus
@@ -80,14 +82,31 @@ export default {
     beat: { type: Number, default: 0 }
   },
   data() {
-    return { NAME_LINE, frame: 0, px: 0, cssWidth: 0, fill: null };
+    return { NAME_LINE, frame: 0, px: 0, cssWidth: 0, fill: null, acteurT: 0 };
   },
   computed: {
     data() {
       return sceneOf(this.scene);
     },
+    // Le jeu de l'avatar dans une scène en plans (game/acteur.js) : la piste « acteur » du temps de la bulle (une bulle
+    // au-delà de la partition garde le dernier), ou null
+    jeu() {
+      const temps = this.data && this.data.plans && this.data.avatar && !this.alone && this.data.partition ? this.data.partition.temps : null;
+      const dernier = temps && temps[Math.min(this.beat, temps.length - 1)];
+      return dernier && dernier.acteur ? dernier.acteur : null;
+    },
+    // L'image que l'avatar joue en ce moment (null tant que le kit se charge : il garde alors son image de la scène)
+    joue() {
+      const anims = this.jeu && mouvementsKit();
+      if (!anims) return null;
+      const { debut, clip } = clipA(this.jeu, this.acteurT);
+      const images = this.imagesDe(clip);
+      return images.length ? images[imageA(clip.anim, this.acteurT - debut, anims)] : null;
+    },
     body() {
       if (!this.data || !this.data.avatar || this.alone) return null;
+      // (il joue la scène : ses images viennent de sa piste, à la place de la scène ; sa direction fait son miroir)
+      if (this.joue) return { ...avatarBox(this.data.avatar), frames: [this.joue], axis: null, acteur: true };
       const spot = { ...this.data.avatar, ...this.pose };
       return { ...avatarBox(spot), frames: avatarFrames(this.look, spot), axis: spot.miroir ? spot.x : null };
     },
@@ -126,6 +145,7 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.timer);
+    clearTimeout(this.acteurTimer);
     if (this.observer) this.observer.disconnect();
     cancelAnimationFrame(this.rainRaf);
     this.token = (this.token || 0) + 1;
@@ -158,11 +178,12 @@ export default {
     layersOf(f) {
       const pick = list => (list.length ? [{ href: list[f % list.length], x: 0, y: 0, w: ART, h: this.data.h }] : []);
       const body = this.body;
-      const avatar = body && body.frames.length ? [{ href: body.frames[f % body.frames.length], x: body.x, y: body.y, w: body.w, h: body.h, axis: body.axis, clip: body.clip }] : [];
+      const avatar = body && body.frames.length ? [{ href: body.frames[f % body.frames.length], x: body.x, y: body.y, w: body.w, h: body.h, axis: body.axis, clip: body.clip, acteur: body.acteur }] : [];
       return { under: pick(this.data.back), over: [...avatar, ...pick(this.data.front)] };
     },
     rasterOf(layer) {
-      return layerRaster(layer, this.px, this.data.h);
+      // (ce que joue l'avatar se lit à la taille de l'écran : lu d'avance, il est là dès que la scène s'ouvre)
+      return layer.acteur ? rasterOf(layer.href, ...acteurPx(layer)) : layerRaster(layer, this.px, this.data.h);
     },
     // L'image du moment, peinte quand ses calques sont lus (une image plus récente demandée entre-temps passe devant) ;
     // la première fois, la couleur des bords de son fond
@@ -175,6 +196,31 @@ export default {
       if (this.$refs.under) this.paintInto(this.$refs.under, under, below);
       if (this.$refs.over) this.paintInto(this.$refs.over, over, above);
       if (!this.fill && below[0]) this.fill = edgeColors(below[0]);
+    },
+    // Les images d'un clip de la piste « acteur », gravées à la lumière de la scène
+    imagesDe(clip) {
+      return acteurImages(this.look, clip, { naufrage: this.data.avatar.naufrage !== false, lumiere: this.data.partition.lumiere || {} });
+    },
+    // Un temps de la partition commence (ScenePlans) : l'avatar joue sa piste depuis son début, au rythme de ses images
+    // (toutes lues d'avance) ; avec le mouvement réduit, il reste sur le début de son dernier clip
+    onTemps() {
+      clearTimeout(this.acteurTimer);
+      const acteur = this.jeu;
+      if (!acteur) return;
+      const box = avatarBox(this.data.avatar);
+      for (const [, clip] of acteur) this.imagesDe(clip).forEach(href => this.rasterOf({ href, ...box, acteur: true }));
+      if (reducedMotion()) {
+        this.acteurT = acteur[acteur.length - 1][0];
+        return;
+      }
+      const t0 = performance.now();
+      const tick = () => {
+        this.acteurT = performance.now() - t0;
+        const anims = mouvementsKit();
+        this.acteurTimer = setTimeout(tick, anims ? prochain(acteur, this.acteurT, anims) : 100);
+      };
+      this.acteurT = 0;
+      tick();
     },
     // La couleur des bords d'une scène en plans : celle de son premier plan (son ciel)
     onEdges(colors) {
