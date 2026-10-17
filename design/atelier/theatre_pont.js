@@ -444,6 +444,10 @@ function soleil(p) {
 }
 
 // ——— 01_pont : les pièces et la partition ———
+// les repères de la scène (ms) : le pavillon entre, la coupe vers le navire, le choc, le retour au pavillon, sa sortie,
+// le canot arraché, le dernier message, ses grésillements, le cri, la lame (choix de l'auteur, 17 oct. : le gramophone
+// est bien, mais il dure trop longtemps : chacun de ses passages, un peu plus d'une seconde)
+const REPERES = { COR_IN: 4300, COUPE: 5500, CHOC: 6500, RACCORD: 7600, SORT: 8800, ARRACHE: 13300, RETOUR: 15100, KRR: 15700, CRI: 16300, CHUTE: 16900 };
 function pont01() {
   const p = 'tp', T = [4200, 5200, 5200, 4600], FIN = 19200;
   const cumulus = [[0, 40, 16, 2, '#E8DCB0'], [1, 126, 14, 3, '#D8D0A8']];
@@ -528,7 +532,7 @@ function pont01() {
   const P = {};
   // la météo qui empire : calme au départ, l'orage à la fin
   const force = t => (t < 4200 ? 0.45 : t < 9400 ? 0.45 + (0.55 * (t - 4200)) / 5200 : t < 14600 ? 1 + (0.5 * (t - 9400)) / 5200 : 2.3);
-  const COR_IN = 4300, COUPE = 5900, CHOC = 6500, RACCORD = 7300, SORT = 9500, ARRACHE = 13300, RETOUR = 14600, KRR = 15700, CRI = 16300, CHUTE = 16900;
+  const { COR_IN, COUPE, CHOC, RACCORD, SORT, ARRACHE, RETOUR, KRR, CRI, CHUTE } = REPERES;
   // (au « Aaah ! », le choc arrache le pavillon : on voit, juste après, le navire frappé)
   const FRAPPE = CRI + 350;
   // le ciel : le jour, puis les nuages d'orage qui arrivent, couvrent le soleil ; la nuit d'orage, la lueur de soufre
@@ -841,4 +845,4 @@ function noir01() {
   return { plans, partition: { temps: [{ duree: D, camera: [[0, { z: 1.04 }], [D, { z: 1.1, y: 10 }]], pistes }] } };
 }
 
-module.exports = { pont01, vague01, racines01, noir01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, navire, C, MARGE, G, D_ };
+module.exports = { pont01, vague01, racines01, noir01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, navire, REPERES, C, MARGE, G, D_ };

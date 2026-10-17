@@ -47369,6 +47369,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-brume-loin",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan brume loin)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-brume-loin_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-brume1",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan brume1)",
@@ -48032,6 +48049,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-houle",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan houle)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-houle_1.svg"
+   ],
+   "cadre": [
+    -120,
+    320,
+    640,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-impact-canot",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan impact canot)",
@@ -48571,6 +48605,23 @@
     193,
     14,
     18
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-pluie-devant",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan pluie devant)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-pluie-devant_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -240,
+    540,
+    800
    ],
    "parcours": "tuto-1",
    "statut": "ok"

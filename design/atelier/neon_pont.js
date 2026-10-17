@@ -9,7 +9,7 @@
 const { hash, f } = require('./ouverture');
 const { courbe } = require('./papier');
 const { atelier, gravure, trait, avecStyle } = require('./gravure');
-const { plein, balance, parTemps, MARGE, G, D_ } = require('./theatre_pont');
+const { plein, balance, secoue, bouffees, parTemps, REPERES, MARGE, G, D_ } = require('./theatre_pont');
 const TP = require('./theatre_pont');
 
 const NEON = { papier: false, modele: '#08021A', reflet: '#C8FFF4', hachures: 0.4, lisere: '#7AF8EE' };
@@ -97,6 +97,20 @@ function fondNeon(p) {
   for (let i = 0; i < 12; i++) { const x = hash(i, 1) * 480 - 40, y = hash(i, 2) * 260 - 20, r = 40 + 70 * hash(i, 3); s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.4)}" ry="${f(r * 0.7)}" fill="${A.rad([[0, i % 3 ? '#3A1A6A' : '#0A0420', 0.5], [1, '#0A0420', 0]], x, y, r * 1.4)}"/>`; }
   return A.out(s);
 }
+// ——— la profondeur : ce qui passe tout près de nous, ce qui se perd au loin ———
+// la houle du premier plan : une grande vague sombre, tout près, qui monte et descend devant tout (sa crête ourlée de
+// cyan) ; elle donne la mesure de la mer et sa parallaxe est la plus forte
+function houle(p) {
+  const A = atelier(`${p}H`), y = 372;
+  const crete = courbe(t => { const x = G - 60 + (D_ - G + 120) * t; return [x, y - 18 * Math.sin(Math.PI * 2 * (x / 230) + 0.6) - 8 * Math.sin(Math.PI * 2 * (x / 97))]; }, 90);
+  return A.out(gravure(A, [...crete, [D_ + 60, D_ + 80], [G - 60, D_ + 80]], A.lin([[0, '#0A3A44'], [0.3, '#05202A'], [1, '#010608']], 0, y - 26, 0, y + 70), { seed: 1500, amp: 0.3, angle: 6, pas: 3.2, ombre: 0.35, tailles: 1, tailleP: 5, trait: 2.6, portee: 0.6, dy: 6, lumiere: [0, -1] })
+    + `<path d="M${crete.map(([x, yy]) => `${f(x)},${f(yy)}`).join(' L')}" fill="none" stroke="#7AF8EE" stroke-width="7" stroke-opacity="0.1" stroke-linecap="round"/><path d="M${crete.map(([x, yy]) => `${f(x)},${f(yy)}`).join(' L')}" fill="none" stroke="#7AF8EE" stroke-width="1.6" stroke-linecap="round"/>`);
+}
+// la pluie tout près de nous : de longs traits cyan, flous de vitesse (une bande qu'on fait tomber en boucle)
+const pluieDevant = p => { const A = atelier(`${p}R`); return A.out(Array.from({ length: 34 }, (_, i) => { const x = G + hash(i, 81) * (D_ - G + 60), y = G - 200 + hash(i, 82) * 800, l = 30 + 30 * hash(i, 83); return `<path d="M${f(x)},${f(y)} l${f(-l * 0.28)},${f(l)}" stroke="#9AFAF0" stroke-width="${f(1 + 1.4 * hash(i, 84))}" stroke-linecap="round" opacity="${f(0.25 + 0.35 * hash(i, 85))}"/>`; }).join('')); };
+// la brume du lointain, sur l'horizon : une bande violette qui boit le large (la profondeur de l'air)
+const brumeLoin = p => { const A = atelier(`${p}B`); return A.out(plein(A, A.lin([[0, '#6A3AAA', 0], [0.5, '#7A4ABA', 0.42], [1, '#3A1A6A', 0]], 0, 150, 0, 250))); };
+
 // ——— 01_pont en papier néon ———
 const PROPRES = { teinte: p => teinteNeon(p), jour: p => avecStyle(NEON, () => jourNeon(p)), fond: p => avecStyle(NEON, () => fondNeon(p)) };
 function pontNeon() {
@@ -107,6 +121,30 @@ function pontNeon() {
     const teinte = /^nuage\d/.test(pl.id) ? 272 : /^cumulus\d/.test(pl.id) ? 312 : undefined;
     pl.dessin = PROPRES[pl.id] ? () => PROPRES[pl.id](p) : () => avecStyle(NEON, () => neonise(d(), teinte));
   }
+  // (la profondeur : la brume du large derrière la mer ; la houle et la pluie tout près, devant tout sauf le gramophone)
+  const avant = id => sc.plans.findIndex(q => q.id === id);
+  sc.plans.splice(avant('lame'), 0, { id: 'brume-loin', profondeur: 0.2, marge: MARGE, flou: 0.2, dessin: () => brumeLoin(p) });
+  sc.plans.splice(avant('anime') + 1, 0, { id: 'houle', profondeur: 1.35, cadre: [G - 80, 320, D_ - G + 160, 140], pivot: [200, 380], dessin: () => avecStyle(NEON, () => houle(p)) }, { id: 'pluie-devant', profondeur: 1.6, cadre: [G, G - 200, D_ - G + 60, 800], dessin: () => pluieDevant(p) });
+  const T = sc.partition.temps.map(t => t.duree), FIN = T.reduce((a, b) => a + b, 0);
+  const { COUPE, CHOC, RACCORD, SORT, ARRACHE, RETOUR, CHUTE } = REPERES, FRAPPE = REPERES.CRI + 350;
+  const P = {
+    'brume-loin': [[0, { o: 0.4 }], [9000, { o: 1 }], [FIN, { o: 0.8 }]],
+    // (la houle : elle entre par le bas, puis berce, de plus en plus haut avec l'orage)
+    houle: [[0, { y: 90 }], [500, { y: 90, e: 'cubic-bezier(.2,.8,.3,1)' }], [1800, { y: 20 }], ...balance(1800, FIN, 2600, (k, t) => ({ y: (k % 2 ? 10 : 30) - Math.min(1, t / 14000) * 26, x: k % 2 ? -14 : 14 }))],
+    // (la pluie tout près : elle tombe en boucle, dès que l'orage est là)
+    'pluie-devant': [[0, { o: 0, y: 0 }], ...bouffees(6000, FIN, 900, { x: 0, y: -260, o: 0.9 }, { x: -70, y: 140, o: 0.9 })]
+  };
+  for (const [id, cles] of Object.entries(P)) parTemps(T, cles).forEach((c, n) => { sc.partition.temps[n].pistes[id] = c; });
+  // (la caméra voyage : elle part du ciel, près du soleil, et descend vers le navire en reculant ; elle fonce sur la
+  // proue au choc ; elle longe le pont pendant les canots ; elle plonge vers les racines ; elle lève les yeux vers la
+  // lame)
+  // (le zoom de la caméra joue selon la profondeur de chaque plan : le ciel bouge à peine, le navire un peu, la houle
+  // du premier plan beaucoup ; ses mouvements sont donc amples : c'est ce qui creuse la scène)
+  const camera = [[0, { x: 30, y: -110, z: 1.7 }], [400, { x: 30, y: -110, z: 1.7, e: 'cubic-bezier(.5,0,.2,1)' }], [3900, { x: 0, y: 6, z: 1.06 }], [COUPE, { x: -10, y: 4, z: 1.1 }],
+    [CHOC - 100, { z: 1.36, x: 70, y: 30, e: 'linear' }], ...secoue(CHOC, { z: 1.36, x: 70, y: 30 }, 15, 8, 50), [RACCORD + 300, { z: 1.12, x: 24, y: 8 }],
+    [SORT + 400, { z: 1.3, x: -70, y: 18 }], [ARRACHE - 200, { z: 1.3, x: 54, y: 12, e: 'linear' }], ...secoue(ARRACHE, { z: 1.3, x: 54, y: 12 }, 12, 6, 50), [RETOUR, { z: 1.12, x: 10, y: 4 }],
+    [FRAPPE - 100, { z: 1.38, x: -20, y: 30, e: 'linear' }], ...secoue(FRAPPE, { z: 1.38, x: -20, y: 30 }, 14, 7, 50), [CHUTE + 200, { z: 1.16, x: 0, y: -14 }], [FIN, { z: 1.22, x: 0, y: -74 }]];
+  parTemps(T, camera, ['x', 'y', 'z', 'r']).forEach((c, n) => { sc.partition.temps[n].camera = c; });
   return sc;
 }
 

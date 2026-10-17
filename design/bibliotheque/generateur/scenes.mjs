@@ -21184,6 +21184,17 @@ var require_gravure = __commonJS({
       const l = Math.hypot(v[0], v[1]);
       LUMIERE = [v[0] / l, v[1] / l];
     }, "lumiere");
+    var STYLE = { papier: true, modele: "#1A0E04", reflet: "#FFF2C0", hachures: 1, lisere: null };
+    function avecStyle(style, dessin) {
+      const avant = { ...STYLE };
+      Object.assign(STYLE, style);
+      try {
+        return dessin();
+      } finally {
+        Object.assign(STYLE, avant);
+      }
+    }
+    __name(avecStyle, "avecStyle");
     function hachures([x, y, w, h], angle, pas, seed) {
       const a = angle * Math.PI / 180, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux, cx = x + w / 2, cy = y + h / 2, R = Math.hypot(w, h) / 2 + 2;
       let d = "";
@@ -21210,11 +21221,12 @@ var require_gravure = __commonJS({
       const sens = /* @__PURE__ */ __name((debut, fin = 1) => A.masque(A.lin([[0, "#000"], [debut, "#000"], [fin, "#FFF"]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R), b), "sens");
       const clip = A.clip(d), pas = o.pas ?? 3, angle = o.angle ?? 38;
       let s = o.portee === 0 ? "" : `<path d="${d}" fill="#000" opacity="${o.portee ?? 0.4}" transform="translate(${o.dx ?? 3} ${o.dy ?? 4})"/>`;
-      s += `<path d="${d}" fill="${couleur}"/><path d="${d}" fill="${A.papier()}"/>`;
+      s += `<path d="${d}" fill="${couleur}"/>${STYLE.papier ? `<path d="${d}" fill="${A.papier()}"/>` : ""}`;
       s += `<g clip-path="${clip}">`;
-      s += `<rect x="${f(bx)}" y="${f(by)}" width="${f(bw)}" height="${f(bh)}" fill="${A.lin([[0, "#FFF2C0", o.reflet ?? 0.18], [0.45, "#FFF2C0", 0], [0.55, "#1A0E04", 0], [1, "#1A0E04", o.modele ?? 0.42]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R)}"/>`;
-      s += `<path d="${hachures(b, angle, pas, seed)}" stroke="${encre}" stroke-width="${o.epaisseur ?? 1.1}" mask="${sens(o.ombre ?? 0.22)}" fill="none"/>`;
-      if (o.noir !== false) s += `<path d="${hachures(b, angle + 74, pas * 1.05, seed + 7)}" stroke="${encre}" stroke-width="${(o.epaisseur ?? 1.1) * 0.9}" mask="${sens(o.noir ?? 0.55)}" fill="none"/>`;
+      s += `<rect x="${f(bx)}" y="${f(by)}" width="${f(bw)}" height="${f(bh)}" fill="${A.lin([[0, STYLE.reflet, o.reflet ?? 0.18], [0.45, STYLE.reflet, 0], [0.55, STYLE.modele, 0], [1, STYLE.modele, o.modele ?? 0.42]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R)}"/>`;
+      const leger = STYLE.hachures < 1 ? ` opacity="${STYLE.hachures}"` : "";
+      s += `<path d="${hachures(b, angle, pas, seed)}" stroke="${encre}" stroke-width="${o.epaisseur ?? 1.1}" mask="${sens(o.ombre ?? 0.22)}" fill="none"${leger}/>`;
+      if (o.noir !== false) s += `<path d="${hachures(b, angle + 74, pas * 1.05, seed + 7)}" stroke="${encre}" stroke-width="${(o.epaisseur ?? 1.1) * 0.9}" mask="${sens(o.noir ?? 0.55)}" fill="none"${leger}/>`;
       const tailles = o.tailles ?? 2;
       if (tailles) {
         let t = "";
@@ -21222,13 +21234,14 @@ var require_gravure = __commonJS({
         s += `<path d="${t}" stroke="${encre}" stroke-width="0.6" fill="none" mask="${sens(0.45)}"/>`;
       }
       if (o.dans) s += o.dans;
+      if (STYLE.lisere) s += `<path d="${d}" fill="none" stroke="${STYLE.lisere}" stroke-width="${f((o.trait ?? 2) * 1.3)}" stroke-opacity="0.6" transform="translate(${f(-L[0] * 2.2)} ${f(-L[1] * 2.2)})"/>`;
       s += "</g>";
       s += `<path d="${d}" fill="none" stroke="${encre}" stroke-width="${o.trait ?? 2}" stroke-linejoin="round"/>`;
       return s;
     }
     __name(gravure, "gravure");
     var trait2 = /* @__PURE__ */ __name((d, w = 1.2, c = ENCRE, op = 1) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${op < 1 ? ` opacity="${op}"` : ""}/>`, "trait");
-    module.exports = { atelier, gravure, hachures, trait: trait2, ovale, gonfle, chemin, boite, lumiere, ENCRE };
+    module.exports = { atelier, gravure, hachures, trait: trait2, ovale, gonfle, chemin, boite, lumiere, avecStyle, ENCRE };
   }
 });
 
@@ -21781,6 +21794,7 @@ var require_theatre_pont = __commonJS({
       return A.out(gravure(A, rayons, C.ocre, { seed: 22, amp: 0.3, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.3, lumiere: [-0.7, -0.7] }) + gravure(A, ovale(x, y, 28, 28, 30), C.creme, { seed: 23, tailles: 3, tailleP: 2.6, lumiere: [-0.7, -0.7], portee: 0 }) + volute(x - 6, y - 8, 8, 1, 1.6, 1.8));
     }
     __name(soleil, "soleil");
+    var REPERES = { COR_IN: 4300, COUPE: 5500, CHOC: 6500, RACCORD: 7600, SORT: 8800, ARRACHE: 13300, RETOUR: 15100, KRR: 15700, CRI: 16300, CHUTE: 16900 };
     function pont01() {
       const p = "tp", T = [4200, 5200, 5200, 4600], FIN = 19200;
       const cumulus = [[0, 40, 16, 2, "#E8DCB0"], [1, 126, 14, 3, "#D8D0A8"]];
@@ -21865,7 +21879,7 @@ var require_theatre_pont = __commonJS({
       ];
       const P2 = {};
       const force = /* @__PURE__ */ __name((t) => t < 4200 ? 0.45 : t < 9400 ? 0.45 + 0.55 * (t - 4200) / 5200 : t < 14600 ? 1 + 0.5 * (t - 9400) / 5200 : 2.3, "force");
-      const COR_IN = 4300, COUPE = 5900, CHOC = 6500, RACCORD = 7300, SORT = 9500, ARRACHE = 13300, RETOUR = 14600, KRR = 15700, CRI = 16300, CHUTE = 16900;
+      const { COR_IN, COUPE, CHOC, RACCORD, SORT, ARRACHE, RETOUR, KRR, CRI, CHUTE } = REPERES;
       const FRAPPE = CRI + 350;
       P2.fond = [[0, { o: 0 }], [4600, { o: 0, e: "ease-in" }], [11e3, { o: 1 }]];
       P2.lueur = [[0, { o: 0 }], [6e3, { o: 0 }], [1e4, { o: 0.3 }]];
@@ -22278,7 +22292,7 @@ var require_theatre_pont = __commonJS({
       return { plans, partition: { temps: [{ duree: D, camera: [[0, { z: 1.04 }], [D, { z: 1.1, y: 10 }]], pistes }] } };
     }
     __name(noir01, "noir01");
-    module.exports = { pont01, vague01, racines01, noir01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, navire, C, MARGE, G, D_ };
+    module.exports = { pont01, vague01, racines01, noir01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, navire, REPERES, C, MARGE, G, D_ };
   }
 });
 
@@ -23592,6 +23606,154 @@ var require_gravure_vent = __commonJS({
   }
 });
 
+// atelier/neon_pont.js
+var require_neon_pont = __commonJS({
+  "atelier/neon_pont.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure, trait: trait2, avecStyle } = require_gravure();
+    var { plein, balance, secoue, bouffees, parTemps, REPERES, MARGE, G, D_ } = require_theatre_pont();
+    var TP = require_theatre_pont();
+    var NEON = { papier: false, modele: "#08021A", reflet: "#C8FFF4", hachures: 0.4, lisere: "#7AF8EE" };
+    var hsl = /* @__PURE__ */ __name((hex) => {
+      const n = hex.length === 4 ? hex.slice(1).split("").map((c) => parseInt(c + c, 16) / 255) : [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+      const [r, g, b] = n, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      if (!d) return [0, 0, l];
+      const s = d / (1 - Math.abs(2 * l - 1));
+      const h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      return [(h * 60 + 360) % 360, s, l];
+    }, "hsl");
+    var versHex = /* @__PURE__ */ __name((h, s, l) => {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }, "versHex");
+    var borne = /* @__PURE__ */ __name((v, a, b) => Math.min(b, Math.max(a, v)), "borne");
+    function neon(hex) {
+      const [h, s, l] = hsl(hex);
+      if (l < 0.13) return versHex(258, 0.6, borne(l + 0.05, 0.07, 0.15));
+      if (s < 0.12) return versHex(250, 0.35, borne(l, 0.15, 0.9));
+      if (h >= 20 && h < 75 && l > 0.72) return versHex(325, 0.85, borne(l + 0.04, 0.8, 0.93));
+      if (h >= 38 && h < 75 && s > 0.7) return versHex(78, 0.9, borne(l + 0.04, 0.5, 0.75));
+      if (h >= 30 && h < 75 && l >= 0.35) return versHex(14, 0.92, borne(l + 0.06, 0.45, 0.7));
+      if (h >= 15 && h < 75) return versHex(300, 0.55, borne(l + 0.06, 0.16, 0.4));
+      if (h < 15 || h >= 340) return versHex(328, 0.9, borne(l + 0.08, 0.4, 0.65));
+      if (h < 150) return l > 0.4 ? versHex(88, 0.85, borne(l, 0.45, 0.7)) : versHex(165, 0.8, borne(l + 0.05, 0.18, 0.4));
+      if (h < 200) return versHex(l > 0.5 ? 182 : 174, 0.85, borne(l * 1.15, 0.18, 0.75));
+      if (h < 250) return versHex(228, 0.8, borne(l + 0.05, 0.2, 0.7));
+      return versHex(278, 0.75, borne(l + 0.05, 0.2, 0.7));
+    }
+    __name(neon, "neon");
+    var hexDe = /* @__PURE__ */ __name((r, g, b) => "#" + [r, g, b].map((v) => (+v).toString(16).padStart(2, "0")).join(""), "hexDe");
+    function douce(hex) {
+      const c = neon(hex), [h, s, l] = hsl(c);
+      if (h > 60 && h < 100 && s > 0.6 && l > 0.45) return c;
+      return versHex(h, s * 0.85, l > 0.72 ? l * 0.86 : l * 0.62);
+    }
+    __name(douce, "douce");
+    var neonise = /* @__PURE__ */ __name((svg, teinte) => {
+      const c = teinte === void 0 ? douce : (hex) => {
+        const [, s, l] = hsl(douce(hex));
+        return l < 0.12 ? douce(hex) : versHex(teinte, Math.max(s, 0.5), l * 0.85);
+      };
+      return svg.replace(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g, (x) => c(x)).replace(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g, (m, r, g, b) => c(hexDe(r, g, b)));
+    }, "neonise");
+    function teinteNeon(p) {
+      const A = atelier(`${p}N`);
+      return A.out(plein(A, A.lin([[0, "#FF3FA8", 0.08], [0.4, "#FF3FA8", 0], [0.65, "#00E0C8", 0], [1, "#00C8D8", 0.07]], 0, 0, 0, 400)) + plein(A, A.rad([[0, "#000", 0], [0.55, "#05010F", 0.15], [1, "#020008", 0.78]], 200, 200, 320)));
+    }
+    __name(teinteNeon, "teinteNeon");
+    var SOLEIL = [300, 86];
+    function jourNeon(p) {
+      const A = atelier(`${p}J`);
+      let s = plein(A, A.lin([[0, "#05030F"], [0.3, "#1A0E44"], [0.58, "#5A1E7A"], [0.82, "#C83A7A"], [1, "#FF8A4A"]], 0, G, 0, 270));
+      s += plein(A, A.rad([[0, "#FFF2A0", 0.85], [0.14, "#FFC85A", 0.5], [0.45, "#FF5A8A", 0.16], [1, "#FF5A8A", 0]], SOLEIL[0], SOLEIL[1], 240));
+      return A.out(s);
+    }
+    __name(jourNeon, "jourNeon");
+    function fondNeon(p) {
+      const A = atelier(`${p}F`);
+      let s = plein(A, A.lin([[0, "#07041C"], [0.5, "#1A0A3E"], [1, "#2A0C48"]], 0, G, 0, 300));
+      s += plein(A, A.rad([[0, "#FF3FA8", 0.45], [0.5, "#B0206E", 0.15], [1, "#B0206E", 0]], 80, 60, 240));
+      s += plein(A, A.rad([[0, "#C8F25A", 0.32], [0.45, "#3EE8B0", 0.1], [1, "#3EE8B0", 0]], 300, 104, 150));
+      for (let i = 0; i < 12; i++) {
+        const x = hash(i, 1) * 480 - 40, y = hash(i, 2) * 260 - 20, r = 40 + 70 * hash(i, 3);
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.4)}" ry="${f(r * 0.7)}" fill="${A.rad([[0, i % 3 ? "#3A1A6A" : "#0A0420", 0.5], [1, "#0A0420", 0]], x, y, r * 1.4)}"/>`;
+      }
+      return A.out(s);
+    }
+    __name(fondNeon, "fondNeon");
+    function houle(p) {
+      const A = atelier(`${p}H`), y = 372;
+      const crete = courbe((t) => {
+        const x = G - 60 + (D_ - G + 120) * t;
+        return [x, y - 18 * Math.sin(Math.PI * 2 * (x / 230) + 0.6) - 8 * Math.sin(Math.PI * 2 * (x / 97))];
+      }, 90);
+      return A.out(gravure(A, [...crete, [D_ + 60, D_ + 80], [G - 60, D_ + 80]], A.lin([[0, "#0A3A44"], [0.3, "#05202A"], [1, "#010608"]], 0, y - 26, 0, y + 70), { seed: 1500, amp: 0.3, angle: 6, pas: 3.2, ombre: 0.35, tailles: 1, tailleP: 5, trait: 2.6, portee: 0.6, dy: 6, lumiere: [0, -1] }) + `<path d="M${crete.map(([x, yy]) => `${f(x)},${f(yy)}`).join(" L")}" fill="none" stroke="#7AF8EE" stroke-width="7" stroke-opacity="0.1" stroke-linecap="round"/><path d="M${crete.map(([x, yy]) => `${f(x)},${f(yy)}`).join(" L")}" fill="none" stroke="#7AF8EE" stroke-width="1.6" stroke-linecap="round"/>`);
+    }
+    __name(houle, "houle");
+    var pluieDevant = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}R`);
+      return A.out(Array.from({ length: 34 }, (_, i) => {
+        const x = G + hash(i, 81) * (D_ - G + 60), y = G - 200 + hash(i, 82) * 800, l = 30 + 30 * hash(i, 83);
+        return `<path d="M${f(x)},${f(y)} l${f(-l * 0.28)},${f(l)}" stroke="#9AFAF0" stroke-width="${f(1 + 1.4 * hash(i, 84))}" stroke-linecap="round" opacity="${f(0.25 + 0.35 * hash(i, 85))}"/>`;
+      }).join(""));
+    }, "pluieDevant");
+    var brumeLoin = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}B`);
+      return A.out(plein(A, A.lin([[0, "#6A3AAA", 0], [0.5, "#7A4ABA", 0.42], [1, "#3A1A6A", 0]], 0, 150, 0, 250)));
+    }, "brumeLoin");
+    var PROPRES = { teinte: /* @__PURE__ */ __name((p) => teinteNeon(p), "teinte"), jour: /* @__PURE__ */ __name((p) => avecStyle(NEON, () => jourNeon(p)), "jour"), fond: /* @__PURE__ */ __name((p) => avecStyle(NEON, () => fondNeon(p)), "fond") };
+    function pontNeon() {
+      const p = "tp", sc = TP.pont01();
+      for (const pl of sc.plans) {
+        if (!pl.dessin) continue;
+        const d = pl.dessin;
+        const teinte = /^nuage\d/.test(pl.id) ? 272 : /^cumulus\d/.test(pl.id) ? 312 : void 0;
+        pl.dessin = PROPRES[pl.id] ? () => PROPRES[pl.id](p) : () => avecStyle(NEON, () => neonise(d(), teinte));
+      }
+      const avant = /* @__PURE__ */ __name((id2) => sc.plans.findIndex((q) => q.id === id2), "avant");
+      sc.plans.splice(avant("lame"), 0, { id: "brume-loin", profondeur: 0.2, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => brumeLoin(p), "dessin") });
+      sc.plans.splice(avant("anime") + 1, 0, { id: "houle", profondeur: 1.35, cadre: [G - 80, 320, D_ - G + 160, 140], pivot: [200, 380], dessin: /* @__PURE__ */ __name(() => avecStyle(NEON, () => houle(p)), "dessin") }, { id: "pluie-devant", profondeur: 1.6, cadre: [G, G - 200, D_ - G + 60, 800], dessin: /* @__PURE__ */ __name(() => pluieDevant(p), "dessin") });
+      const T = sc.partition.temps.map((t) => t.duree), FIN = T.reduce((a, b) => a + b, 0);
+      const { COUPE, CHOC, RACCORD, SORT, ARRACHE, RETOUR, CHUTE } = REPERES, FRAPPE = REPERES.CRI + 350;
+      const P2 = {
+        "brume-loin": [[0, { o: 0.4 }], [9e3, { o: 1 }], [FIN, { o: 0.8 }]],
+        // (la houle : elle entre par le bas, puis berce, de plus en plus haut avec l'orage)
+        houle: [[0, { y: 90 }], [500, { y: 90, e: "cubic-bezier(.2,.8,.3,1)" }], [1800, { y: 20 }], ...balance(1800, FIN, 2600, (k, t) => ({ y: (k % 2 ? 10 : 30) - Math.min(1, t / 14e3) * 26, x: k % 2 ? -14 : 14 }))],
+        // (la pluie tout près : elle tombe en boucle, dès que l'orage est là)
+        "pluie-devant": [[0, { o: 0, y: 0 }], ...bouffees(6e3, FIN, 900, { x: 0, y: -260, o: 0.9 }, { x: -70, y: 140, o: 0.9 })]
+      };
+      for (const [id2, cles] of Object.entries(P2)) parTemps(T, cles).forEach((c, n) => {
+        sc.partition.temps[n].pistes[id2] = c;
+      });
+      const camera = [
+        [0, { x: 30, y: -110, z: 1.7 }],
+        [400, { x: 30, y: -110, z: 1.7, e: "cubic-bezier(.5,0,.2,1)" }],
+        [3900, { x: 0, y: 6, z: 1.06 }],
+        [COUPE, { x: -10, y: 4, z: 1.1 }],
+        [CHOC - 100, { z: 1.36, x: 70, y: 30, e: "linear" }],
+        ...secoue(CHOC, { z: 1.36, x: 70, y: 30 }, 15, 8, 50),
+        [RACCORD + 300, { z: 1.12, x: 24, y: 8 }],
+        [SORT + 400, { z: 1.3, x: -70, y: 18 }],
+        [ARRACHE - 200, { z: 1.3, x: 54, y: 12, e: "linear" }],
+        ...secoue(ARRACHE, { z: 1.3, x: 54, y: 12 }, 12, 6, 50),
+        [RETOUR, { z: 1.12, x: 10, y: 4 }],
+        [FRAPPE - 100, { z: 1.38, x: -20, y: 30, e: "linear" }],
+        ...secoue(FRAPPE, { z: 1.38, x: -20, y: 30 }, 14, 7, 50),
+        [CHUTE + 200, { z: 1.16, x: 0, y: -14 }],
+        [FIN, { z: 1.22, x: 0, y: -74 }]
+      ];
+      parTemps(T, camera, ["x", "y", "z", "r"]).forEach((c, n) => {
+        sc.partition.temps[n].camera = c;
+      });
+      return sc;
+    }
+    __name(pontNeon, "pontNeon");
+    module.exports = { pontNeon, neon, neonise, NEON };
+  }
+});
+
 // atelier/gravure_cercle.js
 var require_gravure_cercle = __commonJS({
   "atelier/gravure_cercle.js"(exports, module) {
@@ -24439,8 +24601,9 @@ var require_scenes6 = __commonJS({
     var GR = require_gravure_rencontre();
     var GL = require_gravure_lorena();
     var GV = require_gravure_vent();
+    var NP = require_neon_pont();
     var GC = require_gravure_cercle();
-    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
+    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", NP.pontNeon], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }
