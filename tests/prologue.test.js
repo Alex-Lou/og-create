@@ -108,7 +108,7 @@ describe('le tutoriel', () => {
     // Son Ponton, le chemin entre les deux camps, ses quatre piquets en travers du passage des égarés (Brume dit à quoi
     // ils servent ; déplacer attend le jour de Nathan)
     expect(island({ id: 'premier-ponton', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-bois'] });
-    expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
+    expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse', 'ponton-moyens'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
     expect(island({ id: 'chemin-aster', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['voisins'] });
     expect(island({ id: 'clotures', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] });
@@ -175,7 +175,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
     // Chaque réplique nommée existe
-    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'ponton-moyens', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'cage-bois', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin de Lorena.
