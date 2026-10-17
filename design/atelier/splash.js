@@ -216,13 +216,13 @@ function maitre([qui, pose, expr], x, y, k, voile, begin) {
     + `<g transform="translate(${f(x - 24 * k)} ${f(y - 62 * k)}) scale(${f(k)})">${corps}${brume}</g>`;
 }
 // Les maîtres, en trois rangs de chaque côté (le plus proche, le plus grand), tournés vers le centre, en quinconce :
-// chaque visage se voit (aucun derrière un autre, ni derrière Brume) ; chacun son expression (deux voisins n'ont jamais
-// la même ; rien de triste)
+// chaque visage se voit (aucun derrière un autre, ni derrière Brume ou ses sceaux) et tous tiennent dans le cadre ;
+// chacun son expression (deux voisins n'ont jamais la même ; rien de triste)
 const TROUPE = [
-  [['ondin', 'avant_salut', 'surpris'], 100, 640, 4, 0.4, 0.4], [['sylve', 'avant_mains-tendues', 'sourire'], 290, 610, 3.8, 0.42, 1.3],
+  [['ondin', 'avant_salut', 'surpris'], 112, 640, 4, 0.4, 0.4], [['sylve', 'avant_mains-tendues', 'sourire'], 268, 610, 3.8, 0.42, 1.3],
   [['cannelle', 'face_mains-tendues', 'tendresse'], 640, 600, 3.6, 0.42, 2.1],
   [['galet', 'avant_applaudir', 'rire'], 250, 790, 5.2, 0.2, 0.8], [['melisse', 'face_applaudir', 'emerveillee'], 655, 790, 5.2, 0.2, 1.7],
-  [['aster', 'avant_salut', 'clin'], 115, 995, 6.4, 0, 2.6], [['rivet', 'face_salut', 'content'], 795, 995, 6.4, 0, 0.2]
+  [['aster', 'avant_salut', 'clin'], 158, 995, 6.4, 0, 2.6], [['rivet', 'face_salut', 'content'], 744, 995, 6.4, 0, 0.2]
 ];
 
 // L'affiche, en deux calques pour rester fluide sur téléphone (un SVG animé se redessine en entier à chaque image) :
