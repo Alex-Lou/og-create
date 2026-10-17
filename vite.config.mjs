@@ -1,3 +1,4 @@
+import { readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -19,8 +20,22 @@ const versionFile = {
   }
 };
 
+// Les fichiers de cette version sous ces préfixes (fichiers.json, à côté du build : ceux du build et ceux de public/) :
+// le service worker retire de son cache ceux qui n'y sont plus (public/sw.js ; les dessins et les fichiers lus à la
+// demande d'une version passée y restaient sans fin)
+const LISTED = /^(js|css|img|fonts)\//;
+const publicDir = fileURLToPath(new URL('./public', import.meta.url));
+const filesList = {
+  name: 'files-list',
+  generateBundle(options, bundle) {
+    const own = readdirSync(publicDir, { recursive: true }).filter(file => statSync(`${publicDir}/${file}`).isFile());
+    const files = [...Object.keys(bundle), ...own].filter(file => LISTED.test(file)).sort().map(file => `/${file}`);
+    this.emitFile({ type: 'asset', fileName: 'fichiers.json', source: JSON.stringify(files) });
+  }
+};
+
 export default defineConfig(({ command }) => ({
-  plugins: [vue(), versionFile, libraryUrls()],
+  plugins: [vue(), versionFile, filesList, libraryUrls()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
     extensions: ['.mjs', '.js', '.json', '.vue']
