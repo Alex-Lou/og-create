@@ -12,7 +12,7 @@ const { atelier, gravure, trait, avecStyle } = require('./gravure');
 const { plein, balance, parTemps, MARGE, G, D_ } = require('./theatre_pont');
 const TP = require('./theatre_pont');
 
-const NEON = { papier: false, modele: '#2A0A4A', reflet: '#E8FFF8', hachures: 0.45, lisere: '#F4FFFF' };
+const NEON = { papier: false, modele: '#08021A', reflet: '#C8FFF4', hachures: 0.4, lisere: '#7AF8EE' };
 
 // ——— la palette ———
 const hsl = hex => {
@@ -58,9 +58,16 @@ function neon(hex) {
 // un dessin dans la palette néon : toutes ses couleurs (#rgb, #rrggbb, rgb(…)) ; les références (url(#…)) ne sont
 // pas des couleurs (leurs noms commencent par le préfixe de la scène)
 const hexDe = (r, g, b) => '#' + [r, g, b].map(v => (+v).toString(16).padStart(2, '0')).join('');
+// une couleur dans la palette néon, douce : les grandes surfaces assombries (elles sortent de la nuit), les clairs un peu
+// retenus ; seules les lumières (vert acide, jaunes vifs) gardent tout leur éclat
+function douce(hex) {
+  const c = neon(hex), [h, s, l] = hsl(c);
+  if (h > 60 && h < 100 && s > 0.6 && l > 0.45) return c;
+  return versHex(h, s * 0.85, l > 0.72 ? l * 0.86 : l * 0.62);
+}
 // (teinte : une teinte imposée à toute la pièce, ses clartés gardées ; les nuages d'orage, violets)
 const neonise = (svg, teinte) => {
-  const c = teinte === undefined ? neon : hex => { const [, s, l] = hsl(neon(hex)); return l < 0.16 ? neon(hex) : versHex(teinte, Math.max(s, 0.5), l * 0.8); };
+  const c = teinte === undefined ? douce : hex => { const [, s, l] = hsl(douce(hex)); return l < 0.12 ? douce(hex) : versHex(teinte, Math.max(s, 0.5), l * 0.85); };
   return svg.replace(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g, x => c(x)).replace(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g, (m, r, g, b) => c(hexDe(r, g, b)));
 };
 
@@ -68,7 +75,7 @@ const neonise = (svg, teinte) => {
 // vives au centre ; pas de grain de vieux papier
 function teinteNeon(p) {
   const A = atelier(`${p}N`);
-  return A.out(plein(A, A.lin([[0, '#FF3FA8', 0.12], [0.45, '#FF3FA8', 0], [0.6, '#00E0C8', 0], [1, '#00C8D8', 0.1]], 0, 0, 0, 400)) + plein(A, A.rad([[0, '#000', 0], [0.62, '#14063A', 0.12], [1, '#0A0228', 0.62]], 200, 200, 330)));
+  return A.out(plein(A, A.lin([[0, '#FF3FA8', 0.08], [0.4, '#FF3FA8', 0], [0.65, '#00E0C8', 0], [1, '#00C8D8', 0.07]], 0, 0, 0, 400)) + plein(A, A.rad([[0, '#000', 0], [0.55, '#05010F', 0.15], [1, '#020008', 0.78]], 200, 200, 320)));
 }
 
 // ——— ce que le néon ajoute (déjà dans sa palette : on ne le repasse pas au néon) ———
@@ -77,9 +84,8 @@ function teinteNeon(p) {
 const SOLEIL = [300, 86];
 function jourNeon(p) {
   const A = atelier(`${p}J`);
-  let s = plein(A, A.lin([[0, '#0B3354'], [0.32, '#4A2A8A'], [0.62, '#E0408A'], [0.86, '#FF7A4A'], [1, '#FFB45A']], 0, G, 0, 270));
-  s += plein(A, A.rad([[0, '#FFF2A0', 0.9], [0.18, '#FFD25A', 0.55], [0.5, '#FF6A8A', 0.18], [1, '#FF6A8A', 0]], SOLEIL[0], SOLEIL[1], 260));
-  for (let i = 0; i < 7; i++) { const x = hash(i, 21) * 480 - 40, y = 30 + hash(i, 22) * 150, r = 30 + 40 * hash(i, 23); s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.8)}" ry="${f(r * 0.5)}" fill="${A.rad([[0, '#FFB0E0', 0.35], [1, '#FFB0E0', 0]], x, y, r * 1.8)}"/>`; }
+  let s = plein(A, A.lin([[0, '#05030F'], [0.3, '#1A0E44'], [0.58, '#5A1E7A'], [0.82, '#C83A7A'], [1, '#FF8A4A']], 0, G, 0, 270));
+  s += plein(A, A.rad([[0, '#FFF2A0', 0.85], [0.14, '#FFC85A', 0.5], [0.45, '#FF5A8A', 0.16], [1, '#FF5A8A', 0]], SOLEIL[0], SOLEIL[1], 240));
   return A.out(s);
 }
 // la nuit d'orage : indigo, violet, une lueur magenta derrière les nuages, une autre vert acide là où la foudre couve
@@ -98,7 +104,7 @@ function pontNeon() {
   for (const pl of sc.plans) {
     if (!pl.dessin) continue;
     const d = pl.dessin;
-    const teinte = /^nuage\d/.test(pl.id) ? 272 : undefined;
+    const teinte = /^nuage\d/.test(pl.id) ? 272 : /^cumulus\d/.test(pl.id) ? 312 : undefined;
     pl.dessin = PROPRES[pl.id] ? () => PROPRES[pl.id](p) : () => avecStyle(NEON, () => neonise(d(), teinte));
   }
   return sc;
