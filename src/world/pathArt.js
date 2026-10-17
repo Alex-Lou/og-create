@@ -18,6 +18,9 @@ export const CLEAR_GRASS = 'transparent';
 
 const texts = new Map();
 const images = new Map();
+// Les herbes demandées d'un dessin dont le texte se lit encore : leurs images se font dès qu'il arrive (faites au dessin
+// suivant, elles arrivaient une repeinte du sol plus tard)
+const asked = new Map();
 let listener = null;
 let timer = 0;
 // (plusieurs images arrivent ensemble : le sol n'est repeint qu'une fois)
@@ -43,24 +46,43 @@ function textOf(file) {
   if (!texts.has(file)) {
     texts.set(file, null);
     const load = FILES[ROOT + file];
-    if (load) load().then(text => { texts.set(file, text); loaded(); });
+    if (load) {
+      load().then(text => {
+        texts.set(file, text);
+        for (const grass of asked.get(file) || []) imageOf(file, grass, text);
+        asked.delete(file);
+      });
+    }
   }
   return texts.get(file);
 }
 
-// L'image d'un dessin dans l'herbe d'une teinte, ou null tant qu'elle n'est pas prête (elle se lit alors)
-export function pathImage(file, grass) {
-  if (!file || typeof Image === 'undefined') return null;
+// L'image d'un dessin dans l'herbe d'une teinte (son texte lu), faite une fois ; son arrivée fait repeindre le sol
+function imageOf(file, grass, text) {
   const key = `${file}${grass}`;
   let img = images.get(key);
   if (!img) {
-    const text = textOf(file);
-    if (!text) return null;
     img = new Image();
     img.onload = loaded;
     const svg = grass === CLEAR_GRASS ? text.replace(GRASS_STOP, '$& stop-opacity="0"') : grass ? text.replace(GRASS, grass) : text;
     img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
     images.set(key, img);
+  }
+  return img;
+}
+
+// L'image d'un dessin dans l'herbe d'une teinte, ou null tant qu'elle n'est pas prête (elle se lit alors)
+export function pathImage(file, grass) {
+  if (!file || typeof Image === 'undefined') return null;
+  let img = images.get(`${file}${grass}`);
+  if (!img) {
+    const text = textOf(file);
+    if (!text) {
+      if (!asked.has(file)) asked.set(file, new Set());
+      asked.get(file).add(grass);
+      return null;
+    }
+    img = imageOf(file, grass, text);
   }
   return img.complete && img.naturalWidth ? img : null;
 }
