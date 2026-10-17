@@ -22666,15 +22666,21 @@
         600,
         {
          "anim": "repos",
-         "dir": "bas_droite",
-         "expr": "mefiante"
+         "dir": "haut_droite"
         }
        ],
        [
-        1000,
+        1900,
         {
-         "anim": "pose_visiere",
-         "dir": "bas_droite"
+         "anim": "repos",
+         "dir": "haut_gauche"
+        }
+       ],
+       [
+        3300,
+        {
+         "anim": "repos",
+         "dir": "haut_droite"
         }
        ]
       ]
@@ -23793,7 +23799,8 @@
         1500,
         {
          "anim": "arret",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "veille"
         }
        ],
        [
@@ -23811,10 +23818,11 @@
         }
        ],
        [
-        2700,
+        2900,
         {
-         "anim": "pose_tete",
-         "dir": "face"
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "surprise"
         }
        ]
       ]
@@ -25629,19 +25637,12 @@
        [
         0,
         {
-         "anim": "pose_sursaut",
-         "dir": "bas_droite"
-        }
-       ],
-       [
-        700,
-        {
          "anim": "pose_tete",
          "dir": "face"
         }
        ],
        [
-        1700,
+        1300,
         {
          "anim": "repos",
          "dir": "bas_droite",
@@ -26889,7 +26890,8 @@
         1300,
         {
          "anim": "arret",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "veille"
         }
        ],
        [

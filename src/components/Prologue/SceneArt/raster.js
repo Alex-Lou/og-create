@@ -122,13 +122,14 @@ export function acteurPx(box) {
   const k = planPx() / ART;
   return [Math.max(1, Math.round(box.w * k)), Math.max(1, Math.round(box.h * k))];
 }
-// Les images que l'avatar joue au premier temps d'une scène en plans, lues d'avance (PrologueScene : la scène qui vient)
+// Toutes les images que l'avatar joue dans une scène en plans, lues d'avance (PrologueScene : la scène qui vient ;
+// SceneArt : la sienne) : sur un téléphone, une image lue au moment de la jouer arrive en retard, et l'avatar saccade
 export function prepareActeur(data, look) {
-  const temps = data && data.plans && data.avatar && data.partition ? data.partition.temps : null;
-  const acteur = temps && temps[0] && temps[0].acteur;
-  if (!acteur) return;
+  if (!data || !data.plans || !data.avatar || !data.partition) return;
   const size = acteurPx(avatarBox(data.avatar));
-  for (const [, clip] of acteur) acteurImages(look, clip, { naufrage: data.avatar.naufrage !== false, lumiere: data.partition.lumiere || {} }).forEach(href => rasterOf(href, ...size));
+  for (const { acteur } of data.partition.temps) {
+    for (const [, clip] of acteur || []) acteurImages(look, clip, { naufrage: data.avatar.naufrage !== false, lumiere: data.partition.lumiere || {} }).forEach(href => rasterOf(href, ...size));
+  }
 }
 
 // La couleur moyenne d'une bande de lignes d'une image (canvas), en « rgb(r, g, b) »

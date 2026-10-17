@@ -22750,7 +22750,7 @@ var require_gravure_rencontre = __commonJS({
         joue([0, "repos", "haut_droite"]),
         joue([0, "repos", "haut_droite"], [1400, "repos", "haut_gauche"], [3400, "repos", "haut_droite"]),
         joue([0, "repos", "haut_droite"], [500, "repos", "bas_droite", "froid"], [900, "pose_frisson", "bas_droite"]),
-        joue([0, "pose_frisson", "bas_droite"], [600, "repos", "bas_droite", "mefiante"], [1e3, "pose_visiere", "bas_droite"]),
+        joue([0, "pose_frisson", "bas_droite"], [600, "repos", "haut_droite"], [1900, "repos", "haut_gauche"], [3300, "repos", "haut_droite"]),
         joue([0, "repos", "bas_droite", "decidee"], [600, "repos", "haut_droite"], [1e3, "marche", "haut_droite"], [3e3, "repos", "haut_droite"])
       ];
       const pas = /* @__PURE__ */ __name((D) => [[0, { x: 0, y: 0, s: 1 }], [1e3, { x: 0, y: 0, s: 1 }], [3e3, { x: 46, y: -34, s: 0.8, e: "linear" }], [D, { x: 46, y: -34, s: 0.8 }]], "pas");
@@ -22818,7 +22818,7 @@ var require_gravure_rencontre = __commonJS({
       const temps = [
         {
           ...unTemps(D0, [[0, c0], [D0, { ...c1, e: "ease-in-out" }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit, avatar: marche }),
-          acteur: joue([0, "marche", "bas_droite"], [1500, "arret", "bas_droite"], [2020, "repos", "bas_droite"], [2150, "pose_sursaut", "bas_droite"], [2700, "pose_tete", "face"])
+          acteur: joue([0, "marche", "bas_droite"], [1500, "arret", "bas_droite", "veille"], [2020, "repos", "bas_droite"], [2150, "pose_sursaut", "bas_droite"], [2900, "repos", "bas_droite", "surprise"])
         },
         {
           ...unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [D1, { x: -9 }]] }),
@@ -22895,11 +22895,11 @@ var require_gravure_rencontre = __commonJS({
         avatar: [[0, { x: -10 }], [D, { x: -10 }]]
       };
       const cam = { x: 0, y: 6, z: 1.2 }, fin = { x: 0, y: 2, z: 1.14 };
-      const t0 = { ...unTemps(D, [[0, cam], [D, { ...fin, e: "ease-in-out" }]], P2), acteur: joue([0, "pose_sursaut", "bas_droite"], [700, "pose_tete", "face"], [1700, "repos", "bas_droite", "surprise"]) };
+      const t0 = { ...unTemps(D, [[0, cam], [D, { ...fin, e: "ease-in-out" }]], P2), acteur: joue([0, "pose_tete", "face"], [1300, "repos", "bas_droite", "surprise"]) };
       const t1 = tenir(t0, 2600, joue([0, "pose_pointe", "bas_droite"], [1900, "repos", "bas_droite", "surprise"]));
       const t2 = tenir(t1, 2600, joue([0, "repos", "bas_droite", "surprise"], [700, "pose_hausse", "bas_droite"]));
       const t3 = tenir(t2, 2e3, joue([0, "repos", "bas_droite"]));
-      const t4 = tenir(t3, 2400, joue([0, "marche", "bas_droite"], [1300, "arret", "bas_droite"], [1820, "repos", "bas_droite"]), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: "linear" }], [2400, { x: 40, y: -12, s: 0.96 }]] });
+      const t4 = tenir(t3, 2400, joue([0, "marche", "bas_droite"], [1300, "arret", "bas_droite", "veille"], [1820, "repos", "bas_droite"]), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: "linear" }], [2400, { x: 40, y: -12, s: 0.96 }]] });
       const t5 = tenir(t4, 2600, joue([0, "pose_poings", "bas_droite"]));
       const t6 = tenir(t5, 2600, joue([0, "pose_croises", "bas_droite"], [1800, "repos", "bas_droite"]));
       const t7 = tenir(t6, 2600, joue([0, "repos", "bas_droite", "froid"]));

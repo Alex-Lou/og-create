@@ -159,12 +159,13 @@ function plage02() {
   // (la caméra : le plan large, puis on se rapproche de lui quand il se retourne et grelotte, puis on le laisse partir)
   const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -40, y: 22, z: 1.22 }, { x: -34, y: 18, z: 1.2 }, { x: -6, y: 2, z: 1.1 }];
   // (son jeu, une pensée après l'autre : il regarde la mer ; le long de la plage, puis la mer ; il se retourne et
-  // grelotte ; il scrute le rivage, la main en visière ; il se décide et marche vers le rocher, au loin)
+  // grelotte ; il se retourne vers le rivage et le scrute, d'un côté puis de l'autre ; il se décide et marche vers le
+  // rocher, au loin)
   const ACTEUR = [
     joue([0, 'repos', 'haut_droite']),
     joue([0, 'repos', 'haut_droite'], [1400, 'repos', 'haut_gauche'], [3400, 'repos', 'haut_droite']),
     joue([0, 'repos', 'haut_droite'], [500, 'repos', 'bas_droite', 'froid'], [900, 'pose_frisson', 'bas_droite']),
-    joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'bas_droite', 'mefiante'], [1000, 'pose_visiere', 'bas_droite']),
+    joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'haut_droite'], [1900, 'repos', 'haut_gauche'], [3300, 'repos', 'haut_droite']),
     joue([0, 'repos', 'bas_droite', 'decidee'], [600, 'repos', 'haut_droite'], [1000, 'marche', 'haut_droite'], [3000, 'repos', 'haut_droite'])
   ];
   const pas = D => [[0, { x: 0, y: 0, s: 1 }], [1000, { x: 0, y: 0, s: 1 }], [3000, { x: 46, y: -34, s: 0.8, e: 'linear' }], [D, { x: 46, y: -34, s: 0.8 }]];
@@ -226,11 +227,11 @@ function lueur02() {
     [2000, { x: -38, y: -46, s: 0.36, o: 1, e: 'ease-in-out' }], [2450, { x: -14, y: -26, s: 0.62, e: 'ease-out' }], [2800, { x: -24, y: -22, s: 0.6, e: 'ease-in-out' }], [POSE, { x: 0, y: 0, s: 1, o: 1, e: 'ease-in-out' }], [D0 - 1, { x: 0, y: 0, s: 1, o: 1, e: 'linear' }], [D0, { o: 0 }]];
   const pose = [[0, { o: 0 }], [D0 - 1, { o: 0, e: 'linear' }], [D0, { o: 1 }]], luit = [[0, { o: 0 }], [1300, { o: 0, e: 'ease-in' }], [POSE, { o: 1 }], [D0, { o: 1 }]], reste = D => [[0, { o: 1 }], [D, { o: 1 }]];
   // (il arrive du fond de la plage en marchant vers nous, s'arrête ; le point de lumière grandit : il sursaute, recule
-  // d'un pas, les mains aux tempes ; puis il la montre du doigt : une étoile ?)
+  // d'un pas, et la fixe ; puis il la montre du doigt : une étoile ?)
   const marche = [[0, { x: -70, y: -16, s: 0.88 }], [1500, { x: 0, y: 0, s: 1, e: 'linear' }], [2150, { x: 0, y: 0, s: 1 }], [2300, { x: -3, y: -7, s: 1, e: 'ease-out' }], [2500, { x: -9, y: 0, s: 1, e: 'ease-in' }], [D0, { x: -9, y: 0, s: 1 }]];
   const temps = [
     { ...unTemps(D0, [[0, c0], [D0, { ...c1, e: 'ease-in-out' }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit, avatar: marche }),
-      acteur: joue([0, 'marche', 'bas_droite'], [1500, 'arret', 'bas_droite'], [2020, 'repos', 'bas_droite'], [2150, 'pose_sursaut', 'bas_droite'], [2700, 'pose_tete', 'face']) },
+      acteur: joue([0, 'marche', 'bas_droite'], [1500, 'arret', 'bas_droite', 'veille'], [2020, 'repos', 'bas_droite'], [2150, 'pose_sursaut', 'bas_droite'], [2900, 'repos', 'bas_droite', 'surprise']) },
     { ...unTemps(D1, [[0, c1], [D1, { ...c2, e: 'ease-in-out' }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [D1, { x: -9 }]] }),
       acteur: joue([0, 'repos', 'bas_droite', 'surprise'], [500, 'pose_pointe', 'bas_droite'], [2600, 'repos', 'bas_droite', 'surprise']) }
   ];
@@ -306,14 +307,14 @@ function rocher02() {
     avatar: [[0, { x: -10 }], [D, { x: -10 }]]
   };
   const cam = { x: 0, y: 6, z: 1.2 }, fin = { x: 0, y: 2, z: 1.14 };
-  // (une bulle par temps : il sursaute avec elle, les mains aux tempes ; il la montre du doigt (« Tu es vivant ? ») ;
+  // (une bulle par temps : les mains aux tempes encore, puis il les baisse ; il la montre du doigt (« Tu es vivant ? ») ;
   // corrigé, il hausse les épaules ; il attend ; il s'approche du rocher (« T'approcher ») ; les poings sur les
   // hanches (« C'est toi qui nous as fait naufrager ? ») ; les bras croisés ; il l'écoute)
-  const t0 = { ...unTemps(D, [[0, cam], [D, { ...fin, e: 'ease-in-out' }]], P), acteur: joue([0, 'pose_sursaut', 'bas_droite'], [700, 'pose_tete', 'face'], [1700, 'repos', 'bas_droite', 'surprise']) };
+  const t0 = { ...unTemps(D, [[0, cam], [D, { ...fin, e: 'ease-in-out' }]], P), acteur: joue([0, 'pose_tete', 'face'], [1300, 'repos', 'bas_droite', 'surprise']) };
   const t1 = tenir(t0, 2600, joue([0, 'pose_pointe', 'bas_droite'], [1900, 'repos', 'bas_droite', 'surprise']));
   const t2 = tenir(t1, 2600, joue([0, 'repos', 'bas_droite', 'surprise'], [700, 'pose_hausse', 'bas_droite']));
   const t3 = tenir(t2, 2000, joue([0, 'repos', 'bas_droite']));
-  const t4 = tenir(t3, 2400, joue([0, 'marche', 'bas_droite'], [1300, 'arret', 'bas_droite'], [1820, 'repos', 'bas_droite']), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: 'linear' }], [2400, { x: 40, y: -12, s: 0.96 }]] });
+  const t4 = tenir(t3, 2400, joue([0, 'marche', 'bas_droite'], [1300, 'arret', 'bas_droite', 'veille'], [1820, 'repos', 'bas_droite']), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: 'linear' }], [2400, { x: 40, y: -12, s: 0.96 }]] });
   const t5 = tenir(t4, 2600, joue([0, 'pose_poings', 'bas_droite']));
   const t6 = tenir(t5, 2600, joue([0, 'pose_croises', 'bas_droite'], [1800, 'repos', 'bas_droite']));
   const t7 = tenir(t6, 2600, joue([0, 'repos', 'bas_droite', 'froid']));

@@ -46,7 +46,7 @@ import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
 import { acteurImages, mouvementsKit } from '@/game/avatarKit';
 import { clipA, imageA, prochain } from '@/game/acteur';
 import { reducedMotion } from '@/utils/fx';
-import { layerRaster, rasterOf, acteurPx, edgeColors, MAX_DPR, ART } from './raster';
+import { layerRaster, rasterOf, acteurPx, prepareActeur, edgeColors, MAX_DPR, ART } from './raster';
 import ScenePlans from './ScenePlans';
 // La pluie (meteo.pluie, de 0 à 1) : ses gouttes au plus, leur pente, la vitesse à laquelle elle forcit ou faiblit (par
 // seconde) ; la finesse de son image au plus
@@ -207,8 +207,10 @@ export default {
       clearTimeout(this.acteurTimer);
       const acteur = this.jeu;
       if (!acteur) return;
+      // (toutes ses images de la scène, celles de ce temps d'abord)
       const box = avatarBox(this.data.avatar);
       for (const [, clip] of acteur) this.imagesDe(clip).forEach(href => this.rasterOf({ href, ...box, acteur: true }));
+      if (!this.alone) prepareActeur(this.data, this.look);
       if (reducedMotion()) {
         this.acteurT = acteur[acteur.length - 1][0];
         return;
