@@ -1,11 +1,13 @@
 // L'écran de démarrage (splash.js) : écrit le fond, l'affiche (le Grimoire, les maîtres) et Brume dans
 // public/img/splash/, immobiles : ce qui bouge, index.html l'anime en CSS (public/splash.css) ; et son orage (l'autre
-// visage de l'île et des maîtres : splash_survie.js ; les nuages et les éclairs : splash_orage.js)
+// visage de l'île et des maîtres : splash_survie.js ; les nuages, les éclairs, l'aura : splash_orage.js ; sa chronologie,
+// les keyframes de public/splash.css : splash_orage_temps.js)
 const fs = require('fs');
 const path = require('path');
 const { fond, affiche, brume, demon, fixe } = require('./splash');
 const { fondSurvie, afficheSurvie } = require('./splash_survie');
 const { nuages, eclairs, aura, souffle } = require('./splash_orage');
+const { chronologieOrage } = require('./splash_orage_temps');
 
 const OUT = path.join(__dirname, '..', '..', 'public', 'img', 'splash');
 fs.mkdirSync(OUT, { recursive: true });
@@ -21,6 +23,9 @@ const INDEX = path.join(ROOT, 'index.html');
 let html = fs.readFileSync(INDEX, 'utf8');
 for (const [nom] of IMAGES) html = html.replace(new RegExp(`/img/splash/${nom}\\.svg(\\?v=[0-9a-f]+)?"`, 'g'), `/img/splash/${nom}.svg?v=${empreinte(path.join(OUT, `${nom}.svg`))}"`);
 html = html.replace(/(<!-- les éclairs[^>]*-->)[\s\S]*?(<!-- \/les éclairs -->)/, (m, a, b) => `${a}${eclairs()}${b}`);
+// la chronologie de l'orage, dans la feuille de style (avant son empreinte)
+const CSS = path.join(ROOT, 'public', 'splash.css');
+fs.writeFileSync(CSS, chronologieOrage(fs.readFileSync(CSS, 'utf8')));
 html = html.replace(/\/splash\.css(\?v=[0-9a-f]+)?"/g, `/splash.css?v=${empreinte(path.join(ROOT, 'public', 'splash.css'))}"`);
 fs.writeFileSync(INDEX, html);
 console.log(`splash : ${IMAGES.map(([nom]) => nom).join(', ')} dans ${path.relative(process.cwd(), OUT)}, éclairs et empreintes dans index.html`);

@@ -1,13 +1,13 @@
-// L'écran de démarrage, version « survie » : une proposition à part (choix de l'auteur, 17 oct. : chibi mais rude), à
-// côté de l'écran du jeu (splash.js), qui ne change pas. Le même splash, la nuit où l'île tient bon :
-// - le fond : des égarés du jeu (le fantôme, le zombie, le noyé de l'Hirondelle, la racine errante, l'esprit sylvestre)
-//   sortent de la brume sur la mer, autour de l'île ; les tentacules d'un kraken (la couleur de celui du Ponton) se
-//   dressent derrière elle, un autre s'enroule près de l'épave ;
-// - l'affiche : les sept maîtres de face, en tenue de naufragé, le regard dur ; chacun ses marques de vétéran (une
-//   cicatrice recousue, un cache-œil, des griffures, un bandeau…), parfois une bandoulière ou une épaulière cloutée, et
-//   une arme de fortune à la main (massue cloutée, pied-de-biche, poignard, couperet, fourche, pistolet de marine,
-//   fusée de détresse).
-// preview_splash_survie.js l'écrit dans design/atelier/survie/ (avec un aperçu de l'écran entier) ; rien dans public/.
+// L'autre visage de l'écran de démarrage (splash.js), celui que l'orage révèle (public/splash.css, « 5. L'orage ») :
+// - le fond (tempete.svg) : des égarés du jeu (le fantôme, le zombie, le noyé de l'Hirondelle, la racine errante, l'esprit
+//   sylvestre) sortent de la brume sur la mer, autour de l'île ; les tentacules d'un kraken (la couleur de celui du
+//   Ponton) se dressent derrière elle, un autre s'enroule près de l'épave ;
+// - l'affiche (guerriers.svg) : les sept maîtres de face, en tenue de naufragé, prêts et armés (choix de l'auteur,
+//   17 oct. : chibi mais rude, pas hostiles) ; chacun ses marques de vétéran (une cicatrice recousue, une balafre, un
+//   cache-œil, des griffures, un bandeau, des peintures de guerre…), parfois une bandoulière ou une épaulière cloutée, et
+//   une arme de fortune brandie (massue cloutée, pied-de-biche, poignard, couperet, fourche, pistolet de marine, fusée
+//   de détresse).
+// preview_splash.js les écrit dans public/img/splash/.
 const fs = require('fs');
 const path = require('path');
 const { fond, affiche, fixe } = require('./splash');
