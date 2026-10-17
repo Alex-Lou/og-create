@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const { OUT, P, E, L, arm, frame } = require('./troupe');
-const { anyaVeille, cerfVeille, etincelle, outils: { eclairer, rayonne } } = require('./splash_anya');
+const { anyaVeille, etincelle, outils: { eclairer, rayonne } } = require('./splash_anya');
 const { brumeHeroine } = require('./splash_brume');
 const { ileVivante } = require('./splash_ile');
 const { avatar } = require('../personnages/avatar.js');
@@ -79,7 +79,7 @@ function poussieres(cx, cy, rx, ry, seed, n = 30) {
   }
   return s;
 }
-// La brume qui monte devant Anya et son cerf, derrière l'île : des nappes claires, larges et plates, qui se recouvrent
+// La brume qui monte devant Anya, derrière l'île : des nappes claires, larges et plates, qui se recouvrent
 function brumeDevant(cx, y) {
   return `<defs>${rad('spVoile', [[0, '#DCEAF6', 0.6], [0.55, '#C4D8EC', 0.24], [1, '#C4D8EC', 0]])}</defs>`
     + [[-380, 14, 190, 30], [-210, 4, 230, 38], [-30, -8, 260, 44], [150, -10, 220, 50], [330, 4, 210, 40]]
@@ -108,20 +108,18 @@ function fond() {
   s += ilot(`M60,${HZ + 2} Q120,${HZ - 34} 200,${HZ - 26} Q270,${HZ - 52} 350,${HZ - 18} Q400,${HZ - 6} 430,${HZ + 2} Z`, '#24405F')
     + ilot(`M1190,${HZ + 2} Q1250,${HZ - 30} 1330,${HZ - 34} Q1420,${HZ - 58} 1490,${HZ - 20} Q1540,${HZ - 8} 1580,${HZ + 2} Z`, '#203A58');
   s += `<g transform="scale(4 1)">${nappeDouce('spB1', HZ - 6, 0.3, 24, 10, 0.8, '210,226,242', 3)}</g>`;
-  // Anya et son cerf de lune, derrière l'île, à contre-jour : la lune se lève juste derrière sa tête (son auréole), ses
-  // rayons s'étirent sur la nuit et la mer ; un halo d'argent autour d'eux, des poussières de lumière ; la brume monte
-  // devant eux (le bas de leur corps s'y efface), puis l'île, où tombe la lumière chaude de ses mains ouvertes
-  // (elle mesure les deux tiers de l'île de haut ; le cerf, 80 % d'elle, comme sur l'île : ses bois arrivent à sa
-  // couronne ; à sa droite, tourné vers elle, son museau près de sa main)
-  const LY = 245, ka = 2.1, kc = ka * 0.8, ax = CX;
+  // Anya, seule, au centre, derrière l'île, à contre-jour : la lune se lève juste derrière sa tête (son auréole), ses
+  // rayons s'étirent sur la nuit et la mer ; un halo d'argent autour d'elle, des poussières de lumière ; la brume monte
+  // devant elle (le bas de sa robe s'y efface), puis l'île, où tombe la lumière chaude de ses mains ouvertes (elle
+  // mesure les deux tiers de l'île de haut ; sans son cerf : choix de l'auteur, 17 oct.)
+  const LY = 245, ka = 2.1, ax = CX;
   s += rayonsLune(CX, LY)
     // deux cercles de lumière autour de la lune : son auréole
     + `<circle cx="${CX}" cy="${LY}" r="${f(120 * LUNE + 9)}" fill="none" stroke="#FFF6D8" stroke-width="1.6" opacity=".45"/>`
     + `<circle cx="${CX}" cy="${LY}" r="${f(120 * LUNE + 17)}" fill="none" stroke="#FFF6D8" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="0.1 9" opacity=".6"/>`;
-  s += `<ellipse cx="${ax + 20}" cy="300" rx="230" ry="170" fill="url(#spAura)"/>`
-    + `<g transform="translate(${f(ax + 72 - 38 * kc)} ${f(422 - 141 * kc)}) scale(${f(kc)})">${cerfVeille()}</g>`
+  s += `<ellipse cx="${ax}" cy="300" rx="230" ry="170" fill="url(#spAura)"/>`
     + `<g transform="translate(${f(ax - 40 * ka)} ${f(LY - 34 * ka)}) scale(${ka})">${anyaVeille()}</g>`
-    + poussieres(ax + 20, 290, 270, 170, 11) + brumeDevant(CX, 404);
+    + poussieres(ax, 290, 270, 170, 11) + brumeDevant(CX, 404);
   // l'île des naufragés, dessinée pour cet écran (splash_ile.js), devant elle ; la lumière de ses mains y tombe
   s += `<g transform="translate(${CX} 470) scale(.78)">${ileVivante()}</g>`;
   s += `<ellipse cx="${ax}" cy="412" rx="170" ry="44" fill="url(#spMainsIle)"/>` + poussieres(ax, 380, 90, 26, 5, 9);
