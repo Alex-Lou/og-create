@@ -16,7 +16,9 @@ describe('les scènes de la bibliothèque', () => {
     for (const id of [...used, '00_carte']) {
       const scene = sceneOf(id);
       expect(scene, id).toBeTruthy();
-      expect(scene.back, id).toHaveLength(scene.frames);
+      // (une scène en plans : chacun de ses plans peints a son image, à la place du fond)
+      if (scene.plans) expect(scene.plans.every(p => p.href || ['anime', 'avatar'].includes(p.id)), id).toBe(true);
+      else expect(scene.back, id).toHaveLength(scene.frames);
       expect(scene.back.every(Boolean) && scene.live.every(Boolean) && scene.front.every(Boolean), id).toBe(true);
     }
     expect(sceneOf('inconnue')).toBe(null);

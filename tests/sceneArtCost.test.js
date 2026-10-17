@@ -11,13 +11,23 @@ const CSS = read('SceneArt.css');
 
 describe('le coût d’une scène du tutoriel', () => {
   it('le fond, l’avatar et le devant sont peints dans deux canvas ; seul le calque « anime » se joue tel quel', () => {
-    expect(TEMPLATE.match(/<canvas ref="(under|over)"/g)).toHaveLength(2);
+    const [plans, image] = TEMPLATE.split('<div v-else');
+    expect(image.match(/<canvas ref="(under|over)"/g)).toHaveLength(2);
     expect(TEMPLATE).not.toMatch(/data\.(back|front)/);
     expect(TEMPLATE).not.toMatch(/<image /);
-    expect(TEMPLATE.match(/v-for="\(href, k\) in data\.live"/g)).toHaveLength(1);
+    expect(image.match(/v-for="\(href, k\) in data\.live"/g)).toHaveLength(1);
+    // (une scène en plans : ScenePlans peint ses plans, une fois chacun ; l'avatar dans son canvas, le calque anime tel quel)
+    expect(plans.match(/<canvas ref="over"/g)).toHaveLength(1);
+    expect(plans.match(/v-for="\(href, k\) in data\.live"/g)).toHaveLength(1);
+    expect(read('ScenePlans.js')).toMatch(/h\('canvas'/);
+  });
+  it('une scène en plans reste visible d’une bulle à l’autre (sa visibilité est dans son état, pas posée à la main)', () => {
+    expect(read('ScenePlans.js')).toMatch(/opacity: this\.visible/);
+    expect(read('ScenePlans.js')).not.toMatch(/\$el\.style/);
   });
   it('rien n’est flouté', () => {
     expect(CSS).not.toMatch(/blur\(/);
+    expect(read('ScenePlans.js')).not.toMatch(/blur\(/);
     expect(TEMPLATE).not.toMatch(/sa__backdrop|sa__edge/);
   });
 });

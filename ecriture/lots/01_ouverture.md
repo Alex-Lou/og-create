@@ -65,7 +65,7 @@ Colonnes : l'identifiant (existant, ou **nouveau** en gras) ; qui parle ; où da
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| naufrage.0 | légende | `01_pont`, auto | L'Hirondelle, troisième nuit de croisière. | L'Hirondelle, troisième nuit de croisière. | Gardée. |
+| naufrage.0 | légende | `01_pont`, auto | L'Hirondelle, troisième nuit de croisière. | L'Hirondelle, troisième jour de croisière. | Changée (choix de l'auteur, 16 oct. : le naufrage a lieu en journée). |
 | naufrage.1 → **naufrage.1a** | Le capitaine | `01_pont`, auto | Mesdames et messieurs, le commandant vous prie de regagner… krrr… vos cabines… | Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée. | Le texte de l'auteur ; « qui vous parle » retiré (redondant). « Un élément inconnu » est gardé : le mystère des racines (décision 3). |
 | **naufrage.1b** | Le capitaine | `01_pont`, auto | — | Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme. | Le calme professionnel. « Il faudra vous organiser » devient une consigne de capitaine. |
 | **naufrage.1c** | Le capitaine | `01_pont`, auto | — | Nous rencontrons des difficultés à manœ… — krrr — Aaah ! — krrrr… shhh… | La voix se coupe sur le mot ; le cri est réel. Le « krrr » reste : c'est un bruit (décision 11). Un seul « Aaah », pas cinq : la peur, pas la caricature. |

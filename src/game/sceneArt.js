@@ -76,7 +76,8 @@ export function avatarBox(spot) {
 // Une scène de la bibliothèque : ses images (back : le fond, live : ce qui bouge par-dessus le fond, front : le devant,
 // chacun dans l'ordre), la durée d'une image (ms), sa hauteur (h, unités de ses dessins : 400 pour un carré, plus pour une
 // scène en hauteur), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la
-// bibliothèque ne l'a pas. Le calque « anime » (facultatif) : une scène lourde livre un fond immobile, que le navigateur
+// bibliothèque ne l'a pas. Une scène en plans (plans, partition : game/scenePlans.js) n'a ni fond ni devant : ScenePlans
+// peint ses plans. Le calque « anime » (facultatif) : une scène lourde livre un fond immobile, que le navigateur
 // peint une fois, et à part ce qui bouge (SceneArt ; choix de l'auteur, 15 oct. : rien ne se perd en qualité)
 // Les scènes des personnages sont encore des suites de 2 à 4 images qui tournent : à l'écran, des à-coups (choix de
 // l'auteur, 11 oct. : au niveau des scènes fluides, le Feu et le Grimoire). En attendant leur version animée en continu
@@ -109,6 +110,16 @@ export function sceneOf(id) {
   const shown = DATA.scenes[id] ? id : STANDIN[id];
   const scene = DATA.scenes[shown];
   if (!scene) return null;
+  const url = file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`];
+  // (une scène en plans, game/scenePlans.js : ses plans du fond vers nous, sa partition ; son calque anime et l'avatar
+  // ont leur place dans la pile)
+  if (scene.plans) {
+    const plans = scene.plans.map(p => ({ id: p.id, href: p.fichier && p.id !== 'anime' ? url(p.fichier) : null, profondeur: p.profondeur || 0, marge: p.marge || 0, flou: p.flou || 1, pivot: p.pivot || null, cadre: p.cadre || null, dans: p.dans || null, derriere: !!p.derriere,
+      // (un figurant : ses images, par clé, et ses animations)
+      ...(p.images ? { images: Object.fromEntries(Object.entries(p.images).map(([cle, f]) => [cle, url(f)])), anims: p.anims } : {}) }));
+    const anime = scene.plans.find(p => p.id === 'anime');
+    return { frames: 1, ms: scene.ms_par_image, still: false, h: 400, plans, partition: scene.partition || null, back: [], live: anime && anime.fichier ? [url(anime.fichier)] : [], front: [], avatar: scene.avatar };
+  }
   const kept = Object.hasOwn(STILL, shown) && scene.images > 1 ? STILL[shown] : null;
   const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
   return {

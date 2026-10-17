@@ -4,8 +4,9 @@
 // lu seulement par l'éditeur (chargé à la demande) : ce module-ci part au démarrage (les scènes), sans ses 260 Ko.
 // Un avatar est soit l'un des douze exemples de la bibliothèque (« avatar-03 », game/sceneArt.js), soit ses choix.
 import { reactive } from 'vue';
+import { gravee } from './acteur';
 
-const state = reactive({ kit: null, failed: false });
+const state = reactive({ kit: null, failed: false, exemples: null });
 let loading = null;
 
 // Un avatar composé (ses choix), et non l'un des exemples
@@ -80,6 +81,44 @@ export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage =
     const view = vue === 'avant' ? 'se' : 'ne';
     const body = kit.frame(c, view, 'marche', 1);
     return [toUrl(kit.svg(view === 'se' ? mirrored(body) : body))];
+  });
+}
+
+// Les choix des exemples de la bibliothèque (avatar.json, avec le catalogue de l'éditeur : chargé à la demande), pour
+// qu'un joueur qui a choisi un exemple joue lui aussi les scènes (réactif, comme le kit)
+let exemplesLoading = null;
+function exemplesNow() {
+  if (!state.exemples && !exemplesLoading) {
+    exemplesLoading = import('./avatarCatalog')
+      .then(m => (state.exemples = m.CATALOG.exemples))
+      .catch(() => (state.exemples = {}));
+  }
+  return state.exemples;
+}
+// Les animations du kit (MOUVEMENTS : leurs images, leur durée), ou null tant qu'il se charge
+export const mouvementsKit = () => (kitNow() || {}).MOUVEMENTS || null;
+// Les images d'un clip de la piste « acteur » (game/acteur.js) : l'avatar (ses choix, ou l'un des exemples) qui joue
+// cette animation dans cette direction, gravé à la lumière de la scène ; des URL data:, dans l'ordre ; [] tant que le
+// kit ou les exemples se chargent, ou si l'animation n'existe pas
+export function acteurImages(look, { anim, dir, expr }, { naufrage = true, lumiere = {} } = {}) {
+  const kit = kitNow();
+  if (!kit || !kit.MOUVEMENTS[anim]) return [];
+  let choices = look;
+  if (!isCustom(look)) {
+    const ex = exemplesNow();
+    if (!ex) return [];
+    const exemple = ex[look] || Object.values(ex)[0];
+    if (!exemple) return [];
+    choices = exemple.choix;
+  }
+  return memo(`${JSON.stringify(choices)}|acteur|${anim}|${dir}|${expr}|${naufrage}|${JSON.stringify(lumiere)}`, () => {
+    const c = characterOf(kit, choices, naufrage);
+    if (!c) return [];
+    try {
+      return Array.from({ length: kit.MOUVEMENTS[anim].images }, (_, n) => toUrl(gravee(kit.mouvement(c, anim, dir, n, expr), `a${n}`, lumiere)));
+    } catch (error) {
+      return [];
+    }
   });
 }
 

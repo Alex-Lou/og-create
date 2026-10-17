@@ -52,7 +52,7 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
-| naufrage.0 | légende | L'Hirondelle, troisième nuit de croisière. | Garder | Le lieu et le temps, sans un mot de trop. | 01 |
+| naufrage.0 | légende | L'Hirondelle, troisième jour de croisière. | Garder | Le lieu et le temps, sans un mot de trop. | 01 |
 | naufrage.1 | Le haut-parleur | Mesdames et messieurs, le commandant vous prie de regagner… krrr… vos cabines… | Réécrire | Remplacé par l'annonce du capitaine (décision 2). | 01 |
 | naufrage.2–3 | images | (la vague, le noir) | Élever | On y ajoute les racines sous l'eau (décision 3). | 01 |
 | naufrage.4 | pensée | Du sable dans la bouche. La mer. Rien d'autre. | Élever | La sensation reste ; s'y ajoute « Où suis-je ? », le réveil de l'auteur. | 01 |

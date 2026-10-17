@@ -19,10 +19,10 @@ export const SCENES = {
   // l'annonce du capitaine coupée net, la vague, les racines sous l'eau, le noir ; le réveil vu par ses yeux, la plage,
   // les débris, la carte d'embarquement aperçue sur le sable
   naufrage: [
-    { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième nuit de croisière.', auto: 4200 },
+    { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième jour de croisière.', auto: 4200 },
     { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée.', auto: 5200 },
     { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme.', auto: 5200 },
-    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Nous rencontrons des difficultés à manœ… — krrr — Aaah ! — krrrr… shhh…', auto: 3600 },
+    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Nous rencontrons des difficultés à manœ… — krrr — Aaah ! Mais que sont ces choses ?! — krrrr… shhh…', auto: 4600 },
     { scene: '01_vague', auto: 2600 },
     // (sous la surface, les racines : rien ne s'explique)
     { scene: '01_racines', auto: 3000 },
@@ -44,7 +44,7 @@ export const SCENES = {
     { scene: '02_plage', thought: true, text: 'Je ne vois personne. Pourtant, j’aurais juré voir des silhouettes nager vers le rivage…' },
     { scene: '02_plage', thought: true, text: 'Tant pis. D’abord, avançons.', gesture: { label: 'Avancer', x: 50, y: 66 } },
     { scene: '02_lueur', avatar: SHIVER, who: 'joueur', text: 'Aaah ! Mais c’est quoi, ça ?!' },
-    { scene: '02_lueur', avatar: SHIVER, who: 'joueur', text: 'Une étoile ? … C’est magique ?' },
+    { scene: '02_lueur', avatar: SHIVER, who: 'joueur', text: 'Une étoile ? … C’est magique ? Ça veut me tuer ?' },
     // (elle s'immobilise une seconde : Brume ne relève pas « étoile »)
     { scene: '02_approche', avatar: SHIVER, auto: 1400 },
     { scene: '02_rocher', avatar: SHIVER, who: 'Brume', text: 'Tu… Tu peux me voir ? Et me parler ?!' },
@@ -65,7 +65,7 @@ export const SCENES = {
     { scene: '03_vent', who: 'Brume', text: 'Oh ! Mais toi aussi, tu sais commander aux éléments ?!' },
     { scene: '03_vent', who: 'joueur', text: 'Je… J’ignore ce qui s’est passé. C’est moi qui ai fait ça ?' },
     { scene: '03_vent', who: 'Brume', text: 'Oui ! Tu es comme eux ! Tu peux créer, donner vie à ce qui dort dans ce livre.' },
-    { scene: '03_vent', who: 'Brume', text: 'Moi, je ne le comprends pas. Je le garde pour celui qui doit le recevoir… et on dirait que c’est toi.', gesture: { label: 'Tourner la page', x: 72, y: 64 } }
+    { scene: '03_vent', who: 'Brume', text: 'Moi, je ne le comprends pas. Je le garde pour celui qui doit le recevoir… et on dirait que… c’est toi.', gesture: { label: 'Tourner la page', x: 72, y: 64 } }
   ],
   // « Quel jour ? » : elle regarde le ciel sans rien dire (après la page de garde, ou après « souffle »)
   jour: [
@@ -80,8 +80,8 @@ export const SCENES = {
   cercle: [
     { scene: '03_vent', who: 'joueur', text: 'Oh non… Je sens que la nuit va être froide. Je n’ai ni abri, ni nourriture, ni de quoi me réchauffer.' },
     { scene: '03_vent', who: 'Brume', text: 'Non, non, ne t’en fais pas. Je ne réchauffe pas beaucoup, mais je brille. Je resterai près de toi jusqu’au matin.' },
-    { scene: '03_vent', who: 'joueur', text: 'Bon… D’accord, Brume. On suit ton plan. Je n’ai pas d’autre choix, de toute façon.' },
-    { scene: '03_vent', who: 'Brume', text: 'C’est vrai ! Viens, par là.', gesture: { label: 'Suivre Brume', x: 64, y: 44 } },
+    { scene: '03_vent', who: 'joueur', text: 'Bon… D’accord, Brume. On suit ton plan. Je n’ai pas d’autre choix, de toute façon, mais je vais quand même mourir de froid !' },
+    { scene: '03_vent', who: 'Brume', text: 'Ah… C’est vrai ! Viens, par là.', gesture: { label: 'Suivre Brume', x: 64, y: 44 } },
     { scene: '05_cercle', who: 'Brume', text: 'Autrefois, il y avait ici un cercle de flammes, et ceux d’avant tout autour.' },
     { scene: '05_cercle', who: 'Brume', text: 'Ils parlaient, dansaient, chantaient, riaient. Ils discutaient sérieusement, aussi. Et parfois, plus tristement.' },
     { scene: '05_cercle', who: 'Brume', text: 'C’était un vrai lieu de vie. Je m’en souviens si peu, et tellement à la fois… C’est étrange.' },
@@ -92,7 +92,7 @@ export const SCENES = {
     { scene: '05_cercle', who: 'joueur', text: 'Attends. Je pense que mon bateau va s’échouer sur la plage : je pourrai sans doute récupérer mes affaires.' },
     { scene: '05_cercle', who: 'joueur', text: 'Tu es Brume, non ? Tu ne pourrais pas, justement, faire s’en aller la brume ?' },
     { scene: '05_cercle', who: 'Brume', text: 'Oui… Pardon pour ça. Il y a longtemps que j’ai oublié comment la retenir.' },
-    { scene: '05_cercle', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus.' },
+    { scene: '05_cercle', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus forte aussi.' },
     { scene: '05_cercle', who: 'joueur', text: 'Euh… D’accord. Écoute, ce n’est pas grave. Déjà, installons-nous.' }
   ],
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée ; quelqu'un regarde le feu (Agathe)
@@ -103,17 +103,33 @@ export const SCENES = {
     // (le premier indice de l'étoile tombée, le Voile : HISTOIRE.md, § 7.2 ; ce qu'on voit, une légende)
     { scene: '05_feu', caption: 'Une étoile file. Brume détourne les yeux.' },
     { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, sur les rochers. Quelqu’un regarde ton feu.' },
-    { scene: '06_silhouette', who: 'Brume', text: 'On lui fera une place, demain. Dors : je surveille la brume.' }
+    { scene: '06_silhouette', who: 'Brume', text: 'On lui fera une place demain, si le cœur lui en dit. En attendant, dors : je veille sur nous.' }
   ],
   // Lorena atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
   recolte: [
     // (soulagée, choix de l'auteur, 12 oct. : rassurée et reconnaissante, pas un grand sourire ; puis décidée)
     // (l'épave venue jusqu'aux rochers dans la nuit : la promesse de la veille se tient, à moitié)
-    { scene: '10_epave', thought: true, text: 'L’épave est venue jusqu’aux rochers, cette nuit. Mes affaires sont quelque part là-dedans… ou au fond.' },
-    { scene: '10_aster', who: 'Lorena', mood: 'soulage', text: 'Ho, du feu ! Tu étais sur l’Hirondelle ? Alors donne-moi la main. La mer ne m’a pas lâchée de la nuit.' },
+    { scene: '10_epave', thought: true, text: 'L’épave est venue jusqu’aux rochers, cette nuit… Elle aurait pu nous rentrer dedans, j’ai rien entendu…' },
+    { scene: '10_epave', thought: true, text: 'Mes affaires sont quelque part là-dedans… ou au fond.' },
+    { scene: '10_aster', who: 'Lorena', mood: 'soulage', text: 'Ho, du feu ! Toi aussi, tu étais sur le navire ? Alors donne-moi la main. La mer ne m’a pas lâchée de la nuit.' },
     { scene: '10_aster', who: 'Lorena', mood: 'soulage', text: 'Lorena, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
-    { scene: '10_aster', who: 'Lorena', mood: 'determine', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore.' }
+    // (sa réplique, en deux bulles : elle ne tient pas dans une seule)
+    { scene: '10_aster', who: 'Lorena', mood: 'soulage', text: 'J’ai failli me faire attraper par deux requins, et j’ai cru voir un tentacule immense… Bref !' },
+    { scene: '10_aster', who: 'joueur', text: 'Un requin ? Un tentacule géant ? Mais tu es certaine de ne pas avoir halluciné ?' },
+    { scene: '10_aster', who: 'Lorena', mood: 'pensif', text: 'J’aurais préféré, crois-moi.' },
+    { scene: '10_aster', who: 'Lorena', mood: 'content', text: 'En tout cas ! La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’on va pouvoir en faire.' },
+    { scene: '10_aster', who: 'joueur', text: 'On ? Parce que… tu t’installes avec nous ?' },
+    { scene: '10_aster', who: 'Lorena', mood: 'determine', text: 'Pourquoi ? Tu y vois un inconvénient ? Et ton animal domestique, il a quelque chose contre moi ?' },
+    { scene: '10_aster', who: 'Brume', text: 'Je ne suis PAS un animal ! Et encore moins domestique ! Je suis Brume !' },
+    { scene: '10_aster', who: 'Lorena', mood: 'surpris', text: 'Oh, mais ça parle ! Ça, par exemple ! Je n’avais encore jamais vu ça !' },
+    { scene: '10_aster', who: 'joueur', text: 'Ah, parce que survivre aux requins et voir un tentacule géant, ça va, mais la flammèche qui parle, c’est la goutte d’eau, c’est ça ?' },
+    { scene: '10_aster', who: 'Lorena', mood: 'gene', text: 'Je… Je n’avais juste jamais… parlé à une entité… magique !' },
+    { scene: '10_aster', who: 'Lorena', mood: 'determine', text: 'Quoi qu’il en soit ! On va devoir trouver un moyen de survivre. Cette île est étrange, croyez-en mon expérience.' },
+    { scene: '10_aster', who: 'Lorena', mood: 'determine', text: 'Construisons-nous un véritable abri de naufragés.' },
+    { scene: '10_aster', who: 'Brume', text: 'Elle a raison. Ici, la nuit comme le jour, ce n’est pas toujours très calme… Il arrive des choses…' },
+    { scene: '10_aster', who: 'joueur', text: 'Euuh… Brume ? Ça va ? On devrait savoir quelque chose ?' },
+    { scene: '10_aster', who: 'Brume', text: 'Oubliez ça. Je vous aiderai à bien tout comprendre.' }
   ],
   // Agathe regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
   // follets ; son souvenir revient devant lui (son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)
@@ -221,42 +237,43 @@ export const LINES = {
   // Le jour de Lorena (choix de l'auteur, 11 oct.) : sa scène au réveil (elle sort de l'eau sur notre plage), sa caisse,
   // sa longue-vue qui choisit son camp (look : la caméra y va, WorldView coach.js), sa Récolte, son Ponton, le chemin
   // entre son camp et le nôtre, ses quatre piquets ; le soir, autour du feu, la deuxième nuit
-  caisse: { who: 'ponton', mood: 'surpris', text: 'Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l’ouvrir.' },
-  tresors: { who: 'ponton', mood: 'emu', text: 'Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera.' },
+  caisse: { who: 'ponton', mood: 'surpris', text: 'Mes affaires ! Je n’arrive pas à y croire ! Aidez-moi à l’attraper !' },
+  tresors: { who: 'ponton', mood: 'emu', text: 'Ma longue-vue, mon compas… intacts. Et mon filet ! Tant pis pour le reste, on se débrouillera avec ce qu’on a déjà là !' },
   rend: 'La mer rend ce qu’elle a pris. C’est toi qui l’as dit.',
-  installe: { who: 'ponton', mood: 'fier', text: 'Là, face à la mer : c’est là que je m’installe.', look: 'site:ponton' },
-  rivage: { who: 'ponton', mood: 'determine', text: 'Viens au rivage. La marée laisse des choses, et elle les reprend vite.' },
+  installe: { who: 'ponton', mood: 'fier', text: 'Là, face à la mer : c’est là que je m’installe !', look: 'site:ponton' },
+  rivage: { who: 'ponton', mood: 'determine', text: 'Viens au rivage. La marée laisse souvent des choses, mais elle les reprend vite aussi.' },
   // (les deux formes, chacune d'un mot : game/accord.js)
   'bois-ponton': { who: 'ponton', mood: 'malicieux', text: 'Pas mal, pour un|une naufragé|naufragée. Pour mon ponton, il en faudra bien plus.' },
   'ponton-bois': { who: 'ponton', mood: 'determine', text: 'Un ponton, et la mer devient un chemin.' },
-  'ponton-tient': { who: 'ponton', mood: 'rire', text: 'Il tient. Ma grand-mère aurait tapé du talon dessus, pour voir.' },
+  'ponton-tient': { who: 'ponton', mood: 'rire', text: 'Il tient. C’est déjà ça… Ma grand-mère aurait tapé du talon dessus, pour voir.' },
   // (le Ponton n'a pas de fanal au palier I : la réplique de remplacement, choix de l'auteur, 14 oct.)
-  'ponton-promesse': 'Un ponton. La mer a un chemin pour revenir, maintenant.',
-  'chemin-camps': { who: 'ponton', mood: 'pensif', text: 'Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds.' },
-  'chemin-pieds': 'Un chemin. Les pieds le retrouvent, même dans la brume.',
+  'ponton-promesse': 'Un ponton ? J’ignorais ce que c’était, mais ça n’a pas l’air d’être bien grand.',
+  'ponton-moyens': { who: 'ponton', mood: 'fache', text: 'Hé ! Je fais avec les moyens du bord, d’accord ?' },
+  'chemin-camps': { who: 'ponton', mood: 'pensif', text: 'Avec deux camps, on sera d’abord moins serrés, mais on pourra aussi commencer à former une communauté de survivants.' },
+  'chemin-pieds': 'Un chemin. Ça commence à ressembler à un petit village… Comme avant.',
   voisins: { who: 'ponton', mood: 'content', text: 'Voilà. Deux pas, et on est voisins.' },
   'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
   // Les clôtures : Brume vous apprend, à Lorena et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; la nuit de la
   // veillée (game/prologue.js : VEILLEE ; choix de l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés butent
   // dessus sous vos yeux (egare : demos.js, strayDemo), puis le feu repart (rallume)
-  'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils cherchent ce qui brille… sans savoir pourquoi.',
+  'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils cherchent ce qui brille sans savoir pourquoi… et attaquent parfois ce qui bouge.',
   'egares-nord': { text: 'Ils viennent de partout. Une clôture tout autour du feu… et ils s’arrêtent, je crois.', look: 'barrage' },
-  cachons: { text: 'Chut… Cachons-nous. Ne bouge plus.', look: 'site:foyer', demo: 'eteint' },
-  'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
+  cachons: { text: 'Chut… Cachons-nous. Ne bougez plus.', look: 'site:foyer', demo: 'eteint' },
+  'egare-la': { text: 'Chut… Là, au bord de la brume. Des égarés.', look: 'barrage', demo: 'egare' },
   visiteurs: { text: 'Celui-là marche les yeux fermés. Il ne regarde même pas le feu.', look: 'barrage' },
   // (le Dormeur, endormi contre l'enclos : choix de l'auteur, 15 oct., ecriture/lots/03_egares.md)
-  'dormeur-pique': { text: 'Il s’est endormi contre les piquets. … Comme s’il n’attendait que ça.', look: 'barrage' },
-  'cloture-voyez': { text: 'Le feu repart. Ils rentrent dans la brume, sans un bruit. Ils reviendront.', look: 'site:foyer', demo: 'rallume' },
-  'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
+  'dormeur-pique': { text: 'Il s’est endormi contre les piquets. … Comme s’il n’attendait que ça… Étrange…', look: 'barrage' },
+  'cloture-voyez': { text: 'Le feu repart. Ils rentrent dans la brume, sans un bruit, mais ils reviendront.', look: 'site:foyer', demo: 'rallume' },
+  'aster-dormir': { who: 'ponton', mood: 'effraye', text: 'Je ne suis pas certaine de pouvoir fermer l’œil de la nuit, maintenant.' },
   'cloture-deux': 'Une clôture, ça décore. Bien placée, ça protège aussi. Tout autour du feu, alors.',
   'chez-nous': 'Ça ressemble à un chez-nous.',
   cuisiner: { who: 'ponton', mood: 'gene', text: 'On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner.' },
   manger: 'Moi, je ne mange pas. Ça n’aide pas, je sais.',
-  debrouiller: { who: 'ponton', mood: 'pensif', text: 'Demain, on se débrouillera. Ou quelqu’un viendra, qui sait faire.' },
-  soir: 'Deux, ce soir, autour du feu. Dors : je veille.',
+  debrouiller: { who: 'ponton', mood: 'pensif', text: 'Demain, on se débrouillera mieux. Ce soir, quelques baies et racines feront malheureusement l’affaire. J’espère ne pas être malade !' },
+  soir: 'Deux de plus qu’il y a deux jours… Je ne me sens enfin plus seule. Dormez, je veille sur vous.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'Du bois flotté. Et là, les pierres du vieux cercle. Rassemble tout : on va le rallumer.',
-  chaine: 'L’île donne plus à ceux qui vont loin. Elle aime ça, je crois.',
+  chaine: 'L’île est du genre généreuse. Si tu t’appliques à récolter ou à produire, elle te le rendra.',
   // Le Brasier déjà écrit : le feu se bâtit tout de suite
   'feu-pret': 'Tout y est. Là, au milieu des pierres.',
   // (un ancien parcours, le Brasier pas encore écrit : le joueur passe au Grimoire de lui-même, invité par sa bulle)

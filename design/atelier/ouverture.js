@@ -8,7 +8,6 @@
 // d'Hermine est gris et doux. Le nom du joueur, les répliques et les légendes ne sont jamais dessinés.
 const { effile } = require('./egares_voile');
 const { brumeFrame } = require('./brume');
-const { carte: carteEmbarquement } = require('./carte_embarquement');
 const { vif } = require('./figer');
 
 const W = 400;
@@ -64,152 +63,6 @@ const fonduUneFois = (attr, values, keyTimes, dur, begin = 0) => `<animate attri
 
 const path = (d, fill, extra = '') => `<path d="${d}" fill="${fill}"${extra ? ' ' + extra : ''}/>`;
 const trait = (d, c, w, extra = '') => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"${extra ? ' ' + extra : ''}/>`;
-
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-// 01_racines — sous la surface, dans le faisceau d'un projecteur qui tangue : des racines sombres et lentes, grandes
-// comme le navire. Elles bougent comme une ombre bouge, sans bruit. Puis l'une se ramasse et frappe la coque (choix de
-// l'auteur, 15 oct., à la place de « elles ne frappent pas ») : la coque tremble, le faisceau vacille, un éclair, des
-// bulles ; trois secondes, puis le noir.
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-// Une racine : une ligne de Bézier (base hors du cadre → pointe), épaisse à la base, fine au bout, avec des nœuds ;
-// son contour lissé, le côté pris par la lumière (en haut), trois stries d'écorce. Le tracé garde la même forme d'une
-// pose à l'autre : le morphing reste fluide
-const bez = (p0, p1, p2, p3, t) => { const u = 1 - t; return [0, 1].map(j => u * u * u * p0[j] + 3 * u * u * t * p1[j] + 3 * u * t * t * p2[j] + t * t * t * p3[j]); };
-const g1 = n => Math.round(n * 10) / 10;
-const lisse = pts => `M${pts[0].map(g1).join(',')}` + pts.slice(1).map((p, i) => { const q = pts[i + 2]; return q ? ` Q${p.map(g1).join(',')} ${g1((p[0] + q[0]) / 2)},${g1((p[1] + q[1]) / 2)}` : ` L${p.map(g1).join(',')}`; }).join('');
-function racineForme(p0, c1, c2, p3, w0, noeuds = [0.3, 0.58]) {
-  const N = 16, cote = [], autre = [], lum = [], ecorce = [[], []];
-  for (let i = 0; i <= N; i++) {
-    const t = i / N, p = bez(p0, c1, c2, p3, t), q = bez(p0, c1, c2, p3, Math.min(1, t + 0.01)), o = bez(p0, c1, c2, p3, Math.max(0, t - 0.01));
-    const dx = q[0] - o[0], dy = q[1] - o[1], l = Math.hypot(dx, dy) || 1;
-    let nx = -dy / l, ny = dx / l;
-    if (ny > 0) { nx = -nx; ny = -ny; } // (n : vers le haut, vers la lumière)
-    let w = Math.max(1.2, (w0 / 2) * (1 - t) ** 0.8);
-    for (const k of noeuds) w += (w0 / 2) * 0.16 * Math.exp(-(((t - k) / 0.035) ** 2));
-    cote.push([p[0] + nx * w, p[1] + ny * w]);
-    autre.push([p[0] - nx * w, p[1] - ny * w]);
-    lum.push([p[0] + nx * w * 0.3, p[1] + ny * w * 0.3]);
-    [-0.4, 0.3].forEach((k, j) => ecorce[j].push([p[0] + nx * w * k, p[1] + ny * w * k]));
-  }
-  return {
-    corps: lisse([...cote, ...autre.reverse()]) + ' Z',
-    lumiere: lisse([...cote, ...lum.reverse()]) + ' Z',
-    ecorce: ecorce.map(l => lisse(l.slice(2, N - 2)))
-  };
-}
-// une racine qui ondule : ses trois poses
-function racine(r, k) {
-  const ph = (k / 3) * Math.PI * 2;
-  const o = (a, amp) => amp * Math.sin(ph + a);
-  const c1 = [r.c1[0] + o(r.s, 10), r.c1[1] + o(r.s + 1, 8)];
-  const c2 = [r.c2[0] + o(r.s + 2, 16), r.c2[1] + o(r.s + 3, 12)];
-  const b = [r.pointe[0] + o(r.s + 4, 22), r.pointe[1] + o(r.s + 5, 16)];
-  return { ...racineForme(r.base, c1, c2, b, r.w, r.noeuds), c1, c2, b };
-}
-function racines01() {
-  const D = Defs('rac');
-  // l'eau : plus claire sous la surface, noire au fond
-  let s = `<rect width="${W}" height="${W}" fill="${D.lin([[0, '#1B4A5C'], [0.22, '#0E2B3A'], [0.6, '#061722'], [1, '#010508']], 0, 0, 0, W)}"/>`;
-  // la surface vue d'en dessous : un plafond de lumière qui ondule
-  const surf = k => `M0,0 L400,0 L400,${f(22 + 4 * Math.sin(k))} ` + Array.from({ length: 9 }, (_, i) => { const x = 400 - (i + 1) * 50; return `Q${f(x + 25)},${f(30 + 6 * Math.sin(k + i * 1.3))} ${x},${f(22 + 5 * Math.sin(k + i * 0.9 + 1))}`; }).join(' ') + ' Z';
-  s += `<path d="${surf(0)}" fill="${D.lin([[0, '#7FC4C8', 0.55], [1, '#3E8A98', 0.18]], 0, 0, 0, 36)}">${boucle('d', [surf(0), surf(2.1), surf(4.2)], 3.6)}</path>`;
-  // les reflets qui dansent sous la surface
-  for (let i = 0; i < 7; i++) {
-    const x = 20 + i * 56;
-    s += `<path d="M${x},${f(30 + 4 * hash(i, 1))} q14,-5 28,0 q12,4 24,-1" fill="none" stroke="#BFF0EE" stroke-width="1.2" stroke-linecap="round" opacity="0.35">${boucle('opacity', [0.1, 0.45, 0.2], 1.4 + hash(i, 3), hash(i, 5) * 2)}</path>`;
-  }
-  // les racines du fond : pâles, floues, immenses
-  const loin = [
-    { base: [-60, 430], c1: [40, 300], c2: [110, 220], pointe: [178, 120], w: 120, s: 0.3 },
-    { base: [470, 460], c1: [380, 330], c2: [330, 240], pointe: [276, 140], w: 110, s: 1.7 }
-  ];
-  const flouLoin = D.flou(3.2);
-  for (const r of loin) {
-    const k = [0, 1, 2].map(i => racine(r, i).corps);
-    s += `<path d="${k[0]}" fill="#0C2230" opacity="0.85" filter="${flouLoin}">${boucle('d', k, 7.5, r.s)}</path>`;
-  }
-  // la coque de l'Hirondelle, petite, tout là-haut : elle tangue ; son projecteur balaie l'eau
-  const CHOC = 2.45; // l'instant où la racine touche la coque (s)
-  const tremble = `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;5 -4;-6 3;4 -2;-2 1;0 0" keyTimes="0;${f(CHOC / 3)};${f((CHOC + 0.05) / 3)};${f((CHOC + 0.12) / 3)};${f((CHOC + 0.2) / 3)};${f((CHOC + 0.3) / 3)};1" dur="3s" fill="freeze" additive="sum"/>`;
-  const vacille = `<animate attributeName="opacity" values="1;1;0.15;0.9;0.1;0.7;0.2" keyTimes="0;${f(CHOC / 3)};${f((CHOC + 0.04) / 3)};${f((CHOC + 0.1) / 3)};${f((CHOC + 0.16) / 3)};${f((CHOC + 0.26) / 3)};1" dur="3s" fill="freeze"/>`;
-  const coque = `<g>${tremble}<g>${vaVient('rotate', '-3 150 40', '3.4 150 40', 3.2)}` +
-    path('M62,10 Q66,40 104,52 L196,56 Q232,52 246,26 L250,8 Z', D.lin([[0, '#163240'], [1, '#04101A']], 0, 8, 0, 56)) +
-    path('M70,26 Q80,44 108,50 L192,53 Q222,50 238,30', 'none', 'stroke="#2E5C68" stroke-width="1.2" opacity="0.6"') +
-    // l'hélice et le gouvernail
-    path('M232,30 L248,46 L240,52 L226,38 Z', '#061520') +
-    `<circle cx="126" cy="52" r="3.4" fill="#F4FFF4"/><circle cx="126" cy="52" r="9" fill="#DFFFF4" opacity="0.35"/>` +
-    // le faisceau : un cône de lumière qui tangue avec la coque, très doux sur ses bords
-    `<g>${vacille}${vaVient('rotate', '-14 126 52', '10 126 52', 3.4, 0.6)}` +
-    `<path d="M126,52 L18,430 L238,430 Z" fill="${D.lin([[0, '#DFFFF2', 0.5], [0.55, '#9FE0D2', 0.24], [1, '#6FBFB0', 0.04]], 126, 52, 128, 430)}" filter="${D.flou(9)}"/>` +
-    `<path d="M126,52 L86,430 L170,430 Z" fill="${D.lin([[0, '#F4FFF8', 0.55], [0.5, '#BFF2E4', 0.14], [1, '#BFF2E4', 0]], 126, 52, 128, 430)}" filter="${D.flou(4)}"/>` +
-    '</g></g></g>';
-  // les racines proches, devant : sombres, en volume, leur dos pris dans la lumière du faisceau, l'écorce striée, des
-  // radicelles qui ondulent ; l'une traverse le faisceau en ombre chinoise
-  const pres = [
-    { base: [-90, 360], c1: [30, 320], c2: [150, 300], pointe: [250, 196], w: 104, s: 0.9, noeuds: [0.26, 0.52] },
-    { base: [500, 330], c1: [400, 290], c2: [320, 330], pointe: [246, 292], w: 92, s: 2.4, noeuds: [0.3, 0.6] },
-    { base: [120, 490], c1: [150, 420], c2: [230, 400], pointe: [186, 318], w: 120, s: 4.1, noeuds: [0.34] }
-  ];
-  let devant = '';
-  pres.forEach((r, i) => {
-    const k = [0, 1, 2].map(j => racine(r, j));
-    const dur = 7 + i * 0.8;
-    const corps = D.lin([[0, '#010407'], [0.55, '#06131B'], [1, '#0E2430']], r.base[0], r.base[1], r.pointe[0], r.pointe[1]);
-    devant += `<path d="${k[0].corps}" fill="${corps}">${boucle('d', k.map(x => x.corps), dur, r.s)}</path>`;
-    devant += `<path d="${k[0].lumiere}" fill="#2E6268" opacity="0.4">${boucle('d', k.map(x => x.lumiere), dur, r.s)}${boucle('opacity', [0.18, 0.5, 0.26], 3.4, 0.6 + i * 0.4)}</path>`;
-    for (let j = 0; j < 2; j++) devant += `<path d="${k[0].ecorce[j]}" fill="none" stroke="${j === 0 ? '#0B1E28' : '#1E4048'}" stroke-width="1.2" stroke-linecap="round" opacity="0.7">${boucle('d', k.map(x => x.ecorce[j]), dur, r.s)}</path>`;
-    // les radicelles : elles partent de la racine et ondulent à leur rythme
-    for (let j = 0; j < 2; j++) {
-      const rad = [0, 1, 2].map(m => {
-        const q = k[m], t = 0.42 + j * 0.18;
-        const [px, py] = bez(r.base, q.c1, q.c2, q.b, t);
-        const a = (j % 2 ? -1 : 1) * (1 + 0.35 * Math.sin(m * 2.1 + i + j)) + (j === 2 ? 0.6 : 0);
-        return racineForme([px, py], [px + 26 * Math.cos(a), py - 26 * Math.sin(a) - 8], [px + 42 * Math.cos(a), py - 46], [px + 50 * Math.cos(a + 0.5 * Math.sin(m + j)), py - 60 + 10 * Math.sin(m + j)], 12 - j * 2, []).corps;
-      });
-      devant += `<path d="${rad[0]}" fill="#061620">${boucle('d', rad, 6.2 + j * 0.7, r.s + j)}</path>`;
-    }
-  });
-  // la racine qui frappe : elle ondule au fond, se ramasse en arrière, puis fouette jusqu'à la quille
-  const frappe = [
-    racineForme([-40, 430], [30, 360], [80, 330], [128, 318], 86, [0.32]),
-    racineForme([-40, 430], [24, 368], [70, 338], [112, 330], 86, [0.32]),
-    racineForme([-40, 430], [10, 380], [30, 360], [58, 352], 86, [0.32]),
-    racineForme([-40, 430], [20, 300], [196, 230], [166, 60], 86, [0.32])
-  ];
-  const kt4 = `0;${f(1.4 / 3)};${f(2.1 / 3)};${f(CHOC / 3)};1`;
-  const anim = k => `<animate attributeName="d" values="${frappe.map(x => x[k]).concat([frappe[3][k]]).join(';')}" keyTimes="${kt4}" calcMode="spline" keySplines="0.45 0 0.55 1;0.4 0 0.6 1;0.8 0 1 1;0 0 1 1" dur="3s" fill="freeze"/>`;
-  devant += `<path d="${frappe[0].corps}" fill="${D.lin([[0, '#010407'], [0.6, '#071620'], [1, '#12303A']], -40, 430, 166, 60)}">${anim('corps')}</path>`;
-  devant += `<path d="${frappe[0].lumiere}" fill="#3E7A78" opacity="0.45">${anim('lumiere')}</path>`;
-  // au choc : l'éclair dans l'eau, l'onde, les bulles qui jaillissent de la quille
-  const t0 = f(CHOC);
-  devant += `<circle cx="166" cy="58" r="10" fill="none" stroke="#DFFFF4" stroke-width="3" opacity="0"><animate attributeName="r" values="10;90" begin="${t0}s" dur="0.5s" fill="freeze"/><animate attributeName="opacity" values="0.9;0" begin="${t0}s" dur="0.5s" fill="freeze"/></circle>`;
-  for (let i = 0; i < 16; i++) {
-    const a = -Math.PI / 2 + (hash(i, 71) - 0.5) * 2.6, v = 30 + hash(i, 73) * 70;
-    devant += `<circle cx="166" cy="60" r="${f(1.2 + hash(i, 75) * 2.4)}" fill="none" stroke="#E8FFF8" stroke-width="0.9" opacity="0"><animateTransform attributeName="transform" type="translate" values="0 0;${f(Math.cos(a) * v)} ${f(Math.sin(a) * v * 0.6 + 30)}" begin="${t0}s" dur="0.55s" fill="freeze"/><animate attributeName="opacity" values="0.9;0" begin="${t0}s" dur="0.55s" fill="freeze"/></circle>`;
-  }
-  // la neige marine qui dérive dans le faisceau, et les bulles qui remontent vers la coque
-  let neige = '';
-  for (let i = 0; i < 46; i++) {
-    const x = f(20 + hash(i, 11) * 340), y = f(60 + hash(i, 13) * 330), r = f(0.6 + hash(i, 15) * 1.4);
-    neige += `<circle cx="${x}" cy="${y}" r="${r}" fill="#CFF6EE" opacity="${f(0.25 + hash(i, 17) * 0.5)}">${defile('0 0', `${f(-6 + hash(i, 19) * 12)} -26`, 6 + hash(i, 21) * 5, hash(i, 23) * 6)}</circle>`;
-  }
-  // (vivantes, au calque anime de la scène figée : les dix premières bulles ; figer.js)
-  let bulles = '';
-  for (let i = 0; i < 12; i++) {
-    const x = f(100 + hash(i, 31) * 60), r = f(1.4 + hash(i, 33) * 2.6), d = f(1.8 + hash(i, 35) * 1.4);
-    if (i === 10) bulles = vif(bulles);
-    bulles += `<circle cx="${x}" cy="150" r="${r}" fill="none" stroke="#DFFFF8" stroke-width="0.8" opacity="0.7">${defile('0 0', `${f(-8 + hash(i, 37) * 16)} -110`, d, hash(i, 39) * d)}${boucle('opacity', [0, 0.8, 0.5], d, hash(i, 39) * d)}</circle>`;
-  }
-  // la lueur que le faisceau allume dans l'eau, derrière la grande racine (elle s'y découpe en ombre chinoise)
-  const halo = `<ellipse cx="138" cy="262" rx="110" ry="70" fill="${D.rad([[0, '#8FD8C8', 0.32], [1, '#8FD8C8', 0]], 138, 262, 110)}">${boucle('opacity', [0.6, 1, 0.75], 3.4, 0.6)}</ellipse>`;
-  s += coque + halo + neige + devant + bulles;
-  // le voile d'eau, plus épais vers le bas, et le noir qui tombe à trois secondes
-  s += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#000000', 0], [0.7, '#000000', 0.35], [1, '#000000', 0.8]], 160, 160, 330)}"/>`;
-  s += `<rect width="${W}" height="${W}" fill="#DFFFF4" opacity="0"><animate attributeName="opacity" values="0;0.45;0" keyTimes="0;0.25;1" begin="${t0}s" dur="0.35s" fill="freeze"/></rect>`;
-  s += `<rect width="${W}" height="${W}" fill="#000" opacity="0">${fonduUneFois('opacity', '0;0;1', `0;${f((CHOC + 0.15) / 3)};1`, 3)}</rect>`;
-  return D.out(s);
-}
-
 
 // ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 // La plage au couchant (01_paupieres, 01_carte, 02_plage) : un ciel violet qui s'embrase à l'horizon, le soleil à
@@ -278,65 +131,6 @@ function plageCouchant(D, o) {
 }
 // les objets du premier plan de la plage au couchant
 const objetsPlage = D => galet(D, 70, 342, 10, 6) + galet(D, 330, 360, 13, 7) + galet(D, 300, 322, 6, 3.6) + coquillage(150, 340, 5) + coquillage(262, 372, 4, '#F6C8B8') + etoileDeMer(232, 336, 11, 0.3) + etoileDeMer(96, 380, 8, 1.1, '#D85A6A') + algue(24, 318, 1.1) + algue(308, 300, 0.8);
-
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-// 01_paupieres — vue subjective : des paupières qui battent (le noir qui s'ouvre et se referme deux fois), du flou,
-// puis la plage au couchant. On est couché sur le sable : l'horizon penche à peine
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-function paupieres01() {
-  const D = Defs('pau');
-  // la plage, nette ; par-dessus, la même plage floue qui s'efface quand le regard se fait (le flou va, revient, part)
-  const plage = `<g transform="translate(200 210) rotate(-5) scale(1.12) translate(-200 -210)">${plageCouchant(D, { soleil: 236, horizon: 186, rivage: 252, objets: objetsPlage(D) + valise(330, 268, 0.7) + planche(40, 262, 40, -8) })}</g>`;
-  let s = plage + `<g filter="${D.flou(7)}">${fonduUneFois('opacity', '1;1;0.75;0.9;0.45;0.6;0', '0;0.15;0.32;0.45;0.62;0.75;1', 5.2)}${plage}</g>`;
-  // tout près de l'œil, de gros grains de sable flous
-  for (let i = 0; i < 9; i++) s += `<ellipse cx="${f(20 + hash(i, 61) * 360)}" cy="${f(372 + hash(i, 63) * 30)}" rx="${f(6 + hash(i, 65) * 8)}" ry="${f(4 + hash(i, 67) * 5)}" fill="#C89A72" opacity="0.6" filter="${D.flou(2.5)}"/>`;
-  // la lumière chaude qui entre par les cils
-  s += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#FFD8A0', 0], [0.7, '#5A2E3A', 0.2], [1, '#1A0E18', 0.75]], 200, 200, 290)}"/>`;
-  // les paupières : elles s'ouvrent un peu, se referment, s'ouvrent plus, se referment, puis s'ouvrent pour de bon
-  const lids = flouL => {
-    const haut = `<g filter="${flouL}">${uneFois('translate', '0 0;0 0;0 -86;0 0;0 -176;0 -6;0 -6;0 -330', '0;0.17;0.31;0.42;0.58;0.69;0.78;1', 3.6)}<path d="M-40,-420 L440,-420 L440,186 Q200,246 -40,186 Z" fill="#0A0508"/><path d="M-40,182 Q200,242 440,182" fill="none" stroke="#3A1A1E" stroke-width="8" opacity="0.8"/></g>`;
-    const bas = `<g filter="${flouL}">${uneFois('translate', '0 0;0 0;0 70;0 0;0 150;0 4;0 4;0 300', '0;0.17;0.31;0.42;0.58;0.69;0.78;1', 3.6)}<path d="M-40,224 Q200,176 440,224 L440,820 L-40,820 Z" fill="#0A0508"/></g>`;
-    return haut + bas;
-  };
-  s += lids(D.flou(5));
-  return D.out(s);
-}
-
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-// 01_carte — vue subjective : quelque chose de blanc sur le sable, au loin ; puis, de près, la carte d'embarquement
-// trempée. Elle remplace 01_gilet dans l'ouverture
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-function carte01() {
-  const D = Defs('car');
-  const cx = 214, cy = 300;
-  // au loin : la plage au couchant, une tache blanche sur le sable qui accroche la lumière
-  const blanc = `<g transform="rotate(-12 ${cx} ${cy})"><rect x="${cx - 6}" y="${cy - 3.6}" width="12" height="7.2" rx="0.8" fill="#F6EEDC" stroke="#8A7A64" stroke-width="0.6"/><rect x="${cx - 6}" y="${cy - 3.6}" width="12" height="2.2" fill="#2E4E8C"/></g>` +
-    `<circle cx="${cx + 4}" cy="${cy - 2}" r="2" fill="#FFFFFF">${boucle('opacity', [0.2, 1, 0.4], 1.6)}${boucle('r', [1.4, 3.2, 1.8], 1.6)}</circle>`;
-  const loin = plageCouchant(D, { soleil: 150, horizon: 182, rivage: 250, objets: objetsPlage(D) + coque(70, 276, 0.8, 6) + planche(300, 270, 46, 10) + valise(352, 262, 0.6) + blanc });
-  // le regard s'approche de la tache blanche (3,2 s), puis le gros plan prend la place
-  let s = `<g transform="translate(${cx} ${cy})"><g>${uneFois('scale', '1;1;7', '0;0.6;1', 5.2)}<g transform="translate(${-cx} ${-cy})">${loin}</g></g>${fonduUneFois('opacity', '1;1;0', '0;0.78;1', 5.2)}</g>`;
-  // de près : le sable mouillé, doré par le couchant, ses rides ; la carte trempée, à moitié dans une flaque
-  let pres = `<rect width="${W}" height="${W}" fill="${D.lin([[0, '#C8906C'], [0.5, '#B07A60'], [1, '#7A4E44']], 0, 0, 120, 400)}"/>`;
-  for (let i = 0; i < 9; i++) pres += trait(`M-10,${30 + i * 44} q60,-10 120,0 t120,0 t120,0 t120,0`, '#8E5E4E', 3, 'opacity="0.35"') + trait(`M-10,${27 + i * 44} q60,-10 120,0 t120,0 t120,0 t120,0`, '#E8B890', 1.2, 'opacity="0.4"');
-  for (let i = 0; i < 90; i++) pres += `<circle cx="${f(hash(i, 81) * 400)}" cy="${f(hash(i, 83) * 400)}" r="${f(0.6 + hash(i, 85) * 1.4)}" fill="${hash(i, 87) < 0.5 ? '#F2CFA6' : '#6A443A'}" opacity="0.55"/>`;
-  // la lumière du couchant, rasante, depuis la gauche
-  pres += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#FFD08A', 0.45], [1, '#FFD08A', 0]], 40, 60, 360)}"/>`;
-  // l'ombre de la carte, la carte (le dessin de la bibliothèque, état trempé)
-  pres += `<g transform="translate(200 206) rotate(-14) scale(0.62) translate(-160 -105)"><rect x="6" y="10" width="320" height="210" rx="10" fill="#3A2016" opacity="0.35" filter="${D.flou(6)}"/>${carteEmbarquement('trempee')}</g>`;
-  // la flaque qui recouvre le coin de la carte : elle monte, redescend ; son bord d'écume, ses reflets
-  // (vivants, au calque anime de la scène figée : la flaque, son bord, ses bulles, les éclats ; figer.js)
-  let vivant = '';
-  const flaque = k => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)} L410,410 L-10,410 Z`;
-  vivant += `<path d="${flaque(0)}" fill="${D.lin([[0, '#9EB8D0', 0.5], [1, '#5A6E8E', 0.75]], 0, 260, 0, 400)}">${boucle('d', [flaque(10), flaque(-14), flaque(2)], 6)}</path>`;
-  const bord = k => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)}`;
-  vivant += `<path d="${bord(0)}" fill="none" stroke="#FFF4E6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="18 6 4 8" opacity="0.9">${boucle('d', [bord(10), bord(-14), bord(2)], 6)}</path>`;
-  for (let i = 0; i < 10; i++) vivant += `<circle cx="${f(40 + hash(i, 91) * 320)}" cy="${f(320 + hash(i, 93) * 60)}" r="${f(1.2 + hash(i, 95) * 2)}" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6">${boucle('opacity', [0, 0.7, 0.3], 2 + hash(i, 97) * 2, hash(i, 99) * 3)}</circle>`;
-  // des éclats de soleil sur le papier mouillé
-  for (let i = 0; i < 5; i++) vivant += `<circle cx="${f(150 + hash(i, 101) * 110)}" cy="${f(170 + hash(i, 103) * 70)}" r="1.6" fill="#FFFFFF">${boucle('opacity', [0, 0.9, 0], 1.8 + hash(i, 105), hash(i, 107) * 2)}</circle>`;
-  pres += vif(vivant);
-  s += `<g opacity="0">${fonduUneFois('opacity', '0;0;1', '0;0.74;1', 5.4)}<g transform="translate(200 206)"><g>${uneFois('scale', '1.18;1.18;1', '0;0.74;1', 5.6)}<g transform="translate(-200 -206)">${pres}</g></g></g></g>`;
-  return D.out(s);
-}
 
 // ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 // 02_plage — on se voit enfin : l'avatar en tenue de naufragé, de dos, face à la mer, au couchant. Du sable devant lui
@@ -514,26 +308,6 @@ function epave10() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-// 01_greve (refaite, 15 oct.) — vue subjective : la plage de Brumelune au couchant, « paradisiaque, même si rien ne
-// l'est dans la situation » : l'horizon doré, les galets, les étoiles de mer, les algues. Le regard glisse, de l'horizon
-// vers les débris : des valises éventrées, des morceaux de coque, une bouée
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-const bouee = (x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s)})"><ellipse cx="0" cy="0" rx="14" ry="6" fill="#F2EEE6" stroke="#4A3A34" stroke-width="1"/><ellipse cx="0" cy="-0.6" rx="6" ry="2.4" fill="#9C6A62"/>${[0, 1, 2, 3].map(k => { const a = (k / 4) * Math.PI * 2 + 0.4; return `<path d="M${f(Math.cos(a) * 7)},${f(Math.sin(a) * 3)} L${f(Math.cos(a) * 14)},${f(Math.sin(a) * 6)}" stroke="#C8463A" stroke-width="4.2"/>`; }).join('')}<ellipse cx="0" cy="0" rx="14" ry="6" fill="none" stroke="#4A3A34" stroke-width="1"/></g>`;
-// une valise éventrée, ses habits répandus sur le sable
-const valiseOuverte = (x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s)})"><ellipse cx="2" cy="3" rx="30" ry="6" fill="#5A3A40" opacity="0.35"/>${path('M-18,0 L16,0 L14,-10 L-16,-10 Z', '#7A4A30', 'stroke="#3A2016" stroke-width="1"')}${path('M-16,-10 L-26,-26 L8,-30 L14,-10 Z', '#8E5A3A', 'stroke="#3A2016" stroke-width="1"')}${path('M-14,-10 Q-6,-16 2,-11 Q8,-15 13,-10 Z', '#E8E0D4')}${path('M10,-2 Q22,-6 30,2 Q22,6 12,4 Z', '#4E7AB8', 'stroke="#2A3A5A" stroke-width="0.6"')}${path('M-22,-2 Q-30,2 -36,0 Q-30,-6 -20,-6 Z', '#E8B84A', 'stroke="#7A5A20" stroke-width="0.6"')}${trait('M-12,-4 l20,0', '#5A3420', 1)}</g>`;
-function greve01() {
-  const D = Defs('gre');
-  const objets = objetsPlage(D) + etoileDeMer(186, 352, 9, 0.8, '#F08A5A') + coquillage(120, 300, 4.4, '#FFE0D0') + galet(D, 176, 300, 7, 4)
-    + coque(300, 300, 1.3, -10) + valiseOuverte(352, 330, 1.1) + bouee(248, 288, 0.9) + planche(290, 262, 60, 8) + valise(380, 276, 0.8) + coque(392, 352, 0.9, 14);
-  const plage = plageCouchant(D, { soleil: 120, horizon: 186, rivage: 254, objets });
-  // le regard glisse : de l'horizon doré (à gauche) jusqu'aux débris (à droite), lentement, puis il se pose et respire
-  let s = `<g transform="translate(200 200)"><g>${uneFois('translate', '60 0;60 0;-56 6', '0;0.18;1', 6.4)}<g>${vaVient('translate', '0 0', '-4 2', 7, 0)}<g transform="scale(1.32) translate(-200 -200)">${plage}</g></g></g></g>`;
-  // la chaleur du couchant qui baigne tout, et le bord du regard, plus sombre
-  s += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#FFD8A0', 0], [0.75, '#3A1E2E', 0.18], [1, '#1A0E18', 0.55]], 200, 210, 300)}"/>`;
-  return D.out(s);
-}
-
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 // 03_vent (refaite, 15 oct.) — à l'heure bleue, juste après le coucher du soleil (la nuit tombera quand il lèvera les
 // yeux, 03_ciel). Le vent se lève pour de vrai et ouvre une trouée dans la brume : la plage proche se découvre, le bois
 // flotté, des pierres noircies ; au large, la brume tient, et l'épave y reste cachée. Brume, à droite de l'avatar, qui
@@ -580,4 +354,4 @@ function vent03() {
   for (let i = 0; i < 4; i++) s += `<g>${defile('-220 0', '460 0', 2.4 + i * 0.3, i * 0.7)}${trait(`M0,${f(120 + i * 52)} q60,-14 120,0 q30,8 60,-6`, '#F2F0FA', 2.2, 'opacity="0.45"')}</g>`;
   return D.out(s);
 }
-module.exports = { greve01, vent03, racines01, paupieres01, carte01, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W, galet, coquillage, algue, etoileDeMer, planche };
+module.exports = { vent03, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W, galet, coquillage, algue, etoileDeMer, planche };

@@ -46315,12 +46315,12 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/00_tampon/00_tampon_fond",
+   "id": "scenes/tutoriel/00_tampon/00_tampon_plan-anime",
    "rubrique": "scenes",
-   "titre": "Scène 0c : Embarqué : le vent emporte la carte (fond)",
+   "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan anime)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/00_tampon/00_tampon_fond_1.svg"
+    "svg/scenes/tutoriel/00_tampon/00_tampon_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46332,12 +46332,114 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_carte/01_carte_anime",
+   "id": "scenes/tutoriel/00_tampon/00_tampon_plan-carte",
    "rubrique": "scenes",
-   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (ce qui vit sur le fond figé)",
+   "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan carte)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_carte/01_carte_anime_1.svg"
+    "svg/scenes/tutoriel/00_tampon/00_tampon_plan-carte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/00_tampon/00_tampon_plan-encre",
+   "rubrique": "scenes",
+   "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan encre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/00_tampon/00_tampon_plan-encre_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/00_tampon/00_tampon_plan-regard",
+   "rubrique": "scenes",
+   "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan regard)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/00_tampon/00_tampon_plan-regard_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/00_tampon/00_tampon_plan-sable-pres",
+   "rubrique": "scenes",
+   "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan sable pres)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/00_tampon/00_tampon_plan-sable-pres_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/00_tampon/00_tampon_plan-tampon",
+   "rubrique": "scenes",
+   "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan tampon)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/00_tampon/00_tampon_plan-tampon_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/00_tampon/00_tampon_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/00_tampon/00_tampon_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46349,18 +46451,205 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_carte/01_carte_fond",
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-carte",
    "rubrique": "scenes",
-   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (fond)",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan carte)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_carte/01_carte_fond_1.svg"
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-carte_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-ecume",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan ecume)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-ecume_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-regard",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan regard)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-regard_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-sable-pres",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan sable pres)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-sable-pres_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-tache",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan tache)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-tache_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46383,12 +46672,12 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_greve/01_greve_fond",
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-anime",
    "rubrique": "scenes",
-   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (fond)",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan anime)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_greve/01_greve_fond_1.svg"
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46400,12 +46689,182 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_noir/01_noir_fond",
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-ciel",
    "rubrique": "scenes",
-   "titre": "Scène 1b : Le noir ; la mer, très loin (fond)",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan ciel)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_noir/01_noir_fond_1.svg"
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-epave_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-premier",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan premier)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-premier_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-regard",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan regard)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-regard_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46417,12 +46876,165 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_paupieres/01_paupieres_anime",
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris0",
    "rubrique": "scenes",
-   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (ce qui vit sur le fond figé)",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_paupieres/01_paupieres_anime_1.svg"
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris0_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris1",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris1_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris2",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris2_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris3_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris4",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris4_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris5",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris5_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-epave_1.svg"
+   ],
+   "cadre": [
+    140,
+    84,
+    140,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-fond_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46434,12 +47046,216 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_paupieres/01_paupieres_fond",
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-ciel",
    "rubrique": "scenes",
-   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (fond)",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan ciel)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_paupieres/01_paupieres_fond_1.svg"
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-flou",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan flou)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-flou_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-paupiere-bas",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan paupiere bas)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-paupiere-bas_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-paupiere-haut",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan paupiere haut)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-paupiere-haut_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-premier",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan premier)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-premier_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-regard",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan regard)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-regard_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46451,12 +47267,1576 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_anime",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-assombri",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (ce qui vit sur le fond figé)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan assombri)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_anime_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-assombri_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-boucle0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan boucle0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-boucle0_1.svg"
+   ],
+   "cadre": [
+    76,
+    110,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-boucle1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan boucle1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-boucle1_1.svg"
+   ],
+   "cadre": [
+    76,
+    170,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-breche",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan breche)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-breche_1.svg"
+   ],
+   "cadre": [
+    292,
+    224,
+    62,
+    44
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-breche2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan breche2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-breche2_1.svg"
+   ],
+   "cadre": [
+    80,
+    226,
+    62,
+    44
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-breche3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan breche3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-breche3_1.svg"
+   ],
+   "cadre": [
+    156,
+    210,
+    62,
+    44
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-brume1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan brume1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-brume1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-brume2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan brume2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-brume2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-canot",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan canot)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-canot_1.svg"
+   ],
+   "cadre": [
+    120,
+    132,
+    84,
+    46
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-cassure",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cassure)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-cassure_1.svg"
+   ],
+   "cadre": [
+    176,
+    196,
+    52,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-cor",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cor)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-cor_1.svg"
+   ],
+   "cadre": [
+    96,
+    40,
+    300,
+    290
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-cornet",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cornet)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-cornet_1.svg"
+   ],
+   "cadre": [
+    290,
+    114,
+    40,
+    34
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-cumulus0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cumulus0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-cumulus0_1.svg"
+   ],
+   "cadre": [
+    -120,
+    8,
+    640,
+    66
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-cumulus1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cumulus1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-cumulus1_1.svg"
+   ],
+   "cadre": [
+    -120,
+    96,
+    640,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclair",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclair)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclair_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat1_1.svg"
+   ],
+   "cadre": [
+    308,
+    230,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat2_1.svg"
+   ],
+   "cadre": [
+    304,
+    236,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat3_1.svg"
+   ],
+   "cadre": [
+    312,
+    240,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat4",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat4_1.svg"
+   ],
+   "cadre": [
+    172,
+    220,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat5",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat5_1.svg"
+   ],
+   "cadre": [
+    176,
+    226,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat6",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat6_1.svg"
+   ],
+   "cadre": [
+    168,
+    218,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat7",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat7_1.svg"
+   ],
+   "cadre": [
+    96,
+    234,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat8",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat8_1.svg"
+   ],
+   "cadre": [
+    100,
+    240,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-eclat9",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan eclat9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-eclat9_1.svg"
+   ],
+   "cadre": [
+    186,
+    226,
+    28,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-embrun0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan embrun0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-embrun0_1.svg"
+   ],
+   "cadre": [
+    324,
+    204,
+    64,
+    42
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-embrun1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan embrun1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-embrun1_1.svg"
+   ],
+   "cadre": [
+    324,
+    204,
+    64,
+    42
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-etincelles",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan étincelles)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-etincelles_1.svg"
+   ],
+   "cadre": [
+    104,
+    60,
+    90,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fanion",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fanion)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fanion_1.svg"
+   ],
+   "cadre": [
+    316,
+    92,
+    40,
+    22
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-felure",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan felure)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-felure_1.svg"
+   ],
+   "cadre": [
+    200,
+    110,
+    52,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fente-mat",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fente mat)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fente-mat_1.svg"
+   ],
+   "cadre": [
+    312,
+    144,
+    20,
+    40
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fissure1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fissure1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fissure1_1.svg"
+   ],
+   "cadre": [
+    232,
+    190,
+    130,
+    96
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fissure2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fissure2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fissure2_1.svg"
+   ],
+   "cadre": [
+    116,
+    190,
+    140,
+    96
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fissure3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fissure3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fissure3_1.svg"
+   ],
+   "cadre": [
+    60,
+    196,
+    130,
+    96
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fond_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-foudre",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan foudre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-foudre_1.svg"
+   ],
+   "cadre": [
+    60,
+    -24,
+    72,
+    244
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fumee0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fumee0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fumee0_1.svg"
+   ],
+   "cadre": [
+    140,
+    50,
+    100,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fumee1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fumee1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fumee1_1.svg"
+   ],
+   "cadre": [
+    140,
+    50,
+    100,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fumee2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fumee2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fumee2_1.svg"
+   ],
+   "cadre": [
+    140,
+    50,
+    100,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fumee3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fumee3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fumee3_1.svg"
+   ],
+   "cadre": [
+    140,
+    50,
+    100,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fumee4",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fumee4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fumee4_1.svg"
+   ],
+   "cadre": [
+    140,
+    50,
+    100,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-fumee5",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fumee5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-fumee5_1.svg"
+   ],
+   "cadre": [
+    140,
+    50,
+    100,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-grosse-onde0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan grosse onde0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-grosse-onde0_1.svg"
+   ],
+   "cadre": [
+    70,
+    40,
+    90,
+    290
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-grosse-onde1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan grosse onde1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-grosse-onde1_1.svg"
+   ],
+   "cadre": [
+    70,
+    40,
+    90,
+    290
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-grosse-onde2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan grosse onde2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-grosse-onde2_1.svg"
+   ],
+   "cadre": [
+    70,
+    40,
+    90,
+    290
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-guirlande",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan guirlande)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-guirlande_1.svg"
+   ],
+   "cadre": [
+    56,
+    98,
+    306,
+    120
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-impact-canot",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan impact canot)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-impact-canot_1.svg"
+   ],
+   "cadre": [
+    120,
+    120,
+    90,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-impact-poupe",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan impact poupe)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-impact-poupe_1.svg"
+   ],
+   "cadre": [
+    50,
+    188,
+    120,
+    120
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-impact-proue",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan impact proue)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-impact-proue_1.svg"
+   ],
+   "cadre": [
+    262,
+    186,
+    120,
+    120
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-jour",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan jour)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-jour_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-lame",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan lame)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-lame_1.svg"
+   ],
+   "cadre": [
+    -100,
+    -14,
+    600,
+    364
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-lueur",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan lueur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-lueur_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-lueur-cor",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan lueur cor)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-lueur-cor_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-lumieres",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan lumieres)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-lumieres_1.svg"
+   ],
+   "cadre": [
+    112,
+    140,
+    200,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-mat",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mat)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-mat_1.svg"
+   ],
+   "cadre": [
+    56,
+    92,
+    306,
+    124
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-mer1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mer1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-mer1_1.svg"
+   ],
+   "cadre": [
+    -90,
+    178,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-mer2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mer2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-mer2_1.svg"
+   ],
+   "cadre": [
+    -90,
+    196,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-mer3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mer3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-mer3_1.svg"
+   ],
+   "cadre": [
+    -90,
+    218,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-mer4",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mer4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-mer4_1.svg"
+   ],
+   "cadre": [
+    -90,
+    250,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-navire",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan navire)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-navire_1.svg"
+   ],
+   "cadre": [
+    36,
+    92,
+    344,
+    190
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -120,
+    -4,
+    640,
+    72
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -120,
+    32,
+    640,
+    68
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage2_1.svg"
+   ],
+   "cadre": [
+    -120,
+    122,
+    640,
+    76
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage3_1.svg"
+   ],
+   "cadre": [
+    -120,
+    164,
+    640,
+    68
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-onde0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan onde0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-onde0_1.svg"
+   ],
+   "cadre": [
+    270,
+    104,
+    34,
+    54
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-onde1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan onde1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-onde1_1.svg"
+   ],
+   "cadre": [
+    270,
+    104,
+    34,
+    54
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p1_1.svg"
+   ],
+   "cadre": [
+    114,
+    163,
+    26,
+    48
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p1-bras",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p1 bras)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p1-bras_1.svg"
+   ],
+   "cadre": [
+    122,
+    179,
+    12,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p1-jambe0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p1 jambe0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p1-jambe0_1.svg"
+   ],
+   "cadre": [
+    120,
+    193,
+    14,
+    18
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p1-jambe1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p1 jambe1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p1-jambe1_1.svg"
+   ],
+   "cadre": [
+    122,
+    193,
+    14,
+    18
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p2_1.svg"
+   ],
+   "cadre": [
+    140,
+    163,
+    26,
+    48
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p2-bras",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p2 bras)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p2-bras_1.svg"
+   ],
+   "cadre": [
+    148,
+    179,
+    12,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p2-jambe0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p2 jambe0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p2-jambe0_1.svg"
+   ],
+   "cadre": [
+    146,
+    193,
+    14,
+    18
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p2-jambe1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p2 jambe1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p2-jambe1_1.svg"
+   ],
+   "cadre": [
+    148,
+    193,
+    14,
+    18
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p3_1.svg"
+   ],
+   "cadre": [
+    270,
+    163,
+    26,
+    48
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p3-bras",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p3 bras)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p3-bras_1.svg"
+   ],
+   "cadre": [
+    278,
+    179,
+    12,
+    20
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p3-jambe0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p3 jambe0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p3-jambe0_1.svg"
+   ],
+   "cadre": [
+    276,
+    193,
+    14,
+    18
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-p3-jambe1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan p3 jambe1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-p3-jambe1_1.svg"
+   ],
+   "cadre": [
+    278,
+    193,
+    14,
+    18
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-racineA",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan racinea)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-racineA_1.svg"
+   ],
+   "cadre": [
+    -80,
+    60,
+    560,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-racineA-bout",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan racinea bout)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-racineA-bout_1.svg"
+   ],
+   "cadre": [
+    -80,
+    60,
+    560,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-racineB",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan racineb)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-racineB_1.svg"
+   ],
+   "cadre": [
+    -80,
+    60,
+    560,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-racineB-bout",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan racineb bout)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-racineB-bout_1.svg"
+   ],
+   "cadre": [
+    -80,
+    60,
+    560,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-racineC",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan racinec)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-racineC_1.svg"
+   ],
+   "cadre": [
+    -80,
+    60,
+    560,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-racineC-bout",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan racinec bout)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-racineC-bout_1.svg"
+   ],
+   "cadre": [
+    -80,
+    60,
+    560,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    240,
+    26,
+    120,
+    120
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale0_1.svg"
+   ],
+   "cadre": [
+    26,
+    20,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale1_1.svg"
+   ],
+   "cadre": [
+    146,
+    -2,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale2_1.svg"
+   ],
+   "cadre": [
+    98,
+    82,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale3_1.svg"
+   ],
+   "cadre": [
+    342,
+    20,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale4",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale4_1.svg"
+   ],
+   "cadre": [
+    206,
+    146,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale5",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale5_1.svg"
+   ],
+   "cadre": [
+    -10,
+    120,
+    60,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-voile",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan voile)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-voile_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46468,12 +48848,301 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_devant",
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-choc",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (devant l'avatar)",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan choc)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_devant_1.svg"
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-choc_1.svg"
+   ],
+   "cadre": [
+    110,
+    10,
+    120,
+    120
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-coque",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan coque)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-coque_1.svg"
+   ],
+   "cadre": [
+    40,
+    4,
+    272,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-eclair",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan eclair)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-eclair_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-faisceau",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan faisceau)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-faisceau_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-fond_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-frappe",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan frappe)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-frappe_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-frappe-bout",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan frappe bout)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-frappe-bout_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-loin",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan loin)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-loin_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-noir",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan noir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-noir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-r1",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan r1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-r1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-r1-bout",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan r1 bout)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-r1-bout_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-r2",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan r2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-r2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-r2-bout",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan r2 bout)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-r2-bout_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-r3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan r3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-r3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-r3-bout",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan r3 bout)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-r3-bout_1.svg"
+   ],
+   "cadre": [
+    -100,
+    40,
+    600,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-surface",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan surface)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-surface_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (01 racines plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46485,103 +49154,970 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_fond",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-breche",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (fond)",
+   "titre": "Scène 1b : La vague (01 vague plan breche)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_fond_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-breche_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    292,
+    224,
+    62,
+    44
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_racines/01_racines_anime",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-breche2",
    "rubrique": "scenes",
-   "titre": "Scène 1b : Sous la surface, les racines (ce qui vit sur le fond figé)",
+   "titre": "Scène 1b : La vague (01 vague plan breche2)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_racines/01_racines_anime_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-breche2_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    80,
+    226,
+    62,
+    44
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_racines/01_racines_fond",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-brume1",
    "rubrique": "scenes",
-   "titre": "Scène 1b : Sous la surface, les racines (fond)",
+   "titre": "Scène 1b : La vague (01 vague plan brume1)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_racines/01_racines_fond_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-brume1_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_vague/01_vague_fond",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete0",
    "rubrique": "scenes",
-   "titre": "Scène 1b : La vague (fond)",
+   "titre": "Scène 1b : La vague (01 vague plan crete0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_vague/01_vague_fond_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete0_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -60,
+    -20,
+    380,
+    380
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_approche/02_approche_devant",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete1",
    "rubrique": "scenes",
-   "titre": "Scène 2b : Brume approche d’un coup (devant l'avatar)",
+   "titre": "Scène 1b : La vague (01 vague plan crete1)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_approche/02_approche_devant_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete1_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -60,
+    -20,
+    380,
+    380
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_approche/02_approche_fond",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete2",
    "rubrique": "scenes",
-   "titre": "Scène 2b : Brume approche d’un coup (fond)",
+   "titre": "Scène 1b : La vague (01 vague plan crete2)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_approche/02_approche_fond_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete2_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete3_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete4",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete4_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete5",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete5_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete6",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete6_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete7",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete7_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete8",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete8_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-eau",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan eau)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-eau_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-eclair",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan eclair)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-eclair_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-fond_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-gerbe0",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan gerbe0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-gerbe0_1.svg"
+   ],
+   "cadre": [
+    12,
+    158,
+    156,
+    96
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-gerbe1",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan gerbe1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-gerbe1_1.svg"
+   ],
+   "cadre": [
+    73.8,
+    129.8,
+    192.4,
+    118.4
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-gerbe2",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan gerbe2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-gerbe2_1.svg"
+   ],
+   "cadre": [
+    164.2,
+    146.2,
+    171.6,
+    105.60000000000001
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-gerbe3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan gerbe3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-gerbe3_1.svg"
+   ],
+   "cadre": [
+    257.2,
+    167.2,
+    145.6,
+    89.60000000000001
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-gerbe4",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan gerbe4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-gerbe4_1.svg"
+   ],
+   "cadre": [
+    65,
+    185,
+    130,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-lame",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan lame)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-lame_1.svg"
+   ],
+   "cadre": [
+    -100,
+    -14,
+    600,
+    364
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-lueur",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan lueur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-lueur_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-mat",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan mat)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-mat_1.svg"
+   ],
+   "cadre": [
+    56,
+    92,
+    306,
+    124
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-mer1",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan mer1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-mer1_1.svg"
+   ],
+   "cadre": [
+    -90,
+    178,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-mer2",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan mer2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-mer2_1.svg"
+   ],
+   "cadre": [
+    -90,
+    196,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-mer3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan mer3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-mer3_1.svg"
+   ],
+   "cadre": [
+    -90,
+    218,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-mer4",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan mer4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-mer4_1.svg"
+   ],
+   "cadre": [
+    -90,
+    250,
+    580,
+    270
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-navire",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan navire)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-navire_1.svg"
+   ],
+   "cadre": [
+    36,
+    92,
+    344,
+    190
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -120,
+    -4,
+    640,
+    72
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -120,
+    32,
+    640,
+    68
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-nuage2",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan nuage2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-nuage2_1.svg"
+   ],
+   "cadre": [
+    -120,
+    122,
+    640,
+    76
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-nuage3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan nuage3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-nuage3_1.svg"
+   ],
+   "cadre": [
+    -120,
+    164,
+    640,
+    68
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-brume",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan brume)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-brume_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-filets1",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan filets1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-filets1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    206,
+    600,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-filets2",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan filets2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-filets2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
+    600,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-flaque",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan flaque)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-flaque_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-reflet",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan reflet)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-reflet_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-voile1",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-voile1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-voile2",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-voile3_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46638,12 +50174,12 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_lueur/02_lueur_devant",
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-anime",
    "rubrique": "scenes",
-   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (devant l'avatar)",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan anime)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_1.svg"
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46655,12 +50191,403 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_lueur/02_lueur_fond",
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-ciel",
    "rubrique": "scenes",
-   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (fond)",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan ciel)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_1.svg"
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    206,
+    600,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets2",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
+    600,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-reflet",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan reflet)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-reflet_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-venue",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan venue)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-venue_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile2",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile3_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46672,18 +50599,409 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_plage/02_plage_fond",
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-ciel",
    "rubrique": "scenes",
-   "titre": "Scène 2a : Face à la mer, au couchant (fond)",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan ciel)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_plage/02_plage_fond_1.svg"
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-ciel_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-contre-jour",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan contre jour)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-contre-jour_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-debris",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan debris)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-debris_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-filets1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan filets1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-filets1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    206,
+    600,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-filets2",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan filets2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-filets2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
+    600,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-ombre",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan ombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-ombre_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-premier",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan premier)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-premier_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-voile1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan voile1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-voile1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-voile2",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan voile2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-voile3_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46723,12 +51041,12 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_rocher/02_rocher_anime",
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-anime",
    "rubrique": "scenes",
-   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (ce qui vit sur le fond figé)",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan anime)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_rocher/02_rocher_anime_1.svg"
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46740,18 +51058,409 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_rocher/02_rocher_fond",
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-brume",
    "rubrique": "scenes",
-   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (fond)",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan brume)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_rocher/02_rocher_fond_1.svg"
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-brume_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-filets1",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan filets1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-filets1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    206,
+    600,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-filets2",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan filets2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-filets2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
+    600,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-reflet",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan reflet)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-reflet_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-rocher-devant",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan rocher devant)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-rocher-devant_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile1",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile2",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile3_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -66055,38 +70764,1548 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/10_aster/10_aster_fond",
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume",
    "rubrique": "scenes",
-   "titre": "Scène 10b : Aster tire une caisse des vagues (fond)",
-   "images": 3,
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume)",
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_1.svg",
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_2.svg",
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_3.svg"
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    100,
+    170,
+    116,
+    116
    ],
-   "ms_par_image": 360,
    "parcours": "tuto-3",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/10_epave/10_epave_fond",
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--0",
    "rubrique": "scenes",
-   "titre": "Scène 10 : Le matin d’Hermine : l’épave contre les rochers (fond)",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/10_epave/10_epave_fond_1.svg"
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--0_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--1",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--1_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--10",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 10)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--10_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--11",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 11)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--11_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--12",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 12)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--12_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--13",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 13)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--13_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--14",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 14)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--14_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--15",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 15)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--15_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--16",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 16)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--16_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--17",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 17)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--17_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--2",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--2_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--3",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--3_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--4",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--4_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--5",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--5_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--6",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--6_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--7",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--7_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--8",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--8_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--9",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--9_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-eau-devant",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan eau devant)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-eau-devant_1.svg"
+   ],
+   "cadre": [
+    250,
+    220,
+    100,
+    70
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-epave_1.svg"
+   ],
+   "cadre": [
+    190,
+    160,
+    260,
+    140
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-filets-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan filets large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-filets-large_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-fraicheur",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan fraicheur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-fraicheur_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--0",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--0_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--1",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--1_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--10",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 10)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--10_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--11",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 11)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--11_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--12",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 12)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--12_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--13",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 13)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--13_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--14",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 14)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--14_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--15",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 15)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--15_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--16",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 16)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--16_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--17",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 17)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--17_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--18",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 18)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--18_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--19",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 19)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--19_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--2",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--2_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--20",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 20)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--20_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--21",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 21)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--21_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--22",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 22)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--22_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--23",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 23)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--23_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--24",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 24)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--24_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--25",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 25)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--25_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--26",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 26)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--26_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--27",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 27)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--27_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--28",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 28)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--28_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--29",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 29)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--29_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--3",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--3_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--30",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 30)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--30_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--31",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 31)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--31_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--32",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 32)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--32_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--33",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 33)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--33_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--34",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 34)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--34_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--35",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 35)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--35_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--36",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 36)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--36_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--37",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 37)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--37_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--38",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 38)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--38_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--39",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 39)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--39_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--4",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--4_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--40",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 40)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--40_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--41",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 41)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--41_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--42",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 42)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--42_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--43",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 43)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--43_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--44",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 44)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--44_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--45",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 45)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--45_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--5",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--5_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--6",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--6_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--7",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--7_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--8",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--8_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--9",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--9_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-voile-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan voile large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-voile-large_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-anime_1.svg"
    ],
    "cadre": [
     0,
     0,
     400,
     400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-epave_1.svg"
+   ],
+   "cadre": [
+    190,
+    160,
+    260,
+    140
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-filets-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan filets large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-filets-large_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-fraicheur",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan fraicheur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-fraicheur_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-regard",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan regard)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-regard_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-voile-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan voile large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-voile-large_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-3",
    "statut": "ok"
@@ -160806,278 +167025,6 @@
    "statut": "ok"
   },
   {
-   "id": "chemins/pave-neige_ne",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_ne-no",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne-no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_ne-se",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne se",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne-se.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_ne-se-no",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne se no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne-se-no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_ne-se-so",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne se so",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne-se-so.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_ne-se-so-no",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne se so no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne-se-so-no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_ne-so",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne so",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne-so.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_ne-so-no",
-   "rubrique": "chemins",
-   "titre": "Pave neige ne so no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_ne-so-no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_no",
-   "rubrique": "chemins",
-   "titre": "Pave neige no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_se",
-   "rubrique": "chemins",
-   "titre": "Pave neige se",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_se.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_se-no",
-   "rubrique": "chemins",
-   "titre": "Pave neige se no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_se-no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_se-so",
-   "rubrique": "chemins",
-   "titre": "Pave neige se so",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_se-so.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_se-so-no",
-   "rubrique": "chemins",
-   "titre": "Pave neige se so no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_se-so-no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_seul",
-   "rubrique": "chemins",
-   "titre": "Pave neige seul",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_seul.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_so",
-   "rubrique": "chemins",
-   "titre": "Pave neige so",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_so.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "chemins/pave-neige_so-no",
-   "rubrique": "chemins",
-   "titre": "Pave neige so no",
-   "images": 1,
-   "fichiers": [
-    "svg/chemins/pave-neige_so-no.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    64,
-    32
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
    "id": "chemins/pave_ne",
    "rubrique": "chemins",
    "titre": "Pave ne",
@@ -161339,6 +167286,278 @@
    "images": 1,
    "fichiers": [
     "svg/chemins/pave_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-so",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_no",
+   "rubrique": "chemins",
+   "titre": "Pave neige no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se",
+   "rubrique": "chemins",
+   "titre": "Pave neige se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se-so",
+   "rubrique": "chemins",
+   "titre": "Pave neige se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_seul",
+   "rubrique": "chemins",
+   "titre": "Pave neige seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_so",
+   "rubrique": "chemins",
+   "titre": "Pave neige so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave-neige_so-no",
+   "rubrique": "chemins",
+   "titre": "Pave neige so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave-neige_so-no.svg"
    ],
    "cadre": [
     0,

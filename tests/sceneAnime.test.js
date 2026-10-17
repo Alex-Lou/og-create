@@ -8,7 +8,7 @@ import DATA from '../design/bibliotheque/svg/scenes/tutoriel/scenes.json';
 // 400 × 400, ne garde que l'essentiel vivant : au plus 30 animations, sans filtre
 const read = file => readFileSync(fileURLToPath(new URL(`../design/bibliotheque/svg/scenes/tutoriel/${file}`, import.meta.url)), 'utf8');
 const ANIMATIONS = /<(animate|animateTransform|animateMotion|set)\b/g;
-const LOURDES = ['30_phare_porte', '12_veillee', '12_habits', '01_racines', '01_paupieres', '05_feu', '01_pont', '05_cercle', '03_livre', '06_silhouette', '01_carte', '02_rocher'];
+const LOURDES = ['30_phare_porte', '12_veillee', '12_habits', '05_feu', '05_cercle', '03_livre', '06_silhouette'];
 
 describe('les scènes lourdes : un fond figé, un calque anime léger', () => {
   it.each(LOURDES)('%s', id => {
@@ -24,3 +24,48 @@ describe('les scènes lourdes : un fond figé, un calque anime léger', () => {
   });
 });
 
+
+// Les scènes en plans (game/scenePlans.js) : chaque plan de papier, peint une fois, n'a aucune animation (le jeu le bouge
+// lui-même) ; le plan « anime », au cadre 400 × 400, au plus 30, sans filtre ; leur partition, un temps par bulle
+const EN_PLANS = Object.keys(DATA.scenes).filter(id => DATA.scenes[id].plans);
+const croissant = cles => cles.every(([t], i) => typeof t === 'number' && t >= 0 && (i === 0 || t >= cles[i - 1][0]));
+
+describe('les scènes en plans : des plans immobiles, une partition', () => {
+  it('il y en a', () => expect(EN_PLANS.length).toBeGreaterThan(0));
+  it.each(EN_PLANS)('%s', id => {
+    const { plans, partition } = DATA.scenes[id];
+    const ids = plans.map(p => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const plan of plans) {
+      if (plan.id === 'avatar') continue;
+      const svg = read(plan.fichier);
+      expect(svg).not.toMatch(/<filter[\s>]|\sfilter="/);
+      if (plan.id === 'anime') {
+        expect(svg).toMatch(/^<svg [^>]*viewBox="0 0 400 400"/);
+        expect((svg.match(ANIMATIONS) || []).length).toBeLessThanOrEqual(30);
+      } else {
+        const m = plan.marge || 0;
+        expect(svg).toMatch(new RegExp(`^<svg [^>]*viewBox="${(plan.cadre || [-m, -m, 400 + 2 * m, 400 + 2 * m]).join(' ')}"`));
+        expect(svg.match(ANIMATIONS)).toBeNull();
+      }
+      // (une pièce attachée l'est à une pièce de la scène, posée avant elle)
+      if (plan.dans) expect(ids.slice(0, ids.indexOf(plan.id))).toContain(plan.dans);
+    }
+    expect(partition.temps.length).toBeGreaterThan(0);
+    for (const temps of partition.temps) {
+      expect(temps.duree).toBeGreaterThan(0);
+      expect(croissant(temps.camera || [])).toBe(true);
+      for (const [plan, cles] of Object.entries(temps.pistes || {})) {
+        expect(ids).toContain(plan);
+        expect(croissant(cles)).toBe(true);
+        expect(cles[cles.length - 1][0]).toBeLessThanOrEqual(temps.duree);
+      }
+    }
+    // (le démontage, quand la scène s'en va)
+    for (const [plan, cles] of Object.entries((partition.sortie && partition.sortie.pistes) || {})) {
+      expect(ids).toContain(plan);
+      expect(croissant(cles)).toBe(true);
+      expect(cles[cles.length - 1][0]).toBeLessThanOrEqual(partition.sortie.duree);
+    }
+  });
+});
