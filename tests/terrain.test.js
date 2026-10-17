@@ -114,6 +114,57 @@ describe('carrés du sol', () => {
     expect(cache.draw(ctx, view, 2, Infinity)).toBe(0);
     expect(made).toBe(first);
   });
+  it('les carrés d’un trajet préparé d’avance restent au-delà de la réserve, jusqu’à ce qu’on les rende', () => {
+    const big = islandOf({ height: Array(48).fill('1'.repeat(48)), ground: Array(48).fill('g'.repeat(48)), grid: Array(48).fill('0'.repeat(48)) }, 48);
+    const cache = new TerrainCache(big, () => 0);
+    cache.render = (tx, ty, res) => ({ canvas: { width: 1, height: 1 }, r: { x: tx * 512 / res, y: ty * 512 / res, w: 512 / res, h: 512 / res } });
+    cache.rendering = function* (tx, ty, res) { yield; return cache.render(tx, ty, res); };
+    const ctx = { drawImage() {}, save() {}, restore() {}, beginPath() {}, rect() {}, clip() {} };
+    const route = { x: -1500, y: 0, w: 3000, h: 1600 };
+    while (cache.prepare(route, 2));
+    const prepared = [...cache.tiles.keys()];
+    expect(prepared.length).toBeGreaterThan(24);
+    // Une image ailleurs : la réserve ne jette aucun carré du trajet
+    const elsewhere = { x: -200, y: 1700, w: 400, h: 300 };
+    cache.draw(ctx, elsewhere, 2, Infinity);
+    expect(prepared.every(key => cache.tiles.has(key))).toBe(true);
+    // Rendus, ils repartent comme les autres
+    cache.release();
+    cache.draw(ctx, elsewhere, 2, Infinity);
+    expect(cache.tiles.size).toBe(24);
+  });
+  it('un carré du trajet se peint par morceaux, ne se montre que fini, et se refait si le sol change pendant ce temps', () => {
+    const big = islandOf({ height: Array(48).fill('1'.repeat(48)), ground: Array(48).fill('g'.repeat(48)), grid: Array(48).fill('0'.repeat(48)) }, 48);
+    const cache = new TerrainCache(big, () => 0);
+    // (trois diagonales de cases par carré)
+    cache.rendering = function* (tx, ty, res) { yield; yield; return { canvas: { width: 1, height: 1 }, r: { x: tx * 512 / res, y: ty * 512 / res, w: 512 / res, h: 512 / res } }; };
+    const route = { x: -200, y: 0, w: 400, h: 300 };
+    // Le moment de répit déjà passé (until : 0) : une diagonale à chaque appel ; le carré ne paraît que fini
+    expect(cache.prepare(route, 2, false, 0)).toBe(true);
+    expect(cache.prepare(route, 2, false, 0)).toBe(true);
+    expect(cache.tiles.size).toBe(0);
+    expect(cache.prepare(route, 2, false, 0)).toBe(true);
+    expect(cache.tiles.size).toBe(1);
+    const [first] = cache.tiles.values();
+    expect(first.stale).toBeFalsy();
+    // Le décor change pendant que le second se peint : fini, il est à refaire
+    cache.prepare(route, 2, false, 0);
+    cache.restand();
+    while (cache.tiles.size < 2) cache.prepare(route, 2, false, 0);
+    const second = [...cache.tiles.values()][1];
+    expect(second.stale).toBe(true);
+    expect(first.stale).toBeFalsy();
+    // Refait à son tour (son délai passé), par morceaux lui aussi : il compte un essai
+    while (cache.prepare(route, 2, false, Infinity));
+    second.at = -Infinity;
+    expect(cache.retouch(0)).toBe(true);
+    while (cache.job) cache.retouch(0);
+    const redone = cache.tiles.get([...cache.tiles.keys()][1]);
+    expect(redone).not.toBe(second);
+    expect(redone.stale).toBeFalsy();
+    expect(redone.tries).toBe(1);
+    expect(cache.retouch(0)).toBe(false);
+  });
   it('un carré avec le décor cuit est distinct d’un carré sans ; le décor changé ne refait que les premiers', () => {
     const big = islandOf({ height: Array(48).fill('1'.repeat(48)), ground: Array(48).fill('g'.repeat(48)), grid: Array(48).fill('0'.repeat(48)) }, 48);
     const cache = new TerrainCache(big, () => 0, () => true);
