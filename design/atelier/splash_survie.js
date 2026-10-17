@@ -125,16 +125,17 @@ function dessinSurvivant(qui, pose, expr, prefixe, o = {}) {
   return corps.replace(/id="([^"]+)"/g, `id="${prefixe}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${prefixe}$1)`).replace(/href="#([^"]+)"/g, `href="#${prefixe}$1"`);
 }
 // La troupe de la survie : les places de l'affiche du jeu (splash.js, TROUPE), tous de face ; chacun son regard, ses
-// marques, son arme (deux voisins jamais le même regard ; Rivet, en colère : choix de l'auteur, 17 oct., « il doit moins
-// sourire » ; deux ou trois marques chacun, pour qu'elles se lisent)
+// marques, son arme (deux voisins jamais le même regard ; choix de l'auteur, 17 oct. : prêts et armés, pas hostiles,
+// d'où des regards décidés, attentifs ou sur leurs gardes, et Rivet qui ne sourit plus ; deux ou trois marques chacun,
+// pour qu'elles se lisent)
 const TROUPE_SURVIE = [
-  [['ondin', 'face_repos', 'colere', { arme: 'barre', marques: ['nez', 'suie', 'joue'], equipement: ['bandouliere'] }], 112, 640, 4, 0.4, 0.4],
-  [['sylve', 'face_repos', 'ironique', { arme: 'poignard', marques: ['griffures', 'sourcil'] }], 268, 610, 3.8, 0.42, 1.3],
+  [['ondin', 'face_repos', 'decidee', { arme: 'barre', marques: ['nez', 'suie', 'joue'], equipement: ['bandouliere'] }], 112, 640, 4, 0.4, 0.4],
+  [['sylve', 'face_repos', 'veille', { arme: 'poignard', marques: ['griffures', 'sourcil'] }], 268, 610, 3.8, 0.42, 1.3],
   [['cannelle', 'face_repos', 'mefiante', { arme: 'couperet', marques: ['bandeau', 'balafre'] }], 640, 600, 3.6, 0.42, 2.1],
   [['galet', 'face_repos', 'mefiante', { arme: 'massue', marques: ['cache-oeil', 'joue', 'menton'], equipement: ['epauliere'] }], 250, 790, 5.2, 0.2, 0.8],
   [['melisse', 'face_repos', 'decidee', { arme: 'fourche', marques: ['menton', 'peinture', 'suie'] }], 655, 790, 5.2, 0.2, 1.7],
   [['aster', 'face_repos', 'decidee', { arme: 'fusee', marques: ['sourcil', 'suie', 'peinture'], equipement: ['bandouliere'] }], 158, 995, 6.4, 0, 2.6],
-  [['rivet', 'face_repos', 'colere', { arme: 'pistolet', marques: ['balafre', 'griffures', 'suie'], equipement: ['epauliere'] }], 744, 995, 6.4, 0, 0.2]
+  [['rivet', 'face_repos', 'veille', { arme: 'pistolet', marques: ['balafre', 'griffures', 'suie'], equipement: ['epauliere'] }], 744, 995, 6.4, 0, 0.2]
 ];
 // la flamme de la fusée : ses dégradés, une fois pour toute l'affiche
 const DEFS_AFFICHE = '<defs><radialGradient id="svFlamme"><stop offset="0" stop-color="#FFF4C8"/><stop offset=".25" stop-color="#FF8A3A" stop-opacity=".9"/>'
