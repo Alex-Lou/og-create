@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brumelune — l'écran « survie » (proposition)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../public/splash.css" />
+    <style>.splash__bar span { width: 78%; }</style>
+  </head>
+  <body>
+<div id="splash" class="splash" role="status" aria-live="polite" aria-label="Brumelune se prépare">
+      <img id="splash-fond" class="splash__fond" src="fond.svg" alt="L’île assiégée par les égarés et un kraken, Anya devant la lune" />
+      <div class="splash__affiche">
+        <img class="splash__affiche-art" src="affiche.svg" alt="Le Grimoire ouvert, les sept maîtres armés, prêts à défendre l’île" />
+        <span class="splash__halo" aria-hidden="true"></span>
+        <span class="splash__onde" aria-hidden="true"></span><span class="splash__onde splash__onde--2" aria-hidden="true"></span>
+        <span class="splash__orbite" aria-hidden="true"><i style="--i:0;--c:#E8584A"></i><i style="--i:1;--c:#F2C04B"></i><i style="--i:2;--c:#7EC45B"></i><i style="--i:3;--c:#5EA8E8"></i><i style="--i:4;--c:#B07EE0"></i><i style="--i:5;--c:#F28A2E"></i><i style="--i:6;--c:#E8E4DA"></i></span>
+        <img class="splash__brume" src="../../../public/img/splash/brume.svg" alt="Brume jaillit du Grimoire" />
+        <span class="splash__etincelles" aria-hidden="true"><i style="--i:0;--x:-30%"></i><i style="--i:1;--x:24%"></i><i style="--i:2;--x:-12%"></i><i style="--i:3;--x:36%"></i><i style="--i:4;--x:-40%"></i><i style="--i:5;--x:8%"></i></span>
+      </div>
+      <div class="splash__card">
+        <div class="splash__top">
+          <div class="splash__brand">
+            <svg class="splash__logo" viewBox="0 0 760 186" role="img" aria-label="Brumelune">
+              <defs>
+                <path id="splash-logo-arc" d="M76 142 Q380 -2 684 142" />
+                <linearGradient id="splash-logo-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe7"/><stop offset=".48" stop-color="#f5dc98"/><stop offset="1" stop-color="#c8974e"/></linearGradient>
+              </defs>
+              <text class="splash__logo-title"><textPath href="#splash-logo-arc" startOffset="50%" text-anchor="middle">BRUMELUNE</textPath></text>
+              <path class="splash__logo-flourish" d="M205 150q77 17 151 5m199-5q-77 17-151 5" />
+              <circle cx="380" cy="152" r="4" fill="#f4d88d"/><circle cx="380" cy="152" r="9" fill="none" stroke="#f4d88d" stroke-opacity=".38"/>
+              <text class="splash__logo-kicker" x="380" y="180" text-anchor="middle">L’ÎLE AUX SEPT SOUFFLES</text>
+            </svg>
+          </div>
+          <p class="splash__subtitle">La nuit tombe. L’île tient bon.</p>
+        </div>
+        <div class="splash__bottom">
+          <div class="splash__progress">
+            <div class="splash__bar" aria-hidden="true"><span></span></div>
+            <ul class="splash__steps">
+              <li data-step="code" class="is-done"><span>Le Grimoire s’éveille</span><b>…</b></li>
+              <li data-step="fonts" class="is-done"><span>L’encre sèche</span><b>…</b></li>
+              <li data-step="carnet"><span>Ta partie revient</span><b>…</b></li>
+              <li data-step="ile" hidden><span>L’île se réveille</span><b>…</b></li>
+            </ul>
+          </div>
+          <button id="splash-enter" type="button" class="splash__enter">Entrée</button>
+          <p class="splash__note splash__note--slow">Brume rappelle l’île… le serveur peut prendre une minute.</p>
+          <p class="splash__note splash__note--failed">Brumelune ne répond pas encore. Vérifie ta connexion puis réessaie.</p>
+          <button id="splash-retry" type="button" class="splash__retry">Réessayer</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
