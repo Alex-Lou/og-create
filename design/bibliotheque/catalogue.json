@@ -70764,38 +70764,1548 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/10_aster/10_aster_fond",
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume",
    "rubrique": "scenes",
-   "titre": "Scène 10b : Aster tire une caisse des vagues (fond)",
-   "images": 3,
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume)",
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_1.svg",
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_2.svg",
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_3.svg"
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    100,
+    170,
+    116,
+    116
    ],
-   "ms_par_image": 360,
    "parcours": "tuto-3",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/10_epave/10_epave_fond",
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--0",
    "rubrique": "scenes",
-   "titre": "Scène 10 : Le matin d’Hermine : l’épave contre les rochers (fond)",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/10_epave/10_epave_fond_1.svg"
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--0_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--1",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--1_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--10",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 10)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--10_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--11",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 11)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--11_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--12",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 12)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--12_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--13",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 13)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--13_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--14",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 14)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--14_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--15",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 15)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--15_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--16",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 16)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--16_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--17",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 17)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--17_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--2",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--2_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--3",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--3_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--4",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--4_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--5",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--5_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--6",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--6_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--7",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--7_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--8",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--8_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-brume--9",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume 9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-brume--9_1.svg"
+   ],
+   "cadre": [
+    100,
+    170,
+    116,
+    116
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-eau-devant",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan eau devant)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-eau-devant_1.svg"
+   ],
+   "cadre": [
+    250,
+    220,
+    100,
+    70
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-epave_1.svg"
+   ],
+   "cadre": [
+    190,
+    160,
+    260,
+    140
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-filets-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan filets large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-filets-large_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-fraicheur",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan fraicheur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-fraicheur_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--0",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--0_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--1",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--1_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--10",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 10)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--10_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--11",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 11)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--11_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--12",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 12)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--12_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--13",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 13)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--13_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--14",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 14)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--14_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--15",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 15)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--15_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--16",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 16)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--16_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--17",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 17)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--17_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--18",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 18)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--18_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--19",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 19)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--19_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--2",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--2_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--20",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 20)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--20_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--21",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 21)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--21_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--22",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 22)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--22_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--23",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 23)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--23_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--24",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 24)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--24_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--25",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 25)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--25_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--26",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 26)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--26_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--27",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 27)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--27_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--28",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 28)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--28_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--29",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 29)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--29_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--3",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--3_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--30",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 30)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--30_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--31",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 31)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--31_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--32",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 32)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--32_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--33",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 33)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--33_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--34",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 34)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--34_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--35",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 35)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--35_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--36",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 36)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--36_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--37",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 37)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--37_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--38",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 38)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--38_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--39",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 39)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--39_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--4",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--4_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--40",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 40)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--40_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--41",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 41)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--41_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--42",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 42)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--42_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--43",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 43)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--43_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--44",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 44)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--44_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--45",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 45)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--45_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--5",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--5_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--6",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--6_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--7",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--7_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--8",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--8_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-lorena--9",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan lorena 9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-lorena--9_1.svg"
+   ],
+   "cadre": [
+    180,
+    160,
+    170,
+    220
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_aster/10_aster_plan-voile-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan voile large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_plan-voile-large_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-anime_1.svg"
    ],
    "cadre": [
     0,
     0,
     400,
     400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-epave_1.svg"
+   ],
+   "cadre": [
+    190,
+    160,
+    260,
+    140
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-filets-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan filets large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-filets-large_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-fraicheur",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan fraicheur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-fraicheur_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-regard",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan regard)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-regard_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_plan-voile-large",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage (10 epave plan voile large)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_plan-voile-large_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-3",
    "statut": "ok"

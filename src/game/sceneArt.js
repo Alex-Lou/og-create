@@ -114,7 +114,9 @@ export function sceneOf(id) {
   // (une scène en plans, game/scenePlans.js : ses plans du fond vers nous, sa partition ; son calque anime et l'avatar
   // ont leur place dans la pile)
   if (scene.plans) {
-    const plans = scene.plans.map(p => ({ id: p.id, href: p.fichier && p.id !== 'anime' ? url(p.fichier) : null, profondeur: p.profondeur || 0, marge: p.marge || 0, flou: p.flou || 1, pivot: p.pivot || null, cadre: p.cadre || null, dans: p.dans || null, derriere: !!p.derriere }));
+    const plans = scene.plans.map(p => ({ id: p.id, href: p.fichier && p.id !== 'anime' ? url(p.fichier) : null, profondeur: p.profondeur || 0, marge: p.marge || 0, flou: p.flou || 1, pivot: p.pivot || null, cadre: p.cadre || null, dans: p.dans || null, derriere: !!p.derriere,
+      // (un figurant : ses images, par clé, et ses animations)
+      ...(p.images ? { images: Object.fromEntries(Object.entries(p.images).map(([cle, f]) => [cle, url(f)])), anims: p.anims } : {}) }));
     const anime = scene.plans.find(p => p.id === 'anime');
     return { frames: 1, ms: scene.ms_par_image, still: false, h: 400, plans, partition: scene.partition || null, back: [], live: anime && anime.fichier ? [url(anime.fichier)] : [], front: [], avatar: scene.avatar };
   }

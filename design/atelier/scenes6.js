@@ -304,7 +304,7 @@ S('09_rivet', {
 // le sable, au premier plan. Aster soulagée (choix de l'auteur, 12 oct. : « rassurée et reconnaissante », pas un grand
 // sourire) : les yeux qui se ferment doucement, les joues roses
 S('10_aster', {
-  titre: 'Aster tire une caisse des vagues', etapes: ['10b'], images: 3, ms: 360,
+  titre: 'Lorena sort de l’eau et vient au feu', etapes: ['10b'], images: 3, ms: 360,
   fond: f => {
     let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(image(T.Aster.nau, 'se', 'marche', f * 2, 'soulagee'), 262, 332, 2.6);
     s += trait(`M166,${262 + f} Q206,${252 - f * 2} 236,262`, '#D8C08A', 2.6)
@@ -552,7 +552,7 @@ const OUVERTURE = [
   ['02_plage', '01_gilet', 'Face à la mer, au couchant', ['2a'], O.plage02, { x: 144, y: 376, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true }],
   ['03_ciel', '03_vent', 'Brume lève les yeux vers le ciel', ['3'], O.ciel03, null],
   ['05_cercle', '03_vent', 'Le cercle de pierres noircies ; au large, l’épave dans la brume', ['5'], O.cercle05, { x: 136, y: 386, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }],
-  ['10_epave', '09_rivet', 'Le matin d’Hermine : l’épave contre les rochers', ['10'], O.epave10, null]
+  ['10_epave', '09_rivet', 'Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage', ['10'], null, null]
 ];
 {
   const ordre = Object.keys(SCENES);
@@ -580,7 +580,8 @@ const OUVERTURE = [
 const TP = require('./theatre_pont');
 const GP = require('./gravure_plage');
 const GR = require('./gravure_rencontre');
-for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02]]) {
+const GL = require('./gravure_lorena');
+for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }

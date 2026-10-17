@@ -9,6 +9,10 @@ export const ENCRE = '#1A1410';
 // (les animations qui ne bouclent pas : elles finissent sur leur dernière image)
 const UNE_FOIS = new Set(['arret']);
 
+// La clé d'une image d'un figurant (une pièce à plusieurs images, ScenePlans) : son animation, sa direction, son
+// expression, son rang ; l'atelier nomme ses images de même (design/atelier/figurants.js)
+export const cleImage = ({ anim, dir, expr }, n) => `${anim}|${dir}|${expr || ''}|${n}`;
+
 // Le clip joué à l'instant t (ms) : son rang, son début, ce qu'il joue
 export function clipA(acteur, t) {
   let k = 0;

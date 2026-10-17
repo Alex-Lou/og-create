@@ -19837,15 +19837,15 @@ var require_figer = __commonJS({
       const vifs = els.filter((el) => estVif(el) && !els.some((a) => a !== el && estVif(a) && dedans(el, a)));
       if (!vifs.length) throw new Error("figer : aucun groupe vivant à séparer");
       const vivant = /* @__PURE__ */ __name((el) => vifs.some((v) => v === el || dedans(el, v)), "vivant");
-      const fige = new Map(balisesFigees(corps, els, t));
-      for (const el of els) if (ANIM.has(el.nom)) fige.set(el, "");
+      const fige2 = new Map(balisesFigees(corps, els, t));
+      for (const el of els) if (ANIM.has(el.nom)) fige2.set(el, "");
       const garde = /* @__PURE__ */ __name((el) => boucle(el) && vivant(el), "garde");
       const enVie = new Map(balisesFigees(corps, els, t, garde));
       for (const el of els) if (ANIM.has(el.nom) && !garde(el)) enVie.set(el, "");
       for (const el of els) if (garde(el) && debuts(attr(el.attrs, "begin"))[0] > 0) enVie.set(el, poser(corps.slice(el.de, el.a), "begin", void 0));
       const cache = /* @__PURE__ */ __name((el) => attr(enVie.get(el) ?? corps.slice(el.de, el.a), "opacity") === "0" && !els.some((a) => a.parent === el && garde(a) && attr(a.attrs, "attributeName") === "opacity"), "cache");
       for (const el of els) if (!ANIM.has(el.nom) && vivant(el) && cache(el)) enVie.set(el, "");
-      const rf = new Map(fige);
+      const rf = new Map(fige2);
       for (const el of vifs) rf.set(el, "");
       const fond = recomposer(corps, 0, corps.length, rf);
       let corpsAnime = "";
@@ -19855,7 +19855,7 @@ var require_figer = __commonJS({
           if (/^(defs|clipPath|mask|pattern|symbol|marker)$/.test(p.nom)) throw new Error(`figer : un groupe vivant dans <${p.nom}>`);
           parents.unshift(p);
         }
-        const ouvre = parents.map((p) => fige.get(p) ?? corps.slice(p.de, p.a));
+        const ouvre = parents.map((p) => fige2.get(p) ?? corps.slice(p.de, p.a));
         if (enVie.get(el) === "" || ouvre.some((b) => attr(b, "opacity") === "0")) continue;
         corpsAnime += ouvre.join("") + recomposer(corps, el.de, el.fin, enVie) + parents.reverse().map((p) => `</${p.nom}>`).join("");
       }
@@ -19871,7 +19871,7 @@ var require_figer = __commonJS({
         pris.add(id2);
         const el = parId.get(id2);
         if (!el) throw new Error(`figer : #${id2} introuvable`);
-        const txt = recomposer(corps, el.de, el.fin, fige);
+        const txt = recomposer(corps, el.de, el.fin, fige2);
         defs.push(txt);
         aVoir.push(...cites(txt));
       }
@@ -19882,7 +19882,14 @@ var require_figer = __commonJS({
       return { fond, anime };
     }
     __name(separer, "separer");
-    module.exports = { vif, separer, sansVif };
+    function fige(corps, t = Infinity) {
+      const els = lire(corps);
+      const f = new Map(balisesFigees(corps, els, t));
+      for (const el of els) if (ANIM.has(el.nom)) f.set(el, "");
+      return recomposer(corps, 0, corps.length, f);
+    }
+    __name(fige, "fige");
+    module.exports = { vif, separer, sansVif, fige };
   }
 });
 
@@ -21775,7 +21782,7 @@ var require_theatre_pont = __commonJS({
     }
     __name(soleil, "soleil");
     function pont01() {
-      const p = "tp", T = [4200, 5200, 5200, 3600], FIN = 18200;
+      const p = "tp", T = [4200, 5200, 5200, 4600], FIN = 19200;
       const cumulus = [[0, 40, 16, 2, "#E8DCB0"], [1, 126, 14, 3, "#D8D0A8"]];
       const nuages = [[0, 34, 22, 3, "#4A625A"], [1, 66, 18, 4, "#3E5650"], [2, 164, 26, 3, "#344A46"], [3, 198, 18, 5, "#2C403E"]];
       const mers = [[1, 214, 12, 70, "#2E5650"], [2, 236, 16, 92, C.sarcelle], [3, 264, 22, 116, "#24484A"], [4, 302, 28, 146, C.sarcelleS]];
@@ -21962,7 +21969,7 @@ var require_theatre_pont = __commonJS({
         P2[`onde${i}`] = bouffees(SORT + 300 + i * 300, RETOUR - 400, 600, { s: 0.4, o: 1, x: 0 }, { s: 1.8, o: 0, x: -10 });
       });
       P2.anime = [[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]];
-      const coups = [[11200, 0.8], [FRAPPE, 1], [17800, 1]];
+      const coups = [[11200, 0.8], [FRAPPE, 1], [18600, 1]];
       P2.foudre = [[0, { s: 0.05, o: 0 }], ...coups.flatMap(([t]) => [[t - 1, { s: 0.05, o: 0, e: "linear" }], [t, { s: 0.05, o: 1, e: "ease-out" }], [t + 110, { s: 1, o: 1 }], [t + 320, { s: 1, o: 1, e: "ease-in" }], [t + 600, { s: 1, o: 0 }]])];
       P2.lueur.push(...coups.flatMap(([t, a]) => [[t - 1, { o: 0.3, e: "linear" }], [t + 40, { o: a, e: "linear" }], [t + 160, { o: 0.5 * a, e: "linear" }], [t + 220, { o: a, e: "ease-out" }], [t + 900, { o: 0.3 }]]));
       P2.eclair = [[0, { o: 0 }], ...[...coups, [CHOC, 0.7], [ARRACHE, 0.6], [FRAPPE + 520, 0.5]].sort((u, v) => u[0] - v[0]).flatMap(([t, a]) => [[t - 1, { o: 0, e: "linear" }], [t + 40, { o: 0.3 * a, e: "linear" }], [t + 100, { o: 0.05, e: "linear" }], [t + 160, { o: 0.2 * a, e: "ease-out" }], [t + 420, { o: 0 }]])];
@@ -22822,8 +22829,8 @@ var require_gravure_rencontre = __commonJS({
           acteur: joue([0, "marche", "bas_droite"], [1500, "arret", "bas_droite", "veille"], [2020, "repos", "bas_droite"], [2150, "pose_sursaut", "bas_droite"], [2900, "repos", "bas_droite", "surprise"])
         },
         {
-          ...unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [D1, { x: -9 }]] }),
-          acteur: joue([0, "repos", "bas_droite", "surprise"], [500, "pose_pointe", "bas_droite"], [2600, "repos", "bas_droite", "surprise"])
+          ...unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [2300, { x: -9, e: "ease-out" }], [2550, { x: -17, y: -3 }], [2750, { x: -19, y: 0, e: "ease-in" }], [D1, { x: -19, y: 0 }]] }),
+          acteur: joue([0, "repos", "bas_droite", "surprise"], [500, "pose_pointe", "bas_droite"], [2300, "pose_tete", "face"])
         }
       ];
       return { plans, partition: { lumiere: FROIDE, temps, repos: { duree: 1e4, camera: { x: 5, y: -2, z: 0.02 }, pistes: { anime: [6e3, { x: -10, y: -5 }], filets0: [12e3, { x: 14 }], filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
@@ -22856,10 +22863,10 @@ var require_gravure_rencontre = __commonJS({
         reflet: [[0, { o: 0 }], [ARRIVE, { o: 0, e: "ease-out" }], [D, { o: 1 }]],
         lechee: lecheeVa(D),
         // (il recule d'un bond quand elle arrive sur lui)
-        avatar: [[0, { x: 4, y: 0 }], [ARRIVE - 80, { x: 4, y: 0, e: "ease-out" }], [ARRIVE + 120, { x: -12, y: -10 }], [ARRIVE + 300, { x: -18, y: 0, e: "ease-in" }], [D, { x: -18, y: 0 }]]
+        avatar: [[0, { x: -6, y: 0 }], [ARRIVE - 80, { x: -6, y: 0, e: "ease-out" }], [ARRIVE + 120, { x: -12, y: -10 }], [ARRIVE + 300, { x: -18, y: 0, e: "ease-in" }], [D, { x: -18, y: 0 }]]
       };
       const cam = { x: 4, y: 2, z: 1.12 }, arrivee = { x: 0, y: 6, z: 1.2 };
-      const acteur = joue([0, "repos", "bas_droite", "surprise"], [ARRIVE - 80, "pose_sursaut", "bas_droite"], [ARRIVE + 420, "pose_tete", "face"]);
+      const acteur = joue([0, "pose_tete", "face"], [ARRIVE - 80, "pose_sursaut", "bas_droite"], [ARRIVE + 420, "pose_tete", "face"]);
       return { plans, partition: { lumiere: FROIDE, temps: [{ ...unTemps(D, [[0, cam], [ARRIVE, { ...arrivee, e: "ease-out" }], ...secoue(ARRIVE + 10, arrivee, 3, 4), [D, arrivee]], P2), acteur }], repos: { duree: 9e3, camera: { x: -3, y: 2, z: 0.02 } } } };
     }
     __name(approche02, "approche02");
@@ -22907,7 +22914,238 @@ var require_gravure_rencontre = __commonJS({
       return { plans, partition: { lumiere: FROIDE, temps: [t0, t1, t2, t3, t4, t5, t6, t7], repos: { duree: 1e4, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
     }
     __name(rocher02, "rocher02");
-    module.exports = { plage02, lueur02, approche02, rocher02 };
+    module.exports = { plage02, lueur02, approche02, rocher02, voile, filets, escarbilles, lechee, brumeGravee, HALO, joue, tenir, borne };
+  }
+});
+
+// atelier/figurants.js
+var require_figurants = __commonJS({
+  "atelier/figurants.js"(exports, module) {
+    var ENCRE = "#1A1410";
+    var cleImage = /* @__PURE__ */ __name(({ anim, dir, expr }, n) => `${anim}|${dir}|${expr || ""}|${n}`, "cleImage");
+    var posesDe = /* @__PURE__ */ __name((temps, id2) => {
+      const vues = /* @__PURE__ */ new Map();
+      for (const t of temps) for (const [, clip] of t.jeux && t.jeux[id2] || []) vues.set(cleImage(clip, 0), clip);
+      return [...vues.values()];
+    }, "posesDe");
+    function gravee(corps, uid2, { teinte = "#2A2448", force = 0.2, cote = 1 } = {}) {
+      const hach = Array.from({ length: 34 }, (_, k) => `M${-16 + k * 2},68 l36,-76`).join(" ");
+      const [x1, x2] = cote > 0 ? [0, 1] : [1, 0];
+      return `<style>.c${uid2} *{fill:${ENCRE}!important;stroke:${ENCRE}!important;stroke-width:2.4px!important}.m${uid2} *{fill:#fff!important;stroke:#fff!important}</style><defs><mask id="k${uid2}" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="64"><g class="m${uid2}">${corps}</g></mask><linearGradient id="g${uid2}" x1="${x1}" y1="0" x2="${x2}" y2="0.3"><stop offset="0.38" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient><mask id="h${uid2}" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="64"><rect width="48" height="64" fill="url(#g${uid2})"/></mask></defs><g class="c${uid2}">${corps}</g>${corps}<g mask="url(#k${uid2})"><rect width="48" height="64" fill="${teinte}" opacity="${force}"/><g mask="url(#h${uid2})"><path d="${hach}" fill="none" stroke="${ENCRE}" stroke-width="0.45" opacity="0.8"/></g></g>`;
+    }
+    __name(gravee, "gravee");
+    var pose = /* @__PURE__ */ __name((corps, [x, y], s) => `<g transform="translate(${x - 24 * s} ${y - 62 * s}) scale(${s})">${corps}</g>`, "pose");
+    var LIMITES = { repos: 2 };
+    function figurant(plan, anims, poses, dessiner) {
+      const images = [], vues = /* @__PURE__ */ new Set(), nb = /* @__PURE__ */ __name((a) => Math.min(anims[a].images, LIMITES[a] || Infinity), "nb");
+      for (const p of poses) {
+        for (let n = 0; n < nb(p.anim); n++) {
+          const cle = cleImage(p, n);
+          if (vues.has(cle)) continue;
+          vues.add(cle);
+          images.push({ id: `${plan.id}--${images.length}`, imageDe: plan.id, cle, cadre: plan.cadre, marge: plan.marge, dessin: /* @__PURE__ */ __name(() => dessiner(p.anim, p.dir, n, p.expr), "dessin") });
+        }
+      }
+      const utiles = Object.fromEntries([...new Set(poses.map((p) => p.anim))].map((a) => [a, { images: nb(a), dt: anims[a].dt * anims[a].images / nb(a) }]));
+      return [{ ...plan, figurant: { anims: utiles }, dessin: images[0].dessin }, ...images];
+    }
+    __name(figurant, "figurant");
+    module.exports = { cleImage, posesDe, gravee, pose, figurant };
+  }
+});
+
+// atelier/gravure_lorena.js
+var require_gravure_lorena = __commonJS({
+  "atelier/gravure_lorena.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, chemin, ENCRE } = require_gravure();
+    var { volute, teinte, plein, C, MARGE, G, D_ } = require_theatre_pont();
+    var { nuage, plage, unTemps, HORIZON, RIVAGE } = require_gravure_plage();
+    var R = require_gravure_rencontre();
+    var { figurant, posesDe, gravee, pose } = require_figurants();
+    var { fige } = require_figer();
+    var { flamePath } = require_brume();
+    var { habiller } = require_lorena_tenues();
+    var LORENA = require_lorena_anims();
+    function cielMatin(p) {
+      const A = atelier(`${p}c`);
+      let s = plein(A, A.lin([[0, "#6E7A92"], [0.5, "#A8AAB8"], [0.85, "#D8CCC8"], [1, "#EAD8CC"]], 0, G, 0, HORIZON + 10));
+      s += plein(A, A.rad([[0, "#FFF0DC", 0.85], [0.3, "#F2D2B8", 0.4], [1, "#C8B0B0", 0]], 92, HORIZON - 10, 230));
+      for (let i = 0; i < 10; i++) {
+        const x = hash(i, 61) * 480 - 40, y = 20 + hash(i, 62) * 140, r = 30 + 50 * hash(i, 63);
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.9)}" ry="${f(r * 0.45)}" fill="${A.rad([[0, i % 3 ? "#8A8EA4" : "#E8D2C4", 0.5], [1, "#8A8EA4", 0]], x, y, r * 1.9)}"/>`;
+      }
+      return A.out(s);
+    }
+    __name(cielMatin, "cielMatin");
+    function merMatin(p) {
+      const A = atelier(`${p}m`);
+      let s = gravure(A, [[G, HORIZON - 1], [D_, HORIZON - 1], [D_, RIVAGE + 20], [G, RIVAGE + 20]], A.lin([[0, "#9AA2B2"], [0.5, "#6E8090"], [1, "#4E6274"]], 0, HORIZON, 0, RIVAGE), { seed: 500, amp: 0, angle: 4, pas: 3.4, ombre: 0.25, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
+      const rangee = /* @__PURE__ */ __name((y, a, w, c, i) => {
+        const haut = courbe((t) => {
+          const x = G + (D_ - G) * t, ph = (x + i * 31) / w % 1;
+          return [x, y - a * Math.pow(Math.sin(Math.PI * ph), 2)];
+        }, 80);
+        return gravure(A, [...haut, [D_, y + 40], [G, y + 40]], c, { seed: 501 + i, amp: 0.3, angle: 4, pas: 3.2, ombre: 0.22, tailles: 0, portee: 0.3, dy: 3, trait: 1.3, lumiere: [0, -1], dans: trait2(chemin(haut.map(([x, yy]) => [x, yy + 7])), 0.8, ENCRE, 0.5) });
+      }, "rangee");
+      s += rangee(HORIZON + 18, 2.5, 46, "#8090A0", 0) + rangee(HORIZON + 36, 3.5, 60, "#6A7E8E", 1) + rangee(HORIZON + 54, 4.5, 76, "#586C7E", 2);
+      for (let i = 0; i < 9; i++) {
+        const t = i / 9, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 24 * t, x = 92 + (hash(i, 7) - 0.5) * (14 + 40 * t);
+        s += gravure(A, [[x - w / 2, y], [x + w / 2, y - 0.5], [x + w / 2 - 1, y + 1.8 + t], [x - w / 2 + 1, y + 2 + t]], "#E8E0D4", { seed: 510 + i, amp: 0.2, tailles: 0, noir: false, trait: 0.9, portee: 0 });
+      }
+      return A.out(s);
+    }
+    __name(merMatin, "merMatin");
+    var fraicheur = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}k`);
+      return A.out(plein(A, A.lin([[0, "#5A6680", 0.22], [0.5, "#7A8498", 0.12], [1, "#4A5266", 0.24]], 0, G, 0, D_)));
+    }, "fraicheur");
+    function epave(p) {
+      const A = atelier(`${p}e`);
+      const roc = /* @__PURE__ */ __name((pts5, i) => gravure(A, pts5, A.lin([[0, "#6A6470"], [1, "#2E2A34"]], 0, Math.min(...pts5.map((q) => q[1])), 0, Math.max(...pts5.map((q) => q[1]))), { seed: 520 + i, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2, portee: 0.5, dy: 5, lumiere: [-0.7, -0.7] }), "roc");
+      let s = roc([[244, 268], [252, 232], [276, 206], [306, 196], [338, 200], [372, 186], [404, 204], [430, 236], [440, 270]], 0);
+      s += gravure(A, [[262, 214], [404, 188], [410, 214], [272, 244]], C.creme, { seed: 530, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.4, tailles: 2, tailleP: 4, trait: 1.8, portee: 0.5, dy: 5, lumiere: [-0.7, -0.7] });
+      s += gravure(A, [[270, 236], [408, 208], [409, 214], [272, 243]], C.rouge, { seed: 531, amp: 0.2, tailles: 0, trait: 1, portee: 0 });
+      for (let i = 0; i < 6; i++) {
+        const x = 290 + i * 20, y = 222 - i * 4;
+        s += `<circle cx="${x}" cy="${f(y)}" r="3.2" fill="#2C3A44" stroke="${ENCRE}" stroke-width="1.1"/><circle cx="${x - 0.9}" cy="${f(y - 0.9)}" r="0.9" fill="#C8D8DC"/>`;
+      }
+      s += trait2("M266,212 L270,196 M286,208 L288,190 M306,204 Q310,188 318,186 M330,200 L328,182 L340,176 M352,196 L354,180 M378,192 L382,174", 1.8, ENCRE) + trait2("M268,198 Q300,186 330,182 T384,174", 1.6, ENCRE);
+      s += gravure(A, [[206, 278], [222, 262], [270, 258], [292, 270], [286, 280]], "#4E6A7E", { seed: 532, amp: 0.4, angle: 10, tailles: 1, trait: 1.6, portee: 0.5, dy: 4, lumiere: [-0.7, -0.7] }) + trait2("M214,272 L284,268", 1, ENCRE, 0.7);
+      for (const [x, y, w, i] of [[300, 262, 22, 0], [318, 252, 18, 1], [330, 268, 20, 2]]) s += gravure(A, [[x, y], [x + w, y - 2], [x + w + 1, y + w * 0.7], [x + 1, y + w * 0.72]], "#8A6440", { seed: 540 + i, amp: 0.3, tailles: 1, tailleP: 3, trait: 1.4, portee: 0.4, dy: 3, lumiere: [-0.7, -0.7] }) + trait2(`M${x + 2},${y + 4} L${x + w - 2},${y + w * 0.6} M${x + w - 2},${y + 3} L${x + 3},${y + w * 0.6}`, 1.2, "#C8A86A");
+      s += trait2("M296,276 Q310,286 328,280 T360,288", 2, "#C8A86A") + trait2("M296,276 Q310,286 328,280 T360,288", 0.7, ENCRE, 0.6);
+      return A.out(s + volute(352, 214, 5, 1, 1.4, 1.2));
+    }
+    __name(epave, "epave");
+    var decorMatin = /* @__PURE__ */ __name((p) => [
+      { id: "ciel", profondeur: 0.1, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => cielMatin(p), "dessin") },
+      { id: "nuage0", profondeur: 0.14, cadre: [-80, 24, 600, 60], dessin: /* @__PURE__ */ __name(() => nuage(p, 0, 60, 16, "#7A7E92"), "dessin") },
+      { id: "nuage1", profondeur: 0.18, cadre: [-80, 100, 600, 56], dessin: /* @__PURE__ */ __name(() => nuage(p, 1, 132, 12, "#9A92A0", -40, 480), "dessin") },
+      { id: "mer", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => merMatin(p), "dessin") },
+      // (la brume tient au large : le Vent n'a ouvert que la plage proche, l'épave en est sortie)
+      { id: "voile-large", profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => R.voile(p, 5, HORIZON + 4, 30, 0.85), "dessin") },
+      { id: "filets-large", profondeur: 0.34, cadre: [-100, HORIZON - 24, 600, 56], dessin: /* @__PURE__ */ __name(() => R.filets(p, 5, [[-40, HORIZON + 6, 210, 3, 7], [170, HORIZON + 12, 260, 4, 8]]), "dessin") },
+      { id: "epave", profondeur: 0.45, cadre: [190, 160, 260, 140], dessin: /* @__PURE__ */ __name(() => epave(p), "dessin") },
+      { id: "plage", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => plage(p), "dessin") },
+      { id: "lechee", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lechee(p), "dessin") },
+      { id: "fraicheur", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => fraicheur(p), "dessin") }
+    ], "decorMatin");
+    var lecheeVa = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [D * 0.4, { y: 8, e: "ease-in-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "lecheeVa");
+    var MATIN = { teinte: "#3A4458", force: 0.16, cote: 1 };
+    function nageuse() {
+      return `<g><animateTransform attributeName="transform" type="translate" values="0 0;-26 6" dur="14s" fill="freeze"/><g transform="translate(232 238)"><animateTransform attributeName="transform" type="translate" values="232 238;232 240;232 238" dur="1.6s" repeatCount="indefinite"/><path d="M-14,4 q7,-3 14,0 t14,0" fill="none" stroke="#E8E0D4" stroke-width="1.4" stroke-linecap="round"/><circle cx="0" cy="0" r="3.2" fill="#5A3A28" stroke="${ENCRE}" stroke-width="1"/><path d="M2,0 q4,-7 9,-5" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round"><animate attributeName="d" values="M2,0 q4,-7 9,-5;M2,0 q-2,-6 -7,-6;M2,0 q4,-7 9,-5" dur="1.6s" repeatCount="indefinite"/></path><path d="M2,0 q4,-7 9,-5" fill="none" stroke="#E8C080" stroke-width="1.1" stroke-linecap="round"><animate attributeName="d" values="M2,0 q4,-7 9,-5;M2,0 q-2,-6 -7,-6;M2,0 q4,-7 9,-5" dur="1.6s" repeatCount="indefinite"/></path></g></g>` + R.escarbilles();
+    }
+    __name(nageuse, "nageuse");
+    var regardMatin = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}g`);
+      return A.out(plein(A, A.rad([[0, "#000", 0], [0.68, "#1A1C24", 0.18], [1, "#08080C", 0.6]], 200, 210, 300)));
+    }, "regardMatin");
+    function epave10() {
+      const p = "le";
+      const plans = [...decorMatin(p), { id: "anime", profondeur: 0.45, dessin: /* @__PURE__ */ __name(() => nageuse(), "dessin") }, { id: "regard", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => regardMatin(p), "dessin") }, { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }];
+      const D0 = 6e3, D1 = 5e3;
+      const temps = [
+        unTemps(D0, [[0, { x: -50, y: 0, z: 1.1 }], [D0, { x: 40, y: 6, z: 1.22, e: "ease-in-out" }]], { lechee: lecheeVa(D0) }),
+        unTemps(D1, [[0, { x: 40, y: 6, z: 1.22 }], [D1, { x: 56, y: 10, z: 1.34, e: "ease-in-out" }]], { lechee: lecheeVa(D1) })
+      ];
+      return { plans, partition: { temps, repos: { duree: 9e3, camera: { x: -4, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(epave10, "epave10");
+    var PIEDS_AVATAR = [76, 396];
+    var PIEDS_LORENA = [262, 368];
+    var BRUME = [158, 236];
+    var LORENA_C = habiller("cire", null, "naufragee");
+    var lorenaImage = /* @__PURE__ */ __name((anim, dir, n, expr) => pose(gravee(fige(LORENA.dessiner({ ...LORENA_C, uid: `lo${anim}${dir}${n}${expr || ""}` }, anim, dir, n, expr), 0), `lo${anim.slice(0, 3)}${dir.slice(0, 2)}${n}${(expr || "").slice(0, 3)}`, MATIN), PIEDS_LORENA, 3), "lorenaImage");
+    var BRUME_ANIMS = { flotte: { images: 3, dt: 0.28 } };
+    var brumeImage = /* @__PURE__ */ __name((anim, dir, n, expr) => {
+      const k = n, id2 = `lb${n}${(expr || "n").slice(0, 3)}`;
+      return `<defs>${R.HALO(id2)}</defs><circle cx="${BRUME[0]}" cy="${BRUME[1] - 12}" r="44" fill="url(#${id2}H)"/><g transform="translate(${BRUME[0]} ${BRUME[1]}) scale(1.6) translate(-20 -32)">${R.brumeGravee(id2, k, expr || "neutre")}</g>`;
+    }, "brumeImage");
+    function eauDevant(p) {
+      const id2 = `${p}we`;
+      return `<defs><linearGradient id="${id2}g" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.2" stop-color="#fff"/><stop offset="0.8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="${id2}" maskUnits="userSpaceOnUse" x="250" y="220" width="100" height="70"><rect x="250" y="220" width="100" height="70" fill="url(#${id2}g)"/></mask></defs><g mask="url(#${id2})">${R.lechee(p)}</g>`;
+    }
+    __name(eauDevant, "eauDevant");
+    function aster10() {
+      const p = "la";
+      const { joue, tenir } = R;
+      const L = /* @__PURE__ */ __name((anim, dir, expr) => [anim, dir, expr], "L"), B = /* @__PURE__ */ __name((expr) => ["flotte", "face", expr], "B");
+      const plan = /* @__PURE__ */ __name((cam, z) => ({ ...cam, z }), "plan");
+      const LARGE = { x: 10, y: 4, z: 1.06 }, DEUX = { x: 20, y: 18, z: 1.18 }, SUR_LORENA = { x: 56, y: 22, z: 1.32 }, SUR_BRUME = { x: -24, y: -6, z: 1.34 }, SUR_AVATAR = { x: -46, y: 30, z: 1.3 };
+      const R0 = [
+        // 0 « Ho, du feu ! … donne-moi la main » : elle sort de l'eau et vient ; lui sursaute, puis va vers elle
+        [4800, LARGE, joue([0, "repos", "bas_droite", "surprise"], [700, "pose_sursaut", "bas_droite"], [1800, "marche", "bas_droite"], [2900, "arret", "bas_droite", "veille"], [3420, "repos", "bas_droite"]), [[0, L("marche", "bas_gauche", "soulagee")], [3200, L("arret", "bas_gauche", "soulagee")], [3720, L("repos", "bas_gauche", "soulagee")]], [[0, B("curieuse")]]],
+        // 1 « Lorena, navigatrice. Officier de quart… »
+        [3600, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_poings", "bas_gauche", "sourire")]], [[0, B("curieuse")]]],
+        // 2 « deux requins… un tentacule immense… Bref ! »
+        [4200, SUR_LORENA, joue([0, "repos", "bas_droite", "surprise"]), [[0, L("pose_tete", "bas_gauche", "peur")], [2600, L("pose_hausse", "bas_gauche", "ironique")]], [[0, B("surpris")]]],
+        // 3 « Un requin ? Un tentacule géant ? … halluciné ? »
+        [3600, SUR_AVATAR, joue([0, "pose_hausse", "bas_droite"]), [[0, L("repos", "bas_gauche", "mefiante")]], [[0, B("neutre")]]],
+        // 4 « J'aurais préféré, crois-moi. »
+        [3e3, SUR_LORENA, joue([0, "repos", "bas_droite"]), [[0, L("repos", "bas_gauche", "pensive")]], [[0, B("triste")]]],
+        // 5 « En tout cas ! La mer rend ce qu'elle a pris… »
+        [3800, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_joie", "bas_gauche", "sourire")], [1700, L("repos", "bas_gauche", "sourire")]], [[0, B("content")]]],
+        // 6 « On ? Parce que… tu t'installes avec nous ? »
+        [3200, SUR_AVATAR, joue([0, "repos", "bas_droite", "surprise"], [500, "pose_pointe", "bas_droite"]), [[0, L("repos", "bas_gauche", "sourire")]], [[0, B("curieuse")]]],
+        // 7 « Pourquoi ? … Et ton animal domestique ? » : elle montre Brume du doigt
+        [4200, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_poings", "bas_gauche", "decidee")], [1900, L("pose_pointe", "bas_gauche", "ironique")]], [[0, B("neutre")], [2e3, B("surpris")]]],
+        // 8 « Je ne suis PAS un animal ! … Je suis Brume ! » : elle s'enfle, outrée ; lui sursaute à côté d'elle
+        [3800, SUR_BRUME, joue([0, "pose_sursaut", "bas_droite"], [900, "repos", "bas_droite", "surprise"]), [[0, L("repos", "bas_gauche", "surprise")]], [[0, B("surpris")]]],
+        // 9 « Oh, mais ça parle ! »
+        [3200, SUR_LORENA, joue([0, "repos", "bas_droite", "surprise"]), [[0, L("pose_sursaut", "bas_gauche", "surprise")]], [[0, B("gene")]]],
+        // 10 « … la flammèche qui parle, c'est la goutte d'eau, c'est ça ? »
+        [4200, SUR_AVATAR, joue([0, "pose_croises", "bas_droite", "ironique"]), [[0, L("repos", "bas_gauche", "genee")]], [[0, B("content")]]],
+        // 11 « Je… Je n'avais juste jamais… parlé à une entité… magique ! »
+        [3800, SUR_LORENA, joue([0, "repos", "bas_droite"]), [[0, L("pose_hausse", "bas_gauche", "genee")]], [[0, B("gene")]]],
+        // 12 « Quoi qu'il en soit ! On va devoir trouver un moyen de survivre… »
+        [3800, DEUX, joue([0, "repos", "bas_droite", "decidee"]), [[0, L("pose_poings", "bas_gauche", "decidee")]], [[0, B("neutre")]]],
+        // 13 « Construisons-nous un véritable abri de naufragés. »
+        [3200, LARGE, joue([0, "pose_poings", "bas_droite", "decidee"]), [[0, L("pose_pointe", "face", "decidee")]], [[0, B("content")]]],
+        // 14 « Elle a raison. Ici… Il arrive des choses… » : elle baisse, la voix basse
+        [4200, SUR_BRUME, joue([0, "repos", "bas_droite"]), [[0, L("repos", "bas_gauche", "inquiete")]], [[0, B("triste")]]],
+        // 15 « Euuh… Brume ? Ça va ? »
+        [3e3, SUR_AVATAR, joue([0, "repos", "bas_droite", "surprise"]), [[0, L("repos", "bas_gauche", "inquiete")]], [[0, B("triste")]]],
+        // 16 « Oubliez ça. Je vous aiderai à bien tout comprendre. »
+        [3600, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("repos", "bas_gauche", "sourire")]], [[0, B("content")]]]
+      ];
+      const clips = /* @__PURE__ */ __name((list) => list.map(([t, [anim, dir, expr]]) => [t, expr ? { anim, dir, expr } : { anim, dir }]), "clips");
+      const entree2 = /* @__PURE__ */ __name((D) => [[0, { x: 38, y: -124, s: 0.44 }], [1100, { x: 34, y: -110, s: 0.5, e: "linear" }], [3200, { x: 0, y: 0, s: 1, e: "cubic-bezier(.3,0,.4,1)" }], [D, { x: 0, y: 0, s: 1 }]], "entree");
+      const vague0 = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [700, { y: -7, e: "ease-in" }], [1300, { y: -2, e: "linear" }], [D * 0.4, { y: 8, e: "ease-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "vague0");
+      const vaVers = /* @__PURE__ */ __name((D) => [[0, { x: 0, y: 0 }], [1800, { x: 0, y: 0 }], [2900, { x: 34, y: -6, e: "linear" }], [D, { x: 34, y: -6 }]], "vaVers");
+      const outree = /* @__PURE__ */ __name((D) => [[0, { y: 0, s: 1 }], [200, { y: -26, s: 1.3, e: "cubic-bezier(.2,.8,.4,1.3)" }], [D - 600, { y: -20, s: 1.24 }], [D, { y: -6, s: 1.08, e: "ease-in-out" }]], "outree");
+      const baisse = /* @__PURE__ */ __name((D) => [[0, { y: -6, s: 1.08 }], [900, { y: 14, s: 0.92, e: "ease-in-out" }], [D, { y: 14, s: 0.92 }]], "baisse");
+      const temps = [];
+      R0.forEach(([D, cam, acteur, lo, br], n) => {
+        const jeux = { lorena: clips(lo), brume: clips(br) };
+        if (!n) {
+          temps.push({ ...unTemps(D, [[0, plan(LARGE, 1.04)], [D, { ...cam, e: "ease-out" }]], { lechee: vague0(D), lorena: entree2(D), "eau-devant": vague0(D).map(([t2, c]) => [t2, { ...c, o: t2 < 1300 ? 1 : 0 }]), avatar: vaVers(D), brume: [[0, { y: 0, s: 1 }], [D, { y: -6, s: 1.08 }]] }), acteur, jeux });
+          return;
+        }
+        const prec = temps[n - 1], pistes = { lechee: lecheeVa(D) };
+        if (n === 8) pistes.brume = outree(D);
+        if (n === 14) pistes.brume = baisse(D);
+        if (n === 16) pistes.brume = [[0, { y: 14, s: 0.92 }], [800, { y: -4, s: 1.06, e: "cubic-bezier(.2,.8,.4,1.2)" }], [D, { y: -6, s: 1.08 }]];
+        const t = tenir(prec, D, acteur, pistes);
+        t.camera = [[0, { ...prec.camera[prec.camera.length - 1][1], e: void 0 }], [Math.min(900, D), { ...cam, e: "ease-in-out" }], [D, cam]];
+        t.jeux = jeux;
+        temps.push(t);
+      });
+      for (const t of temps) t.camera.forEach(([, c]) => {
+        if (c.e === void 0) delete c.e;
+      });
+      const plans = [
+        ...decorMatin(p),
+        ...figurant({ id: "lorena", profondeur: 0.62, cadre: [180, 160, 170, 220], pivot: PIEDS_LORENA }, LORENA.ANIMS, posesDe(temps, "lorena"), lorenaImage),
+        { id: "eau-devant", profondeur: 0.55, cadre: [250, 220, 100, 70], dessin: /* @__PURE__ */ __name(() => eauDevant(p), "dessin") },
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_AVATAR },
+        ...figurant({ id: "brume", profondeur: 0.68, cadre: [100, 170, 116, 116], pivot: [BRUME[0], BRUME[1] + 10] }, BRUME_ANIMS, posesDe(temps, "brume"), brumeImage),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      return { plans, partition: { lumiere: MATIN, temps, repos: { duree: 9e3, camera: { x: -3, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(aster10, "aster10");
+    module.exports = { epave10, aster10 };
   }
 });
 
@@ -23351,7 +23589,7 @@ var require_scenes6 = __commonJS({
       avatar: { x: 76, y: 388, echelle: 3, vue: "avant", pose: "repos", naufrage: true }
     });
     S("10_aster", {
-      titre: "Aster tire une caisse des vagues",
+      titre: "Lorena sort de l’eau et vient au feu",
       etapes: ["10b"],
       images: 3,
       ms: 360,
@@ -23552,7 +23790,7 @@ var require_scenes6 = __commonJS({
       ["02_plage", "01_gilet", "Face à la mer, au couchant", ["2a"], O.plage02, { x: 144, y: 376, echelle: 3, vue: "dos", pose: "repos", naufrage: true }],
       ["03_ciel", "03_vent", "Brume lève les yeux vers le ciel", ["3"], O.ciel03, null],
       ["05_cercle", "03_vent", "Le cercle de pierres noircies ; au large, l’épave dans la brume", ["5"], O.cercle05, { x: 136, y: 386, echelle: 3, vue: "avant", pose: "repos", naufrage: true }],
-      ["10_epave", "09_rivet", "Le matin d’Hermine : l’épave contre les rochers", ["10"], O.epave10, null]
+      ["10_epave", "09_rivet", "Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage", ["10"], null, null]
     ];
     {
       const ordre = Object.keys(SCENES2);
@@ -23574,7 +23812,8 @@ var require_scenes6 = __commonJS({
     var TP = require_theatre_pont();
     var GP = require_gravure_plage();
     var GR = require_gravure_rencontre();
-    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02]]) {
+    var GL = require_gravure_lorena();
+    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }

@@ -4,11 +4,14 @@
 // caméra (selon sa profondeur), puis son mouvement propre. Une pièce attachée à une autre (dans : un bras au corps, une
 // mâchoire à la tête) se pose dans son cadre, devant elle ou derrière (derriere), et suit tous ses mouvements. L'avatar
 // et le calque « anime » de SceneArt prennent leur place dans la pile (fentes avatar, anime). Quand la scène s'en va,
-// ses pièces jouent leur sortie (partition.sortie : le démontage), par-dessus là où elles en sont
+// ses pièces jouent leur sortie (partition.sortie : le démontage), par-dessus là où elles en sont. Un figurant (Lorena,
+// Brume…) est une pièce à plusieurs images (images : une par animation, direction, expression, image) : chaque temps dit
+// ce qu'il joue (temps.jeux : ses clips, comme la piste « acteur » de l'avatar, game/acteur.js)
 import { h } from 'vue';
 import { reducedMotion } from '@/utils/fx';
 import { SCENE_W, imagesCles, styleCamera, stylePiste, tempsDe, derniere, premiere, cleRepos, cameraTransform, pisteTransform } from '@/game/scenePlans';
 import { rasterOf, edgeColors, planPx, planSize } from './raster';
+import { clipA, imageA, prochain, cleImage } from '@/game/acteur';
 
 const pc = v => `${(v * 100) / SCENE_W}%`;
 // (la couleur des bords de l'écran, au-dessus et au-dessous du carré : celle de la première pièce, assombrie comme la
@@ -23,7 +26,7 @@ export default {
   name: 'ScenePlans',
   props: {
     // Les pièces, du fond vers nous (game/sceneArt.js : sceneOf) : { id, href, profondeur, marge, flou, pivot, cadre,
-    // dans, derriere }
+    // dans, derriere } ; un figurant, en plus, ses images ({ clé : href }) et ses animations ({ anim : { images, dt } })
     plans: { type: Array, required: true },
     // La partition (game/scenePlans.js)
     partition: { type: Object, default: null },
@@ -55,6 +58,8 @@ export default {
     this.pistes = {};
     this.canvases = {};
     this.peint = false;
+    // (l'image que montre chaque figurant)
+    this.montre = {};
   },
   watch: {
     beat(n) {
@@ -73,6 +78,7 @@ export default {
   beforeUnmount() {
     // (la scène s'efface en fondu : ses pièces restent où elles en sont, et se démontent)
     clearTimeout(this.drift);
+    clearTimeout(this.figTimer);
     this.token = (this.token || 0) + 1;
     this.sortie();
   },
@@ -125,6 +131,18 @@ export default {
       // (la scène paraît d'un coup, toutes ses pièces peintes : jamais une pièce seule sur le vide)
       this.visible = true;
       this.play(this.beat);
+      this.lireFigurants(token, px);
+    },
+    // Les images des figurants, lues d'avance une à une (elles changent pendant la scène) : lues toutes d'un coup, elles
+    // gelaient l'écran à l'ouverture (64 dessins pour Lorena et Brume : plus d'une seconde) ; celle qu'un temps montre
+    // se lit tout de suite (montrer)
+    async lireFigurants(token, px) {
+      for (const plan of this.plans) {
+        for (const href of Object.values(plan.images || {})) {
+          if (token !== this.token) return;
+          await rasterOf(href, ...planSize(plan, px));
+        }
+      }
     },
     stop() {
       (this.running || []).forEach(a => a.cancel());
@@ -150,8 +168,9 @@ export default {
       const temps = tempsDe(this.partition, n);
       if (!temps) return;
       this.stop();
-      // (le temps commence : l'avatar joue le sien en même temps, SceneArt)
+      // (le temps commence : l'avatar joue le sien en même temps, SceneArt ; les figurants, ici)
       this.$emit('temps', n);
+      this.jouer(temps);
       if (reducedMotion()) {
         this.pose(temps, 'fin');
         return;
@@ -165,6 +184,43 @@ export default {
       }
       const repos = this.partition && this.partition.repos;
       if (repos) this.drift = setTimeout(() => this.rest(temps, repos), temps.duree);
+    },
+    // Les figurants jouent les clips du temps (temps.jeux), au rythme de leurs images ; un temps qui n'en a pas laisse
+    // chacun où il en est ; avec le mouvement réduit, chacun reste sur le début de son dernier clip
+    jouer(temps) {
+      const jeux = temps.jeux;
+      if (!jeux) return;
+      clearTimeout(this.figTimer);
+      const figurants = Object.entries(jeux).map(([id, clips]) => [this.plans.find(p => p.id === id), clips]).filter(([plan]) => plan && plan.images && plan.anims);
+      if (reducedMotion()) {
+        for (const [plan, clips] of figurants) this.montrer(plan, cleImage(clips[clips.length - 1][1], 0));
+        return;
+      }
+      const t0 = performance.now();
+      const tick = () => {
+        const t = performance.now() - t0;
+        let suite = Infinity;
+        for (const [plan, clips] of figurants) {
+          const { debut, clip } = clipA(clips, t);
+          this.montrer(plan, cleImage(clip, imageA(clip.anim, t - debut, plan.anims)));
+          suite = Math.min(suite, prochain(clips, t, plan.anims));
+        }
+        if (suite < Infinity) this.figTimer = setTimeout(tick, suite);
+      };
+      tick();
+    },
+    // Une image d'un figurant dans son canvas (déjà lue : elle l'a été d'avance ; sinon dès qu'elle l'est)
+    async montrer(plan, cle) {
+      const href = plan.images[cle];
+      if (!href || this.montre[plan.id] === cle) return;
+      this.montre[plan.id] = cle;
+      const [pw, ph] = planSize(plan, planPx());
+      const image = await rasterOf(href, pw, ph);
+      const canvas = this.canvases[plan.id];
+      if (!image || !canvas || this.montre[plan.id] !== cle) return;
+      canvas.width = pw;
+      canvas.height = ph;
+      canvas.getContext('2d').drawImage(image, 0, 0);
     },
     // Le repos : la caméra va et vient doucement autour de là où le temps l'a laissée ; les pièces qui ont le leur
     // (repos.pistes : { piece: [duree, cle] }) se balancent autour de là où elles sont

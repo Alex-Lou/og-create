@@ -445,7 +445,7 @@ function soleil(p) {
 
 // ——— 01_pont : les pièces et la partition ———
 function pont01() {
-  const p = 'tp', T = [4200, 5200, 5200, 3600], FIN = 18200;
+  const p = 'tp', T = [4200, 5200, 5200, 4600], FIN = 19200;
   const cumulus = [[0, 40, 16, 2, '#E8DCB0'], [1, 126, 14, 3, '#D8D0A8']];
   const nuages = [[0, 34, 22, 3, '#4A625A'], [1, 66, 18, 4, '#3E5650'], [2, 164, 26, 3, '#344A46'], [3, 198, 18, 5, '#2C403E']];
   const mers = [[1, 214, 12, 70, '#2E5650'], [2, 236, 16, 92, C.sarcelle], [3, 264, 22, 116, '#24484A'], [4, 302, 28, 146, C.sarcelleS]];
@@ -594,7 +594,7 @@ function pont01() {
   // la pluie : elle commence avec les premiers nuages, et forcit
   P.anime = [[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]];
   // la foudre : seulement quand l'orage est là (la deuxième foudre frappe le mât)
-  const coups = [[11200, 0.8], [FRAPPE, 1], [17800, 1]];
+  const coups = [[11200, 0.8], [FRAPPE, 1], [18600, 1]];
   P.foudre = [[0, { s: 0.05, o: 0 }], ...coups.flatMap(([t]) => [[t - 1, { s: 0.05, o: 0, e: 'linear' }], [t, { s: 0.05, o: 1, e: 'ease-out' }], [t + 110, { s: 1, o: 1 }], [t + 320, { s: 1, o: 1, e: 'ease-in' }], [t + 600, { s: 1, o: 0 }]])];
   P.lueur.push(...coups.flatMap(([t, a]) => [[t - 1, { o: 0.3, e: 'linear' }], [t + 40, { o: a, e: 'linear' }], [t + 160, { o: 0.5 * a, e: 'linear' }], [t + 220, { o: a, e: 'ease-out' }], [t + 900, { o: 0.3 }]]));
   // (et un éclair blanc à chaque coup reçu)

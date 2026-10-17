@@ -55,9 +55,12 @@ for (const [id, sc] of Object.entries(SCENES)) {
   // une scène en plans (game/scenePlans.js) : ses plans du fond vers nous, chacun dans son fichier (sauf l'avatar, que le
   // jeu pose), sa partition ; la planche la montre dans l'état où la laisse son dernier temps
   if (sc.plans) {
-    const plans = sc.plans.map(q => {
+    // (les images d'un figurant, figurants.js : chacune son fichier, rangées sous lui par leur clé)
+    for (const q of sc.plans.filter(q => q.imageDe)) { write(path.join(LIB, `${id}/${id}_plan-${q.id}_1.svg`), scene(id, `plan-${q.id}`).svg); count++; }
+    const plans = sc.plans.filter(q => !q.imageDe).map(q => {
       const o = { id: q.id };
       if (q.dessin) { o.fichier = `${id}/${id}_plan-${q.id}_1.svg`; write(path.join(LIB, o.fichier), scene(id, `plan-${q.id}`).svg); count++; }
+      if (q.figurant) Object.assign(o, { images: Object.fromEntries(sc.plans.filter(k => k.imageDe === q.id).map(k => [k.cle, `${id}/${id}_plan-${k.id}_1.svg`])), anims: q.figurant.anims });
       return Object.assign(o, { profondeur: q.profondeur || 0 }, q.marge ? { marge: q.marge } : {}, q.flou ? { flou: q.flou } : {}, q.pivot ? { pivot: q.pivot } : {}, q.cadre ? { cadre: q.cadre } : {}, q.dans ? { dans: q.dans } : {}, q.derriere ? { derriere: true } : {});
     });
     index.scenes[id] = { nom, etape, cadre: [0, 0, W, W], images: 1, ms_par_image: sc.ms, avatar: sc.avatar, plans, partition: sc.partition, calques: {} };
@@ -70,7 +73,7 @@ for (const [id, sc] of Object.entries(SCENES)) {
       const { x = 0, y = 0, s = 1, r = 0, o = 1 } = fin(q), [px, py] = q.pivot || [W / 2, W / 2];
       return o > 0 ? `<g transform="translate(${r2(x + px)} ${r2(y + py)}) rotate(${r}) scale(${s}) translate(${-px} ${-py})" opacity="${o}">${sous}${corps}${sur}</g>` : '';
     };
-    const image = unique(sc.plans.filter(q => !q.dans).map(piece).join(''));
+    const image = unique(sc.plans.filter(q => !q.dans && !q.imageDe).map(piece).join(''));
     parties[+id.slice(0, 2) >= 5 ? 1 : 0].push(row(`${etape} — ${sc.titre}`, [[svgOf(image, 0.46), 'fin de l\'entrée']]));
     anim.push({ label: `${etape} — ${sc.titre}`, frames: [svgOf(image, 0.6)], timings: [sc.ms], w: r2(W * 0.6), h: r2(W * 0.6) });
     continue;

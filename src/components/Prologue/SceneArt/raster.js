@@ -4,7 +4,7 @@
 // (les images d'une scène et de son avatar, ou les pièces de deux scènes en plans, celle qui joue et la suivante, lue
 // d'avance ; au-delà, la plus ancienne part : une image d'un grand écran pèse lourd)
 import { avatarBox } from '@/game/sceneArt';
-import { acteurImages } from '@/game/avatarKit';
+import { acteurImages, kitFailed } from '@/game/avatarKit';
 const KEEP = 160;
 const cache = new Map();
 // Un grand dessin se peint par bandes, une à chaque image de l'écran, chacune d'au plus SLICE_MS : peint d'un bloc, le
@@ -123,12 +123,23 @@ export function acteurPx(box) {
   return [Math.max(1, Math.round(box.w * k)), Math.max(1, Math.round(box.h * k))];
 }
 // Toutes les images que l'avatar joue dans une scène en plans, lues d'avance (PrologueScene : la scène qui vient ;
-// SceneArt : la sienne) : sur un téléphone, une image lue au moment de la jouer arrive en retard, et l'avatar saccade
-export function prepareActeur(data, look) {
+// SceneArt : la sienne) : sur un téléphone, une image lue au moment de la jouer arrive en retard, et l'avatar saccade.
+// Elles se dessinent et se lisent une à une (toutes d'un coup, elles gelaient l'écran plus d'une seconde) ; tant que le
+// kit ou les exemples se chargent (un joueur qui reprend sa partie au matin : l'épave n'a pas d'avatar), on réessaie
+const ESSAIS = 20;
+const ATTENTE = 300;
+export async function prepareActeur(data, look, essais = ESSAIS) {
   if (!data || !data.plans || !data.avatar || !data.partition) return;
   const size = acteurPx(avatarBox(data.avatar));
-  for (const { acteur } of data.partition.temps) {
-    for (const [, clip] of acteur || []) acteurImages(look, clip, { naufrage: data.avatar.naufrage !== false, lumiere: data.partition.lumiere || {} }).forEach(href => rasterOf(href, ...size));
+  const options = { naufrage: data.avatar.naufrage !== false, lumiere: data.partition.lumiere || {} };
+  const clips = data.partition.temps.flatMap(({ acteur }) => (acteur || []).map(([, clip]) => clip));
+  for (const [i, clip] of clips.entries()) {
+    const hrefs = acteurImages(look, clip, options);
+    if (!hrefs.length && !i) {
+      if (essais > 0 && !kitFailed()) setTimeout(() => prepareActeur(data, look, essais - 1), ATTENTE);
+      return;
+    }
+    for (const href of hrefs) await rasterOf(href, ...size);
   }
 }
 
