@@ -51517,12 +51517,12 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/03_ciel/03_ciel_fond",
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-anime",
    "rubrique": "scenes",
-   "titre": "Scène 3 : Brume lève les yeux vers le ciel (fond)",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan anime)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/03_ciel/03_ciel_fond_1.svg"
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -51534,12 +51534,386 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/03_livre/03_livre_anime",
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-brume",
    "rubrique": "scenes",
-   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (ce qui vit sur le fond figé)",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan brume)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/03_livre/03_livre_anime_1.svg"
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-brume_1.svg"
+   ],
+   "cadre": [
+    111.6,
+    237.6,
+    176.8,
+    145.6
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-brume--0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan brume 0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-brume--0_1.svg"
+   ],
+   "cadre": [
+    111.6,
+    237.6,
+    176.8,
+    145.6
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-brume--1",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan brume 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-brume--1_1.svg"
+   ],
+   "cadre": [
+    111.6,
+    237.6,
+    176.8,
+    145.6
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-brume--2",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan brume 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-brume--2_1.svg"
+   ],
+   "cadre": [
+    111.6,
+    237.6,
+    176.8,
+    145.6
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-brume--3",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan brume 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-brume--3_1.svg"
+   ],
+   "cadre": [
+    111.6,
+    237.6,
+    176.8,
+    145.6
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-brume--4",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan brume 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-brume--4_1.svg"
+   ],
+   "cadre": [
+    111.6,
+    237.6,
+    176.8,
+    145.6
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-brume--5",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan brume 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-brume--5_1.svg"
+   ],
+   "cadre": [
+    111.6,
+    237.6,
+    176.8,
+    145.6
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-etoiles",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan etoiles)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-etoiles_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-filante",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan filante)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-filante_1.svg"
+   ],
+   "cadre": [
+    130,
+    0,
+    160,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-nuit",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan nuit)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-nuit_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -51551,12 +51925,556 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/03_livre/03_livre_fond",
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-brume-c",
    "rubrique": "scenes",
-   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (fond)",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan brume c)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/03_livre/03_livre_fond_1.svg"
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-brume-c_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-brume-g",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan brume g)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-brume-g_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-brume-j",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan brume j)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-brume-j_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-creux",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan creux)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-creux_1.svg"
+   ],
+   "cadre": [
+    230,
+    240,
+    64,
+    44
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-filets1",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan filets1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-filets1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    206,
+    600,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-filets2",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan filets2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-filets2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
+    600,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-levre",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan levre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-levre_1.svg"
+   ],
+   "cadre": [
+    230,
+    252,
+    64,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-livre",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan livre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-livre_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-livre-dehors",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan livre dehors)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-livre-dehors_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-lueur",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan lueur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-lueur_1.svg"
+   ],
+   "cadre": [
+    176,
+    316,
+    144,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-poussiere",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan poussiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-poussiere_1.svg"
+   ],
+   "cadre": [
+    196,
+    320,
+    104,
+    44
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-reflet",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan reflet)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-reflet_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-rocher-devant",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan rocher devant)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-rocher-devant_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-voile1",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan voile1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-voile1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-voile2",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan voile2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (03 livre plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_plan-voile3_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -51568,18 +52486,1820 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/03_vent/03_vent_fond",
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume",
    "rubrique": "scenes",
-   "titre": "Scène 3e : Le vent chasse la brume, à l’heure bleue (fond)",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/03_vent/03_vent_fond_1.svg"
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--0_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--1",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--1_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--10",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 10)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--10_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--11",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 11)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--11_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--12",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 12)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--12_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--13",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 13)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--13_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--14",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 14)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--14_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--2",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--2_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--3",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--3_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--4",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--4_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--5",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--5_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--6",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--6_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--7",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--7_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--8",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--8_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-brume--9",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan brume 9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-brume--9_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-eclat",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan eclat)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-eclat_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-etoiles",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan etoiles)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-etoiles_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-livre",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan livre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-livre_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-lune",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan lune)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-lune_1.svg"
+   ],
+   "cadre": [
+    10,
+    0,
+    150,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-nuit",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan nuit)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-nuit_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_nuit/03_nuit_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La nuit tombe, froide ; Brume l’emmène vers le vieux cercle (03 nuit plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_nuit/03_nuit_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-anime_1.svg"
    ],
    "cadre": [
     0,
     0,
     400,
     400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--0_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--1",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--1_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--10",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 10)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--10_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--11",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 11)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--11_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--2",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--2_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--3",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--3_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--4",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--4_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--5",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--5_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--6",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--6_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--7",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--7_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--8",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--8_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-brume--9",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan brume 9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-brume--9_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-etoiles",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan etoiles)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-etoiles_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-livre",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan livre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-livre_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-nuit",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan nuit)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-nuit_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_trouee/03_trouee_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : La brume ouverte autour d’eux, les étoiles : ceux d’avant (03 trouee plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_trouee/03_trouee_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--0",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--0_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--1",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--1_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--10",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 10)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--10_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--11",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 11)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--11_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--2",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--2_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--3",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--3_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--4",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--4_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--5",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--5_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--6",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--6_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--7",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--7_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--8",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--8_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-brume--9",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan brume 9)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-brume--9_1.svg"
+   ],
+   "cadre": [
+    213,
+    202,
+    136,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-etoiles",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan etoiles)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-etoiles_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    162,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-filets1",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan filets1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-filets1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    206,
+    600,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-filets2",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan filets2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-filets2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
+    600,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-livre",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan livre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-livre_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-mer-soir",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan mer soir)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-mer-soir_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-nuit",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan nuit)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-nuit_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-rafale0",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan rafale0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-rafale0_1.svg"
+   ],
+   "cadre": [
+    -200,
+    90,
+    800,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-rafale1",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan rafale1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-rafale1_1.svg"
+   ],
+   "cadre": [
+    -200,
+    196,
+    800,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-rafale2",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan rafale2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-rafale2_1.svg"
+   ],
+   "cadre": [
+    -200,
+    282,
+    800,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-voile1",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan voile1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-voile1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-voile2",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan voile2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_vent/03_vent_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_plan-voile3_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"

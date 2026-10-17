@@ -69,19 +69,19 @@ export const SCENES = {
   ],
   // « Quel jour ? » : elle regarde le ciel sans rien dire (après la page de garde, ou après « souffle »)
   jour: [
-    { scene: '03_vent', who: 'joueur', text: 'Il y a déjà eu des gens, ici ?' },
-    { scene: '03_vent', who: 'Brume', text: 'Ceux d’avant savaient beaucoup. On s’apprenait tout, eux et moi… Mais depuis ce jour, je ne me rappelle plus rien.' },
-    { scene: '03_vent', who: 'joueur', text: 'Quel jour ?' },
+    { scene: '03_trouee', who: 'joueur', text: 'Il y a déjà eu des gens, ici ?' },
+    { scene: '03_trouee', who: 'Brume', text: 'Ceux d’avant savaient beaucoup. On s’apprenait tout, eux et moi… Mais depuis ce jour, je ne me rappelle plus rien.' },
+    { scene: '03_trouee', who: 'joueur', text: 'Quel jour ?' },
     { scene: '03_ciel', auto: 2200 },
-    { scene: '03_vent', who: 'Brume', text: 'Peu importe. Ce livre a d’autres choses pour toi. Mais il faudra être patient|patiente : il est très gros…' },
-    { scene: '03_vent', who: 'Brume', text: '… et ses pages ont l’air d’avoir oublié, elles aussi, ce qu’elles contenaient.', gesture: { label: 'Lever les yeux', x: 50, y: 20 } }
+    { scene: '03_trouee', who: 'Brume', text: 'Peu importe. Ce livre a d’autres choses pour toi. Mais il faudra être patient|patiente : il est très gros…' },
+    { scene: '03_trouee', who: 'Brume', text: '… et ses pages ont l’air d’avoir oublié, elles aussi, ce qu’elles contenaient.', gesture: { label: 'Lever les yeux', x: 50, y: 20 } }
   ],
   // La nuit qui vient : le besoin naît du joueur ; Brume le mène au vieux cercle de pierres, puis la page du Brasier
   cercle: [
-    { scene: '03_vent', who: 'joueur', text: 'Oh non… Je sens que la nuit va être froide. Je n’ai ni abri, ni nourriture, ni de quoi me réchauffer.' },
-    { scene: '03_vent', who: 'Brume', text: 'Non, non, ne t’en fais pas. Je ne réchauffe pas beaucoup, mais je brille. Je resterai près de toi jusqu’au matin.' },
-    { scene: '03_vent', who: 'joueur', text: 'Bon… D’accord, Brume. On suit ton plan. Je n’ai pas d’autre choix, de toute façon, mais je vais quand même mourir de froid !' },
-    { scene: '03_vent', who: 'Brume', text: 'Ah… C’est vrai ! Viens, par là.', gesture: { label: 'Suivre Brume', x: 64, y: 44 } },
+    { scene: '03_nuit', who: 'joueur', text: 'Oh non… Je sens que la nuit va être froide. Je n’ai ni abri, ni nourriture, ni de quoi me réchauffer.' },
+    { scene: '03_nuit', who: 'Brume', text: 'Non, non, ne t’en fais pas. Je ne réchauffe pas beaucoup, mais je brille. Je resterai près de toi jusqu’au matin.' },
+    { scene: '03_nuit', who: 'joueur', text: 'Bon… D’accord, Brume. On suit ton plan. Je n’ai pas d’autre choix, de toute façon, mais je vais quand même mourir de froid !' },
+    { scene: '03_nuit', who: 'Brume', text: 'Ah… C’est vrai ! Viens, par là.', gesture: { label: 'Suivre Brume', x: 64, y: 44 } },
     { scene: '05_cercle', who: 'Brume', text: 'Autrefois, il y avait ici un cercle de flammes, et ceux d’avant tout autour.' },
     { scene: '05_cercle', who: 'Brume', text: 'Ils parlaient, dansaient, chantaient, riaient. Ils discutaient sérieusement, aussi. Et parfois, plus tristement.' },
     { scene: '05_cercle', who: 'Brume', text: 'C’était un vrai lieu de vie. Je m’en souviens si peu, et tellement à la fois… C’est étrange.' },

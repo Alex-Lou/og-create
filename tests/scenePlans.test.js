@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { cameraTransform, pisteTransform, imagesCles, stylePiste, tempsDe, derniere, premiere, cleRepos } from '../src/game/scenePlans';
+import { cameraTransform, pisteTransform, imagesCles, stylePiste, tempsDe, derniere, premiere, cleRepos, rangBulle } from '../src/game/scenePlans';
+import { SCENES } from '../src/texts/tutorial/scenes';
+import DATA from '../design/bibliotheque/svg/scenes/tutoriel/scenes.json';
 
 describe('la cinématique en plans', () => {
   it('un plan suit la caméra selon sa profondeur', () => {
@@ -29,5 +31,21 @@ describe('la cinématique en plans', () => {
   });
   it('la dérive au repos', () => {
     expect(cleRepos({ x: 10, z: 1.5 }, { camera: { x: -5, z: 0.25 } })).toEqual({ x: 5, y: 0, z: 1.75, r: 0 });
+  });
+});
+
+describe('le temps que chaque bulle joue', () => {
+  it('son rang dans sa scène, même quand une autre image s\'intercale', () => {
+    const b = [{ scene: 'a' }, { scene: 'a' }, { scene: 'c' }, { scene: 'a' }, { scene: 'b' }];
+    expect([0, 1, 2, 3, 4].map(k => rangBulle(b, k))).toEqual([0, 1, 0, 2, 0]);
+    // (« Quel jour ? », le ciel, puis la trouée reprend à sa quatrième réplique)
+    const jour = SCENES.jour, k = jour.findIndex(l => l.text && l.text.startsWith('Peu importe'));
+    expect(jour[k].scene).toBe('03_trouee');
+    expect(rangBulle(jour, k)).toBe(3);
+  });
+  it('les scènes du livre et du Vent ont un temps pour chaque bulle de leur suite', () => {
+    for (const [suite, ids] of [['arrivee', ['03_livre']], ['souffle', ['03_vent']], ['jour', ['03_trouee', '03_ciel']], ['cercle', ['03_nuit']]]) {
+      for (const id of ids) expect(SCENES[suite].filter(l => l.scene === id).length).toBe(DATA.scenes[id].partition.temps.length);
+    }
   });
 });

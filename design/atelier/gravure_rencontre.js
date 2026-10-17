@@ -321,4 +321,4 @@ function rocher02() {
   return { plans, partition: { lumiere: FROIDE, temps: [t0, t1, t2, t3, t4, t5, t6, t7], repos: { duree: 10000, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
 }
 
-module.exports = { plage02, lueur02, approche02, rocher02, voile, filets, escarbilles, lechee, brumeGravee, HALO, joue, tenir, borne };
+module.exports = { plage02, lueur02, approche02, rocher02, voile, filets, escarbilles, lechee, brumeGravee, HALO, joue, tenir, borne, decorSoir, brumeDevant, soir, soirDe, rocher, reflet, ARETE_HAUT, lumiereFroide, brumePiece, brumeVive, flaque, spirales, lecheeVa, FROIDE, CACHEE };

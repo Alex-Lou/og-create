@@ -42,6 +42,9 @@ export function tempsDe(partition, n) {
   const temps = (partition && partition.temps) || [];
   return n >= 0 && n < temps.length ? temps[n] : null;
 }
+// Le rang de la bulle k d'une suite de bulles dans sa scène : les bulles d'avant sur la même image, même quand une autre
+// s'intercale (« Quel jour ? », le ciel, puis la plage reprend où elle en était) ; la scène y joue ce temps
+export const rangBulle = (bulles, k) => bulles.slice(0, k).filter(b => b.scene === bulles[k].scene).length;
 // La dernière clé d'une suite (l'état où un temps laisse la caméra ou un plan), ou celle par défaut
 export const derniere = (cles, defaut = {}) => (cles && cles.length ? cles[cles.length - 1][1] : defaut);
 // La première clé d'une suite (l'état d'où part un temps)

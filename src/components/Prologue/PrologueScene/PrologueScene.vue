@@ -40,6 +40,7 @@ import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
 import { TOUCH_TO_GO_ON } from '@/texts/ui/common';
 import { sceneOf } from '@/game/sceneArt';
+import { rangBulle } from '@/game/scenePlans';
 import { preparePlans, prepareActeur } from '../SceneArt/raster';
 
 export default {
@@ -70,11 +71,9 @@ export default {
     frame() {
       return this.list[this.k] || {};
     },
-    // Le rang de la bulle dans sa scène (les bulles d'affilée sur la même image) : une scène en plans y joue son temps
+    // Le rang de la bulle dans sa scène (game/scenePlans.js) : une scène en plans y joue son temps
     beat() {
-      let i = this.k;
-      while (i > 0 && this.list[i - 1].scene === this.frame.scene) i--;
-      return this.k - i;
+      return this.list[this.k] ? rangBulle(this.list, this.k) : 0;
     },
     // Qui parle (game/speakers.js) : sa couleur, son motif ; une pensée garde son habit. Le joueur (who : 'joueur')
     // parle sous son nom (game/accord.js), sans couleur

@@ -545,12 +545,16 @@ for (const [id, feu] of [['05_feu', [222, 334]], ['06_silhouette', [176, 336]]])
 // dessin : une scène de l'ouverture en plans, plus bas)
 const O = require('./ouverture');
 const R = require('./rencontre');
+// (après le Vent : l'avatar là où l'a laissé le livre, Brume à sa droite ; gravure_vent.js)
+const APRES_VENT = { x: 182, y: 348, echelle: 3.25, vue: 'avant', pose: 'repos', naufrage: true };
 const OUVERTURE = [
   ['01_racines', '01_vague', 'Sous la surface, les racines', ['1b'], null, null],
   ['01_paupieres', '01_noir', 'Les paupières qui battent ; la plage au couchant', ['1c'], null, null],
   ['01_carte', '01_greve', 'Quelque chose de blanc sur le sable : la carte d’embarquement trempée', ['1d'], null, null],
   ['02_plage', '01_gilet', 'Face à la mer, au couchant', ['2a'], O.plage02, { x: 144, y: 376, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true }],
-  ['03_ciel', '03_vent', 'Brume lève les yeux vers le ciel', ['3'], O.ciel03, null],
+  ['03_trouee', '03_vent', 'La brume ouverte autour d’eux, les étoiles : ceux d’avant', ['3'], null, APRES_VENT],
+  ['03_ciel', '03_vent', 'Brume lève les yeux vers le ciel', ['3'], null, null],
+  ['03_nuit', '03_vent', 'La nuit tombe, froide ; Brume l’emmène vers le vieux cercle', ['3'], null, APRES_VENT],
   ['05_cercle', '03_vent', 'Le cercle de pierres noircies ; au large, l’épave dans la brume', ['5'], O.cercle05, { x: 136, y: 386, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }],
   ['10_epave', '09_rivet', 'Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage', ['10'], null, null]
 ];
@@ -562,12 +566,12 @@ const OUVERTURE = [
   // bleue, Brume à droite de l'avatar)
   const refaites = {
     '01_greve': { titre: 'La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris', etapes: ['1c'], images: 1, ms: 1000, avatar: null },
-    '03_vent': { titre: 'Le vent chasse la brume, à l’heure bleue', etapes: ['3e'], images: 1, ms: 900, fond: () => O.vent03(), avatar: { x: 164, y: 368, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true } },
+    '03_vent': { titre: 'Le Vent se lève et ouvre la brume autour d’eux', etapes: ['3e'], images: 1, ms: 900, avatar: APRES_VENT },
     // la rencontre, au crépuscule (rencontre.js), du soleil couché jusqu'à l'heure bleue du vent
     '02_lueur': { ...SCENES['02_lueur'], titre: 'Une lueur erre dans la brume, au crépuscule', fond: () => R.lueur02(), devant: () => R.brumeDevant('lud', 0.04, 372) },
     '02_approche': { ...SCENES['02_approche'], titre: 'Brume approche d’un coup', fond: () => R.approche02(), devant: () => R.brumeDevant('apd', 0.08, 384) },
     '02_rocher': { ...SCENES['02_rocher'], titre: 'Brume se cache derrière un rocher et passe la tête', fond: () => R.rocher02() },
-    '03_livre': { ...SCENES['03_livre'], titre: 'Brume tire du rocher le livre aux sept sceaux', fond: () => R.livre03() }
+    '03_livre': { ...SCENES['03_livre'], titre: 'Brume tire du rocher le livre aux sept sceaux', avatar: { x: 156, y: 354, echelle: 3.3, vue: 'avant', pose: 'repos', naufrage: true } }
   };
   const toutes = { ...SCENES, ...neuves, ...refaites };
   for (const id of Object.keys(SCENES)) delete SCENES[id];
@@ -581,7 +585,8 @@ const TP = require('./theatre_pont');
 const GP = require('./gravure_plage');
 const GR = require('./gravure_rencontre');
 const GL = require('./gravure_lorena');
-for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
+const GV = require('./gravure_vent');
+for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }
@@ -599,7 +604,7 @@ S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme 
 // Ailleurs, les marques s'effacent : ces scènes ne changent pas d'un octet
 const FIGEES = {
   '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity,
-  '05_feu': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity
+  '05_feu': Infinity, '05_cercle': Infinity, '06_silhouette': Infinity
 };
 for (const [id, sc] of Object.entries(SCENES)) {
   // (une scène en plans n'a ni fond ni devant : ses plans sont déjà séparés, figés, et son calque anime à part)
