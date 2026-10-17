@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const { OUT, P, E, L, arm, frame } = require('./troupe');
 const { anyaVeille, etincelle, outils: { eclairer, rayonne } } = require('./splash_anya');
-const { brumeHeroine } = require('./splash_brume');
+const { brumeHeroine, brumeDemon } = require('./splash_brume');
 const { ileVivante } = require('./splash_ile');
 const { avatar } = require('../personnages/avatar.js');
 const { f, lin, rad, rnd, SPLINE, vaVient, defile, palpite, halo, nappeDouce, houle } = require('./scenes7').outils;
@@ -247,9 +247,15 @@ function brume() {
   const [x, y, w, h] = BRUME;
   return fixe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}">${brumeGrande(450, 610, 10.5)}</svg>`);
 }
+// Son autre visage, le démon de feu (l'orage : il paraît un instant au grand éclair, public/splash.css), au même cadre,
+// à la même place : son image est posée sur la sienne et flotte avec elle
+function demon() {
+  const [x, y, w, h] = BRUME;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}"><g transform="translate(${f(450 - 20 * 10.5)} ${f(610 - 41 * 10.5)}) scale(10.5)">${brumeDemon()}</g></svg>`;
+}
 
 // La version immobile d'un dessin (pour qui demande moins de mouvement) : sans ses animations ; ce qui ne tient sa
 // place que par un trajet (les lucioles) s'en va avec
 const fixe = svg => svg.replace(/<g data-mouvant="">[\s\S]*?<\/g>/g, '').replace(/<animate(Transform|Motion)?\b[^>]*\/>/g, '');
 
-module.exports = { fond, affiche, brume, BRUME, fixe, FOND, AVANT, SPLINE, TROUPE };
+module.exports = { fond, affiche, brume, demon, BRUME, fixe, FOND, AVANT, SPLINE, TROUPE };
