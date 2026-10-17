@@ -228,7 +228,8 @@
 .splash.is-orage .splash__sous--orage { animation-name: splash-orage-sous; }
 .splash__sous { grid-area: 1 / 1; }
 
-/* (1 % du cycle : 0,6 s) */
+/* Les keyframes de l'orage qui suivent (splash-orage-…) sont écrits par design/atelier/splash_orage_temps.js (lancé par
+   preview_splash.js) : les régler là, pas ici. (1 % du cycle : 0,6 s) */
 @keyframes splash-orage-voile {
   0% { opacity: 0; } 6.67% { opacity: .5; }
   8.17% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 8.93% { opacity: 0.93; }
