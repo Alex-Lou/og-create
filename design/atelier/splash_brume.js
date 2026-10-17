@@ -51,96 +51,72 @@ function brumeHeroine() {
 }
 
 // Son autre visage, pour l'orage (choix de l'auteur, 17 oct. : un démon de feu, qu'on ne voit qu'un instant, à travers
-// un éclair ; « visible mais grossièrement dessiné, mais en fait hyper propre et détaillé ») : de loin, une crinière de
-// feu sauvage, en pointes déchirées qui montent, deux griffes de flamme ; de près, tout est tenu : un trait rouge fin,
-// des mèches dessinées dans chaque pointe, le grain doré de la flamme, un cœur plus chaud. La même flamme au milieu,
-// dorée, des marques rouges sur les joues ; les yeux en amande, blancs de chaleur, cerclés de rouge, la pupille en fente ;
-// les sourcils froncés ; un sourire à crocs. Immobile (comme tout l'écran : preview_splash.js). Même repère que Brume ;
-// la crinière déborde son cadre de 40 × 48 (l'image de Brume a de la place autour : x de -8 à 48, y de -8 à 57).
-const ROUGE = '#B8221A', SOMBRE = '#4A0A08';
-// La cape de feu qui l'enveloppe : une goutte plus large qu'elle, plus haute, au bord déchiré de petites pointes
-const capeR = a => { const s = Math.sin(a); return [13.6 * (s < 0 ? 1 - 0.18 * -s : 1), 14.2 * (s < 0 ? 1 + 0.32 * -s : 0.92)]; };
-function cape(g) {
-  const n = 46, pts = [];
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2, [rx, ry] = capeR(a), k = i % 2 ? 1.05 + g() * 0.14 : 0.9 + g() * 0.04;
-    pts.push([20 + rx * k * Math.cos(a), 30 + ry * k * Math.sin(a)]);
-  }
-  let d = `M${f(pts[0][0])},${f(pts[0][1])}`;
-  for (let i = 1; i <= n; i++) {
-    const [x, y] = pts[i % n], [px, py] = pts[i - 1];
-    d += i % 2 ? ` Q${f(px + (x - px) * 0.6)},${f(py + (y - py) * 0.2)} ${f(x)},${f(y - 0.5)}` : ` Q${f(px + (x - px) * 0.4)},${f(py + (y - py) * 0.8)} ${f(x)},${f(y)}`;
-  }
-  return d + ' Z';
+// un éclair). Brume, c'est une goutte de flamme et deux yeux : lui aussi, rien de plus (ni bouche, ni cornes, ni
+// marques) ; tout est dans le rendu. La goutte brûle : elle s'embrase en langues de feu qui montent, en trois couches
+// (cramoisi, orangé, or), chacune au trait fin et à sa fibre ; dedans, le feu sombre en haut, chauffé à blanc en bas,
+// ses filaments et son grain ; deux yeux en amande, inclinés, qui brûlent. Immobile (comme tout l'écran :
+// preview_splash.js). Même repère que Brume ; les flammes débordent son cadre de 40 × 48 (l'image de Brume a de la
+// place autour : x de -8 à 48, y de -8 à 57).
+const SOMBRE = '#3E0806';
+// Une langue de feu : sa base en (x, y), sa demi-largeur w, sa hauteur h ; sa pointe penche de p, sa taille ondule de o
+function langue(x, y, w, h, p, o) {
+  const tx = x + p, ty = y - h;
+  return `M${f(x - w)},${f(y)} C${f(x - w * 1.25)},${f(y - h * 0.4)} ${f(x + p * 0.5 - w * 0.55 + o)},${f(y - h * 0.68)} ${f(tx)},${f(ty)}`
+    + ` C${f(x + p * 0.45 + w * 0.3 + o)},${f(y - h * 0.62)} ${f(x + w * 1.15)},${f(y - h * 0.35)} ${f(x + w)},${f(y)} Q${f(x)},${f(y + w * 1.1)} ${f(x - w)},${f(y)} Z`;
 }
-// Une mèche de feu, posée au bord de la cape (angle a) : elle part vers l'extérieur et se recourbe vers le haut, en
-// s'effilant ; ses mèches à elle : deux traits fins de la base vers la pointe
-function meche(a, l, w, monte, tord) {
-  const [rx, ry] = capeR(a), bx = 20 + rx * 0.76 * Math.cos(a), by = 30 + ry * 0.76 * Math.sin(a);
-  const ox = Math.cos(a), oy = Math.sin(a), dx = ox * (1 - monte), dy = oy * (1 - monte) - monte, n = Math.hypot(dx, dy);
-  const tx = bx + (dx / n) * l + tord, ty = by + (dy / n) * l;
-  const px = -oy, py = ox;
-  const cx = bx + ox * l * 0.5, cy = by + oy * l * 0.5 - l * 0.2 * monte;
-  const d = `M${f(bx - px * w)},${f(by - py * w)} Q${f(cx - px * w * 0.5)},${f(cy - py * w * 0.5)} ${f(tx)},${f(ty)} Q${f(cx + px * w * 0.7)},${f(cy + py * w * 0.7)} ${f(bx + px * w)},${f(by + py * w)} Z`;
-  const traits = [-0.4, 0.35].map(k => `M${f(bx + px * w * k)},${f(by + py * w * k)} Q${f(cx + px * w * k * 0.5)},${f(cy + py * w * k * 0.5)} ${f(bx + (tx - bx) * 0.72)},${f(by + (ty - by) * 0.72)}`).join(' ');
-  return [d, traits];
+// sa fibre : un trait de la base vers la pointe, qui suit son ondulation
+const fibre = (x, y, w, h, p, o) => `M${f(x)},${f(y)} Q${f(x + p * 0.35 + o * 0.6)},${f(y - h * 0.55)} ${f(x + p * 0.86)},${f(y - h * 0.86)}`;
+function couche(liste, fill, trait, fibreC) {
+  return `<g fill="${fill}" stroke="${trait}" stroke-width=".38" stroke-linejoin="round">${liste.map(l => `<path d="${langue(...l)}"/>`).join('')}</g>`
+    + `<path d="${liste.map(l => fibre(...l)).join(' ')}" fill="none" stroke="${fibreC}" stroke-width=".24" stroke-linecap="round" opacity=".75"/>`;
 }
-function meches(liste, fill, trait, w, couleurTraits) {
-  const m = liste.map(o => meche(...o));
-  return `<g fill="${fill}" stroke="${trait}" stroke-width="${w}" stroke-linejoin="round">${m.map(([d]) => `<path d="${d}"/>`).join('')}</g>`
-    + `<path d="${m.map(([, t]) => t).join(' ')}" fill="none" stroke="${couleurTraits}" stroke-width=".26" stroke-linecap="round" opacity=".8"/>`;
-}
-// Une griffe : trois doigts de feu crochus qui sortent du bas de la cape (k : -1 à gauche, 1 à droite)
-const griffe = k => [[0, 4.6], [0.55, 5.4], [1.1, 4.4]].map(([dy, l]) => {
-  const bx = 20 + k * 11.6, by = 37.6 + dy * 1.6, tx = bx + k * l, ty = by + 2.6 - dy * 0.3;
-  return `<path d="M${f(bx)},${f(by - 0.9)} Q${f(bx + k * l * 0.8)},${f(by - 0.9)} ${f(tx)},${f(ty)} Q${f(bx + k * l * 0.45)},${f(by + 0.4)} ${f(bx)},${f(by + 0.8)} Z" fill="url(#bdOr)" stroke="${ROUGE}" stroke-width=".4" stroke-linejoin="round"/>`;
-}).join('');
 function brumeDemon() {
   const g = rnd(23);
   const defs = '<defs>'
-    + rayonne('bdHalo', 20, 24, 30, [[0, '#FF9A2E', 0.6], [0.5, '#F2621E', 0.26], [1, '#E2341E', 0]])
-    + rayonne('bdFond', 20, 22, 26, [[0, '#FFC24A'], [0.55, '#F2822A'], [1, '#D2401C']])
-    + rayonne('bdOr', 20, 28, 20, [[0, '#FFF6C8'], [0.4, '#FFE58A'], [0.8, '#FFC650'], [1, '#F6A836']])
-    + rayonne('bdCorps', 20, 33, 14, [[0, '#FFFDF0'], [0.4, '#FFF2B4'], [0.8, '#FFD866'], [1, '#FFBE48']], 18, 36)
-    + rayonne('bdOeil', 0, 0, 1, [[0, '#FFFFFF'], [0.5, '#FFF6C8'], [1, '#FFC84A']]).replace('gradientUnits="userSpaceOnUse" ', '')
-    + `<clipPath id="bdDedans"><path d="${flamme(0)}"/></clipPath><clipPath id="bdCape"><path d="${cape(rnd(5))}"/></clipPath>`
+    + rayonne('bdHalo', 20, 26, 26, [[0, '#FF8A2A', 0.7], [0.45, '#E2401E', 0.32], [1, '#C8301C', 0]])
+    + rayonne('bdChaleur', 20, 31, 14.5, [[0, '#FFC24A', 0.55], [0.7, '#FF8A2A', 0.3], [1, '#FF8A2A', 0]])
+    + degrade('bdLoin', 0, -4, 0, 30, [[0, '#7A1410'], [1, '#C8301C']])
+    + degrade('bdMi', 0, 0, 0, 30, [[0, '#E2501E'], [1, '#FF8A2A']])
+    + degrade('bdPres', 0, 4, 0, 26, [[0, '#FFB43C'], [1, '#FFE08A']])
+    + rayonne('bdCorps', 20, 38.5, 25, [[0, '#FFF8DC'], [0.18, '#FFD866'], [0.42, '#F2782A'], [0.7, '#B8261A'], [1, '#5E0C0A']])
+    + rayonne('bdOeil', 0.5, 0.55, 0.6, [[0, '#FFFFFF'], [0.45, '#FFF4C0'], [0.8, '#FFC650'], [1, '#FF8A2A']]).replace('gradientUnits="userSpaceOnUse" ', '')
+    + rayonne('bdLueur', 0.5, 0.5, 0.5, [[0, '#FFE08A', 0.7], [0.5, '#FFB43C', 0.25], [1, '#FF8A2A', 0]]).replace('gradientUnits="userSpaceOnUse" ', '')
+    + `<clipPath id="bdDedans"><path d="${flamme(0)}"/></clipPath>`
     + '</defs>';
-  let s = defs + '<ellipse cx="20" cy="24" rx="28" ry="31" fill="url(#bdHalo)"/>';
-  // derrière : les grandes mèches orangées qui montent (deux, plus hautes, comme des oreilles de bête), puis les dorées
-  const loin = [[-1.57, 21, 2.4, 0.15, -1], [-2.2, 22, 2.6, 0.3, -3.2], [-0.94, 22, 2.6, 0.3, 3.2], [-1.85, 17, 2, 0.2, -1.6], [-1.29, 17, 2, 0.2, 1.4],
-    [-2.6, 15, 2.4, 0.55, -2], [-0.54, 15, 2.4, 0.55, 2], [-2.95, 12, 2.2, 0.7, -1.2], [-0.19, 12, 2.2, 0.7, 1.2], [2.8, 9, 2, 0.8, -0.6], [0.34, 9, 2, 0.8, 0.6]];
-  const pres = [[-1.7, 13, 1.8, 0.1, -0.8], [-1.42, 14, 1.8, 0.1, 0.7], [-2.05, 12, 1.7, 0.3, -1.4], [-1.09, 12, 1.7, 0.3, 1.4], [-2.4, 11, 1.8, 0.45, -1.4],
-    [-0.74, 11, 1.8, 0.45, 1.4], [-2.75, 9, 1.7, 0.6, -0.8], [-0.39, 9, 1.7, 0.6, 0.8], [3.1, 7.5, 1.6, 0.75, -0.4], [0.04, 7.5, 1.6, 0.75, 0.4], [2.6, 6, 1.5, 0.85, 0], [0.54, 6, 1.5, 0.85, 0]];
-  s += meches(loin, 'url(#bdFond)', SOMBRE, 0.5, '#8E1A10');
-  s += meches(pres, 'url(#bdOr)', ROUGE, 0.42, '#D8401E');
-  // la cape, au bord déchiré ; son grain : des points serrés, clairs et brûlés, comme la flamme vue de près
-  const dCape = cape(rnd(5));
-  s += griffe(-1) + griffe(1);
-  s += `<path d="${dCape}" fill="url(#bdOr)" stroke="${ROUGE}" stroke-width=".5" stroke-linejoin="round"/><g clip-path="url(#bdCape)">`;
-  for (let i = 0; i < 260; i++) {
-    const x = 5 + g() * 30, y = 11 + g() * 34;
-    s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.1 + g() * 0.2)}" fill="${i % 4 ? '#FFFBE6' : '#E8742A'}" opacity="${f(0.3 + g() * 0.5)}"/>`;
+  let s = defs + '<ellipse cx="20" cy="26" rx="26" ry="30" fill="url(#bdHalo)"/>';
+  // les langues de feu, du fond vers l'avant : elles naissent dans la goutte et montent au-dessus d'elle
+  s += couche([[20, 27, 3.6, 31, 1.2, -2.2], [14.6, 31, 3.4, 25, -5, 2.4], [25.4, 31, 3.4, 24, 5.4, -2.6], [12, 37, 3, 19, -8.4, 2],
+    [28, 37, 3, 18, 8.6, -1.8], [17.2, 29, 2.8, 27, -2.6, 2.6], [23, 29, 2.8, 28, 3.2, -2.8]], 'url(#bdLoin)', SOMBRE, '#E2501E');
+  s += couche([[20, 25, 2.8, 25, -1.4, 2], [15.8, 30, 2.6, 20, -4.2, -1.8], [24.2, 30, 2.6, 21, 4, 2], [13, 36, 2.2, 14, -6, 1.4],
+    [27, 36, 2.2, 15, 6.4, -1.4]], 'url(#bdMi)', '#6A1008', '#FFB43C');
+  s += couche([[20, 23, 1.9, 17, 1, -1.4], [17.4, 26, 1.7, 13, -2.6, 1.2], [22.6, 26, 1.7, 14, 2.8, -1]], 'url(#bdPres)', '#A8261A', '#FFF2C0');
+  // une chaleur vive tout autour de la goutte : elle se détache des flammes
+  s += '<ellipse cx="20" cy="31" rx="14" ry="15" fill="url(#bdChaleur)"/>';
+  // la goutte : le feu sombre en haut, chauffé à blanc en bas ; au bord, une chaleur plus vive, dedans
+  s += `<path d="${flamme(0)}" fill="url(#bdCorps)"/>`;
+  s += `<g clip-path="url(#bdDedans)"><path d="${flamme(0)}" fill="none" stroke="#FF7A2A" stroke-width="2.2" opacity=".35"/>`;
+  // ses filaments : des fibres qui montent du cœur et suivent sa forme
+  s += '<path d="M14,40.4 Q12.6,31 18.4,19.6 M26,40.4 Q27.4,31 21.6,19.6 M16.6,40.8 Q16,32 19.2,23.4 M23.4,40.8 Q24,32 20.8,23.4 M11.6,39.4 Q10.4,33.6 13.6,27.4 M28.4,39.4 Q29.6,33.6 26.4,27.4"'
+    + ' fill="none" stroke="#7A1410" stroke-width=".28" stroke-linecap="round" opacity=".55"/>'
+    + '<path d="M18.2,40.6 Q17.6,36 19.4,30.4 M21.8,40.6 Q22.4,36 20.6,30.4" fill="none" stroke="#FFF2C0" stroke-width=".3" stroke-linecap="round" opacity=".6"/>';
+  // son grain : de petits points clairs, plus serrés vers le cœur
+  for (let i = 0; i < 170; i++) {
+    const x = 8.5 + g() * 23, y = 14 + Math.pow(g(), 0.6) * 27;
+    s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.08 + g() * 0.16)}" fill="#FFF4D0" opacity="${f(0.2 + g() * 0.5)}"/>`;
   }
-  s += '<path d="M8,40 Q6.4,30 11,20 M32,40 Q33.6,30 29,20 M10.4,42 Q9.4,34 13,26 M29.6,42 Q30.6,34 27,26" fill="none" stroke="#E8642A" stroke-width=".26" stroke-linecap="round" opacity=".7"/></g>';
-  // la flamme : dorée, le cœur presque blanc, ses mèches dessinées dedans
-  s += `<path d="${flamme(0)}" fill="url(#bdCorps)" stroke="${ROUGE}" stroke-width=".8" stroke-linejoin="round"/>`;
-  s += '<g clip-path="url(#bdDedans)" fill="none" stroke="#E8642A" stroke-width=".24" stroke-linecap="round" opacity=".65">'
-    + '<path d="M12.6,40 Q12.4,31 17.6,22 M27.4,40 Q27.6,31 22.4,22 M15,40.4 Q15.4,33 18.8,26.6 M25,40.4 Q24.6,33 21.2,26.6 M20,15.6 L20,20.4"/></g>';
-  // les marques rouges sur les joues : trois traits de chaque côté
-  s += [-1, 1].map(k => [0, 1, 2].map(i => `<path d="M${f(20 + k * 4.4)},${f(34.2 + i * 1.1)} L${f(20 + k * 7.6)},${f(33.7 + i * 1.5)}" stroke="${ROUGE}" stroke-width="${f(0.55 - i * 0.08)}" stroke-linecap="round"/>`).join('')).join('');
-  // les sourcils froncés, les yeux de braise en amande (un liseré rouge, la pupille en fente, une étincelle)
-  s += `<path d="M12.4,28.4 Q15.6,28.8 18.6,30.6 L18.3,31.5 Q15.4,30.2 12.3,29.7 Z M27.6,28.4 Q24.4,28.8 21.4,30.6 L21.7,31.5 Q24.6,30.2 27.7,29.7 Z" fill="${SOMBRE}"/>`;
-  s += [[16.1, -1], [23.9, 1]].map(([x, k]) => {
-    const oeil = `M${f(x - 2.5)},${f(32.5 + k * 0.35)} Q${f(x - 0.2 * k)},${f(30.3)} ${f(x + 2.5)},${f(32.5 - k * 0.35)} Q${f(x + 0.2 * k)},${f(33.9)} ${f(x - 2.5)},${f(32.5 + k * 0.35)} Z`;
-    return `<path d="${oeil}" fill="url(#bdOeil)" stroke="${ROUGE}" stroke-width=".55" stroke-linejoin="round"/>`
-      + `<ellipse cx="${f(x)}" cy="32.2" rx=".38" ry="1.1" fill="${SOMBRE}"/><circle cx="${f(x - 0.9)}" cy="31.6" r=".28" fill="#FFFFFF"/>`;
+  s += '</g>';
+  s += `<path d="${flamme(0)}" fill="none" stroke="${SOMBRE}" stroke-width=".9" stroke-linejoin="round"/>`;
+  // les deux yeux : en amande, inclinés vers le dedans (le haut presque droit : le regard dur), qui brûlent ; leur lueur
+  s += [[16.6, 1], [23.4, -1]].map(([x, k]) => {
+    const dx = k * 2.7;
+    const oeil = `M${f(x - dx)},${f(30.2)} Q${f(x - dx * 0.1)},${f(30)} ${f(x + dx)},${f(32.1)} Q${f(x + dx * 0.15)},${f(35.4)} ${f(x - dx)},${f(30.2)} Z`;
+    return `<ellipse cx="${f(x)}" cy="32.4" rx="4.4" ry="3.6" fill="url(#bdLueur)"/>`
+      + `<path d="${oeil}" fill="url(#bdOeil)" stroke="${SOMBRE}" stroke-width=".5" stroke-linejoin="round"/>`
+      + `<ellipse cx="${f(x + k * 0.2)}" cy="32.3" rx="1.2" ry=".75" fill="#FFFFFF" opacity=".9" transform="rotate(${f(k * 26)} ${f(x + k * 0.2)} 32.3)"/>`;
   }).join('');
-  // le sourire à crocs
-  s += `<path d="M15.6,36.2 Q20,40.6 24.4,36.2 Q20,38.3 15.6,36.2 Z" fill="#5A0A08" stroke="${ROUGE}" stroke-width=".45" stroke-linejoin="round"/>`
-    + [[17, 36.9, 1.1], [18.7, 37.5, 1.5], [21.3, 37.5, 1.5], [23, 36.9, 1.1]].map(([x, y, h]) => `<path d="M${f(x - 0.55)},${f(y - 0.25)} L${f(x)},${f(y + h)} L${f(x + 0.55)},${f(y - 0.25)} Z" fill="#FFFBF0"/>`).join('');
-  // des étincelles qui montent autour
-  s += [[3, 14, 0.4], [37, 12, 0.36], [8, 2, 0.32], [32, 0, 0.32], [24, -6, 0.36], [-2, 26, 0.3], [42, 24, 0.3], [13, -4, 0.26], [40, 4, 0.26], [0, 6, 0.26]]
-    .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${f(r * 2.4)}" fill="#FF9A2E" opacity=".45"/><circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6D0"/>`).join('');
+  // quelques braises qui montent avec les flammes
+  s += [[6, 12, 0.28], [34, 10, 0.26], [13, 0, 0.24], [27, -2, 0.24], [20, -6, 0.22]]
+    .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${f(r * 3)}" fill="#FFB43C" opacity=".22"/><circle cx="${x}" cy="${y}" r="${r}" fill="#FFF0B0"/>`).join('');
   return s;
 }
 
