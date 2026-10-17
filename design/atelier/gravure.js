@@ -51,6 +51,16 @@ function atelier(pref) {
 let LUMIERE = [0.55, -0.83];
 const lumiere = v => { const l = Math.hypot(v[0], v[1]); LUMIERE = [v[0] / l, v[1] / l]; };
 
+// Le style du rendu, le temps d'un dessin (avecStyle) : la gravure par défaut ; le papier néon (choix de l'auteur, 17 oct. :
+// de la fraîcheur, des couleurs vives, plus de sépia ; neon_pont.js) : sans taches de vieux papier, le modelé et le
+// reflet froids, des hachures légères, un liseré de lumière au bord de chaque pièce, du côté de la lumière
+const STYLE = { papier: true, modele: '#1A0E04', reflet: '#FFF2C0', hachures: 1, lisere: null };
+function avecStyle(style, dessin) {
+  const avant = { ...STYLE };
+  Object.assign(STYLE, style);
+  try { return dessin(); } finally { Object.assign(STYLE, avant); }
+}
+
 // des hachures : des traits parallèles (angle en degrés, pas), sur un cadre, un peu tremblés
 function hachures([x, y, w, h], angle, pas, seed) {
   const a = (angle * Math.PI) / 180, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux, cx = x + w / 2, cy = y + h / 2, R = Math.hypot(w, h) / 2 + 2;
@@ -74,16 +84,19 @@ function gravure(A, pts, couleur, o = {}) {
   const sens = (debut, fin = 1) => A.masque(A.lin([[0, '#000'], [debut, '#000'], [fin, '#FFF']], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R), b);
   const clip = A.clip(d), pas = o.pas ?? 3, angle = o.angle ?? 38;
   let s = o.portee === 0 ? '' : `<path d="${d}" fill="#000" opacity="${o.portee ?? 0.4}" transform="translate(${o.dx ?? 3} ${o.dy ?? 4})"/>`;
-  s += `<path d="${d}" fill="${couleur}"/><path d="${d}" fill="${A.papier()}"/>`;
+  s += `<path d="${d}" fill="${couleur}"/>${STYLE.papier ? `<path d="${d}" fill="${A.papier()}"/>` : ''}`;
   s += `<g clip-path="${clip}">`;
   // le modelé : l'ombre peinte qui gagne la pièce, du côté opposé à la lumière ; un reflet du côté de la lumière
-  s += `<rect x="${f(bx)}" y="${f(by)}" width="${f(bw)}" height="${f(bh)}" fill="${A.lin([[0, '#FFF2C0', o.reflet ?? 0.18], [0.45, '#FFF2C0', 0], [0.55, '#1A0E04', 0], [1, '#1A0E04', o.modele ?? 0.42]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R)}"/>`;
-  s += `<path d="${hachures(b, angle, pas, seed)}" stroke="${encre}" stroke-width="${o.epaisseur ?? 1.1}" mask="${sens(o.ombre ?? 0.22)}" fill="none"/>`;
-  if (o.noir !== false) s += `<path d="${hachures(b, angle + 74, pas * 1.05, seed + 7)}" stroke="${encre}" stroke-width="${(o.epaisseur ?? 1.1) * 0.9}" mask="${sens(o.noir ?? 0.55)}" fill="none"/>`;
+  s += `<rect x="${f(bx)}" y="${f(by)}" width="${f(bw)}" height="${f(bh)}" fill="${A.lin([[0, STYLE.reflet, o.reflet ?? 0.18], [0.45, STYLE.reflet, 0], [0.55, STYLE.modele, 0], [1, STYLE.modele, o.modele ?? 0.42]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R)}"/>`;
+  const leger = STYLE.hachures < 1 ? ` opacity="${STYLE.hachures}"` : '';
+  s += `<path d="${hachures(b, angle, pas, seed)}" stroke="${encre}" stroke-width="${o.epaisseur ?? 1.1}" mask="${sens(o.ombre ?? 0.22)}" fill="none"${leger}/>`;
+  if (o.noir !== false) s += `<path d="${hachures(b, angle + 74, pas * 1.05, seed + 7)}" stroke="${encre}" stroke-width="${(o.epaisseur ?? 1.1) * 0.9}" mask="${sens(o.noir ?? 0.55)}" fill="none"${leger}/>`;
   // les tailles : des traits qui suivent le contour, à l'intérieur, du côté de l'ombre
   const tailles = o.tailles ?? 2;
   if (tailles) { let t = ''; for (let k = 1; k <= tailles; k++) t += rugueux(gonfle(pts, -k * (o.tailleP ?? 3)), amp * 0.6, seed + 20 + k, 6) + ' '; s += `<path d="${t}" stroke="${encre}" stroke-width="0.6" fill="none" mask="${sens(0.45)}"/>`; }
   if (o.dans) s += o.dans;
+  // (le liseré : le contour décalé vers l'ombre, découpé à la pièce, ne reste visible qu'au bord éclairé)
+  if (STYLE.lisere) s += `<path d="${d}" fill="none" stroke="${STYLE.lisere}" stroke-width="${f((o.trait ?? 2) * 1.3)}" stroke-opacity="0.6" transform="translate(${f(-L[0] * 2.2)} ${f(-L[1] * 2.2)})"/>`;
   s += '</g>';
   s += `<path d="${d}" fill="none" stroke="${encre}" stroke-width="${o.trait ?? 2}" stroke-linejoin="round"/>`;
   return s;
@@ -91,4 +104,4 @@ function gravure(A, pts, couleur, o = {}) {
 // un trait d'encre
 const trait = (d, w = 1.2, c = ENCRE, op = 1) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${op < 1 ? ` opacity="${op}"` : ''}/>`;
 
-module.exports = { atelier, gravure, hachures, trait, ovale, gonfle, chemin, boite, lumiere, ENCRE };
+module.exports = { atelier, gravure, hachures, trait, ovale, gonfle, chemin, boite, lumiere, avecStyle, ENCRE };
