@@ -22,7 +22,7 @@ export const SCENES = {
     { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième nuit de croisière.', auto: 4200 },
     { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée.', auto: 5200 },
     { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme.', auto: 5200 },
-    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Nous rencontrons des difficultés à manœ… — krrr — Aaah ! — krrrr… shhh…', auto: 3600 },
+    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Nous rencontrons des difficultés à manœ… — krrr — Aaah ! Mais que sont ces choses ?! — krrrr… shhh…', auto: 4600 },
     { scene: '01_vague', auto: 2600 },
     // (sous la surface, les racines : rien ne s'explique)
     { scene: '01_racines', auto: 3000 },
@@ -44,7 +44,7 @@ export const SCENES = {
     { scene: '02_plage', thought: true, text: 'Je ne vois personne. Pourtant, j’aurais juré voir des silhouettes nager vers le rivage…' },
     { scene: '02_plage', thought: true, text: 'Tant pis. D’abord, avançons.', gesture: { label: 'Avancer', x: 50, y: 66 } },
     { scene: '02_lueur', avatar: SHIVER, who: 'joueur', text: 'Aaah ! Mais c’est quoi, ça ?!' },
-    { scene: '02_lueur', avatar: SHIVER, who: 'joueur', text: 'Une étoile ? … C’est magique ?' },
+    { scene: '02_lueur', avatar: SHIVER, who: 'joueur', text: 'Une étoile ? … C’est magique ? Ça veut me tuer ?' },
     // (elle s'immobilise une seconde : Brume ne relève pas « étoile »)
     { scene: '02_approche', avatar: SHIVER, auto: 1400 },
     { scene: '02_rocher', avatar: SHIVER, who: 'Brume', text: 'Tu… Tu peux me voir ? Et me parler ?!' },
@@ -65,7 +65,7 @@ export const SCENES = {
     { scene: '03_vent', who: 'Brume', text: 'Oh ! Mais toi aussi, tu sais commander aux éléments ?!' },
     { scene: '03_vent', who: 'joueur', text: 'Je… J’ignore ce qui s’est passé. C’est moi qui ai fait ça ?' },
     { scene: '03_vent', who: 'Brume', text: 'Oui ! Tu es comme eux ! Tu peux créer, donner vie à ce qui dort dans ce livre.' },
-    { scene: '03_vent', who: 'Brume', text: 'Moi, je ne le comprends pas. Je le garde pour celui qui doit le recevoir… et on dirait que c’est toi.', gesture: { label: 'Tourner la page', x: 72, y: 64 } }
+    { scene: '03_vent', who: 'Brume', text: 'Moi, je ne le comprends pas. Je le garde pour celui qui doit le recevoir… et on dirait que… c’est toi.', gesture: { label: 'Tourner la page', x: 72, y: 64 } }
   ],
   // « Quel jour ? » : elle regarde le ciel sans rien dire (après la page de garde, ou après « souffle »)
   jour: [
@@ -80,8 +80,8 @@ export const SCENES = {
   cercle: [
     { scene: '03_vent', who: 'joueur', text: 'Oh non… Je sens que la nuit va être froide. Je n’ai ni abri, ni nourriture, ni de quoi me réchauffer.' },
     { scene: '03_vent', who: 'Brume', text: 'Non, non, ne t’en fais pas. Je ne réchauffe pas beaucoup, mais je brille. Je resterai près de toi jusqu’au matin.' },
-    { scene: '03_vent', who: 'joueur', text: 'Bon… D’accord, Brume. On suit ton plan. Je n’ai pas d’autre choix, de toute façon.' },
-    { scene: '03_vent', who: 'Brume', text: 'C’est vrai ! Viens, par là.', gesture: { label: 'Suivre Brume', x: 64, y: 44 } },
+    { scene: '03_vent', who: 'joueur', text: 'Bon… D’accord, Brume. On suit ton plan. Je n’ai pas d’autre choix, de toute façon, mais je vais quand même mourir de froid !' },
+    { scene: '03_vent', who: 'Brume', text: 'Ah… C’est vrai ! Viens, par là.', gesture: { label: 'Suivre Brume', x: 64, y: 44 } },
     { scene: '05_cercle', who: 'Brume', text: 'Autrefois, il y avait ici un cercle de flammes, et ceux d’avant tout autour.' },
     { scene: '05_cercle', who: 'Brume', text: 'Ils parlaient, dansaient, chantaient, riaient. Ils discutaient sérieusement, aussi. Et parfois, plus tristement.' },
     { scene: '05_cercle', who: 'Brume', text: 'C’était un vrai lieu de vie. Je m’en souviens si peu, et tellement à la fois… C’est étrange.' },
@@ -92,7 +92,7 @@ export const SCENES = {
     { scene: '05_cercle', who: 'joueur', text: 'Attends. Je pense que mon bateau va s’échouer sur la plage : je pourrai sans doute récupérer mes affaires.' },
     { scene: '05_cercle', who: 'joueur', text: 'Tu es Brume, non ? Tu ne pourrais pas, justement, faire s’en aller la brume ?' },
     { scene: '05_cercle', who: 'Brume', text: 'Oui… Pardon pour ça. Il y a longtemps que j’ai oublié comment la retenir.' },
-    { scene: '05_cercle', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus.' },
+    { scene: '05_cercle', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus forte aussi.' },
     { scene: '05_cercle', who: 'joueur', text: 'Euh… D’accord. Écoute, ce n’est pas grave. Déjà, installons-nous.' }
   ],
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée ; quelqu'un regarde le feu (Agathe)
@@ -103,7 +103,7 @@ export const SCENES = {
     // (le premier indice de l'étoile tombée, le Voile : HISTOIRE.md, § 7.2 ; ce qu'on voit, une légende)
     { scene: '05_feu', caption: 'Une étoile file. Brume détourne les yeux.' },
     { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, sur les rochers. Quelqu’un regarde ton feu.' },
-    { scene: '06_silhouette', who: 'Brume', text: 'On lui fera une place, demain. Dors : je surveille la brume.' }
+    { scene: '06_silhouette', who: 'Brume', text: 'On lui fera une place demain, si le cœur lui en dit. En attendant, dors : je veille sur nous.' }
   ],
   // Lorena atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
