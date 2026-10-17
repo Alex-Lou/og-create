@@ -161,18 +161,17 @@
 }
 
 /* ═══ 5. L'orage ═══
-   Qui reste 12 s sur l'écran (le script d'index.html pose is-orage) voit le ciel tourner, puis se calmer, et ainsi de
-   suite (un cycle : --sp-orage, 60 s) :
-     0 – 6 s  le présage : des nuages sombres glissent sur la lune, le ciel s'assombrit, des lueurs au loin ;
-     6 – 8 s  la pluie arrive ; le sous-titre change de voix ;
-              avec la pluie, les maîtres deviennent prêts et armés (guerriers.svg), en fondu, et le restent jusqu'à
-              l'accalmie (choix de l'auteur, 17 oct. : pas hostiles, prêts) ;
-     9,6 s, 13,6 s, 17,8 s (le grand, au centre), 22 s : quatre grands coups, espacés, chacun en trois temps (le ciel
-              s'allume dans les nuages, le coup en deux battements, sa rémanence). Dans la foudre seulement, l'île se
-              montre assiégée (tempete.svg : les égarés, le kraken) ; Brume devient démon de feu par à-coups (demon.svg :
-              deux sursauts à demi transparents, puis elle se tient), dans son aura qui se diffuse, et l'onde de feu
-              part d'elle ;
-     25 – 34 s l'accalmie ; puis le calme, jusqu'au cycle suivant.
+   Qui reste 12 s sur l'écran (le script d'index.html pose is-orage) voit passer un orage bref, puis le calme revient,
+   et ainsi de suite (un cycle : --sp-orage, 60 s ; choix de l'auteur, 17 oct. : 7 s d'orage, puis le retour au calme) :
+     0 – 4 s  le présage : des nuages sombres glissent sur la lune, le ciel s'assombrit, des lueurs au loin ;
+     4 – 11,7 s l'orage. La pluie tombe, le sous-titre change de voix ; les maîtres deviennent prêts et armés
+              (guerriers.svg), en fondu, pas hostiles, et le restent jusqu'à l'éclaircie. Trois coups, à 5,4 s, 7,6 s (le
+              grand, au centre) et 9,9 s, chacun en trois temps (la nuit s'épaissit pendant que le ciel s'allume dans les
+              nuages, le coup en deux battements, sa rémanence). Dans la foudre seulement, l'île se montre assiégée
+              (tempete.svg : les égarés, le kraken) ; Brume devient démon de feu par à-coups (demon.svg : deux sursauts
+              à demi transparents, puis elle se tient), dans son aura qui se diffuse, et l'onde de feu part d'elle ;
+     11,7 – 14,4 s l'éclaircie : la pluie cesse, les nuages s'en vont, les maîtres reviennent au calme ;
+     puis le calme, jusqu'au cycle suivant.
    Rien ne clignote plus de trois fois par seconde ; les flashs restent doux (un voile, jamais un blanc plein) ; rien du
    tout pour qui demande moins de mouvement. Toutes les animations ont la même durée : elles restent en phase. */
 .splash__tempete, .splash__nuages, .splash__lueur, .splash__eclairs svg, .splash__guerriers, .splash__demon, .splash__aura, .splash__souffle, .splash__pluie, .splash__voile, .splash__flash, .splash__sous--orage { opacity: 0; pointer-events: none; }
@@ -231,131 +230,132 @@
 
 /* (1 % du cycle : 0,6 s) */
 @keyframes splash-orage-voile {
-  0% { opacity: 0; } 10% { opacity: .5; }
-  15.17% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 15.93% { opacity: 0.93; }
-  16.08% { opacity: 0.22; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 19% { opacity: 0.8; }
-  21.83% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 22.6% { opacity: 0.93; }
-  22.75% { opacity: 0.22; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 25.67% { opacity: 0.8; }
-  28.83% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 29.6% { opacity: 0.93; }
-  29.75% { opacity: 0.12; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  32.33% { opacity: 0.2; animation-timing-function: ease-in-out; } 34.67% { opacity: 0.8; }
-  35.83% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 36.6% { opacity: 0.93; }
-  36.75% { opacity: 0.22; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 39.67% { opacity: 0.8; }
-  42% { opacity: .8; } 52% { opacity: .25; } 57%, 100% { opacity: 0; }
+  0% { opacity: 0; } 6.67% { opacity: .5; }
+  8.17% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 8.93% { opacity: 0.93; }
+  9.08% { opacity: 0.22; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 11.5% { opacity: 0.8; }
+  11.83% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 12.6% { opacity: 0.93; }
+  12.75% { opacity: 0.12; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  14.5% { opacity: 0.2; animation-timing-function: ease-in-out; } 15.42% { opacity: 0.8; }
+  15.67% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 16.43% { opacity: 0.93; }
+  16.58% { opacity: 0.22; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 19% { opacity: 0.8; }
+  19.5% { opacity: 0.8; animation-timing-function: ease-in-out; } 22.83% { opacity: 0.25; } 24%, 100% { opacity: 0; }
 }
-@keyframes splash-orage-nuages { 0% { opacity: 0; } 2%, 54% { opacity: 1; } 57%, 100% { opacity: 0; } }
-@keyframes splash-orage-nuage { 0% { transform: translateX(-80%); } 11%, 44% { transform: translateX(-16%); } 56%, 100% { transform: translateX(-80%); } }
-@keyframes splash-orage-nuage-d { 0% { transform: scaleX(-1) translateX(-80%); } 11%, 44% { transform: scaleX(-1) translateX(-16%); } 56%, 100% { transform: scaleX(-1) translateX(-80%); } }
-@keyframes splash-orage-lueur { 0%, 3.6% { opacity: 0; } 3.8% { opacity: .55; } 4.6% { opacity: 0; } 6.6% { opacity: 0; } 6.8% { opacity: .7; } 7.6% { opacity: 0; } 9% { opacity: 0; } 9.2% { opacity: .45; } 10%, 100% { opacity: 0; } }
-@keyframes splash-orage-pluie { 0%, 10% { opacity: 0; } 14%, 42% { opacity: .9; } 53%, 100% { opacity: 0; } }
+@keyframes splash-orage-nuages {
+  0% { opacity: 0; } 1.5% { opacity: 1; } 21% { opacity: 1; } 24%, 100% { opacity: 0; }
+}
+@keyframes splash-orage-nuage {
+  0% { transform: translateX(-80%); } 6.67% { transform: translateX(-16%); } 19.5% { transform: translateX(-16%); }
+  24%, 100% { transform: translateX(-80%); }
+}
+@keyframes splash-orage-nuage-d {
+  0% { transform: scaleX(-1) translateX(-80%); } 6.67% { transform: scaleX(-1) translateX(-16%); }
+  19.5% { transform: scaleX(-1) translateX(-16%); } 24%, 100% { transform: scaleX(-1) translateX(-80%); }
+}
+@keyframes splash-orage-lueur {
+  0% { opacity: 0; } 2.33% { opacity: 0; } 2.53% { opacity: 0.55; } 3.33% { opacity: 0; } 4.33% { opacity: 0; }
+  4.53% { opacity: 0.7; } 5.33% { opacity: 0; } 5.67% { opacity: 0; } 5.87% { opacity: 0.45; } 6.67% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes splash-orage-pluie {
+  0%, 6.67% { opacity: 0; } 8.67% { opacity: 0.9; } 19.5% { opacity: 0.9; } 22.5%, 100% { opacity: 0; }
+}
 @keyframes splash-pluie-tombe { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-28px, 160px, 0); } }
 @keyframes splash-pluie-tombe-loin { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-22px, 160px, 0); } }
 /* les flashs : la pré-lueur (le ciel s'allume doucement), le coup en deux battements (deux au plus par seconde), une
    lente rémanence */
 @keyframes splash-orage-flash {
-  0% { opacity: 0; } 15.25% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
-  15.87% { opacity: 0.1; } 16% { opacity: 0.08; } 16.08% { opacity: 0.45; } 16.25% { opacity: 0.16; }
-  16.42% { opacity: 0.36; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 18.67% { opacity: 0; }
-  21.92% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 22.53% { opacity: 0.1; }
-  22.67% { opacity: 0.08; } 22.75% { opacity: 0.5; } 22.92% { opacity: 0.17; }
-  23.08% { opacity: 0.4; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 25.33% { opacity: 0; }
-  28.92% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 29.53% { opacity: 0.1; }
-  29.67% { opacity: 0.08; } 29.75% { opacity: 0.7; } 29.92% { opacity: 0.24; }
-  30.08% { opacity: 0.56; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 33.33% { opacity: 0; }
-  35.92% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 36.53% { opacity: 0.1; }
-  36.67% { opacity: 0.08; } 36.75% { opacity: 0.42; } 36.92% { opacity: 0.15; }
-  37.08% { opacity: 0.34; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 39.33% { opacity: 0; }
+  0% { opacity: 0; } 8.25% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  8.87% { opacity: 0.1; } 9% { opacity: 0.08; } 9.08% { opacity: 0.45; } 9.25% { opacity: 0.16; }
+  9.42% { opacity: 0.36; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 11.67% { opacity: 0; }
+  11.92% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 12.53% { opacity: 0.1; }
+  12.67% { opacity: 0.08; } 12.75% { opacity: 0.7; } 12.92% { opacity: 0.24; }
+  13.08% { opacity: 0.56; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 15.33% { opacity: 0; }
+  15.75% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 16.37% { opacity: 0.1; }
+  16.5% { opacity: 0.08; } 16.58% { opacity: 0.5; } 16.75% { opacity: 0.17; }
+  16.92% { opacity: 0.4; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 19.17% { opacity: 0; }
   100% { opacity: 0; }
 }
 /* l'île assiégée : elle paraît avec le coup, tient le temps qu'il éclaire, et s'efface dans sa rémanence ; au grand
    coup, plus longtemps */
 @keyframes splash-orage-ile {
-  0% { opacity: 0; } 16.05% { opacity: 0; } 16.1% { opacity: 1; }
-  16.67% { opacity: 1; animation-timing-function: ease-in-out; } 18.83% { opacity: 0; } 22.72% { opacity: 0; }
-  22.77% { opacity: 1; } 23.33% { opacity: 1; animation-timing-function: ease-in-out; } 25.5% { opacity: 0; }
-  29.72% { opacity: 0; } 29.77% { opacity: 1; } 32% { opacity: 1; animation-timing-function: ease-in-out; }
-  34.33% { opacity: 0; } 36.72% { opacity: 0; } 36.77% { opacity: 1; }
-  37.33% { opacity: 1; animation-timing-function: ease-in-out; } 39.5% { opacity: 0; } 100% { opacity: 0; }
+  0% { opacity: 0; } 9.05% { opacity: 0; } 9.1% { opacity: 1; }
+  9.67% { opacity: 1; animation-timing-function: ease-in-out; } 11.83% { opacity: 0; } 12.72% { opacity: 0; }
+  12.77% { opacity: 1; } 14.33% { opacity: 1; animation-timing-function: ease-in-out; } 15.83% { opacity: 0; }
+  16.55% { opacity: 0; } 16.6% { opacity: 1; } 17.17% { opacity: 1; animation-timing-function: ease-in-out; }
+  19.33% { opacity: 0; } 100% { opacity: 0; }
 }
 /* les maîtres, prêts et armés : ils le deviennent quand la pluie arrive, et le restent jusqu'à l'accalmie */
 @keyframes splash-orage-guerriers {
-  0%, 10% { opacity: 0; animation-timing-function: ease-in-out; } 14.5% { opacity: 1; }
-  42% { opacity: 1; animation-timing-function: ease-in-out; } 50%, 100% { opacity: 0; }
+  0%, 6.67% { opacity: 0; animation-timing-function: ease-in-out; } 8.5% { opacity: 1; }
+  19.5% { opacity: 1; animation-timing-function: ease-in-out; } 22.67%, 100% { opacity: 0; }
 }
 /* Brume en démon (demon.svg), à chaque coup, par à-coups : deux sursauts à demi transparents avec ses deux battements,
    puis elle se tient (jamais tout à fait opaque : Brume transparaît), et s'efface ; son aura naît au second sursaut,
    petite et vive, s'élargit, se diffuse, s'efface avec elle ; l'onde de feu (souffle.svg) part d'elle avec le coup (deux
    au grand) et se dissipe en s'élargissant */
 @keyframes splash-orage-demon {
-  0% { opacity: 0; } 16% { opacity: 0; } 16.08% { opacity: 0.45; } 16.2% { opacity: 0.2; } 16.42% { opacity: 0.7; }
-  16.57% { opacity: 0.45; } 16.75% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  17.5% { opacity: 0.88; animation-timing-function: ease-in-out; } 18.67% { opacity: 0; } 22.67% { opacity: 0; }
-  22.75% { opacity: 0.45; } 22.87% { opacity: 0.2; } 23.08% { opacity: 0.7; } 23.23% { opacity: 0.45; }
-  23.42% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  24.17% { opacity: 0.88; animation-timing-function: ease-in-out; } 25.33% { opacity: 0; } 29.67% { opacity: 0; }
-  29.75% { opacity: 0.45; } 29.87% { opacity: 0.2; } 30.08% { opacity: 0.7; } 30.23% { opacity: 0.45; }
-  30.42% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  32.33% { opacity: 0.88; animation-timing-function: ease-in-out; } 33.5% { opacity: 0; } 36.67% { opacity: 0; }
-  36.75% { opacity: 0.45; } 36.87% { opacity: 0.2; } 37.08% { opacity: 0.7; } 37.23% { opacity: 0.45; }
-  37.42% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  38.17% { opacity: 0.88; animation-timing-function: ease-in-out; } 39.33% { opacity: 0; } 100% { opacity: 0; }
+  0% { opacity: 0; } 9% { opacity: 0; } 9.08% { opacity: 0.45; } 9.2% { opacity: 0.2; } 9.42% { opacity: 0.7; }
+  9.57% { opacity: 0.45; } 9.75% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  10.5% { opacity: 0.88; animation-timing-function: ease-in-out; } 11.67% { opacity: 0; } 12.67% { opacity: 0; }
+  12.75% { opacity: 0.45; } 12.87% { opacity: 0.2; } 13.08% { opacity: 0.7; } 13.23% { opacity: 0.45; }
+  13.42% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  14.67% { opacity: 0.88; animation-timing-function: ease-in-out; } 15.83% { opacity: 0; } 16.5% { opacity: 0; }
+  16.58% { opacity: 0.45; } 16.7% { opacity: 0.2; } 16.92% { opacity: 0.7; } 17.07% { opacity: 0.45; }
+  17.25% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  18% { opacity: 0.88; animation-timing-function: ease-in-out; } 19.17% { opacity: 0; } 100% { opacity: 0; }
 }
 @keyframes splash-orage-aura {
   0% { opacity: 0; transform: scale(.5); }
-  16.33% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  16.75% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  17.5% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
-  18.83% { opacity: 0; transform: scale(1.14); }
-  23% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  23.42% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  24.17% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
-  25.5% { opacity: 0; transform: scale(1.14); }
-  30% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  30.42% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  32.33% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
-  33.67% { opacity: 0; transform: scale(1.14); }
-  37% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  37.42% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  38.17% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
-  39.5% { opacity: 0; transform: scale(1.14); } 100% { opacity: 0; transform: scale(.5); }
+  9.33% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  9.75% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  10.5% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  11.83% { opacity: 0; transform: scale(1.14); }
+  13% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  13.42% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  14.67% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  16% { opacity: 0; transform: scale(1.14); }
+  16.83% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  17.25% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  18% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  19.33% { opacity: 0; transform: scale(1.14); } 100% { opacity: 0; transform: scale(.5); }
 }
 @keyframes splash-orage-souffle {
   0% { opacity: 0; transform: scale(.25); }
-  16.05% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  16.13% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  17.55% { opacity: 0; transform: scale(1.5); }
-  22.72% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  22.8% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  24.22% { opacity: 0; transform: scale(1.5); }
-  29.72% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  29.8% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  30.55% { opacity: 0; transform: scale(1.5); }
-  30.5% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  30.58% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  32.17% { opacity: 0; transform: scale(1.5); }
-  36.72% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  36.8% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  38.22% { opacity: 0; transform: scale(1.5); } 100% { opacity: 0; transform: scale(.25); }
+  9.05% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  9.13% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  10.55% { opacity: 0; transform: scale(1.5); }
+  12.72% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  12.8% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  13.55% { opacity: 0; transform: scale(1.5); }
+  13.6% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  13.68% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  15.27% { opacity: 0; transform: scale(1.5); }
+  16.55% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  16.63% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  18.05% { opacity: 0; transform: scale(1.5); } 100% { opacity: 0; transform: scale(.25); }
 }
 /* le feu de l'aura tourbillonne (deux couches en sens contraire) et respire */
 @keyframes splash-aura-tourne { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.06); } 100% { transform: rotate(360deg) scale(1); } }
 @keyframes splash-aura-contre { 0% { transform: scaleX(-1) rotate(0deg) scale(1.08); } 50% { transform: scaleX(-1) rotate(180deg) scale(1); } 100% { transform: scaleX(-1) rotate(360deg) scale(1.08); } }
 @keyframes splash-orage-eclair-a {
-  0% { opacity: 0; } 22.67% { opacity: 0; } 22.72% { opacity: 1; } 22.92% { opacity: 0.3; } 23.08% { opacity: 0.95; }
-  23.83% { opacity: 0; } 100% { opacity: 0; }
+  0% { opacity: 0; } 16.5% { opacity: 0; } 16.55% { opacity: 1; } 16.75% { opacity: 0.3; } 16.92% { opacity: 0.95; }
+  17.67% { opacity: 0; } 100% { opacity: 0; }
 }
 @keyframes splash-orage-eclair-b {
-  0% { opacity: 0; } 16% { opacity: 0; } 16.05% { opacity: 1; } 16.25% { opacity: 0.3; } 16.42% { opacity: 0.95; }
-  17.17% { opacity: 0; } 36.67% { opacity: 0; } 36.72% { opacity: 1; } 36.92% { opacity: 0.3; }
-  37.08% { opacity: 0.95; } 37.83% { opacity: 0; } 100% { opacity: 0; }
+  0% { opacity: 0; } 9% { opacity: 0; } 9.05% { opacity: 1; } 9.25% { opacity: 0.3; } 9.42% { opacity: 0.95; }
+  10.17% { opacity: 0; } 100% { opacity: 0; }
 }
 @keyframes splash-orage-eclair-c {
-  0% { opacity: 0; } 29.67% { opacity: 0; } 29.72% { opacity: 1; } 29.92% { opacity: 0.3; } 30.08% { opacity: 0.95; }
-  31.17% { opacity: 0; } 100% { opacity: 0; }
+  0% { opacity: 0; } 12.67% { opacity: 0; } 12.72% { opacity: 1; } 12.92% { opacity: 0.3; } 13.08% { opacity: 0.95; }
+  14.17% { opacity: 0; } 100% { opacity: 0; }
 }
 /* le sous-titre change de voix pendant l'orage */
-@keyframes splash-orage-calme { 0%, 11% { opacity: 1; } 13%, 49% { opacity: 0; } 52%, 100% { opacity: 1; } }
-@keyframes splash-orage-sous { 0%, 11% { opacity: 0; } 13%, 49% { opacity: 1; } 52%, 100% { opacity: 0; } }
+@keyframes splash-orage-calme {
+  0%, 6.67% { opacity: 1; } 8.33% { opacity: 0; } 19.5% { opacity: 0; } 22%, 100% { opacity: 1; }
+}
+@keyframes splash-orage-sous {
+  0%, 6.67% { opacity: 0; } 8.33% { opacity: 1; } 19.5% { opacity: 1; } 22%, 100% { opacity: 0; }
+}
 
 /* écran large (ordinateur, tablette en paysage) : l'affiche plus petite, posée en bas, laisse voir l'île au-dessus de Brume */
 @media (min-aspect-ratio: 5/4) and (min-height: 561px) { .splash { --sp-affiche-l: min(900px, 60vh); } }
