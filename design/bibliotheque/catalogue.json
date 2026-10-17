@@ -55478,6 +55478,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/05_promesse/05_promesse_plan-navire",
+   "rubrique": "scenes",
+   "titre": "Scène 5 : Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume (05 promesse plan navire)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/05_promesse/05_promesse_plan-navire_1.svg"
+   ],
+   "cadre": [
+    240,
+    130,
+    130,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/05_promesse/05_promesse_plan-nuage0",
    "rubrique": "scenes",
    "titre": "Scène 5 : Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume (05 promesse plan nuage0)",
