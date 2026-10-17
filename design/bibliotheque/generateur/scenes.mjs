@@ -4319,9 +4319,10 @@ var require_lorena_poses = __commonJS({
       return `<path d="M${r22(base[0])},${r22(base[1])} L${r22(tip[0])},${r22(tip[1])}" fill="none" stroke="${OUT4}" stroke-width="2.5" stroke-linecap="round"/><path d="M${r22(base[0])},${r22(base[1])} L${r22(tip[0])},${r22(tip[1])}" fill="none" stroke="${f}" stroke-width="1.3" stroke-linecap="round"/>` + E(x, y, 2, 2, f) + L([x - uy * 0.9 + ux * 0.4, y + ux * 0.9 + uy * 0.4], [x - uy * 0.2 + ux * 1.1, y + ux * 0.2 + uy * 1.1], OUT4, 0.45);
     }
     __name(index, "index");
-    function visiereMain(c, [x, y], k) {
-      const f = c.hand || c.skin, x1 = x - k * 4.6;
-      return P2(`M${r22(x + k * 0.8)},${r22(y - 1.1)} L${r22(x1 + k * 0.6)},${r22(y - 0.9)} Q${r22(x1)},${r22(y - 0.6)} ${r22(x1 + k * 0.3)},${r22(y + 0.5)} L${r22(x + k * 0.8)},${r22(y + 1.1)} Q${r22(x + k * 1.8)},${y} ${r22(x + k * 0.8)},${r22(y - 1.1)} Z`, f, 0.9) + L([x - k * 1.2, y + 0.05], [x1 + k * 1, y + 0.1], OUT4, 0.4) + E(x - k * 0.6, y + 1.2, 0.9, 0.6, f, 0.7);
+    function visiereMain(c, [x, y], k, ang) {
+      const f = c.hand || c.skin, X = /* @__PURE__ */ __name((v) => r22(x - k * v), "X"), Y = /* @__PURE__ */ __name((v) => r22(y + v), "Y");
+      const main = P2(`M${X(-0.6)},${Y(-1.7)} Q${X(2.2)},${Y(-2.5)} ${X(4.6)},${Y(-1.7)} Q${X(6.1)},${Y(-1)} ${X(5.6)},${Y(0.3)} Q${X(5)},${Y(1.4)} ${X(2.6)},${Y(1.6)} L${X(0.4)},${Y(1.8)} Q${X(-1.3)},${Y(0)} ${X(-0.6)},${Y(-1.7)} Z`, f, 0.9) + E(x - k * 1.4, y + 1.7, 1.05, 0.8, f, 0.75) + `<path d="M${X(3.4)},${Y(-1.5)} Q${X(4.4)},${Y(-0.5)} ${X(3.6)},${Y(0.6)} M${X(4.6)},${Y(-1.4)} Q${X(5.4)},${Y(-0.5)} ${X(4.8)},${Y(0.5)}" fill="none" stroke="${OUT4}" stroke-width="0.4" stroke-linecap="round"/>`;
+      return `<g transform="rotate(${r22(k * ang)} ${r22(x)} ${r22(y)})">${main}</g>`;
     }
     __name(visiereMain, "visiereMain");
     function paumeCiel(c, [x, y], k) {
@@ -4371,11 +4372,11 @@ var require_lorena_poses = __commonJS({
         fn({ view, n }) {
           const [a, b] = this.shoulders, s = n ? 0.5 : 0;
           if (view === "se") {
-            const h2 = atteint(this, a, -2.4 + s, -10.4, 0.97);
-            return { left: "", right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h2, [a[0] - 4.6, a[1] - 3.4], `<g transform="rotate(-32 ${h2[0]} ${h2[1]})">${visiereMain(this, h2, -1)}</g>`) };
+            const h2 = atteint(this, a, -6.2 + s * 0.4, -10, 0.98);
+            return { left: "", right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h2, [a[0] - 6.4, a[1] - 3.2], visiereMain(this, h2, -1, 62)) };
           }
-          const h = atteint(this, b, 3 - s, -10.4, 0.97);
-          return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: "", over: arm(this, b, h, [b[0] + 4.6, b[1] - 3.4], `<g transform="rotate(32 ${h[0]} ${h[1]})">${visiereMain(this, h, 1)}</g>`) };
+          const h = atteint(this, b, 2.6 - s * 0.4, -10, 0.98);
+          return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: "", over: arm(this, b, h, [b[0] + 5.2, b[1] - 4.2], visiereMain(this, h, 1, 38)) };
         }
       },
       // elle montre du doigt, l'ordre lancé : « Là ! » ; l'image 2, le bras se tend un peu plus
@@ -22750,7 +22751,7 @@ var require_gravure_rencontre = __commonJS({
         joue([0, "repos", "haut_droite"]),
         joue([0, "repos", "haut_droite"], [1400, "repos", "haut_gauche"], [3400, "repos", "haut_droite"]),
         joue([0, "repos", "haut_droite"], [500, "repos", "bas_droite", "froid"], [900, "pose_frisson", "bas_droite"]),
-        joue([0, "pose_frisson", "bas_droite"], [600, "repos", "haut_droite"], [1900, "repos", "haut_gauche"], [3300, "repos", "haut_droite"]),
+        joue([0, "pose_frisson", "bas_droite"], [600, "repos", "bas_droite", "mefiante"], [1e3, "pose_visiere", "bas_droite"]),
         joue([0, "repos", "bas_droite", "decidee"], [600, "repos", "haut_droite"], [1e3, "marche", "haut_droite"], [3e3, "repos", "haut_droite"])
       ];
       const pas = /* @__PURE__ */ __name((D) => [[0, { x: 0, y: 0, s: 1 }], [1e3, { x: 0, y: 0, s: 1 }], [3e3, { x: 46, y: -34, s: 0.8, e: "linear" }], [D, { x: 46, y: -34, s: 0.8 }]], "pas");

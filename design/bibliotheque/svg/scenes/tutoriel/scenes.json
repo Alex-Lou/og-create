@@ -22666,21 +22666,15 @@
         600,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "bas_droite",
+         "expr": "mefiante"
         }
        ],
        [
-        1900,
+        1000,
         {
-         "anim": "repos",
-         "dir": "haut_gauche"
-        }
-       ],
-       [
-        3300,
-        {
-         "anim": "repos",
-         "dir": "haut_droite"
+         "anim": "pose_visiere",
+         "dir": "bas_droite"
         }
        ]
       ]

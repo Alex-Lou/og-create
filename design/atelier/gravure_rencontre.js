@@ -159,13 +159,12 @@ function plage02() {
   // (la caméra : le plan large, puis on se rapproche de lui quand il se retourne et grelotte, puis on le laisse partir)
   const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -40, y: 22, z: 1.22 }, { x: -34, y: 18, z: 1.2 }, { x: -6, y: 2, z: 1.1 }];
   // (son jeu, une pensée après l'autre : il regarde la mer ; le long de la plage, puis la mer ; il se retourne et
-  // grelotte ; il se retourne vers le rivage et le scrute, d'un côté puis de l'autre ; il se décide et marche vers le
-  // rocher, au loin)
+  // grelotte ; il scrute le rivage, la main en visière ; il se décide et marche vers le rocher, au loin)
   const ACTEUR = [
     joue([0, 'repos', 'haut_droite']),
     joue([0, 'repos', 'haut_droite'], [1400, 'repos', 'haut_gauche'], [3400, 'repos', 'haut_droite']),
     joue([0, 'repos', 'haut_droite'], [500, 'repos', 'bas_droite', 'froid'], [900, 'pose_frisson', 'bas_droite']),
-    joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'haut_droite'], [1900, 'repos', 'haut_gauche'], [3300, 'repos', 'haut_droite']),
+    joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'bas_droite', 'mefiante'], [1000, 'pose_visiere', 'bas_droite']),
     joue([0, 'repos', 'bas_droite', 'decidee'], [600, 'repos', 'haut_droite'], [1000, 'marche', 'haut_droite'], [3000, 'repos', 'haut_droite'])
   ];
   const pas = D => [[0, { x: 0, y: 0, s: 1 }], [1000, { x: 0, y: 0, s: 1 }], [3000, { x: 46, y: -34, s: 0.8, e: 'linear' }], [D, { x: 46, y: -34, s: 0.8 }]];
