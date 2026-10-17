@@ -117,7 +117,7 @@ function aster10() {
   const LARGE = { x: 10, y: 4, z: 1.06 }, DEUX = { x: 20, y: 18, z: 1.18 }, SUR_LORENA = { x: 56, y: 22, z: 1.32 }, SUR_BRUME = { x: -24, y: -6, z: 1.34 }, SUR_AVATAR = { x: -46, y: 30, z: 1.3 };
   const R0 = [
     // 0 « Ho, du feu ! … donne-moi la main » : elle sort de l'eau et vient ; lui sursaute, puis va vers elle
-    [4800, LARGE, joue([0, 'repos', 'bas_droite', 'surprise'], [700, 'pose_sursaut', 'bas_droite'], [1800, 'marche', 'bas_droite'], [2900, 'arret', 'bas_droite', 'veille'], [3420, 'repos', 'bas_droite']), [[0, L('marche', 'bas_gauche', 'soulagee')], [3200, L('arret', 'bas_gauche', 'soulagee')], [3720, L('repos', 'bas_gauche', 'soulagee')]], [[0, B('curieuse')]]],
+    [4800, LARGE, joue([0, 'repos', 'bas_droite', 'surprise'], [700, 'pose_sursaut', 'bas_droite'], [1800, 'marche', 'bas_droite'], [2900, 'arret', 'bas_droite'], [3420, 'repos', 'bas_droite']), [[0, L('marche', 'bas_gauche', 'soulagee')], [3200, L('arret', 'bas_gauche', 'soulagee')], [3720, L('repos', 'bas_gauche', 'soulagee')]], [[0, B('curieuse')]]],
     // 1 « Lorena, navigatrice. Officier de quart… »
     [3600, DEUX, joue([0, 'repos', 'bas_droite']), [[0, L('pose_poings', 'bas_gauche', 'sourire')]], [[0, B('curieuse')]]],
     // 2 « deux requins… un tentacule immense… Bref ! »
@@ -141,9 +141,9 @@ function aster10() {
     // 11 « Je… Je n'avais juste jamais… parlé à une entité… magique ! »
     [3800, SUR_LORENA, joue([0, 'repos', 'bas_droite']), [[0, L('pose_hausse', 'bas_gauche', 'genee')]], [[0, B('gene')]]],
     // 12 « Quoi qu'il en soit ! On va devoir trouver un moyen de survivre… »
-    [3800, DEUX, joue([0, 'repos', 'bas_droite', 'decidee']), [[0, L('pose_poings', 'bas_gauche', 'decidee')]], [[0, B('neutre')]]],
+    [3800, DEUX, joue([0, 'repos', 'bas_droite']), [[0, L('pose_poings', 'bas_gauche', 'decidee')]], [[0, B('neutre')]]],
     // 13 « Construisons-nous un véritable abri de naufragés. »
-    [3200, LARGE, joue([0, 'pose_poings', 'bas_droite', 'decidee']), [[0, L('pose_pointe', 'face', 'decidee')]], [[0, B('content')]]],
+    [3200, LARGE, joue([0, 'pose_poings', 'bas_droite', 'neutre']), [[0, L('pose_pointe', 'face', 'decidee')]], [[0, B('content')]]],
     // 14 « Elle a raison. Ici… Il arrive des choses… » : elle baisse, la voix basse
     [4200, SUR_BRUME, joue([0, 'repos', 'bas_droite']), [[0, L('repos', 'bas_gauche', 'inquiete')]], [[0, B('triste')]]],
     // 15 « Euuh… Brume ? Ça va ? »

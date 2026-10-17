@@ -22054,7 +22054,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ]
       ]
@@ -22353,21 +22354,24 @@
         0,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ],
        [
         1400,
         {
          "anim": "repos",
-         "dir": "haut_gauche"
+         "dir": "haut_gauche",
+         "expr": "neutre"
         }
        ],
        [
         3400,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ]
       ]
@@ -22666,7 +22670,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -22674,7 +22679,7 @@
         {
          "anim": "repos",
          "dir": "bas_droite",
-         "expr": "froid"
+         "expr": "neutre"
         }
        ],
        [
@@ -22988,7 +22993,7 @@
         {
          "anim": "repos",
          "dir": "bas_droite",
-         "expr": "mefiante"
+         "expr": "neutre"
         }
        ],
        [
@@ -23331,28 +23336,31 @@
         {
          "anim": "repos",
          "dir": "bas_droite",
-         "expr": "decidee"
+         "expr": "neutre"
         }
        ],
        [
         600,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ],
        [
         1000,
         {
          "anim": "marche",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ],
        [
         3000,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ]
       ]
@@ -24107,7 +24115,8 @@
         0,
         {
          "anim": "marche",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -24115,14 +24124,15 @@
         {
          "anim": "arret",
          "dir": "bas_droite",
-         "expr": "veille"
+         "expr": "neutre"
         }
        ],
        [
         2020,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -26905,7 +26915,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ]
@@ -27220,7 +27231,8 @@
         0,
         {
          "anim": "marche",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -27228,14 +27240,15 @@
         {
          "anim": "arret",
          "dir": "bas_droite",
-         "expr": "veille"
+         "expr": "neutre"
         }
        ],
        [
         1820,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ]
@@ -27854,7 +27867,8 @@
         1800,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ]
@@ -28161,7 +28175,7 @@
         {
          "anim": "repos",
          "dir": "bas_droite",
-         "expr": "froid"
+         "expr": "neutre"
         }
        ]
       ]
@@ -30301,7 +30315,8 @@
         500,
         {
          "anim": "marche",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -30309,14 +30324,15 @@
         {
          "anim": "arret",
          "dir": "bas_droite",
-         "expr": "veille"
+         "expr": "neutre"
         }
        ],
        [
         2220,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ]
@@ -31318,7 +31334,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -32609,7 +32626,7 @@
         {
          "anim": "repos",
          "dir": "bas_droite",
-         "expr": "content"
+         "expr": "neutre"
         }
        ]
       ],
@@ -33016,7 +33033,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -33464,14 +33482,16 @@
         0,
         {
          "anim": "repos",
-         "dir": "haut_gauche"
+         "dir": "haut_gauche",
+         "expr": "neutre"
         }
        ],
        [
         1400,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -33679,15 +33699,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
-        }
-       ],
-       [
-        2800,
-        {
-         "anim": "repos",
          "dir": "bas_droite",
-         "expr": "triste"
+         "expr": "neutre"
         }
        ]
       ],
@@ -33921,7 +33934,8 @@
         0,
         {
          "anim": "marche",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -33929,7 +33943,7 @@
         {
          "anim": "arret",
          "dir": "bas_droite",
-         "expr": "veille"
+         "expr": "neutre"
         }
        ],
        [
@@ -34172,15 +34186,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
-        }
-       ],
-       [
-        1800,
-        {
-         "anim": "repos",
          "dir": "bas_droite",
-         "expr": "content"
+         "expr": "neutre"
         }
        ]
       ],
@@ -34427,7 +34434,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -34629,9 +34637,9 @@
       "flotte|face|curieuse|0": "03_ciel/03_ciel_plan-brume--0_1.svg",
       "flotte|face|curieuse|1": "03_ciel/03_ciel_plan-brume--1_1.svg",
       "flotte|face|curieuse|2": "03_ciel/03_ciel_plan-brume--2_1.svg",
-      "flotte|face|triste|0": "03_ciel/03_ciel_plan-brume--3_1.svg",
-      "flotte|face|triste|1": "03_ciel/03_ciel_plan-brume--4_1.svg",
-      "flotte|face|triste|2": "03_ciel/03_ciel_plan-brume--5_1.svg"
+      "flotte|face|dos|0": "03_ciel/03_ciel_plan-brume--3_1.svg",
+      "flotte|face|dos|1": "03_ciel/03_ciel_plan-brume--4_1.svg",
+      "flotte|face|dos|2": "03_ciel/03_ciel_plan-brume--5_1.svg"
      },
      "anims": {
       "flotte": {
@@ -34683,7 +34691,7 @@
         }
        ],
        [
-        300,
+        650,
         {
          "x": 0,
          "y": 70,
@@ -34691,10 +34699,18 @@
         }
        ],
        [
-        2200,
+        1500,
         {
          "x": 0,
          "y": -70,
+         "z": 1.24
+        }
+       ],
+       [
+        2200,
+        {
+         "x": 0,
+         "y": -74,
          "z": 1.24
         }
        ]
@@ -34812,7 +34828,7 @@
          }
         ],
         [
-         1100,
+         950,
          {
           "x": 60,
           "y": -16,
@@ -34821,16 +34837,16 @@
          }
         ],
         [
-         1150,
+         1050,
          {
-          "x": 40,
-          "y": -10,
+          "x": 52,
+          "y": -14,
           "o": 1,
           "e": "linear"
          }
         ],
         [
-         1650,
+         2000,
          {
           "x": -40,
           "y": 12,
@@ -34838,17 +34854,9 @@
          }
         ],
         [
-         1800,
-         {
-          "x": -60,
-          "y": 16,
-          "o": 0
-         }
-        ],
-        [
          2200,
          {
-          "x": -60,
+          "x": -56,
           "y": 16,
           "o": 0
          }
@@ -34858,13 +34866,38 @@
         [
          0,
          {
-          "y": 0
+          "y": 0,
+          "r": 0
+         }
+        ],
+        [
+         420,
+         {
+          "y": 0,
+          "r": 0,
+          "e": "ease-out"
+         }
+        ],
+        [
+         540,
+         {
+          "y": -9,
+          "r": -6,
+          "e": "ease-in"
+         }
+        ],
+        [
+         680,
+         {
+          "y": 0,
+          "r": 0
          }
         ],
         [
          2200,
          {
-          "y": -10
+          "y": -10,
+          "r": 0
          }
         ]
        ]
@@ -34880,11 +34913,11 @@
          }
         ],
         [
-         900,
+         540,
          {
           "anim": "flotte",
           "dir": "face",
-          "expr": "triste"
+          "expr": "dos"
          }
         ]
        ]
@@ -35346,7 +35379,7 @@
         {
          "anim": "pose_frisson",
          "dir": "bas_droite",
-         "expr": "froid"
+         "expr": "neutre"
         }
        ]
       ],
@@ -35598,7 +35631,7 @@
         {
          "anim": "pose_frisson",
          "dir": "bas_droite",
-         "expr": "froid"
+         "expr": "neutre"
         }
        ],
        [
@@ -35606,7 +35639,7 @@
         {
          "anim": "repos",
          "dir": "bas_droite",
-         "expr": "froid"
+         "expr": "neutre"
         }
        ]
       ],
@@ -35827,7 +35860,7 @@
         {
          "anim": "pose_croises",
          "dir": "bas_droite",
-         "expr": "froid"
+         "expr": "neutre"
         }
        ],
        [
@@ -35835,7 +35868,7 @@
         {
          "anim": "pose_frisson",
          "dir": "bas_droite",
-         "expr": "froid"
+         "expr": "neutre"
         }
        ]
       ],
@@ -36107,7 +36140,8 @@
         900,
         {
          "anim": "repos",
-         "dir": "haut_droite"
+         "dir": "haut_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -36171,7 +36205,7 @@
    "calques": {}
   },
   "05_cercle": {
-   "nom": "Scène 5 : Le cercle de pierres noircies ; au large, l’épave dans la brume",
+   "nom": "Scène 5 : Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant",
    "etape": "5",
    "cadre": [
     0,
@@ -36182,27 +36216,4265 @@
    "images": 1,
    "ms_par_image": 900,
    "avatar": {
-    "x": 136,
-    "y": 386,
-    "echelle": 3,
+    "x": 126,
+    "y": 384,
+    "echelle": 3.1,
     "vue": "avant",
     "pose": "repos",
     "naufrage": true
    },
-   "calques": {
-    "fond": {
-     "nom": "Scène 5 : Le cercle de pierres noircies ; au large, l’épave dans la brume (fond)",
-     "fichiers": [
-      "05_cercle/05_cercle_fond_1.svg"
+   "plans": [
+    {
+     "id": "ciel",
+     "fichier": "05_cercle/05_cercle_plan-ciel_1.svg",
+     "profondeur": 0.1,
+     "marge": 40,
+     "flou": 0.2
+    },
+    {
+     "id": "soleil",
+     "fichier": "05_cercle/05_cercle_plan-soleil_1.svg",
+     "profondeur": 0.12,
+     "pivot": [
+      236,
+      186
+     ],
+     "cadre": [
+      180,
+      130,
+      112,
+      64
      ]
     },
-    "anime": {
-     "nom": "Scène 5 : Le cercle de pierres noircies ; au large, l’épave dans la brume (ce qui vit sur le fond figé)",
-     "fichiers": [
-      "05_cercle/05_cercle_anime_1.svg"
+    {
+     "id": "nuage0",
+     "fichier": "05_cercle/05_cercle_plan-nuage0_1.svg",
+     "profondeur": 0.14,
+     "cadre": [
+      -80,
+      24,
+      600,
+      60
      ]
+    },
+    {
+     "id": "nuage1",
+     "fichier": "05_cercle/05_cercle_plan-nuage1_1.svg",
+     "profondeur": 0.18,
+     "cadre": [
+      -80,
+      100,
+      600,
+      56
+     ]
+    },
+    {
+     "id": "etoiles",
+     "fichier": "05_cercle/05_cercle_plan-etoiles_1.svg",
+     "profondeur": 0.1,
+     "marge": 40
+    },
+    {
+     "id": "lune",
+     "fichier": "05_cercle/05_cercle_plan-lune_1.svg",
+     "profondeur": 0.12,
+     "cadre": [
+      10,
+      0,
+      150,
+      140
+     ]
+    },
+    {
+     "id": "mer-soir",
+     "fichier": "05_cercle/05_cercle_plan-mer-soir_1.svg",
+     "profondeur": 0.3,
+     "marge": 40
+    },
+    {
+     "id": "mer",
+     "fichier": "05_cercle/05_cercle_plan-mer_1.svg",
+     "profondeur": 0.3,
+     "marge": 40
+    },
+    {
+     "id": "plage",
+     "fichier": "05_cercle/05_cercle_plan-plage_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
+     "id": "lechee",
+     "fichier": "05_cercle/05_cercle_plan-lechee_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
+     "id": "crepuscule",
+     "fichier": "05_cercle/05_cercle_plan-crepuscule_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "voile0",
+     "fichier": "05_cercle/05_cercle_plan-voile0_1.svg",
+     "profondeur": 0.32,
+     "marge": 40,
+     "flou": 0.2
+    },
+    {
+     "id": "filets0",
+     "fichier": "05_cercle/05_cercle_plan-filets0_1.svg",
+     "profondeur": 0.36,
+     "cadre": [
+      -100,
+      162,
+      600,
+      60
+     ]
+    },
+    {
+     "id": "herbe",
+     "fichier": "05_cercle/05_cercle_plan-herbe_1.svg",
+     "profondeur": 0.58,
+     "marge": 40
+    },
+    {
+     "id": "nuit",
+     "fichier": "05_cercle/05_cercle_plan-nuit_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "flaque",
+     "fichier": "05_cercle/05_cercle_plan-flaque_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      290,
+      212,
+      60
+     ]
+    },
+    {
+     "id": "pierres-fond",
+     "fichier": "05_cercle/05_cercle_plan-pierres-fond_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      270,
+      212,
+      70
+     ]
+    },
+    {
+     "id": "flammes",
+     "fichier": "05_cercle/05_cercle_plan-flammes_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      236,
+      318
+     ],
+     "cadre": [
+      196,
+      250,
+      80,
+      72
+     ]
+    },
+    {
+     "id": "flammes-orange",
+     "fichier": "05_cercle/05_cercle_plan-flammes-orange_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      236,
+      318
+     ],
+     "cadre": [
+      196,
+      250,
+      80,
+      72
+     ]
+    },
+    {
+     "id": "danseur0",
+     "fichier": "05_cercle/05_cercle_plan-danseur0_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      150,
+      300
+     ],
+     "cadre": [
+      116,
+      240,
+      68,
+      66
+     ]
+    },
+    {
+     "id": "danseur1",
+     "fichier": "05_cercle/05_cercle_plan-danseur1_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      190,
+      288
+     ],
+     "cadre": [
+      159.4,
+      234,
+      61.2,
+      59.4
+     ]
+    },
+    {
+     "id": "danseur2",
+     "fichier": "05_cercle/05_cercle_plan-danseur2_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      282,
+      286
+     ],
+     "cadre": [
+      251.4,
+      232,
+      61.2,
+      59.4
+     ]
+    },
+    {
+     "id": "danseur3",
+     "fichier": "05_cercle/05_cercle_plan-danseur3_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      326,
+      302
+     ],
+     "cadre": [
+      292,
+      242,
+      68,
+      66
+     ]
+    },
+    {
+     "id": "danseur4",
+     "fichier": "05_cercle/05_cercle_plan-danseur4_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      118,
+      330
+     ],
+     "cadre": [
+      80.6,
+      264,
+      74.80000000000001,
+      72.60000000000001
+     ]
+    },
+    {
+     "id": "danseur5",
+     "fichier": "05_cercle/05_cercle_plan-danseur5_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      356,
+      334
+     ],
+     "cadre": [
+      318.6,
+      268,
+      74.80000000000001,
+      72.60000000000001
+     ]
+    },
+    {
+     "id": "pierres-devant",
+     "fichier": "05_cercle/05_cercle_plan-pierres-devant_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      300,
+      212,
+      70
+     ]
+    },
+    {
+     "id": "brume",
+     "fichier": "05_cercle/05_cercle_plan-brume_1.svg",
+     "images": {
+      "flotte|face|content|0": "05_cercle/05_cercle_plan-brume--0_1.svg",
+      "flotte|face|content|1": "05_cercle/05_cercle_plan-brume--1_1.svg",
+      "flotte|face|content|2": "05_cercle/05_cercle_plan-brume--2_1.svg",
+      "flotte|face|triste|0": "05_cercle/05_cercle_plan-brume--3_1.svg",
+      "flotte|face|triste|1": "05_cercle/05_cercle_plan-brume--4_1.svg",
+      "flotte|face|triste|2": "05_cercle/05_cercle_plan-brume--5_1.svg",
+      "flotte|face|gene|0": "05_cercle/05_cercle_plan-brume--6_1.svg",
+      "flotte|face|gene|1": "05_cercle/05_cercle_plan-brume--7_1.svg",
+      "flotte|face|gene|2": "05_cercle/05_cercle_plan-brume--8_1.svg"
+     },
+     "anims": {
+      "flotte": {
+       "images": 3,
+       "dt": 0.28
+      }
+     },
+     "profondeur": 0.68,
+     "pivot": [
+      262,
+      268
+     ],
+     "cadre": [
+      194,
+      180,
+      136,
+      112
+     ]
+    },
+    {
+     "id": "avatar",
+     "profondeur": 0.7,
+     "pivot": [
+      126,
+      384
+     ]
+    },
+    {
+     "id": "lumiere",
+     "fichier": "05_cercle/05_cercle_plan-lumiere_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "teinte",
+     "fichier": "05_cercle/05_cercle_plan-teinte_1.svg",
+     "profondeur": 0,
+     "marge": 40
     }
-   }
+   ],
+   "partition": {
+    "lumiere": {
+     "teinte": "#141C3A",
+     "force": 0.32,
+     "cote": -1
+    },
+    "temps": [
+     {
+      "duree": 4600,
+      "camera": [
+       [
+        0,
+        {
+         "x": 20,
+         "y": -20,
+         "z": 1.1
+        }
+       ],
+       [
+        4600,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "o": 0.85,
+          "x": 14
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "danseur0": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         2600,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "danseur1": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         2750,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "danseur2": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         2900,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "danseur3": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         3050,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "danseur4": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         3200,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "danseur5": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         3350,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "flammes": [
+        [
+         0,
+         {
+          "o": 0,
+          "s": 0.8
+         }
+        ],
+        [
+         1800,
+         {
+          "o": 0,
+          "s": 0.8
+         }
+        ],
+        [
+         3000,
+         {
+          "o": 0.55,
+          "s": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "s": 1,
+          "o": 0.5
+         }
+        ]
+       ],
+       "flammes-orange": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 20,
+          "y": -150,
+          "s": 0.9
+         }
+        ],
+        [
+         1400,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1,
+          "e": "ease-out"
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1,
+          "e": "ease-out"
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": -70,
+          "y": -8,
+          "s": 0.96
+         }
+        ],
+        [
+         1400,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1,
+          "e": "linear"
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1,
+          "e": "linear"
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "marche",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        1400,
+        {
+         "anim": "arret",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        1920,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "content"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 5600,
+      "camera": [
+       [
+        0,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ],
+       [
+        900,
+        {
+         "x": 30,
+         "y": 26,
+         "z": 1.2
+        }
+       ],
+       [
+        5600,
+        {
+         "x": 30,
+         "y": 26,
+         "z": 1.2
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         5600,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         5600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         5600,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         5600,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         5600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "danseur0": [
+        [
+         0,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         350,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         700,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1050,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1400,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1750,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2100,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2450,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2800,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3150,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3500,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3850,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4200,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4550,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4900,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5250,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5600,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "danseur1": [
+        [
+         0,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         395,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         790,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1185,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1580,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1975,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2370,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2765,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3160,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3555,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3950,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4345,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4740,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5135,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5530,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "danseur2": [
+        [
+         0,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         440,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         880,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1320,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1760,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2200,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2640,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3080,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3520,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3960,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4400,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4840,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5280,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "danseur3": [
+        [
+         0,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         485,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         970,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1455,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1940,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2425,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2910,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3395,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3880,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4365,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4850,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5335,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "danseur4": [
+        [
+         0,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         530,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1060,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1590,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2120,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2650,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3180,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3710,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4240,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4770,
+         {
+          "x": -6,
+          "y": -7,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5300,
+         {
+          "x": 6,
+          "y": 0,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "danseur5": [
+        [
+         0,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         575,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1150,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1725,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2300,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2875,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3450,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4025,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4600,
+         {
+          "x": -6,
+          "y": 0,
+          "r": 8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5175,
+         {
+          "x": 6,
+          "y": -7,
+          "r": -8,
+          "o": 0.6,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "flammes": [
+        [
+         0,
+         {
+          "o": 0.5,
+          "s": 1
+         }
+        ],
+        [
+         700,
+         {
+          "o": 0.7,
+          "s": 1.08
+         }
+        ],
+        [
+         1400,
+         {
+          "o": 0.55,
+          "s": 0.96
+         }
+        ],
+        [
+         2100,
+         {
+          "o": 0.7,
+          "s": 1.08
+         }
+        ],
+        [
+         2800,
+         {
+          "o": 0.55,
+          "s": 0.96
+         }
+        ],
+        [
+         3500,
+         {
+          "o": 0.65,
+          "s": 1.04
+         }
+        ],
+        [
+         5600,
+         {
+          "o": 0.45,
+          "s": 0.96
+         }
+        ]
+       ],
+       "flammes-orange": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         5600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ],
+        [
+         5600,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ],
+        [
+         5600,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         2240,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4480,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5600,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "content"
+         }
+        ],
+        [
+         4200,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "triste"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 5000,
+      "camera": [
+       [
+        0,
+        {
+         "x": 30,
+         "y": 26,
+         "z": 1.2
+        }
+       ],
+       [
+        900,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ],
+       [
+        5000,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         5000,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         5000,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "danseur0": [
+        [
+         0,
+         {
+          "o": 0.6
+         }
+        ],
+        [
+         600,
+         {
+          "o": 0.6,
+          "y": 0
+         }
+        ],
+        [
+         2600,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ]
+       ],
+       "danseur1": [
+        [
+         0,
+         {
+          "o": 0.6
+         }
+        ],
+        [
+         860,
+         {
+          "o": 0.6,
+          "y": 0
+         }
+        ],
+        [
+         2860,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ]
+       ],
+       "danseur2": [
+        [
+         0,
+         {
+          "o": 0.6
+         }
+        ],
+        [
+         1120,
+         {
+          "o": 0.6,
+          "y": 0
+         }
+        ],
+        [
+         3120,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ]
+       ],
+       "danseur3": [
+        [
+         0,
+         {
+          "o": 0.6
+         }
+        ],
+        [
+         1380,
+         {
+          "o": 0.6,
+          "y": 0
+         }
+        ],
+        [
+         3380,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ]
+       ],
+       "danseur4": [
+        [
+         0,
+         {
+          "o": 0.6
+         }
+        ],
+        [
+         1640,
+         {
+          "o": 0.6,
+          "y": 0
+         }
+        ],
+        [
+         3640,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ]
+       ],
+       "danseur5": [
+        [
+         0,
+         {
+          "o": 0.6
+         }
+        ],
+        [
+         1900,
+         {
+          "o": 0.6,
+          "y": 0
+         }
+        ],
+        [
+         3900,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0,
+          "y": -26
+         }
+        ]
+       ],
+       "flammes": [
+        [
+         0,
+         {
+          "o": 0.45
+         }
+        ],
+        [
+         3600,
+         {
+          "o": 0.15
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0.15
+         }
+        ]
+       ],
+       "flammes-orange": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0
+         }
+        ],
+        [
+         3000,
+         {
+          "x": 0,
+          "y": 10,
+          "s": 0.94
+         }
+        ],
+        [
+         5000,
+         {
+          "x": 0,
+          "y": 10,
+          "s": 0.94
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ],
+        [
+         5000,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         2000,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4000,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5000,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "triste"
+         }
+        ],
+        [
+         3000,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "gene"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 4600,
+      "camera": [
+       [
+        0,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ],
+       [
+        900,
+        {
+         "x": 30,
+         "y": 26,
+         "z": 1.2
+        }
+       ],
+       [
+        4600,
+        {
+         "x": 30,
+         "y": 26,
+         "z": 1.2
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "danseur0": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "danseur1": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "danseur2": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "danseur3": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "danseur4": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "danseur5": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "flammes": [
+        [
+         0,
+         {
+          "o": 0.15
+         }
+        ],
+        [
+         800,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "flammes-orange": [
+        [
+         0,
+         {
+          "o": 0,
+          "s": 0.7
+         }
+        ],
+        [
+         900,
+         {
+          "o": 0,
+          "s": 0.7,
+          "e": "ease-out"
+         }
+        ],
+        [
+         1500,
+         {
+          "o": 0.9,
+          "s": 1.06
+         }
+        ],
+        [
+         2600,
+         {
+          "o": 0.75,
+          "s": 0.98
+         }
+        ],
+        [
+         3600,
+         {
+          "o": 0,
+          "s": 0.9
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 10,
+          "s": 0.94
+         }
+        ],
+        [
+         400,
+         {
+          "x": 0,
+          "y": -8,
+          "s": 1,
+          "e": "ease-in"
+         }
+        ],
+        [
+         1300,
+         {
+          "x": -26,
+          "y": -2,
+          "s": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "x": -26,
+          "y": -2,
+          "s": 1
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0
+         }
+        ],
+        [
+         1600,
+         {
+          "x": 0,
+          "y": 0,
+          "e": "linear"
+         }
+        ],
+        [
+         2500,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         1840,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3680,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        1600,
+        {
+         "anim": "marche",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        2500,
+        {
+         "anim": "arret",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        3020,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "gene"
+         }
+        ],
+        [
+         400,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "content"
+         }
+        ]
+       ]
+      }
+     }
+    ],
+    "repos": {
+     "duree": 10000,
+     "camera": {
+      "x": 3,
+      "y": -2,
+      "z": 0.02
+     },
+     "pistes": {
+      "filets0": [
+       12000,
+       {
+        "x": 14
+       }
+      ],
+      "lechee": [
+       2600,
+       {
+        "y": 12
+       }
+      ],
+      "brume": [
+       3000,
+       {
+        "y": -4
+       }
+      ]
+     }
+    }
+   },
+   "calques": {}
+  },
+  "05_promesse": {
+   "nom": "Scène 5 : Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume",
+   "etape": "5",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 1,
+   "ms_par_image": 900,
+   "avatar": {
+    "x": 126,
+    "y": 384,
+    "echelle": 3.1,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "plans": [
+    {
+     "id": "ciel",
+     "fichier": "05_promesse/05_promesse_plan-ciel_1.svg",
+     "profondeur": 0.1,
+     "marge": 40,
+     "flou": 0.2
+    },
+    {
+     "id": "soleil",
+     "fichier": "05_promesse/05_promesse_plan-soleil_1.svg",
+     "profondeur": 0.12,
+     "pivot": [
+      236,
+      186
+     ],
+     "cadre": [
+      180,
+      130,
+      112,
+      64
+     ]
+    },
+    {
+     "id": "nuage0",
+     "fichier": "05_promesse/05_promesse_plan-nuage0_1.svg",
+     "profondeur": 0.14,
+     "cadre": [
+      -80,
+      24,
+      600,
+      60
+     ]
+    },
+    {
+     "id": "nuage1",
+     "fichier": "05_promesse/05_promesse_plan-nuage1_1.svg",
+     "profondeur": 0.18,
+     "cadre": [
+      -80,
+      100,
+      600,
+      56
+     ]
+    },
+    {
+     "id": "etoiles",
+     "fichier": "05_promesse/05_promesse_plan-etoiles_1.svg",
+     "profondeur": 0.1,
+     "marge": 40
+    },
+    {
+     "id": "lune",
+     "fichier": "05_promesse/05_promesse_plan-lune_1.svg",
+     "profondeur": 0.12,
+     "cadre": [
+      10,
+      0,
+      150,
+      140
+     ]
+    },
+    {
+     "id": "mer-soir",
+     "fichier": "05_promesse/05_promesse_plan-mer-soir_1.svg",
+     "profondeur": 0.3,
+     "marge": 40
+    },
+    {
+     "id": "mer",
+     "fichier": "05_promesse/05_promesse_plan-mer_1.svg",
+     "profondeur": 0.3,
+     "marge": 40
+    },
+    {
+     "id": "plage",
+     "fichier": "05_promesse/05_promesse_plan-plage_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
+     "id": "lechee",
+     "fichier": "05_promesse/05_promesse_plan-lechee_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
+     "id": "crepuscule",
+     "fichier": "05_promesse/05_promesse_plan-crepuscule_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "voile0",
+     "fichier": "05_promesse/05_promesse_plan-voile0_1.svg",
+     "profondeur": 0.32,
+     "marge": 40,
+     "flou": 0.2
+    },
+    {
+     "id": "filets0",
+     "fichier": "05_promesse/05_promesse_plan-filets0_1.svg",
+     "profondeur": 0.36,
+     "cadre": [
+      -100,
+      162,
+      600,
+      60
+     ]
+    },
+    {
+     "id": "herbe",
+     "fichier": "05_promesse/05_promesse_plan-herbe_1.svg",
+     "profondeur": 0.58,
+     "marge": 40
+    },
+    {
+     "id": "nuit",
+     "fichier": "05_promesse/05_promesse_plan-nuit_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "flaque",
+     "fichier": "05_promesse/05_promesse_plan-flaque_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      290,
+      212,
+      60
+     ]
+    },
+    {
+     "id": "pierres-fond",
+     "fichier": "05_promesse/05_promesse_plan-pierres-fond_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      270,
+      212,
+      70
+     ]
+    },
+    {
+     "id": "grande",
+     "fichier": "05_promesse/05_promesse_plan-grande_1.svg",
+     "profondeur": 0.64,
+     "pivot": [
+      262,
+      268
+     ],
+     "cadre": [
+      190,
+      60,
+      144,
+      220
+     ]
+    },
+    {
+     "id": "sienne",
+     "fichier": "05_promesse/05_promesse_plan-sienne_1.svg",
+     "profondeur": 0.66,
+     "cadre": [
+      -100,
+      228,
+      600,
+      70
+     ]
+    },
+    {
+     "id": "pierres-devant",
+     "fichier": "05_promesse/05_promesse_plan-pierres-devant_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      300,
+      212,
+      70
+     ]
+    },
+    {
+     "id": "brume",
+     "fichier": "05_promesse/05_promesse_plan-brume_1.svg",
+     "images": {
+      "flotte|face|curieuse|0": "05_promesse/05_promesse_plan-brume--0_1.svg",
+      "flotte|face|curieuse|1": "05_promesse/05_promesse_plan-brume--1_1.svg",
+      "flotte|face|curieuse|2": "05_promesse/05_promesse_plan-brume--2_1.svg",
+      "flotte|face|surpris|0": "05_promesse/05_promesse_plan-brume--3_1.svg",
+      "flotte|face|surpris|1": "05_promesse/05_promesse_plan-brume--4_1.svg",
+      "flotte|face|surpris|2": "05_promesse/05_promesse_plan-brume--5_1.svg",
+      "flotte|face|gene|0": "05_promesse/05_promesse_plan-brume--6_1.svg",
+      "flotte|face|gene|1": "05_promesse/05_promesse_plan-brume--7_1.svg",
+      "flotte|face|gene|2": "05_promesse/05_promesse_plan-brume--8_1.svg",
+      "flotte|face|triste|0": "05_promesse/05_promesse_plan-brume--9_1.svg",
+      "flotte|face|triste|1": "05_promesse/05_promesse_plan-brume--10_1.svg",
+      "flotte|face|triste|2": "05_promesse/05_promesse_plan-brume--11_1.svg",
+      "flotte|face|content|0": "05_promesse/05_promesse_plan-brume--12_1.svg",
+      "flotte|face|content|1": "05_promesse/05_promesse_plan-brume--13_1.svg",
+      "flotte|face|content|2": "05_promesse/05_promesse_plan-brume--14_1.svg"
+     },
+     "anims": {
+      "flotte": {
+       "images": 3,
+       "dt": 0.28
+      }
+     },
+     "profondeur": 0.68,
+     "pivot": [
+      262,
+      268
+     ],
+     "cadre": [
+      194,
+      180,
+      136,
+      112
+     ]
+    },
+    {
+     "id": "avatar",
+     "profondeur": 0.7,
+     "pivot": [
+      126,
+      384
+     ]
+    },
+    {
+     "id": "lumiere",
+     "fichier": "05_promesse/05_promesse_plan-lumiere_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "teinte",
+     "fichier": "05_promesse/05_promesse_plan-teinte_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    }
+   ],
+   "partition": {
+    "lumiere": {
+     "teinte": "#141C3A",
+     "force": 0.32,
+     "cote": -1
+    },
+    "temps": [
+     {
+      "duree": 4600,
+      "camera": [
+       [
+        0,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ],
+       [
+        1200,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ],
+       [
+        4600,
+        {
+         "x": 30,
+         "y": -40,
+         "z": 1.14
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "o": 0.85,
+          "x": 14
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "grande": [
+        [
+         0,
+         {
+          "o": 0,
+          "s": 0.8
+         }
+        ],
+        [
+         4600,
+         {
+          "s": 0.8,
+          "o": 0
+         }
+        ]
+       ],
+       "sienne": [
+        [
+         0,
+         {
+          "o": 0,
+          "x": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 0,
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 0,
+          "y": 0
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        900,
+        {
+         "anim": "repos",
+         "dir": "haut_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "curieuse"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 4200,
+      "camera": [
+       [
+        0,
+        {
+         "x": 30,
+         "y": -40,
+         "z": 1.14
+        }
+       ],
+       [
+        900,
+        {
+         "x": -20,
+         "y": 24,
+         "z": 1.24
+        }
+       ],
+       [
+        4200,
+        {
+         "x": -20,
+         "y": 24,
+         "z": 1.24
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4200,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4200,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4200,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4200,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         4200,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4200,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4200,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "grande": [
+        [
+         0,
+         {
+          "s": 0.8,
+          "o": 0
+         }
+        ],
+        [
+         4200,
+         {
+          "s": 0.8,
+          "o": 0
+         }
+        ]
+       ],
+       "sienne": [
+        [
+         0,
+         {
+          "x": 0,
+          "o": 0
+         }
+        ],
+        [
+         4200,
+         {
+          "x": 0,
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0
+         }
+        ],
+        [
+         4200,
+         {
+          "x": 0,
+          "y": 0
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         1680,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3360,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4200,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        600,
+        {
+         "anim": "pose_pointe",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        2600,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "curieuse"
+         }
+        ],
+        [
+         2400,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "surpris"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 4600,
+      "camera": [
+       [
+        0,
+        {
+         "x": -20,
+         "y": 24,
+         "z": 1.24
+        }
+       ],
+       [
+        900,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ],
+       [
+        4600,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "grande": [
+        [
+         0,
+         {
+          "s": 0.8,
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "s": 0.8,
+          "o": 0
+         }
+        ]
+       ],
+       "sienne": [
+        [
+         0,
+         {
+          "o": 0,
+          "x": 0
+         }
+        ],
+        [
+         600,
+         {
+          "o": 0,
+          "x": 0
+         }
+        ],
+        [
+         1800,
+         {
+          "o": 0.8,
+          "x": 20
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.5,
+          "x": 70
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 0
+         }
+        ],
+        [
+         1200,
+         {
+          "x": 0,
+          "y": 12,
+          "s": 0.94
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 0,
+          "y": 12,
+          "s": 0.94
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         1840,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3680,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "gene"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 5200,
+      "camera": [
+       [
+        0,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ],
+       [
+        900,
+        {
+         "x": 34,
+         "y": -6,
+         "z": 1.16
+        }
+       ],
+       [
+        5200,
+        {
+         "x": 34,
+         "y": -6,
+         "z": 1.16
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         5200,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         5200,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5200,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         5200,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         5200,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         5200,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5200,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "grande": [
+        [
+         0,
+         {
+          "o": 0,
+          "s": 0.8
+         }
+        ],
+        [
+         1600,
+         {
+          "o": 0,
+          "s": 0.8,
+          "e": "ease-out"
+         }
+        ],
+        [
+         2800,
+         {
+          "o": 0.85,
+          "s": 1
+         }
+        ],
+        [
+         4200,
+         {
+          "o": 0.7,
+          "s": 1.02
+         }
+        ],
+        [
+         5200,
+         {
+          "o": 0,
+          "s": 1.06
+         }
+        ]
+       ],
+       "sienne": [
+        [
+         0,
+         {
+          "o": 0.5,
+          "x": 70
+         }
+        ],
+        [
+         1500,
+         {
+          "o": 0,
+          "x": 110
+         }
+        ],
+        [
+         5200,
+         {
+          "o": 0,
+          "x": 110
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 12,
+          "s": 0.94
+         }
+        ],
+        [
+         5200,
+         {
+          "x": 0,
+          "y": 12,
+          "s": 0.94
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         2080,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4160,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5200,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "triste"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 4400,
+      "camera": [
+       [
+        0,
+        {
+         "x": 34,
+         "y": -6,
+         "z": 1.16
+        }
+       ],
+       [
+        900,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ],
+       [
+        4400,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4400,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4400,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4400,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4400,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         4400,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4400,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4400,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "grande": [
+        [
+         0,
+         {
+          "o": 0,
+          "s": 1.06
+         }
+        ],
+        [
+         4400,
+         {
+          "o": 0,
+          "s": 1.06
+         }
+        ]
+       ],
+       "sienne": [
+        [
+         0,
+         {
+          "o": 0,
+          "x": 110
+         }
+        ],
+        [
+         4400,
+         {
+          "o": 0,
+          "x": 110
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 0,
+          "y": 12,
+          "s": 0.94
+         }
+        ],
+        [
+         1800,
+         {
+          "x": 0,
+          "y": 12,
+          "s": 0.94,
+          "e": "ease-out"
+         }
+        ],
+        [
+         2600,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ],
+        [
+         4400,
+         {
+          "x": 0,
+          "y": 0,
+          "s": 1
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         1760,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3520,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4400,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "pose_hausse",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ],
+       [
+        2000,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "triste"
+         }
+        ],
+        [
+         1800,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "content"
+         }
+        ]
+       ]
+      }
+     }
+    ],
+    "repos": {
+     "duree": 10000,
+     "camera": {
+      "x": 3,
+      "y": -2,
+      "z": 0.02
+     },
+     "pistes": {
+      "filets0": [
+       12000,
+       {
+        "x": 14
+       }
+      ],
+      "lechee": [
+       2600,
+       {
+        "y": 12
+       }
+      ],
+      "brume": [
+       3000,
+       {
+        "y": -4
+       }
+      ]
+     }
+    }
+   },
+   "calques": {}
   },
   "05_feu": {
    "nom": "Scène 5d : Le feu prend",
@@ -37110,7 +41382,8 @@
         1800,
         {
          "anim": "marche",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ],
        [
@@ -37118,14 +41391,15 @@
         {
          "anim": "arret",
          "dir": "bas_droite",
-         "expr": "veille"
+         "expr": "neutre"
         }
        ],
        [
         3420,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -37298,7 +41572,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -37778,7 +42053,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -37935,7 +42211,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -38265,7 +42542,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -38935,7 +43213,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -39093,7 +43372,7 @@
         {
          "anim": "repos",
          "dir": "bas_droite",
-         "expr": "decidee"
+         "expr": "neutre"
         }
        ]
       ],
@@ -39251,7 +43530,7 @@
         {
          "anim": "pose_poings",
          "dir": "bas_droite",
-         "expr": "decidee"
+         "expr": "neutre"
         }
        ]
       ],
@@ -39416,7 +43695,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],
@@ -39739,7 +44019,8 @@
         0,
         {
          "anim": "repos",
-         "dir": "bas_droite"
+         "dir": "bas_droite",
+         "expr": "neutre"
         }
        ]
       ],

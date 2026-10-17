@@ -89,11 +89,11 @@ export const SCENES = {
   ],
   // Le Brasier écrit, avant la plage : l'épave promise pour le matin ; le doute de Brume, sa brume qu'elle ne retient plus
   epave: [
-    { scene: '05_cercle', who: 'joueur', text: 'Attends. Je pense que mon bateau va s’échouer sur la plage : je pourrai sans doute récupérer mes affaires.' },
-    { scene: '05_cercle', who: 'joueur', text: 'Tu es Brume, non ? Tu ne pourrais pas, justement, faire s’en aller la brume ?' },
-    { scene: '05_cercle', who: 'Brume', text: 'Oui… Pardon pour ça. Il y a longtemps que j’ai oublié comment la retenir.' },
-    { scene: '05_cercle', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus forte aussi.' },
-    { scene: '05_cercle', who: 'joueur', text: 'Euh… D’accord. Écoute, ce n’est pas grave. Déjà, installons-nous.' }
+    { scene: '05_promesse', who: 'joueur', text: 'Attends. Je pense que mon bateau va s’échouer sur la plage : je pourrai sans doute récupérer mes affaires.' },
+    { scene: '05_promesse', who: 'joueur', text: 'Tu es Brume, non ? Tu ne pourrais pas, justement, faire s’en aller la brume ?' },
+    { scene: '05_promesse', who: 'Brume', text: 'Oui… Pardon pour ça. Il y a longtemps que j’ai oublié comment la retenir.' },
+    { scene: '05_promesse', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus forte aussi.' },
+    { scene: '05_promesse', who: 'joueur', text: 'Euh… D’accord. Écoute, ce n’est pas grave. Déjà, installons-nous.' }
   ],
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée ; quelqu'un regarde le feu (Agathe)
   nuit: [

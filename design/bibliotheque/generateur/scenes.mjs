@@ -22725,7 +22725,8 @@ var require_gravure_rencontre = __commonJS({
       { id: "filets2", profondeur: 0.9, cadre: [-100, 336, 600, 90], dessin: /* @__PURE__ */ __name(() => filets(p, 2, [[-60, 362, 250, 5, 11], [210, 374, 250, 6, 12]]), "dessin") }
     ], "brumeDevant");
     var lecheeVa = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [D * 0.4, { y: 8, e: "ease-in-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "lecheeVa");
-    var joue = /* @__PURE__ */ __name((...clips) => clips.map(([t, anim, dir, expr]) => [t, expr ? { anim, dir, expr } : { anim, dir }]), "joue");
+    var NEUTRES = /* @__PURE__ */ new Set(["repos", "marche", "arret"]);
+    var joue = /* @__PURE__ */ __name((...clips) => clips.map(([t, anim, dir, expr = NEUTRES.has(anim) ? "neutre" : void 0]) => [t, expr ? { anim, dir, expr } : { anim, dir }]), "joue");
     var COUCHANT = { teinte: "#2A140A", force: 0.24, cote: 1 };
     var FROIDE = { teinte: "#1C2242", force: 0.26, cote: -1 };
     var derniere = /* @__PURE__ */ __name((cles) => {
@@ -22757,9 +22758,9 @@ var require_gravure_rencontre = __commonJS({
       const ACTEUR = [
         joue([0, "repos", "haut_droite"]),
         joue([0, "repos", "haut_droite"], [1400, "repos", "haut_gauche"], [3400, "repos", "haut_droite"]),
-        joue([0, "repos", "haut_droite"], [500, "repos", "bas_droite", "froid"], [900, "pose_frisson", "bas_droite"]),
-        joue([0, "pose_frisson", "bas_droite"], [600, "repos", "bas_droite", "mefiante"], [1e3, "pose_visiere", "bas_droite"]),
-        joue([0, "repos", "bas_droite", "decidee"], [600, "repos", "haut_droite"], [1e3, "marche", "haut_droite"], [3e3, "repos", "haut_droite"])
+        joue([0, "repos", "haut_droite"], [500, "repos", "bas_droite"], [900, "pose_frisson", "bas_droite"]),
+        joue([0, "pose_frisson", "bas_droite"], [600, "repos", "bas_droite"], [1e3, "pose_visiere", "bas_droite"]),
+        joue([0, "repos", "bas_droite"], [600, "repos", "haut_droite"], [1e3, "marche", "haut_droite"], [3e3, "repos", "haut_droite"])
       ];
       const pas = /* @__PURE__ */ __name((D) => [[0, { x: 0, y: 0, s: 1 }], [1e3, { x: 0, y: 0, s: 1 }], [3e3, { x: 46, y: -34, s: 0.8, e: "linear" }], [D, { x: 46, y: -34, s: 0.8 }]], "pas");
       const temps = SOIR.map(([k0, k1, D], n) => ({ ...unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? "ease-in-out" : "ease-out" }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), rocher: [[0, ROC_LOIN], [D, ROC_LOIN]], anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]], ...n === 4 ? { avatar: pas(D) } : {} }), acteur: ACTEUR[n] }));
@@ -22770,7 +22771,7 @@ var require_gravure_rencontre = __commonJS({
       const r = 8, ph = n % 4 / 4, sway = Math.sin(ph * Math.PI * 2) * r * 0.32, jit = [[0, 0], [0.5, -0.2], [-0.4, 0.2], [0.3, 0.3]][n % 4];
       const x = 20 + jit[0], y = 32 + [0, -0.6, -1, -0.6][n % 4] + jit[1], contour = flamePath(x, y, r, sway), id2 = `${pref}${n}`;
       const hach = Array.from({ length: 9 }, (_, k) => `M${f(x - 2 + k * 1.6)},${f(y + r + 2)} l${f(8)},${f(-22)}`).join(" ");
-      return `<path d="${contour}" fill="none" stroke="${ENCRE}" stroke-width="2.6" stroke-linejoin="round"/>` + brumeFrame("s0", n, expr).replace(/bhs0(\d)/g, `${id2}h$1`) + `<defs><clipPath id="${id2}c"><path d="${contour}"/></clipPath></defs><g clip-path="url(#${id2}c)"><path d="${hach}" fill="none" stroke="#6E8792" stroke-width="0.45" opacity="0.7"/></g>`;
+      return `<path d="${contour}" fill="none" stroke="${ENCRE}" stroke-width="2.6" stroke-linejoin="round"/>` + brumeFrame("s0", n, expr === "dos" ? "neutre" : expr, expr !== "dos").replace(/bhs0(\d)/g, `${id2}h$1`) + `<defs><clipPath id="${id2}c"><path d="${contour}"/></clipPath></defs><g clip-path="url(#${id2}c)"><path d="${hach}" fill="none" stroke="#6E8792" stroke-width="0.45" opacity="0.7"/></g>`;
     }
     __name(brumeGravee, "brumeGravee");
     var HALO = /* @__PURE__ */ __name((p) => `<radialGradient id="${p}H"><stop offset="0" stop-color="#E4F6FF" stop-opacity="0.6"/><stop offset="0.35" stop-color="#BFE2F6" stop-opacity="0.26"/><stop offset="1" stop-color="#BFE2F6" stop-opacity="0"/></radialGradient>`, "HALO");
@@ -22826,7 +22827,7 @@ var require_gravure_rencontre = __commonJS({
       const temps = [
         {
           ...unTemps(D0, [[0, c0], [D0, { ...c1, e: "ease-in-out" }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit, avatar: marche }),
-          acteur: joue([0, "marche", "bas_droite"], [1500, "arret", "bas_droite", "veille"], [2020, "repos", "bas_droite"], [2150, "pose_sursaut", "bas_droite"], [2900, "repos", "bas_droite", "surprise"])
+          acteur: joue([0, "marche", "bas_droite"], [1500, "arret", "bas_droite"], [2020, "repos", "bas_droite"], [2150, "pose_sursaut", "bas_droite"], [2900, "repos", "bas_droite", "surprise"])
         },
         {
           ...unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [2300, { x: -9, e: "ease-out" }], [2550, { x: -17, y: -3 }], [2750, { x: -19, y: 0, e: "ease-in" }], [D1, { x: -19, y: 0 }]] }),
@@ -22907,10 +22908,10 @@ var require_gravure_rencontre = __commonJS({
       const t1 = tenir(t0, 2600, joue([0, "pose_pointe", "bas_droite"], [1900, "repos", "bas_droite", "surprise"]));
       const t2 = tenir(t1, 2600, joue([0, "repos", "bas_droite", "surprise"], [700, "pose_hausse", "bas_droite"]));
       const t3 = tenir(t2, 2e3, joue([0, "repos", "bas_droite"]));
-      const t4 = tenir(t3, 2400, joue([0, "marche", "bas_droite"], [1300, "arret", "bas_droite", "veille"], [1820, "repos", "bas_droite"]), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: "linear" }], [2400, { x: 40, y: -12, s: 0.96 }]] });
+      const t4 = tenir(t3, 2400, joue([0, "marche", "bas_droite"], [1300, "arret", "bas_droite"], [1820, "repos", "bas_droite"]), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: "linear" }], [2400, { x: 40, y: -12, s: 0.96 }]] });
       const t5 = tenir(t4, 2600, joue([0, "pose_poings", "bas_droite"]));
       const t6 = tenir(t5, 2600, joue([0, "pose_croises", "bas_droite"], [1800, "repos", "bas_droite"]));
-      const t7 = tenir(t6, 2600, joue([0, "repos", "bas_droite", "froid"]));
+      const t7 = tenir(t6, 2600, joue([0, "repos", "bas_droite"]));
       return { plans, partition: { lumiere: FROIDE, temps: [t0, t1, t2, t3, t4, t5, t6, t7], repos: { duree: 1e4, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
     }
     __name(rocher02, "rocher02");
@@ -23075,7 +23076,7 @@ var require_gravure_lorena = __commonJS({
       const LARGE = { x: 10, y: 4, z: 1.06 }, DEUX = { x: 20, y: 18, z: 1.18 }, SUR_LORENA = { x: 56, y: 22, z: 1.32 }, SUR_BRUME = { x: -24, y: -6, z: 1.34 }, SUR_AVATAR = { x: -46, y: 30, z: 1.3 };
       const R0 = [
         // 0 « Ho, du feu ! … donne-moi la main » : elle sort de l'eau et vient ; lui sursaute, puis va vers elle
-        [4800, LARGE, joue([0, "repos", "bas_droite", "surprise"], [700, "pose_sursaut", "bas_droite"], [1800, "marche", "bas_droite"], [2900, "arret", "bas_droite", "veille"], [3420, "repos", "bas_droite"]), [[0, L("marche", "bas_gauche", "soulagee")], [3200, L("arret", "bas_gauche", "soulagee")], [3720, L("repos", "bas_gauche", "soulagee")]], [[0, B("curieuse")]]],
+        [4800, LARGE, joue([0, "repos", "bas_droite", "surprise"], [700, "pose_sursaut", "bas_droite"], [1800, "marche", "bas_droite"], [2900, "arret", "bas_droite"], [3420, "repos", "bas_droite"]), [[0, L("marche", "bas_gauche", "soulagee")], [3200, L("arret", "bas_gauche", "soulagee")], [3720, L("repos", "bas_gauche", "soulagee")]], [[0, B("curieuse")]]],
         // 1 « Lorena, navigatrice. Officier de quart… »
         [3600, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_poings", "bas_gauche", "sourire")]], [[0, B("curieuse")]]],
         // 2 « deux requins… un tentacule immense… Bref ! »
@@ -23099,9 +23100,9 @@ var require_gravure_lorena = __commonJS({
         // 11 « Je… Je n'avais juste jamais… parlé à une entité… magique ! »
         [3800, SUR_LORENA, joue([0, "repos", "bas_droite"]), [[0, L("pose_hausse", "bas_gauche", "genee")]], [[0, B("gene")]]],
         // 12 « Quoi qu'il en soit ! On va devoir trouver un moyen de survivre… »
-        [3800, DEUX, joue([0, "repos", "bas_droite", "decidee"]), [[0, L("pose_poings", "bas_gauche", "decidee")]], [[0, B("neutre")]]],
+        [3800, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_poings", "bas_gauche", "decidee")]], [[0, B("neutre")]]],
         // 13 « Construisons-nous un véritable abri de naufragés. »
-        [3200, LARGE, joue([0, "pose_poings", "bas_droite", "decidee"]), [[0, L("pose_pointe", "face", "decidee")]], [[0, B("content")]]],
+        [3200, LARGE, joue([0, "pose_poings", "bas_droite", "neutre"]), [[0, L("pose_pointe", "face", "decidee")]], [[0, B("content")]]],
         // 14 « Elle a raison. Ici… Il arrive des choses… » : elle baisse, la voix basse
         [4200, SUR_BRUME, joue([0, "repos", "bas_droite"]), [[0, L("repos", "bas_gauche", "inquiete")]], [[0, B("triste")]]],
         // 15 « Euuh… Brume ? Ça va ? »
@@ -23309,7 +23310,7 @@ var require_gravure_vent = __commonJS({
         acteur: R.joue([0, "repos", "bas_droite", "surprise"], [TOMBE - 50, "pose_sursaut", "bas_droite"], [3800, "repos", "bas_droite", "surprise"])
       };
       const pres = { x: 30, y: 30, z: 1.32 };
-      const t1 = R.tenir(t0, D1, R.joue([0, "repos", "bas_droite", "surprise"], [500, "marche", "bas_droite"], [1700, "arret", "bas_droite", "veille"], [2220, "repos", "bas_droite"]), {
+      const t1 = R.tenir(t0, D1, R.joue([0, "repos", "bas_droite", "surprise"], [500, "marche", "bas_droite"], [1700, "arret", "bas_droite"], [2220, "repos", "bas_droite"]), {
         avatar: [[0, { x: -10, y: 0 }], [500, { x: -10, y: 0, e: "linear" }], [1700, { x: 26, y: -6, s: 0.98 }], [D1, { x: 26, y: -6, s: 0.98 }]],
         lechee: R.lecheeVa(D1)
       });
@@ -23467,7 +23468,7 @@ var require_gravure_vent = __commonJS({
         // « Je… J'ignore ce qui s'est passé. C'est moi qui ai fait ça ? »
         [3800, SUR_AVATAR2, R.joue([0, "pose_hausse", "bas_droite", "surprise"], [2400, "repos", "bas_droite", "surprise"]), B([0, "curieuse"])],
         // « Oui ! Tu es comme eux ! Tu peux créer… » : elle tourne autour de lui, toute à sa joie
-        [4e3, DEUX2, R.joue([0, "repos", "bas_droite", "surprise"], [1600, "repos", "bas_droite", "content"]), B([0, "content"]), { brume: [[0, { x: -20, y: 0 }], [700, { x: -48, y: -30, s: 1.06 }], [1400, { x: -70, y: -6, s: 1.04 }], [2100, { x: -52, y: 12, s: 0.98 }], [2900, { x: -20, y: 0, s: 1 }], [4e3, { x: -20, y: 0, s: 1 }]] }],
+        [4e3, DEUX2, R.joue([0, "repos", "bas_droite", "surprise"], [1600, "repos", "bas_droite"]), B([0, "content"]), { brume: [[0, { x: -20, y: 0 }], [700, { x: -48, y: -30, s: 1.06 }], [1400, { x: -70, y: -6, s: 1.04 }], [2100, { x: -52, y: 12, s: 0.98 }], [2900, { x: -20, y: 0, s: 1 }], [4e3, { x: -20, y: 0, s: 1 }]] }],
         // « Moi, je ne le comprends pas. Je le garde pour celui qui doit le recevoir… et on dirait que… c'est toi. » : elle
         // se pose au-dessus du livre, l'y invite (« Tourner la page »)
         [4600, GESTE, R.joue([0, "repos", "bas_droite"]), B([0, "gene"], [2600, "content"]), { brume: [[0, { x: -20, y: 0 }], [1800, { x: 0, y: 0 }], [4600, { x: 0, y: 0 }]] }]
@@ -23496,10 +23497,12 @@ var require_gravure_vent = __commonJS({
         filets0: [[0, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }], [D, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }]],
         nuit: [[0, { o: 0.2 }], [D, { o: 0.24 }]],
         etoiles: [[0, { o: 1 }], [D, { o: 1 }]],
-        filante: [[0, { x: 60, y: -16, o: 0 }], [1100, { x: 60, y: -16, o: 0, e: "linear" }], [1150, { x: 40, y: -10, o: 1, e: "linear" }], [1650, { x: -40, y: 12, o: 1 }], [1800, { x: -60, y: 16, o: 0 }], [D, { x: -60, y: 16, o: 0 }]],
-        brume: [[0, { y: 0 }], [D, { y: -10 }]]
+        // (l'étoile file quand le regard est monté : longtemps, lentement)
+        filante: [[0, { x: 60, y: -16, o: 0 }], [950, { x: 60, y: -16, o: 0, e: "linear" }], [1050, { x: 52, y: -14, o: 1, e: "linear" }], [2e3, { x: -40, y: 12, o: 1 }], [D, { x: -56, y: 16, o: 0 }]],
+        // (elle se retourne d'un petit bond, puis reste de dos, les yeux au ciel, et s'élève un peu)
+        brume: [[0, { y: 0, r: 0 }], [420, { y: 0, r: 0, e: "ease-out" }], [540, { y: -9, r: -6, e: "ease-in" }], [680, { y: 0, r: 0 }], [D, { y: -10 }]]
       };
-      const t0 = { ...unTemps(D, [[0, { x: 0, y: 70, z: 1.5 }], [300, { x: 0, y: 70, z: 1.5 }], [D, { x: 0, y: -70, z: 1.24 }]], P2), jeux: { brume: B([0, "curieuse"], [900, "triste"]) } };
+      const t0 = { ...unTemps(D, [[0, { x: 0, y: 70, z: 1.5 }], [650, { x: 0, y: 70, z: 1.5 }], [1500, { x: 0, y: -70, z: 1.24 }], [D, { x: 0, y: -74, z: 1.24 }]], P2), jeux: { brume: B([0, "curieuse"], [540, "dos"]) } };
       plans.splice(plans.indexOf(null), 1, ...brumeFigurant([t0], BC, 2.6, 0.62));
       return fin(plans, [t0], R.FROIDE);
     }
@@ -23534,11 +23537,11 @@ var require_gravure_vent = __commonJS({
       const temps = repliques(t0, [
         // « Ceux d'avant savaient beaucoup… Mais depuis ce jour, je ne me rappelle plus rien. » : elle s'éloigne un peu vers
         // la mer, pâlit
-        [5e3, SUR_BRUME, R.joue([0, "repos", "bas_droite"], [2800, "repos", "bas_droite", "triste"]), B([0, "content"], [2400, "triste"]), { ...nuitee(5e3, 0.06, 0.1), brume: [[0, { x: 0, y: 0, s: 1 }], [3200, { x: 30, y: -14, s: 0.92 }], [5e3, { x: 34, y: -16, s: 0.92 }]] }],
+        [5e3, SUR_BRUME, R.joue([0, "repos", "bas_droite"]), B([0, "content"], [2400, "triste"]), { ...nuitee(5e3, 0.06, 0.1), brume: [[0, { x: 0, y: 0, s: 1 }], [3200, { x: 30, y: -14, s: 0.92 }], [5e3, { x: 34, y: -16, s: 0.92 }]] }],
         // « Quel jour ? » : il fait un pas vers elle
-        [2600, SUR_AVATAR, R.joue([0, "marche", "bas_droite"], [800, "arret", "bas_droite", "veille"], [1320, "repos", "bas_droite", "surprise"]), B([0, "triste"]), { ...nuitee(2600, 0.1, 0.12), avatar: [[0, { x: 0, y: 0 }], [800, { x: 16, y: -4, s: 0.98, e: "linear" }], [2600, { x: 16, y: -4, s: 0.98 }]] }],
+        [2600, SUR_AVATAR, R.joue([0, "marche", "bas_droite"], [800, "arret", "bas_droite"], [1320, "repos", "bas_droite", "surprise"]), B([0, "triste"]), { ...nuitee(2600, 0.1, 0.12), avatar: [[0, { x: 0, y: 0 }], [800, { x: 16, y: -4, s: 0.98, e: "linear" }], [2600, { x: 16, y: -4, s: 0.98 }]] }],
         // (03_ciel) « Peu importe. Ce livre a d'autres choses pour toi… il est très gros… » : elle se secoue, file au livre
-        [4600, { x: 18, y: 22, z: 1.2 }, R.joue([0, "repos", "bas_droite"], [1800, "repos", "bas_droite", "content"]), B([0, "gene"], [700, "content"]), { ...nuitee(4600, 0.12, 0.16), brume: [[0, { x: 34, y: -16, s: 0.92 }], [500, { x: 34, y: -34, s: 0.96, e: "ease-in" }], [1600, { x: -30, y: 28, s: 1 }], [4600, { x: -30, y: 28, s: 1 }]] }],
+        [4600, { x: 18, y: 22, z: 1.2 }, R.joue([0, "repos", "bas_droite"]), B([0, "gene"], [700, "content"]), { ...nuitee(4600, 0.12, 0.16), brume: [[0, { x: 34, y: -16, s: 0.92 }], [500, { x: 34, y: -34, s: 0.96, e: "ease-in" }], [1600, { x: -30, y: 28, s: 1 }], [4600, { x: -30, y: 28, s: 1 }]] }],
         // « … et ses pages ont l'air d'avoir oublié, elles aussi, ce qu'elles contenaient. » : elle reste penchée sur la page
         // vide ; lui croise les bras ; puis elle lève les yeux vers le ciel, et le regard monte avec elle (« Lever les yeux »)
         [4400, { x: 0, y: -36, z: 1.1 }, R.joue([0, "repos", "bas_droite"], [1200, "pose_croises", "bas_droite"]), B([0, "triste"], [2800, "curieuse"]), { ...nuitee(4400, 0.16, 0.2), brume: [[0, { x: -30, y: 28 }], [2800, { x: -30, y: 28, e: "ease-out" }], [3600, { x: -30, y: 6 }], [4400, { x: -30, y: 6 }]] }]
@@ -23567,17 +23570,17 @@ var require_gravure_vent = __commonJS({
       const NUIT_O = 0.36;
       const t0 = {
         ...unTemps(D0, [[0, SUR_AVATAR], [D0, { ...SUR_AVATAR, x: -8 }]], { ...apresVent(plans.filter(Boolean), D0, NUIT_O, NUIT_O + 0.02), brume: [[0, { x: -20, y: 0 }], [D0, { x: -20, y: 0 }]], eclat: [[0, { o: 0 }], [D0, { o: 0 }]] }),
-        acteur: R.joue([0, "pose_frisson", "bas_droite", "froid"]),
+        acteur: R.joue([0, "pose_frisson", "bas_droite", "neutre"]),
         jeux: { brume: B([0, "curieuse"], [2400, "triste"]) }
       };
       const PRES = { x: 238 - BV[0], y: 246 - BV[1] };
       const temps = repliques(t0, [
         // « Non, non, ne t'en fais pas. Je ne réchauffe pas beaucoup, mais je brille… » : elle vient tout près de lui et se
         // fait lumière
-        [5e3, DEUX, R.joue([0, "pose_frisson", "bas_droite", "froid"], [2600, "repos", "bas_droite", "froid"]), B([0, "content"]), { brume: [[0, { x: -20, y: 0 }], [1400, { ...PRES, s: 1.06 }], [5e3, { ...PRES, s: 1.06 }]], eclat: [[0, { o: 0, x: -20, y: 0 }], [1400, { ...PRES, o: 0.4 }], [2400, { ...PRES, o: 1, s: 1.12 }], [5e3, { ...PRES, o: 1, s: 1.12 }]] }],
+        [5e3, DEUX, R.joue([0, "pose_frisson", "bas_droite", "neutre"], [2600, "repos", "bas_droite"]), B([0, "content"]), { brume: [[0, { x: -20, y: 0 }], [1400, { ...PRES, s: 1.06 }], [5e3, { ...PRES, s: 1.06 }]], eclat: [[0, { o: 0, x: -20, y: 0 }], [1400, { ...PRES, o: 0.4 }], [2400, { ...PRES, o: 1, s: 1.12 }], [5e3, { ...PRES, o: 1, s: 1.12 }]] }],
         // « Bon… D'accord, Brume. On suit ton plan… mais je vais quand même mourir de froid ! » : les bras croisés, puis il
         // regrelotte ; elle, gênée : elle avait oublié
-        [5e3, SUR_AVATAR, R.joue([0, "pose_croises", "bas_droite", "froid"], [3e3, "pose_frisson", "bas_droite", "froid"]), B([0, "content"], [3e3, "gene"])],
+        [5e3, SUR_AVATAR, R.joue([0, "pose_croises", "bas_droite", "neutre"], [3e3, "pose_frisson", "bas_droite", "neutre"]), B([0, "content"], [3e3, "gene"])],
         // « Ah… C'est vrai ! Viens, par là. » : elle sursaute, file vers le haut de la plage, et l'attend (« Suivre Brume »)
         [3600, { x: 0, y: 0, z: 1.04 }, R.joue([0, "repos", "bas_droite", "surprise"], [900, "repos", "haut_droite"]), B([0, "surpris"], [600, "content"]), { brume: [[0, { ...PRES, s: 1.06 }], [300, { ...PRES, y: PRES.y - 12, s: 1.06, e: "cubic-bezier(.3,0,.3,1)" }], [1400, { x: -26, y: -172, s: 0.9 }], [3600, { x: -26, y: -172, s: 0.9 }]], eclat: [[0, { ...PRES, o: 1, s: 1.12 }], [300, { ...PRES, o: 1, s: 1.12, e: "cubic-bezier(.3,0,.3,1)" }], [1400, { x: -26, y: -172, o: 0.5, s: 0.9 }], [3600, { x: -26, y: -172, o: 0.5, s: 0.9 }]] }]
       ]);
@@ -23585,7 +23588,178 @@ var require_gravure_vent = __commonJS({
       return fin(plans, temps, NUIT, { brume: [3e3, { y: -4 }], eclat: [3e3, { y: -4 }] });
     }
     __name(nuit03, "nuit03");
-    module.exports = { livre03, vent03, ciel03, trouee03, nuit03 };
+    module.exports = { livre03, vent03, ciel03, trouee03, nuit03, decorApres, B, brumeFigurant, repliques, fin, NUIT };
+  }
+});
+
+// atelier/gravure_cercle.js
+var require_gravure_cercle = __commonJS({
+  "atelier/gravure_cercle.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, ENCRE } = require_gravure();
+    var { balance, teinte, MARGE, G, D_ } = require_theatre_pont();
+    var { unTemps } = require_gravure_plage();
+    var { flamePath } = require_brume();
+    var R = require_gravure_rencontre();
+    var V = require_gravure_vent();
+    var C0 = [236, 318];
+    var LISIERE = 262;
+    function herbe(p) {
+      const A = atelier(`${p}h`);
+      const bord = courbe((t) => [G + (D_ - G) * t, LISIERE + 5 * Math.sin(t * 9 + 1) + 3 * Math.sin(t * 23)], 50);
+      let s = gravure(A, [...bord, [D_, D_ + 20], [G, D_ + 20]], A.lin([[0, "#5A7A4A"], [0.4, "#3E5E36"], [1, "#1E3420"]], 0, LISIERE, 0, D_), { seed: 760, amp: 0.4, angle: 16, pas: 2.6, ombre: 0.3, tailles: 2, tailleP: 4, trait: 2.2, portee: 0, lumiere: [0.3, -1] });
+      const touffes = [];
+      for (let i = 0; i < 40; i++) {
+        const x = G + 10 + hash(i, 71) * (D_ - G - 20), y = LISIERE + 12 + hash(i, 73) ** 0.85 * (D_ - LISIERE - 10);
+        if (Math.hypot((x - C0[0]) / 104, (y - C0[1]) / 34) < 1) continue;
+        touffes.push([x, y, 0.5 + (y - LISIERE) / 140]);
+      }
+      for (const [x, y, k] of touffes.sort((a, b) => a[1] - b[1])) {
+        const pts5 = [[x - 7 * k, y], [x - 11 * k, y - 11 * k], [x - 3 * k, y - 4 * k], [x - 1 * k, y - 17 * k], [x + 2.5 * k, y - 4 * k], [x + 10 * k, y - 13 * k], [x + 7 * k, y]];
+        s += gravure(A, pts5, "#6E9A56", { seed: 780 + Math.round(x), amp: 0.2, angle: 70, pas: 1.8, ombre: 0.45, tailles: 0, trait: 1.3, portee: 0.3, dy: 2, lumiere: [0.3, -1] });
+      }
+      for (let i = 0; i < 14; i++) {
+        const x = G + 20 + hash(i, 75) * (D_ - G - 40), y = LISIERE + 16 + hash(i, 77) * (D_ - LISIERE - 30);
+        if (Math.hypot((x - C0[0]) / 110, (y - C0[1]) / 38) < 1) continue;
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.6 + hash(i, 79))}" fill="${i % 3 ? "#E6DCB0" : "#C8B4D8"}" stroke="${ENCRE}" stroke-width="0.7"/>`;
+      }
+      return A.out(s);
+    }
+    __name(herbe, "herbe");
+    var PIERRES = Array.from({ length: 11 }, (_, i) => {
+      const a = i / 11 * Math.PI * 2 + 0.3;
+      return [C0[0] + 84 * Math.cos(a), C0[1] + 26 * Math.sin(a), 8 + 4 * hash(i, 81), a];
+    });
+    function pierres(p, devant) {
+      const A = atelier(`${p}p${devant ? "d" : "f"}`);
+      let s = "";
+      if (!devant) s += gravure(A, ovale(C0[0], C0[1] + 2, 54, 15, 22), "#2A2422", { seed: 800, amp: 0.6, angle: 10, pas: 2.2, tailles: 1, trait: 1.6, portee: 0, noir: false }) + [[220, 318], [244, 322], [232, 314], [252, 316]].map(([x, y], k) => `<path d="M${x - 6},${y} l12,${k % 2 ? -2 : 2}" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round"/>`).join("");
+      for (const [x, y, r, a] of PIERRES.filter(([, y2]) => y2 > C0[1] === devant).sort((u, v) => u[1] - v[1])) {
+        const k = 0.75 + 0.25 * Math.sin(a);
+        s += gravure(A, ovale(x, y - r * 0.4 * k, r * k * 1.15, r * k * 0.75, 12, hash(Math.round(x), 3)), A.lin([[0, "#5A5560"], [0.55, "#3A363E"], [1, "#1A1618"]], 0, y - r, 0, y + r * 0.4), { seed: 820 + Math.round(x), amp: 0.5, angle: 40, pas: 2, ombre: 0.35, tailles: 1, tailleP: 2, trait: 1.8, portee: 0.4, dy: 3, lumiere: [0.4, -0.9] });
+      }
+      return A.out(s);
+    }
+    __name(pierres, "pierres");
+    function flammes(p, orange) {
+      const A = atelier(`${p}${orange ? "o" : "g"}`), [x, y] = C0;
+      const ext = orange ? A.lin([[0, "#F2C24E"], [1, "#D8602A"]], 0, y - 60, 0, y) : A.lin([[0, "#E8F2F8"], [1, "#A8C4D8"]], 0, y - 60, 0, y);
+      const int = orange ? "#FFE8A0" : "#F4FAFF";
+      let s = "";
+      for (const [dx, r, sway] of [[-18, 11, -4], [16, 10, 5], [0, 15, 2]]) s += `<path d="${flamePath(x + dx, y - r, r, sway)}" fill="${ext}" stroke="${ENCRE}" stroke-width="2.2" stroke-linejoin="round"/><path d="${flamePath(x + dx, y - r * 0.7, r * 0.5, sway * 0.6)}" fill="${int}" stroke="${ENCRE}" stroke-width="1" stroke-linejoin="round"/>`;
+      return A.out(s);
+    }
+    __name(flammes, "flammes");
+    var DANSEURS = [[150, 300, 1, "haut"], [190, 288, 0.9, "large"], [282, 286, 0.9, "haut"], [326, 302, 1, "large"], [118, 330, 1.1, "large"], [356, 334, 1.1, "haut"]];
+    function danseur(p, i) {
+      const [x, y, k, bras] = DANSEURS[i], A = atelier(`${p}d${i}`);
+      const corps = [[x - 10 * k, y], [x - 6 * k, y - 30 * k], [x + 6 * k, y - 30 * k], [x + 10 * k, y]];
+      let s = gravure(A, corps, "#D8E6EE", { seed: 840 + i, amp: 0.4, angle: 60, pas: 2.2, ombre: 0.5, tailles: 0, trait: 1.8, portee: 0, lumiere: [-0.5, -0.8] });
+      const bd = bras === "haut" ? `M${x - 5 * k},${y - 27 * k} q-8,-8 -6,-20 M${x + 5 * k},${y - 27 * k} q8,-8 6,-20` : `M${x - 5 * k},${y - 26 * k} q-12,0 -16,-8 M${x + 5 * k},${y - 26 * k} q12,0 16,-8`;
+      s += trait2(bd, 4.4 * k, ENCRE) + trait2(bd, 2.2 * k, "#D8E6EE");
+      s += gravure(A, ovale(x, y - 38 * k, 7 * k, 7.6 * k, 14), "#E2EEF4", { seed: 850 + i, amp: 0.2, angle: 60, pas: 2, ombre: 0.55, tailles: 0, trait: 1.8, portee: 0, lumiere: [-0.5, -0.8] });
+      return A.out(s);
+    }
+    __name(danseur, "danseur");
+    var BCE = [262, 268];
+    var S_BCE = 2;
+    function grande(p) {
+      const A = atelier(`${p}g`), [x, y] = BCE;
+      return A.out(`<path d="${flamePath(x, y - 70, 52, 8)}" fill="${A.lin([[0, "#EAF6FF", 0.55], [1, "#9EC4DC", 0.2]], 0, y - 180, 0, y)}" stroke="${ENCRE}" stroke-width="2.4" stroke-linejoin="round" opacity="0.7"/>`);
+    }
+    __name(grande, "grande");
+    var sienne = /* @__PURE__ */ __name((p) => R.filets(`${p}s`, 6, [[BCE[0] - 70, BCE[1] - 10, 90, 3, 6], [BCE[0] + 6, BCE[1] + 6, 80, 3, 6]]), "sienne");
+    var PIEDS_CERCLE = [126, 384];
+    function decorCercle(p, souvenirs) {
+      const base = V.decorApres(p, { livre: null, nuitee: true, anime: /* @__PURE__ */ __name(() => "", "anime") }).filter((q) => !["rocher", "anime"].includes(q.id));
+      base.splice(base.findIndex((q) => q.id === "nuit"), 0, { id: "herbe", profondeur: 0.58, marge: MARGE, dessin: /* @__PURE__ */ __name(() => herbe(p), "dessin") });
+      return [
+        ...base,
+        { id: "flaque", profondeur: 0.62, cadre: [130, 290, 212, 60], dessin: /* @__PURE__ */ __name(() => {
+          const A = atelier(`${p}q`);
+          return A.out(R.flaque(`${p}q`, [C0[0], C0[1] + 4], 100));
+        }, "dessin") },
+        { id: "pierres-fond", profondeur: 0.62, cadre: [130, 270, 212, 70], dessin: /* @__PURE__ */ __name(() => pierres(p, false), "dessin") },
+        ...souvenirs,
+        { id: "pierres-devant", profondeur: 0.62, cadre: [130, 300, 212, 70], dessin: /* @__PURE__ */ __name(() => pierres(p, true), "dessin") },
+        null,
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_CERCLE },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lumiereFroide(p, BCE), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+    }
+    __name(decorCercle, "decorCercle");
+    var nuitFixe = /* @__PURE__ */ __name((plans, D) => ({
+      ...R.soirDe(plans, D, 1, 1),
+      voile0: [[0, { o: 0.78 }], [D, { o: 0.78 }]],
+      filets0: [[0, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }], [D, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }]],
+      nuit: [[0, { o: 0.4 }], [D, { o: 0.4 }]],
+      etoiles: [[0, { o: 1 }], [D, { o: 1 }]]
+    }), "nuitFixe");
+    var LARGE = { x: 6, y: 6, z: 1.06 };
+    var SUR_CERCLE = { x: 30, y: 26, z: 1.2 };
+    var SUR_BRUME = { x: 40, y: 10, z: 1.28 };
+    var SUR_AVATAR = { x: -20, y: 24, z: 1.24 };
+    function cercle05() {
+      const p = "ce", D0 = 4600;
+      const souvenirs = [
+        { id: "flammes", profondeur: 0.62, cadre: [196, 250, 80, 72], pivot: C0, dessin: /* @__PURE__ */ __name(() => flammes(p, false), "dessin") },
+        { id: "flammes-orange", profondeur: 0.62, cadre: [196, 250, 80, 72], pivot: C0, dessin: /* @__PURE__ */ __name(() => flammes(p, true), "dessin") },
+        ...DANSEURS.map(([x, y, k], i) => ({ id: `danseur${i}`, profondeur: 0.62, cadre: [x - 34 * k, y - 60 * k, 68 * k, 66 * k], pivot: [x, y], dessin: /* @__PURE__ */ __name(() => danseur(p, i), "dessin") }))
+      ];
+      const plans = decorCercle(p, souvenirs);
+      const idx = DANSEURS.map((d, i) => `danseur${i}`), cache = /* @__PURE__ */ __name((D) => Object.fromEntries(idx.map((id2) => [id2, [[0, { o: 0 }], [D, { o: 0 }]]])), "cache");
+      const t0 = { ...unTemps(D0, [[0, { x: 20, y: -20, z: 1.1 }], [D0, LARGE]], {
+        ...nuitFixe(plans.filter(Boolean), D0),
+        ...Object.fromEntries(idx.map((id2, i) => [id2, [[0, { o: 0 }], [2600 + i * 150, { o: 0 }], [D0, { o: 0.4 }]]])),
+        flammes: [[0, { o: 0, s: 0.8 }], [1800, { o: 0, s: 0.8 }], [3e3, { o: 0.55, s: 1 }], [D0, { o: 0.5, s: 1 }]],
+        "flammes-orange": [[0, { o: 0 }], [D0, { o: 0 }]],
+        brume: [[0, { x: 20, y: -150, s: 0.9 }], [1400, { x: 0, y: 0, s: 1, e: "ease-out" }], [D0, { x: 0, y: 0 }]],
+        avatar: [[0, { x: -70, y: -8, s: 0.96 }], [1400, { x: 0, y: 0, s: 1, e: "linear" }], [D0, { x: 0, y: 0 }]]
+      }), acteur: R.joue([0, "marche", "bas_droite"], [1400, "arret", "bas_droite"], [1920, "repos", "bas_droite"]), jeux: { brume: V.B([0, "content"]) } };
+      const danse = /* @__PURE__ */ __name((D, i, o) => balance(0, D, 700 + i * 90, (k) => ({ x: (k % 2 ? 6 : -6) * (i % 2 ? 1 : -1), y: k % 2 ? -7 : 0, r: (k % 2 ? 8 : -8) * (i % 2 ? -1 : 1), o })), "danse");
+      const temps = V.repliques(t0, [
+        // « Ils parlaient, dansaient, chantaient, riaient. … Et parfois, plus tristement. » : ils dansent ; à la fin, plus lents
+        [5600, SUR_CERCLE, R.joue([0, "repos", "bas_droite"]), V.B([0, "content"], [4200, "triste"]), { ...Object.fromEntries(idx.map((id2, i) => [id2, danse(5600, i, 0.6)])), flammes: [[0, { o: 0.5, s: 1 }], [700, { o: 0.7, s: 1.08 }], [1400, { o: 0.55, s: 0.96 }], [2100, { o: 0.7, s: 1.08 }], [2800, { o: 0.55, s: 0.96 }], [3500, { o: 0.65, s: 1.04 }], [5600, { o: 0.45, s: 0.96 }]] }],
+        // « C'était un vrai lieu de vie. Je m'en souviens si peu, et tellement à la fois… » : ils s'effacent en montant
+        [5e3, SUR_BRUME, R.joue([0, "repos", "bas_droite"]), V.B([0, "triste"], [3e3, "gene"]), { ...Object.fromEntries(idx.map((id2, i) => [id2, [[0, { o: 0.6 }], [600 + i * 260, { o: 0.6, y: 0 }], [2600 + i * 260, { o: 0, y: -26 }], [5e3, { o: 0, y: -26 }]]])), flammes: [[0, { o: 0.45 }], [3600, { o: 0.15 }], [5e3, { o: 0.15 }]], brume: [[0, { x: 0, y: 0 }], [3e3, { x: 0, y: 10, s: 0.94 }], [5e3, { x: 0, y: 10, s: 0.94 }]] }],
+        // « Pas grave ! Regarde : c'est ici que dansaient les flammes orange. Tu pourrais peut-être les refaire ? » : elle se
+        // ressaisit, file au milieu du cercle ; les flammes orange s'y rallument un instant, puis s'éteignent ; il s'approche
+        [4600, SUR_CERCLE, R.joue([0, "repos", "bas_droite"], [1600, "marche", "bas_droite"], [2500, "arret", "bas_droite"], [3020, "repos", "bas_droite"]), V.B([0, "gene"], [400, "content"]), { ...cache(4600), flammes: [[0, { o: 0.15 }], [800, { o: 0 }], [4600, { o: 0 }]], "flammes-orange": [[0, { o: 0, s: 0.7 }], [900, { o: 0, s: 0.7, e: "ease-out" }], [1500, { o: 0.9, s: 1.06 }], [2600, { o: 0.75, s: 0.98 }], [3600, { o: 0, s: 0.9 }], [4600, { o: 0 }]], brume: [[0, { x: 0, y: 10, s: 0.94 }], [400, { x: 0, y: -8, s: 1, e: "ease-in" }], [1300, { x: C0[0] - BCE[0], y: C0[1] - 52 - BCE[1], s: 1 }], [4600, { x: C0[0] - BCE[0], y: C0[1] - 52 - BCE[1], s: 1 }]], avatar: [[0, { x: 0, y: 0 }], [1600, { x: 0, y: 0, e: "linear" }], [2500, { x: 26, y: -6, s: 0.98 }], [4600, { x: 26, y: -6, s: 0.98 }]] }]
+      ]);
+      plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
+      return V.fin(plans, temps, V.NUIT, { brume: [3e3, { y: -4 }] });
+    }
+    __name(cercle05, "cercle05");
+    function promesse05() {
+      const p = "pr", D0 = 4600;
+      const plans = decorCercle(p, [
+        { id: "grande", profondeur: 0.64, cadre: [190, 60, 144, 220], pivot: BCE, dessin: /* @__PURE__ */ __name(() => grande(p), "dessin") },
+        { id: "sienne", profondeur: 0.66, cadre: [-100, BCE[1] - 40, 600, 70], dessin: /* @__PURE__ */ __name(() => sienne(p), "dessin") }
+      ]);
+      const t0 = { ...unTemps(D0, [[0, LARGE], [1200, LARGE], [D0, { x: 30, y: -40, z: 1.14 }]], {
+        ...nuitFixe(plans.filter(Boolean), D0),
+        grande: [[0, { o: 0, s: 0.8 }], [D0, { o: 0, s: 0.8 }]],
+        sienne: [[0, { o: 0, x: 0 }], [D0, { o: 0, x: 0 }]],
+        brume: [[0, { x: 0, y: 0 }], [D0, { x: 0, y: 0 }]]
+      }), acteur: R.joue([0, "repos", "bas_droite"], [900, "repos", "haut_droite"]), jeux: { brume: V.B([0, "curieuse"]) } };
+      const temps = V.repliques(t0, [
+        // « Tu es Brume, non ? Tu ne pourrais pas, justement, faire s'en aller la brume ? » : il se retourne vers elle
+        [4200, SUR_AVATAR, R.joue([0, "repos", "bas_droite"], [600, "pose_pointe", "bas_droite", "neutre"], [2600, "repos", "bas_droite"]), V.B([0, "curieuse"], [2400, "surpris"])],
+        // « Oui… Pardon pour ça. Il y a longtemps que j'ai oublié comment la retenir. » : elle baisse, sa brume lui échappe
+        [4600, SUR_BRUME, R.joue([0, "repos", "bas_droite"]), V.B([0, "gene"]), { brume: [[0, { x: 0, y: 0 }], [1200, { x: 0, y: 12, s: 0.94 }], [4600, { x: 0, y: 12, s: 0.94 }]], sienne: [[0, { o: 0, x: 0 }], [600, { o: 0, x: 0 }], [1800, { o: 0.8, x: 20 }], [4600, { o: 0.5, x: 70 }]] }],
+        // « J'ai perdu la mémoire. Et le reste avec. Avant, j'étais plus grande. Bien plus forte aussi. » : derrière elle, sa
+        // grande flamme d'autrefois se lève, pâle, puis s'efface
+        [5200, { x: 34, y: -6, z: 1.16 }, R.joue([0, "repos", "bas_droite"]), V.B([0, "triste"]), { sienne: [[0, { o: 0.5, x: 70 }], [1500, { o: 0, x: 110 }], [5200, { o: 0, x: 110 }]], grande: [[0, { o: 0, s: 0.8 }], [1600, { o: 0, s: 0.8, e: "ease-out" }], [2800, { o: 0.85, s: 1 }], [4200, { o: 0.7, s: 1.02 }], [5200, { o: 0, s: 1.06 }]] }],
+        // « Euh… D'accord. Écoute, ce n'est pas grave. Déjà, installons-nous. » : il hausse les épaules ; elle remonte, rassurée
+        [4400, LARGE, R.joue([0, "pose_hausse", "bas_droite", "neutre"], [2e3, "repos", "bas_droite"]), V.B([0, "triste"], [1800, "content"]), { brume: [[0, { x: 0, y: 12, s: 0.94 }], [1800, { x: 0, y: 12, s: 0.94, e: "ease-out" }], [2600, { x: 0, y: 0, s: 1 }], [4400, { x: 0, y: 0, s: 1 }]] }]
+      ]);
+      plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
+      return V.fin(plans, temps, V.NUIT, { brume: [3e3, { y: -4 }] });
+    }
+    __name(promesse05, "promesse05");
+    module.exports = { cercle05, promesse05 };
   }
 });
 
@@ -24224,6 +24398,7 @@ var require_scenes6 = __commonJS({
     var O = require_ouverture();
     var R = require_rencontre();
     var APRES_VENT = { x: 182, y: 348, echelle: 3.25, vue: "avant", pose: "repos", naufrage: true };
+    var AU_CERCLE = { x: 126, y: 384, echelle: 3.1, vue: "avant", pose: "repos", naufrage: true };
     var OUVERTURE = [
       ["01_racines", "01_vague", "Sous la surface, les racines", ["1b"], null, null],
       ["01_paupieres", "01_noir", "Les paupières qui battent ; la plage au couchant", ["1c"], null, null],
@@ -24232,7 +24407,8 @@ var require_scenes6 = __commonJS({
       ["03_trouee", "03_vent", "La brume ouverte autour d’eux, les étoiles : ceux d’avant", ["3"], null, APRES_VENT],
       ["03_ciel", "03_vent", "Brume lève les yeux vers le ciel", ["3"], null, null],
       ["03_nuit", "03_vent", "La nuit tombe, froide ; Brume l’emmène vers le vieux cercle", ["3"], null, APRES_VENT],
-      ["05_cercle", "03_vent", "Le cercle de pierres noircies ; au large, l’épave dans la brume", ["5"], O.cercle05, { x: 136, y: 386, echelle: 3, vue: "avant", pose: "repos", naufrage: true }],
+      ["05_cercle", "03_vent", "Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant", ["5"], null, AU_CERCLE],
+      ["05_promesse", "03_vent", "Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume", ["5"], null, AU_CERCLE],
       ["10_epave", "09_rivet", "Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage", ["10"], null, null]
     ];
     {
@@ -24257,7 +24433,8 @@ var require_scenes6 = __commonJS({
     var GR = require_gravure_rencontre();
     var GL = require_gravure_lorena();
     var GV = require_gravure_vent();
-    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
+    var GC = require_gravure_cercle();
+    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }
@@ -24267,7 +24444,6 @@ var require_scenes6 = __commonJS({
       "12_veillee": Infinity,
       "12_habits": Infinity,
       "05_feu": Infinity,
-      "05_cercle": Infinity,
       "06_silhouette": Infinity
     };
     for (const [id2, sc] of Object.entries(SCENES2)) {

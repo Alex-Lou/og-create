@@ -127,7 +127,11 @@ const brumeDevant = p => [
 const lecheeVa = D => [[0, { y: -10 }], [D * 0.4, { y: 8, e: 'ease-in-out' }], [D * 0.8, { y: -6, e: 'ease-in-out' }], [D, { y: 2 }]];
 // ——— le jeu de l'avatar (src/game/acteur.js : le jeu en dessine les images avec le kit, gravées à la lumière de la
 // scène) : un clip [t, anim, direction, expression] ; ses pas et ses cadrages sont les pistes du plan « avatar » ———
-const joue = (...clips) => clips.map(([t, anim, dir, expr]) => [t, expr ? { anim, dir, expr } : { anim, dir }]);
+// (choix de l'auteur, 17 oct. : quand il écoute, sans raison de sourire, son visage est neutre ; le repos, la marche et
+// l'arrêt le sont donc par défaut — sinon le kit prend l'expression choisie pour son avatar, souvent un sourire ; les
+// poses gardent la leur)
+const NEUTRES = new Set(['repos', 'marche', 'arret']);
+const joue = (...clips) => clips.map(([t, anim, dir, expr = NEUTRES.has(anim) ? 'neutre' : undefined]) => [t, expr ? { anim, dir, expr } : { anim, dir }]);
 // (la lumière qui le grave : le contre-jour du couchant ; puis la lumière froide de Brume, à droite)
 const COUCHANT = { teinte: '#2A140A', force: 0.24, cote: 1 }, FROIDE = { teinte: '#1C2242', force: 0.26, cote: -1 };
 // un temps qui tient tout où le précédent l'a laissé (la caméra, chaque piste), le temps que l'avatar joue
@@ -163,9 +167,9 @@ function plage02() {
   const ACTEUR = [
     joue([0, 'repos', 'haut_droite']),
     joue([0, 'repos', 'haut_droite'], [1400, 'repos', 'haut_gauche'], [3400, 'repos', 'haut_droite']),
-    joue([0, 'repos', 'haut_droite'], [500, 'repos', 'bas_droite', 'froid'], [900, 'pose_frisson', 'bas_droite']),
-    joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'bas_droite', 'mefiante'], [1000, 'pose_visiere', 'bas_droite']),
-    joue([0, 'repos', 'bas_droite', 'decidee'], [600, 'repos', 'haut_droite'], [1000, 'marche', 'haut_droite'], [3000, 'repos', 'haut_droite'])
+    joue([0, 'repos', 'haut_droite'], [500, 'repos', 'bas_droite'], [900, 'pose_frisson', 'bas_droite']),
+    joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'bas_droite'], [1000, 'pose_visiere', 'bas_droite']),
+    joue([0, 'repos', 'bas_droite'], [600, 'repos', 'haut_droite'], [1000, 'marche', 'haut_droite'], [3000, 'repos', 'haut_droite'])
   ];
   const pas = D => [[0, { x: 0, y: 0, s: 1 }], [1000, { x: 0, y: 0, s: 1 }], [3000, { x: 46, y: -34, s: 0.8, e: 'linear' }], [D, { x: 46, y: -34, s: 0.8 }]];
   const temps = SOIR.map(([k0, k1, D], n) => ({ ...unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? 'ease-in-out' : 'ease-out' }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), rocher: [[0, ROC_LOIN], [D, ROC_LOIN]], anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]], ...(n === 4 ? { avatar: pas(D) } : {}) }), acteur: ACTEUR[n] }));
@@ -174,13 +178,13 @@ function plage02() {
 
 // ——— Brume ———
 // l'image n de son tremblement (stade 0, pâle) : sa flamme et ses yeux tels que le jeu les dessine, un cerne d'encre
-// épais autour, des hachures fines du côté de l'ombre (à droite)
+// épais autour, des hachures fines du côté de l'ombre (à droite) ; de dos (expr « dos »), sans les yeux
 function brumeGravee(pref, n, expr = 'neutre') {
   const r = 8, ph = (n % 4) / 4, sway = Math.sin(ph * Math.PI * 2) * r * 0.32, jit = [[0, 0], [0.5, -0.2], [-0.4, 0.2], [0.3, 0.3]][n % 4];
   const x = 20 + jit[0], y = 32 + [0, -0.6, -1, -0.6][n % 4] + jit[1], contour = flamePath(x, y, r, sway), id = `${pref}${n}`;
   const hach = Array.from({ length: 9 }, (_, k) => `M${f(x - 2 + k * 1.6)},${f(y + r + 2)} l${f(8)},${f(-22)}`).join(' ');
   return `<path d="${contour}" fill="none" stroke="${ENCRE}" stroke-width="2.6" stroke-linejoin="round"/>`
-    + brumeFrame('s0', n, expr).replace(/bhs0(\d)/g, `${id}h$1`)
+    + brumeFrame('s0', n, expr === 'dos' ? 'neutre' : expr, expr !== 'dos').replace(/bhs0(\d)/g, `${id}h$1`)
     + `<defs><clipPath id="${id}c"><path d="${contour}"/></clipPath></defs><g clip-path="url(#${id}c)"><path d="${hach}" fill="none" stroke="#6E8792" stroke-width="0.45" opacity="0.7"/></g>`;
 }
 // son halo froid (centré au milieu de sa flamme, en unités de la scène)
@@ -231,7 +235,7 @@ function lueur02() {
   const marche = [[0, { x: -70, y: -16, s: 0.88 }], [1500, { x: 0, y: 0, s: 1, e: 'linear' }], [2150, { x: 0, y: 0, s: 1 }], [2300, { x: -3, y: -7, s: 1, e: 'ease-out' }], [2500, { x: -9, y: 0, s: 1, e: 'ease-in' }], [D0, { x: -9, y: 0, s: 1 }]];
   const temps = [
     { ...unTemps(D0, [[0, c0], [D0, { ...c1, e: 'ease-in-out' }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit, avatar: marche }),
-      acteur: joue([0, 'marche', 'bas_droite'], [1500, 'arret', 'bas_droite', 'veille'], [2020, 'repos', 'bas_droite'], [2150, 'pose_sursaut', 'bas_droite'], [2900, 'repos', 'bas_droite', 'surprise']) },
+      acteur: joue([0, 'marche', 'bas_droite'], [1500, 'arret', 'bas_droite'], [2020, 'repos', 'bas_droite'], [2150, 'pose_sursaut', 'bas_droite'], [2900, 'repos', 'bas_droite', 'surprise']) },
     { ...unTemps(D1, [[0, c1], [D1, { ...c2, e: 'ease-in-out' }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [2300, { x: -9, e: 'ease-out' }], [2550, { x: -17, y: -3 }], [2750, { x: -19, y: 0, e: 'ease-in' }], [D1, { x: -19, y: 0 }]] }),
       acteur: joue([0, 'repos', 'bas_droite', 'surprise'], [500, 'pose_pointe', 'bas_droite'], [2300, 'pose_tete', 'face']) }
   ];
@@ -314,10 +318,10 @@ function rocher02() {
   const t1 = tenir(t0, 2600, joue([0, 'pose_pointe', 'bas_droite'], [1900, 'repos', 'bas_droite', 'surprise']));
   const t2 = tenir(t1, 2600, joue([0, 'repos', 'bas_droite', 'surprise'], [700, 'pose_hausse', 'bas_droite']));
   const t3 = tenir(t2, 2000, joue([0, 'repos', 'bas_droite']));
-  const t4 = tenir(t3, 2400, joue([0, 'marche', 'bas_droite'], [1300, 'arret', 'bas_droite', 'veille'], [1820, 'repos', 'bas_droite']), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: 'linear' }], [2400, { x: 40, y: -12, s: 0.96 }]] });
+  const t4 = tenir(t3, 2400, joue([0, 'marche', 'bas_droite'], [1300, 'arret', 'bas_droite'], [1820, 'repos', 'bas_droite']), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: 'linear' }], [2400, { x: 40, y: -12, s: 0.96 }]] });
   const t5 = tenir(t4, 2600, joue([0, 'pose_poings', 'bas_droite']));
   const t6 = tenir(t5, 2600, joue([0, 'pose_croises', 'bas_droite'], [1800, 'repos', 'bas_droite']));
-  const t7 = tenir(t6, 2600, joue([0, 'repos', 'bas_droite', 'froid']));
+  const t7 = tenir(t6, 2600, joue([0, 'repos', 'bas_droite']));
   return { plans, partition: { lumiere: FROIDE, temps: [t0, t1, t2, t3, t4, t5, t6, t7], repos: { duree: 10000, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
 }
 

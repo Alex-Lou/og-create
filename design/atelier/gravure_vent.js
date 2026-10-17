@@ -129,7 +129,7 @@ function livre03() {
   // « Regarde. Peut-être que toi, tu comprendras. » : il s'approche du livre ; la caméra se penche sur lui ; Brume, au-
   // dessus, l'y invite (« Toucher le livre »)
   const pres = { x: 30, y: 30, z: 1.32 };
-  const t1 = R.tenir(t0, D1, R.joue([0, 'repos', 'bas_droite', 'surprise'], [500, 'marche', 'bas_droite'], [1700, 'arret', 'bas_droite', 'veille'], [2220, 'repos', 'bas_droite']), {
+  const t1 = R.tenir(t0, D1, R.joue([0, 'repos', 'bas_droite', 'surprise'], [500, 'marche', 'bas_droite'], [1700, 'arret', 'bas_droite'], [2220, 'repos', 'bas_droite']), {
     avatar: [[0, { x: -10, y: 0 }], [500, { x: -10, y: 0, e: 'linear' }], [1700, { x: 26, y: -6, s: 0.98 }], [D1, { x: 26, y: -6, s: 0.98 }]], lechee: R.lecheeVa(D1)
   });
   t1.camera = [[0, chute], [D1, pres]];
@@ -267,7 +267,7 @@ function vent03() {
     // « Je… J'ignore ce qui s'est passé. C'est moi qui ai fait ça ? »
     [3800, SUR_AVATAR, R.joue([0, 'pose_hausse', 'bas_droite', 'surprise'], [2400, 'repos', 'bas_droite', 'surprise']), B([0, 'curieuse'])],
     // « Oui ! Tu es comme eux ! Tu peux créer… » : elle tourne autour de lui, toute à sa joie
-    [4000, DEUX, R.joue([0, 'repos', 'bas_droite', 'surprise'], [1600, 'repos', 'bas_droite', 'content']), B([0, 'content']), { brume: [[0, { x: -20, y: 0 }], [700, { x: -48, y: -30, s: 1.06 }], [1400, { x: -70, y: -6, s: 1.04 }], [2100, { x: -52, y: 12, s: 0.98 }], [2900, { x: -20, y: 0, s: 1 }], [4000, { x: -20, y: 0, s: 1 }]] }],
+    [4000, DEUX, R.joue([0, 'repos', 'bas_droite', 'surprise'], [1600, 'repos', 'bas_droite']), B([0, 'content']), { brume: [[0, { x: -20, y: 0 }], [700, { x: -48, y: -30, s: 1.06 }], [1400, { x: -70, y: -6, s: 1.04 }], [2100, { x: -52, y: 12, s: 0.98 }], [2900, { x: -20, y: 0, s: 1 }], [4000, { x: -20, y: 0, s: 1 }]] }],
     // « Moi, je ne le comprends pas. Je le garde pour celui qui doit le recevoir… et on dirait que… c'est toi. » : elle
     // se pose au-dessus du livre, l'y invite (« Tourner la page »)
     [4600, GESTE, R.joue([0, 'repos', 'bas_droite']), B([0, 'gene'], [2600, 'content']), { brume: [[0, { x: -20, y: 0 }], [1800, { x: 0, y: 0 }], [4600, { x: 0, y: 0 }]] }]
@@ -276,8 +276,8 @@ function vent03() {
   return fin(plans, temps, R.FROIDE, { brume: [3000, { y: -4 }] });
 }
 
-// ——— 03_ciel : « Quel jour ? » ; Brume ne répond pas : elle lève les yeux ; le regard monte avec elle, d'elle aux
-// étoiles ; une étoile file ———
+// ——— 03_ciel : « Quel jour ? » ; Brume ne répond pas : elle se retourne et regarde le ciel ; le regard monte avec
+// elle, d'elle aux étoiles ; une étoile file, longuement ———
 const BC = [200, 352];
 const filante = p => { const A = atelier(`${p}e`); return A.out(trait('M150,52 L268,22', 3.4, ENCRE) + trait('M150,52 L268,22', 1.4, '#FFF4D8') + etoile(268, 22, 2.6)); };
 function ciel03() {
@@ -292,10 +292,12 @@ function ciel03() {
   const P = {
     ...R.soirDe(plans.filter(Boolean), D, 1, 1), voile0: [[0, { o: 0.78 }], [D, { o: 0.78 }]], filets0: [[0, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }], [D, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }]],
     nuit: [[0, { o: 0.2 }], [D, { o: 0.24 }]], etoiles: [[0, { o: 1 }], [D, { o: 1 }]],
-    filante: [[0, { x: 60, y: -16, o: 0 }], [1100, { x: 60, y: -16, o: 0, e: 'linear' }], [1150, { x: 40, y: -10, o: 1, e: 'linear' }], [1650, { x: -40, y: 12, o: 1 }], [1800, { x: -60, y: 16, o: 0 }], [D, { x: -60, y: 16, o: 0 }]],
-    brume: [[0, { y: 0 }], [D, { y: -10 }]]
+    // (l'étoile file quand le regard est monté : longtemps, lentement)
+    filante: [[0, { x: 60, y: -16, o: 0 }], [950, { x: 60, y: -16, o: 0, e: 'linear' }], [1050, { x: 52, y: -14, o: 1, e: 'linear' }], [2000, { x: -40, y: 12, o: 1 }], [D, { x: -56, y: 16, o: 0 }]],
+    // (elle se retourne d'un petit bond, puis reste de dos, les yeux au ciel, et s'élève un peu)
+    brume: [[0, { y: 0, r: 0 }], [420, { y: 0, r: 0, e: 'ease-out' }], [540, { y: -9, r: -6, e: 'ease-in' }], [680, { y: 0, r: 0 }], [D, { y: -10 }]]
   };
-  const t0 = { ...unTemps(D, [[0, { x: 0, y: 70, z: 1.5 }], [300, { x: 0, y: 70, z: 1.5 }], [D, { x: 0, y: -70, z: 1.24 }]], P), jeux: { brume: B([0, 'curieuse'], [900, 'triste']) } };
+  const t0 = { ...unTemps(D, [[0, { x: 0, y: 70, z: 1.5 }], [650, { x: 0, y: 70, z: 1.5 }], [1500, { x: 0, y: -70, z: 1.24 }], [D, { x: 0, y: -74, z: 1.24 }]], P), jeux: { brume: B([0, 'curieuse'], [540, 'dos']) } };
   plans.splice(plans.indexOf(null), 1, ...brumeFigurant([t0], BC, 2.6, 0.62));
   return fin(plans, [t0], R.FROIDE);
 }
@@ -323,11 +325,11 @@ function trouee03() {
   const temps = repliques(t0, [
     // « Ceux d'avant savaient beaucoup… Mais depuis ce jour, je ne me rappelle plus rien. » : elle s'éloigne un peu vers
     // la mer, pâlit
-    [5000, SUR_BRUME, R.joue([0, 'repos', 'bas_droite'], [2800, 'repos', 'bas_droite', 'triste']), B([0, 'content'], [2400, 'triste']), { ...nuitee(5000, 0.06, 0.1), brume: [[0, { x: 0, y: 0, s: 1 }], [3200, { x: 30, y: -14, s: 0.92 }], [5000, { x: 34, y: -16, s: 0.92 }]] }],
+    [5000, SUR_BRUME, R.joue([0, 'repos', 'bas_droite']), B([0, 'content'], [2400, 'triste']), { ...nuitee(5000, 0.06, 0.1), brume: [[0, { x: 0, y: 0, s: 1 }], [3200, { x: 30, y: -14, s: 0.92 }], [5000, { x: 34, y: -16, s: 0.92 }]] }],
     // « Quel jour ? » : il fait un pas vers elle
-    [2600, SUR_AVATAR, R.joue([0, 'marche', 'bas_droite'], [800, 'arret', 'bas_droite', 'veille'], [1320, 'repos', 'bas_droite', 'surprise']), B([0, 'triste']), { ...nuitee(2600, 0.1, 0.12), avatar: [[0, { x: 0, y: 0 }], [800, { x: 16, y: -4, s: 0.98, e: 'linear' }], [2600, { x: 16, y: -4, s: 0.98 }]] }],
+    [2600, SUR_AVATAR, R.joue([0, 'marche', 'bas_droite'], [800, 'arret', 'bas_droite'], [1320, 'repos', 'bas_droite', 'surprise']), B([0, 'triste']), { ...nuitee(2600, 0.1, 0.12), avatar: [[0, { x: 0, y: 0 }], [800, { x: 16, y: -4, s: 0.98, e: 'linear' }], [2600, { x: 16, y: -4, s: 0.98 }]] }],
     // (03_ciel) « Peu importe. Ce livre a d'autres choses pour toi… il est très gros… » : elle se secoue, file au livre
-    [4600, { x: 18, y: 22, z: 1.2 }, R.joue([0, 'repos', 'bas_droite'], [1800, 'repos', 'bas_droite', 'content']), B([0, 'gene'], [700, 'content']), { ...nuitee(4600, 0.12, 0.16), brume: [[0, { x: 34, y: -16, s: 0.92 }], [500, { x: 34, y: -34, s: 0.96, e: 'ease-in' }], [1600, { x: -30, y: 28, s: 1 }], [4600, { x: -30, y: 28, s: 1 }]] }],
+    [4600, { x: 18, y: 22, z: 1.2 }, R.joue([0, 'repos', 'bas_droite']), B([0, 'gene'], [700, 'content']), { ...nuitee(4600, 0.12, 0.16), brume: [[0, { x: 34, y: -16, s: 0.92 }], [500, { x: 34, y: -34, s: 0.96, e: 'ease-in' }], [1600, { x: -30, y: 28, s: 1 }], [4600, { x: -30, y: 28, s: 1 }]] }],
     // « … et ses pages ont l'air d'avoir oublié, elles aussi, ce qu'elles contenaient. » : elle reste penchée sur la page
     // vide ; lui croise les bras ; puis elle lève les yeux vers le ciel, et le regard monte avec elle (« Lever les yeux »)
     [4400, { x: 0, y: -36, z: 1.1 }, R.joue([0, 'repos', 'bas_droite'], [1200, 'pose_croises', 'bas_droite']), B([0, 'triste'], [2800, 'curieuse']), { ...nuitee(4400, 0.16, 0.2), brume: [[0, { x: -30, y: 28 }], [2800, { x: -30, y: 28, e: 'ease-out' }], [3600, { x: -30, y: 6 }], [4400, { x: -30, y: 6 }]] }]
@@ -357,15 +359,15 @@ function nuit03() {
   const NUIT_O = 0.36;
   // « Oh non… Je sens que la nuit va être froide. Je n'ai ni abri, ni nourriture… » : il grelotte
   const t0 = { ...unTemps(D0, [[0, SUR_AVATAR], [D0, { ...SUR_AVATAR, x: -8 }]], { ...apresVent(plans.filter(Boolean), D0, NUIT_O, NUIT_O + 0.02), brume: [[0, { x: -20, y: 0 }], [D0, { x: -20, y: 0 }]], eclat: [[0, { o: 0 }], [D0, { o: 0 }]] }),
-    acteur: R.joue([0, 'pose_frisson', 'bas_droite', 'froid']), jeux: { brume: B([0, 'curieuse'], [2400, 'triste']) } };
+    acteur: R.joue([0, 'pose_frisson', 'bas_droite', 'neutre']), jeux: { brume: B([0, 'curieuse'], [2400, 'triste']) } };
   const PRES = { x: 238 - BV[0], y: 246 - BV[1] };
   const temps = repliques(t0, [
     // « Non, non, ne t'en fais pas. Je ne réchauffe pas beaucoup, mais je brille… » : elle vient tout près de lui et se
     // fait lumière
-    [5000, DEUX, R.joue([0, 'pose_frisson', 'bas_droite', 'froid'], [2600, 'repos', 'bas_droite', 'froid']), B([0, 'content']), { brume: [[0, { x: -20, y: 0 }], [1400, { ...PRES, s: 1.06 }], [5000, { ...PRES, s: 1.06 }]], eclat: [[0, { o: 0, x: -20, y: 0 }], [1400, { ...PRES, o: 0.4 }], [2400, { ...PRES, o: 1, s: 1.12 }], [5000, { ...PRES, o: 1, s: 1.12 }]] }],
+    [5000, DEUX, R.joue([0, 'pose_frisson', 'bas_droite', 'neutre'], [2600, 'repos', 'bas_droite']), B([0, 'content']), { brume: [[0, { x: -20, y: 0 }], [1400, { ...PRES, s: 1.06 }], [5000, { ...PRES, s: 1.06 }]], eclat: [[0, { o: 0, x: -20, y: 0 }], [1400, { ...PRES, o: 0.4 }], [2400, { ...PRES, o: 1, s: 1.12 }], [5000, { ...PRES, o: 1, s: 1.12 }]] }],
     // « Bon… D'accord, Brume. On suit ton plan… mais je vais quand même mourir de froid ! » : les bras croisés, puis il
     // regrelotte ; elle, gênée : elle avait oublié
-    [5000, SUR_AVATAR, R.joue([0, 'pose_croises', 'bas_droite', 'froid'], [3000, 'pose_frisson', 'bas_droite', 'froid']), B([0, 'content'], [3000, 'gene'])],
+    [5000, SUR_AVATAR, R.joue([0, 'pose_croises', 'bas_droite', 'neutre'], [3000, 'pose_frisson', 'bas_droite', 'neutre']), B([0, 'content'], [3000, 'gene'])],
     // « Ah… C'est vrai ! Viens, par là. » : elle sursaute, file vers le haut de la plage, et l'attend (« Suivre Brume »)
     [3600, { x: 0, y: 0, z: 1.04 }, R.joue([0, 'repos', 'bas_droite', 'surprise'], [900, 'repos', 'haut_droite']), B([0, 'surpris'], [600, 'content']), { brume: [[0, { ...PRES, s: 1.06 }], [300, { ...PRES, y: PRES.y - 12, s: 1.06, e: 'cubic-bezier(.3,0,.3,1)' }], [1400, { x: -26, y: -172, s: 0.9 }], [3600, { x: -26, y: -172, s: 0.9 }]], eclat: [[0, { ...PRES, o: 1, s: 1.12 }], [300, { ...PRES, o: 1, s: 1.12, e: 'cubic-bezier(.3,0,.3,1)' }], [1400, { x: -26, y: -172, o: 0.5, s: 0.9 }], [3600, { x: -26, y: -172, o: 0.5, s: 0.9 }]] }]
   ]);
@@ -373,4 +375,4 @@ function nuit03() {
   return fin(plans, temps, NUIT, { brume: [3000, { y: -4 }], eclat: [3000, { y: -4 }] });
 }
 
-module.exports = { livre03, vent03, ciel03, trouee03, nuit03 };
+module.exports = { livre03, vent03, ciel03, trouee03, nuit03, decorApres, B, brumeFigurant, repliques, fin, NUIT };
