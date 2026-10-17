@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const { OUT, P, E, L, arm, frame } = require('./troupe');
 const { anyaVeille, etincelle, outils: { eclairer, rayonne } } = require('./splash_anya');
-const { brumeHeroine } = require('./splash_brume');
+const { brumeHeroine, brumeDemon } = require('./splash_brume');
 const { ileVivante } = require('./splash_ile');
 const { avatar } = require('../personnages/avatar.js');
 const { f, lin, rad, rnd, SPLINE, vaVient, defile, palpite, halo, nappeDouce, houle } = require('./scenes7').outils;
@@ -86,7 +86,8 @@ function brumeDevant(cx, y) {
       .map(([dx, dy, rx, ry]) => `<ellipse cx="${f(cx + dx)}" cy="${f(y + dy)}" rx="${rx}" ry="${ry}" fill="url(#spVoile)"/>`).join('');
 }
 
-function fond() {
+// (autour : des calques en plus, avant l'île et juste après elle ; l'écran « survie », splash_survie.js)
+function fond(autour = {}) {
   const [W, H] = FOND, HZ = 430, CX = 800;
   const LUNE = 0.8; // la lune, un peu plus petite que son halo : l'auréole d'Anya, son visage au centre
   let s = `<defs>${lin('spCiel', [[0, '#050C22'], [0.42, '#0F2246'], [0.8, '#2A4874'], [1, '#5B789E']])}`
@@ -121,7 +122,7 @@ function fond() {
     + `<g transform="translate(${f(ax - 40 * ka)} ${f(LY - 34 * ka)}) scale(${ka})">${anyaVeille()}</g>`
     + poussieres(ax, 290, 270, 170, 11) + brumeDevant(CX, 404);
   // l'île des naufragés, dessinée pour cet écran (splash_ile.js), devant elle ; la lumière de ses mains y tombe
-  s += `<g transform="translate(${CX} 470) scale(.78)">${ileVivante()}</g>`;
+  s += (autour.avantIle || '') + `<g transform="translate(${CX} 470) scale(.78)">${ileVivante()}</g>` + (autour.apresIle || '');
   s += `<ellipse cx="${ax}" cy="412" rx="170" ry="44" fill="url(#spMainsIle)"/>` + poussieres(ax, 380, 90, 26, 5, 9);
   // la brume devant l'île, puis le voile du haut (le logo s'y lit) et du bas (l'avant-plan s'y pose)
   s += `<g transform="scale(4 1)">${nappeDouce('spB2', 640, 0.24, 20, 12, 1, '214,232,244', 5)}${nappeDouce('spB3', 780, 0.18, 26, 10, 1.3, '200,220,238', 7)}</g>`;
@@ -208,9 +209,9 @@ function dessinMaitre(qui, pose, expr, prefixe) {
   return (v === 'se' ? `<g transform="translate(48 0) scale(-1 1)">${corps}</g>` : corps)
     .replace(/id="([^"]+)"/g, `id="${prefixe}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${prefixe}$1)`).replace(/href="#([^"]+)"/g, `href="#${prefixe}$1"`);
 }
-function maitre([qui, pose, expr], x, y, k, voile, begin) {
+function maitre([qui, pose, expr, ...plus], x, y, k, voile, begin, dessin = dessinMaitre) {
   const id = `sp${qui}`, cote = x < 450 ? 1 : -1;
-  const corps = eclairer(dessinMaitre(qui, pose, expr, id), `${id}e`, [0, 0, 48, 64], cote, 1, '#CFEFFF');
+  const corps = eclairer(dessin(qui, pose, expr, id, ...plus), `${id}e`, [0, 0, 48, 64], cote, 1, '#CFEFFF');
   const brume = voile ? `<rect x="-4" y="-4" width="56" height="72" fill="#152A50" opacity="${voile}" mask="url(#${id}eM)"/>` : '';
   return `<defs>${rad(`${id}O`, [[0, '#020817', 0.6], [1, '#020817', 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y - k)}" rx="${f(k * 15)}" ry="${f(k * 3.4)}" fill="url(#${id}O)"/>`
     + `<g transform="translate(${f(x - 24 * k)} ${f(y - 62 * k)}) scale(${f(k)})">${corps}${brume}</g>`;
@@ -229,11 +230,12 @@ const TROUPE = [
 // affiche() est immobile (les maîtres, le Grimoire ouvert, les rayons) ; brume() est petit et animé (Brume, les
 // sept sceaux, les ondes, les étincelles), posé par-dessus par index.html dans le cadre BRUME du repère de l'affiche
 const BRUME = [150, 90, 600, 690];
-function affiche() {
+// (troupe, dessin : une autre troupe et sa façon de dessiner un maître ; l'écran « survie », splash_survie.js)
+function affiche(troupe = TROUPE, dessin = dessinMaitre) {
   const [W, H] = AVANT, BX = 450;
   let s = `<defs>${rad('spRai', [[0, '#DFF6FF', 0.7], [1, '#DFF6FF', 0]])}${rad('spNb', [[0, '#D8ECFA', 0.3], [1, '#D8ECFA', 0]])}</defs>`;
-  s += rayons(BX, 520) + TROUPE.slice(0, 5).map(t => maitre(...t)).join('');
-  s += TROUPE.slice(5).map(t => maitre(...t)).join('');
+  s += rayons(BX, 520) + troupe.slice(0, 5).map(t => maitre(...t, dessin)).join('');
+  s += troupe.slice(5).map(t => maitre(...t, dessin)).join('');
   // le Grimoire ouvert, grand, au centre, au premier plan
   s += `<g transform="translate(450 800) scale(1.85) translate(-450 -640)">${livre(450, 640)}</g>`;
   s += [[270, 960, 230], [630, 975, 250]].map(([cx, cy, rx]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${f(rx * 0.18)}" fill="url(#spNb)"/>`).join('');
@@ -245,9 +247,15 @@ function brume() {
   const [x, y, w, h] = BRUME;
   return fixe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}">${brumeGrande(450, 610, 10.5)}</svg>`);
 }
+// Son autre visage, le démon de feu (l'orage : il paraît un instant au grand éclair, public/splash.css), au même cadre,
+// à la même place : son image est posée sur la sienne et flotte avec elle
+function demon() {
+  const [x, y, w, h] = BRUME;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}"><g transform="translate(${f(450 - 20 * 10.5)} ${f(610 - 41 * 10.5)}) scale(10.5)">${brumeDemon()}</g></svg>`;
+}
 
 // La version immobile d'un dessin (pour qui demande moins de mouvement) : sans ses animations ; ce qui ne tient sa
 // place que par un trajet (les lucioles) s'en va avec
 const fixe = svg => svg.replace(/<g data-mouvant="">[\s\S]*?<\/g>/g, '').replace(/<animate(Transform|Motion)?\b[^>]*\/>/g, '');
 
-module.exports = { fond, affiche, brume, BRUME, fixe, FOND, AVANT, SPLINE };
+module.exports = { fond, affiche, brume, demon, BRUME, fixe, FOND, AVANT, SPLINE, TROUPE };
