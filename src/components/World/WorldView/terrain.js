@@ -30,6 +30,15 @@ const GRASS_MIX = [['tuft', 0.08], ['flowers', 0.12], ['bush', 0.135], ['tuft', 
 // Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
 const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
 const FOREST_HIGH = ['pine', 'pine', 'tree'];
+// La jungle de la zone de départ (choix de l'auteur, 18 oct. : « c'est censé être une jungle », dense autour des
+// naufragés ; les arbres de l'île restent pour les vraies zones boisées) : dans l'herbe, trois cases sur quatre portent
+// une plante, quelques grands arbres parmi le sous-bois, et une case sur trois une seconde plante basse ; un bosquet y
+// devient un fourré, un grand et un petit par case
+const JUNGLE_MIX = [['kapok', 0.04], ['banana', 0.13], ['treefern', 0.22], ['monstera', 0.35], ['heliconia', 0.46], ['croton', 0.57], ['caladium', 0.67], ['tuft', 0.75]];
+const JUNGLE_UNDER = 0.33;
+const JUNGLE_TALL = ['kapok', 'banana', 'banana', 'treefern', 'treefern'];
+const JUNGLE_LOW = ['monstera', 'heliconia', 'croton', 'caladium'];
+const JUNGLE_ZONE = 'coeur';
 
 export default {
   methods: {
@@ -84,11 +93,12 @@ export default {
         const c = this.world(x + dx, y + dy);
         // Son dessin : celui de la bibliothèque (sa variante tirée de sa place), sinon le dessin par code
         const look = plantLook(kind, x + dx, y + dy) || { key: `nature-${kind}`, make: ALL_NATURE[kind] };
-        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y), key: look.key, make: look.make });
+        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y), key: look.key, make: look.make, glow: look.glow || null });
       };
       const wet = (x, y) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => M.ground(x + a, y + b) === 'w');
       // Sable des Dunes : des cactus plutôt que des coquillages
       const dunes = (x, y) => (state.map.zones[M.zone(x, y)] || {}).climate === 'dunes';
+      const jungle = (x, y) => (state.map.zones[M.zone(x, y)] || {}).id === JUNGLE_ZONE;
       for (let y = 0; y < n; y++) {
         for (let x = 0; x < n; x++) {
           if (taken.has(y * n + x)) continue;
@@ -98,6 +108,9 @@ export default {
             const kinds = M.height(x, y) >= 2 ? FOREST_HIGH : FOREST_LOW;
             add(kinds[Math.floor(roll * kinds.length)], x, y, -0.2, -0.16);
             add(kinds[Math.floor(hash(y, x) * kinds.length)], x, y, 0.18, 0.22);
+          } else if (g === 't' && jungle(x, y)) {
+            add(JUNGLE_TALL[Math.floor(roll * JUNGLE_TALL.length)], x, y, -0.2, -0.16);
+            add(JUNGLE_LOW[Math.floor(hash(y, x) * JUNGLE_LOW.length)], x, y, 0.18, 0.22);
           } else if (g === 't') add(roll < 0.55 ? 'tree' : roll < 0.8 ? 'apple' : 'birch', x, y);
           else if (g === 'r') add(ROCK_MIX.find(([, upTo]) => roll < upTo)[0], x, y);
           else if (g === 'd') add('tuft', x, y);
@@ -112,8 +125,9 @@ export default {
           else if (g === 's' && dunes(x, y)) { if (roll < 0.12) add(roll < 0.09 ? 'cactus' : 'rocks', x, y); }
           else if ((g === 'g' || g === 'm') && wet(x, y) && roll < 0.45) add(roll < 0.3 ? 'reeds' : 'lily', x, y);
           else if (g === 's' || g === 'g' || g === 'm') {
-            const kind = ((g === 's' ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
+            const kind = ((g === 's' ? BEACH_MIX : jungle(x, y) ? JUNGLE_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
             if (kind) add(kind, x, y);
+            if (g !== 's' && jungle(x, y) && hash(y, x) < JUNGLE_UNDER) add(JUNGLE_LOW[Math.floor(hash(y + 7, x) * JUNGLE_LOW.length)], x, y, 0.22, 0.18);
           }
         }
       }

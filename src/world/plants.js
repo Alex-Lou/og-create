@@ -17,8 +17,14 @@ const PLANTS = {
   palm: 'palmier', deadtree: 'arbre_mort', tuft: 'touffe', bush: 'buisson', rock: 'rocher', rocks: 'rochers',
   crag: 'aiguille', mossy: 'rochers_moussus', flowers: 'fleurs', stump: 'souche', log: 'rondin', mushrooms: 'champignons',
   reeds: 'roseaux', lily: 'nenuphars', shells: 'coquillages', driftwood: 'bois_flotte', heather: 'bruyere',
-  cactus: 'cactus', nest: 'nid'
+  cactus: 'cactus', nest: 'nid',
+  // la jungle de la zone de départ (choix de l'auteur, 18 oct. : design/atelier/jungle.js)
+  banana: 'bananier', monstera: 'monstera', treefern: 'fougere', heliconia: 'heliconia', croton: 'croton',
+  caladium: 'caladium', kapok: 'fromager'
 };
+// Ce qui luit la nuit : la jungle (ses nervures, ses fleurs) ; ses lueurs sont le dessin « <variante>_nuit », que le
+// jeu allume à mesure que la nuit tombe (draw/nature.js, drawLueursJungle)
+const GLOWS = new Set(['banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok']);
 // Les dessins de nuit (« champignons_bruns_nuit ») sont d'un autre moment, pas des variantes : ils ne se tirent pas
 const NIGHT = /(^|_)nuit(_|$)/;
 
@@ -97,11 +103,13 @@ function makeOf(name) {
   return makes.get(name);
 }
 
-// Le dessin d'une plante posée en (x, y) (en cases, fractions comprises) : { name, key, make }, ou null si la
-// bibliothèque n'a rien pour cette sorte
+// Le dessin d'une plante posée en (x, y) (en cases, fractions comprises) : { name, key, make, glow }, ou null si la
+// bibliothèque n'a rien pour cette sorte ; glow : ses lueurs de nuit ({ key, make }), ou null
 export function plantLook(kind, x, y) {
   const variants = VARIANTS[kind];
   if (!variants || !variants.length) return null;
   const name = variants[Math.floor(pick(x, y) * variants.length)];
-  return { name, key: `plante-${name}`, make: makeOf(name) };
+  const night = `${name}_nuit`;
+  const glow = GLOWS.has(kind) && FILES[`${DIR}${night}.svg`] ? { key: `plante-${night}`, make: makeOf(night) } : null;
+  return { name, key: `plante-${name}`, make: makeOf(name), glow };
 }

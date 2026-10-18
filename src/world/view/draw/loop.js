@@ -33,7 +33,7 @@ const LOADING_FRAME_MS = 250;
 // Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
 // taille), ni petits détails du décor ; la très grande île reste fluide
 const FAR_SCALE = 0.45;
-const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest']);
+const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest', 'caladium']);
 
 // Pendant une pose : ce qui se tient devant une case dorée (jusqu'à tant de rangs plus près, et tant de colonnes de côté)
 // ne garde que tant d'opacité
@@ -677,6 +677,8 @@ export default {
     drawPlankton(ctx, this.live.shore, view, t, phase.night);
     if (life.jellies) drawJellies(ctx, life.jellies, view, t, phase.night);
     drawLueursBancs(ctx, bancs, phase.night);
+    // (et la jungle de la zone de départ : draw/nature.js)
+    if (phase.night >= 0.02) this.drawLueursJungle(ctx, this.props.filter(prop => prop.glow && seenAt(prop.wx, prop.wy)), t, phase.night, near, repaint);
     ctx.restore();
     if (geant) {
       drawLueursGeant(ctx, geant, t, phase.night);

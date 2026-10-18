@@ -11,7 +11,8 @@ import { hash } from '@/world/scene';
 const DIR = fileURLToPath(new URL('../design/bibliotheque/svg/plantes/', import.meta.url));
 // Ce que natureOf (WorldView/terrain.js) fait pousser
 const GROWN = ['tree', 'apple', 'birch', 'pine', 'autumn', 'palm', 'rock', 'rocks', 'crag', 'mossy', 'tuft', 'reeds', 'lily',
-  'stump', 'heather', 'bush', 'snowpine', 'deadtree', 'cactus', 'flowers', 'mushrooms', 'log', 'shells', 'driftwood', 'nest'];
+  'stump', 'heather', 'bush', 'snowpine', 'deadtree', 'cactus', 'flowers', 'mushrooms', 'log', 'shells', 'driftwood', 'nest',
+  'banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok'];
 
 describe('les plantes de la bibliothèque', () => {
   it('chaque sorte qui pousse sur l\'île a son dessin, le dessin par défaut en tête', () => {
@@ -66,6 +67,15 @@ describe('les plantes de la bibliothèque', () => {
     for (const season of ['printemps', 'ete', 'automne', 'hiver']) {
       for (const kind of GROWN) expect(variantsFor(season)[kind]?.length, `${season} ${kind}`).toBeGreaterThan(0);
     }
+  });
+
+  it('la jungle de la zone de départ luit la nuit : chaque plante a ses lueurs, qui ne se tirent pas comme variantes', () => {
+    for (const kind of ['banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok']) {
+      const look = plantLook(kind, 3, 5);
+      expect(look.glow, kind).toEqual({ key: `plante-${look.name}_nuit`, make: expect.any(Function) });
+    }
+    expect(VARIANTS.treefern).toContain('fougere_acide_petite');
+    expect(plantLook('tree', 3, 5).glow).toBe(null);
   });
 
   it('un dessin redessiné en variantes dans la bibliothèque varie sur l\'île', () => {

@@ -8,7 +8,7 @@ const STAIRS = 'pkb';
 // Ce que coûte un pas vers une case (le plus court chemin) : une porte ou un chemin 3, l'herbe 6 (le chemin coûte
 // moitié moins), le pavé 2 (on le préfère encore : choix de l'auteur, 16 oct.)
 const stepCost = (M, x, y, door) => (door ? 3 : pavedAt(M, x, y) ? 2 : STAIRS.includes(M.ground(x, y)) ? 3 : 6);
-const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest']);
+const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest', 'banana', 'treefern', 'kapok', 'monstera', 'heliconia', 'croton']);
 
 // Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni objet du camp
 // des naufragés (camp : ses cases ; l'épave, les caisses… : on n'y marche pas, on ne s'y cache pas), ni arbre ou

@@ -6,9 +6,10 @@ import { leavesOf, leafTones, drawLeaves, LEAFY, drawTapis, aTapis } from '@/wor
 import { SEASON } from '@/world/plants';
 
 // Ce qui prend le liseré doré de l'heure dorée (les arbres et les buissons ; les petites plantes, non)
-const RIMMED = new Set(['tree', 'palm', 'bush', 'birch', 'apple', 'autumn', 'snowpine']);
+const RIMMED = new Set(['tree', 'palm', 'bush', 'birch', 'apple', 'autumn', 'snowpine', 'banana', 'treefern', 'kapok', 'monstera']);
 // Ce qui plie au vent, et de combien
-const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08, snowpine: 0.02, heather: 0.04 };
+const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08, snowpine: 0.02, heather: 0.04,
+  banana: 0.05, treefern: 0.04, kapok: 0.025, monstera: 0.03, heliconia: 0.05, croton: 0.04, caladium: 0.05 };
 
 export default {
   // Décor fixe d'une case, cuit dans le sol sauf de près (sans le vent ; à demi effacé sous la brume, comme le sol) :
@@ -40,5 +41,18 @@ export default {
     // réduit, pas sous la brume ; rien en hiver)
     if (!still && !mist && LEAFY.has(prop.kind) && leafTones(SEASON) && !this.reduced()) drawLeaves(ctx, SEASON, leavesOf(c.x, c.y, prop.x, prop.y, t));
     if (mist) ctx.restore();
+  },
+  // La nuit, la jungle luit (choix de l'auteur, 18 oct. : les couleurs néon de ses références le soir et la nuit) : les
+  // lueurs de chaque plante (ses nervures, ses fleurs), à mesure que la nuit tombe, par-dessus l'obscurité (loop.js, en
+  // « lighter ») ; à demi sous la brume comme elle ; pliées au vent comme elle, de près
+  drawLueursJungle(ctx, props, t, night, near, repaint) {
+    if (night < 0.02) return;
+    for (const prop of props) {
+      if (this.hiddenCell(prop.x, prop.y)) continue;
+      const zone = this.zoneAt(prop.x, prop.y);
+      ctx.globalAlpha = night * (zone && !zone.owned ? 1 - this.mistFade(0.5, zone) : 1);
+      this.swayed(ctx, prop.glow.key, prop.glow.make, prop.wx, prop.wy, near ? (SWAY[prop.kind] || 0) * this.windOf(t, prop.x, prop.y) : 0, repaint);
+    }
+    ctx.globalAlpha = 1;
   }
 };

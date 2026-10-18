@@ -2,6 +2,7 @@
 // le générateur des plantes (generateur_plantes.mjs) les dessine, avec les mêmes fonctions.
 const { arbre, ARBRES, arbreSaison, ARBRES_SAISONS, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
 const { ARBRES_DE_SAISON } = require('./arbres_saisons');
+const { JUNGLE, JUNGLE_NUIT } = require('./jungle');
 const { touffe, TOUFFES, touffeSaison, TOUFFES_SAISONS } = require('./herbes');
 const { rocher, ROCHERS, rocherSaison, ROCHERS_SAISONS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS } = require('./rochers');
 const { coquillages, COQUILLAGES, boisFlotte, BOIS_FLOTTES } = require('./plage');
@@ -23,6 +24,10 @@ const PLANTES = [
   ...BOULEAUX.map(([fichier, libelle, o]) => [fichier, libelle, 'birch', () => bouleau(o)]),
   ...SAPINS.map(([fichier, libelle, o]) => [fichier, libelle, o.neige ? 'snowpine' : 'pine', () => sapin(o)]),
   ...PALMIERS.map(([fichier, libelle, o]) => [fichier, libelle, 'palm', () => palmier(o)]),
+  // la jungle de la zone de départ (jungle.js) : bananier, monstera, fougère arborescente, héliconia, croton, caladium,
+  // fromager ; puis leurs lueurs de nuit
+  ...JUNGLE,
+  ...JUNGLE_NUIT,
   ...ARBRES_MORTS.map(([fichier, libelle, o]) => [fichier, libelle, 'deadtree', () => arbreMort(o)]),
   // les autres plantes refaites (plantes.js) : le buisson et ses 8 variantes, la bruyère et ses 8, les fleurs et leurs 8,
   // le cactus et ses 8, la souche et ses 8, le rondin et ses 8, les champignons et leurs 8, les roseaux et leurs 8, les

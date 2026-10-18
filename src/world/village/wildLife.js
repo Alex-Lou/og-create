@@ -108,7 +108,7 @@ export function homesOf({ n, M, owned, grid, props, avoid = [] }) {
     }
   }
   for (const p of props) {
-    if (['tree', 'apple', 'birch', 'autumn'].includes(p.kind) && owned.has(M.zone(p.x, p.y))) of(M.zone(p.x, p.y)).arbres.push({ x: p.x, y: p.y });
+    if (['tree', 'apple', 'birch', 'autumn', 'kapok', 'banana', 'treefern'].includes(p.kind) && owned.has(M.zone(p.x, p.y))) of(M.zone(p.x, p.y)).arbres.push({ x: p.x, y: p.y });
   }
   return homes;
 }
