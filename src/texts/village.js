@@ -114,6 +114,16 @@ export const MEAL_SAYS = {
   carriere: 'Hm. Bonne soupe. (Il tend son bol.)',
   potager: 'Ces carottes viennent de chez moi. Elles sont un peu timides, sois gentil.'
 };
+// Le jour de marché au Foyer (choix de l'auteur, 18 oct. ; world/village/agenda.js : MARKET)
+export const MARKET_SAYS = {
+  ponton: 'Jour de marché. J’échange du poisson contre des nouvelles. Les nouvelles sont plus fraîches.',
+  foyer: 'Approchez ! Soupe, galettes, et un mot gentil pour chacun. Le mot est gratuit.',
+  atelier: 'J’ai réparé trois choses pour le marché. Une seule servait à quelque chose.',
+  puits: 'Au marché, je vends de l’eau. Enfin, je la donne. Personne ne paie l’eau.',
+  bosquet: 'Trop de monde. (Elle reste au bord, mais elle reste.)',
+  carriere: 'Hm. Marché. (Il pose une pierre bien taillée sur l’étal.)',
+  potager: 'Mes plus belles courges. Ne les touche pas trop, elles sont sensibles.'
+};
 export const VISIT_SAYS = {
   ponton: 'Je passe voir si tout tient. Vieille habitude de quart.',
   foyer: 'J’apporte de quoi grignoter. Chez moi, personne ne travaille le ventre vide.',

@@ -32,7 +32,7 @@
 // (paths.js), les habitants (residents.js), la ferme (farm.js), les bêtes sauvages (wild.js), Anya (anya.js), le dessin
 // d'une bête (beast.js). Les paroles sont dans texts/village.js.
 import { bestiaryOf, FAMILIARS } from './bestiary';
-import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
+import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS } from '@/texts/village';
 import { gridOf, gridKeyOf, route, doorOf } from './village/paths';
 import { residentsOf, plannerOf, drawResidents, visitHere } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
@@ -42,14 +42,14 @@ import { creatureOf, creatureOfHit } from './creatures';
 import { drawAnya, anyaSign, storyInfo } from './village/anya';
 import { hash } from './village/beast';
 import { dayHourOf } from './gameClock';
-import { momentOf } from './village/agenda';
+import { momentOf, marketDay, MARKET } from './village/agenda';
 import { SEASON } from './plants';
 
 export { BEAST_NAMES, isWild };
 
 /* ---------- Le village ---------- */
 // Les chemins gardés, au plus (la mémoire reste bornée sur une longue partie)
-const ROUTES_MAX = 600;
+const ROUTES_MAX = 1500;
 // L'empreinte de ce qui tire les tournées (le planificateur du village d'avant resservira tel quel) : chaque habitant
 // (son rang, ses places, son humeur, son allure), les portes, le Foyer, le tutoriel
 const cellKey = c => (c ? `${c.x},${c.y}` : '-');
@@ -88,6 +88,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
   const foyer = built.find(s => s.id === 'foyer');
+  // Jour de marché (agenda.js) : ce jour de la semaine de l'île, le Foyer à son palier
+  const marketOn = day => Boolean(foyer && foyer.level >= MARKET.level && marketDay(day));
   const home = doors.foyer || Object.values(doors)[0] || null;
   // (les chemins déjà tirés, ROUTES_MAX au plus : au-delà, on repart de rien)
   const routes = kept ? kept.routes : new Map();
@@ -135,7 +137,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const dayTime = h > phase.rise + 0.5 && h < phase.set - 0.5;
     const night = phase.night > 0.5;
     const meets = [];
-    const f = { t, clock, h, rain, day, islandDay, phase, tapped, out, lights, meets, dawn, dusk, dayTime, night };
+    const f = { t, clock, h, rain, day, islandDay, market: marketOn(islandDay), phase, tapped, out, lights, meets, dawn, dusk, dayTime, night };
     drawResidents(f, { residents, ...planner, arrivals, bestiary, calm });
     drawFarm(f, farm, loose);
     const paint = wildPainter(f);
@@ -160,7 +162,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   function moment(r, phase) {
     const day = dayHourOf(Date.now()).day;
     const present = residents.filter(o => o.master && !o.asleep && !o.swim);
-    return momentOf(r, phase.hour, phase, { rain: phase.weather.rain, calm, visit: r.master && !calm ? visitHere(r, day, present) : null });
+    const market = marketOn(day);
+    return momentOf(r, phase.hour, phase, { rain: phase.weather.rain, calm, visit: r.master && !calm ? visitHere(r, day, present, market) : null, day, market });
   }
   // La dernière réplique de chacun (il ne la redit pas tout de suite)
   const lastSaid = new Map();
@@ -181,7 +184,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const now = voice && moment(r, phase);
       // (il dort sa nuit : il ne dit rien, comme un dormeur)
       if (now && now.mode === 'nuit') return { title: r.look.label, text: '' };
-      const doing = now && (now.ritual ? RITUAL_SAYS : now.mode === 'repas' ? MEAL_SAYS : now.mode === 'visite' ? VISIT_SAYS : null);
+      const doing = now && (now.ritual ? RITUAL_SAYS : now.mode === 'repas' ? MEAL_SAYS : now.mode === 'marche' ? MARKET_SAYS : now.mode === 'visite' ? VISIT_SAYS : null);
       if (doing && doing[voice]) return { title: r.look.label, text: doing[voice] };
       const weather = says => says[voice] || says.common;
       // (un voyageur installé a la voix de son métier, pas celle du maître qui travaille là)
@@ -233,5 +236,5 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     return { title, text, hint: isWild(who.species) ? TOUCH_HINTS.startle : TOUCH_HINTS.reactShe };
   }
   // (life : pour le village d'après, before)
-  return { residents, farm, at, say, describe, home, foyer, life: { grid, gridKey, routes, lifeKey, planner } };
+  return { residents, farm, at, say, describe, home, foyer, marketOn, life: { grid, gridKey, routes, lifeKey, planner } };
 }

@@ -4,7 +4,9 @@ import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
 import { CREATURE_TEXTS } from '@/texts/world/creatures';
-import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
+import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS } from '@/texts/village';
+import { marketDay } from '@/world/village/agenda';
+import { cycleStart, dayHourOf } from '@/world/gameClock';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
 const N = 14;
@@ -171,7 +173,7 @@ describe('village : ce qu’ils disent selon leur journée', () => {
   });
   it('chaque maître a ses répliques ; les rencontres vont d’un maître à un autre, en deux bulles', () => {
     const masters = ['ponton', 'foyer', 'atelier', 'puits', 'bosquet', 'carriere', 'potager'];
-    for (const table of [RITUAL_SAYS, VISIT_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS]) expect(Object.keys(table).sort()).toEqual([...masters].sort());
+    for (const table of [RITUAL_SAYS, VISIT_SAYS, MARKET_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS]) expect(Object.keys(table).sort()).toEqual([...masters].sort());
     expect(Object.keys(MEAL_SAYS).sort()).toEqual(masters.filter(m => m !== 'foyer').sort());
     for (const [key, lines] of Object.entries(MEETINGS)) {
       const [from, to] = key.split('>');
@@ -184,7 +186,7 @@ describe('village : ce qu’ils disent selon leur journée', () => {
     expect(pairs).toHaveLength((masters.length * (masters.length - 1)) / 2);
     for (const season of ['printemps', 'ete', 'automne']) expect(Object.keys(SEASON_SAYS[season]).sort()).toEqual([...masters].sort());
     expect(Object.keys(SETTLER_SAYS).sort()).toEqual([...masters].sort());
-    const all = [RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS, ...Object.values(SEASON_SAYS)].flatMap(Object.values)
+    const all = [RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MARKET_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS, ...Object.values(SEASON_SAYS)].flatMap(Object.values)
       .concat(Object.values(SETTLER_SAYS).flat(), Object.values(MEETINGS).flat());
     for (const text of all) expect(text.length, text).toBeLessThanOrEqual(140);
   });
@@ -480,6 +482,37 @@ describe('village : fondations de la vie', () => {
     }
     // (assez de flâneries vues pour que le test dise quelque chose)
     expect(checked).toBeGreaterThan(100);
+  });
+  it('la tournée du jour couvre la journée, de son lever au soir, sans boucle', () => {
+    const v = villageOf(base);
+    const day = dayHourOf(Date.now()).day;
+    for (const r of v.residents) {
+      const plan = v.life.planner.planOf(r, false, day);
+      expect(plan.total, r.id).toBeGreaterThan(72 * 60);
+      expect(plan.legs.length, r.id).toBeGreaterThan(8);
+      expect(plan.legs.length, r.id).toBeLessThan(40);
+    }
+    // (d'un jour à l'autre, une autre tournée)
+    const r = v.residents[0];
+    expect(v.life.planner.planOf(r, false, day + 1).legs.map(l => l.act).join()).not.toBe(v.life.planner.planOf(r, false, day).legs.map(l => l.act).join());
+  });
+  it('le jour de marché, le matin, chacun passe au Foyer et en parle', () => {
+    let cycle = dayHourOf(Date.now()).day;
+    while (!marketDay(cycle)) cycle++;
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(cycleStart(cycle) + 25 * 60 * 1000);
+      const v = villageOf(base);
+      expect(v.marketOn(cycle)).toBe(true);
+      people(v, 30, 10);
+      const there = people(v, 900, 10);
+      for (const p of there) expect(Math.hypot(p.x - v.home.x, p.y - v.home.y), p.id).toBeLessThan(2.2);
+      expect(Object.values(MARKET_SAYS)).toContain(v.say(there.find(p => p.id === 'vil:potager'), at(10)).text);
+      // (sans le Foyer à son palier, pas de marché)
+      expect(villageOf({ ...base, sites: sites.map(s => (s.id === 'foyer' ? { ...s, level: 1 } : s)) }).marketOn(cycle)).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
   });
   it('un voyageur installé n’attend pas l’arrivée du maître de son bâtiment', () => {
     const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];

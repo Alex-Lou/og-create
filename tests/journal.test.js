@@ -62,4 +62,10 @@ describe('le journal de l’île', () => {
     const after = [...before, { ...masters.find(m => m.role === 'atelier'), since: { day: 500, hour: 8 } }];
     for (let d = 200; d < 260; d++) expect(dayLines(after, d, 24, sky(clear)), String(d)).toEqual(dayLines(before, d, 24, sky(clear)));
   });
+  it('un jour de marché, le journal le raconte, selon le temps', () => {
+    expect(dayLines(masters, 300, 24, sky(clear), true)).toContain(JOURNAL.marche.clair);
+    expect(dayLines(masters, 300, 24, sky({ ...clear, rain: 1 }), true)).toContain(JOURNAL.marche.pluie);
+    expect(dayLines(masters, 300, 24, sky(clear))).not.toContain(JOURNAL.marche.clair);
+    expect(journalOf({ masters, today: 300, hour: 24, skyOf: sky(clear), marketOn: d => d === 299 })[1].lines).toContain(JOURNAL.marche.clair);
+  });
 });

@@ -8,7 +8,8 @@ import { FAMILIARS } from '../bestiary';
 import { besideOf, nearestWalk, doorOf } from './paths';
 import { hash, beast } from './beast';
 import { plankAt, PLANK_SPRITE, PLANK_LIFT } from './plank';
-import { momentOf, visitOf, matesOf, MASTERS, HOURS } from './agenda';
+import { momentOf, visitOf, matesOf, shiftOf, MASTERS, HOURS } from './agenda';
+import { cycleStart, minuteOf } from '../gameClock';
 import { coach } from '@/game/coach';
 import { SEASON } from '../plants';
 import { pavedAt } from '../terrain';
@@ -33,6 +34,9 @@ export function stepsOf(path, M) {
 }
 // Les voyageurs installés : une maison chacun, au plus (serveur : services/annexes.js, les maisons du Foyer)
 const SETTLERS_MAX = 4;
+// La tournée du jour couvre tant de secondes réelles, de son lever au soir (l'horloge du jeu : gameClock.js, le jour
+// de l'île dure 65 minutes de 6 h à 21 h)
+const DAY_SPAN = 72 * 60;
 // Sans leur bâtiment, Lorena (Ponton) et Nathan (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
 const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
@@ -173,9 +177,9 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
 }
 
 // Sa visite du jour (agenda.js : visitOf), tirée parmi tous ses camarades : seulement si celui-là est là, éveillé
-// (present : les maîtres éveillés), sinon pas de visite
-export function visitHere(r, day, present) {
-  const v = visitOf(r, day, matesOf(r.role));
+// (present : les maîtres éveillés), sinon pas de visite ; market : jour de marché
+export function visitHere(r, day, present, market = false) {
+  const v = visitOf(r, day, matesOf(r.role), market);
   return v && present.some(o => o.role === v.who) ? v : null;
 }
 
@@ -223,6 +227,7 @@ export function plannerOf({ grid, stops, home, calm, routeOf, last = null }) {
     const other = i => stops[Math.floor(hash(r.k * 7 + i, salt(13)) * stops.length)] || r.work;
     const near = stops.filter(s => s !== home).sort((a, b) => Math.hypot(a.x - home.x, a.y - home.y) - Math.hypot(b.x - home.x, b.y - home.y));
     let seq;
+    const daylong = !calm && !evening && !r.guest;
     if (calm && !r.guest) {
       // Le tutoriel : chacun à sa place (son travail, quelques pas autour), le soir aussi : on sait où le trouver
       seq = [[spotOf(r, r.work, salt(0)), roll(0, 60, 110), evening ? 'idle' : 'work'], [roamOf(r, salt(1)), roll(1, 10, 25), 'idle'], [spotOf(r, r.work, salt(2)), roll(2, 50, 90), evening ? 'idle' : 'work']];
@@ -234,27 +239,37 @@ export function plannerOf({ grid, stops, home, calm, routeOf, last = null }) {
       seq = [[spotOf(r, r.work, 1), roll(1, 40, 80), 'idle'], [spotOf(r, other(1), 2), roll(2, 25, 45), 'idle'], [roamOf(r, salt(3)), roll(3, 15, 30), 'idle'],
         [spotOf(r, home, 4), roll(4, 30, 50), 'idle'], [spotOf(r, other(2), 5), roll(5, 25, 45), 'idle']];
     } else {
-      // Le jour : le travail d'abord, puis cinq moments tirés parmi travailler (ou son annexe), passer voir un autre
-      // bâtiment, flâner, une pause au Foyer ; le travail pour finir
+      // Le jour (choix de l'auteur, 18 oct.) : une seule tournée, de son lever au soir, sans boucle : le travail
+      // d'abord, puis des moments tirés parmi travailler (ou son annexe), passer voir un autre bâtiment, flâner dans sa
+      // zone, une pause au Foyer, jusqu'à couvrir la journée (DAY_SPAN secondes)
       const moments = [
-        i => [spotOf(r, r.field || r.work, salt(i)), roll(i, 70, 120), r.field ? 'field' : 'work'],
-        i => [spotOf(r, other(i), salt(i)), roll(i, 15, 35), 'idle'],
-        i => [roamOf(r, salt(i)), roll(i, 10, 25), 'idle'],
-        i => [spotOf(r, home, salt(i)), roll(i, 20, 40), 'idle']
+        i => [spotOf(r, r.field || r.work, salt(i)), roll(i, 240, 420), r.field ? 'field' : 'work'],
+        i => [spotOf(r, other(i), salt(i)), roll(i, 90, 180), 'idle'],
+        i => [roamOf(r, salt(i)), roll(i, 90, 180), 'idle'],
+        i => [spotOf(r, home, salt(i)), roll(i, 120, 240), 'idle']
       ];
-      seq = [[spotOf(r, r.work, salt(0)), roll(0, 60, 110), 'work']];
-      for (let i = 1; i <= 5; i++) seq.push(moments[Math.floor(hash(r.k * 5 + i, salt(9)) * moments.length)](i));
-      seq.push([spotOf(r, r.work, salt(8)), roll(8, 50, 90), 'work']);
+      seq = [[spotOf(r, r.work, salt(0)), roll(0, 240, 420), 'work']];
+      for (let i = 1, span = seq[0][1]; span < DAY_SPAN; i++) {
+        seq.push(moments[Math.floor(hash(r.k * 5 + i, salt(9)) * moments.length)](i));
+        span += seq[seq.length - 1][1];
+      }
     }
     // Une place qu'aucun chemin ne rejoint depuis la sienne (une marche du relief, une case enclavée) : il reste à sa
-    // place plutôt que d'y sauter ; les places gardées se rejoignent alors toutes, le retour au début de la tournée compris
-    seq = seq.map(([to, pause, act]) => [routeOf(r.work, to) ? to : r.work, pause, act]);
+    // place plutôt que d'y sauter ; les places gardées se rejoignent alors toutes, le retour au début de la tournée
+    // compris. (Chaque place gardée est reliée à la sienne : le chemin depuis la précédente suffit à le savoir, une
+    // seule recherche par arrêt)
     const speed = speedOf(r);
     const legs = [];
-    let at = seq[seq.length - 1][0];
+    const last = seq[seq.length - 1][0];
+    let at = routeOf(r.work, last) ? last : r.work;
     let total = 0;
-    for (const [to, pause, act] of seq) {
-      const path = routeOf(at, to) || [to];
+    for (const [stop, pause, act] of seq) {
+      let to = stop;
+      let path = routeOf(at, to);
+      if (!path) {
+        to = r.work;
+        path = routeOf(at, to) || [to];
+      }
       const { span, steps } = stepsOf(path, grid.M);
       const walk = span / speed;
       legs.push({ path, walk, steps, pause, act, start: total });
@@ -263,7 +278,9 @@ export function plannerOf({ grid, stops, home, calm, routeOf, last = null }) {
     }
     // À l'arrêt, chacun se tient à sa place dans la case, sur un petit cercle (angle d'or : deux rangs voisins sont loin)
     const rest = { x: Math.cos(r.k * 2.4) * 0.26, y: Math.sin(r.k * 2.4) * 0.26 };
-    const plan = { legs, total, speed, lane: (hash(r.k, 9) - 0.5) * 0.24, rest, offset: hash(r.k, salt(21)) * total };
+    // (la tournée du jour part de son lever, à l'horloge de l'île : sans boucle ; les autres tournent)
+    const offset = daylong ? -(cycleStart(day) / 1000 + minuteOf(r.wake + shiftOf(r, day)) * 60) : hash(r.k, salt(21)) * total;
+    const plan = { legs, total, speed, lane: (hash(r.k, 9) - 0.5) * 0.24, rest, offset };
     plans.set(key, plan);
     return plan;
   };
@@ -301,6 +318,7 @@ export function plannerOf({ grid, stops, home, calm, routeOf, last = null }) {
       return holdOf(r, m.mode, spotOf(r, where, 79), m.ritual.where === 'field' && m.ritual.pose === 'work' ? 'field' : m.ritual.pose, m.ritual.view || null);
     }
     if (m.mode === 'repas' && home) return holdOf(r, 'repas', spotOf(r, home, 83), 'idle');
+    if (m.mode === 'marche' && home) return holdOf(r, 'marche', spotOf(r, home, 97), 'idle');
     if (m.mode === 'visite') return holdOf(r, 'visite', spotOf(r, doorOf(m.visit.who) || r.work, 91), 'idle');
     return planOf(r, m.mode === 'soir', day);
   };
@@ -357,7 +375,7 @@ export function plannerOf({ grid, stops, home, calm, routeOf, last = null }) {
 // la dernière case du chemin (pas de saut)
 export function onPlan(plan, t) {
   // (un familier qui suit son maître tout juste arrivé regarde un peu avant le départ : il attend au début du chemin)
-  const tt = (Math.max(0, t) + plan.offset) % plan.total;
+  const tt = (((Math.max(0, t) + plan.offset) % plan.total) + plan.total) % plan.total;
   const leg = plan.legs.reduce((found, l) => (tt >= l.start ? l : found), plan.legs[0]);
   const into = tt - leg.start;
   const last = leg.path[leg.path.length - 1];
@@ -393,7 +411,7 @@ export function onPlan(plan, t) {
 // Les habitants à l'instant du dessin (f : t, clock, h, rain, islandDay, phase, tapped, out, lights), selon leur agenda
 // (village/agenda.js), leur familier avec eux. calm : le tutoriel
 export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, arrivals, bestiary, calm = false }) {
-  const { t, clock, h, rain, islandDay: day, phase, tapped, out, lights, meets = [] } = f;
+  const { t, clock, h, rain, islandDay: day, market = false, phase, tapped, out, lights, meets = [] } = f;
   // (la tenue des maîtres : d'hiver toute la saison, de pluie sous une averse ; le parapluie, au-delà de 0,5, passe avant)
   const tenue = SEASON === 'hiver' ? 'hiver' : rain > 0.15 ? 'pluie' : null;
   // Celui que le coach montre (« île:habitant:<rôle> » : Nathan qui sort de la brume) ne se cache jamais, ni au lit ni
@@ -495,7 +513,7 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
       }
     }
     if (!p) {
-      m = momentOf(r, h, phase, { rain, calm, visit: r.master && !calm ? visitHere(r, day, mates) : null, shown: r.master && r.role === wanted });
+      m = momentOf(r, h, phase, { rain, calm, visit: r.master && !calm ? visitHere(r, day, mates, market) : null, shown: r.master && r.role === wanted, day, market });
       // (un voyageur de passage n'a pas de lit sur l'île : la nuit, on ne le voit pas)
       if (m.mode === 'absent') continue;
       p = placeOf(r, m, t, clock, day, doorOf);

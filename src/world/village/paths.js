@@ -53,24 +53,40 @@ export function gridKeyOf(grid) {
   return h >>> 0;
 }
 // Plus court chemin (les chemins coûtent moitié moins que l'herbe, le pavé encore moins : stepCost) : liste de cases,
-// ou null
+// ou null. Cherché vers le but (A*) : un pas coûte au moins MIN_STEP, la distance à vol de case ne surestime jamais ce
+// qui reste ; le chemin trouvé reste le plus court, en fouillant bien moins de cases. Ses tableaux de travail servent
+// d'un chemin à l'autre (aucune mémoire allouée à chaque recherche)
+const MIN_STEP = 2;
+let work = null;
 export function route(grid, from, to) {
   const { n, M, walk, step } = grid;
   const pass = grid.through || (() => false);
   if (!from || !to) return null;
-  const dist = new Float32Array(n * n).fill(Infinity);
-  const prev = new Int32Array(n * n).fill(-1);
+  if (!work || work.n !== n) work = { n, dist: new Float32Array(n * n), prev: new Int32Array(n * n), stamp: new Uint32Array(n * n), run: 0 };
+  // (une case n'est à jour que si elle porte le tampon de cette recherche)
+  const run = ++work.run;
+  const { dist, prev, stamp } = work;
+  const g = i => (stamp[i] === run ? dist[i] : Infinity);
   const start = from.y * n + from.x;
   const goal = to.y * n + to.x;
+  const h = i => MIN_STEP * (Math.abs((i % n) - to.x) + Math.abs(Math.floor(i / n) - to.y));
+  stamp[start] = run;
   dist[start] = 0;
-  // File à seaux : les coûts sont 2 (pavé), 3 (chemin, porte) ou 6 (herbe)
-  const buckets = [[start]];
-  for (let d = 0; d < buckets.length; d++) {
-    const bucket = buckets[d];
+  prev[start] = -1;
+  // File à seaux, par coût estimé (fait + reste) : les pas coûtent 2 (pavé), 3 (chemin, porte) ou 6 (herbe)
+  const buckets = [];
+  buckets[h(start)] = [start];
+  let found = false;
+  for (let f = h(start); f < buckets.length && !found; f++) {
+    const bucket = buckets[f];
     if (!bucket) continue;
-    for (const i of bucket) {
-      if (dist[i] !== d) continue;
-      if (i === goal) break;
+    for (let b = 0; b < bucket.length; b++) {
+      const i = bucket[b];
+      if (g(i) + h(i) !== f) continue;
+      if (i === goal) {
+        found = true;
+        break;
+      }
       const x = i % n;
       const y = (i - x) / n;
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
@@ -79,17 +95,18 @@ export function route(grid, from, to) {
         const door = pass(nx, ny);
         if (!(walk(nx, ny) || door) || !step({ x, y }, { x: nx, y: ny })) continue;
         const j = ny * n + nx;
-        const nd = d + stepCost(M, nx, ny, door);
-        if (nd < dist[j]) {
+        const nd = g(i) + stepCost(M, nx, ny, door);
+        if (nd < g(j)) {
+          stamp[j] = run;
           dist[j] = nd;
           prev[j] = i;
-          (buckets[nd] = buckets[nd] || []).push(j);
+          const fj = nd + h(j);
+          (buckets[fj] = buckets[fj] || []).push(j);
         }
       }
     }
-    if (dist[goal] <= d) break;
   }
-  if (!Number.isFinite(dist[goal])) return null;
+  if (!found) return null;
   const path = [];
   for (let i = goal; i !== -1; i = prev[i]) path.push({ x: i % n, y: Math.floor(i / n) });
   return path.reverse();

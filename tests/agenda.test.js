@@ -1,7 +1,7 @@
 // L'agenda des habitants (world/village/agenda.js ; choix de l'auteur, 16 oct.) : chacun sa journée, ses rituels, son
 // lit ; tout se déduit de l'habitant, de l'heure et du jour de l'île
 import { describe, it, expect } from 'vitest';
-import { momentOf, visitOf, RITUALS, HOURS, MEAL } from '@/world/village/agenda';
+import { momentOf, visitOf, shiftOf, marketDay, RITUALS, HOURS, MEAL, MARKET } from '@/world/village/agenda';
 import { GAME_SUN } from '@/world/gameClock';
 
 const sun = GAME_SUN;
@@ -53,5 +53,30 @@ describe('l’agenda des habitants', () => {
       expect(['puits', 'foyer']).toContain(v.who);
     }
     expect(visitOf(r, 7, ['puits', 'foyer'])).toEqual(visitOf(r, 7, ['puits', 'foyer']));
+  });
+  it('ses heures bougent un peu d’un jour à l’autre, au plus de 20 minutes, rituels compris ; le repas reste à midi', () => {
+    const r = master('carriere', 1);
+    const shifts = Array.from({ length: 60 }, (_, d) => shiftOf(r, d));
+    expect(Math.max(...shifts.map(Math.abs))).toBeLessThanOrEqual(1 / 3);
+    expect(new Set(shifts.map(v => v.toFixed(3))).size).toBeGreaterThan(30);
+    expect(shiftOf(r, undefined)).toBe(0);
+    for (let d = 0; d < 20; d++) {
+      const s = shiftOf(r, d);
+      // (son rituel du matin, décalé du même pas que son lever)
+      expect(mode(r, 5.8 + s + 0.01, { day: d })).toBe('rituel:tot');
+      expect(mode(r, 5.8 + s - 0.01, { day: d })).toBe('nuit');
+      expect(mode(r, (MEAL.from + MEAL.to) / 2, { day: d })).toBe('repas');
+    }
+  });
+  it('le jour de marché : un jour de la semaine de l’île, le matin au Foyer, et plus de visites l’après-midi', () => {
+    expect(Array.from({ length: 14 }, (_, d) => marketDay(d)).filter(Boolean)).toHaveLength(2);
+    const r = master('potager', 3);
+    expect(mode(r, (MARKET.from + MARKET.to) / 2, { market: true })).toBe('marche');
+    expect(mode(r, (MARKET.from + MARKET.to) / 2)).toBe('jour');
+    // (un rituel passe avant : Léo à l'eau ; le tutoriel, rien)
+    expect(mode(master('puits', 3), 9, { market: true })).toBe('rituel:eau');
+    expect(mode(r, (MARKET.from + MARKET.to) / 2, { market: true, calm: true })).toBe('jour');
+    const count = market => Array.from({ length: 200 }, (_, d) => visitOf(r, d, ['puits', 'foyer'], market)).filter(Boolean).length;
+    expect(count(true)).toBeGreaterThan(count(false));
   });
 });
