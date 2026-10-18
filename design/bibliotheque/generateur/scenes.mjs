@@ -23787,9 +23787,9 @@ var require_neon_naufrage = __commonJS({
     var enNeon = /* @__PURE__ */ __name((dessin) => avecStyle(NUIT, dessin), "enNeon");
     var HORIZON = 206;
     var SOLEIL = [96, 150];
-    function ciel(p) {
+    function ciel(p, horizon = HORIZON, [sx, sy] = SOLEIL) {
       const A = atelier(`${p}C`);
-      return A.out(plein(A.lin([[0, "#03021A"], [0.3, "#140846"], [0.55, "#4A127E"], [0.75, "#B0287E"], [0.88, "#FF4F78"], [0.96, "#FF8A50"], [1, "#FFC070"]], 0, G, 0, HORIZON + 6)) + plein(A.rad([[0, "#FF6AA0", 0.55], [0.4, "#FF3FA8", 0.22], [1, "#FF3FA8", 0]], SOLEIL[0], SOLEIL[1], 260)));
+      return A.out(plein(A.lin([[0, "#03021A"], [0.3, "#140846"], [0.55, "#4A127E"], [0.75, "#B0287E"], [0.88, "#FF4F78"], [0.96, "#FF8A50"], [1, "#FFC070"]], 0, G, 0, horizon + 6)) + plein(A.rad([[0, "#FF6AA0", 0.55], [0.4, "#FF3FA8", 0.22], [1, "#FF3FA8", 0]], sx, sy, 260)));
     }
     __name(ciel, "ciel");
     function cielNuit(p) {
@@ -23801,9 +23801,9 @@ var require_neon_naufrage = __commonJS({
       const A = atelier(`${p}E`);
       return A.out(etoiles(90, 31, G, 150));
     }, "etoilesCiel");
-    function soleil(p) {
-      const A = atelier(`${p}S`), [x, y] = SOLEIL;
-      let s = rayons(A, SOLEIL, 26, 200, "#FFE0B0", 0.22, 7);
+    function soleil(p, [x, y] = SOLEIL) {
+      const A = atelier(`${p}S`);
+      let s = rayons(A, [x, y], 26, 200, "#FFE0B0", 0.22, 7);
       const anneaux = [[78, "#5A1488", VIOLET2], [62, "#B0207E", MAGENTA], [48, "#F0445A", CORAIL], [36, "#FF8A3A", ORANGE]];
       anneaux.forEach(([r, c, lum], i) => {
         const n = 14 + i * 2, bord = courbe((t) => {
@@ -23861,8 +23861,8 @@ var require_neon_naufrage = __commonJS({
       return A.out(plein(A.lin([[0, "#7A3ABA", 0], [0.5, "#9A4ACA", 0.4], [1, "#3A1A6A", 0]], 0, HORIZON - 40, 0, HORIZON + 30)));
     }, "brumeLoin");
     var MERS = [[HORIZON + 4, 4, 34, ["#3E8AB8", "#1E4A7A", "#0E2A4A"], "#FFB8D8"], [HORIZON + 18, 6, 46, ["#1E7A98", "#0E3A5A", "#082238"], "#B8FFF0"], [HORIZON + 38, 9, 62, ["#0E6A78", "#0A3A4A", "#041C26"], CYAN], [HORIZON + 66, 13, 84, ["#0A4A5A", "#06242E", "#020E14"], CYAN], [HORIZON + 104, 18, 110, ["#08323E", "#03141C", "#01080C"], "#3EC8E8"], [HORIZON + 152, 24, 140, ["#062430", "#020A10", NOIR], "#2AA8D8"]];
-    function vague(p, i) {
-      const A = atelier(`${p}M${i}`), [y, h, l, couleurs, lum] = MERS[i], pts5 = [];
+    function vague(p, i, [y, h, l, couleurs, lum] = MERS[i]) {
+      const A = atelier(`${p}M${i}`), pts5 = [];
       for (let x = G - 140 - l; x < D_ + 140 + l; x += l) {
         const w = l * (0.8 + 0.4 * hash(Math.round(x), i)), hh = h * (0.7 + 0.6 * hash(Math.round(x), i + 3));
         for (let j = 0; j <= 14; j++) {
@@ -24411,7 +24411,145 @@ var require_neon_naufrage = __commonJS({
       return { plans, partition: { temps } };
     }
     __name(naufrage, "naufrage");
-    module.exports = { naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau: rideau2, remous, abysse, surface, bulles, racineNeon, enCouleurs, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET: VIOLET2, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
+    module.exports = { vignette, rayons, etoiles, naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau: rideau2, remous, abysse, surface, bulles, racineNeon, enCouleurs, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET: VIOLET2, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
+  }
+});
+
+// atelier/neon_reveil.js
+var require_neon_reveil = __commonJS({
+  "atelier/neon_reveil.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure } = require_gravure();
+    var GP = require_gravure_plage();
+    var N = require_neon_naufrage();
+    var { G, D_ } = require_theatre_pont();
+    var { HORIZON, RIVAGE, SOLEIL } = GP;
+    var { lumineux, enNeon, enCouleurs, plein, chemin, ENCRE, CYAN, ACIDE, MAGENTA } = N;
+    var ciel = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}E`);
+      return N.ciel(p, HORIZON, SOLEIL) + A.out(N.etoiles(60, 41, G, 120));
+    }, "ciel");
+    var soleil = /* @__PURE__ */ __name((p) => N.soleil(p, SOLEIL), "soleil");
+    var NUAGES = [[0, 60, "#FFB8D8"], [1, 134, "#FF8A70"]];
+    var RANGEES = [[HORIZON + 4, 3, 30, ["#4A7AB8", "#2A4A7A", "#14284A"], "#FFB8D8"], [HORIZON + 16, 4, 40, ["#2A7A9A", "#14405A", "#0A2238"], "#FFD0E0"], [HORIZON + 32, 6, 52, ["#1A6A7A", "#0A3A4A", "#06202A"], "#B8FFF0"], [HORIZON + 50, 8, 66, ["#0E5A6A", "#082E3A", "#04161E"], CYAN]];
+    function mer(p) {
+      let s = RANGEES.map((r, i) => N.vague(`${p}r`, 10 + i, r)).join("");
+      const A = atelier(`${p}O`);
+      for (let i = 0; i < 16; i++) {
+        const t = i / 16, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 30 * t + 8 * hash(i, 3), x = SOLEIL[0] + (hash(i, 5) - 0.5) * (14 + 60 * t);
+        s += lumineux(`M${f(x - w / 2)},${f(y)} L${f(x + w / 2)},${f(y - 0.6)}`, i % 3 ? "#FFB060" : MAGENTA, 0.8 + t * 1.2, 0.12);
+      }
+      return A.out(s);
+    }
+    __name(mer, "mer");
+    function plage(p) {
+      const A = atelier(`${p}P`);
+      let s = gravure(A, [...courbe((t) => [G + (D_ - G) * t, RIVAGE - 4 + 5 * Math.sin(t * 9)], 30), [D_, D_], [G, D_]], A.lin([[0, "#4A1A7A"], [1, "#1E0A40"]], 0, RIVAGE - 4, 0, RIVAGE + 40), { seed: 70, amp: 0.4, angle: 6, pas: 3, ombre: 0.3, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
+      s += `<ellipse cx="${SOLEIL[0]}" cy="${RIVAGE + 10}" rx="56" ry="12" fill="${A.rad([[0, "#FF8AC0", 0.7], [0.5, MAGENTA, 0.3], [1, MAGENTA, 0]], SOLEIL[0], RIVAGE + 10, 56)}"/>`;
+      const dentelle = courbe((t) => [G + (D_ - G) * t, RIVAGE + 3 + 4 * Math.sin(t * 13) + 1.6 * Math.sin(t * 47)], 60);
+      s += lumineux(chemin(dentelle), "#E8FFFA", 1.2, 0.16) + lumineux(chemin(dentelle.map(([x, y], k) => [x, y + 5 + 2 * Math.sin(k)])), CYAN, 0.6, 0.1);
+      const sec = [...courbe((t) => [G + (D_ - G) * t, RIVAGE + 22 + 8 * Math.sin(t * 5 + 1) + 3 * Math.sin(t * 17)], 34), [D_, D_], [G, D_]];
+      s += gravure(A, sec, A.lin([[0, "#3A1868"], [0.5, "#24104A"], [1, "#100626"]], 0, RIVAGE + 20, 0, D_), { seed: 72, amp: 0.6, angle: 14, pas: 3.2, ombre: 0.35, tailles: 2, tailleP: 5, portee: 0.4, dy: 4, lumiere: [-0.2, -1] });
+      s += lumineux(chemin(sec.slice(0, -2)), "#C870F0", 0.5, 0.08);
+      for (let i = 0; i < 40; i++) s += `<circle cx="${f(G + hash(i, 81) * (D_ - G))}" cy="${f(RIVAGE + 30 + hash(i, 83) * 180)}" r="${f(0.6 + hash(i, 85))}" fill="${i % 5 ? "#9A7AF0" : ACIDE}" opacity="0.6"/>`;
+      for (let i = 0; i < 14; i++) {
+        const x = G + hash(i, 91) * (D_ - G), y = RIVAGE + 6 + hash(i, 92) * 12;
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="4" fill="${A.rad([[0, CYAN, 0.5], [1, CYAN, 0]], x, y, 4)}"/><circle cx="${f(x)}" cy="${f(y)}" r="0.9" fill="#E8FFFA"/>`;
+      }
+      const coquillage = /* @__PURE__ */ __name((x, y, r, c) => gravure(A, courbe((t) => [x + r * Math.cos(Math.PI + t * Math.PI), y - r * 1.2 * Math.sin(t * Math.PI)], 10), c, { seed: x, amp: 0.15, tailles: 0, noir: false, trait: 1, portee: 0.3, dx: 1, dy: 1 }) + `<path d="M${x},${y} L${x},${f(y - r)} M${f(x - r * 0.5)},${y} L${f(x - r * 0.2)},${f(y - r * 0.9)} M${f(x + r * 0.5)},${y} L${f(x + r * 0.2)},${f(y - r * 0.9)}" stroke="${ENCRE}" stroke-width="0.6"/>`, "coquillage");
+      const etoile = /* @__PURE__ */ __name((x, y, r, a, c) => gravure(A, Array.from({ length: 10 }, (_, k) => {
+        const an = a + k / 10 * Math.PI * 2, rr = k % 2 ? r * 0.42 : r;
+        return [x + Math.cos(an) * rr, y + Math.sin(an) * rr * 0.7];
+      }), c, { seed: x + 7, amp: 0.2, tailles: 0, trait: 1.1, portee: 0.35, dx: 1, dy: 1, pas: 2 }), "etoile");
+      s += coquillage(150, 342, 5, "#FFD0EC") + coquillage(262, 368, 4, "#FF9AD0") + coquillage(60, 362, 4.4, "#FFD0EC") + etoile(232, 340, 10, 0.3, "#FF6A4A") + etoile(96, 384, 7, 1.1, MAGENTA);
+      for (const [x, y, k] of [[22, 322, 1.1], [304, 306, 0.8], [190, 380, 0.9]]) {
+        const d = `M${x},${y} q${f(6 * k)},${f(-4 * k)} ${f(14 * k)},${f(-1 * k)} t${f(12 * k)},${f(-2 * k)} t${f(10 * k)},${f(2 * k)}`;
+        s += `<path d="${d}" fill="none" stroke="${ENCRE}" stroke-width="${f(3.4 * k)}" stroke-linecap="round"/>` + lumineux(d, "#3AE8B0", 0.9 * k, 0.1);
+      }
+      for (const [x, y, rx, ry, i] of [[70, 346, 9, 5, 0], [330, 360, 12, 6, 1], [300, 322, 6, 3.4, 2], [380, 396, 10, 5, 3]]) s += gravure(A, courbe((t) => [x + rx * Math.cos(t * Math.PI * 2), y + ry * Math.sin(t * Math.PI * 2)], 14), "#4A3A8A", { seed: 90 + i, amp: 0.3, tailles: 0, trait: 1.2, portee: 0.4, dx: 1, dy: 2, pas: 2 });
+      return A.out(s);
+    }
+    __name(plage, "plage");
+    function vivant() {
+      let s = "";
+      for (let i = 0; i < 9; i++) {
+        const t = i / 9, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 8 + 26 * t, x = SOLEIL[0] + (hash(i, 15) - 0.5) * (16 + 60 * t), d = 1 + hash(i, 17) * 1.4;
+        s += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1.4 + 1.4 * t)}" fill="#FFF0F8" opacity="0"><animate attributeName="opacity" values="0;0.95;0" dur="${f(d)}s" begin="${f(-hash(i, 19) * d)}s" repeatCount="indefinite"/></rect>`;
+      }
+      s += `<g><animateMotion path="M-30,110 Q120,70 240,96 T460,60" dur="16s" repeatCount="indefinite"/><path d="M-8,0 Q-4,-4 0,0 Q4,-4 8,0" fill="none" stroke="${CYAN}" stroke-width="3.4" stroke-opacity="0.25" stroke-linecap="round"/><path d="M-8,0 Q-4,-4 0,0 Q4,-4 8,0" fill="none" stroke="#E8FFFA" stroke-width="1.4" stroke-linecap="round"><animateTransform attributeName="transform" type="scale" values="1 1;1 -0.5;1 1" dur="0.6s" repeatCount="indefinite"/></path></g>`;
+      for (const [x, y, d, beg, c] of [[60, 50, 2.2, 0, ACIDE], [170, 30, 2.8, 1, "#FFFFFF"], [330, 64, 2.4, 0.6, "#FFB8E8"], [380, 130, 3, 1.8, CYAN], [110, 118, 2.6, 1.2, "#FFFFFF"]]) s += `<path d="M${x - 4},${y} L${x + 4},${y} M${x},${y - 4} L${x},${y + 4}" stroke="${c}" stroke-width="1.2" stroke-linecap="round" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="${d}s" begin="${-beg}s" repeatCount="indefinite"/></path>`;
+      return s;
+    }
+    __name(vivant, "vivant");
+    var premier = /* @__PURE__ */ __name((p) => enNeon(() => enCouleurs(GP.premier(p))), "premier");
+    var regard = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}R`);
+      return A.out(plein(A.rad([[0, "#000", 0], [0.66, "#14062A", 0.22], [1, "#05010F", 0.72]], 200, 210, 300)));
+    }, "regard");
+    var DECOR = {
+      ciel: /* @__PURE__ */ __name((p) => ciel(p), "ciel"),
+      soleil: /* @__PURE__ */ __name((p) => soleil(p), "soleil"),
+      mer: /* @__PURE__ */ __name((p) => enNeon(() => mer(p)), "mer"),
+      plage: /* @__PURE__ */ __name((p) => enNeon(() => plage(p)), "plage"),
+      nuage0: /* @__PURE__ */ __name((p) => N.strate(p, 0, NUAGES[0][1], NUAGES[0][2]), "nuage0"),
+      nuage1: /* @__PURE__ */ __name((p) => N.strate(p, 1, NUAGES[1][1], NUAGES[1][2]), "nuage1"),
+      flou: /* @__PURE__ */ __name((p) => ciel(p) + enNeon(() => mer(p) + plage(p)), "flou"),
+      premier: /* @__PURE__ */ __name((p) => premier(p), "premier"),
+      regard: /* @__PURE__ */ __name((p) => regard(p), "regard"),
+      teinte: /* @__PURE__ */ __name((p) => N.vignette(p), "teinte")
+    };
+    function enNeonScene(scene2, p, propres = {}) {
+      const sc = scene2();
+      for (const pl of sc.plans) {
+        const d = pl.dessin, a = propres[pl.id] || DECOR[pl.id];
+        if (pl.id === "anime") continue;
+        if (!d) continue;
+        pl.dessin = a ? () => a(p) : () => enNeon(() => enCouleurs(d()));
+        if (/^nuage\d$/.test(pl.id)) pl.cadre = [G - 100, NUAGES[+pl.id.slice(-1)][1] - 24, D_ - G + 200, 34];
+        if (pl.id === "soleil") pl.cadre = [SOLEIL[0] - 200, SOLEIL[1] - 200, 400, 400];
+      }
+      const anime = sc.plans.find((q) => q.id === "anime");
+      if (anime && propres.anime) anime.dessin = propres.anime;
+      return sc;
+    }
+    __name(enNeonScene, "enNeonScene");
+    function sablePres(p, empreinte = false) {
+      const A = atelier(`${p}Z`);
+      let s = gravure(A, [[G, G], [D_, G], [D_, D_], [G, D_]], A.lin([[0, "#3A1868"], [1, "#14062E"]], 0, G, 140, D_), { seed: 320, amp: 0, angle: 10, pas: 3.6, ombre: 0.4, tailles: 0, portee: 0, trait: 0, lumiere: [-0.5, -0.85] });
+      for (let i = 0; i < 10; i++) {
+        const y = G + 10 + i * 48, ride = courbe((t) => [G + (D_ - G) * t, y + 7 * Math.sin(t * 8 + i) + 4 * Math.sin(t * 21)], 40);
+        s += gravure(A, [...ride, ...ride.slice().reverse().map(([x, yy]) => [x, yy + 12])], i % 2 ? "#4A2080" : "#3E1A70", { seed: 321 + i, amp: 0.4, angle: 6, pas: 2.6, ombre: 0.4, tailles: 0, trait: 1.2, portee: 0.3, dy: 2, lumiere: [0, -1] }) + lumineux(chemin(ride), i % 3 ? "#9A6AF0" : MAGENTA, 0.4, 0.06);
+      }
+      for (let i = 0; i < 30; i++) s += `<circle cx="${f(G + hash(i, 81) * (D_ - G))}" cy="${f(G + hash(i, 83) * (D_ - G))}" r="${f(0.8 + 1.4 * hash(i, 85))}" fill="${hash(i, 87) < 0.5 ? "#FFD0EC" : "#7A5AE0"}" stroke="${ENCRE}" stroke-width="0.5"/>`;
+      s += gravure(A, courbe((t) => [60 + 12 * Math.cos(Math.PI + t * Math.PI), 340 - 14 * Math.sin(t * Math.PI)], 10), "#FFD0EC", { seed: 340, amp: 0.2, tailles: 0, noir: false, trait: 1.2, portee: 0.4 }) + `<path d="M330,350 q16,-10 34,-2 t30,-4" fill="none" stroke="${ENCRE}" stroke-width="7" stroke-linecap="round"/>` + lumineux("M330,350 q16,-10 34,-2 t30,-4", "#3AE8B0", 1.6, 0.1);
+      if (empreinte) s += `<g transform="translate(200 206) rotate(-14) translate(-130 -84)"><path d="M0,0 L260,0 L260,140 L246,150 L252,158 L240,168 L0,168 Z" fill="#0A0420" opacity="0.5"/></g>`;
+      return A.out(s);
+    }
+    __name(sablePres, "sablePres");
+    function ecumeBord(p) {
+      const A = atelier(`${p}U`), bord = courbe((t) => [G + (D_ - G) * t, 34 + 10 * Math.sin(t * 7 + 1) + 5 * Math.sin(t * 19)], 60);
+      return A.out(gravure(A, [[G, G - 60], [D_, G - 60], ...bord.slice().reverse()], A.lin([[0, "#04202A"], [1, "#0E6A7A"]], 0, G - 60, 0, 40), { seed: 350, amp: 0.4, angle: 4, pas: 3, tailles: 0, trait: 1.4, portee: 0.4, dy: 3, lumiere: [0, -1] }) + lumineux(chemin(bord), "#E8FFFA", 1.3, 0.16) + lumineux(chemin(bord.map(([x, y], k) => [x, y - 6 - 3 * Math.abs(Math.sin(k * 0.9))])), CYAN, 0.7, 0.1));
+    }
+    __name(ecumeBord, "ecumeBord");
+    var TACHE = [128, 296];
+    var vivantTache = /* @__PURE__ */ __name(() => `<circle cx="${TACHE[0] + 4}" cy="${TACHE[1] - 2}" r="2.4" fill="${ACIDE}"><animate attributeName="opacity" values="0.2;1;0.4;0.2" dur="1.6s" repeatCount="indefinite"/><animate attributeName="r" values="1.4;3.4;1.8;1.4" dur="1.6s" repeatCount="indefinite"/></circle><path d="M${TACHE[0] + 4},${TACHE[1] - 9} v14 M${TACHE[0] - 3},${TACHE[1] - 2} h14" stroke="#FFFFFF" stroke-width="1" opacity="0"><animate attributeName="opacity" values="0;0;0.9;0" keyTimes="0;0.5;0.6;1" dur="3.2s" repeatCount="indefinite"/></path>`, "vivantTache");
+    function vent() {
+      let s = "";
+      for (let i = 0; i < 6; i++) {
+        const y = 40 + i * 62, d = 1.4 + hash(i, 2);
+        s += `<path d="M-60,${y} q60,-16 120,0 t120,-4" fill="none" stroke="#B8FFF4" stroke-width="2" stroke-linecap="round" opacity="0.7"><animateTransform attributeName="transform" type="translate" from="-80 20" to="480 -60" dur="${f(d)}s" begin="${f(-hash(i, 3) * d)}s" repeatCount="indefinite"/></path>`;
+      }
+      let grains = "";
+      for (let i = 0; i < 40; i++) grains += `<circle cx="${f(hash(i, 5) * 400)}" cy="${f(hash(i, 6) * 400)}" r="${f(0.8 + hash(i, 7))}"/>`;
+      return s + `<g fill="#FFD0EC" stroke="${ENCRE}" stroke-width="0.4"><animateTransform attributeName="transform" type="translate" from="-400 30" to="0 0" dur="1.2s" repeatCount="indefinite"/>${grains}<g transform="translate(400 -30)">${grains}</g></g>`;
+    }
+    __name(vent, "vent");
+    var paupieres01 = /* @__PURE__ */ __name(() => enNeonScene(GP.paupieres01, "np", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }), "paupieres01");
+    var greve01 = /* @__PURE__ */ __name(() => enNeonScene(GP.greve01, "ng", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }), "greve01");
+    var carte01 = /* @__PURE__ */ __name(() => enNeonScene(GP.carte01, "nc", { anime: /* @__PURE__ */ __name(() => vivantTache(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p)), "sable-pres"), ecume: /* @__PURE__ */ __name((p) => enNeon(() => ecumeBord(p)), "ecume") }), "carte01");
+    var tampon00 = /* @__PURE__ */ __name(() => enNeonScene(GP.tampon00, "nt", { anime: /* @__PURE__ */ __name(() => vent(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p, true)), "sable-pres") }), "tampon00");
+    module.exports = { paupieres01, greve01, carte01, tampon00 };
   }
 });
 
@@ -25258,13 +25396,13 @@ var require_scenes6 = __commonJS({
       for (const id2 of ordre) SCENES2[id2] = toutes[id2];
     }
     var TP = require_theatre_pont();
-    var GP = require_gravure_plage();
     var GR = require_gravure_rencontre();
     var GL = require_gravure_lorena();
     var GV = require_gravure_vent();
     var NN = require_neon_naufrage();
+    var NR = require_neon_reveil();
     var GC = require_gravure_cercle();
-    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", NN.naufrage], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
+    for (const [id2, scene2] of [["00_tampon", NR.tampon00], ["01_pont", NN.naufrage], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", NR.paupieres01], ["01_greve", NR.greve01], ["01_carte", NR.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }

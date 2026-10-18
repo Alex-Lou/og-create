@@ -46527,10 +46527,10 @@
     "svg/scenes/tutoriel/01_carte/01_carte_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46544,10 +46544,10 @@
     "svg/scenes/tutoriel/01_carte/01_carte_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46612,10 +46612,10 @@
     "svg/scenes/tutoriel/01_carte/01_carte_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46748,10 +46748,10 @@
     "svg/scenes/tutoriel/01_greve/01_greve_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46765,10 +46765,10 @@
     "svg/scenes/tutoriel/01_greve/01_greve_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46833,10 +46833,10 @@
     "svg/scenes/tutoriel/01_greve/01_greve_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47105,10 +47105,10 @@
     "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47122,10 +47122,10 @@
     "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47224,10 +47224,10 @@
     "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"

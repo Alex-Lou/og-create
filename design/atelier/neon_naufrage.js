@@ -40,10 +40,10 @@ const enNeon = dessin => avecStyle(NUIT, dessin);
 // ——— le ciel ———
 // le crépuscule : de l'indigo en haut au corail sur l'horizon, une floraison magenta autour du soleil
 const HORIZON = 206, SOLEIL = [96, 150];
-function ciel(p) {
+function ciel(p, horizon = HORIZON, [sx, sy] = SOLEIL) {
   const A = atelier(`${p}C`);
-  return A.out(plein(A.lin([[0, '#03021A'], [0.3, '#140846'], [0.55, '#4A127E'], [0.75, '#B0287E'], [0.88, '#FF4F78'], [0.96, '#FF8A50'], [1, '#FFC070']], 0, G, 0, HORIZON + 6))
-    + plein(A.rad([[0, '#FF6AA0', 0.55], [0.4, '#FF3FA8', 0.22], [1, '#FF3FA8', 0]], SOLEIL[0], SOLEIL[1], 260)));
+  return A.out(plein(A.lin([[0, '#03021A'], [0.3, '#140846'], [0.55, '#4A127E'], [0.75, '#B0287E'], [0.88, '#FF4F78'], [0.96, '#FF8A50'], [1, '#FFC070']], 0, G, 0, horizon + 6))
+    + plein(A.rad([[0, '#FF6AA0', 0.55], [0.4, '#FF3FA8', 0.22], [1, '#FF3FA8', 0]], sx, sy, 260)));
 }
 // la nuit d'orage : noire en haut, violette, une lueur magenta basse sur l'horizon
 function cielNuit(p) {
@@ -53,9 +53,9 @@ function cielNuit(p) {
 const etoilesCiel = p => { const A = atelier(`${p}E`); return A.out(etoiles(90, 31, G, 150)); };
 // le soleil de papier : un cœur blanc et vert acide, des anneaux festonnés orange, corail, magenta, violet, chacun
 // éclairé au bord intérieur ; des rayons pâles
-function soleil(p) {
-  const A = atelier(`${p}S`), [x, y] = SOLEIL;
-  let s = rayons(A, SOLEIL, 26, 200, '#FFE0B0', 0.22, 7);
+function soleil(p, [x, y] = SOLEIL) {
+  const A = atelier(`${p}S`);
+  let s = rayons(A, [x, y], 26, 200, '#FFE0B0', 0.22, 7);
   const anneaux = [[78, '#5A1488', VIOLET], [62, '#B0207E', MAGENTA], [48, '#F0445A', CORAIL], [36, '#FF8A3A', ORANGE]];
   anneaux.forEach(([r, c, lum], i) => {
     const n = 14 + i * 2, bord = courbe(t => { const a = t * Math.PI * 2, q = (t * n) % 1; const rr = r * (1 + 0.07 * Math.sin(Math.PI * q) ** 2); return [x + rr * Math.cos(a), y + rr * Math.sin(a)]; }, n * 10);
@@ -97,8 +97,8 @@ const brumeLoin = p => { const A = atelier(`${p}B`); return A.out(plein(A.lin([[
 // ——— la mer : six couches, du large (pâles, dans la lumière de l'horizon) au premier plan (noires, saturées) ———
 // chaque crête faite de houles inégales, leur pointe qui penche, son liseré de lumière
 const MERS = [[HORIZON + 4, 4, 34, ['#3E8AB8', '#1E4A7A', '#0E2A4A'], '#FFB8D8'], [HORIZON + 18, 6, 46, ['#1E7A98', '#0E3A5A', '#082238'], '#B8FFF0'], [HORIZON + 38, 9, 62, ['#0E6A78', '#0A3A4A', '#041C26'], CYAN], [HORIZON + 66, 13, 84, ['#0A4A5A', '#06242E', '#020E14'], CYAN], [HORIZON + 104, 18, 110, ['#08323E', '#03141C', '#01080C'], '#3EC8E8'], [HORIZON + 152, 24, 140, ['#062430', '#020A10', NOIR], '#2AA8D8']];
-function vague(p, i) {
-  const A = atelier(`${p}M${i}`), [y, h, l, couleurs, lum] = MERS[i], pts = [];
+function vague(p, i, [y, h, l, couleurs, lum] = MERS[i]) {
+  const A = atelier(`${p}M${i}`), pts = [];
   for (let x = G - 140 - l; x < D_ + 140 + l; x += l) {
     const w = l * (0.8 + 0.4 * hash(Math.round(x), i)), hh = h * (0.7 + 0.6 * hash(Math.round(x), i + 3));
     for (let j = 0; j <= 14; j++) { const t = j / 14; pts.push([x + w * t, y - hh * Math.sin(Math.PI * t) ** 1.4 + (t > 0.62 ? (t - 0.62) * hh * 0.9 : 0)]); }
@@ -458,4 +458,4 @@ function naufrage() {
   return { plans, partition: { temps } };
 }
 
-module.exports = { naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau, remous, abysse, surface, bulles, racineNeon, enCouleurs, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
+module.exports = { vignette, rayons, etoiles, naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau, remous, abysse, surface, bulles, racineNeon, enCouleurs, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
