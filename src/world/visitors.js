@@ -11,6 +11,25 @@ export function visitorLook(seed, role = 'Visiteur') {
   return look.build === 'child' ? { ...look, build: 'slim' } : look;
 }
 
+// Les visiteurs de la bibliothèque (design/bibliotheque/svg/personnages/visiteurs : visiteur-01 à -12, masterArt.js :
+// VISITORS), un par graine. seeds : les installés dans l'ordre de leur arrivée, puis le visiteur du moment ; chacun prend
+// le visiteur de sa graine, ou le suivant s'il est déjà pris : jamais deux pareils tant qu'ils sont douze au plus, et une
+// arrivée ne change pas ceux qui sont déjà là. Une graine → son visiteur (Map)
+const DRAWN = 12;
+export const visitorName = n => `visiteur-${String(n + 1).padStart(2, '0')}`;
+export function visitorCast(seeds) {
+  const cast = new Map();
+  const taken = new Set();
+  for (const seed of seeds) {
+    if (seed === undefined || seed === null || cast.has(seed)) continue;
+    let n = (Math.imul((seed >>> 0) ^ (seed >>> 16), 0x45D9F3B) >>> 0) % DRAWN;
+    for (let i = 0; i < DRAWN && taken.has(n); i++) n = (n + 1) % DRAWN;
+    taken.add(n);
+    cast.set(seed, visitorName(n));
+  }
+  return cast;
+}
+
 // Ce qu'il raconte de lui, selon son métier (le bâtiment où il travaillerait)
 export const storyOf = visitor => STORIES[visitor.site] || STORIES.foyer;
 

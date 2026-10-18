@@ -7,7 +7,9 @@
 // lanterne ou parapluie en main, on ne travaille pas et on ne salue pas.
 // L'ombre au sol, absente des dessins debout, est celle du jeu. L'hiver ou sous la pluie, un maître porte sa tenue (tenues :
 // hiver, pluie) en repos et en marche : mêmes cadres, mêmes vitesses, on échange le fichier.
-import { maitres, naufrages, tenues } from '../../design/bibliotheque/svg/personnages/quotidien.json';
+// Les visiteurs (visiteurs/visiteur-01 à -12, tirés du générateur de l'avatar) : les mêmes cadres et les mêmes poses, sans le
+// geste « travail » ; à la porte de son métier, un visiteur installé fait celui du bâtiment (VISITOR_WORK).
+import { maitres, naufrages, tenues, visiteurs } from '../../design/bibliotheque/svg/personnages/quotidien.json';
 import { fitTo, textsOf } from './library';
 import { MASTERS, VIEWS, POSES } from './masterPortraits';
 
@@ -19,7 +21,11 @@ const FILES = textsOf(import.meta.glob([
   // (les tenues d'hiver et de pluie des maîtres, en repos et en marche)
   '/design/bibliotheque/svg/personnages/maitres/*/*_{face,avant,dos}_{marche,repos}_{hiver,pluie}_[0-9].svg',
   // (la marche épuisée d'un naufragé, hors quotidien.json : Lorena qui nage vers la plage, pose « tired »)
-  '/design/bibliotheque/svg/personnages/naufrages/*/*_avant_marche_triste_[0-9].svg'
+  '/design/bibliotheque/svg/personnages/naufrages/*/*_avant_marche_triste_[0-9].svg',
+  // (les visiteurs : seulement ce que l'île leur fait faire ; de face, ils ne font que se tenir et saluer)
+  '/design/bibliotheque/svg/personnages/visiteurs/*/*_face_{repos,salut}_[0-9].svg',
+  '/design/bibliotheque/svg/personnages/visiteurs/*/*_{avant,dos}_{marche,repos,salut,lanterne,parapluie,arroser,becher,semer,recolter,scier,tailler,pecher,piocher}_[0-9].svg',
+  '/design/bibliotheque/svg/personnages/visiteurs/*/*_couche_[0-9].svg'
 ], { query: '?url', import: 'default', eager: true }));
 // Les gestes des mini-jeux (quotidien.json : pecher, piocher, cueillir), de trois quarts avant, en maître (le jeu s'ouvre
 // au palier III : le bâtiment est fondé)
@@ -37,6 +43,15 @@ const SHADOW = '<ellipse cx="24.5" cy="62" rx="8.5" ry="2.75" fill="rgba(40,55,2
 // Flamme de la lanterne, de trois quarts avant, debout (unités du jeu, depuis les pieds), mesurée sur chaque dessin ; de
 // dos, la lanterne est dans l'autre main
 const LANTERNS = { aster: [-7.9, -7.6], cannelle: [-9.1, -6.5], galet: [-7.4, -5.2], melisse: [-7.8, -7.5], ondin: [-7.4, -5.2], rivet: [-7.8, -7.8], sylve: [-7.5, -7.8] };
+// (celle des visiteurs, au centre du verre, sur l'image debout : leur taille et leur bras changent d'un visiteur à l'autre)
+const VISITOR_LANTERNS = {
+  'visiteur-01': [-7.3, -5.4], 'visiteur-02': [-8.9, -9.1], 'visiteur-03': [-8.7, -9.1], 'visiteur-04': [-10.6, -7.5], 'visiteur-05': [-8.1, -9.1], 'visiteur-06': [-10.6, -9.1],
+  'visiteur-07': [-8.1, -5.4], 'visiteur-08': [-10.6, -5.4], 'visiteur-09': [-10.6, -7.5], 'visiteur-10': [-7.3, -9.1], 'visiteur-11': [-8.1, -7.5], 'visiteur-12': [-8.1, -9.1]
+};
+// Le geste d'un visiteur installé à la porte de son métier (sur l'annexe, ceux du maître : residents.js, CHORES)
+const VISITOR_WORK = { potager: 'becher', bosquet: 'tailler', atelier: 'scier', foyer: 'recolter', puits: 'arroser', ponton: 'pecher', carriere: 'piocher' };
+// Les douze visiteurs de la bibliothèque
+export const VISITORS = Object.keys(visiteurs);
 
 // Les gestes dont les deux images n'ont pas le même visage (Léo au travail : calme, puis bouche bée) : une seule image,
 // la première, pour que sa tête ne change pas sous les yeux (choix de l'auteur, 11 oct.)
@@ -58,39 +73,60 @@ function boxOf(svgViewBox, [ax, ay]) {
 export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame = 0, lantern = false, umbrella = false, chore = null, tenue = null } = {}) {
   const set = setOf(role, castaway);
   if (!set) return null;
-  const files = set.fichiers;
+  const name = MASTERS[role];
+  if (pose === 'tired') {
+    // Épuisé, de trois quarts avant (choix de l'auteur, 13 oct. : Lorena ne sourit pas dans l'eau) : sa marche triste
+    const list = castaway ? [1, 2, 3, 4, 5, 6, 7, 8].map(n => `naufrages/${name}/${name}-naufrage_avant_marche_triste_${n}.svg`).filter(file => FILES[ROOT + file]) : [];
+    return list.length ? artOf(list[frame % list.length], pose, 'avant', null, null) : null;
+  }
+  const worn = (drawn, gesture) => tenue && !castaway && tenues[tenue]?.[name]?.fichiers[`${drawn}_${gesture}`];
+  return poseOf(set.fichiers, { pose, view, frame, lantern, umbrella, chore, work: POSES.work, worn, steady: STEADY[name], flame: LANTERNS[name] });
+}
+
+// Le dessin d'un visiteur de la bibliothèque (VISITORS ; visitors.js : visitorCast), selon sa pose (celles de masterSprite) ;
+// site : le bâtiment de son métier, s'il s'est installé. null s'il n'est pas dans la bibliothèque
+export function visitorSprite(who, site, { pose = 'idle', view = 'se', frame = 0, lantern = false, umbrella = false, chore = null } = {}) {
+  const set = visiteurs[who];
+  if (!set || pose === 'tired') return null;
+  return poseOf(set.fichiers, { pose, view, frame, lantern, umbrella, chore, work: VISITOR_WORK[site] || 'repos', flame: VISITOR_LANTERNS[who] });
+}
+
+// Le tronc commun : l'image d'une pose dans les fichiers d'un personnage. work : le geste de « work » sans chore ; worn :
+// la tenue de saison d'une vue et d'un geste, s'il la porte ; steady : les gestes à une seule image ; flame : sa lanterne
+function poseOf(files, { pose, view, frame, lantern, umbrella, chore, work, worn = () => null, steady = [], flame }) {
+  // Les images d'une pose (seules celles que l'île montre sont chargées : une autre manque, et l'on se rabat)
+  const at = key => (files[key] && FILES[ROOT + files[key][0]] ? files[key] : null);
   let list;
   let drawn = VIEWS[view];
   let held = null;
-  if (pose === 'sleep') list = files.couche;
-  else if (pose === 'tired') {
-    // Épuisé, de trois quarts avant (choix de l'auteur, 13 oct. : Lorena ne sourit pas dans l'eau) : sa marche triste
-    const name = MASTERS[role];
-    list = castaway ? [1, 2, 3, 4, 5, 6, 7, 8].map(n => `naufrages/${name}/${name}-naufrage_avant_marche_triste_${n}.svg`).filter(file => FILES[ROOT + file]) : [];
-    if (!list.length) return null;
-    drawn = 'avant';
-  } else {
+  const gesture = pose === 'work' ? work : POSES[pose];
+  if (pose === 'sleep') list = at('couche');
+  else {
     const carry = umbrella ? 'parapluie' : lantern ? 'lanterne' : null;
     const turned = drawn === 'face' ? 'avant' : drawn;
-    const carried = carry && files[`${turned}_${carry}`];
+    const carried = carry && at(`${turned}_${carry}`);
     if (carried) {
       list = pose === 'walk' ? carried : [carried[1]];
       drawn = turned;
       held = carry;
     } else {
       // Sans le geste dans la bibliothèque (Robby et Maerys naufragés ont oublié leur don), il attend, au repos
-      list = (pose === 'work' && chore && files[`${drawn}_${chore}`]) || files[`${drawn}_${POSES[pose]}`] || (files[`${drawn}_repos`] && [files[`${drawn}_repos`][0]]);
-      const worn = tenue && !castaway && tenues[tenue]?.[MASTERS[role]]?.fichiers[`${drawn}_${POSES[pose]}`];
-      if (worn && list === files[`${drawn}_${POSES[pose]}`]) list = worn;
+      list = (pose === 'work' && chore && at(`${drawn}_${chore}`)) || at(`${drawn}_${gesture}`) || (at(`${drawn}_repos`) && [at(`${drawn}_repos`)[0]]);
+      const dressed = worn(drawn, gesture);
+      if (dressed && list === at(`${drawn}_${gesture}`)) list = dressed;
     }
   }
   if (!list) return null;
-  if ((STEADY[MASTERS[role]] || []).includes(POSES[pose]) && list === files[`${drawn}_${POSES[pose]}`]) list = [list[0]];
+  if (steady.includes(gesture) && list === at(`${drawn}_${gesture}`)) list = [list[0]];
   const file = list[frame % list.length];
   if (!FILES[ROOT + file]) return null;
+  return artOf(file, pose, drawn, held, held === 'lanterne' ? flame : null);
+}
+
+// Un fichier de la bibliothèque, prêt pour l'île : { key, make, view, lantern } (drawn : sa vue ; de dos, la lanterne est
+// dans l'autre main)
+function artOf(file, pose, drawn, held, flame) {
   const anchor = pose === 'sleep' ? BED : FEET;
-  const name = MASTERS[role];
-  const flame = held === 'lanterne' ? LANTERNS[name] : null;
   return {
     key: `lib-${file.split('/').pop().replace(/\.svg$/, '')}`,
     make: () => {

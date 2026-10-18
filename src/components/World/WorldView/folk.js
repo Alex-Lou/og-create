@@ -8,7 +8,7 @@ import { villagerSprite } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
 import { thanksOf, askOr, affordable } from '@/world/needs';
-import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
+import { visitorCast, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
 import { vibrate } from '@/utils/fx';
@@ -18,7 +18,7 @@ import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { momentsDue, momentLines } from '@/game/firstTimes';
-import { masterPortrait } from '@/world/masterPortraits';
+import { masterPortrait, visitorPortraitUrl } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/texts/guide/tips';
 import { ANYA_RESTED, MEETINGS } from '@/texts/village';
@@ -134,8 +134,11 @@ export default {
       const dy = (best.y - cy) / len;
       return { x: best.x, y: best.y, dx, dy, flip: dx - dy > 0 };
     },
+    // Portrait d'un visiteur (le visiteur du moment ou un installé) : le même visiteur de la bibliothèque que sur l'île
+    // (village/residents.js : visitorCast, sur les mêmes graines dans le même ordre)
     visitorPortrait(v) {
-      return spriteUrl(`portrait-vis-${v.seed}`, () => villagerSprite(visitorLook(v.seed, v.role)));
+      const settlers = (this.state.villagers || []).filter(s => s.seed !== undefined).map(s => s.seed);
+      return visitorPortraitUrl(visitorCast([...settlers, this.state.visitor && this.state.visitor.seed]).get(v.seed));
     },
     openVisitor() {
       if (!this.state || !this.state.visitor) return;
