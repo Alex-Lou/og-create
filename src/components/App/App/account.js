@@ -43,7 +43,9 @@ export default {
       // Jeton du lien « confirme ta nouvelle adresse » (?email=…)
       emailToken: takeToken('email'),
       selectedFrame: worn.frame || DEFAULT_FRAME,
-      selectedAvatar: worn.avatar || DEFAULT_EMBLEM
+      selectedAvatar: worn.avatar || DEFAULT_EMBLEM,
+      // Le mode debug (serveur : DEBUG_ACCOUNTS) : le bouton « Recommencer l'île » d'un appui long (DebugReset)
+      debugMode: false
     };
   },
   mounted() {
@@ -77,6 +79,7 @@ export default {
         this.actsKnown = true;
         this.checkEarlyWisp();
       }).catch(() => {});
+      accountService.debug().then(({ debug }) => { this.debugMode = debug === true; }).catch(() => {});
       const [progress, selections] = await Promise.all([
         progressService.load().catch(() => null),
         customizationService.getUserSelections()
