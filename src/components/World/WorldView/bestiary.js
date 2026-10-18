@@ -1,19 +1,14 @@
 // L'île : le Bestiaire des animaux rencontrés (choix de l'auteur, 18 oct.). Le premier toucher d'une créature
 // l'inscrit sur le compte (serveur : animals) et l'île le dit d'une pastille ; le livre s'ouvre depuis le Carnet
-// d'explorateur (BestiaryBook). Le petit signe des raretés : une créature rare ou légendaire qui sort près de ce qu'on
-// regarde scintille (un Éclat), une fois par sortie (au plus une toutes les SIGN_CALM ms) ; la première fois qu'on en
-// voit une pas encore rencontrée, Brume le dit (une fois sur l'appareil, si elle ne dit rien d'autre ; avant ce qui
-// attend). Ni pendant le tutoriel, ni pour le Kraken (il a déjà son signe : view/draw/life.js, sayKraken), ni pour les
-// égarés (on les repousse). Mixin de WorldView.vue : ses données et méthodes s'ajoutent à celles de l'île.
+// d'explorateur (BestiaryBook) ; une créature rare qui sort près de ce qu'on regarde se signale (hors tutoriel). Mixin
+// de WorldView.vue : ses données et méthodes s'ajoutent à celles de l'île.
 
 import playService from '@/services/playService';
 import notificationService from '@/services/notificationService';
 import { creatureOfHit, creatureOf } from '@/world/creatures';
+import { rareSigns } from '@/world/rareSigns';
 import { guide } from '@/game/guide';
 import { BESTIARY } from '@/texts/world/creatures';
-
-const SIGN_CALM = 60 * 1000;
-const SIGNED = new Set(['rare', 'légendaire']);
 
 export default {
   data() {
@@ -31,12 +26,8 @@ export default {
   created() {
     // Les rencontres en route vers le serveur (deux touchers de suite n'en font qu'une)
     this.meeting = new Set();
-    // Le petit signe : les créatures rares sorties (clé de la cible → { frame, signed }), la créature de chaque bête
-    // sauvage (clé → créature rare, ou null), l'image en cours, le dernier signe (ms)
-    this.rareOut = new Map();
-    this.wildRare = new Map();
-    this.rareFrame = 0;
-    this.rareSignAt = -Infinity;
+    // Le suivi des créatures rares sorties (le petit signe)
+    this.rareSigns = rareSigns();
   },
   methods: {
     openBestiary() {
@@ -59,42 +50,16 @@ export default {
         .catch(() => {})
         .finally(() => this.meeting.delete(id));
     },
-    // À chaque image, après ce qu'on peut toucher (view/draw/loop.js) ; view : ce qu'on regarde (dans le monde)
+    // Le petit signe des raretés (world/rareSigns.js), à chaque image, après ce qu'on peut toucher (view/draw/loop.js) ;
+    // view : ce qu'on regarde (dans le monde). Un Éclat sur la créature ; la première fois qu'on en voit une pas encore
+    // rencontrée, Brume le dit (une fois sur l'appareil, si elle ne dit rien d'autre ; avant ce qui attend)
     signRare(view) {
       if (guide.state.tutorial || !this.state) return;
-      const frame = ++this.rareFrame;
-      this.signAmong(this.landHits, view, frame);
-      this.signAmong(this.seaHits, view, frame);
-      // (rentrée, ou partie : sa prochaine sortie aura son signe)
-      for (const [key, out] of this.rareOut) if (out.frame !== frame) this.rareOut.delete(key);
-    },
-    signAmong(hits, view, frame) {
-      for (const hit of hits) {
-        const creature = this.rareOf(hit);
-        if (!creature) continue;
-        let out = this.rareOut.get(hit.key);
-        if (!out) this.rareOut.set(hit.key, (out = { frame, signed: false }));
-        out.frame = frame;
-        if (out.signed || hit.x < view.x || hit.x > view.x + view.w || hit.y < view.y || hit.y > view.y + view.h) continue;
-        const now = performance.now();
-        if (now - this.rareSignAt < SIGN_CALM) continue;
-        out.signed = true;
-        this.rareSignAt = now;
+      for (const { hit, creature } of this.rareSigns.see(view, performance.now(), this.landHits, this.seaHits)) {
         this.sparkle('eclat', { x: hit.x, y: hit.y });
         const met = (this.state.animals || []).some(a => a.id === creature.id);
         if (!met && !guide.current) guide.say({ id: `rare-${creature.id}`, text: creature.rarity === 'rare' ? BESTIARY.rareLine : BESTIARY.legendLine, island: true }, { first: true });
       }
-    },
-    // La créature rare ou légendaire d'une cible de l'île, ou null : une bête sauvage (gardée par bête), le Géant
-    rareOf(hit) {
-      if (hit.kind === 'geant') return creatureOf('geant');
-      const id = hit.who && hit.who.id;
-      if (!id || !id.startsWith('wild:')) return null;
-      if (!this.wildRare.has(id)) {
-        const creature = creatureOf(creatureOfHit(hit));
-        this.wildRare.set(id, creature && SIGNED.has(creature.rarity) ? creature : null);
-      }
-      return this.wildRare.get(id);
     }
   }
 };

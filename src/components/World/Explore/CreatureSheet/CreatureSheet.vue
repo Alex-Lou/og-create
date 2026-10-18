@@ -7,7 +7,7 @@
       <p v-if="met" class="creature__date">{{ T.metOn(longDate) }}</p>
       <template v-else>
         <p v-if="arrival" class="creature__hint">{{ arrival }}</p>
-        <p class="creature__hint">{{ creature.category === 'brume' ? T.notYetStray : T.notYet }}</p>
+        <p class="creature__hint">{{ notYet }}</p>
       </template>
     </div>
   </GModal>
@@ -46,6 +46,10 @@ export default {
     },
     arrival() {
       return arrivalOf(this.creature, { elements: this.elements, acts: this.acts });
+    },
+    // (un égaré s'inscrit quand on le repousse, la nuit)
+    notYet() {
+      return this.creature.category === 'brume' ? T.notYetStray : T.notYet;
     },
     longDate() {
       return new Date(this.met).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
