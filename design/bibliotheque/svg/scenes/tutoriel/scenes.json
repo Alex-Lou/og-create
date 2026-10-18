@@ -43966,6 +43966,18 @@
      "marge": 40
     },
     {
+     "id": "epave",
+     "fichier": "01_paupieres/01_paupieres_plan-epave_1.svg",
+     "profondeur": 0.62,
+     "marge": 40
+    },
+    {
+     "id": "tache",
+     "fichier": "01_paupieres/01_paupieres_plan-tache_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
      "id": "anime",
      "fichier": "01_paupieres/01_paupieres_plan-anime_1.svg",
      "profondeur": 0.4
@@ -44295,6 +44307,12 @@
      "marge": 40
     },
     {
+     "id": "tache",
+     "fichier": "01_greve/01_greve_plan-tache_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
      "id": "premier",
      "fichier": "01_greve/01_greve_plan-premier_1.svg",
      "profondeur": 1,
@@ -44443,6 +44461,12 @@
      "marge": 40
     },
     {
+     "id": "epave",
+     "fichier": "01_carte/01_carte_plan-epave_1.svg",
+     "profondeur": 0.62,
+     "marge": 40
+    },
+    {
      "id": "tache",
      "fichier": "01_carte/01_carte_plan-tache_1.svg",
      "profondeur": 0.55,
@@ -44452,6 +44476,13 @@
      "id": "anime",
      "fichier": "01_carte/01_carte_plan-anime_1.svg",
      "profondeur": 0.55
+    },
+    {
+     "id": "premier",
+     "fichier": "01_carte/01_carte_plan-premier_1.svg",
+     "profondeur": 1,
+     "marge": 40,
+     "flou": 0.3
     },
     {
      "id": "sable-pres",

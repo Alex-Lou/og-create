@@ -24499,8 +24499,20 @@ var require_neon_reveil = __commonJS({
       regard: /* @__PURE__ */ __name((p) => regard(p), "regard"),
       teinte: /* @__PURE__ */ __name((p) => N.vignette(p), "teinte")
     };
-    function enNeonScene(scene2, p, propres = {}) {
+    var OBJETS = /* @__PURE__ */ __name(() => {
+      const g = GP.greve01().plans, c = GP.carte01().plans;
+      return { epave: g.find((q) => q.id === "epave"), tache: c.find((q) => q.id === "tache"), premier: g.find((q) => q.id === "premier") };
+    }, "OBJETS");
+    function memesObjets(plans) {
+      const O = OBJETS(), a = /* @__PURE__ */ __name((id2) => plans.some((q) => q.id === id2), "a"), apres = /* @__PURE__ */ __name((id2, q) => plans.splice(plans.findIndex((k) => k.id === id2) + 1, 0, q), "apres");
+      if (!a("epave")) apres("plage", O.epave);
+      if (!a("tache")) apres("epave", O.tache);
+      if (!a("premier")) plans.splice(plans.findIndex((q) => q.id === "sable-pres" || q.id === "regard"), 0, O.premier);
+    }
+    __name(memesObjets, "memesObjets");
+    function enNeonScene(scene2, p, propres = {}, plage2 = false) {
       const sc = scene2();
+      if (plage2) memesObjets(sc.plans);
       for (const pl of sc.plans) {
         const d = pl.dessin, a = propres[pl.id] || DECOR[pl.id];
         if (pl.id === "anime") continue;
@@ -24545,9 +24557,9 @@ var require_neon_reveil = __commonJS({
       return s + `<g fill="#FFD0EC" stroke="${ENCRE}" stroke-width="0.4"><animateTransform attributeName="transform" type="translate" from="-400 30" to="0 0" dur="1.2s" repeatCount="indefinite"/>${grains}<g transform="translate(400 -30)">${grains}</g></g>`;
     }
     __name(vent, "vent");
-    var paupieres01 = /* @__PURE__ */ __name(() => enNeonScene(GP.paupieres01, "np", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }), "paupieres01");
-    var greve01 = /* @__PURE__ */ __name(() => enNeonScene(GP.greve01, "ng", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }), "greve01");
-    var carte01 = /* @__PURE__ */ __name(() => enNeonScene(GP.carte01, "nc", { anime: /* @__PURE__ */ __name(() => vivantTache(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p)), "sable-pres"), ecume: /* @__PURE__ */ __name((p) => enNeon(() => ecumeBord(p)), "ecume") }), "carte01");
+    var paupieres01 = /* @__PURE__ */ __name(() => enNeonScene(GP.paupieres01, "np", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }, true), "paupieres01");
+    var greve01 = /* @__PURE__ */ __name(() => enNeonScene(GP.greve01, "ng", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }, true), "greve01");
+    var carte01 = /* @__PURE__ */ __name(() => enNeonScene(GP.carte01, "nc", { anime: /* @__PURE__ */ __name(() => vivant() + vivantTache(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p)), "sable-pres"), ecume: /* @__PURE__ */ __name((p) => enNeon(() => ecumeBord(p)), "ecume") }, true), "carte01");
     var tampon00 = /* @__PURE__ */ __name(() => enNeonScene(GP.tampon00, "nt", { anime: /* @__PURE__ */ __name(() => vent(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p, true)), "sable-pres") }), "tampon00");
     module.exports = { paupieres01, greve01, carte01, tampon00 };
   }

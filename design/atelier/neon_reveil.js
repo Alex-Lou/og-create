@@ -66,9 +66,19 @@ const DECOR = {
   nuage0: p => N.strate(p, 0, NUAGES[0][1], NUAGES[0][2]), nuage1: p => N.strate(p, 1, NUAGES[1][1], NUAGES[1][2]),
   flou: p => ciel(p) + enNeon(() => mer(p) + plage(p)), premier: p => premier(p), regard: p => regard(p), teinte: p => N.vignette(p)
 };
+// ce que la mer a rendu reste en place d'une image à l'autre (choix de l'auteur, 18 oct. : les objets ne doivent ni
+// surgir ni disparaître) : l'épave, la carte au loin, le premier plan, dans les trois images de la plage, à la même place
+const OBJETS = () => { const g = GP.greve01().plans, c = GP.carte01().plans; return { epave: g.find(q => q.id === 'epave'), tache: c.find(q => q.id === 'tache'), premier: g.find(q => q.id === 'premier') }; };
+function memesObjets(plans) {
+  const O = OBJETS(), a = id => plans.some(q => q.id === id), apres = (id, q) => plans.splice(plans.findIndex(k => k.id === id) + 1, 0, q);
+  if (!a('epave')) apres('plage', O.epave);
+  if (!a('tache')) apres('epave', O.tache);
+  if (!a('premier')) plans.splice(plans.findIndex(q => q.id === 'sable-pres' || q.id === 'regard'), 0, O.premier);
+}
 // une scène gravée, passée au néon : ses pièces, sa caméra, ses temps ; le décor redessiné, le reste recoloré
-function enNeonScene(scene, p, propres = {}) {
+function enNeonScene(scene, p, propres = {}, plage = false) {
   const sc = scene();
+  if (plage) memesObjets(sc.plans);
   for (const pl of sc.plans) {
     const d = pl.dessin, a = propres[pl.id] || DECOR[pl.id];
     if (pl.id === 'anime') continue;
@@ -111,9 +121,10 @@ function vent() {
   return s + `<g fill="#FFD0EC" stroke="${ENCRE}" stroke-width="0.4"><animateTransform attributeName="transform" type="translate" from="-400 30" to="0 0" dur="1.2s" repeatCount="indefinite"/>${grains}<g transform="translate(400 -30)">${grains}</g></g>`;
 }
 
-const paupieres01 = () => enNeonScene(GP.paupieres01, 'np', { anime: () => vivant() });
-const greve01 = () => enNeonScene(GP.greve01, 'ng', { anime: () => vivant() });
-const carte01 = () => enNeonScene(GP.carte01, 'nc', { anime: () => vivantTache(), 'sable-pres': p => enNeon(() => sablePres(p)), ecume: p => enNeon(() => ecumeBord(p)) });
+const paupieres01 = () => enNeonScene(GP.paupieres01, 'np', { anime: () => vivant() }, true);
+const greve01 = () => enNeonScene(GP.greve01, 'ng', { anime: () => vivant() }, true);
+// (la carte : le chemin de lumière et la mouette continuent, la carte au loin se met à scintiller)
+const carte01 = () => enNeonScene(GP.carte01, 'nc', { anime: () => vivant() + vivantTache(), 'sable-pres': p => enNeon(() => sablePres(p)), ecume: p => enNeon(() => ecumeBord(p)) }, true);
 const tampon00 = () => enNeonScene(GP.tampon00, 'nt', { anime: () => vent(), 'sable-pres': p => enNeon(() => sablePres(p, true)) });
 
 module.exports = { paupieres01, greve01, carte01, tampon00 };

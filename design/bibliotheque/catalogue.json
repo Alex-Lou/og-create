@@ -46502,6 +46502,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-epave_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_carte/01_carte_plan-mer",
    "rubrique": "scenes",
    "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan mer)",
@@ -46559,6 +46576,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/01_carte/01_carte_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_plan-premier",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (01 carte plan premier)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_plan-premier_1.svg"
    ],
    "cadre": [
     -40,
@@ -46842,6 +46876,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_greve/01_greve_plan-tache",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan tache)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_plan-tache_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_greve/01_greve_plan-teinte",
    "rubrique": "scenes",
    "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan teinte)",
@@ -47063,6 +47114,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-epave_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-flou",
    "rubrique": "scenes",
    "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan flou)",
@@ -47228,6 +47296,23 @@
     -14,
     400,
     400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_plan-tache",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (01 paupieres plan tache)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_plan-tache_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
