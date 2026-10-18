@@ -17,71 +17,13 @@
 // la spirale des menhirs : il manque une pierre (la clé d'Héliane, sous une pierre, acte VI). Pas de filtre : des
 // dégradés et des motifs. Aucun texte dessiné.
 const { Defs, vaVient, boucle, defile, hash, f, W } = require('./ouverture');
-const { ombrePapier, plan, grain } = require('./papier');
+const { ombrePapier, plan, grain, rugueux, courbe, piece, papiers, spirale, volute } = require('./papier');
 const { vif } = require('./figer');
 // les poussières de lumière du faisceau qui vivent au calque anime (deux animations chacune ; l'Étoile en a 14)
 const POUSSIERES_VIVES = 7;
 
 const OUT = '#1E1A22';
 const LUEUR = '#C8F4EE';
-
-// ——— les ciseaux ———
-// Un contour coupé aux ciseaux : les côtés du polygone (points [x, y]) découpés en petits pas, chacun un peu de travers
-// (amp : l'écart, seed : la main) ; fermé
-function rugueux(pts, amp = 1.4, seed = 1, pas = 7) {
-  const out = [];
-  for (let i = 0; i < pts.length; i++) {
-    const [ax, ay] = pts[i], [bx, by] = pts[(i + 1) % pts.length], l = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(l / pas));
-    const nx = -(by - ay) / (l || 1), ny = (bx - ax) / (l || 1);
-    for (let k = 0; k < n; k++) {
-      const t = k / n, e = (hash(seed * 31 + i, k) - 0.5) * 2 * amp;
-      out.push([ax + (bx - ax) * t + nx * e, ay + (by - ay) * t + ny * e]);
-    }
-  }
-  return `M${out.map(([x, y]) => `${f(x)},${f(y)}`).join(' L')} Z`;
-}
-// une courbe échantillonnée : fn(t) → [x, y], t de 0 à 1
-const courbe = (fn, n = 24) => Array.from({ length: n + 1 }, (_, k) => fn(k / n));
-// une pièce de papier : son contour coupé, sa couleur, l'encre, l'épaisseur du papier sur le bord éclairé (le haut :
-// les bordN premiers points), son papier (un motif posé dessus, découpé à la pièce)
-function piece(D, pts, fill, o = {}) {
-  const d = rugueux(pts, o.amp ?? 1.4, o.seed ?? 1);
-  let s = `<path d="${d}" fill="${fill}" stroke="${OUT}" stroke-width="${o.encre ?? 1.5}" stroke-linejoin="round"/>`;
-  if (o.texture) s += `<path d="${d}" fill="url(#${o.texture})" opacity="${o.textureA ?? 1}"/>`;
-  if (o.bord) {
-    const haut = pts.slice(0, o.bordN ?? Math.ceil(pts.length / 2));
-    s += `<path d="M${haut.map(([x, y]) => `${f(x)},${f(y + 1.2)}`).join(' L')}" fill="none" stroke="${o.bord}" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>`;
-  }
-  return s;
-}
-
-// ——— les papiers : un motif par matière ———
-function papiers(pref) {
-  const tache = (x, y, r, c, a) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 0.6)}" fill="${c}" opacity="${f(a)}"/>`;
-  const fibres = (n, c, a, k) => Array.from({ length: n }, (_, i) => { const x = hash(i, k) * 80, y = hash(i, k + 1) * 80, an = hash(i, k + 2) * Math.PI, l = 2 + 5 * hash(i, k + 3); return `<path d="M${f(x)},${f(y)} l${f(Math.cos(an) * l)},${f(Math.sin(an) * l)}" stroke="${c}" stroke-width="0.5" opacity="${f(a)}"/>`; }).join('');
-  const motif = (id, corps, t = 80) => `<pattern id="${pref}${id}" patternUnits="userSpaceOnUse" width="${t}" height="${t}">${corps}</pattern>`;
-  return `<defs>`
-    // (le lavis du ciel sur un grand carreau, très léger : la répétition ne se voit pas)
-    + motif('ciel', Array.from({ length: 14 }, (_, i) => tache(hash(i, 1) * 200, hash(i, 2) * 200, 10 + 30 * hash(i, 3), i % 2 ? '#FFFFFF' : '#0A0E28', 0.025)).join('') + Array.from({ length: 70 }, (_, i) => { const x = hash(i, 4) * 200, y = hash(i, 5) * 200, an = hash(i, 6) * Math.PI, l = 2 + 5 * hash(i, 7); return `<path d="M${f(x)},${f(y)} l${f(Math.cos(an) * l)},${f(Math.sin(an) * l)}" stroke="#C8D0F0" stroke-width="0.5" opacity="0.1"/>`; }).join(''), 200)
-    + motif('pierre', Array.from({ length: 14 }, (_, i) => tache(hash(i, 11) * 80, hash(i, 12) * 80, 4 + 9 * hash(i, 13), i % 3 ? '#0A0C12' : '#A8B4C8', i % 3 ? 0.14 : 0.08)).join('') + Array.from({ length: 22 }, (_, i) => `<circle cx="${f(hash(i, 14) * 80)}" cy="${f(hash(i, 15) * 80)}" r="0.6" fill="#05070C" opacity="0.4"/>`).join(''))
-    + motif('mer', Array.from({ length: 16 }, (_, i) => `<path d="M${f(hash(i, 21) * 80)},${f(hash(i, 22) * 80)} q8,-1 ${f(10 + 16 * hash(i, 23))},0" stroke="${i % 3 ? '#0A1430' : '#9AAAE0'}" stroke-width="${f(0.8 + hash(i, 24))}" fill="none" opacity="${i % 3 ? 0.3 : 0.18}" stroke-linecap="round"/>`).join(''))
-    + motif('roc', Array.from({ length: 40 }, (_, i) => `<circle cx="${f(hash(i, 31) * 80)}" cy="${f(hash(i, 32) * 80)}" r="${f(0.4 + hash(i, 33))}" fill="${i % 4 ? '#06050A' : '#B8B4C8'}" opacity="${i % 4 ? 0.35 : 0.2}"/>`).join('') + fibres(12, '#B8B4C8', 0.15, 34))
-    + motif('bois', Array.from({ length: 10 }, (_, i) => `<path d="M${f(hash(i, 41) * 80)},0 q${f(2 - 4 * hash(i, 42))},40 0,80" stroke="#05080A" stroke-width="0.7" fill="none" opacity="0.35"/>`).join(''))
-    + `</defs>`;
-}
-
-// une spirale qui s'enroule (une volute de nuage, une crête de vague) : un chemin de (x, y), de rayon r, dans le sens d
-const spirale = (x, y, r, d = 1, tours = 1.6) => {
-  let s = `M${f(x)},${f(y)}`;
-  const n = Math.round(tours * 10);
-  for (let k = 1; k <= n; k++) {
-    const a = (k / 10) * Math.PI * 2 * d - Math.PI / 2, rr = r * (1 - k / (n + 2));
-    s += ` L${f(x + Math.cos(a) * rr)},${f(y + r + Math.sin(a) * rr)}`;
-  }
-  return s;
-};
-// une volute qui se dessine, se tient, puis se défait (dur, début), en trait clair
-const volute = (d, couleur, dur, beg, w = 1.8) => `<path d="${d}" fill="none" stroke="${couleur}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="120" stroke-dashoffset="120"><animate attributeName="stroke-dashoffset" values="120;0;0;120" keyTimes="0;0.35;0.7;1" calcMode="spline" keySplines="0.4 0 0.2 1;0 0 1 1;0.6 0 0.8 1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`;
 
 function portePhare() {
   const D = Defs('pp');

@@ -25,7 +25,6 @@ const T = Object.fromEntries(CAST_REFONTE.filter(({ base }) => ['Cannelle', 'Riv
 const NUIT = { ciel: '#16213F', cielBas: '#2C3D63', mer: '#1E3552', merH: '#2E4E72', ecume: '#8FA9C4', sable: '#5E5B57', roche: '#3E4352', rocheH: '#545B6E', brume: '220,230,242' };
 const AUBE = { ciel: '#5B6A9A', cielBas: '#F2B8A0', mer: '#4E6E96', merH: '#6E8EB4', ecume: '#E8D8D0', sable: '#B8A48A', roche: '#6E6A72', rocheH: '#8A8690', brume: '245,230,226' };
 const JOUR = { ciel: '#7EB6E0', cielBas: '#CDE6F2', mer: '#3E8EB8', merH: '#5EAAD0', ecume: '#F4FAFC', sable: '#E8D3A6', roche: '#8E8A84', rocheH: '#ABA79F', brume: '255,255,255' };
-const TEMPETE = { ciel: '#0E1530', cielBas: '#24345A' };
 
 // ---- petits morceaux ----
 const trait = (d, color, w, extra = '') => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
@@ -139,67 +138,26 @@ S('00_carte', {
 // la garde de la scène précédente)
 S('00_tampon', {
   titre: 'Embarqué : le vent emporte la carte', etapes: ['0c'], images: 3, ms: 500,
-  fond: f => {
-    const [dx, dy, k] = [[0, 0, 1], [40, -30, 0.8], [130, -110, 0.45]][f];
-    return ciel('c1', NUIT) + etoiles(ETOILES, f)
-      + (f ? trait('M20,260 q60,-30 120,-10 q60,20 120,-20 M60,320 q70,-24 140,-4', 'rgba(220,230,242,.45)', 3) : '')
-      + `<g transform="translate(${200 + dx} ${200 + dy}) rotate(${f * 18}) scale(${k}) translate(-200 -200)">${carte(true)}</g>`;
-  },
   avatar: null
 });
 // Étape 1a — le pont de l'Hirondelle, la nuit, dans la tempête ; l'avatar agrippé au bastingage
 S('01_pont', {
   titre: 'Le pont de l’Hirondelle dans la tempête', etapes: ['1a'], images: 3, ms: 160,
-  fond: f => {
-    let s = ciel('pc', TEMPETE, 260);
-    // la mer démontée, une grosse vague au loin
-    s += mer(200, 300, f) + P(`M0,${230 - f * 3} Q90,${170 - f * 6} 170,${210 - f * 2} Q240,240 320,${200 - f * 4} Q370,180 400,210 L400,300 L0,300 Z`, '#203A5C', 2) + trait(`M80,${195 - f * 4} q30,-10 60,8 M250,${210 - f * 3} q30,-12 60,4`, '#9FB6CF', 3);
-    // le pont de bois, le mât et les guirlandes qui battent
-    s += P('M0,300 L400,300 L400,400 L0,400 Z', '#6B4E36', 2) + [318, 342, 370].map(y => L([0, y], [400, y], '#5A3F2A', 2)).join('');
-    s += `<rect x="330" y="20" width="12" height="285" fill="#C9B79A" stroke="${OUT}" stroke-width="2"/>`;
-    const guirlande = (x0, y0, x1, y1, ph) => {
-      const cy = (y0 + y1) / 2 + 40 + [0, 10, -6][(f + ph) % 3];
-      let g = P(`M${x0},${y0} Q${(x0 + x1) / 2},${cy} ${x1},${y1}`, 'none', 1.6);
-      for (let k = 1; k < 8; k++) {
-        const t = k / 8, x = (1 - t) ** 2 * x0 + 2 * t * (1 - t) * ((x0 + x1) / 2) + t * t * x1, y = (1 - t) ** 2 * y0 + 2 * t * (1 - t) * cy + t * t * y1;
-        g += lueur(x, y + 6, 9, '255,220,140', 0.25) + E(x, y + 6, 3.4, 4.4, ['#FFD15A', '#F27A5A', '#7EC4E8', '#9BE07A'][k % 4], 1.2);
-      }
-      return g;
-    };
-    s += guirlande(-10, 60, 336, 40, 0) + guirlande(-10, 130, 336, 110, 1);
-    // le bastingage blanc, une bouée
-    s += [0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => `<rect x="${i * 50 + 4}" y="250" width="7" height="58" fill="#EDE6D8" stroke="${OUT}" stroke-width="1.6"/>`).join('')
-      + `<rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT}" stroke-width="2"/>`
-      + E(84, 268, 22, 22, '#E8562E', 2.4) + E(84, 268, 11, 11, '#6B4E36', 2) + [0, 90, 180, 270].map(a => `<rect x="80" y="246" width="8" height="10" fill="#F4EEDF" transform="rotate(${a + 45} 84 268)"/>`).join('');
-    return s + pluie(f, 0.4);
-  },
-  devant: f => pluie(f + 1, 0.25),
   avatar: { x: 232, y: 352, echelle: 3.4, vue: 'face', pose: 'grelotter', naufrage: false }
 });
 // Étape 1b — une vague énorme couvre l'écran
 S('01_vague', {
   titre: 'La vague', etapes: ['1b'], images: 3, ms: 260,
-  fond: f => {
-    const h = [130, 250, 440][f];
-    let s = ciel('vg', TEMPETE) + `<rect x="0" y="250" width="400" height="150" fill="#6B4E36"/><rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT}" stroke-width="2"/>`;
-    s += P(`M-20,420 L-20,${400 - h} Q120,${360 - h * 1.25} 260,${380 - h * 1.1} Q330,${388 - h * 1.15} 360,${410 - h} Q330,${420 - h * 0.9} 300,${426 - h * 0.86} L420,${430 - h * 0.7} L420,420 Z`, '#1E3A60', 3)
-      + trait(`M10,${410 - h * 0.95} Q130,${370 - h * 1.15} 250,${392 - h * 1.05}`, '#9FB6CF', 4) + trait(`M260,${380 - h * 1.1} q60,-4 96,28`, '#E8F0F8', 5);
-    return s + pluie(f, 0.35);
-  },
   avatar: null
 });
 // Étape 1b — le noir ; la mer, très loin
 S('01_noir', {
   titre: 'Le noir ; la mer, très loin', etapes: ['1b'], images: 2, ms: 1200,
-  fond: f => `<rect x="0" y="0" width="400" height="400" fill="#05080F"/>` + trait(`M60,${300 + f} q35,-3 70,0 t70,0 t70,0 t70,0`, 'rgba(120,150,190,.35)', 2) + trait(`M120,${312 - f} q30,-2 60,0 t60,0 t60,0`, 'rgba(120,150,190,.2)', 1.6),
   avatar: null
 });
 // Étape 1c — la plage de Brumelune, la nuit, dans la brume ; des débris, une chaise longue retournée ; l'avatar se redresse, grelotte
 S('01_greve', {
   titre: 'La plage de Brumelune, la nuit, dans la brume', etapes: ['1c'], images: 3, ms: 400,
-  fond: f => ciel('gc', NUIT, 240) + lueur(300, 70, 60, '220,230,245', 0.25) + E(300, 70, 16, 16, '#DCE4EF', 0)
-    + mer(190, 250, f) + nappe(200, 0.18, f) + sable(250) + planche(40, 296, 96, -8) + planche(300, 326, 70, 12) + chaiseLongue(300, 286, 168) + nappe(300, 0.14, f, 1.2),
-  devant: f => nappe(370, 0.16, -f, 1.4),
   avatar: { x: 200, y: 344, echelle: 3.6, vue: 'face', pose: 'grelotter', naufrage: true }
 });
 // Étape 1d — un gilet de sauvetage s'échoue à ses pieds, « L'HIRONDELLE » au pochoir ; seule la mer répond
@@ -346,7 +304,7 @@ S('09_rivet', {
 // le sable, au premier plan. Aster soulagée (choix de l'auteur, 12 oct. : « rassurée et reconnaissante », pas un grand
 // sourire) : les yeux qui se ferment doucement, les joues roses
 S('10_aster', {
-  titre: 'Aster tire une caisse des vagues', etapes: ['10b'], images: 3, ms: 360,
+  titre: 'Lorena sort de l’eau et vient au feu', etapes: ['10b'], images: 3, ms: 360,
   fond: f => {
     let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(image(T.Aster.nau, 'se', 'marche', f * 2, 'soulagee'), 262, 332, 2.6);
     s += trait(`M166,${262 + f} Q206,${252 - f * 2} 236,262`, '#D8C08A', 2.6)
@@ -583,37 +541,63 @@ for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, t
 for (const [id, feu] of [['05_feu', [222, 334]], ['06_silhouette', [176, 336]]]) SCENES[id].devant = () => devantAvatar(`${id.slice(3, 6)}a`, SCENES[id].avatar, feu);
 
 // Les images nouvelles de l'ouverture (ouverture.js ; demande de l'auteur du 15 oct.), en animation continue, chacune
-// rangée à sa place dans l'ordre du récit : [identifiant, après quelle scène, titre, étapes, dessin, avatar]
+// rangée à sa place dans l'ordre du récit : [identifiant, après quelle scène, titre, étapes, dessin, avatar] (sans
+// dessin : une scène de l'ouverture en plans, plus bas)
 const O = require('./ouverture');
 const R = require('./rencontre');
+// (après le Vent : l'avatar là où l'a laissé le livre, Brume à sa droite ; gravure_vent.js)
+const APRES_VENT = { x: 182, y: 348, echelle: 3.25, vue: 'avant', pose: 'repos', naufrage: true };
+// (au vieux cercle de pierres, à sa gauche ; gravure_cercle.js)
+const AU_CERCLE = { x: 126, y: 384, echelle: 3.1, vue: 'avant', pose: 'repos', naufrage: true };
 const OUVERTURE = [
-  ['01_racines', '01_vague', 'Sous la surface, les racines', ['1b'], O.racines01, null],
-  ['01_paupieres', '01_noir', 'Les paupières qui battent ; la plage au couchant', ['1c'], O.paupieres01, null],
-  ['01_carte', '01_greve', 'Quelque chose de blanc sur le sable : la carte d’embarquement trempée', ['1d'], O.carte01, null],
+  ['01_racines', '01_vague', 'Sous la surface, les racines', ['1b'], null, null],
+  ['01_paupieres', '01_noir', 'Les paupières qui battent ; la plage au couchant', ['1c'], null, null],
+  ['01_carte', '01_greve', 'Quelque chose de blanc sur le sable : la carte d’embarquement trempée', ['1d'], null, null],
   ['02_plage', '01_gilet', 'Face à la mer, au couchant', ['2a'], O.plage02, { x: 144, y: 376, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true }],
-  ['03_ciel', '03_vent', 'Brume lève les yeux vers le ciel', ['3'], O.ciel03, null],
-  ['05_cercle', '03_vent', 'Le cercle de pierres noircies ; au large, l’épave dans la brume', ['5'], O.cercle05, { x: 136, y: 386, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }],
-  ['10_epave', '09_rivet', 'Le matin d’Hermine : l’épave contre les rochers', ['10'], O.epave10, null]
+  ['03_trouee', '03_vent', 'La brume ouverte autour d’eux, les étoiles : ceux d’avant', ['3'], null, APRES_VENT],
+  ['03_ciel', '03_vent', 'Brume lève les yeux vers le ciel', ['3'], null, null],
+  ['03_nuit', '03_vent', 'La nuit tombe, froide ; Brume l’emmène vers le vieux cercle', ['3'], null, APRES_VENT],
+  ['05_cercle', '03_vent', 'Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant', ['5'], null, AU_CERCLE],
+  ['05_promesse', '03_vent', 'Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume', ['5'], null, AU_CERCLE],
+  ['10_epave', '09_rivet', 'Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage', ['10'], null, null]
 ];
 {
   const ordre = Object.keys(SCENES);
   for (const [id, apres] of [...OUVERTURE].reverse()) ordre.splice(ordre.indexOf(apres) + 1, 0, id);
-  const neuves = Object.fromEntries(OUVERTURE.map(([id, , titre, etapes, dessin, avatar]) => [id, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1000, fond: () => dessin(), avatar }]));
+  const neuves = Object.fromEntries(OUVERTURE.map(([id, , titre, etapes, dessin, avatar]) => [id, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1000, ...(dessin && { fond: () => dessin() }), avatar }]));
   // (et deux scènes refaites pour que la nuit tombe juste : la plage vue par ses yeux, au couchant ; le vent, à l'heure
   // bleue, Brume à droite de l'avatar)
   const refaites = {
-    '01_greve': { titre: 'La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris', etapes: ['1c'], images: 1, ms: 1000, fond: () => O.greve01(), avatar: null },
-    '03_vent': { titre: 'Le vent chasse la brume, à l’heure bleue', etapes: ['3e'], images: 1, ms: 900, fond: () => O.vent03(), avatar: { x: 164, y: 368, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true } },
+    '01_greve': { titre: 'La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris', etapes: ['1c'], images: 1, ms: 1000, avatar: null },
+    '03_vent': { titre: 'Le Vent se lève et ouvre la brume autour d’eux', etapes: ['3e'], images: 1, ms: 900, avatar: APRES_VENT },
     // la rencontre, au crépuscule (rencontre.js), du soleil couché jusqu'à l'heure bleue du vent
     '02_lueur': { ...SCENES['02_lueur'], titre: 'Une lueur erre dans la brume, au crépuscule', fond: () => R.lueur02(), devant: () => R.brumeDevant('lud', 0.04, 372) },
     '02_approche': { ...SCENES['02_approche'], titre: 'Brume approche d’un coup', fond: () => R.approche02(), devant: () => R.brumeDevant('apd', 0.08, 384) },
     '02_rocher': { ...SCENES['02_rocher'], titre: 'Brume se cache derrière un rocher et passe la tête', fond: () => R.rocher02() },
-    '03_livre': { ...SCENES['03_livre'], titre: 'Brume tire du rocher le livre aux sept sceaux', fond: () => R.livre03() }
+    '03_livre': { ...SCENES['03_livre'], titre: 'Brume tire du rocher le livre aux sept sceaux', avatar: { x: 156, y: 354, echelle: 3.3, vue: 'avant', pose: 'repos', naufrage: true } }
   };
   const toutes = { ...SCENES, ...neuves, ...refaites };
   for (const id of Object.keys(SCENES)) delete SCENES[id];
   for (const id of ordre) SCENES[id] = toutes[id];
 }
+
+// L'ouverture en gravures découpées, en cinématique de plans (choix de l'auteur, 16 oct. : le style des cinématiques
+// d'Alice Madness Returns, partout ; theatre_pont.js, gravure_plage.js, game/scenePlans.js) : la scène garde son
+// titre, ses étapes et sa place d'avatar ; ses pièces et sa partition remplacent son dessin
+const TP = require('./theatre_pont');
+const GR = require('./gravure_rencontre');
+const GL = require('./gravure_lorena');
+const GV = require('./gravure_vent');
+const NN = require('./neon_naufrage');
+const NR = require('./neon_reveil');
+const NJ = require('./neon_jeu');
+const GC = require('./gravure_cercle');
+for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
+  const { fond, devant, ...garde } = SCENES[id];
+  SCENES[id] = { ...garde, images: 1, ...scene() };
+}
+// (le reste des cinématiques, en papier néon : neon_jeu.js)
+for (const [id, scene] of NJ.cinematiques) SCENES[id] = { ...SCENES[id], ...scene() };
 
 // L'arc du Phare (ecriture/arc_phare.md ; choix de l'auteur, 15 oct.) : acte III, des Hauteurs, avec l'Étoile, la porte du
 // phare vue de près, fermée par une serrure en forme de pierre ; une cinématique de papier découpé (porte_phare.js), sans
@@ -624,14 +608,15 @@ S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme 
 // joue en direct entre le fond et l'avatar le calque « anime » d'une scène qui en a un (SceneArt). Leur fond n'a plus
 // aucune animation ; leur calque anime, léger et sans filtre, garde l'essentiel vivant (les groupes marqués par vif :
 // la flamme, Brume et sa lueur, quelques lucioles ou étincelles ; figer.js). L'instant figé de chacune : son état final
-// (Infinity : le feu pris, la carte de près, le livre sur le sable…), ou son départ (0 : les racines, avant le noir).
+// (Infinity : le feu pris, le livre sur le sable…).
 // Ailleurs, les marques s'effacent : ces scènes ne changent pas d'un octet
 const FIGEES = {
-  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity, '01_racines': 0, '01_paupieres': Infinity,
-  '05_feu': Infinity, '01_pont': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity,
-  '01_carte': Infinity, '02_rocher': Infinity
+  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity,
+  '05_feu': Infinity, '06_silhouette': Infinity
 };
 for (const [id, sc] of Object.entries(SCENES)) {
+  // (une scène en plans n'a ni fond ni devant : ses plans sont déjà séparés, figés, et son calque anime à part)
+  if (sc.plans) { for (const p of sc.plans) if (p.dessin) { const d = p.dessin; p.dessin = () => sansVif(d()); } continue; }
   const { fond, devant } = sc;
   if (devant) sc.devant = n => sansVif(devant(n));
   if (!Object.hasOwn(FIGEES, id)) { sc.fond = n => sansVif(fond(n)); continue; }
@@ -639,6 +624,19 @@ for (const [id, sc] of Object.entries(SCENES)) {
   const part = n => parts.get(n) || parts.set(n, separer(fond(n), FIGEES[id])).get(n);
   sc.fond = n => part(n).fond;
   sc.anime = n => part(n).anime;
+}
+
+// Tout le jeu en papier néon (choix de l'auteur, 18 oct.) : les scènes fixes ravivées (neon_reveil.js : ravivee), l'étalonnage
+// néon sous l'avatar, l'avatar rendu en néon (game/acteur.js : gravee)
+// (leurs personnages y sont dessinés avec le décor : leurs couleurs gardent leur teinte, ravivées, comme celles de l'avatar)
+// (la lumière sur l'avatar : [laquelle, d'où elle vient (1 : de la gauche, -1 : de la droite, le feu)])
+const NEON_FIXES = { '05_feu': ['feu', -1], '06_silhouette': ['nuit', 1], '07_cannelle': ['jour', 1], '07_souvenir': ['jour', 1], '09_rivet': ['jour', 1], '11_ondin': ['jour', 1], '11_reveil': ['jour', 1], '12_veillee': ['feu', -1], '12_habits': ['feu', -1], '30_phare_porte': ['nuit', 1] };
+for (const [id, [lumiere, cote]] of Object.entries(NEON_FIXES)) {
+  const sc = SCENES[id], { fond, anime, devant } = sc, n0 = `nf${id.replace(/\W/g, '')}`;
+  sc.fond = n => NR.ravivee(fond(n)) + NN.vignette(`${n0}${n}`);
+  if (anime) sc.anime = n => NR.ravivee(anime(n));
+  if (devant) sc.devant = n => NR.ravivee(devant(n));
+  if (sc.avatar) sc.avatar = { ...sc.avatar, neon: true, lumiere: { ...NR.LUMIERES[lumiere], cote } };
 }
 
 module.exports = { SCENES, W, CADRE_PHOTO };

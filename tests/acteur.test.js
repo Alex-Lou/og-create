@@ -53,19 +53,17 @@ describe('le jeu de l\'avatar dans une scène en plans', () => {
 // Les pistes « acteur » des scènes : des clips dans l'ordre, dans leur temps, d'animations que le kit joue dans cette
 // direction
 const JOUEES = Object.entries(DATA.scenes).flatMap(([id, sc]) => (sc.plans && sc.partition ? sc.partition.temps.map((t, n) => [`${id} ${n}`, t, sc]) : [])).filter(([, t]) => t.acteur);
-// (le naufrage se voit par ses yeux : aucune scène ne fait encore jouer l'avatar ; celles qui le feront sont vérifiées ici)
 describe('les pistes « acteur » des scènes', () => {
-  it('des clips dans l\'ordre, dans leur temps, que le kit joue dans cette direction', () => {
-    for (const [nom, temps, scene] of JOUEES) {
-      expect(scene.avatar, nom).toBeTruthy();
-      expect(scene.plans.map(p => p.id), nom).toContain('avatar');
-      temps.acteur.forEach(([t, clip], i) => {
-        expect(t, nom).toBeGreaterThanOrEqual(i ? temps.acteur[i - 1][0] : 0);
-        expect(t, nom).toBeLessThanOrEqual(temps.duree);
-        expect(ANIMS[clip.anim], nom).toBeTruthy();
-        expect(DIRECTIONS[clip.dir], nom).toBeTruthy();
-        expect(ANIMS[clip.anim].dirs, nom).toContain(clip.dir);
-      });
-    }
+  it('il y en a', () => expect(JOUEES.length).toBeGreaterThan(0));
+  it.each(JOUEES)('%s', (nom, temps, scene) => {
+    expect(scene.avatar).toBeTruthy();
+    expect(scene.plans.map(p => p.id)).toContain('avatar');
+    temps.acteur.forEach(([t, clip], i) => {
+      expect(t).toBeGreaterThanOrEqual(i ? temps.acteur[i - 1][0] : 0);
+      expect(t).toBeLessThanOrEqual(temps.duree);
+      expect(ANIMS[clip.anim]).toBeTruthy();
+      expect(DIRECTIONS[clip.dir]).toBeTruthy();
+      expect(ANIMS[clip.anim].dirs).toContain(clip.dir);
+    });
   });
 });

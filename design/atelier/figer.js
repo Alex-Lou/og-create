@@ -209,4 +209,13 @@ function separer(corps, t = Infinity) {
   return { fond, anime };
 }
 
-module.exports = { vif, separer, sansVif };
+// Un dessin tout figé à l'instant t, sans calque anime (un figurant des scènes en plans : chacune de ses images est
+// immobile, le jeu les enchaîne ; figurants.js)
+function fige(corps, t = Infinity) {
+  const els = lire(corps);
+  const f = new Map(balisesFigees(corps, els, t));
+  for (const el of els) if (ANIM.has(el.nom)) f.set(el, '');
+  return recomposer(corps, 0, corps.length, f);
+}
+
+module.exports = { vif, separer, sansVif, fige };

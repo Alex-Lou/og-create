@@ -1195,7 +1195,7 @@ Les éléments ci-dessous sont antérieurs au contrat par compagnons. Ils ne doi
 |---|---|---|---|
 | 0a | Ta carte d'embarquement de *l'Hirondelle* : la photo se compose, tourne et s'anime (face, trois quarts, marche, salut) | choisir silhouette, peau, yeux, sourcils, taches de rousseur, coupe et couleur de cheveux, haut, bas, couleurs, un accessoire ; ou « Au hasard » | — |
 | 0b | Sous la photo, une ligne « Nom » | écrire son nom | — |
-| 0c | Un tampon : « Embarqué ». Le vent du large emporte la carte | toucher | Légende : « Troisième nuit de croisière. » |
+| 0c | Un tampon : « Embarqué ». Le vent du large emporte la carte | toucher | Légende : « Troisième jour de croisière. » |
 
 Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée, déchirée, pieds nus) jusqu'au Campement.
 
