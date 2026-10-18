@@ -11,13 +11,16 @@ import { viewOf, stepAt, lookOf } from '../beastArt';
 import { minuteOf, cycleAt, CYCLE_MS } from '../gameClock';
 import { moonOf } from '../lumiere/ombres';
 
-// La rareté : combien par zone, combien d'arrêts par sortie, leurs pauses et le temps passé rentrée entre deux sorties
-// (minutes réelles), la sieste (chance par sortie), un cycle du jeu sur combien où elle se montre
+// La rareté : combien par zone ; son créneau (minutes réelles : au plus une sortie par créneau, le reste du temps elle
+// est rentrée), la durée d'une sortie, ses arrêts, la sieste (chance par sortie), la part des créneaux où elle sort
 const RARITY = {
-  commun: { count: 2, stops: [3, 4], pause: [0.4, 1], gap: [0.5, 1.5], nap: 0.5, every: 1 },
-  'peu commun': { count: 1, stops: [2, 3], pause: [0.35, 0.7], gap: [2, 4], nap: 0.3, every: 1 },
-  rare: { count: 1, stops: [1, 2], pause: [0.25, 0.5], gap: [6, 10], nap: 0, every: 2 }
+  commun: { count: 2, slot: 4.5, out: [3, 4], stops: [3, 4], nap: 0.5, show: 1 },
+  'peu commun': { count: 1, slot: 6, out: [2, 3], stops: [2, 3], nap: 0.3, show: 1 },
+  rare: { count: 1, slot: 10, out: [1, 1.5], stops: [1, 2], nap: 0, show: 0.5 }
 };
+// La marche tient au plus cette part d'une sortie (au-delà, un arrêt de moins) ; le reste se partage entre ses pauses,
+// au poids de chacune (la sieste compte triple, le premier regard, à la sortie du coin, moitié)
+const WALK_SHARE = 0.7;
 // Sa façon d'aller (cases par minute réelle) : à pas, en bonds, au trot, lentement, en broutant ; perchée, elle vole
 // d'arbre en arbre ; en l'air, elle flotte d'une case à l'autre
 const SPEED = { pas: 40, bonds: 50, trot: 60, lent: 18, broute: 30, perche: 150, vol: 30 };
@@ -29,8 +32,6 @@ const FULL_MOON = 0.85;
 const PERCH_Z = 14;
 const FLIGHT_Z = 10;
 const CYCLE_MIN = CYCLE_MS / 60000;
-// (une sortie finit avant la fin du cycle : le cycle suivant tire les siennes)
-const CYCLE_END = 0.5;
 // Les sols : des prés (herbe, prairie), du sable ; ceux où se pose une bête des cases libres (ni eau, ni lac gelé, ni lave,
 // ni pont, ni forêt, ni roche)
 const MEADOW = 'gm';
@@ -175,69 +176,68 @@ export function wildLifeOf({ homes, zoneIds, grid, n }) {
       }
     }
   }
-  // Ses sorties d'un cycle du jeu, tirées une fois (gardées pour le cycle en cours)
-  const outings = new Map();
-  let shownCycle = null;
-  const outingsOf = (w, cycle) => {
-    if (cycle !== shownCycle) {
-      outings.clear();
-      shownCycle = cycle;
-    }
-    if (!outings.has(w.key)) outings.set(w.key, plan(w, cycle));
-    return outings.get(w.key);
-  };
-  function plan(w, cycle) {
-    const r = w.rarity;
-    const roll = (i, a = 0, b = 1) => a + (b - a) * hash(w.seed * 997 + i * 7.13, cycle * 0.37 + w.k);
-    // (une bête rare ne se montre pas à chaque cycle)
-    if (roll(0) * r.every >= 1) return [];
-    const speed = SPEED[w.move];
-    const out = [];
-    let m = roll(1, 0, r.gap[1]);
-    for (let i = 0; i < 60; i++) {
-      const s = 100 + i * 20;
-      const legs = w.move === 'perche' || w.move === 'vol' ? flightOf(w, s, roll, speed) : walkingOf(w, s, roll, speed, r);
-      const total = legs.reduce((sum, leg) => sum + leg.walk + leg.pause, 0);
-      if (m + total > CYCLE_MIN - CYCLE_END) break;
-      out.push({ start: m, total, legs });
-      m += total + roll(s + 19, r.gap[0], r.gap[1]);
-    }
-    return out;
+  // Sa sortie du créneau slot du cycle du jeu (null : elle reste rentrée), tirée une fois : seule celle du créneau en
+  // cours est gardée, sur la bête (le village refait, elle se retire à l'identique, sans rien chercher d'autre)
+  function outingOf(w, cycle, slot) {
+    const id = `${cycle}:${slot}`;
+    if (!w.outing || w.outing.id !== id) w.outing = { id, plan: plan(w, cycle, slot) };
+    return w.outing.plan;
   }
+  function plan(w, cycle, slot) {
+    const r = w.rarity;
+    const roll = (i, a = 0, b = 1) => a + (b - a) * hash(w.seed * 997 + i * 7.13, cycle * 0.37 + slot * 1.91 + w.k);
+    if (roll(0) >= r.show) return null;
+    const total = roll(1, r.out[0], r.out[1]);
+    const speed = SPEED[w.move];
+    const legs = w.move === 'perche' || w.move === 'vol' ? flightOf(w, roll, speed, total) : walkingOf(w, roll, speed, total);
+    return { start: slot * r.slot + roll(2) * (r.slot - total), total, legs };
+  }
+  // Les pauses d'une sortie : ce que la marche laisse de sa durée, au poids de chacune
+  const paced = (legs, total) => {
+    const walk = legs.reduce((sum, leg) => sum + leg.walk, 0);
+    const weight = legs.reduce((sum, leg) => sum + leg.weight, 0);
+    return legs.map(leg => ({ ...leg, pause: ((total - walk) * leg.weight) / weight }));
+  };
   // Une sortie à pied : elle sort à une case de son coin, va d'arrêt en arrêt par les cases qu'elle rejoint, et revient
   // rentrer où elle était sortie
-  function walkingOf(w, s, roll, speed, r) {
-    const den = w.cells[Math.floor(roll(s) * w.cells.length)];
+  function walkingOf(w, roll, speed, total) {
+    const r = w.rarity;
+    const den = w.cells[Math.floor(roll(3) * w.cells.length)];
     const from = reachOf(den, REACH, w.ok, grid.step, n);
     const reached = [...from.keys()].filter(key => key !== den.y * n + den.x).map(key => ({ x: key % n, y: Math.floor(key / n) }));
-    const count = Math.round(roll(s + 1, r.stops[0], r.stops[1]));
-    const stops = reached.length ? Array.from({ length: count }, (_, i) => reached[Math.floor(roll(s + 2 + i) * reached.length)]) : [];
-    const napAt = roll(s + 9) < r.nap ? Math.floor(roll(s + 10) * stops.length) : -1;
-    const legs = [{ path: [den], walk: 0, pause: roll(s + 11, 0.1, 0.25), act: 'regarde' }];
-    let at = den;
-    stops.forEach((stop, i) => {
-      const path = walkOf(from, at, stop, n);
-      const nap = i === napAt;
-      legs.push({ path, walk: (path.length - 1) / speed, pause: nap ? roll(s + 12 + i, 1, 1.6) : roll(s + 12 + i, r.pause[0], r.pause[1]), act: nap ? 'sieste' : roll(s + 30 + i) < 0.5 ? 'broute' : 'regarde' });
-      at = stop;
-    });
-    const home = walkOf(from, at, den, n);
-    legs.push({ path: home, walk: (home.length - 1) / speed, pause: 0, act: 'regarde' });
-    return legs;
+    const napAt = roll(4) < r.nap ? 0 : -1;
+    let stops = reached.length ? Array.from({ length: Math.round(roll(5, r.stops[0], r.stops[1])) }, (_, i) => reached[Math.floor(roll(6 + i) * reached.length)]) : [];
+    for (;;) {
+      const legs = [{ path: [den], walk: 0, weight: 0.5, act: 'regarde' }];
+      let at = den;
+      stops.forEach((stop, i) => {
+        const path = walkOf(from, at, stop, n);
+        const nap = i === napAt;
+        legs.push({ path, walk: (path.length - 1) / speed, weight: nap ? 3 : 1, act: nap ? 'sieste' : roll(12 + i) < 0.5 ? 'broute' : 'regarde' });
+        at = stop;
+      });
+      const home = walkOf(from, at, den, n);
+      legs.push({ path: home, walk: (home.length - 1) / speed, weight: 0, act: 'regarde' });
+      if (!stops.length || legs.reduce((sum, leg) => sum + leg.walk, 0) <= total * WALK_SHARE) return paced(legs, total);
+      stops = stops.slice(0, -1);
+    }
   }
   // Une sortie en l'air : d'un arbre (ou d'une case) à l'autre de son coin, tout droit, en s'arrêtant à chacun
-  function flightOf(w, s, roll, speed) {
-    const den = w.cells[Math.floor(roll(s) * w.cells.length)];
+  function flightOf(w, roll, speed, total) {
+    const den = w.cells[Math.floor(roll(3) * w.cells.length)];
     const near = w.cells.filter(c => Math.abs(c.x - den.x) + Math.abs(c.y - den.y) <= REACH + 1);
-    const count = Math.round(roll(s + 1, 2, 4));
-    const legs = [{ path: [den], walk: 0, pause: roll(s + 2, 0.4, 1), act: 'regarde', straight: true }];
+    const legs = [{ path: [den], walk: 0, weight: 1, act: 'regarde', straight: true }];
     let at = den;
-    for (let i = 0; i < count; i++) {
-      const to = near[Math.floor(roll(s + 3 + i) * near.length)];
-      legs.push({ path: [at, to], walk: Math.hypot(to.x - at.x, to.y - at.y) / speed, pause: roll(s + 10 + i, 0.4, 1.2), act: 'regarde', straight: true });
+    let walk = 0;
+    for (let i = 0, count = Math.round(roll(5, 2, 4)); i < count; i++) {
+      const to = near[Math.floor(roll(6 + i) * near.length)];
+      const leg = { path: [at, to], walk: Math.hypot(to.x - at.x, to.y - at.y) / speed, weight: 1, act: 'regarde', straight: true };
+      if (walk + leg.walk > total * WALK_SHARE) break;
+      legs.push(leg);
+      walk += leg.walk;
       at = to;
     }
-    return legs;
+    return paced(legs, total);
   }
   // Où elle est m minutes après le début de sa sortie : { x, y, dx, dy, moving, act, d (cases parcourues), k (part du vol) }
   function placeOn(legs, speed, m) {
@@ -280,10 +280,13 @@ export function wildLifeOf({ homes, zoneIds, grid, n }) {
     const cycle = cycleAt(Date.now());
     const m = minuteOf(h);
     for (const w of beasts) {
-      if (!w.hours.some(slot => slots[slot]) || (w.weather && !w.weather.includes(sky)) || (w.moon && !fullMoon)) continue;
+      if (!w.hours.some(hours => slots[hours]) || (w.weather && !w.weather.includes(sky)) || (w.moon && !fullMoon)) continue;
       if ((w.act && !doneAct(w.act)) || (w.element && !bestiary.has(w.element))) continue;
-      const outing = outingsOf(w, cycle).find(o => m >= o.start && m < o.start + o.total);
-      const p = outing && placeOn(outing.legs, SPEED[w.move], m - outing.start);
+      // (le créneau qui dépasserait la fin du cycle reste vide : le cycle suivant tire les siens)
+      const slot = Math.floor(m / w.rarity.slot);
+      if ((slot + 1) * w.rarity.slot > CYCLE_MIN) continue;
+      const outing = outingOf(w, cycle, slot);
+      const p = outing && m >= outing.start && m < outing.start + outing.total && placeOn(outing.legs, SPEED[w.move], m - outing.start);
       if (!p) continue;
       put(w.key, w.species, poseOf(w, p, t));
     }
