@@ -1,5 +1,5 @@
 // Les portraits de la troupe hors de l'île (bulles du guide, scènes) : le dessin de la bibliothèque, en naufragé tant que
-// son bâtiment n'est pas fondé ; le générateur pour qui n'a pas de dessin.
+// son bâtiment n'est pas fondé ; sans dessin dans la vue demandée, son portrait de face.
 import { describe, it, expect } from 'vitest';
 import { faceHref, builtOf, lineFace } from '@/world/faces';
 
@@ -10,8 +10,10 @@ describe('les portraits de la troupe', () => {
     expect(faceHref('atelier', { view: 'se', pose: 'work', castaway: true })).toMatch(/rivet-naufrage_avant_travail_1\.svg$/);
   });
 
-  it('sans portrait de la bibliothèque dans cette vue (de dos), celui du générateur', () => {
-    expect(faceHref('ponton', { view: 'ne' })).toMatch(/^data:image\/svg\+xml/);
+  it('sans portrait de la bibliothèque dans cette vue (de dos), celui de face ; personne pour qui n\'est pas de la troupe', () => {
+    expect(faceHref('ponton', { view: 'ne' })).toMatch(/aster_face_repos_1\.svg$/);
+    expect(faceHref('ponton', { view: 'ne', castaway: true })).toMatch(/aster-naufrage_face_repos_1\.svg$/);
+    expect(faceHref('phare')).toBe(null);
   });
 
   it('les maîtres dont le bâtiment est fondé, d\'après le serveur (les visiteurs installés à part)', () => {

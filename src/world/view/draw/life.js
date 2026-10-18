@@ -9,7 +9,6 @@ import { drawSprite } from '@/world/spriteCache';
 import { drawSpout, seaGuests, DOLPHIN_EVERY, DOLPHIN_FOR, podAt, WHALE_EVERY, WHALE_FOR, whaleAt, jelliesAt, circling, crossing, nearestOpen, spread } from '@/world/sea';
 import { FLOATING_ZONE, COLONY_ZONE, ferryPose } from '@/world/islets';
 import { SEA_Z, HS, worldOf } from '@/world/terrain';
-import { CRITTERS } from '@/world/nature';
 import { beastSprite, lookOf } from '@/world/beastArt';
 import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
@@ -218,7 +217,9 @@ export default {
       ctx.globalAlpha = critter.e;
       ctx.translate(0, (1 - critter.e) * 8);
     }
-    const [key, make] = this.critterSprite(critter);
+    const art = this.critterSprite(critter);
+    if (!art) return ctx.restore();
+    const [key, make] = art;
     // (sa dernière image le temps que la suivante se lise : son identité, sinon une autre image de son espèce)
     drawSprite(ctx, key, make, 0, 0, repaint, critter.id ?? `${critter.kind}:${critter.species || ''}`);
     ctx.restore();
@@ -262,7 +263,7 @@ export default {
     if (c.kind === 'whale') return ['whale-back', SEA_SPRITES.whaleBack];
     if (c.kind === 'fluke') return ['whale-fluke', SEA_SPRITES.whaleFluke];
     if (c.kind === 'gull') return [`gull-${c.frame}`, SEA_SPRITES.gull[c.frame]];
-    return [`${c.kind}-${c.frame}`, CRITTERS[c.kind][c.frame]];
+    return null;
   },
   // La mer à cet instant (lot 5b) : ce qui se montre à la surface (dauphins, baleine), les ronds dans l'eau, les
   // mouettes en vol, les méduses ; et ce qu'on peut toucher (seaHits). Les visiteurs arrivent avec les quartiers

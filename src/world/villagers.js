@@ -15,7 +15,7 @@ const ell = (x, y, rx, ry, fill, extra = '') => `<ellipse cx="${f2(x)}" cy="${f2
 const ln = (a, b, color, w = 1, extra = '') => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${f2(w)}" stroke-linecap="round"${extra}/>`;
 const OUT = ' stroke="rgba(60,40,25,.35)" stroke-width="0.5"';
 const shade = (hex, k) => `#${[1, 3, 5].map(i => Math.min(255, Math.round(parseInt(hex.slice(i, i + 2), 16) * k)).toString(16).padStart(2, '0')).join('')}`;
-export const VILLAGER_BOX = { x: -19, y: -50, w: 38, h: 53 };
+const VILLAGER_BOX = { x: -19, y: -50, w: 38, h: 53 };
 export const VIEWS = ['front', 'se', 'ne'];
 
 // Couleurs possibles : peau, cheveux
