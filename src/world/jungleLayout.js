@@ -23,8 +23,10 @@ const ramp = (a, b, v) => smooth(clamp01((v - a) / (b - a)));
 // bord de la plage, le joueur découvre la suite lui-même) : les deux premières zones de l'île à la plage, celle du Feu
 // et celle de Lorena contre l'épave (world/zones.js, mêmes cases) ; tout autour, la jungle serrée, sous la brume tant
 // qu'elle n'est pas découverte
-const CORE_ZONES = ['plage', 'aster'];
-export const CLEARINGS = ZONES.filter(z => CORE_ZONES.includes(z.id)).map(z => z.rect);
+// (choix de l'auteur, 18 oct. : la zone de Lorena et le bord nord se referment aussi ; seul reste le coin du Feu, au
+// bord de la plage, sans sa première rangée ni sa première colonne)
+const CORE_ZONES = ['plage'];
+export const CLEARINGS = ZONES.filter(z => CORE_ZONES.includes(z.id)).map(({ rect: [rx, ry, w, h] }) => [rx + 1, ry + 1, w - 1, h - 1]);
 // (la distance d'une case au noyau, en cases : 0 dedans)
 const outsideOf = (x, y, [rx, ry, w, h]) => Math.max(rx - x, x - (rx + w - 1), ry - y, y - (ry + h - 1), 0);
 const outside = (x, y) => Math.min(...CLEARINGS.map(r => outsideOf(x, y, r)));
