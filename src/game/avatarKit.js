@@ -163,8 +163,9 @@ export function waveFrame(choices, n) {
 }
 
 // Les cadres des vignettes de l'éditeur (dans le cadre 48 × 64 du personnage, de face, carrés) : la tête, la coiffure,
-// le buste, les jambes, les pieds, le personnage en pied (choix de l'auteur, 13 oct. : des vignettes vivantes)
-export const CROPS = { tete: '10 2 28 28', coiffure: '5 0 38 38', buste: '9 20 30 30', jambes: '10 34 28 28', pieds: '12 44 24 24', pied: '0 0 48 64' };
+// le buste, les jambes, les pieds, le personnage en pied (choix de l'auteur, 13 oct. : des vignettes vivantes ; 18 oct. :
+// un peu de recul, que rien ne touche le bord du cadre)
+export const CROPS = { tete: '7 -1 34 34', coiffure: '4 -3 40 40', buste: '5 8 38 38', jambes: '8 34 32 32', pieds: '12 42 24 24', pied: '2 0 44 63' };
 // Une vignette : le personnage de ces choix, de face, au repos, vu par ce cadre (CROPS) ; null tant que le générateur se
 // charge, ou si un choix est inconnu
 export function cropFrame(choices, crop) {
