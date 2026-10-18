@@ -1,7 +1,7 @@
 // Le naufrage en néon, d'une traite (choix de l'auteur, 18 oct. : « refais toute la vidéo d'une traite » ; la vague
 // coupait la scène et changeait de texture, elle ressemblait à une baleine, il n'y avait aucune couleur, la profondeur
 // n'y était pas ; « réinvente la scène, quitte à la changer »). Une seule scène, du pont jusqu'au noir, dans une seule
-// matière : le papier néon des images clés (neon_cles.js) : du noir en fond, des couches de papier sombres, saturées,
+// matière : le papier néon : du noir en fond, des couches de papier sombres, saturées,
 // cernées d'un liseré de lumière ; des tracés lumineux qui dessinent les formes puis se transforment.
 //   0. le crépuscule : un trait de lumière trace l'horizon ; le ciel s'allume (indigo, pourpre, magenta, corail) ; le
 //      soleil de papier, ses anneaux ; la mer en six couches, des crêtes pâles du large aux vagues noires du premier
