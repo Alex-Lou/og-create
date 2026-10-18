@@ -78,8 +78,7 @@ export function momentOf(r, h, sun, { rain = 0, calm = false, visit = null, show
   if (calm || r.guest) return { mode: evening ? 'soir' : 'jour' };
   if (ritual) return { mode: `rituel:${ritual.id}`, ritual };
   if (market && h >= MARKET.from && h < MARKET.to) return { mode: 'marche' };
-  // (le repas : toute la troupe, voyageurs installés compris)
-  if (h >= MEAL.from && h < MEAL.to) return { mode: 'repas' };
+  if (r.master && h >= MEAL.from && h < MEAL.to) return { mode: 'repas' };
   if (visit && h >= visit.from && h < visit.to) return { mode: 'visite', visit };
   return { mode: evening ? 'soir' : 'jour' };
 }

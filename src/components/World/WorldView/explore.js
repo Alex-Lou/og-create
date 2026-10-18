@@ -61,16 +61,6 @@ export default {
         return { role: r.role, k: r.k, name: v.name || r.look.label, since: v.since ? dayHourOf(v.since) : null };
       });
     },
-    // Les voyageurs installés ({ name, role, k, since } : leur métier, leur rang comme dans le village, depuis quand
-    // ils sont restés)
-    journalSettlers() {
-      if (!this.state || this.thickMist(this.state) || !this.village) return [];
-      const known = new Map((this.state.villagers || []).map(v => [`vil:${v.id}`, v]));
-      return this.village.residents.filter(r => !r.master && !r.guest && known.has(r.id)).map(r => {
-        const v = known.get(r.id);
-        return { name: v.name, role: v.role, k: r.k, since: v.since ? dayHourOf(v.since) : null };
-      });
-    },
     // Ses sept derniers jours (seulement le Carnet ouvert), au ciel de chaque heure de l'île
     journal() {
       if (!this.logOpen) return [];
@@ -79,7 +69,7 @@ export default {
         const phase = this.skyAt(new Date(2026, 0, 1 + d, 0, 0, 0, Math.round(h * HOUR_MS)));
         return { rise: phase.rise, set: phase.set, weather: phase.weather };
       };
-      return journalOf({ masters: this.journalMasters, settlers: this.journalSettlers, today: day, hour, skyOf, marketOn: this.village ? this.village.marketOn : undefined });
+      return journalOf({ masters: this.journalMasters, today: day, hour, skyOf, marketOn: this.village ? this.village.marketOn : undefined });
     },
     // Un jour de l'île s'est écrit depuis la dernière lecture : le point du Carnet (rien ne s'ouvre tout seul)
     journalNew() {

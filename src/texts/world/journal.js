@@ -24,9 +24,6 @@ export const JOURNAL = {
     pluie: 'À midi, la pluie. On s’est serrés autour du feu, et la soupe a eu meilleur goût. Agathe l’avait dit.',
     orage: 'À midi, l’orage. Personne n’a parlé pendant le tonnerre. Puis quelqu’un a ri, et tout le monde avec.'
   },
-  // Un voyageur installé en visite chez un maître (son prénom, son métier, son hôte ; sans accord : on ne sait pas
-  // s'il est un homme ou une femme)
-  voyageur: (name, role, host) => `${name}, notre ${role.toLowerCase()}, a rendu visite à ${host}.`,
   // Le jour de marché au Foyer, selon le temps
   marche: {
     clair: 'Jour de marché au Foyer. Chacun a apporté quelque chose, et chacun est reparti avec autre chose.',

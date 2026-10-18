@@ -21,7 +21,7 @@ import { momentsDue, momentLines } from '@/game/firstTimes';
 import { masterPortrait } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/texts/guide/tips';
-import { ANYA_RESTED, MEETINGS, SETTLER_VISIT_SAYS, SETTLER_WELCOME } from '@/texts/village';
+import { ANYA_RESTED, MEETINGS } from '@/texts/village';
 import { coach } from '@/game/coach';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 import { BUBBLES } from '@/texts/world/screens/island';
@@ -75,9 +75,8 @@ export default {
         return p.x > 40 && p.x < this.geo.width - 40 && p.y > 120 && p.y < this.geo.height - 120 ? p : null;
       };
       for (const m of meets) {
-        // (une rencontre par paire, dans un sens de visite ou dans l'autre : qui parle d'abord est dans sa clé ; un
-        // voyageur installé : sa bulle de visite, puis l'accueil du maître)
-        const ahead = m.settler ? [SETTLER_VISIT_SAYS[m.settler], SETTLER_WELCOME[m.to]] : MEETINGS[`${m.from}>${m.to}`];
+        // (une rencontre par paire, dans un sens de visite ou dans l'autre : qui parle d'abord est dans sa clé)
+        const ahead = MEETINGS[`${m.from}>${m.to}`];
         const lines = ahead || MEETINGS[`${m.to}>${m.from}`];
         const id = `${m.from}>${m.to}:${m.day}`;
         if (!lines || seen.has(id)) continue;

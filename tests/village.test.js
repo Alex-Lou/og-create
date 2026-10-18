@@ -4,9 +4,8 @@ import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
 import { CREATURE_TEXTS } from '@/texts/world/creatures';
-import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS, SETTLER_MEAL_SAYS, SETTLER_VISIT_SAYS, SETTLER_WELCOME } from '@/texts/village';
+import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS } from '@/texts/village';
 import { marketDay } from '@/world/village/agenda';
-import { visitHere } from '@/world/village/residents';
 import { cycleStart, dayHourOf } from '@/world/gameClock';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
@@ -174,8 +173,7 @@ describe('village : ce qu’ils disent selon leur journée', () => {
   });
   it('chaque maître a ses répliques ; les rencontres vont d’un maître à un autre, en deux bulles', () => {
     const masters = ['ponton', 'foyer', 'atelier', 'puits', 'bosquet', 'carriere', 'potager'];
-    for (const table of [RITUAL_SAYS, VISIT_SAYS, MARKET_SAYS, SETTLER_MEAL_SAYS, SETTLER_VISIT_SAYS, SETTLER_WELCOME, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS]) expect(Object.keys(table).sort()).toEqual([...masters].sort());
-    for (const lines of Object.values(SETTLER_SAYS)) expect(lines).toHaveLength(4);
+    for (const table of [RITUAL_SAYS, VISIT_SAYS, MARKET_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS]) expect(Object.keys(table).sort()).toEqual([...masters].sort());
     expect(Object.keys(MEAL_SAYS).sort()).toEqual(masters.filter(m => m !== 'foyer').sort());
     for (const [key, lines] of Object.entries(MEETINGS)) {
       const [from, to] = key.split('>');
@@ -188,7 +186,7 @@ describe('village : ce qu’ils disent selon leur journée', () => {
     expect(pairs).toHaveLength((masters.length * (masters.length - 1)) / 2);
     for (const season of ['printemps', 'ete', 'automne']) expect(Object.keys(SEASON_SAYS[season]).sort()).toEqual([...masters].sort());
     expect(Object.keys(SETTLER_SAYS).sort()).toEqual([...masters].sort());
-    const all = [RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MARKET_SAYS, SETTLER_MEAL_SAYS, SETTLER_VISIT_SAYS, SETTLER_WELCOME, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS, ...Object.values(SEASON_SAYS)].flatMap(Object.values)
+    const all = [RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MARKET_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS, ...Object.values(SEASON_SAYS)].flatMap(Object.values)
       .concat(Object.values(SETTLER_SAYS).flat(), Object.values(MEETINGS).flat());
     for (const text of all) expect(text.length, text).toBeLessThanOrEqual(140);
   });
@@ -512,25 +510,6 @@ describe('village : fondations de la vie', () => {
       expect(Object.values(MARKET_SAYS)).toContain(v.say(there.find(p => p.id === 'vil:potager'), at(10)).text);
       // (sans le Foyer à son palier, pas de marché)
       expect(villageOf({ ...base, sites: sites.map(s => (s.id === 'foyer' ? { ...s, level: 1 } : s)) }).marketOn(cycle)).toBe(false);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-  it('un voyageur installé mange au Foyer, rend visite à un maître, et parle de ce qu’il fait', () => {
-    const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
-    const v = villageOf({ ...base, settlers });
-    const who = { kind: 'villager', id: 'vil:v5' };
-    expect(v.say(who, at(12.5)).text).toBe(SETTLER_MEAL_SAYS.potager);
-    const r = v.residents.find(o => o.id === 'vil:v5');
-    const present = v.residents.filter(o => o.master);
-    let day = dayHourOf(Date.now()).day;
-    while (!visitHere(r, day, present)) day++;
-    const visit = visitHere(r, day, present);
-    expect(['potager', 'ponton', 'foyer']).toContain(visit.who);
-    vi.useFakeTimers();
-    try {
-      vi.setSystemTime(cycleStart(day) + 25 * 60 * 1000);
-      expect(v.say(who, at((visit.from + visit.to) / 2)).text).toBe(SETTLER_VISIT_SAYS.potager);
     } finally {
       vi.useRealTimers();
     }

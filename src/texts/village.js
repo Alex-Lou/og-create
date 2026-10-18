@@ -195,49 +195,13 @@ export const SEASON_SAYS = {
 // Les voyageurs installés (lot C) : leur voix, selon le métier qui les a fait rester (clé : le bâtiment où ils
 // travaillent ; serveur : services/visitors.js, ROLES) ; à la place des répliques de métier des maîtres
 export const SETTLER_SAYS = {
-  potager: ['Une fleur que je n’ai jamais vue. Encore une. Cette île n’en finit pas.', 'Maggy parle à ses plantes. Je commence à comprendre ce qu’elles répondent.',
-    'J’ai trouvé une graine qui germe la nuit. Maggy n’a pas l’air surprise.', 'Je classe les herbes de l’île. Elles refusent de rester dans leurs cases.'],
-  carriere: ['Ces roches ont des couches que je ne sais pas lire. Robby, si. Il ne dit rien.', 'Une île jeune sur un socle très vieux. Curieux mélange.',
-    'Chaque pierre ici raconte une tempête. Robby les écoute avec le marteau.', 'J’ai trouvé un cristal dans la brume. Il s’est éteint au soleil.'],
-  bosquet: ['Je ne coupe que ce que l’arbre me donne. Maerys y veille.', 'Ce bois chante quand on le travaille. Je n’en avais jamais entendu.',
-    'Le bois de cette forêt sèche en chantant. Maerys dit que c’est normal.', 'J’ai taillé un bol dans une branche tombée. L’arbre a eu l’air content.'],
-  puits: ['L’eau d’ici remonte d’on ne sait où. Léo dit qu’elle vient des nuages d’en dessous.', 'J’ai mesuré la source trois fois. Trois débits différents. Elle se moque de moi.',
-    'La source a changé de goût ce matin. Léo dit qu’elle a rêvé.', 'Je compte les gouttes du puits. À cent, je recommence. Ça apaise.'],
-  ponton: ['Cette île n’est sur aucune carte. Je la dessine. Elle bouge un peu entre deux traits.', 'Lorena me dicte les courants. Je n’ai jamais eu de meilleure boussole.',
-    'Chaque soir, je corrige la carte. Chaque matin, l’île m’a donné tort.', 'J’ai ajouté un îlot sur la carte. Lorena dit qu’il n’y était pas hier.'],
-  atelier: ['Nathan m’a montré un rouage plus fin qu’un cheveu. Je n’ai rien dit. J’étais jaloux.', 'L’or ne vaut rien ici. Le bon outil, si.',
-    'Ici, je fonds moins d’or que de vieux clous. Ils ont plus d’histoires.', 'Nathan m’a confié une pièce à polir. Une seule. C’est déjà beaucoup.'],
-  foyer: ['La soupe d’Agathe mérite un poème. Elle dit qu’elle mérite surtout qu’on la mange chaude.', 'Une île, un feu, des gens. Il ne manquait que les mots. Je suis venu pour ça.',
-    'J’ai écrit un vers sur la brume. Elle l’a effacé. Je recommence.', 'Agathe m’a interdit de rimer pendant les repas. Je rime en silence.']
-};
-// Leur journée avec la troupe (choix de l'auteur, 18 oct.) : au repas de midi, en visite chez un maître (la première
-// bulle de leur rencontre), et l'accueil du maître qui les reçoit (clé : le maître)
-export const SETTLER_MEAL_SAYS = {
-  potager: 'Une salade de l’île. J’en connais chaque feuille par son nom latin.',
-  carriere: 'Ce pain est plus dense que du granit. Je dis ça comme un compliment.',
-  bosquet: 'Une cuillère de bois neuve, pour la soupe d’Agathe. Je l’ai taillée ce matin.',
-  puits: 'L’eau de la cruche vient de la source. Je l’ai mesurée avant de la boire.',
-  ponton: 'À table, je trace la carte des plats. Agathe trouve ça impoli.',
-  atelier: 'J’ai réparé la louche d’Agathe. Elle a doublé ma part.',
-  foyer: 'Un repas, une table, des voix. C’est déjà un poème. Je me tais et je mange.'
-};
-export const SETTLER_VISIT_SAYS = {
-  potager: 'Je passe voir tes plantes. Juste les voir. Promis.',
-  carriere: 'Je viens voir tes pierres. Elles ont peut-être bougé depuis hier.',
-  bosquet: 'Je t’apporte un petit quelque chose en bois. C’est pour rien, c’est pour toi.',
-  puits: 'Ton eau est meilleure que la mienne. Je viens vérifier.',
-  ponton: 'Je viens corriger ta partie de la carte. Tu as un peu bougé.',
-  atelier: 'Je passe te prêter une lime. Rends-la-moi. Un jour.',
-  foyer: 'Je viens te lire trois vers. Deux, si tu as à faire.'
-};
-export const SETTLER_WELCOME = {
-  ponton: 'Entre ! Et essuie tes pieds, ici, c’est le pont.',
-  foyer: 'Assieds-toi, il reste de la soupe. Il en reste toujours.',
-  atelier: 'Ah. Ne touche à rien. Enfin… touche, mais doucement.',
-  puits: 'Tu veux voir mon bocal ? Il n’y a rien dedans. Mais c’est un beau rien.',
-  bosquet: '(Elle fait une place sur la souche.) Assieds-toi.',
-  carriere: 'Hm. Entre.',
-  potager: 'Viens, viens ! Les carottes voulaient justement te voir.'
+  potager: ['Une fleur que je n’ai jamais vue. Encore une. Cette île n’en finit pas.', 'Maggy parle à ses plantes. Je commence à comprendre ce qu’elles répondent.'],
+  carriere: ['Ces roches ont des couches que je ne sais pas lire. Robby, si. Il ne dit rien.', 'Une île jeune sur un socle très vieux. Curieux mélange.'],
+  bosquet: ['Je ne coupe que ce que l’arbre me donne. Maerys y veille.', 'Ce bois chante quand on le travaille. Je n’en avais jamais entendu.'],
+  puits: ['L’eau d’ici remonte d’on ne sait où. Léo dit qu’elle vient des nuages d’en dessous.', 'J’ai mesuré la source trois fois. Trois débits différents. Elle se moque de moi.'],
+  ponton: ['Cette île n’est sur aucune carte. Je la dessine. Elle bouge un peu entre deux traits.', 'Lorena me dicte les courants. Je n’ai jamais eu de meilleure boussole.'],
+  atelier: ['Nathan m’a montré un rouage plus fin qu’un cheveu. Je n’ai rien dit. J’étais jaloux.', 'L’or ne vaut rien ici. Le bon outil, si.'],
+  foyer: ['La soupe d’Agathe mérite un poème. Elle dit qu’elle mérite surtout qu’on la mange chaude.', 'Une île, un feu, des gens. Il ne manquait que les mots. Je suis venu pour ça.']
 };
 
 // Les rencontres (« premier>second » : qui parle d'abord) : deux bulles, une fois par visite, si on les voit ; dans un
