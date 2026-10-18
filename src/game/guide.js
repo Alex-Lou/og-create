@@ -5,6 +5,8 @@ import { reactive } from 'vue';
 import * as storage from '@/utils/storage';
 import { TIPS } from '@/texts/guide/tips';
 
+// (Brume déjà née une fois sur cet appareil ; ce qu'elle a déjà dit)
+const BORN_KEY = 'oc_brume_nee';
 const SEEN_KEY = 'oc_guide_seen';
 // Au plus deux répliques à la suite (choix de l'auteur, 8 oct. : laisser respirer) : après la deuxième, la suivante
 // attend REST_MS
@@ -33,16 +35,19 @@ const state = reactive({
   // (le Grimoire), elle attend son retour, et les autres passent devant
   island: true,
   // Un conseil de l'île est déjà dit depuis l'arrivée sur l'île : les suivants attendent le prochain retour
-  islandTipSaid: false
+  islandTipSaid: false,
+  // Brume est déjà née une fois sur cet appareil (sa longue naissance ne se joue qu'à sa toute première réplique)
+  born: storage.load(BORN_KEY, false)
 });
 
-// La naissance de Brume à une réplique (BrumeGuide.vue ; choix de l'auteur, 14 oct.) : 'full' quand elle paraît,
-// 'short' quand elle parlait déjà juste avant (before : la réplique d'avant, ou null), null pour un autre qui parle
-// (avec son portrait, sans flamme à faire naître)
+// La naissance de Brume à une réplique (BrumeGuide.vue ; choix de l'auteur, 14 oct.) : 'full' à sa toute première
+// réplique sur cet appareil (born : elle est déjà née une fois), 'short' ensuite, vive, qu'elle paraisse ou qu'elle
+// enchaîne (choix de l'auteur, 18 oct. : la longue naissance à chaque fois, c'était trop long) ; null pour un autre qui
+// parle (avec son portrait, sans flamme à faire naître). before : la réplique d'avant, ou null
 const isBrume = entry => Boolean(entry && !entry.face && (!entry.who || entry.who === 'Brume'));
-export function birthOf(now, before) {
+export function birthOf(now, before, born = state.born) {
   if (!isBrume(now)) return null;
-  return isBrume(before) ? 'short' : 'full';
+  return isBrume(before) || born ? 'short' : 'full';
 }
 
 // Une pause de REST_MS (rien ne s'affiche, le coach non plus)
@@ -133,8 +138,16 @@ export const guide = {
     state.seen.add(id);
     storage.save(SEEN_KEY, [...state.seen]);
   },
-  // Tout oublier (« Recommencer l'île » : le tutoriel se rejoue en entier) : ce qui a été dit, la file
+  // Brume vient de naître (sa longue naissance) : les suivantes seront vives, sur cet appareil
+  born() {
+    if (state.born) return;
+    state.born = true;
+    storage.save(BORN_KEY, true);
+  },
+  // Tout oublier (« Recommencer l'île » : le tutoriel se rejoue en entier) : ce qui a été dit, la file ; Brume renaîtra
   forget() {
+    state.born = false;
+    storage.save(BORN_KEY, false);
     clearTimeout(restTimer);
     streak = 0;
     state.resting = false;

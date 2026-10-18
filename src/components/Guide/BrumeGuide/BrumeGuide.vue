@@ -1,8 +1,10 @@
 <template>
   <!-- Brume, le feu follet guide : une réplique à la fois (game/guide.js), au-dessus de la barre d'onglets, sans
-       bloquer le jeu. À chacune de ses bulles, il naît de la brume (choix de l'auteur, 14 oct.) : des volutes se
-       resserrent en flamme, puis ses yeux s'ouvrent ; quand ses répliques s'enchaînent, une naissance courte (un toucher
-       passe la naissance). Chacun parle avec sa couleur et son motif (game/speakers.js) ;
+       bloquer le jeu. À sa toute première bulle, il naît de la brume (choix de l'auteur, 14 oct.) : des volutes se
+       resserrent en flamme, puis ses yeux s'ouvrent ; ensuite, une naissance vive (18 oct.). Comme dans un dialogue de
+       jeu : un toucher pendant la naissance la mène au bout, la bulle entière ; le toucher suivant passe à la suite
+       (« Compris »), sauf quand elle propose d'aller quelque part (ses boutons). Chacun parle avec sa couleur et son motif
+       (game/speakers.js) ;
        un inconnu en silhouette, sous « ??? » ; un hostile dans une bulle sombre, son portrait à droite ; une didascalie
        (aside : « (Tu ne réponds pas.) »), en italique, sans nom ni visage -->
   <transition name="guide">
@@ -35,9 +37,9 @@ import { accord } from '@/game/accord';
 import { reducedMotion } from '@/utils/fx';
 import { bandHeight } from '@/components/World/Hud/bottomBand';
 
-// Naissance : durée totale (ms), celle de la naissance courte (répliques enchaînées), et nombre de volutes
+// Naissance : durée totale (ms), celle de la naissance vive (toutes les suivantes), et nombre de volutes
 const BIRTH_MS = 2700;
-const SHORT_MS = 600;
+const SHORT_MS = 400;
 const MIST = 9;
 // L'écart entre un bandeau du bas de l'île et la bulle posée au-dessus (px)
 const LIFT_GAP = 10;
@@ -93,15 +95,18 @@ export default {
   methods: {
     beBorn(kind) {
       clearTimeout(this.birthTimer);
+      if (kind === 'full') guide.born();
       if (reducedMotion()) return;
       this.birth = kind;
       this.birthTimer = setTimeout(() => { this.birth = false; }, kind === 'full' ? BIRTH_MS : SHORT_MS);
     },
-    // Un toucher pendant la naissance la passe
+    // Un toucher pendant la naissance la passe (la bulle entière, tout de suite) ; après, il passe à la suite, sauf
+    // quand la bulle propose d'aller quelque part (ses boutons)
     skip() {
-      if (!this.birth) return;
-      clearTimeout(this.birthTimer);
-      this.birth = false;
+      if (this.birth) {
+        clearTimeout(this.birthTimer);
+        this.birth = false;
+      } else if (!this.entry.action) this.dismiss();
     },
     // Volutes réparties en cercle autour de Brume, qui partent l'une après l'autre et s'enroulent vers lui
     mistStyle(k) {
