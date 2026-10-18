@@ -134,10 +134,11 @@ export default {
       const dy = (best.y - cy) / len;
       return { x: best.x, y: best.y, dx, dy, flip: dx - dy > 0 };
     },
-    // Portrait d'un habitant venu d'ailleurs (ou du visiteur du moment) : le même que sur l'île, d'après ses choix ou sa
-    // graine (arrivantArt.js ; '' tant que le générateur de l'avatar se charge : il se refait quand il arrive)
+    // Portrait d'un habitant venu d'ailleurs (ou de l'arrivant qui attend) : le même que sur l'île, d'après ses choix ou
+    // sa graine (arrivantArt.js, sur l'objet de la vue du serveur : il n'est fait qu'une fois ; '' tant que le générateur
+    // de l'avatar se charge : il se refait quand il arrive)
     visitorPortrait(v) {
-      return arrivantPortrait({ seed: v.seed, look: v.look || null });
+      return arrivantPortrait(v);
     },
     // L'accueil de l'arrivant : composer son allure, choisir son métier et son prénom
     openArrival() {
