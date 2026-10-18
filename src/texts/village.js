@@ -231,7 +231,7 @@ export const MEETINGS = {
 };
 
 export const VILLAGER_SHEETS = {
-  guest: 'Venu en barque, au Ponton : à toi de l’accueillir.',
+  guest: 'Une barque attend au Ponton : à toi de l’accueillir.',
   plank: 'Il dort sur sa planche. Parle-lui pour le réveiller.',
   asleep: 'Il dort dans la brume. Parle-lui pour le réveiller.',
   camp: site => `Vit au camp, près de « ${site} », en attendant son bâtiment.`,
