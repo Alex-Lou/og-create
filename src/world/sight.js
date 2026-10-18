@@ -6,7 +6,7 @@
 import { TW, TH } from '@/world/view/constants';
 
 // Les sortes hautes, celles qui cachent
-export const TALL = new Set(['tree', 'apple', 'autumn', 'birch', 'pine', 'palm', 'snowpine', 'deadtree', 'crag', 'banana', 'treefern', 'kapok']);
+export const TALL = new Set(['tree', 'apple', 'autumn', 'birch', 'pine', 'palm', 'snowpine', 'deadtree', 'crag', 'banana', 'treefern', 'kapok', 'ravenala']);
 // Le dessin d'un arbre autour de son pied (monde) : demi-largeur du feuillage, hauteur (palette.js, PROP_BOX)
 const TREE_HALF = 28;
 const TREE_H = 92;

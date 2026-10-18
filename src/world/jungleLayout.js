@@ -61,8 +61,10 @@ export function jungleAt(x, y) {
   const r = rnd(x, y, 410), r2 = rnd(y, x, 411), r3 = rnd(x + 5, y, 412);
   const family = ACCENTS[Math.floor(vnoise(x * 0.11 + 40, y * 0.11 + 9, 403) * ACCENTS.length * 0.999)];
   // (des bosquets de bananiers et des bosquets de fougères, pas mélangés)
-  const tall = TALL[vnoise(x * 0.2 + 17, y * 0.2 + 5, 404) < 0.5 ? 0 : 1];
-  const mid = r2 < 0.28 ? family : 'monstera';
+  // (l'arbre du voyageur et l'alocasia, semés dans tout le décor : un grand arbre sur six, une plante moyenne verte sur
+  // trois ; choix de l'auteur, 18 oct.)
+  const tall = rnd(x, y, 414) < 0.17 ? 'ravenala' : TALL[vnoise(x * 0.2 + 17, y * 0.2 + 5, 404) < 0.5 ? 0 : 1];
+  const mid = r2 < 0.28 ? family : rnd(y, x, 415) < 0.35 ? 'alocasia' : 'monstera';
   const under = r3 < 0.32 ? family : 'fiddlehead';
   if (t >= CORE) {
     return [
@@ -82,7 +84,7 @@ export function jungleAt(x, y) {
 
 // La lueur de nuit d'une plante (0 à 1) : pas tout ne luit, sinon plus rien ne brille ; quelques massifs ont leur cœur
 // lumineux, les autres restent dans l'ombre ; les fleurs vives gardent une lueur douce
-const GREENS = new Set(['monstera', 'fiddlehead', 'banana', 'treefern', 'kapok']);
+const GREENS = new Set(['monstera', 'fiddlehead', 'banana', 'treefern', 'kapok', 'ravenala', 'alocasia']);
 export function glowAt(kind, x, y) {
   const heart = ramp(0.5, 0.72, vnoise(x * 0.13 + 70, y * 0.13 + 20, 405));
   return Math.max(heart, GREENS.has(kind) ? 0 : 0.45) * (0.6 + 0.4 * rnd(x, y, 413));

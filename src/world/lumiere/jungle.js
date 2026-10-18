@@ -144,3 +144,80 @@ export function drawJungleJour(ctx, M, view, t, phase, shown) {
   }
   ctx.globalAlpha = 1;
 }
+
+/* ---------- L'arbre du voyageur et l'alocasia : leurs effets, de jour et de nuit ---------- */
+// (choix de l'auteur, 18 oct. : deux variétés de plus, « avec leur lot d'effets jour et nuit ». Les places sont celles
+// de leurs dessins (design/atelier/jungle.js : ravenala, alocasia), ramenées au cadre du jeu (× 0,8))
+const K = 0.8;
+// l'éventail de l'arbre du voyageur : sa base, le rayon jusqu'au bout des feuilles, ses graines
+const FAN = { y: -44 * K, r: 38 * K, seeds: -42 * K };
+// le bout des feuilles de l'alocasia : [x, y] de chaque attache et sa taille (alocasia, fleche)
+const ALOCASIA = [[-15, -30, 1], [14, -32, 1], [0, -40, 1.05], [-21, -18, 0.9], [20, -19, 0.9], [-3, -24, 0.95]].map(([x, y, s]) => {
+  const a = (Math.atan2(y - 8, x) - Math.PI / 2) * 0.55, z = s * 1.05 * 14.6;
+  return [(x - Math.sin(a) * z) * K, (y + 1 + Math.cos(a) * z) * K];
+});
+const tailleDe = prop => (prop.key.includes('_petit') ? 0.74 : 1);
+const goutte = () => rond('jungle:goutte', 24, [[0, 'rgba(255,255,255,1)'], [0.2, 'rgba(232,255,250,.9)'], [0.5, 'rgba(92,242,230,.3)'], [1, 'rgba(92,242,230,0)']]);
+const graine = () => rond('jungle:graine', 40, [[0, 'rgba(220,240,255,1)'], [0.2, 'rgba(92,168,255,.8)'], [0.55, 'rgba(46,107,255,.22)'], [1, 'rgba(46,107,255,0)']]);
+
+// Le jour (transformation du monde) : le reflet qui glisse sur l'éventail ; la rosée qui scintille sur l'alocasia,
+// plus vive le matin. props : les plantes vues ; alphaOf(prop) : 0 sous la brume, 1 à découvert
+export function drawEffetsJour(ctx, props, t, phase, alphaOf) {
+  const k = jourDe(phase);
+  if (k < 0.02) return;
+  const matin = entre(phase.rise - 0.6, phase.rise, phase.hour) * (1 - entre(phase.rise + 1.2, phase.rise + 2.6, phase.hour));
+  ctx.save();
+  ctx.strokeStyle = '#FFFFFF';
+  ctx.lineCap = 'round';
+  for (const prop of props) {
+    const a0 = alphaOf(prop) * k;
+    if (a0 < 0.02) continue;
+    const z = tailleDe(prop), ph = hash(prop.x * 3.1, prop.y * 1.7) * 6.28;
+    const stars = [];
+    if (prop.kind === 'ravenala') {
+      // (un reflet par éventail, qui passe d'une feuille à l'autre, de gauche à droite, puis s'efface)
+      const u = (t / 5 + ph) % 1, ang = Math.PI * (1.05 + 0.9 * u);
+      stars.push([prop.wx + Math.cos(ang) * FAN.r * z, prop.wy + FAN.y * z + Math.sin(ang) * FAN.r * z, Math.sin(u * Math.PI)]);
+    } else if (prop.kind === 'alocasia') {
+      // (la rosée : chaque goutte scintille à son tour)
+      ALOCASIA.forEach(([x, y], i) => {
+        const f = Math.max(0, Math.sin(t * (1.3 + i * 0.17) + ph + i * 2)) ** 6;
+        stars.push([prop.wx + x * z, prop.wy + y * z, f * (0.35 + 0.65 * matin)]);
+      });
+    }
+    for (const [x, y, f] of stars) {
+      if (f < 0.05) continue;
+      const r = 1.5 + 2.5 * f;
+      ctx.globalAlpha = a0 * f;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x - r, y); ctx.lineTo(x + r, y); ctx.moveTo(x, y - r * 0.7); ctx.lineTo(x, y + r * 0.7); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+// La nuit (en « lighter », transformation du monde) : les graines bleues de l'arbre du voyageur qui pulsent ; la goutte
+// de lumière qui se détache du bout d'une feuille d'alocasia et tombe en s'éteignant
+export function drawEffetsNuit(ctx, props, t, phase, alphaOf) {
+  const k = nuitDe(phase);
+  if (k < 0.02) return;
+  for (const prop of props) {
+    const a0 = alphaOf(prop) * k;
+    if (a0 < 0.02) continue;
+    const z = tailleDe(prop), ph = hash(prop.x * 1.3, prop.y * 2.9) * 6.28;
+    if (prop.kind === 'ravenala') {
+      const r = (6 + 2 * Math.sin(t * 1.1 + ph)) * z;
+      ctx.globalAlpha = a0 * (0.32 + 0.18 * Math.sin(t * 1.1 + ph));
+      ctx.drawImage(graine(), prop.wx - r, prop.wy + FAN.seeds * z - r, r * 2, r * 2);
+    } else if (prop.kind === 'alocasia') {
+      // (une goutte toutes les quatre secondes environ, d'une feuille tirée au sort à chaque fois)
+      const life = 3.5 + hash(prop.y, prop.x) * 2, clock = t / life + ph, round = Math.floor(clock), u = clock - round;
+      const [x, y] = ALOCASIA[Math.floor(hash(round, prop.x + prop.y) * ALOCASIA.length)];
+      const fall = entre(0.35, 1, u) * 12, a = entre(0, 0.2, u) * (1 - entre(0.75, 1, u));
+      if (a < 0.02) continue;
+      ctx.globalAlpha = a0 * a;
+      ctx.drawImage(goutte(), prop.wx + x * z - 5, prop.wy + y * z + fall - 5, 10, 10);
+    }
+  }
+  ctx.globalAlpha = 1;
+}

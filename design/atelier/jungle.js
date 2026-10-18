@@ -245,6 +245,62 @@ function orchidees({ fleur = 'magenta' } = {}) {
   return s;
 }
 
+// ——— l'arbre du voyageur (choix de l'auteur, 18 oct. : une variété d'arbre de plus, semée dans tout le décor) : un
+// tronc fin et annelé, un grand éventail plat de feuilles en pagaie sur leurs longs pétioles, déchirées au bord ———
+function ravenala({ petit = false } = {}) {
+  const k = petit ? 0.74 : 1, h = 44 * k, id = `rav${petit ? 'p' : 'g'}`;
+  let s = ombre(14 * k);
+  const tronc = `M${r2(-3.4 * k)},1 Q${r2(-2.6 * k)},${r2(-h * 0.5)} ${r2(-2.2 * k)},${r2(-h)} L${r2(2.2 * k)},${r2(-h)} Q${r2(2.6 * k)},${r2(-h * 0.5)} ${r2(3.6 * k)},1 Z`;
+  s += `<path d="${tronc}" fill="#8A8676" stroke="${OUT}" stroke-width="${W}"/>` + Array.from({ length: 7 }, (_, i) => `<path d="M${r2(-3 * k)},${r2(-h * (i + 0.7) / 7.5)} q${r2(3 * k)},${r2(1.4 * k)} ${r2(6 * k)},0" stroke="#5E5A4C" stroke-width="0.7" fill="none"/>`).join('');
+  // (la base de l'éventail, où les pétioles se serrent)
+  const o = [0, -h];
+  // [angle (degrés), longueur, devant ?] : l'éventail, du fond vers nous
+  const F = [[-168, 1, 0], [-12, 1, 0], [-148, 1.05, 0], [-32, 1.05, 0], [-128, 1.1, 0], [-52, 1.1, 0], [-110, 1.12, 1], [-70, 1.12, 1], [-90, 1.15, 1]];
+  F.forEach(([a, l, devant], i) => {
+    const r = (a * Math.PI) / 180, p0 = [o[0] + Math.cos(r) * 13 * k * l, o[1] + Math.sin(r) * 13 * k * l], p1 = [o[0] + Math.cos(r) * 36 * k * l, o[1] + Math.sin(r) * 36 * k * l];
+    s += `<path d="M${r2(o[0])},${r2(o[1])} L${r2(p0[0])},${r2(p0[1])}" stroke="${OUT}" stroke-width="${r2(1.4 + 2 * W)}" stroke-linecap="round"/><path d="M${r2(o[0])},${r2(o[1])} L${r2(p0[0])},${r2(p0[1])}" stroke="#7FA86A" stroke-width="1.4" stroke-linecap="round"/>`;
+    s += feuille(`${id}${i}`, p0, p1, 4.6 * k, devant ? T.emeraude : T.profond, { fleche: 0.08, dechire: i % 2 ? 0.5 : 0, nervures: 8, maigre: 0.5 });
+  });
+  // (le pied de l'éventail, ses gaines serrées, et ses graines d'un bleu vif, qui luisent la nuit)
+  s += `<path d="M${r2(-3 * k)},${r2(-h + 3 * k)} Q0,${r2(-h - 6 * k)} ${r2(3 * k)},${r2(-h + 3 * k)} Z" fill="#6E9A56" stroke="${OUT}" stroke-width="${W}"/>`;
+  [[-2.4, -1], [0, -2.6], [2.4, -1], [-1.2, 1.2], [1.3, 1.1]].forEach(([dx, dy]) => { s += E(dx * k, -h + 2 * k + dy * k, 1.3 * k, 1.3 * k, '#2E6BFF', 0.6) + E(dx * k - 0.4, -h + 1.6 * k + dy * k, 0.5, 0.5, '#9FD8FF', 0); point(dx * k, -h + 2 * k + dy * k, 0.9 * k, '#5CA8FF'); });
+  return s;
+}
+
+// ——— l'alocasia, l'oreille d'éléphant (choix de l'auteur, 18 oct. : une variété de plante de plus, semée dans tout le
+// décor) : de grandes feuilles en flèche sur de longues tiges, penchées vers l'extérieur, leurs nervures claires ———
+function fleche(id, x, y, s, a, c) {
+  const ca = Math.cos(a), sa = Math.sin(a);
+  const tr = ([u, v]) => [x + (u * ca - v * sa) * s, y + (u * sa + v * ca) * s];
+  // (la feuille vue de face, sa pointe en bas (v > 0), ses deux lobes en haut de part et d'autre de la tige)
+  const P = [[0, 1], [0.32, 0.62], [0.5, 0.2], [0.52, -0.2], [0.36, -0.46], [0.14, -0.3], [0, -0.16], [-0.14, -0.3], [-0.36, -0.46], [-0.52, -0.2], [-0.5, 0.2], [-0.32, 0.62]].map(([u, v]) => tr([u * 14, v * 14]));
+  const d = `M${pts(P)} Z`;
+  let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">`;
+  o += `<path d="M${pts([[0, -0.2], [0, 1.1], [0.7, 1.1], [0.7, -0.6]].map(([u, v]) => tr([u * 14, v * 14])))} Z" fill="${c.dark}" opacity="0.5"/>`;
+  const [n0, m0] = tr([0, -2.2]), [n1, m1] = tr([0, 13]);
+  o += `<path d="M${r2(n0)},${r2(m0)} L${r2(n1)},${r2(m1)}" stroke="${c.light}" stroke-width="1"/>`;
+  luit(`M${r2(n0)},${r2(m0)} L${r2(n1)},${r2(m1)}`, neonDe(c), 0.8);
+  // (la goutte au bout de la feuille : la rosée le matin, une perle de lumière la nuit)
+  const [gx, gy] = tr([0, 14.6]);
+  o += E(gx, gy + 0.6, 0.9, 1.1, '#DFFFF6', 0.4);
+  point(gx, gy + 0.6, 0.8, '#E8FFFA');
+  for (const [u, v] of [[-6, 2], [6, 2], [-5.4, 6.4], [5.4, 6.4], [-5.4, -3.6], [5.4, -3.6]]) {
+    const [a1, b1] = tr([0, v * 0.6]), [a2, b2] = tr([u, v + 2]);
+    o += `<path d="M${r2(a1)},${r2(b1)} L${r2(a2)},${r2(b2)}" stroke="${c.light}" stroke-width="0.6" opacity="0.75"/>`;
+    luit(`M${r2(a1)},${r2(b1)} L${r2(a2)},${r2(b2)}`, neonDe(c), 0.4);
+  }
+  return o + '</g>';
+}
+function alocasia({ teinte = 'profond', petit = false } = {}) {
+  const k = petit ? 0.74 : 1, c = T[teinte], id = `alo${teinte[0]}${petit ? 'p' : 'g'}`;
+  let s = ombre(16 * k);
+  // [x, y de l'attache de la feuille, taille, devant ?]
+  const L = [[-15, -30, 1, 0], [14, -32, 1, 0], [0, -40, 1.05, 0], [-21, -18, 0.9, 1], [20, -19, 0.9, 1], [-3, -24, 0.95, 1]];
+  const une = ([x, y, t], i) => tige([0, 0], [x * k, y * k], '#4E7A40', 1.4) + fleche(`${id}${i}`, x * k, y * k + 1, t * k * 1.05, versDehors(x, y, 0, 8) * 0.55, i % 2 ? c : T.emeraude);
+  s += L.filter(l => !l[3]).map(une).join('') + L.filter(l => l[3]).map((l, i) => une(l, i + 3)).join('');
+  return s;
+}
+
 // [fichier, libellé, id du décor du jeu, dessin]
 const JUNGLE = [
   ...['acide', 'emeraude'].flatMap(t => [false, true].map(p => [`bananier${t === 'emeraude' ? '_emeraude' : ''}${p ? '_petit' : ''}`, `Bananier (${p ? 'petit' : 'grand'}, ${t})`, 'banana', () => bananier({ teinte: t, petit: p })])),
@@ -256,6 +312,8 @@ const JUNGLE = [
   ...[['sarcelle', 'magenta', false, ''], ['violet', 'corail', false, '_rouge'], ['acide', 'magenta', true, '_petite']].map(([t, f, p, n]) => [`bromelia${n}`, `Broméliacée (${t}, bractées ${f}${p ? ', petite' : ''})`, 'bromelia', () => bromelia({ teinte: t, fleur: f, petit: p })]),
   ...['emeraude', 'acide', 'sarcelle'].map(t => [`crosses${t === 'emeraude' ? '' : `_${t}`}`, `Crosses de fougère (${t})`, 'fiddlehead', () => crosses({ teinte: t })]),
   ...['magenta', 'blanches', 'violet'].map(f => [`orchidees${f === 'magenta' ? '' : `_${f === 'violet' ? 'violettes' : f}`}`, `Orchidées terrestres (${f})`, 'orchid', () => orchidees({ fleur: f })]),
+  ...[false, true].map(p => [`ravenala${p ? '_petit' : ''}`, `Arbre du voyageur (${p ? 'petit' : 'grand'})`, 'ravenala', () => ravenala({ petit: p })]),
+  ...[['profond', false, ''], ['sarcelle', false, '_sarcelle'], ['profond', true, '_petit']].map(([t, p, n]) => [`alocasia${n}`, `Alocasia (${t}${p ? ', petit' : ''})`, 'alocasia', () => alocasia({ teinte: t, petit: p })]),
   ...['sarcelle', 'emeraude'].flatMap(t => [true, false].map(l => [`fromager${t === 'emeraude' ? '_emeraude' : ''}${l ? '' : '_nu'}`, `Fromager (${t}${l ? ', lianes et orchidées' : ''})`, 'kapok', () => fromager({ teinte: t, lianes: l })]))
 ];
 
@@ -263,4 +321,4 @@ const JUNGLE = [
 // variantes : world/plants.js)
 const JUNGLE_NUIT = JUNGLE.map(([fichier, libelle, decor, dessin]) => [`${fichier}_nuit`, `${libelle}, ses lueurs de nuit`, decor, () => lueurDe(dessin)]);
 
-module.exports = { JUNGLE, JUNGLE_NUIT, lueurDe, bananier, monstera, fougere, heliconia, croton, caladium, fromager, bromelia, crosses, orchidees };
+module.exports = { JUNGLE, JUNGLE_NUIT, lueurDe, bananier, monstera, fougere, heliconia, croton, caladium, fromager, bromelia, crosses, orchidees, ravenala, alocasia };

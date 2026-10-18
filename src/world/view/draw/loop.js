@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol, orageDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawJungleJour, drawJungleNuit, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, neigeAuSol, drawNeigeSol, drawGlace, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawJungleJour, drawJungleNuit, drawEffetsJour, drawEffetsNuit, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, neigeAuSol, drawNeigeSol, drawGlace, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -33,6 +33,8 @@ const LOADING_FRAME_MS = 250;
 // Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
 // taille), ni petits détails du décor ; la très grande île reste fluide
 const FAR_SCALE = 0.45;
+// Les plantes qui ont leurs effets animés, de jour et de nuit (lumiere/jungle.js)
+const EFFETS = new Set(['ravenala', 'alocasia']);
 const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest', 'caladium', 'fiddlehead', 'orchid']);
 
 // Pendant une pose : ce qui se tient devant une case dorée (jusqu'à tant de rangs plus près, et tant de colonnes de côté)
@@ -568,6 +570,9 @@ export default {
     // Les papillons morpho, les libellules et le pollen de la jungle du départ, le jour (lumiere/jungle.js ; pas en
     // mouvement réduit)
     if (!this.reduced()) drawJungleJour(ctx, this.M, view, t, phase, this.lightGate(now));
+    // (et les effets de l'arbre du voyageur et de l'alocasia : le reflet sur l'éventail, la rosée)
+    const effets = this.reduced() ? [] : this.props.filter(prop => EFFETS.has(prop.kind) && seenAt(prop.wx, prop.wy));
+    if (effets.length) drawEffetsJour(ctx, effets, t, phase, prop => this.plantAlpha(prop));
     // En automne et au printemps, à chaque rafale qui passe sur la terre à soi (là où poussent les arbres ; pas sous la
     // brume d'un quartier), une poignée de feuilles ou de pétales tournoie et file avec le vent (lumiere/saisons.js ; pas
     // en mouvement réduit)
@@ -683,6 +688,7 @@ export default {
     // (et la jungle de la zone de départ : ses plantes, draw/nature.js ; sa mousse, ses lucioles et ses spores,
     // lumiere/jungle.js, pas en mouvement réduit)
     if (!this.reduced()) drawJungleNuit(ctx, this.M, view, t, phase, this.lightGate(now), s);
+    if (effets.length) drawEffetsNuit(ctx, effets, t, phase, prop => this.plantAlpha(prop));
     if (phase.night >= 0.02) this.drawLueursJungle(ctx, this.props.filter(prop => prop.glow && seenAt(prop.wx, prop.wy)), t, phase.night, near, repaint);
     ctx.restore();
     if (geant) {
