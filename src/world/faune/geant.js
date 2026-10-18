@@ -88,6 +88,19 @@ function silhouette(t, ton) {
   return calque;
 }
 
+// Où on le touche (il entre au Bestiaire), tant qu'on le voit bien : le milieu de son corps (dans le monde), ou null
+export function toucherGeant(g) {
+  if (g.vis < 0.3) return null;
+  const r = repere(g);
+  return { x: r.x - Math.cos(r.angle) * 300, y: r.y - Math.sin(r.angle) * 300 * (TH / TW), r: 170 };
+}
+// Son portrait (le Bestiaire) : sa silhouette vue de dessus, d'un bleu de grand fond, en adresse d'image (tirée une fois)
+let portrait = null;
+export function portraitGeant() {
+  if (!portrait) portrait = silhouette(0, 'rgb(30,62,98)').toDataURL();
+  return portrait;
+}
+
 // Le Géant sous la mer (dans le monde, avec la mer : la terre le cache) : sa silhouette et ce qu'il fait à la surface
 // (renflement, sillage, bulles). night : la nuit (0 à 1)
 export function drawGeant(ctx, g, t, night) {

@@ -3,7 +3,7 @@
 // bibliothèque les note : l'égaré à ses pieds, la brume au centre de l'emprise du bâtiment, le petit nuage à son pied.
 import EGARES from '../../design/bibliotheque/svg/egares/egares.json';
 import EMBRUME from '../../design/bibliotheque/svg/decor/embrume/embrume.json';
-import { librarySprite, frameAt, textsOf } from './library';
+import { librarySprite, portraitOf, frameAt, textsOf } from './library';
 
 const FILES = textsOf({
   ...import.meta.glob('/design/bibliotheque/svg/egares/**/*.svg', { query: '?url', import: 'default', eager: true }),
@@ -28,6 +28,14 @@ export function strayKind(kind, climate) {
   if (kind === 'bete') return BEASTS[climate] || BEASTS.tempere;
   return EGARES.egares[kind] ? kind : 'fantome';
 }
+// Le portrait d'un égaré (le Bestiaire) : debout, de face (sa pose repos), recadré (library.js : portraitOf) ; null s'il
+// n'a pas de dessin
+export function strayPortraitUrl(kind) {
+  const art = EGARES.egares[kind];
+  const load = art && FILES[STRAYS + art.fichiers.avant.repos];
+  return load ? portraitOf(`stray:${kind}`, load) : null;
+}
+
 export const strayName = kind => (EGARES.egares[kind] && EGARES.egares[kind].nom) || 'Un égaré';
 
 const makes = new Map();

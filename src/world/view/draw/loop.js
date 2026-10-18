@@ -346,6 +346,8 @@ export default {
     // mouvement réduit)
     if (!this.reduced()) drawEmbruns(ctx, this.live.shore, view, t, 0.15 + 0.85 * agite);
     const life = this.seaLife(t, view, phase);
+    // (le Géant et le Kraken se touchent aussi : ils entrent au Bestiaire)
+    if (geant || kraken) this.seaHits.push(...this.legendHits(geant, kraken));
     drawRings(ctx, life.rings);
     // Sol des chantiers : terre battue (bâti) ou chantier, une tache par emprise qui se fond dans le sol autour
     // (terreBattue.js) ; cases libres pendant un déplacement ; case choisie
@@ -445,6 +447,8 @@ export default {
     // (qui marche sur l'île : les portes s'ouvrent devant lui, walls.js)
     const crowd = this.critters(t);
     this.swingDoors(t, crowd);
+    // (une créature rare ou légendaire sort près de ce qu'on regarde : le petit signe, WorldView, bestiary.js)
+    this.signRare(view);
     const standing = [
       ...this.shownSites().filter(site => met(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2)).map(site => ({ depth: site.x + site.y + site.w, site })),
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),

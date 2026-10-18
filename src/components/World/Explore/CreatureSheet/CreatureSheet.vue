@@ -7,7 +7,7 @@
       <p v-if="met" class="creature__date">{{ T.metOn(longDate) }}</p>
       <template v-else>
         <p v-if="arrival" class="creature__hint">{{ arrival }}</p>
-        <p class="creature__hint">{{ T.notYet }}</p>
+        <p class="creature__hint">{{ creature.category === 'brume' ? T.notYetStray : T.notYet }}</p>
       </template>
     </div>
   </GModal>
@@ -15,7 +15,7 @@
 
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
-import { beastPortraitUrl } from '@/world/beastArt';
+import { creaturePortraitUrl } from '@/world/creatureArt';
 import { whereWhen, arrivalOf } from '@/world/creatures';
 import { BESTIARY as T } from '@/texts/world/creatures';
 
@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     portrait() {
-      return beastPortraitUrl(this.creature.species, this.creature.variant);
+      return creaturePortraitUrl(this.creature);
     },
     where() {
       return whereWhen(this.creature, this.zones);

@@ -1,7 +1,8 @@
 // Les pages du Bestiaire (BestiaryBook ; choix de l'auteur, 18 oct.), de la main du Livre (painter.js : papier, cadre,
 // filets, folio, polices) : le sommaire des catégories, leurs pages de cases (une par créature : son numéro, son dessin,
 // ou sa silhouette d'encre tant qu'elle n'est pas rencontrée, son nom, sa rareté, et le tampon « Rencontré »), l'index.
-// Page de 100 u de large sur 133,3 de haut ; chaque page rend ses zones à toucher (en u) et ce qu'elle dit à voix haute.
+// Une catégorie complète porte un sceau d'or, au sommaire et sur ses pages. Page de 100 u de large sur 133,3 de haut ;
+// chaque page rend ses zones à toucher (en u) et ce qu'elle dit à voix haute.
 import { paperBase, frame, rule, folio, rr, alpha, setFont, fitText, seeded, FELL, CAPS, INK, TEXT_INK, NOTE, FAINT, IVORY } from './painter';
 import { GOLD } from './grimoire';
 import { BESTIARY as T, CATEGORY_TITLES } from '@/texts/world/creatures';
@@ -13,33 +14,34 @@ const ROWS = [18, 53, 88];
 export const CELL = { w: 38, h: 32 };
 // Le tampon, dans le coin de sa case (son centre, en u depuis le coin de la case ; k : sa taille)
 export const STAMP_AT = { dx: CELL.w - 6.6, dy: 12.6, k: 0.8 };
-// Les points de rareté
+// Les points de rareté (une légendaire : une étoile d'or)
 const DOTS = { commun: 1, 'peu commun': 2, rare: 3 };
+// Les lignes de l'index : deux colonnes de INDEX_ROWS par page
+const INDEX_ROWS = 16;
 // L'encre du tampon, et celle des silhouettes
 const STAMP_INK = '#9C3A2B';
 const SHADOW_INK = '#4A3426';
 
-// Les pages du livre : le sommaire, chaque catégorie en pages de PER_PAGE cases, l'index. creatures : world/creatures.js
-// (CREATURES) ; met : Map id → instant de la rencontre. [{ type, … }], et la page de chaque créature (id → index)
+// Les pages du livre : le sommaire, chaque catégorie en pages de PER_PAGE cases (complete : toutes rencontrées), l'index
+// (sur autant de pages qu'il faut). creatures : world/creatures.js (CREATURES) ; met : Map id → instant de la rencontre.
+// [{ type, … }], la page de chaque créature (id → index), la première page de l'index
 export function bestiaryPages(creatures, categories, met) {
-  const pages = [{ type: 'toc' }];
+  const pages = [{ type: 'toc', rows: [] }];
   const pageOf = new Map();
-  const starts = {};
   for (const category of categories) {
     const list = creatures.filter(c => c.category === category);
-    starts[category] = pages.length;
+    const found = list.filter(c => met.has(c.id)).length;
+    const complete = found === list.length;
+    pages[0].rows.push({ category, start: pages.length, found, total: list.length, complete });
     for (let k = 0; k < list.length; k += PER_PAGE) {
       const cells = list.slice(k, k + PER_PAGE);
       cells.forEach(c => pageOf.set(c.id, pages.length));
-      pages.push({ type: 'grid', category, cells, first: k === 0 });
+      pages.push({ type: 'grid', category, cells, first: k === 0, complete });
     }
   }
-  pages.push({ type: 'index' });
-  pages[0].rows = categories.map(category => {
-    const list = creatures.filter(c => c.category === category);
-    return { category, start: starts[category], found: list.filter(c => met.has(c.id)).length, total: list.length };
-  });
-  return { pages, pageOf, index: pages.length - 1 };
+  const index = pages.length;
+  for (let k = 0; k < creatures.length; k += 2 * INDEX_ROWS) pages.push({ type: 'index', from: k, to: Math.min(creatures.length, k + 2 * INDEX_ROWS) });
+  return { pages, pageOf, index };
 }
 
 // Une page (model : bestiaryPages) ; assets : { creatures, met (Map), image(creature) → image prête ou null, hidden
@@ -72,8 +74,8 @@ function paintToc(ctx, u, model, index, assets) {
   rule(ctx, u, 33, 28, 76, true);
   const rows = [...model.rows.map(r => ({ ...r, title: CATEGORY_TITLES[r.category] })), { title: T.index, start: assets.indexPage, found: null }];
   rows.forEach((row, k) => {
-    const y = 39 + k * 13.5;
-    const hh = 11;
+    const y = 37 + k * 12;
+    const hh = 10;
     rr(ctx, 12 * u, y * u, 80 * u, hh * u, 3 * u);
     ctx.fillStyle = alpha(IVORY, 0.7);
     ctx.fill();
@@ -82,17 +84,19 @@ function paintToc(ctx, u, model, index, assets) {
     ctx.stroke();
     ctx.fillStyle = INK;
     ctx.textAlign = 'left';
-    ctx.fillText(fitText(ctx, u, row.title, 50, 5.4, 4.2, FELL), 17 * u, (y + 7) * u);
+    ctx.fillText(fitText(ctx, u, row.title, 50, 5.4, 4.2, FELL), 17 * u, (y + 6.6) * u);
     setFont(ctx, u, 4.6, FELL);
     ctx.textAlign = 'right';
     ctx.fillStyle = NOTE;
-    ctx.fillText(row.found === null ? String(row.start) : `${row.found}/${row.total}`, 88 * u, (y + 7) * u);
-    hotspots.push({ id: `toc-${k}`, x: 12, y, w: 80, h: hh, action: 'goto', data: row.start, label: row.found === null ? row.title : `${row.title}, ${row.found}/${row.total}` });
+    ctx.fillText(row.found === null ? String(row.start) : `${row.found}/${row.total}`, 88 * u, (y + 6.6) * u);
+    if (row.complete) seal(ctx, u, 72, y + hh / 2, 3.6);
+    const label = row.found === null ? row.title : `${row.title}, ${row.found}/${row.total}${row.complete ? `, ${T.complete}` : ''}`;
+    hotspots.push({ id: `toc-${k}`, x: 12, y, w: 80, h: hh, action: 'goto', data: row.start, label });
   });
   setFont(ctx, u, 4.2, FELL, true);
   ctx.fillStyle = NOTE;
   ctx.textAlign = 'center';
-  ctx.fillText(T.tocHint, 52 * u, 121 * u);
+  ctx.fillText(T.tocHint, 52 * u, 124 * u);
   return { hotspots, label: `${T.title}. ${T.toc}.` };
 }
 
@@ -101,8 +105,11 @@ function paintGrid(ctx, u, model, index, assets) {
   // Le titre courant : la catégorie en petites capitales, sur un filet d'or
   ctx.fillStyle = INK;
   ctx.textAlign = 'left';
-  ctx.fillText(fitText(ctx, u, CATEGORY_TITLES[model.category], 70, 4.8, 3.8, CAPS), 13 * u, 11.6 * u);
+  // (complète : son sceau d'or devant le titre, loin du signet)
+  const left = model.complete ? 21.5 : 13;
+  ctx.fillText(fitText(ctx, u, CATEGORY_TITLES[model.category], 83 - left, 4.8, 3.8, CAPS), left * u, 11.6 * u);
   rule(ctx, u, 14, 12, 92);
+  if (model.complete) seal(ctx, u, 16, 9.6, 4);
   model.cells.forEach((creature, k) => {
     const x = COLS[k % 2];
     const y = ROWS[Math.floor(k / 2)];
@@ -110,7 +117,8 @@ function paintGrid(ctx, u, model, index, assets) {
     paintCell(ctx, u, creature, x, y, met, assets);
     hotspots.push({ id: `cell-${creature.id}`, x, y, w: CELL.w, h: CELL.h, action: 'creature', data: creature.id, label: met ? creature.name : `N° ${creature.no}, ${T.unknownName}` });
   });
-  return { hotspots, label: `${CATEGORY_TITLES[model.category]}. ${model.cells.map(c => (assets.met.has(c.id) ? c.name : T.unknownName)).join(', ')}` };
+  const title = model.complete ? `${CATEGORY_TITLES[model.category]}, ${T.complete}` : CATEGORY_TITLES[model.category];
+  return { hotspots, label: `${title}. ${model.cells.map(c => (assets.met.has(c.id) ? c.name : T.unknownName)).join(', ')}` };
 }
 
 // Une case : son numéro, sa rareté, son dessin (ou sa silhouette), son nom, et le tampon s'il est rencontré
@@ -125,12 +133,21 @@ function paintCell(ctx, u, creature, x, y, met, assets) {
   ctx.fillStyle = NOTE;
   ctx.textAlign = 'left';
   ctx.fillText(`N° ${String(creature.no).padStart(2, '0')}`, (x + 2.4) * u, (y + 4.6) * u);
-  // (la rareté : un, deux ou trois points d'or)
-  for (let d = 0; d < 3; d++) {
-    ctx.beginPath();
-    ctx.arc((x + CELL.w - 3 - d * 2.4) * u, (y + 3.4) * u, 0.8 * u, 0, Math.PI * 2);
-    ctx.fillStyle = d < DOTS[creature.rarity] ? alpha(GOLD.base, 0.95) : alpha(FAINT, 0.35);
+  // (la rareté : un, deux ou trois points d'or ; une légendaire, une étoile)
+  if (creature.rarity === 'légendaire') {
+    star(ctx, (x + CELL.w - 5.4) * u, (y + 3.4) * u, 2 * u);
+    ctx.fillStyle = GOLD.base;
     ctx.fill();
+    ctx.strokeStyle = GOLD.edge;
+    ctx.lineWidth = 0.14 * u;
+    ctx.stroke();
+  } else {
+    for (let d = 0; d < 3; d++) {
+      ctx.beginPath();
+      ctx.arc((x + CELL.w - 3 - d * 2.4) * u, (y + 3.4) * u, 0.8 * u, 0, Math.PI * 2);
+      ctx.fillStyle = d < DOTS[creature.rarity] ? alpha(GOLD.base, 0.95) : alpha(FAINT, 0.35);
+      ctx.fill();
+    }
   }
   const img = assets.image(creature);
   if (img) {
@@ -179,6 +196,56 @@ export function stamp(ctx, u, cx, cy, date, seed) {
   ctx.restore();
 }
 
+// Une étoile à cinq branches (son tracé : centre et rayon en pixels)
+function star(ctx, cx, cy, r) {
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    const d = i % 2 ? r * 0.42 : r;
+    ctx.lineTo(cx + Math.cos(a) * d, cy + Math.sin(a) * d);
+  }
+  ctx.closePath();
+}
+
+// Le sceau d'or d'une catégorie complète (cx, cy, r en u) : une rosette dentelée, d'or bombé, un anneau, une étoile
+function seal(ctx, u, cx, cy, r) {
+  ctx.save();
+  ctx.translate(cx * u, cy * u);
+  const R = r * u;
+  const gold = ctx.createRadialGradient(-R * 0.35, -R * 0.35, 0, 0, 0, R);
+  gold.addColorStop(0, GOLD.light);
+  gold.addColorStop(0.55, GOLD.base);
+  gold.addColorStop(1, GOLD.dark);
+  ctx.beginPath();
+  for (let i = 0; i < 36; i++) {
+    const a = (i * Math.PI) / 18;
+    const d = i % 2 ? R * 0.88 : R;
+    ctx.lineTo(Math.cos(a) * d, Math.sin(a) * d);
+  }
+  ctx.closePath();
+  ctx.shadowColor = 'rgba(60, 40, 10, 0.35)';
+  ctx.shadowBlur = 0.8 * u;
+  ctx.shadowOffsetY = 0.3 * u;
+  ctx.fillStyle = gold;
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = GOLD.edge;
+  ctx.lineWidth = 0.16 * u;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, R * 0.66, 0, Math.PI * 2);
+  ctx.strokeStyle = alpha(GOLD.edge, 0.75);
+  ctx.lineWidth = 0.14 * u;
+  ctx.stroke();
+  star(ctx, 0, 0, R * 0.46);
+  ctx.fillStyle = GOLD.light;
+  ctx.fill();
+  ctx.strokeStyle = GOLD.edge;
+  ctx.lineWidth = 0.12 * u;
+  ctx.stroke();
+  ctx.restore();
+}
+
 // La silhouette d'encre d'une créature pas encore rencontrée : son dessin, plein d'une encre sombre, tracé à la taille où
 // la page le peint (gardée par image et par taille : une seule à la fois, celle de la dernière taille)
 const shadows = new WeakMap();
@@ -204,11 +271,9 @@ function paintIndex(ctx, u, model, index, assets) {
   setFont(ctx, u, 7, FELL);
   ctx.fillText(T.index, 52 * u, 19 * u);
   rule(ctx, u, 23, 30, 74, true);
-  const half = Math.ceil(assets.creatures.length / 2);
-  assets.creatures.forEach((creature, k) => {
-    const col = k < half ? 0 : 1;
-    const x = col ? 54 : 13;
-    const y = 30 + (k % half) * 5.8;
+  assets.creatures.slice(model.from, model.to).forEach((creature, k) => {
+    const x = k < INDEX_ROWS ? 13 : 54;
+    const y = 30 + (k % INDEX_ROWS) * 5.8;
     const met = assets.met.has(creature.id);
     setFont(ctx, u, 3.6, FELL);
     ctx.textAlign = 'left';

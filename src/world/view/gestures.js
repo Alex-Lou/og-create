@@ -18,6 +18,7 @@ import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
+import { creatureOf, creatureOfHit } from '@/world/creatures';
 import { emptyCageOf } from '@/world/village/farm';
 import { ANIMALS, CAGE_TEXT, CAGE_EMPTY_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
 import { FIRE } from '@/texts/world/phare';
@@ -313,9 +314,11 @@ export default {
       this.tapMark(hit.mark, px, py);
       return;
     }
-    // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume)
+    // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume) ; la première fois, il
+    // entre au Bestiaire (WorldView, bestiary.js)
     if (hit && hit.animal && hit.animal.stray) {
       this.dropPick();
+      this.meetCreature(hit.animal);
       this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
       return;
     }
@@ -661,7 +664,9 @@ export default {
     }
     if (hit.animal) {
       if (hit.animal.who && this.village) return this.named(this.village.describe(hit.animal.who), hit.animal.who);
-      const [title, text] = ANIMALS[hit.animal.kind] || [UNKNOWN_BEAST, ''];
+      // (le Géant, le Kraken : ce qu'en dit le Bestiaire)
+      const creature = !hit.animal.stray && creatureOf(creatureOfHit(hit.animal));
+      const [title, text] = ANIMALS[hit.animal.kind] || (creature ? [creature.name, creature.text] : [UNKNOWN_BEAST, '']);
       return { title, text, hint: TAP_HINTS.animal };
     }
     if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: TAP_HINTS.sheet };

@@ -51,7 +51,7 @@ import { paintEndpaper, bookFontsReady } from '@/book/painter';
 import { bestiaryPages, paintBestiaryPage, stamp, CELL, STAMP_AT } from '@/book/bestiaryPainter';
 import { LEATHER_GRAIN, BRASS_CORNER } from '@/book/grimoire';
 import { CREATURES, CATEGORIES } from '@/world/creatures';
-import { beastPortraitUrl } from '@/world/beastArt';
+import { creaturePortraitUrl } from '@/world/creatureArt';
 import { BLANK } from '@/world/library';
 import { BESTIARY as T } from '@/texts/world/creatures';
 import { reducedMotion, vibrate } from '@/utils/fx';
@@ -106,7 +106,7 @@ export default {
     },
     // Les portraits (lus à la demande) : chacun arrivé, les pages sont repeintes
     portraits() {
-      return this.creatures.map(c => beastPortraitUrl(c.species, c.variant));
+      return this.creatures.map(creaturePortraitUrl);
     },
     vars() {
       return { '--grain': LEATHER_GRAIN, '--corner': BRASS_CORNER };
@@ -192,7 +192,7 @@ export default {
     },
     // Le portrait d'une créature, prêt à peindre, ou null (il arrive : les pages seront repeintes)
     imageOf(creature) {
-      const url = beastPortraitUrl(creature.species, creature.variant);
+      const url = creaturePortraitUrl(creature);
       if (!url || url === BLANK) return null;
       let img = this.images.get(creature.id);
       if (!img || img.src !== url) {

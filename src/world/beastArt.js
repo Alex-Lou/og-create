@@ -13,8 +13,7 @@
 // Ce que la bibliothèque n'a pas (le cerf blanc d'Anya, le papillon rose du Foyer, le bol de soupe) garde son dessin
 // par code (animals.js, nature.js, seaSprites.js).
 import { betes as BEASTS } from '../../design/bibliotheque/svg/animaux/orientees.json';
-import { reactive } from 'vue';
-import { librarySprite, paintedBox, cropTo, BLANK, textsOf } from './library';
+import { librarySprite, portraitOf, textsOf } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est sur l'île)
 const FILES = textsOf({
@@ -169,11 +168,8 @@ export function flyingGull(t, phase = 0) {
 export const stepAt = (t, k = 0) => (Math.floor((t * 1000) / STEP_MS + k) % 2) + 1;
 
 // Portrait d'une bête (sa fiche, le Bestiaire) : de trois quarts avant, debout (une bête à une seule vue : sa première
-// image), recadré sur ce qu'il peint (le cadre de la bibliothèque garde de la place autour d'elle). Lu et mesuré une
-// fois, à la première demande ; une image vide pendant ce temps. null si la bibliothèque ne l'a pas ou si la lecture
-// échoue : le portrait par code reste
-const started = new Set();
-const portraits = reactive({});
+// image), recadré (library.js : portraitOf). null si la bibliothèque ne l'a pas ou si la lecture échoue : le portrait par
+// code reste
 const portraitFile = (subject, art, alone) => (art
   ? `${ROOT}${art.groupe}/${subject}/${subject}_avant_marche_1.svg`
   : singleNames(subject, alone, 'marche', 1).map(name => `${ROOT}${alone.groupe}/${subject}/${name}.svg`).find(path => FILES[path]));
@@ -182,12 +178,5 @@ export function beastPortraitUrl(species, variant) {
   const art = subject && BEASTS[subject];
   const alone = subject && !art && SINGLE[subject];
   const load = (art || (alone && alone.view)) && FILES[portraitFile(subject, art, alone)];
-  if (!load) return null;
-  if (!started.has(subject)) {
-    started.add(subject);
-    load()
-      .then(svg => paintedBox(svg).then(box => cropTo(svg, box)))
-      .then(svg => { portraits[subject] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }, () => { portraits[subject] = null; });
-  }
-  return subject in portraits ? portraits[subject] : BLANK;
+  return load ? portraitOf(subject, load) : null;
 }
