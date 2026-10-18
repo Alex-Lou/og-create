@@ -6,7 +6,7 @@
 // ecriture/lots/01 et 02). Le Sceau : Brume découvre le mot « écrire » en voyant le joueur signer
 export const TAB_OPENED = {
   world: 'Le vent a ouvert la plage. Pour cette nuit, on reste près du rivage.',
-  sceau: ['Tu écris… C’est ça qu’ils faisaient, ceux d’avant. Ils écrivaient.', 'Le livre se souviendra de toi, même si tu pars. … Tu ne pars pas, hein ?'],
+  sceau: ['Tu écris… C’est ça qu’ils faisaient, ceux d’avant. Ils écrivaient.', 'J’ignore si le livre se souviendra de toi si tu t’en vas… Tu ne pars pas, hein ?'],
   timer: 'Le livre a d’autres jeux. Des énigmes, contre le temps.'
 };
 

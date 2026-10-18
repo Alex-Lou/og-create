@@ -3,7 +3,7 @@
 // (bible, § 8 : il lui revient à l'acte V)
 export const COOKING = {
   title: 'La marmite d’Agathe',
-  open: 'Des coquillages, des algues, un fond d’eau de mer… Ce n’est pas la cuisine du bord. Mais regarde bien.',
+  open: 'Des coquillages, des algues, un fond d’eau de mer… Ce n’est pas la cuisine du bord. Mais regarde bien, et retiens.',
   rule: {
     mettre: 'Glisse chaque ingrédient dans la marmite.',
     touiller: 'Touille : fais tourner ton doigt sur la marmite, sans te presser.',
@@ -27,7 +27,7 @@ export const COOKING = {
   count: (n, total) => `Agathe · ${n} / ${total}`,
   turn: (n, total) => `Agathe · tour ${n} / ${total}`,
   serve: 'Agathe · servir',
-  end: 'Goûte, toi. Moi, je sale toujours trop… à ce qu’on dit.',
+  end: 'Goûte, toi. Moi, je sale toujours un peu plus… On n’est jamais certain.',
   go: 'Commencer',
   later: 'Plus tard',
   next: 'Continuer'

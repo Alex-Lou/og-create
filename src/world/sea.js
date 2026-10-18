@@ -16,7 +16,8 @@ const TRAVEL = 3;
 const DIRS = [[-1, 0], [0, -1], [1, 0], [0, 1]];
 export const DOLPHIN_EVERY = 38;
 export const DOLPHIN_FOR = 7.5;
-export const WHALE_EVERY = 95;
+// (la baleine est peu commune : un passage toutes les 4 min, choix de l'auteur, 18 oct.)
+export const WHALE_EVERY = 240;
 export const WHALE_FOR = 15;
 const WAVE_T = 3.6;
 
@@ -65,9 +66,20 @@ export function nearestOpen(open, x, y, far = 3) {
   return best;
 }
 
-// Qui vit dans la mer de ce joueur : la mer grandit avec l'île (quartiers achetés)
-export function seaGuests(owned) {
-  return { dolphins: owned.has('crique'), whale: owned.has('hameau'), jellies: owned.has('phare') };
+// Qui vit dans la mer de ce joueur, à cette heure et par ce temps (choix de l'auteur, 18 oct. : chaque créature a sa
+// règle, comme les bêtes de l'île) : la mer grandit avec l'île (le quartier acheté de chacune) ; les dauphins et la
+// baleine se montrent le jour, les méduses luisent la nuit, et chacun a son temps (sous l'orage, aucun). phase : la vue
+// du ciel (scene.js : night, weather.kind)
+export const SEA_RULES = {
+  dolphins: { zone: 'crique', night: false, weather: ['clair', 'voile'] },
+  whale: { zone: 'hameau', night: false, weather: ['clair', 'voile', 'brume', 'pluie'] },
+  jellies: { zone: 'phare', night: true, weather: ['clair', 'voile', 'brume', 'pluie'] }
+};
+export function seaGuests(owned, phase) {
+  const night = phase.night > 0.3;
+  const out = {};
+  for (const [name, rule] of Object.entries(SEA_RULES)) out[name] = owned.has(rule.zone) && night === rule.night && rule.weather.includes(phase.weather.kind);
+  return out;
 }
 
 /* ---------- Eaux peu profondes et reflets ---------- */

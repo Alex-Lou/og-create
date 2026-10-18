@@ -15,12 +15,15 @@ function index(c, [x, y], dx, dy) {
     + `<path d="M${r2(base[0])},${r2(base[1])} L${r2(tip[0])},${r2(tip[1])}" fill="none" stroke="${f}" stroke-width="1.3" stroke-linecap="round"/>`
     + E(x, y, 2, 2, f) + L([x - uy * 0.9 + ux * 0.4, y + ux * 0.9 + uy * 0.4], [x - uy * 0.2 + ux * 1.1, y + ux * 0.2 + uy * 1.1], OUT, 0.45);
 }
-// La main à plat, de chant, tenue en visière (k : +1, les doigts vers la gauche de l'écran ; -1, vers la droite) :
-// la tranche de la main, les doigts serrés, le pouce replié dessous
-function visiereMain(c, [x, y], k) {
-  const f = c.hand || c.skin, x1 = x - k * 4.6;
-  return P(`M${r2(x + k * 0.8)},${r2(y - 1.1)} L${r2(x1 + k * 0.6)},${r2(y - 0.9)} Q${r2(x1)},${r2(y - 0.6)} ${r2(x1 + k * 0.3)},${r2(y + 0.5)} L${r2(x + k * 0.8)},${r2(y + 1.1)} Q${r2(x + k * 1.8)},${y} ${r2(x + k * 0.8)},${r2(y - 1.1)} Z`, f, 0.9)
-    + L([x - k * 1.2, y + 0.05], [x1 + k * 1, y + 0.1], OUT, 0.4) + E(x - k * 0.6, y + 1.2, 0.9, 0.6, f, 0.7);
+// La main en visière : une main ronde, de trois quarts, les doigts serrés et arrondis, le pouce dessous ; posée à la
+// tempe, elle monte en biais au-dessus du sourcil (k : +1, les doigts vers la gauche de l'écran ; -1, vers la droite ;
+// ang : son biais, en degrés). Le poignet est en (x, y), là où finit le bras
+function visiereMain(c, [x, y], k, ang) {
+  const f = c.hand || c.skin, X = v => r2(x - k * v), Y = v => r2(y + v);
+  const main = P(`M${X(-0.6)},${Y(-1.7)} Q${X(2.2)},${Y(-2.5)} ${X(4.6)},${Y(-1.7)} Q${X(6.1)},${Y(-1)} ${X(5.6)},${Y(0.3)} Q${X(5)},${Y(1.4)} ${X(2.6)},${Y(1.6)} L${X(0.4)},${Y(1.8)} Q${X(-1.3)},${Y(0)} ${X(-0.6)},${Y(-1.7)} Z`, f, 0.9)
+    + E(x - k * 1.4, y + 1.7, 1.05, 0.8, f, 0.75)
+    + `<path d="M${X(3.4)},${Y(-1.5)} Q${X(4.4)},${Y(-0.5)} ${X(3.6)},${Y(0.6)} M${X(4.6)},${Y(-1.4)} Q${X(5.4)},${Y(-0.5)} ${X(4.8)},${Y(0.5)}" fill="none" stroke="${OUT}" stroke-width="0.4" stroke-linecap="round"/>`;
+  return `<g transform="rotate(${r2(k * ang)} ${r2(x)} ${r2(y)})">${main}</g>`;
 }
 // La paume tournée vers le ciel (le haussement d'épaules), vue de face : une main en coupe, le pouce vers le dehors
 function paumeCiel(c, [x, y], k) {
@@ -75,12 +78,14 @@ const POSES = {
       // (un bras de chibi n'atteint pas le front : la main monte au bord du visage, à hauteur des yeux, le coude haut et en
       // dehors, et la main à plat se lève en biais vers le sourcil : elle fait de l'ombre aux yeux)
       // de trois quarts, c'est le bras proche qui monte, l'autre poing sur la hanche
+      // (la main monte à la tempe, à côté de l'œil, au bout du bras levé, le coude en dehors ; elle le couvre par le
+      // côté, sans passer devant)
       if (view === 'se') {
-        const h = atteint(this, a, -2.4 + s, -10.4, 0.97);
-        return { left: '', right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h, [a[0] - 4.6, a[1] - 3.4], `<g transform="rotate(-32 ${h[0]} ${h[1]})">${visiereMain(this, h, -1)}</g>`) };
+        const h = atteint(this, a, -6.2 + s * 0.4, -10, 0.98);
+        return { left: '', right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h, [a[0] - 6.4, a[1] - 3.2], visiereMain(this, h, -1, 62)) };
       }
-      const h = atteint(this, b, 3 - s, -10.4, 0.97);
-      return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: '', over: arm(this, b, h, [b[0] + 4.6, b[1] - 3.4], `<g transform="rotate(32 ${h[0]} ${h[1]})">${visiereMain(this, h, 1)}</g>`) };
+      const h = atteint(this, b, 2.6 - s * 0.4, -10, 0.98);
+      return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: '', over: arm(this, b, h, [b[0] + 5.2, b[1] - 4.2], visiereMain(this, h, 1, 38)) };
     }
   },
   // elle montre du doigt, l'ordre lancé : « Là ! » ; l'image 2, le bras se tend un peu plus

@@ -8,9 +8,10 @@ import { guide } from '@/game/guide';
 import { loadPrologue, savePrologue, prologueStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire, sceneDelayOf } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
-import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
-import { DEFAULT_LOOK } from '@/game/sceneArt';
-import { setPlayer } from '@/game/accord';
+import { LINES as PROLOGUE_LINES, SCENES as PROLOGUE_SCENES } from '@/texts/tutorial/scenes';
+import { DEFAULT_LOOK, sceneOf, playerFace } from '@/game/sceneArt';
+import { preparePlans } from '@/components/Prologue/SceneArt/raster';
+import { setPlayer, player } from '@/game/accord';
 import { TAB_OPENED, TAB_CALLS, PLAN_WRITTEN } from '@/texts/tutorial/tabs';
 import { COACH, TAB_HELP, LINE_HELP, TIP_HELP } from '@/texts/tutorial/coach';
 
@@ -222,6 +223,9 @@ export default {
         // une création, que son inscription se lise (sceneDelayOf)
         clearTimeout(this.prologueTimer);
         this.toBook();
+        // (sa première image, si elle est en plans, se lit d'avance : elle s'ouvre toute peinte)
+        const first = (PROLOGUE_SCENES[step.scene] || [])[0];
+        if (first && first.scene) preparePlans(sceneOf(first.scene));
         const show = () => {
           if (document.querySelector('.book-unlock')) this.prologueTimer = setTimeout(show, 700);
           else this.prologueScene = step.scene;
@@ -304,14 +308,19 @@ export default {
       (this.tabsWaiting || []).forEach(tab => this.sayTab(tab));
       this.tabsWaiting = [];
     },
-    // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle) ; extra : { top } (en
-    // haut de l'écran, au Grimoire)
+    // Une réplique du tutoriel : de Brume, d'un membre de la troupe (son portrait dans la bulle), ou du joueur (who :
+    // 'joueur' : sous son nom, son avatar dans la bulle) ; extra : { top } (en haut de l'écran, au Grimoire)
     // (et sa ligne d'aide, en annonce, la première fois : LINE_HELP)
     sayPrologue(line, extra = {}) {
       const entry = PROLOGUE_LINES[line];
       const { who, text, mood, action, look, demo } = typeof entry === 'string' ? { text: entry } : entry;
-      const said = guide.say({ id: `prologue-${line}`, text, ...extra, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(demo ? { demo } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+      const said = guide.say({ id: `prologue-${line}`, text, ...extra, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(demo ? { demo } : {}), ...(who ? this.lineSpeaker(who, mood) : {}) });
       if (said && LINE_HELP[line]) this.showAlert(LINE_HELP[line]);
+    },
+    // Qui parle dans une bulle du tutoriel : { who, face, bust? } (le joueur, sous son nom ; sinon un membre de la troupe)
+    lineSpeaker(who, mood) {
+      if (who === 'joueur') return { who: player.name || 'Toi', face: playerFace(this.prologueLook) };
+      return { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) };
     },
     // Le livre est chargé : la page du Vent s'ouvre, si elle attendait
     onBookLoaded() {

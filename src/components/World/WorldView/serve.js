@@ -237,6 +237,9 @@ export default {
     // La vie : mouettes, bouteille à la mer, habitants et bêtes, naufragés qui débarquent, bateau du visiteur
     syncLife(state) {
       this.perches = this.perchesOf(state);
+      // Le rivage où sautent les poissons : devant la terre des quartiers à soi (sous la brume, rien)
+      const owned = (x, y) => this.landAt(x, y) && Boolean((state.map.zones[this.M.zone(x, y)] || {}).owned);
+      this.fishShore = this.shore.filter(c => owned(c.x - 1, c.y) || owned(c.x, c.y - 1));
       this.bottleSpot = this.bottleSpotOf(state);
       this.bottleAshore(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
@@ -247,7 +250,7 @@ export default {
         n: state.size, M: this.M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
         settlers: (state.villagers || []).filter(v => v.seed !== undefined),
-        climates: state.map.zones.map(z => z.climate || null),
+        zoneIds: state.map.zones.map(z => z.id),
         // (les lieux, les gisements et le camp : on les contourne)
         avoid: [...landmarksShown(state), ...depositsShown(state), ...camp],
         camp,

@@ -2,7 +2,7 @@
 // avec son cerf blanc et ses lucioles ; ses loutres au bord de l'eau douce ; le bol de soupe « pour la Dame » ; les
 // bêtes qui se tournent vers elle ; ce qu'ils disent quand on les touche.
 import { anyaHere, anyaVisitClock } from '@/game/anya';
-import { BEAST_NAMES } from '@/texts/village';
+import { creatureOf } from '../creatures';
 import { ANYA_TEXTS as T } from '@/texts/world/anya';
 import { SEASON } from '../plants';
 import { anyaArt, cerfArt, frameOf, durationOf, ANYA_POSES as AP, CERF_POSES as CP, PHRASES } from '../anyaArt';
@@ -91,7 +91,7 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
     }
   }
   if (anya && banks.length) {
-    [0, 1].forEach(k => wild(`anya:otter:${k}`, 'otter', k ? banks.slice().reverse() : banks, dayTime && rain < 0.6, c => {
+    [0, 1].forEach(k => wild(`anya:otter:${k}`, 'otter', k ? banks.slice().reverse() : banks, dayTime && rain < 0.6, 'jour', c => {
       const up = (t + k * 2) % 6 < 1.2;
       const flip = Math.cos(t * 0.2 + k) < 0;
       return { x: c.x + Math.sin(t * 0.2 + k) * 0.3, y: c.y, frame: up ? 1 : 0, flip, look: along(flip, up ? 1 : 0) };
@@ -118,6 +118,6 @@ export function storyInfo(who, long) {
   if (who.id === 'anya:dame') return { title: 'Anya', text: long ? T.dame.sheet : T.dame.says, ...(long ? { hint: T.dame.hint } : {}) };
   if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? T.cerf.sheet : T.cerf.says, ...(long ? { hint: T.cerf.hint } : {}) };
   if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: T.bol.text, ...(long ? { hint: T.bol.hint } : {}) };
-  if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: T.otter.hint } : null;
+  if (who.id.startsWith('anya:otter')) return long ? { title: creatureOf('loutre').name, text: creatureOf('loutre').text, hint: T.otter.hint } : null;
   return long ? { title: 'Luciole', text: T.luciole.text, hint: T.luciole.hint } : null;
 }

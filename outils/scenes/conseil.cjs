@@ -237,13 +237,16 @@ function conseil() {
   return D.out(s);
 }
 
-const svg = body => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 ${TOP} ${W} ${H}">${body}</svg>`;
+// (tout le jeu en papier néon, choix de l'auteur, 18 oct. : ses couleurs ravivées sans changer de teinte (ses personnages gardent les leurs), design/atelier/neon_reveil.js ;
+// l'avatar y est rendu en néon, game/acteur.js : gravee)
+const { ravivee, LUMIERES } = need('atelier/neon_reveil');
+const svg = body => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 ${TOP} ${W} ${H}">${ravivee(body)}</svg>`;
 const { fond, anime } = separer(conseil(), Infinity);
 fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'conseil_fond.svg'), svg(fond));
 fs.writeFileSync(path.join(OUT, 'conseil_anime.svg'), svg(anime));
 fs.writeFileSync(path.join(OUT, 'conseil_devant.svg'), svg(V.devantAvatar('cva', AVATAR, FEU).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '')));
 // (la place de l'avatar, depuis le haut de la scène)
-fs.writeFileSync(path.join(OUT, 'conseil.json'), `${JSON.stringify({ nom: 'Le conseil, sous l’orage qui vient', images: 1, ms_par_image: 1100, hauteur: H, avatar: { ...AVATAR, y: AVATAR.y - TOP } }, null, 2)}\n`);
+fs.writeFileSync(path.join(OUT, 'conseil.json'), `${JSON.stringify({ nom: 'Le conseil, sous l’orage qui vient', images: 1, ms_par_image: 1100, hauteur: H, avatar: { ...AVATAR, y: AVATAR.y - TOP, neon: true, lumiere: { ...LUMIERES.feu, cote: -1 } } }, null, 2)}\n`);
 const anims = (anime.match(/<animate/g) || []).length;
 console.log(`conseil : fond ${Math.round(fond.length / 1024)} Ko, calque animé ${Math.round(anime.length / 1024)} Ko (${anims} animations)`);

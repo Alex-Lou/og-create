@@ -34,65 +34,6 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// personnages/couleurs.js
-var require_couleurs = __commonJS({
-  "personnages/couleurs.js"(exports, module) {
-    var ENCRE = "#0A0418";
-    var ENCRE_KIT = "#3C2819";
-    var NUIT = "#2A1650";
-    var PASTEL = "#B4A8DC";
-    function memo2(fn, max = 4096) {
-      const cache = /* @__PURE__ */ new Map();
-      return (...args) => {
-        const cle = args.join("|");
-        let v = cache.get(cle);
-        if (v === void 0) {
-          if (cache.size >= max) cache.clear();
-          v = fn(...args);
-          cache.set(cle, v);
-        }
-        return v;
-      };
-    }
-    __name(memo2, "memo");
-    function hsl(c) {
-      const n = parseInt(c.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
-      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
-      let h = 0, s = 0;
-      if (d) {
-        s = d / (1 - Math.abs(2 * l - 1));
-        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
-        h *= 60;
-        if (h < 0) h += 360;
-      }
-      return [h, s, l];
-    }
-    __name(hsl, "hsl");
-    function hex([h, s, l]) {
-      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
-      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
-      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
-    }
-    __name(hex, "hex");
-    var mix = memo2((a, b, k) => {
-      const p = /* @__PURE__ */ __name((c) => [0, 2, 4].map((i) => parseInt(c.slice(1 + i, 3 + i), 16)), "p"), A = p(a), B = p(b);
-      return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join("").toUpperCase();
-    });
-    var ton = memo2((c, k) => {
-      const [h, s, l] = hsl(c);
-      if (k >= 1) return hex([h, s, l + (1 - l) * (k - 1)]);
-      return mix(hex([h, s, l * k]), NUIT, Math.min(0.28, (1 - k) * 1.1));
-    });
-    var delave = memo2((c, k = 1) => {
-      const [h, s, l] = hsl(c);
-      return mix(hex([h, s * (1 - 0.45 * k), l + (0.74 - l) * 0.26 * k]), PASTEL, 0.3 * k);
-    });
-    var clarte = /* @__PURE__ */ __name((c) => hsl(c)[2], "clarte");
-    var enPersonnage = /* @__PURE__ */ __name((svg) => svg.replaceAll(ENCRE_KIT, ENCRE), "enPersonnage");
-    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo: memo2, hsl, hex, mix, ton, delave, clarte, enPersonnage };
-  }
-});
-
 // personnages/refonte/membres.js
 var require_membres = __commonJS({
   "personnages/refonte/membres.js"(exports, module) {
@@ -327,7 +268,7 @@ var require_membres = __commonJS({
 // personnages/troupe.js
 var require_troupe = __commonJS({
   "personnages/troupe.js"(exports, module) {
-    var { ENCRE_KIT: OUT4, hsl, ton, enPersonnage } = require_couleurs();
+    var OUT4 = "#3C2819";
     var W2 = 1.1;
     var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
     var st = /* @__PURE__ */ __name((w = W2) => `stroke="${OUT4}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
@@ -338,6 +279,27 @@ var require_troupe = __commonJS({
     var clip = /* @__PURE__ */ __name((id2, d, inner2) => `<clipPath id="${id2}"><path d="${d}"/></clipPath><g clip-path="url(#${id2})">${inner2}</g>`, "clip");
     var IMAGES = { repos: 4, marche: 8, salut: 4, action: 2 };
     var lerp2 = /* @__PURE__ */ __name((a, b, k) => Array.isArray(a) ? a.map((v, i) => r22(v + (b[i] - v) * k)) : r22(a + (b - a) * k), "lerp");
+    var hsl = /* @__PURE__ */ __name((hex2) => {
+      const n = parseInt(hex2.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      let h = 0, sat = 0;
+      if (d) {
+        sat = d / (1 - Math.abs(2 * l - 1));
+        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+      }
+      return [h, sat, l];
+    }, "hsl");
+    var hex = /* @__PURE__ */ __name(([h, s, l]) => {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }, "hex");
+    var ton = /* @__PURE__ */ __name((c, k) => {
+      const [h, s, l] = hsl(c);
+      return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]);
+    }, "ton");
     var PRINCIPALES = ["skin", "hair", "top", "bas", "leg", "sleeve", "shoe", "coat", "base", "hand", "buzz"];
     function lumiere(c, id2, k = 1) {
       const couleurs = /* @__PURE__ */ new Set();
@@ -668,7 +630,7 @@ var require_troupe = __commonJS({
       haut += act && act.over ? act.over : "";
       s += legs.join("") + (breath ? `<g transform="translate(0 ${breath})">${haut}</g>` : haut);
       const { defs, table } = lumiere(c, id2);
-      return enPersonnage(defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`);
+      return defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`;
     }
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
@@ -826,7 +788,7 @@ var require_brume = __commonJS({
     }
     __name(brumeEyes, "brumeEyes");
     var svgB = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${40 * scale}" height="${48 * scale}" viewBox="0 0 40 48">${body}</svg>`, "svgB");
-    module.exports = { STAGES, brumeFrame, brumeEyes, svgB };
+    module.exports = { STAGES, brumeFrame, brumeEyes, svgB, flamePath };
   }
 });
 
@@ -986,7 +948,7 @@ var require_dormeurs = __commonJS({
       const leaf2 = c.nauMound ? [c.nauMound.fill, c.nauMound.shade, c.nauMound.hi] : ["#5E9E4A", "#467A37", "#86C06A"];
       const mound = "M20,46 Q16.6,33.4 29,27.8 Q41,22.6 51.4,29.2 Q60,35 57.6,46 Q55.8,47.6 53.8,46.2 Q52.2,48 50.2,46.4 Q48.4,48 46.4,46.4 Q44.4,48 42.4,46.4 Q40.4,48 38.4,46.4 Q36.4,48 34.4,46.4 Q32.4,48 30.4,46.4 Q28.4,48 26.4,46.4 Q24.2,48 22.2,46.2 Q20.6,47.4 20,46 Z";
       const rows = [33, 38, 43].map((y) => `<path d="M14,${y} Q16,${y + 2} 18,${y} Q20,${y + 2} 22,${y} Q24,${y + 2} 26,${y} Q28,${y + 2} 30,${y} Q32,${y + 2} 34,${y} Q36,${y + 2} 38,${y} Q40,${y + 2} 42,${y} Q44,${y + 2} 46,${y} Q48,${y + 2} 50,${y} Q52,${y + 2} 54,${y} Q56,${y + 2} 58,${y} Q60,${y + 2} 62,${y}" fill="none" stroke="${leaf2[1]}" stroke-width="0.7"/>`).join("");
-      let s = `<ellipse cx="38.6" cy="46.2" rx="20.6" ry="2.2" fill="#0A0418" opacity="0.12"/>`;
+      let s = `<ellipse cx="38.6" cy="46.2" rx="20.6" ry="2.2" fill="#3C2819" opacity="0.12"/>`;
       s += P2(mound, leaf2[0]) + clip(`${id2}m`, mound, `<rect x="41" y="20" width="24" height="30" fill="${leaf2[1]}"/>${c.nauMound ? "" : rows}<ellipse cx="33" cy="30.8" rx="8" ry="2" fill="${leaf2[2]}"/>`) + P2(mound, "none");
       if (c.nauMound) {
         s += `<path d="M36.2,25.4 Q38.6,36 37.4,46.4" fill="none" stroke="${OUT4}" stroke-width="3.2" stroke-linecap="round"/><path d="M36.2,25.4 Q38.6,36 37.4,46.4" fill="none" stroke="#E6DCC3" stroke-width="2" stroke-linecap="round"/>`;
@@ -1139,7 +1101,29 @@ var require_naufrage = __commonJS({
   "atelier/naufrage.js"(exports, module) {
     var { OUT: OUT4, P: P2, E, L, clip, bareFoot, shoe, r2: r22 } = require_troupe2();
     var { jambeRetroussee } = require_jambe();
-    var { delave: fade } = require_couleurs();
+    function hsl(hex2) {
+      const n = parseInt(hex2.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      let h = 0, s = 0;
+      if (d) {
+        s = d / (1 - Math.abs(2 * l - 1));
+        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+      }
+      return [h, s, l];
+    }
+    __name(hsl, "hsl");
+    function hex([h, s, l]) {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round((v + m) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+    __name(hex, "hex");
+    var fade = /* @__PURE__ */ __name((c, k = 1) => {
+      const [h, s, l] = hsl(c);
+      return hex([h, s * (1 - 0.45 * k), l + (0.74 - l) * 0.26 * k]);
+    }, "fade");
     var recolor2 = /* @__PURE__ */ __name((str, map) => str.replace(/#[0-9A-Fa-f]{6}\b/g, (m) => map[m.toUpperCase()] || m), "recolor");
     var CANVAS2 = { cloth: "#E6DCC3", shade: "#C9BB98", seam: "#B3A27C", rope: "#B08850", ropeS: "#86663A" };
     var cord = /* @__PURE__ */ __name((d, w, color) => `<path d="${d}" fill="none" stroke="${OUT4}" stroke-width="${r22(w + 1.4)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "cord");
@@ -1273,26 +1257,58 @@ var require_naufrage = __commonJS({
 // personnages/avatar_choix.js
 var require_avatar_choix = __commonJS({
   "personnages/avatar_choix.js"(exports, module) {
-    var { hsl, hex, mix, ton: tone, delave, clarte } = require_couleurs();
+    function hsl(hex2) {
+      const n = parseInt(hex2.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      let h = 0, s = 0;
+      if (d) {
+        s = d / (1 - Math.abs(2 * l - 1));
+        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+      }
+      return [h, s, l];
+    }
+    __name(hsl, "hsl");
+    function hex([h, s, l]) {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+    __name(hex, "hex");
+    var mix = /* @__PURE__ */ __name((a, b, k) => {
+      const p = /* @__PURE__ */ __name((c) => [0, 2, 4].map((i) => parseInt(c.slice(1 + i, 3 + i), 16)), "p");
+      const A2 = p(a), B = p(b);
+      return "#" + A2.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }, "mix");
+    var tone = /* @__PURE__ */ __name((c, k) => {
+      const [h, s, l] = hsl(c);
+      return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]);
+    }, "tone");
+    var delave = /* @__PURE__ */ __name((c, k = 1) => {
+      const [h, s, l] = hsl(c);
+      return hex([h, s * (1 - 0.45 * k), l + (0.74 - l) * 0.26 * k]);
+    }, "delave");
+    var clarte = /* @__PURE__ */ __name((c) => hsl(c)[2], "clarte");
     var nuancier = /* @__PURE__ */ __name((list) => Object.fromEntries(list.map(([k, c]) => [k, c])), "nuancier");
     var noms = /* @__PURE__ */ __name((list) => Object.fromEntries(list.map(([k, , n]) => [k, n])), "noms");
     var PEAU = [
-      ["nacre", "#FDE8D7", "Nacre"],
-      ["porcelaine", "#F9D3B0", "Porcelaine"],
-      ["rosee", "#F6C8B1", "Rosée"],
-      ["peche", "#F5C99D", "Pêche"],
-      ["doree", "#F1C290", "Dorée"],
-      ["miel", "#EDB98B", "Miel"],
-      ["sable", "#E0AA76", "Sable"],
-      ["ocre", "#D49A64", "Ocre"],
-      ["cannelle", "#CD8A5A", "Cannelle"],
-      ["bronze", "#B87A48", "Bronze"],
-      ["cuivre", "#A6693E", "Cuivre"],
-      ["cacao", "#905938", "Cacao"],
-      ["acajou", "#7F4B30", "Acajou"],
-      ["ebene", "#6D432E", "Ébène"],
-      ["ombre", "#5E3926", "Terre d'ombre"],
-      ["nuit", "#4C2D1E", "Nuit"]
+      ["nacre", "#FCE8D8", "Nacre"],
+      ["porcelaine", "#F6D3B3", "Porcelaine"],
+      ["rosee", "#F3C9B4", "Rosée"],
+      ["peche", "#F2C9A0", "Pêche"],
+      ["doree", "#EDC294", "Dorée"],
+      ["miel", "#E9B98F", "Miel"],
+      ["sable", "#DCAA7A", "Sable"],
+      ["ocre", "#D09A68", "Ocre"],
+      ["cannelle", "#C98B5E", "Cannelle"],
+      ["bronze", "#B47A4C", "Bronze"],
+      ["cuivre", "#A26A42", "Cuivre"],
+      ["cacao", "#8D5A3B", "Cacao"],
+      ["acajou", "#7C4C33", "Acajou"],
+      ["ebene", "#6B4430", "Ébène"],
+      ["ombre", "#5C3A28", "Terre d'ombre"],
+      ["nuit", "#4A2E20", "Nuit"]
     ];
     var CHEVEUX = [
       ["jais", "#221B17", "Noir de jais"],
@@ -1339,44 +1355,44 @@ var require_avatar_choix = __commonJS({
       ["noir", "#1E1A18", "Noirs"]
     ];
     var TISSUS = [
-      ["blanc", "#F0E9F3", "Blanc"],
-      ["creme", "#E7D9E2", "Crème"],
-      ["sable", "#BCA3AB", "Sable"],
-      ["caramel", "#B46C64", "Caramel"],
-      ["cuir", "#52303E", "Cuir"],
-      ["charbon", "#44445E", "Charbon"],
-      ["noir", "#242030", "Noir"],
-      ["rosepale", "#F8C3D4", "Rose pâle"],
-      ["rose", "#EB82A3", "Rose"],
-      ["framboise", "#CE4278", "Framboise"],
-      ["corail", "#EF6E5A", "Corail"],
-      ["rouge", "#CC4245", "Rouge"],
-      ["bordeaux", "#6C2A45", "Bordeaux"],
-      ["abricot", "#F7A260", "Abricot"],
-      ["soleil", "#F6C059", "Soleil"],
-      ["menthe", "#76CEB0", "Menthe"],
-      ["olive", "#607A55", "Olive"],
-      ["foret", "#407A5B", "Forêt"],
-      ["ciel", "#6EA9DE", "Ciel"],
-      ["lagon", "#3AACAD", "Lagon"],
-      ["jean", "#425A92", "Jean"],
-      ["marine", "#2D3767", "Marine"],
-      ["lavande", "#A387DB", "Lavande"],
-      ["prune", "#7A3964", "Prune"]
+      ["blanc", "#F8F4EA", "Blanc"],
+      ["creme", "#F1E6CC", "Crème"],
+      ["sable", "#C9B080", "Sable"],
+      ["caramel", "#B07A48", "Caramel"],
+      ["cuir", "#5E3A22", "Cuir"],
+      ["charbon", "#4A4E5C", "Charbon"],
+      ["noir", "#2E2A2A", "Noir"],
+      ["rosepale", "#F4C2CC", "Rose pâle"],
+      ["rose", "#E8879C", "Rose"],
+      ["framboise", "#C8466E", "Framboise"],
+      ["corail", "#E8705A", "Corail"],
+      ["rouge", "#C8463A", "Rouge"],
+      ["bordeaux", "#6E2E3A", "Bordeaux"],
+      ["abricot", "#F2A65A", "Abricot"],
+      ["soleil", "#F2C04B", "Soleil"],
+      ["menthe", "#7EC4A0", "Menthe"],
+      ["olive", "#6E7A44", "Olive"],
+      ["foret", "#4E7A4A", "Forêt"],
+      ["ciel", "#6FA3D9", "Ciel"],
+      ["lagon", "#3FA7A8", "Lagon"],
+      ["jean", "#3E5A8C", "Jean"],
+      ["marine", "#2E3E66", "Marine"],
+      ["lavande", "#A48CD6", "Lavande"],
+      ["prune", "#7A3E5E", "Prune"]
     ];
     var METAUX = [["or", "#E2B34A", "Or"], ["argent", "#C9CED6", "Argent"], ["orrose", "#E6A88E", "Or rose"], ["cuivre", "#C77A4A", "Cuivre"], ["sombre", "#4A3A30", "Écaille sombre"]];
     var LEVRES = [["naturelles", null, "Naturelles"], ["rose", "#E07A8A", "Rosées"], ["corail", "#E8705A", "Corail"], ["framboise", "#C8466E", "Framboise"], ["nude", "#C98B7A", "Nude"], ["prune", "#8E3E5E", "Prune"], ["rouge", "#C8303A", "Rouges"]];
     var TEINTURES = [
-      ["nacre", "#F2E4F2", "Nacre", "rare", "boutique"],
-      ["opale", "#BDE7E4", "Opale", "rare", "coffre"],
-      ["or", "#E6B450", "Or", "epique", "coffre"],
-      ["argent", "#C7CBDC", "Argent", "rare", "boutique"],
-      ["rubis", "#B51F44", "Rubis", "epique", "coffre"],
-      ["saphir", "#2E4EAE", "Saphir", "epique", "boutique"],
-      ["emeraude", "#1C8060", "Émeraude", "epique", "coffre"],
-      ["amethyste", "#7E3EB0", "Améthyste", "rare", "coffre"],
-      ["onyx", "#181424", "Onyx", "rare", "boutique"],
-      ["aurore", "#FAB5B0", "Aurore", "legendaire", "coffre"]
+      ["nacre", "#F3E6EE", "Nacre", "rare", "boutique"],
+      ["opale", "#BFE3E0", "Opale", "rare", "coffre"],
+      ["or", "#E2B34A", "Or", "epique", "coffre"],
+      ["argent", "#C9CED6", "Argent", "rare", "boutique"],
+      ["rubis", "#B0203A", "Rubis", "epique", "coffre"],
+      ["saphir", "#2A4FA8", "Saphir", "epique", "boutique"],
+      ["emeraude", "#1E7A4E", "Émeraude", "epique", "coffre"],
+      ["amethyste", "#7A3EA8", "Améthyste", "rare", "coffre"],
+      ["onyx", "#1E1A1C", "Onyx", "rare", "boutique"],
+      ["aurore", "#F7B7A3", "Aurore", "legendaire", "coffre"]
     ];
     var NUANCIERS = {
       peau: nuancier(PEAU),
@@ -2211,7 +2227,7 @@ var require_avatar_accessoires = __commonJS({
       const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD"), S = tone(col, 0.72), H = tone(col, 1.35);
       const dome2 = `M${X(11.4)},15.8 Q${X(11.2)},5.4 ${X(24)},5.2 Q${XD(36.8)},5.4 ${XD(36.6)},15.8 Q${X(24)},14.4 ${X(11.4)},15.8 Z`;
       const coutures = view === "ne" ? `M${X(24)},5.4 L${X(24)},14.8 M${X(18)},6.6 Q${X(16.6)},10.6 ${X(16.8)},15 M${X(30)},6.6 Q${X(31.4)},10.6 ${X(31.2)},15` : `M${X(24)},5.4 L${X(24)},14.6 M${X(19)},6.2 Q${X(17)},10.4 ${X(17.2)},14.8 M${X(29)},6.2 Q${X(31)},10.4 ${X(30.8)},14.8`;
-      let s = P2(dome2, col) + clip(`${c.uid}cq${view}`, dome2, `<rect x="${X(27)}" y="4" width="12" height="13" fill="${S}" opacity=".7"/><path d="${coutures}" stroke="${S}" stroke-width=".5" fill="none"/>` + (view === "ne" ? `<path d="M${X(19)},15.6 Q${X(24)},11.6 ${X(29)},15.6 Z" fill="${c.hair || "#543435"}"/><path d="M${X(17)},15.6 L${X(31)},15.6" stroke="${S}" stroke-width="1.2"/>` : "")) + P2(dome2, "none") + E(+X(24), 5.3, 1.1, 0.75, S, 0.6) + L([X(15.4), 9.4], [X(19.6), 7.2], H, 0.9);
+      let s = P2(dome2, col) + clip(`${c.uid}cq${view}`, dome2, `<rect x="${X(27)}" y="4" width="12" height="13" fill="${S}" opacity=".7"/><path d="${coutures}" stroke="${S}" stroke-width=".5" fill="none"/>` + (view === "ne" ? `<path d="M${X(19)},15.6 Q${X(24)},11.6 ${X(29)},15.6 Z" fill="${c.hair || "#5A3A26"}"/><path d="M${X(17)},15.6 L${X(31)},15.6" stroke="${S}" stroke-width="1.2"/>` : "")) + P2(dome2, "none") + E(+X(24), 5.3, 1.1, 0.75, S, 0.6) + L([X(15.4), 9.4], [X(19.6), 7.2], H, 0.9);
       if (view === "front") {
         const v = `M${X(14.2)},15.2 Q${X(24)},12.8 ${X(33.8)},15.2 Q${X(34.6)},17.6 ${X(24)},18.6 Q${X(13.4)},17.6 ${X(14.2)},15.2 Z`;
         s += P2(v, col) + clip(`${c.uid}cv${view}`, v, `<path d="M${X(12)},16.4 Q${X(24)},18.8 ${X(36)},16.4 L${X(36)},20 L${X(12)},20 Z" fill="${S}"/>`) + P2(v, "none") + `<path d="M${X(16)},15.6 Q${X(24)},13.6 ${X(32)},15.6" stroke="${H}" stroke-width=".45" fill="none" stroke-dasharray=".8 .6"/>`;
@@ -2226,7 +2242,7 @@ var require_avatar_accessoires = __commonJS({
       const ne = view === "ne", k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD"), S = tone(col, 0.74), H = tone(col, 1.3);
       const d = ne ? `M${X(11)},18.2 Q${X(10.6)},5.8 ${X(24)},5.6 Q${X(37.4)},5.8 ${X(37)},18.2 Q${X(24)},15.6 ${X(11)},18.2 Z` : `M${X(11.2)},17 Q${X(11)},5.8 ${X(24)},5.6 Q${XD(37)},5.8 ${XD(36.8)},17 Q${X(24)},13.6 ${X(11.2)},17 Z`;
       const pois = [[15.6, 9.6], [20.4, 7.4], [26.4, 7.6], [31.6, 9.8], [18, 12.6], [24, 11], [29.8, 12.8], [14.4, 14.6], [33.6, 14.6]];
-      let s = P2(d, col) + clip(`${c.uid}bd${view}`, d, `<rect x="${X(27.6)}" y="4" width="12" height="16" fill="${S}" opacity=".7"/>` + pois.map(([x, y]) => E(+X(x), y, 0.75, 0.62, "#F6F0FA", 0)).join("") + `<path d="M${X(12.6)},${ne ? 16.4 : 15} Q${X(24)},${ne ? 13.6 : 12} ${X(35.4)},${ne ? 16.4 : 15}" stroke="${S}" stroke-width=".55" fill="none"/>`) + P2(d, "none") + L([X(15.6), 8.4], [X(20.4), 6.6], H, 0.9);
+      let s = P2(d, col) + clip(`${c.uid}bd${view}`, d, `<rect x="${X(27.6)}" y="4" width="12" height="16" fill="${S}" opacity=".7"/>` + pois.map(([x, y]) => E(+X(x), y, 0.75, 0.62, "#FFF6E6", 0)).join("") + `<path d="M${X(12.6)},${ne ? 16.4 : 15} Q${X(24)},${ne ? 13.6 : 12} ${X(35.4)},${ne ? 16.4 : 15}" stroke="${S}" stroke-width=".55" fill="none"/>`) + P2(d, "none") + L([X(15.6), 8.4], [X(20.4), 6.6], H, 0.9);
       if (ne) s += P2(`M${X(23.2)},17 Q${X(21.2)},20.6 ${X(21.6)},24 Q${X(22.8)},22.8 ${X(23.8)},23.4 Q${X(23.4)},20.2 ${X(24.4)},17.2 Z`, S, 0.7) + P2(`M${X(24.8)},17 Q${X(27.4)},20 ${X(27.6)},23.4 Q${X(26.4)},22.6 ${X(25.4)},23 Q${X(25.4)},20 ${X(23.6)},17.4 Z`, S, 0.7) + E(+X(24), 16.8, 2, 1.4, col, 0.7) + L([X(23.2), 16.4], [X(24.4), 16.2], H, 0.5);
       return s;
     }
@@ -2454,14 +2470,14 @@ var require_avatar_accessoires = __commonJS({
     function panier(c, ctx, [col], h) {
       const [x, y] = [h[0], h[1] + 4.6];
       const basket = `M${r22(x - 4)},${y} L${r22(x + 4)},${y} L${r22(x + 3.2)},${r22(y + 4.4)} Q${x},${r22(y + 5.2)} ${r22(x - 3.2)},${r22(y + 4.4)} Z`;
-      return P2(`M${r22(x - 3.4)},${r22(y + 0.2)} Q${x},${r22(y - 6.6)} ${r22(x + 3.4)},${r22(y + 0.2)}`, "none", 1.6).replace(`stroke="${OUT4}"`, 'stroke="#74493B"') + fleurette(x - 2, y - 0.6, 1.05, col) + fleurette(x + 1.6, y - 0.9, 1.1, mix(col, "#FFFFFF", 0.5)) + feuille(x - 0.2, y - 0.4, -60, 0.9) + P2(basket, "#9D6E57") + clip(`${c.uid}pn${ctx.view}`, basket, [1.4, 2.8].map((d) => L([x - 4, y + d], [x + 4, y + d], "#7E5442", 0.5)).join("") + [-2, 0, 2].map((d) => L([x + d, y], [x + d * 0.85, y + 5], "#7E5442", 0.5)).join("")) + P2(basket, "none");
+      return P2(`M${r22(x - 3.4)},${r22(y + 0.2)} Q${x},${r22(y - 6.6)} ${r22(x + 3.4)},${r22(y + 0.2)}`, "none", 1.6).replace(`stroke="${OUT4}"`, 'stroke="#8A5A30"') + fleurette(x - 2, y - 0.6, 1.05, col) + fleurette(x + 1.6, y - 0.9, 1.1, mix(col, "#FFFFFF", 0.5)) + feuille(x - 0.2, y - 0.4, -60, 0.9) + P2(basket, "#C9925A") + clip(`${c.uid}pn${ctx.view}`, basket, [1.4, 2.8].map((d) => L([x - 4, y + d], [x + 4, y + d], "#9A6A3A", 0.5)).join("") + [-2, 0, 2].map((d) => L([x + d, y], [x + d * 0.85, y + 5], "#9A6A3A", 0.5)).join("")) + P2(basket, "none");
     }
     __name(panier, "panier");
     function ombrelle(c, ctx, [col], h) {
       const [x, y] = h, tip = [Math.min(x + 3, 38.6), y - 17.4];
       const canopy = "M-7,0 Q-6.7,-6.2 0,-6.7 Q6.7,-6.2 7,0 Q5.25,-1.2 3.5,0 Q1.75,-1.2 0,0 Q-1.75,-1.2 -3.5,0 Q-5.25,-1.2 -7,0 Z";
       const ribs = [-3.5, 0, 3.5].map((d) => L([d * 0.5, -6.3], [d, -0.2], tone(col, 0.82), 0.5)).join("");
-      return limb([x, y + 0.4], tip, 0.7, "#74493B") + `<g transform="translate(${r22(tip[0])} ${r22(tip[1] + 1.6)}) rotate(16)">${P2(canopy, col)}${ribs}${E(0, -6.9, 0.6, 0.6, tone(col, 0.8), 0.5)}</g>`;
+      return limb([x, y + 0.4], tip, 0.7, "#8A5A30") + `<g transform="translate(${r22(tip[0])} ${r22(tip[1] + 1.6)}) rotate(16)">${P2(canopy, col)}${ribs}${E(0, -6.9, 0.6, 0.6, tone(col, 0.8), 0.5)}</g>`;
     }
     __name(ombrelle, "ombrelle");
     var balance = /* @__PURE__ */ __name((ctx) => ctx.sway || 0, "balance");
@@ -2502,7 +2518,7 @@ var require_avatar_accessoires = __commonJS({
       return P2(d, col, 0.9) + P2(`M${r22(o - 5)},${Y(3.4)} Q${o},${Y(6.4)} ${r22(o + 5)},${Y(3.4)}`, "none", 0.5).replace(`stroke="${OUT4}"`, `stroke="${S}"`);
     }
     __name(colFourrure, "colFourrure");
-    var BOIS2 = "#A7826D";
+    var BOIS2 = "#D9B27C";
     function manteau(c, ctx, [col, fourrure]) {
       if (ctx.couche !== "dessus") return "";
       const { view } = ctx, { cou: y, ourlet: H } = reperes(c), S = tone(col, 0.8), w = balance(ctx), Y = /* @__PURE__ */ __name((d) => r22(y + d), "Y");
@@ -2667,7 +2683,7 @@ var require_avatar_accessoires = __commonJS({
     function pipe(c, ctx, [col, metal], h) {
       const [x, y] = [h[0] + 0.6, h[1] - 1.2], S = tone(col, 0.7), H = tone(col, 1.35);
       const fourneau2 = `M${r22(x + 0.4)},${r22(y - 3.4)} L${r22(x + 3.6)},${r22(y - 3.4)} Q${r22(x + 3.8)},${r22(y + 0.4)} ${r22(x + 2)},${r22(y + 0.6)} Q${r22(x + 0.2)},${r22(y + 0.4)} ${r22(x + 0.4)},${r22(y - 3.4)} Z`;
-      return `<path d="M${r22(x + 0.6)},${r22(y - 0.6)} Q${r22(x - 1.6)},${r22(y + 0.2)} ${r22(x - 3.2)},${r22(y - 1.6)}" fill="none" stroke="${OUT4}" stroke-width="1.7" stroke-linecap="round"/><path d="M${r22(x + 0.6)},${r22(y - 0.6)} Q${r22(x - 1.6)},${r22(y + 0.2)} ${r22(x - 3.2)},${r22(y - 1.6)}" fill="none" stroke="${metal}" stroke-width=".85" stroke-linecap="round"/>` + P2(fourneau2, col, 0.8) + clip(`${c.uid}pp${ctx.view}`, fourneau2, `<rect x="${r22(x + 2.2)}" y="${r22(y - 4)}" width="2" height="5" fill="${S}"/>`) + E(x + 2, y - 3.4, 1.5, 0.5, "#40262A", 0.5) + E(x + 2, y - 3.5, 0.8, 0.25, "#E8743A", 0) + L([x + 0.9, y - 2.6], [x + 0.9, y - 0.8], H, 0.45) + `<path d="M${r22(x + 2)},${r22(y - 4.4)} Q${r22(x + 1)},${r22(y - 6)} ${r22(x + 2.2)},${r22(y - 7.4)} Q${r22(x + 3.2)},${r22(y - 8.8)} ${r22(x + 2.2)},${r22(y - 10)}" fill="none" stroke="#E8EEF2" stroke-width=".6" stroke-linecap="round" opacity=".7"/>`;
+      return `<path d="M${r22(x + 0.6)},${r22(y - 0.6)} Q${r22(x - 1.6)},${r22(y + 0.2)} ${r22(x - 3.2)},${r22(y - 1.6)}" fill="none" stroke="${OUT4}" stroke-width="1.7" stroke-linecap="round"/><path d="M${r22(x + 0.6)},${r22(y - 0.6)} Q${r22(x - 1.6)},${r22(y + 0.2)} ${r22(x - 3.2)},${r22(y - 1.6)}" fill="none" stroke="${metal}" stroke-width=".85" stroke-linecap="round"/>` + P2(fourneau2, col, 0.8) + clip(`${c.uid}pp${ctx.view}`, fourneau2, `<rect x="${r22(x + 2.2)}" y="${r22(y - 4)}" width="2" height="5" fill="${S}"/>`) + E(x + 2, y - 3.4, 1.5, 0.5, "#3A2416", 0.5) + E(x + 2, y - 3.5, 0.8, 0.25, "#E8743A", 0) + L([x + 0.9, y - 2.6], [x + 0.9, y - 0.8], H, 0.45) + `<path d="M${r22(x + 2)},${r22(y - 4.4)} Q${r22(x + 1)},${r22(y - 6)} ${r22(x + 2.2)},${r22(y - 7.4)} Q${r22(x + 3.2)},${r22(y - 8.8)} ${r22(x + 2.2)},${r22(y - 10)}" fill="none" stroke="#E8EEF2" stroke-width=".6" stroke-linecap="round" opacity=".7"/>`;
     }
     __name(pipe, "pipe");
     function canne2(c, ctx, [col, metal], h) {
@@ -2765,7 +2781,7 @@ var require_avatar_accessoires = __commonJS({
 // personnages/aster.js
 var require_aster = __commonJS({
   "personnages/aster.js"(exports, module) {
-    var { OUT: OUT4, P: P2, E, L, clip, expression, arm, r2: r22, lerp: lerp2, TRAITS } = require_troupe();
+    var { P: P2, E, L, clip, expression, arm, r2: r22, lerp: lerp2, TRAITS } = require_troupe();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
     var relevee = /* @__PURE__ */ __name((c) => !!(c.coiffe && c.coiffe.capuche), "relevee");
     var C = {
@@ -2787,17 +2803,17 @@ var require_aster = __commonJS({
       mouth: "#7A3B30"
     };
     function spyglass(x, y, rot, len = 9) {
-      return `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${rot})"><rect x="-1.5" y="${-len / 2}" width="3" height="${len}" rx="0.8" fill="${C.brass}" stroke="${OUT4}" stroke-width="0.9"/><rect x="-1.1" y="${-len / 2 + 0.6}" width="0.8" height="${len - 1.2}" rx="0.4" fill="${C.brassH}"/><rect x="-1.95" y="${-len / 2 - 0.4}" width="3.9" height="2.1" rx="0.6" fill="${C.brassS}" stroke="${OUT4}" stroke-width="0.8"/><line x1="-1.5" y1="0.8" x2="1.5" y2="0.8" stroke="${C.brassS}" stroke-width="0.7"/></g>`;
+      return `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${rot})"><rect x="-1.5" y="${-len / 2}" width="3" height="${len}" rx="0.8" fill="${C.brass}" stroke="#3C2819" stroke-width="0.9"/><rect x="-1.1" y="${-len / 2 + 0.6}" width="0.8" height="${len - 1.2}" rx="0.4" fill="${C.brassH}"/><rect x="-1.95" y="${-len / 2 - 0.4}" width="3.9" height="2.1" rx="0.6" fill="${C.brassS}" stroke="#3C2819" stroke-width="0.8"/><line x1="-1.5" y1="0.8" x2="1.5" y2="0.8" stroke="${C.brassS}" stroke-width="0.7"/></g>`;
     }
     __name(spyglass, "spyglass");
     function heldGlass(x, y, rot, ext) {
       const seg = [[2.2, 1.15, C.brassS], [1.2 + 3 * ext, 1.5, C.brass], [4.8, 1.9, C.brass]];
       let s = "", x0 = 0;
       for (const [len, h, fill] of seg) {
-        s += `<rect x="${r22(x0 - len)}" y="${-h}" width="${r22(len)}" height="${2 * h}" rx="0.5" fill="${fill}" stroke="${OUT4}" stroke-width="0.9"/><rect x="${r22(x0 - len + 0.5)}" y="${r22(-h + 0.4)}" width="${r22(Math.max(len - 1, 0.2))}" height="0.6" rx="0.3" fill="${C.brassH}"/>`;
+        s += `<rect x="${r22(x0 - len)}" y="${-h}" width="${r22(len)}" height="${2 * h}" rx="0.5" fill="${fill}" stroke="#3C2819" stroke-width="0.9"/><rect x="${r22(x0 - len + 0.5)}" y="${r22(-h + 0.4)}" width="${r22(Math.max(len - 1, 0.2))}" height="0.6" rx="0.3" fill="${C.brassH}"/>`;
         x0 -= len;
       }
-      s += `<rect x="${r22(x0 - 1.6)}" y="-2.35" width="2" height="4.7" rx="0.6" fill="${C.brassS}" stroke="${OUT4}" stroke-width="0.9"/>`;
+      s += `<rect x="${r22(x0 - 1.6)}" y="-2.35" width="2" height="4.7" rx="0.6" fill="${C.brassS}" stroke="#3C2819" stroke-width="0.9"/>`;
       return `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${rot})">${s}</g>`;
     }
     __name(heldGlass, "heldGlass");
@@ -3734,7 +3750,6 @@ var require_gestes_os = __commonJS({
 var require_gestes = __commonJS({
   "atelier/gestes.js"(exports, module) {
     var { OUT: OUT4, P: P2, E, L, limb, zee, r2: r22, frame, arm } = require_troupe2();
-    var { enPersonnage } = require_couleurs();
     var CADRE_PARAPLUIE = [0, -18, 48, 82];
     var CADRE_COUCHE = [0, 0, 64, 48];
     var OS = /* @__PURE__ */ __name(() => require_gestes_os(), "OS");
@@ -3771,7 +3786,7 @@ var require_gestes = __commonJS({
       const corps = frame(c, "front", "repos", 0, "endormi").replace(ZEDS, "");
       const souffle = n ? -0.5 : 0;
       const couv = `M31,${r22(9.6 + souffle)} Q46,${r22(7.6 + souffle)} 60.6,10.4 Q62.8,24 60.6,37.6 Q46,40.4 31,${r22(38.4 - souffle)} Q28.6,24 31,${r22(9.6 + souffle)} Z`;
-      return enPersonnage(`<ellipse cx="32" cy="26" rx="29" ry="14" fill="rgba(40,55,20,.16)"/>` + E(9, 24, 7.6, 11, "#F4EEDF", 1.1) + L([4.6, 18], [6.4, 15.6], "#FFFFFF", 1) + `<g transform="translate(32 24) scale(0.95) translate(-32 -24)"><g transform="translate(0 48) rotate(-90)">${corps}</g></g>` + P2(couv, couverture.fond, 1.2) + [16, 24, 32].map((y) => L([33, y + souffle * 0.5], [59.2, y], couverture.motif, 1.1)).join("") + P2(`M31,${r22(9.6 + souffle)} Q28.6,24 31,${r22(38.4 - souffle)} L34.6,${r22(38.2 - souffle)} Q32.4,24 34.6,${r22(9.8 + souffle)} Z`, couverture.motif, 0.9) + (n ? zee(30.6, 6.4, 2) + zee(34, 2.4, 2.6) : zee(30, 7.4, 1.8) + zee(33, 3.6, 2.4)));
+      return `<ellipse cx="32" cy="26" rx="29" ry="14" fill="rgba(40,55,20,.16)"/>` + E(9, 24, 7.6, 11, "#F4EEDF", 1.1) + L([4.6, 18], [6.4, 15.6], "#FFFFFF", 1) + `<g transform="translate(32 24) scale(0.95) translate(-32 -24)"><g transform="translate(0 48) rotate(-90)">${corps}</g></g>` + P2(couv, couverture.fond, 1.2) + [16, 24, 32].map((y) => L([33, y + souffle * 0.5], [59.2, y], couverture.motif, 1.1)).join("") + P2(`M31,${r22(9.6 + souffle)} Q28.6,24 31,${r22(38.4 - souffle)} L34.6,${r22(38.2 - souffle)} Q32.4,24 34.6,${r22(9.8 + souffle)} Z`, couverture.motif, 0.9) + (n ? zee(30.6, 6.4, 2) + zee(34, 2.4, 2.6) : zee(30, 7.4, 1.8) + zee(33, 3.6, 2.4));
     }
     __name(couche, "couche");
     function paume(c, [x, y], k, s = 1) {
@@ -4304,9 +4319,10 @@ var require_lorena_poses = __commonJS({
       return `<path d="M${r22(base[0])},${r22(base[1])} L${r22(tip[0])},${r22(tip[1])}" fill="none" stroke="${OUT4}" stroke-width="2.5" stroke-linecap="round"/><path d="M${r22(base[0])},${r22(base[1])} L${r22(tip[0])},${r22(tip[1])}" fill="none" stroke="${f}" stroke-width="1.3" stroke-linecap="round"/>` + E(x, y, 2, 2, f) + L([x - uy * 0.9 + ux * 0.4, y + ux * 0.9 + uy * 0.4], [x - uy * 0.2 + ux * 1.1, y + ux * 0.2 + uy * 1.1], OUT4, 0.45);
     }
     __name(index, "index");
-    function visiereMain(c, [x, y], k) {
-      const f = c.hand || c.skin, x1 = x - k * 4.6;
-      return P2(`M${r22(x + k * 0.8)},${r22(y - 1.1)} L${r22(x1 + k * 0.6)},${r22(y - 0.9)} Q${r22(x1)},${r22(y - 0.6)} ${r22(x1 + k * 0.3)},${r22(y + 0.5)} L${r22(x + k * 0.8)},${r22(y + 1.1)} Q${r22(x + k * 1.8)},${y} ${r22(x + k * 0.8)},${r22(y - 1.1)} Z`, f, 0.9) + L([x - k * 1.2, y + 0.05], [x1 + k * 1, y + 0.1], OUT4, 0.4) + E(x - k * 0.6, y + 1.2, 0.9, 0.6, f, 0.7);
+    function visiereMain(c, [x, y], k, ang) {
+      const f = c.hand || c.skin, X = /* @__PURE__ */ __name((v) => r22(x - k * v), "X"), Y = /* @__PURE__ */ __name((v) => r22(y + v), "Y");
+      const main = P2(`M${X(-0.6)},${Y(-1.7)} Q${X(2.2)},${Y(-2.5)} ${X(4.6)},${Y(-1.7)} Q${X(6.1)},${Y(-1)} ${X(5.6)},${Y(0.3)} Q${X(5)},${Y(1.4)} ${X(2.6)},${Y(1.6)} L${X(0.4)},${Y(1.8)} Q${X(-1.3)},${Y(0)} ${X(-0.6)},${Y(-1.7)} Z`, f, 0.9) + E(x - k * 1.4, y + 1.7, 1.05, 0.8, f, 0.75) + `<path d="M${X(3.4)},${Y(-1.5)} Q${X(4.4)},${Y(-0.5)} ${X(3.6)},${Y(0.6)} M${X(4.6)},${Y(-1.4)} Q${X(5.4)},${Y(-0.5)} ${X(4.8)},${Y(0.5)}" fill="none" stroke="${OUT4}" stroke-width="0.4" stroke-linecap="round"/>`;
+      return `<g transform="rotate(${r22(k * ang)} ${r22(x)} ${r22(y)})">${main}</g>`;
     }
     __name(visiereMain, "visiereMain");
     function paumeCiel(c, [x, y], k) {
@@ -4356,11 +4372,11 @@ var require_lorena_poses = __commonJS({
         fn({ view, n }) {
           const [a, b] = this.shoulders, s = n ? 0.5 : 0;
           if (view === "se") {
-            const h2 = atteint(this, a, -2.4 + s, -10.4, 0.97);
-            return { left: "", right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h2, [a[0] - 4.6, a[1] - 3.4], `<g transform="rotate(-32 ${h2[0]} ${h2[1]})">${visiereMain(this, h2, -1)}</g>`) };
+            const h2 = atteint(this, a, -6.2 + s * 0.4, -10, 0.98);
+            return { left: "", right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h2, [a[0] - 6.4, a[1] - 3.2], visiereMain(this, h2, -1, 62)) };
           }
-          const h = atteint(this, b, 3 - s, -10.4, 0.97);
-          return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: "", over: arm(this, b, h, [b[0] + 4.6, b[1] - 3.4], `<g transform="rotate(32 ${h[0]} ${h[1]})">${visiereMain(this, h, 1)}</g>`) };
+          const h = atteint(this, b, 2.6 - s * 0.4, -10, 0.98);
+          return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: "", over: arm(this, b, h, [b[0] + 5.2, b[1] - 4.2], visiereMain(this, h, 1, 38)) };
         }
       },
       // elle montre du doigt, l'ordre lancé : « Là ! » ; l'image 2, le bras se tend un peu plus
@@ -4598,7 +4614,7 @@ var require_aster2 = __commonJS({
 // personnages/cannelle.js
 var require_cannelle = __commonJS({
   "personnages/cannelle.js"(exports, module) {
-    var { OUT: OUT4, P: P2, E, L, limb, clip, expression, arm, r2: r22, lerp: lerp2, TRAITS } = require_troupe();
+    var { P: P2, E, L, limb, clip, expression, arm, r2: r22, lerp: lerp2, TRAITS } = require_troupe();
     var C = {
       skin: "#E9B98F",
       skinS: "#CF9C72",
@@ -4685,7 +4701,7 @@ var require_cannelle = __commonJS({
           const back2 = "M12,22 Q11,8.6 24,8.6 Q37,8.6 36,22 Q36.8,30 35.8,32.8 Q32.6,34 28.6,32.8 Q27,28.4 24,28.4 Q21,28.4 19.4,32.8 Q15.4,34 12.2,32.8 Q11.2,30 12,22 Z";
           s += P2(back2, C.hair) + clip(`${c.uid}h`, back2, `<rect x="8" y="6" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.6" cy="19.8" rx="13.8" ry="12.4" fill="${C.hair}"/>`) + P2(back2, "none");
           s += P2("M16.6,31.6 Q15.8,21.4 20.6,14.4", "none", 0.6) + P2("M24,26.4 Q23.4,21 24,15.4", "none", 0.6) + P2("M31.4,31.6 Q32.2,21.4 27.4,14.4", "none", 0.6);
-          const curl = /* @__PURE__ */ __name((d) => `<path d="${d}" fill="none" stroke="${OUT4}" stroke-width="1.7" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${C.hair}" stroke-width="0.7" stroke-linecap="round"/>`, "curl");
+          const curl = /* @__PURE__ */ __name((d) => `<path d="${d}" fill="none" stroke="#3C2819" stroke-width="1.7" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${C.hair}" stroke-width="0.7" stroke-linecap="round"/>`, "curl");
           s += curl("M26.4,29.2 Q27.4,30.6 26.6,31.4 Q25.8,31.8 25.7,31");
           s += L([14.6, 17.6], [16.8, 13.6], C.hairH, 1.2);
           s += limb([26.6, 9.6], [31.2, 3.8], 1.1, C.spoon) + `<g transform="rotate(40 32 3)">${E(32, 3, 1.3, 1.75, C.spoon, 0.9)}${E(31.7, 2.7, 0.5, 0.8, "#F2F4F7", 0)}</g>`;
@@ -4709,7 +4725,7 @@ var require_cannelle = __commonJS({
         const outer = se ? [[14.6, 1]] : [[16.2, -1], [31.8, 1]];
         for (const [x, d] of outer) s += L([x, 23.4], [x + (d < 0 ? -1 : 1) * 1.1, 24.1], C.nose, 0.5);
         const nx = se ? 20.8 : 24;
-        s += P2(se ? `M${nx + 0.4},24.2 Q${nx - 1.4},25.6 ${nx + 0.6},26` : `M${nx - 0.9},25.5 Q${nx},26.3 ${nx + 0.9},25.5`, "none", 0.8).replace(`stroke="${OUT4}"`, `stroke="${C.nose}"`);
+        s += P2(se ? `M${nx + 0.4},24.2 Q${nx - 1.4},25.6 ${nx + 0.6},26` : `M${nx - 0.9},25.5 Q${nx},26.3 ${nx + 0.9},25.5`, "none", 0.8).replace('stroke="#3C2819"', `stroke="${C.nose}"`);
         s += expression({
           eyes: se ? [[17.2, 22.8, 1.4], [25.2, 22.8, 1.25]] : [[19.4, 22.8, 1.45], [28.6, 22.8, 1.45]],
           ry: 2.1,
@@ -4756,7 +4772,7 @@ var require_cannelle2 = __commonJS({
 // personnages/rivet.js
 var require_rivet = __commonJS({
   "personnages/rivet.js"(exports, module) {
-    var { OUT: OUT4, P: P2, E, L, limb, clip, expression, arm, r2: r22, lerp: lerp2, TRAITS } = require_troupe();
+    var { P: P2, E, L, limb, clip, expression, arm, r2: r22, lerp: lerp2, TRAITS } = require_troupe();
     var C = {
       skin: "#DDA57C",
       skinS: "#C08A62",
@@ -4795,7 +4811,7 @@ var require_rivet = __commonJS({
         const rr = i % 2 ? r * 0.76 : r;
         pts5.push(`${r22(x + rr * Math.cos(a))},${r22(y + rr * Math.sin(a))}`);
       }
-      return P2(`M${pts5.join(" L")} Z`, C.steel, 0.8) + E(x, y, r * 0.42, r * 0.42, C.steelS, 0.7) + E(x, y, r * 0.16, r * 0.16, OUT4, 0);
+      return P2(`M${pts5.join(" L")} Z`, C.steel, 0.8) + E(x, y, r * 0.42, r * 0.42, C.steelS, 0.7) + E(x, y, r * 0.16, r * 0.16, "#3C2819", 0);
     }
     __name(gear3, "gear");
     var screwdriver = /* @__PURE__ */ __name((a, b) => limb([a[0] + (b[0] - a[0]) * 0.35, a[1] + (b[1] - a[1]) * 0.35], b, 0.6, C.steel) + limb(a, [a[0] + (b[0] - a[0]) * 0.4, a[1] + (b[1] - a[1]) * 0.4], 1.6, C.red), "screwdriver");
@@ -4832,10 +4848,10 @@ var require_rivet = __commonJS({
         const ap = APRON(k);
         s += L([19 + k, 35.4], [18.2 + k * 0.5, 32.4], C.leatherS, 1.2) + L([29 + k, 35.4], [29.8 + k * 0.5, 32.4], C.leatherS, 1.2);
         s += limb([21 + k, 44], [20.4 + k, 40.2], 0.7, C.steel) + limb([20.4 + k, 40.8], [20.1 + k, 39.4], 1.5, C.red);
-        s += `<rect x="${25.6 + k}" y="39.2" width="1.6" height="6" rx="0.3" fill="${C.wood}" stroke="${OUT4}" stroke-width="0.6"/>`;
+        s += `<rect x="${25.6 + k}" y="39.2" width="1.6" height="6" rx="0.3" fill="${C.wood}" stroke="#3C2819" stroke-width="0.6"/>`;
         s += P2(ap, C.leather) + clip(`${c.uid}a`, ap, `<rect x="${27.6 + k}" y="34" width="8" height="22" fill="${C.leatherS}"/><rect x="${18.4 + k}" y="35.8" width="1" height="15" rx="0.5" fill="${C.leatherH}"/>`) + P2(ap, "none");
-        s += `<rect x="${19.2 + k}" y="43.2" width="9.6" height="5.6" rx="0.8" fill="${C.leatherS}" stroke="${OUT4}" stroke-width="0.8"/><path d="M${20 + k},44.2 L${28 + k},44.2" stroke="${C.leatherH}" stroke-width="0.5" stroke-dasharray="0.8 0.6"/>` + L([24 + k, 43.4], [24 + k, 48.6], OUT4, 0.5);
-        s += `<rect x="${21.6 + k}" y="36.4" width="4.6" height="3.4" rx="0.5" fill="${C.leatherS}" stroke="${OUT4}" stroke-width="0.7"/>` + limb([22.6 + k, 37.6], [23.4 + k, 34.6], 0.8, C.pencil);
+        s += `<rect x="${19.2 + k}" y="43.2" width="9.6" height="5.6" rx="0.8" fill="${C.leatherS}" stroke="#3C2819" stroke-width="0.8"/><path d="M${20 + k},44.2 L${28 + k},44.2" stroke="${C.leatherH}" stroke-width="0.5" stroke-dasharray="0.8 0.6"/>` + L([24 + k, 43.4], [24 + k, 48.6], "#3C2819", 0.5);
+        s += `<rect x="${21.6 + k}" y="36.4" width="4.6" height="3.4" rx="0.5" fill="${C.leatherS}" stroke="#3C2819" stroke-width="0.7"/>` + limb([22.6 + k, 37.6], [23.4 + k, 34.6], 0.8, C.pencil);
         for (const [x, y] of [[19.4, 35.9], [28.6, 35.9], [17.6, 40.4], [30.4, 40.4]]) s += E(x + k, y, 0.45, 0.45, C.brass, 0.4);
         s += L([17.4 + k, 40.6], [30.6 + k, 40.6], C.leatherS, 0.8);
         return s;
@@ -4854,7 +4870,7 @@ var require_rivet = __commonJS({
           s += cowlick + E(12.6, 23, 1.6, 2.2, C.skin);
           s += P2(back2, C.hair) + clip(`${c.uid}h`, back2, `<rect x="8" y="4" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="18.4" rx="13.8" ry="12.8" fill="${C.hair}"/>`) + P2(back2, "none");
           s += P2("M17.6,15 Q16.8,21 18.4,28.6", "none", 0.6) + P2("M24.6,15 Q25.4,21 24.2,28.4", "none", 0.6) + P2("M31,16.4 Q32,22 30.6,29.2", "none", 0.6) + L([16.6, 10.2], [21.6, 8.6], C.hairH, 1.2);
-          s += P2("M11.2,12.2 Q24,15.8 36.8,12.2 L37,14 Q24,17.6 11,14 Z", C.strap, 0.8) + `<rect x="22.6" y="14.6" width="2.8" height="2" rx="0.4" fill="${C.brass}" stroke="${OUT4}" stroke-width="0.6"/>`;
+          s += P2("M11.2,12.2 Q24,15.8 36.8,12.2 L37,14 Q24,17.6 11,14 Z", C.strap, 0.8) + `<rect x="22.6" y="14.6" width="2.8" height="2" rx="0.4" fill="${C.brass}" stroke="#3C2819" stroke-width="0.6"/>`;
           s += c.coiffe ? c.coiffe(c, ctx, "cheveux") + c.coiffe(c, ctx, "tete") : pencil([15.4, 20.6], [9.2, 19.2]);
           return s;
         }
@@ -4910,7 +4926,7 @@ var require_rivet = __commonJS({
         const [x, y] = [view === "se" ? 25.2 : 28.6, 22.8];
         const eye = n === 0 ? E(x, y, 2.3, 3, "#2A2420", 0) + E(x + 0.8, y - 1.3, 0.9, 0.9, "#FFFFFF", 0) + E(x - 0.7, y + 1.3, 0.45, 0.45, "#FFFFFF", 0) : P2(`M${x - 2.6},${y + 1.2} Q${x},${y - 2} ${x + 2.6},${y + 1.2}`, "none", 1.4);
         const loupe = L([31.4, 13.6], [31, 19.4], C.brassS, 0.9) + E(x, y, 3.6, 3.6, C.brass, 0.9) + E(x, y, 2.9, 2.9, C.skin, 0) + eye + `<ellipse cx="${x}" cy="${y}" rx="2.9" ry="2.9" fill="${C.glass}" fill-opacity="0.35"/>` + glint(`M${r22(x - 1.8)},${r22(y - 0.6)} Q${r22(x - 1.6)},${r22(y - 1.8)} ${r22(x - 0.4)},${r22(y - 2.1)}`, 0.6) + E(x, y, 2.9, 2.9, "none", 0.8);
-        const g = gear3(36.2, 25, 2.8, n ? 22.5 : 0) + (n ? L([39.8, 21], [41.2, 19.6], OUT4, 0.6) + L([40.6, 24.2], [42.4, 23.8], OUT4, 0.6) + L([37.8, 20.6], [38.2, 18.8], OUT4, 0.6) : "");
+        const g = gear3(36.2, 25, 2.8, n ? 22.5 : 0) + (n ? L([39.8, 21], [41.2, 19.6], "#3C2819", 0.6) + L([40.6, 24.2], [42.4, 23.8], "#3C2819", 0.6) + L([37.8, 20.6], [38.2, 18.8], "#3C2819", 0.6) : "");
         const right = arm(this, [32, 34], [35.8, 28.6], [37.6, 36.4]);
         const left = arm(this, [16, 34], [14.4, 45]) + screwdriver([14.4, 44.2], [12.8, 50.2]);
         if (view === "ne") return { expr: n ? "rire" : "neutre", left, right: "", over: g + right };
@@ -9981,7 +9997,7 @@ var require_portraits = __commonJS({
   "personnages/portraits.js"(exports, module) {
     var T = require_troupe();
     var G = null;
-    var { ENCRE: OUT4 } = require_couleurs();
+    var OUT4 = "#3C2819";
     var WHITE = "#FFFFFF";
     var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
     var st = /* @__PURE__ */ __name((w) => ` stroke="${OUT4}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
@@ -10374,7 +10390,6 @@ var require_portraits = __commonJS({
 var require_troupe_refonte = __commonJS({
   "atelier/troupe_refonte.js"(exports, module) {
     var { frame } = require_troupe2();
-    var { enPersonnage } = require_couleurs();
     var MODULES = {
       lorena: [require_lorena_tenues(), require_lorena_anims()],
       agathe: [require_agathe_tenues(), require_agathe_anims()],
@@ -10407,7 +10422,7 @@ var require_troupe_refonte = __commonJS({
     function refondu(m, etat, naufrage) {
       const [T, A] = MODULES[m.refonte];
       const c = { ...T.habiller(void 0, null, etat), name: m.name, action: [m.action[0], m.action[1]] };
-      const anim = /* @__PURE__ */ __name((nom, v, n, expr, cc = c) => enPersonnage(A.dessiner(cc, nom, DIR[v], n, expr)), "anim");
+      const anim = /* @__PURE__ */ __name((nom, v, n, expr, cc = c) => A.dessiner(cc, nom, DIR[v], n, expr), "anim");
       const joue = /* @__PURE__ */ __name((nom, v) => {
         const X = A.ANIMS[nom];
         return X && X.dirs.includes(DIR[v]) ? X : null;
@@ -10547,7 +10562,6 @@ var require_torche = __commonJS({
 var require_assis = __commonJS({
   "atelier/assis.js"(exports, module) {
     var { arm, leg, limb, r2: r22 } = require_troupe2();
-    var { enPersonnage } = require_couleurs();
     var KNEE = 53;
     var SEAT = 53.6;
     var dyOf = /* @__PURE__ */ __name((c) => r22(KNEE - c.hip), "dyOf");
@@ -10591,11 +10605,11 @@ var require_assis = __commonJS({
       const dessus = up(c.overArms ? c.overArms(cc, ctx) : "");
       const tete = up(c.head(cc, ctx, act || {})) + up(c.overHead ? c.overHead(cc, ctx) : "") + (act && act.over ? act.over : "");
       return {
-        corps: enPersonnage(corps),
-        brasG: enPersonnage(armL),
-        brasD: view === "front" ? enPersonnage(armR) : "",
-        dessus: enPersonnage(dessus),
-        tete: enPersonnage(tete),
+        corps,
+        brasG: armL,
+        brasD: view === "front" ? armR : "",
+        dessus,
+        tete,
         epaules: sh,
         cou: [24, r22(sh[0][1] - 1)]
       };
@@ -19675,130 +19689,6 @@ var require_egares_voile = __commonJS({
   }
 });
 
-// atelier/carte_embarquement.js
-var require_carte_embarquement = __commonJS({
-  "atelier/carte_embarquement.js"(exports, module) {
-    var { OUT: OUT4, P: P2, E, clip, r2: r22 } = require_troupe2();
-    var W2 = 1.4;
-    var MARINE = { corps: "#2E4E8C", ombre: "#22396A", clair: "#4E72B4" };
-    var PAPIER = { corps: "#F8F0DC", ombre: "#EADBB8", fibre: "#D9C8A2", encre: "#6B5A48" };
-    var OR = { clair: "#FFE596", corps: "#E8B84A", ombre: "#B8862A" };
-    var ROUGE = "#C8463A";
-    var ENCRE = "#2E4E8C";
-    var DECHIRE = " L313,170 Q309.6,171.6 311.4,175.4 L307.8,178.6 Q305.2,182 307.4,185.6 L302.6,188 Q299.2,190.6 300.8,194.8 L295.6,196.4 Q291.4,198.6 292.4,202 L286,203 L282,204";
-    var ZONES = { photo: [29, 80, 58, 70, -4], nom: [104, 88, 128, 13] };
-    var texte = /* @__PURE__ */ __name((x, y, t, size, col, extra = "", ancre = "start") => `<text x="${r22(x)}" y="${r22(y)}" font-family="Georgia, 'Times New Roman', serif" font-size="${size}" fill="${col}" text-anchor="${ancre}" ${extra}>${t}</text>`, "texte");
-    var trait2 = /* @__PURE__ */ __name((d, color, w, extra = "") => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`, "trait");
-    var hasard = /* @__PURE__ */ __name((graine) => () => (graine = graine * 16807 % 2147483647) / 2147483647, "hasard");
-    function papierD(dechire) {
-      const bord = /* @__PURE__ */ __name((x0, y0, x1, y1, n, amp, h2) => {
-        let d2 = "";
-        for (let i = 1; i <= n; i++) {
-          const t = i / n;
-          d2 += ` L${r22(x0 + (x1 - x0) * t + (y1 !== y0 ? (h2() - 0.5) * amp : 0))},${r22(y0 + (y1 - y0) * t + (x1 !== x0 ? (h2() - 0.5) * amp : 0))}`;
-        }
-        return d2;
-      }, "bord");
-      const h = hasard(11);
-      let d = "M12,6" + bord(12, 6, 308, 6, 14, 0.9, h) + " Q314,6 314,12";
-      if (dechire) d += bord(314, 12, 314, 166, 10, 0.9, h) + DECHIRE;
-      else d += bord(314, 12, 314, 198, 12, 0.9, h) + " Q314,204 308,204";
-      d += bord(dechire ? 282 : 308, 204, 12, 204, 14, 0.9, h) + " Q6,204 6,198" + bord(6, 198, 6, 12, 12, 0.9, h) + " Q6,6 12,6 Z";
-      return d;
-    }
-    __name(papierD, "papierD");
-    function hirondelle2(x, y, s, col, ventre) {
-      const corps = "M10,0 C8,-1.7 5,-2 2.6,-1.1 L-7,-9.4 C-5.4,-5.4 -3.4,-2.4 -1.2,-0.7 L-12,-1.4 L-4.6,0.9 L-12,4.6 L-2.4,2.2 L-7.4,8.6 C-3.4,4.8 -0.6,2.6 2,2 C5,2.4 8,1.6 10,0 Z";
-      return `<g transform="translate(${r22(x)} ${r22(y)}) scale(${s})"><path d="${corps}" fill="${col}"/>` + (ventre ? `<path d="M9,0.6 C6,1.6 3.4,1.8 1.6,1.4 C3.6,2.4 6.6,2.2 9,0.6 Z" fill="${ventre}"/><circle cx="6.4" cy="-0.5" r="0.55" fill="${ventre === "#FFFFFF" ? MARINE.corps : "#FFFFFF"}"/>` : "") + "</g>";
-    }
-    __name(hirondelle2, "hirondelle");
-    function ecusson(x, y) {
-      const D = `M${x - 12},${y - 15} L${x + 12},${y - 15} L${x + 12},${y + 2} Q${x + 12},${y + 12} ${x},${y + 18} Q${x - 12},${y + 12} ${x - 12},${y + 2} Z`;
-      const d2 = `M${x - 9.4},${y - 12.4} L${x + 9.4},${y - 12.4} L${x + 9.4},${y + 1.6} Q${x + 9.4},${y + 10} ${x},${y + 15} Q${x - 9.4},${y + 10} ${x - 9.4},${y + 1.6} Z`;
-      return P2(D, OR.corps, W2) + P2(d2, MARINE.clair, 0.8) + clip("ceb", d2, `<rect x="${x}" y="${y - 14}" width="12" height="32" fill="${MARINE.corps}" opacity=".5"/>`) + hirondelle2(x - 1, y + 1, 0.82, "#FFFFFF", "#FFFFFF") + trait2(`M${x - 8},${y - 13.4} L${x + 3},${y - 13.4}`, OR.clair, 0.9);
-    }
-    __name(ecusson, "ecusson");
-    function champ(x, y, w, libelle, valeur) {
-      return texte(x, y, libelle, 5.6, PAPIER.encre, 'letter-spacing="0.6"') + trait2(`M${x},${r22(y + 9)} L${r22(x + w)},${r22(y + 9)}`, "#A8987C", 0.6) + (valeur ? texte(x + 1, y + 7.6, valeur, 8, ENCRE, 'font-style="italic"') : "");
-    }
-    __name(champ, "champ");
-    function carte(etat = "neuve") {
-      const trempee = etat === "trempee", id2 = `ce${etat[0]}`;
-      const D = papierD(trempee);
-      const h = hasard(7);
-      let s = `<path d="${D}" fill="rgba(30,20,10,.28)" transform="translate(2.4 3.2)"/>` + P2(D, PAPIER.corps, 0);
-      let grain = "";
-      for (let i = 0; i < 260; i++) grain += `<circle cx="${r22(h() * 320)}" cy="${r22(h() * 210)}" r="${r22(0.25 + h() * 0.45)}" fill="${h() > 0.5 ? PAPIER.fibre : "#FFFFFF"}" opacity="${r22(0.25 + h() * 0.35)}"/>`;
-      for (let i = 0; i < 26; i++) {
-        const x2 = h() * 300 + 10, y = h() * 190 + 10;
-        grain += trait2(`M${r22(x2)},${r22(y)} q${r22(3 + h() * 5)},${r22((h() - 0.5) * 2)} ${r22(8 + h() * 8)},${r22((h() - 0.5) * 1.4)}`, PAPIER.fibre, 0.35, 'opacity=".55"');
-      }
-      s += clip(`${id2}p`, D, `<rect x="0" y="150" width="320" height="60" fill="${PAPIER.ombre}" opacity=".45"/>` + grain + `<g opacity=".07">${hirondelle2(186, 128, 5.2, MARINE.corps)}</g><rect x="0" y="0" width="320" height="46" fill="${MARINE.corps}"/><rect x="0" y="38" width="320" height="8" fill="${MARINE.ombre}"/>` + trait2("M0,46.4 L320,46.4", OR.corps, 1.4) + trait2("M0,41 Q6,38.6 12,41 T24,41 T36,41 T48,41 T60,41 T72,41 T84,41 T96,41 T108,41 T120,41 T132,41 T144,41 T156,41 T168,41 T180,41 T192,41 T204,41 T216,41 T228,41 T240,41 T252,41 T264,41 T276,41 T288,41 T300,41 T312,41 T324,41", "#7E9CD0", 0.7) + `<rect x="243" y="47" width="80" height="170" fill="${PAPIER.ombre}" opacity=".5"/>` + (trempee ? taches() : "")) + P2(D, "none", W2);
-      s += ecusson(30, 25);
-      s += texte(50, 25, "L’HIRONDELLE", 15, "#F6EFDC", 'font-weight="bold" letter-spacing="1.6"') + texte(51, 35.4, "Compagnie des Îles de la Brume", 6.6, OR.clair, 'font-style="italic" letter-spacing="0.4"');
-      s += texte(236, 22, "BILLET", 5.4, "#B8C8E8", 'letter-spacing="1.4"', "end") + texte(236, 32, "N° 0742", 9, "#F6EFDC", 'font-weight="bold"', "end");
-      s += trait2("M12,52 L236,52 L236,198 L12,198 Z", MARINE.corps, 0.8, 'opacity=".75"') + trait2("M14.6,54.6 L233.4,54.6 L233.4,195.4 L14.6,195.4 Z", MARINE.corps, 0.4, 'opacity=".55"');
-      const coin = /* @__PURE__ */ __name((x2, y, sx, sy) => `<g transform="translate(${x2} ${y}) scale(${sx} ${sy})">${trait2("M0,9 L0,0 L9,0", OR.ombre, 1.6)}${trait2("M2.6,8 Q2.6,2.6 8,2.6", OR.corps, 0.9)}<circle cx="0" cy="0" r="1.7" fill="${OR.corps}" stroke="${OUT4}" stroke-width="0.5"/></g>`, "coin");
-      s += coin(12, 52, 1, 1) + coin(236, 52, -1, 1) + coin(12, 198, 1, -1) + coin(236, 198, -1, -1);
-      let vagues = "M28,191";
-      for (let x2 = 28; x2 < 220; x2 += 8) vagues += ` q2,-2.6 4,0 q2,2.6 4,0`;
-      s += trait2(vagues, MARINE.clair, 0.6, 'opacity=".6"');
-      const [px, py, pw, ph, pa] = ZONES.photo, cx = px + pw / 2, cy = py + ph / 2;
-      s += `<g transform="rotate(${pa} ${cx} ${cy})"><rect x="${px - 4}" y="${py - 4}" width="${pw + 8}" height="${ph + 14}" fill="rgba(30,20,10,.22)" transform="translate(1.2 1.6)"/><rect x="${px - 4}" y="${py - 4}" width="${pw + 8}" height="${ph + 14}" fill="#FFFDF6" stroke="${OUT4}" stroke-width="0.8"/><rect x="${px}" y="${py}" width="${pw}" height="${ph}" fill="#DCE6F0" stroke="#9AA8B8" stroke-width="0.5"/><path d="M${px},${py} L${px + pw},${py} L${px},${py + ph * 0.5} Z" fill="#FFFFFF" opacity=".25"/>` + (() => {
-        const mx = px - 4, my = py - 4, mr = px + pw + 4, mb = py + ph + 10;
-        return `<path d="M${mx - 2},${my + 9} L${mx - 2},${my - 2} L${mx + 9},${my - 2} Z" fill="#3A302A"/><path d="M${mr + 2},${mb - 9} L${mr + 2},${mb + 2} L${mr - 9},${mb + 2} Z" fill="#3A302A"/>`;
-      })() + texte(cx, py + ph + 7.4, "Passager", 5, "#8A7A64", 'font-style="italic"', "middle") + "</g>";
-      s += texte(104, 70, "Carte d’embarquement", 11, ENCRE, 'font-style="italic"') + trait2("M104,74 L170,74", OR.corps, 0.9);
-      s += champ(104, 86, 128, "NOM", "");
-      s += champ(104, 114, 56, "DÉPART", "Havre-Gris") + champ(166, 114, 66, "DESTINATION", "Îles de la Brume");
-      s += champ(104, 140, 128, "DATE", "Nuit de la grande marée");
-      s += champ(104, 166, 56, "PONT", "Promenade") + champ(166, 166, 30, "CABINE", "") + texte(181, 173.6, "7", 10, ENCRE, 'font-weight="bold"', "middle") + champ(202, 166, 30, "SIÈGE", "12");
-      s += trait2("M243,52 L243,198", "#8A7A64", 0.9, 'stroke-dasharray="1.4 2.2"');
-      s += clip(`${id2}e`, D, `<circle cx="243" cy="6" r="5" fill="#F4EEDF" stroke="${OUT4}" stroke-width="${W2}"/>` + (trempee ? "" : `<circle cx="243" cy="204" r="5" fill="#F4EEDF" stroke="${OUT4}" stroke-width="${W2}"/>`));
-      s += texte(279, 22, "TALON", 6, "#B8C8E8", 'letter-spacing="2"', "middle") + hirondelle2(285, 33, 0.9, "#F6EFDC");
-      s += texte(279, 68, "N° 0742", 9, ENCRE, 'font-weight="bold"', "middle") + texte(279, 84, "Cabine 7 · Siège 12", 5.6, PAPIER.encre, "", "middle");
-      s += texte(279, 98, "Havre-Gris", 6.2, ENCRE, 'font-style="italic"', "middle") + trait2("M274,102 L284,102 M281,99.6 L284,102 L281,104.4", PAPIER.encre, 0.7) + texte(279, 113, "Îles de la Brume", 6.2, ENCRE, 'font-style="italic"', "middle");
-      const hb = hasard(29);
-      let barres = "", x = 254;
-      while (x < 304) {
-        const w = 0.6 + Math.floor(hb() * 3) * 0.6;
-        barres += `<rect x="${r22(x)}" y="148" width="${r22(w)}" height="30" fill="#2A2420"/>`;
-        x += w + 0.8 + hb() * 1.2;
-      }
-      s += barres + texte(279, 186, "0742 · 07 · 12", 5, PAPIER.encre, 'letter-spacing="0.6"', "middle");
-      if (etat === "tampon") s += tampon();
-      if (trempee) s += clip(`${id2}d`, D, trempe(h) + trait2(`M314,166${DECHIRE}`, "#E2D2AE", 2.2, 'opacity=".9"'));
-      return s;
-    }
-    __name(carte, "carte");
-    function tampon() {
-      const h = hasard(5);
-      let trous = "";
-      for (let i = 0; i < 40; i++) trous += `<circle cx="${r22(150 + h() * 90)}" cy="${r22(160 + h() * 34)}" r="${r22(0.4 + h() * 0.9)}" fill="${PAPIER.corps}"/>`;
-      return `<g transform="rotate(-11 196 176)" opacity=".86"><rect x="152" y="160" width="88" height="32" rx="5" fill="none" stroke="${ROUGE}" stroke-width="2.6"/><rect x="156" y="163.6" width="80" height="24.8" rx="3" fill="none" stroke="${ROUGE}" stroke-width="0.9"/>` + texte(196, 179, "EMBARQUÉ", 11.5, ROUGE, 'font-weight="bold" letter-spacing="1"', "middle") + texte(196, 186.4, "L’HIRONDELLE · CABINE 7", 4.4, ROUGE, 'letter-spacing="0.6"', "middle") + trous + "</g>";
-    }
-    __name(tampon, "tampon");
-    function taches() {
-      const aureole = /* @__PURE__ */ __name((x, y, rx, ry, a) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${a} ${x} ${y})" fill="rgba(150,160,150,.16)" stroke="rgba(120,96,60,.38)" stroke-width="0.9"/><ellipse cx="${x - rx * 0.2}" cy="${y - ry * 0.15}" rx="${rx * 0.6}" ry="${ry * 0.55}" transform="rotate(${a} ${x} ${y})" fill="none" stroke="rgba(120,96,60,.2)" stroke-width="0.6"/>`, "aureole");
-      return aureole(206, 150, 34, 22, -12) + aureole(60, 188, 30, 14, 8) + aureole(282, 132, 22, 34, 4) + aureole(150, 60, 20, 10, 0) + '<rect x="0" y="0" width="320" height="210" fill="rgba(110,140,160,.10)"/>';
-    }
-    __name(taches, "taches");
-    function trempe(h) {
-      let s = "";
-      for (const [x, y, n] of [[108, 122, 5], [170, 122, 6], [108, 148, 8], [108, 174, 4], [180, 176, 1], [205, 174, 2], [272, 70, 4], [266, 100, 3], [266, 115, 4]]) {
-        for (let i = 0; i < n; i++) {
-          const xx = x + i * 6 + h() * 3, l = 3 + h() * 7;
-          s += trait2(`M${r22(xx)},${y} q${r22((h() - 0.5) * 1.4)},${r22(l / 2)} ${r22((h() - 0.5) * 1.2)},${r22(l)}`, ENCRE, r22(0.5 + h() * 0.5), 'opacity=".32"') + `<circle cx="${r22(xx)}" cy="${r22(y + l)}" r="0.7" fill="${ENCRE}" opacity=".3"/>`;
-        }
-      }
-      s += trait2("M96,6 Q110,100 128,204", "#FFFFFF", 1.4, 'opacity=".55"') + trait2("M97.6,6 Q111.6,100 129.6,204", "rgba(120,96,60,.35)", 0.8);
-      return s;
-    }
-    __name(trempe, "trempe");
-    module.exports = { carte, ZONES };
-  }
-});
-
 // atelier/figer.js
 var require_figer = __commonJS({
   "atelier/figer.js"(exports, module) {
@@ -19947,15 +19837,15 @@ var require_figer = __commonJS({
       const vifs = els.filter((el) => estVif(el) && !els.some((a) => a !== el && estVif(a) && dedans(el, a)));
       if (!vifs.length) throw new Error("figer : aucun groupe vivant à séparer");
       const vivant = /* @__PURE__ */ __name((el) => vifs.some((v) => v === el || dedans(el, v)), "vivant");
-      const fige = new Map(balisesFigees(corps, els, t));
-      for (const el of els) if (ANIM.has(el.nom)) fige.set(el, "");
+      const fige2 = new Map(balisesFigees(corps, els, t));
+      for (const el of els) if (ANIM.has(el.nom)) fige2.set(el, "");
       const garde = /* @__PURE__ */ __name((el) => boucle(el) && vivant(el), "garde");
       const enVie = new Map(balisesFigees(corps, els, t, garde));
       for (const el of els) if (ANIM.has(el.nom) && !garde(el)) enVie.set(el, "");
       for (const el of els) if (garde(el) && debuts(attr(el.attrs, "begin"))[0] > 0) enVie.set(el, poser(corps.slice(el.de, el.a), "begin", void 0));
       const cache = /* @__PURE__ */ __name((el) => attr(enVie.get(el) ?? corps.slice(el.de, el.a), "opacity") === "0" && !els.some((a) => a.parent === el && garde(a) && attr(a.attrs, "attributeName") === "opacity"), "cache");
       for (const el of els) if (!ANIM.has(el.nom) && vivant(el) && cache(el)) enVie.set(el, "");
-      const rf = new Map(fige);
+      const rf = new Map(fige2);
       for (const el of vifs) rf.set(el, "");
       const fond = recomposer(corps, 0, corps.length, rf);
       let corpsAnime = "";
@@ -19965,7 +19855,7 @@ var require_figer = __commonJS({
           if (/^(defs|clipPath|mask|pattern|symbol|marker)$/.test(p.nom)) throw new Error(`figer : un groupe vivant dans <${p.nom}>`);
           parents.unshift(p);
         }
-        const ouvre = parents.map((p) => fige.get(p) ?? corps.slice(p.de, p.a));
+        const ouvre = parents.map((p) => fige2.get(p) ?? corps.slice(p.de, p.a));
         if (enVie.get(el) === "" || ouvre.some((b) => attr(b, "opacity") === "0")) continue;
         corpsAnime += ouvre.join("") + recomposer(corps, el.de, el.fin, enVie) + parents.reverse().map((p) => `</${p.nom}>`).join("");
       }
@@ -19981,7 +19871,7 @@ var require_figer = __commonJS({
         pris.add(id2);
         const el = parId.get(id2);
         if (!el) throw new Error(`figer : #${id2} introuvable`);
-        const txt = recomposer(corps, el.de, el.fin, fige);
+        const txt = recomposer(corps, el.de, el.fin, fige2);
         defs.push(txt);
         aVoir.push(...cites(txt));
       }
@@ -19992,7 +19882,14 @@ var require_figer = __commonJS({
       return { fond, anime };
     }
     __name(separer, "separer");
-    module.exports = { vif, separer, sansVif };
+    function fige(corps, t = Infinity) {
+      const els = lire(corps);
+      const f = new Map(balisesFigees(corps, els, t));
+      for (const el of els) if (ANIM.has(el.nom)) f.set(el, "");
+      return recomposer(corps, 0, corps.length, f);
+    }
+    __name(fige, "fige");
+    module.exports = { vif, separer, sansVif, fige };
   }
 });
 
@@ -20001,7 +19898,6 @@ var require_ouverture = __commonJS({
   "atelier/ouverture.js"(exports, module) {
     var { effile } = require_egares_voile();
     var { brumeFrame } = require_brume();
-    var { carte: carteEmbarquement } = require_carte_embarquement();
     var { vif } = require_figer();
     var W2 = 400;
     var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
@@ -20053,132 +19949,6 @@ var require_ouverture = __commonJS({
     var fonduUneFois = /* @__PURE__ */ __name((attr, values, keyTimes, dur, begin = 0) => `<animate attributeName="${attr}" values="${values}" keyTimes="${keyTimes}" calcMode="spline" keySplines="${SPL(keyTimes.split(";").length - 1)}" dur="${f(dur)}s" begin="${f(begin)}s" fill="freeze"/>`, "fonduUneFois");
     var path = /* @__PURE__ */ __name((d, fill, extra = "") => `<path d="${d}" fill="${fill}"${extra ? " " + extra : ""}/>`, "path");
     var trait2 = /* @__PURE__ */ __name((d, c, w, extra = "") => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"${extra ? " " + extra : ""}/>`, "trait");
-    var bez = /* @__PURE__ */ __name((p0, p1, p2, p3, t) => {
-      const u = 1 - t;
-      return [0, 1].map((j) => u * u * u * p0[j] + 3 * u * u * t * p1[j] + 3 * u * t * t * p2[j] + t * t * t * p3[j]);
-    }, "bez");
-    var g1 = /* @__PURE__ */ __name((n) => Math.round(n * 10) / 10, "g1");
-    var lisse = /* @__PURE__ */ __name((pts5) => `M${pts5[0].map(g1).join(",")}` + pts5.slice(1).map((p, i) => {
-      const q = pts5[i + 2];
-      return q ? ` Q${p.map(g1).join(",")} ${g1((p[0] + q[0]) / 2)},${g1((p[1] + q[1]) / 2)}` : ` L${p.map(g1).join(",")}`;
-    }).join(""), "lisse");
-    function racineForme(p0, c1, c2, p3, w0, noeuds = [0.3, 0.58]) {
-      const N = 16, cote = [], autre = [], lum = [], ecorce = [[], []];
-      for (let i = 0; i <= N; i++) {
-        const t = i / N, p = bez(p0, c1, c2, p3, t), q = bez(p0, c1, c2, p3, Math.min(1, t + 0.01)), o = bez(p0, c1, c2, p3, Math.max(0, t - 0.01));
-        const dx = q[0] - o[0], dy = q[1] - o[1], l = Math.hypot(dx, dy) || 1;
-        let nx = -dy / l, ny = dx / l;
-        if (ny > 0) {
-          nx = -nx;
-          ny = -ny;
-        }
-        let w = Math.max(1.2, w0 / 2 * (1 - t) ** 0.8);
-        for (const k of noeuds) w += w0 / 2 * 0.16 * Math.exp(-(((t - k) / 0.035) ** 2));
-        cote.push([p[0] + nx * w, p[1] + ny * w]);
-        autre.push([p[0] - nx * w, p[1] - ny * w]);
-        lum.push([p[0] + nx * w * 0.3, p[1] + ny * w * 0.3]);
-        [-0.4, 0.3].forEach((k, j) => ecorce[j].push([p[0] + nx * w * k, p[1] + ny * w * k]));
-      }
-      return {
-        corps: lisse([...cote, ...autre.reverse()]) + " Z",
-        lumiere: lisse([...cote, ...lum.reverse()]) + " Z",
-        ecorce: ecorce.map((l) => lisse(l.slice(2, N - 2)))
-      };
-    }
-    __name(racineForme, "racineForme");
-    function racine(r, k) {
-      const ph = k / 3 * Math.PI * 2;
-      const o = /* @__PURE__ */ __name((a, amp) => amp * Math.sin(ph + a), "o");
-      const c1 = [r.c1[0] + o(r.s, 10), r.c1[1] + o(r.s + 1, 8)];
-      const c2 = [r.c2[0] + o(r.s + 2, 16), r.c2[1] + o(r.s + 3, 12)];
-      const b = [r.pointe[0] + o(r.s + 4, 22), r.pointe[1] + o(r.s + 5, 16)];
-      return { ...racineForme(r.base, c1, c2, b, r.w, r.noeuds), c1, c2, b };
-    }
-    __name(racine, "racine");
-    function racines01() {
-      const D = Defs("rac");
-      let s = `<rect width="${W2}" height="${W2}" fill="${D.lin([[0, "#1B4A5C"], [0.22, "#0E2B3A"], [0.6, "#061722"], [1, "#010508"]], 0, 0, 0, W2)}"/>`;
-      const surf = /* @__PURE__ */ __name((k) => `M0,0 L400,0 L400,${f(22 + 4 * Math.sin(k))} ` + Array.from({ length: 9 }, (_, i) => {
-        const x = 400 - (i + 1) * 50;
-        return `Q${f(x + 25)},${f(30 + 6 * Math.sin(k + i * 1.3))} ${x},${f(22 + 5 * Math.sin(k + i * 0.9 + 1))}`;
-      }).join(" ") + " Z", "surf");
-      s += `<path d="${surf(0)}" fill="${D.lin([[0, "#7FC4C8", 0.55], [1, "#3E8A98", 0.18]], 0, 0, 0, 36)}">${boucle("d", [surf(0), surf(2.1), surf(4.2)], 3.6)}</path>`;
-      for (let i = 0; i < 7; i++) {
-        const x = 20 + i * 56;
-        s += `<path d="M${x},${f(30 + 4 * hash(i, 1))} q14,-5 28,0 q12,4 24,-1" fill="none" stroke="#BFF0EE" stroke-width="1.2" stroke-linecap="round" opacity="0.35">${boucle("opacity", [0.1, 0.45, 0.2], 1.4 + hash(i, 3), hash(i, 5) * 2)}</path>`;
-      }
-      const loin = [
-        { base: [-60, 430], c1: [40, 300], c2: [110, 220], pointe: [178, 120], w: 120, s: 0.3 },
-        { base: [470, 460], c1: [380, 330], c2: [330, 240], pointe: [276, 140], w: 110, s: 1.7 }
-      ];
-      const flouLoin = D.flou(3.2);
-      for (const r of loin) {
-        const k = [0, 1, 2].map((i) => racine(r, i).corps);
-        s += `<path d="${k[0]}" fill="#0C2230" opacity="0.85" filter="${flouLoin}">${boucle("d", k, 7.5, r.s)}</path>`;
-      }
-      const CHOC = 2.45;
-      const tremble = `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;5 -4;-6 3;4 -2;-2 1;0 0" keyTimes="0;${f(CHOC / 3)};${f((CHOC + 0.05) / 3)};${f((CHOC + 0.12) / 3)};${f((CHOC + 0.2) / 3)};${f((CHOC + 0.3) / 3)};1" dur="3s" fill="freeze" additive="sum"/>`;
-      const vacille = `<animate attributeName="opacity" values="1;1;0.15;0.9;0.1;0.7;0.2" keyTimes="0;${f(CHOC / 3)};${f((CHOC + 0.04) / 3)};${f((CHOC + 0.1) / 3)};${f((CHOC + 0.16) / 3)};${f((CHOC + 0.26) / 3)};1" dur="3s" fill="freeze"/>`;
-      const coque2 = `<g>${tremble}<g>${vaVient("rotate", "-3 150 40", "3.4 150 40", 3.2)}` + path("M62,10 Q66,40 104,52 L196,56 Q232,52 246,26 L250,8 Z", D.lin([[0, "#163240"], [1, "#04101A"]], 0, 8, 0, 56)) + path("M70,26 Q80,44 108,50 L192,53 Q222,50 238,30", "none", 'stroke="#2E5C68" stroke-width="1.2" opacity="0.6"') + // l'hélice et le gouvernail
-      path("M232,30 L248,46 L240,52 L226,38 Z", "#061520") + `<circle cx="126" cy="52" r="3.4" fill="#F4FFF4"/><circle cx="126" cy="52" r="9" fill="#DFFFF4" opacity="0.35"/><g>${vacille}${vaVient("rotate", "-14 126 52", "10 126 52", 3.4, 0.6)}<path d="M126,52 L18,430 L238,430 Z" fill="${D.lin([[0, "#DFFFF2", 0.5], [0.55, "#9FE0D2", 0.24], [1, "#6FBFB0", 0.04]], 126, 52, 128, 430)}" filter="${D.flou(9)}"/><path d="M126,52 L86,430 L170,430 Z" fill="${D.lin([[0, "#F4FFF8", 0.55], [0.5, "#BFF2E4", 0.14], [1, "#BFF2E4", 0]], 126, 52, 128, 430)}" filter="${D.flou(4)}"/></g></g></g>`;
-      const pres = [
-        { base: [-90, 360], c1: [30, 320], c2: [150, 300], pointe: [250, 196], w: 104, s: 0.9, noeuds: [0.26, 0.52] },
-        { base: [500, 330], c1: [400, 290], c2: [320, 330], pointe: [246, 292], w: 92, s: 2.4, noeuds: [0.3, 0.6] },
-        { base: [120, 490], c1: [150, 420], c2: [230, 400], pointe: [186, 318], w: 120, s: 4.1, noeuds: [0.34] }
-      ];
-      let devant = "";
-      pres.forEach((r, i) => {
-        const k = [0, 1, 2].map((j) => racine(r, j));
-        const dur = 7 + i * 0.8;
-        const corps = D.lin([[0, "#010407"], [0.55, "#06131B"], [1, "#0E2430"]], r.base[0], r.base[1], r.pointe[0], r.pointe[1]);
-        devant += `<path d="${k[0].corps}" fill="${corps}">${boucle("d", k.map((x) => x.corps), dur, r.s)}</path>`;
-        devant += `<path d="${k[0].lumiere}" fill="#2E6268" opacity="0.4">${boucle("d", k.map((x) => x.lumiere), dur, r.s)}${boucle("opacity", [0.18, 0.5, 0.26], 3.4, 0.6 + i * 0.4)}</path>`;
-        for (let j = 0; j < 2; j++) devant += `<path d="${k[0].ecorce[j]}" fill="none" stroke="${j === 0 ? "#0B1E28" : "#1E4048"}" stroke-width="1.2" stroke-linecap="round" opacity="0.7">${boucle("d", k.map((x) => x.ecorce[j]), dur, r.s)}</path>`;
-        for (let j = 0; j < 2; j++) {
-          const rad = [0, 1, 2].map((m) => {
-            const q = k[m], t = 0.42 + j * 0.18;
-            const [px, py] = bez(r.base, q.c1, q.c2, q.b, t);
-            const a = (j % 2 ? -1 : 1) * (1 + 0.35 * Math.sin(m * 2.1 + i + j)) + (j === 2 ? 0.6 : 0);
-            return racineForme([px, py], [px + 26 * Math.cos(a), py - 26 * Math.sin(a) - 8], [px + 42 * Math.cos(a), py - 46], [px + 50 * Math.cos(a + 0.5 * Math.sin(m + j)), py - 60 + 10 * Math.sin(m + j)], 12 - j * 2, []).corps;
-          });
-          devant += `<path d="${rad[0]}" fill="#061620">${boucle("d", rad, 6.2 + j * 0.7, r.s + j)}</path>`;
-        }
-      });
-      const frappe = [
-        racineForme([-40, 430], [30, 360], [80, 330], [128, 318], 86, [0.32]),
-        racineForme([-40, 430], [24, 368], [70, 338], [112, 330], 86, [0.32]),
-        racineForme([-40, 430], [10, 380], [30, 360], [58, 352], 86, [0.32]),
-        racineForme([-40, 430], [20, 300], [196, 230], [166, 60], 86, [0.32])
-      ];
-      const kt4 = `0;${f(1.4 / 3)};${f(2.1 / 3)};${f(CHOC / 3)};1`;
-      const anim = /* @__PURE__ */ __name((k) => `<animate attributeName="d" values="${frappe.map((x) => x[k]).concat([frappe[3][k]]).join(";")}" keyTimes="${kt4}" calcMode="spline" keySplines="0.45 0 0.55 1;0.4 0 0.6 1;0.8 0 1 1;0 0 1 1" dur="3s" fill="freeze"/>`, "anim");
-      devant += `<path d="${frappe[0].corps}" fill="${D.lin([[0, "#010407"], [0.6, "#071620"], [1, "#12303A"]], -40, 430, 166, 60)}">${anim("corps")}</path>`;
-      devant += `<path d="${frappe[0].lumiere}" fill="#3E7A78" opacity="0.45">${anim("lumiere")}</path>`;
-      const t0 = f(CHOC);
-      devant += `<circle cx="166" cy="58" r="10" fill="none" stroke="#DFFFF4" stroke-width="3" opacity="0"><animate attributeName="r" values="10;90" begin="${t0}s" dur="0.5s" fill="freeze"/><animate attributeName="opacity" values="0.9;0" begin="${t0}s" dur="0.5s" fill="freeze"/></circle>`;
-      for (let i = 0; i < 16; i++) {
-        const a = -Math.PI / 2 + (hash(i, 71) - 0.5) * 2.6, v = 30 + hash(i, 73) * 70;
-        devant += `<circle cx="166" cy="60" r="${f(1.2 + hash(i, 75) * 2.4)}" fill="none" stroke="#E8FFF8" stroke-width="0.9" opacity="0"><animateTransform attributeName="transform" type="translate" values="0 0;${f(Math.cos(a) * v)} ${f(Math.sin(a) * v * 0.6 + 30)}" begin="${t0}s" dur="0.55s" fill="freeze"/><animate attributeName="opacity" values="0.9;0" begin="${t0}s" dur="0.55s" fill="freeze"/></circle>`;
-      }
-      let neige = "";
-      for (let i = 0; i < 46; i++) {
-        const x = f(20 + hash(i, 11) * 340), y = f(60 + hash(i, 13) * 330), r = f(0.6 + hash(i, 15) * 1.4);
-        neige += `<circle cx="${x}" cy="${y}" r="${r}" fill="#CFF6EE" opacity="${f(0.25 + hash(i, 17) * 0.5)}">${defile("0 0", `${f(-6 + hash(i, 19) * 12)} -26`, 6 + hash(i, 21) * 5, hash(i, 23) * 6)}</circle>`;
-      }
-      let bulles = "";
-      for (let i = 0; i < 12; i++) {
-        const x = f(100 + hash(i, 31) * 60), r = f(1.4 + hash(i, 33) * 2.6), d = f(1.8 + hash(i, 35) * 1.4);
-        if (i === 10) bulles = vif(bulles);
-        bulles += `<circle cx="${x}" cy="150" r="${r}" fill="none" stroke="#DFFFF8" stroke-width="0.8" opacity="0.7">${defile("0 0", `${f(-8 + hash(i, 37) * 16)} -110`, d, hash(i, 39) * d)}${boucle("opacity", [0, 0.8, 0.5], d, hash(i, 39) * d)}</circle>`;
-      }
-      const halo = `<ellipse cx="138" cy="262" rx="110" ry="70" fill="${D.rad([[0, "#8FD8C8", 0.32], [1, "#8FD8C8", 0]], 138, 262, 110)}">${boucle("opacity", [0.6, 1, 0.75], 3.4, 0.6)}</ellipse>`;
-      s += coque2 + halo + neige + devant + bulles;
-      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#000000", 0], [0.7, "#000000", 0.35], [1, "#000000", 0.8]], 160, 160, 330)}"/>`;
-      s += `<rect width="${W2}" height="${W2}" fill="#DFFFF4" opacity="0"><animate attributeName="opacity" values="0;0.45;0" keyTimes="0;0.25;1" begin="${t0}s" dur="0.35s" fill="freeze"/></rect>`;
-      s += `<rect width="${W2}" height="${W2}" fill="#000" opacity="0">${fonduUneFois("opacity", "0;0;1", `0;${f((CHOC + 0.15) / 3)};1`, 3)}</rect>`;
-      return D.out(s);
-    }
-    __name(racines01, "racines01");
     var COUCHANT = { haut: "#241E4A", mi: "#5E3A6E", bas: "#D8664A", horizon: "#FFD98E", soleil: "#FFF4CC", merLoin: "#5B4878", merPres: "#2B3558", sableMouille: "#9C6A62", sable: "#D6A77E", sableOmbre: "#8E6450" };
     function etoileDeMer2(x, y, r, a, c = "#E8744A") {
       let d = "";
@@ -20230,44 +20000,6 @@ var require_ouverture = __commonJS({
     }
     __name(plageCouchant, "plageCouchant");
     var objetsPlage = /* @__PURE__ */ __name((D) => galet2(D, 70, 342, 10, 6) + galet2(D, 330, 360, 13, 7) + galet2(D, 300, 322, 6, 3.6) + coquillage(150, 340, 5) + coquillage(262, 372, 4, "#F6C8B8") + etoileDeMer2(232, 336, 11, 0.3) + etoileDeMer2(96, 380, 8, 1.1, "#D85A6A") + algue(24, 318, 1.1) + algue(308, 300, 0.8), "objetsPlage");
-    function paupieres01() {
-      const D = Defs("pau");
-      const plage = `<g transform="translate(200 210) rotate(-5) scale(1.12) translate(-200 -210)">${plageCouchant(D, { soleil: 236, horizon: 186, rivage: 252, objets: objetsPlage(D) + valise(330, 268, 0.7) + planche(40, 262, 40, -8) })}</g>`;
-      let s = plage + `<g filter="${D.flou(7)}">${fonduUneFois("opacity", "1;1;0.75;0.9;0.45;0.6;0", "0;0.15;0.32;0.45;0.62;0.75;1", 5.2)}${plage}</g>`;
-      for (let i = 0; i < 9; i++) s += `<ellipse cx="${f(20 + hash(i, 61) * 360)}" cy="${f(372 + hash(i, 63) * 30)}" rx="${f(6 + hash(i, 65) * 8)}" ry="${f(4 + hash(i, 67) * 5)}" fill="#C89A72" opacity="0.6" filter="${D.flou(2.5)}"/>`;
-      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFD8A0", 0], [0.7, "#5A2E3A", 0.2], [1, "#1A0E18", 0.75]], 200, 200, 290)}"/>`;
-      const lids = /* @__PURE__ */ __name((flouL) => {
-        const haut = `<g filter="${flouL}">${uneFois("translate", "0 0;0 0;0 -86;0 0;0 -176;0 -6;0 -6;0 -330", "0;0.17;0.31;0.42;0.58;0.69;0.78;1", 3.6)}<path d="M-40,-420 L440,-420 L440,186 Q200,246 -40,186 Z" fill="#0A0508"/><path d="M-40,182 Q200,242 440,182" fill="none" stroke="#3A1A1E" stroke-width="8" opacity="0.8"/></g>`;
-        const bas = `<g filter="${flouL}">${uneFois("translate", "0 0;0 0;0 70;0 0;0 150;0 4;0 4;0 300", "0;0.17;0.31;0.42;0.58;0.69;0.78;1", 3.6)}<path d="M-40,224 Q200,176 440,224 L440,820 L-40,820 Z" fill="#0A0508"/></g>`;
-        return haut + bas;
-      }, "lids");
-      s += lids(D.flou(5));
-      return D.out(s);
-    }
-    __name(paupieres01, "paupieres01");
-    function carte01() {
-      const D = Defs("car");
-      const cx = 214, cy = 300;
-      const blanc = `<g transform="rotate(-12 ${cx} ${cy})"><rect x="${cx - 6}" y="${cy - 3.6}" width="12" height="7.2" rx="0.8" fill="#F6EEDC" stroke="#8A7A64" stroke-width="0.6"/><rect x="${cx - 6}" y="${cy - 3.6}" width="12" height="2.2" fill="#2E4E8C"/></g><circle cx="${cx + 4}" cy="${cy - 2}" r="2" fill="#FFFFFF">${boucle("opacity", [0.2, 1, 0.4], 1.6)}${boucle("r", [1.4, 3.2, 1.8], 1.6)}</circle>`;
-      const loin = plageCouchant(D, { soleil: 150, horizon: 182, rivage: 250, objets: objetsPlage(D) + coque(70, 276, 0.8, 6) + planche(300, 270, 46, 10) + valise(352, 262, 0.6) + blanc });
-      let s = `<g transform="translate(${cx} ${cy})"><g>${uneFois("scale", "1;1;7", "0;0.6;1", 5.2)}<g transform="translate(${-cx} ${-cy})">${loin}</g></g>${fonduUneFois("opacity", "1;1;0", "0;0.78;1", 5.2)}</g>`;
-      let pres = `<rect width="${W2}" height="${W2}" fill="${D.lin([[0, "#C8906C"], [0.5, "#B07A60"], [1, "#7A4E44"]], 0, 0, 120, 400)}"/>`;
-      for (let i = 0; i < 9; i++) pres += trait2(`M-10,${30 + i * 44} q60,-10 120,0 t120,0 t120,0 t120,0`, "#8E5E4E", 3, 'opacity="0.35"') + trait2(`M-10,${27 + i * 44} q60,-10 120,0 t120,0 t120,0 t120,0`, "#E8B890", 1.2, 'opacity="0.4"');
-      for (let i = 0; i < 90; i++) pres += `<circle cx="${f(hash(i, 81) * 400)}" cy="${f(hash(i, 83) * 400)}" r="${f(0.6 + hash(i, 85) * 1.4)}" fill="${hash(i, 87) < 0.5 ? "#F2CFA6" : "#6A443A"}" opacity="0.55"/>`;
-      pres += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFD08A", 0.45], [1, "#FFD08A", 0]], 40, 60, 360)}"/>`;
-      pres += `<g transform="translate(200 206) rotate(-14) scale(0.62) translate(-160 -105)"><rect x="6" y="10" width="320" height="210" rx="10" fill="#3A2016" opacity="0.35" filter="${D.flou(6)}"/>${carteEmbarquement("trempee")}</g>`;
-      let vivant = "";
-      const flaque = /* @__PURE__ */ __name((k) => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)} L410,410 L-10,410 Z`, "flaque");
-      vivant += `<path d="${flaque(0)}" fill="${D.lin([[0, "#9EB8D0", 0.5], [1, "#5A6E8E", 0.75]], 0, 260, 0, 400)}">${boucle("d", [flaque(10), flaque(-14), flaque(2)], 6)}</path>`;
-      const bord = /* @__PURE__ */ __name((k) => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)}`, "bord");
-      vivant += `<path d="${bord(0)}" fill="none" stroke="#FFF4E6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="18 6 4 8" opacity="0.9">${boucle("d", [bord(10), bord(-14), bord(2)], 6)}</path>`;
-      for (let i = 0; i < 10; i++) vivant += `<circle cx="${f(40 + hash(i, 91) * 320)}" cy="${f(320 + hash(i, 93) * 60)}" r="${f(1.2 + hash(i, 95) * 2)}" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6">${boucle("opacity", [0, 0.7, 0.3], 2 + hash(i, 97) * 2, hash(i, 99) * 3)}</circle>`;
-      for (let i = 0; i < 5; i++) vivant += `<circle cx="${f(150 + hash(i, 101) * 110)}" cy="${f(170 + hash(i, 103) * 70)}" r="1.6" fill="#FFFFFF">${boucle("opacity", [0, 0.9, 0], 1.8 + hash(i, 105), hash(i, 107) * 2)}</circle>`;
-      pres += vif(vivant);
-      s += `<g opacity="0">${fonduUneFois("opacity", "0;0;1", "0;0.74;1", 5.4)}<g transform="translate(200 206)"><g>${uneFois("scale", "1.18;1.18;1", "0;0.74;1", 5.6)}<g transform="translate(-200 -206)">${pres}</g></g></g></g>`;
-      return D.out(s);
-    }
-    __name(carte01, "carte01");
     function plage02() {
       const D = Defs("pla");
       let s = plageCouchant(D, { soleil: 236, horizon: 196, rivage: 262, objets: objetsPlage(D) + coque(352, 300, 0.9, -8) + valise(46, 300, 0.85) + planche(300, 282, 50, 6) });
@@ -20399,20 +20131,6 @@ var require_ouverture = __commonJS({
       return D.out(s);
     }
     __name(epave10, "epave10");
-    var bouee = /* @__PURE__ */ __name((x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s)})"><ellipse cx="0" cy="0" rx="14" ry="6" fill="#F2EEE6" stroke="#4A3A34" stroke-width="1"/><ellipse cx="0" cy="-0.6" rx="6" ry="2.4" fill="#9C6A62"/>${[0, 1, 2, 3].map((k) => {
-      const a = k / 4 * Math.PI * 2 + 0.4;
-      return `<path d="M${f(Math.cos(a) * 7)},${f(Math.sin(a) * 3)} L${f(Math.cos(a) * 14)},${f(Math.sin(a) * 6)}" stroke="#C8463A" stroke-width="4.2"/>`;
-    }).join("")}<ellipse cx="0" cy="0" rx="14" ry="6" fill="none" stroke="#4A3A34" stroke-width="1"/></g>`, "bouee");
-    var valiseOuverte = /* @__PURE__ */ __name((x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s)})"><ellipse cx="2" cy="3" rx="30" ry="6" fill="#5A3A40" opacity="0.35"/>${path("M-18,0 L16,0 L14,-10 L-16,-10 Z", "#7A4A30", 'stroke="#3A2016" stroke-width="1"')}${path("M-16,-10 L-26,-26 L8,-30 L14,-10 Z", "#8E5A3A", 'stroke="#3A2016" stroke-width="1"')}${path("M-14,-10 Q-6,-16 2,-11 Q8,-15 13,-10 Z", "#E8E0D4")}${path("M10,-2 Q22,-6 30,2 Q22,6 12,4 Z", "#4E7AB8", 'stroke="#2A3A5A" stroke-width="0.6"')}${path("M-22,-2 Q-30,2 -36,0 Q-30,-6 -20,-6 Z", "#E8B84A", 'stroke="#7A5A20" stroke-width="0.6"')}${trait2("M-12,-4 l20,0", "#5A3420", 1)}</g>`, "valiseOuverte");
-    function greve01() {
-      const D = Defs("gre");
-      const objets = objetsPlage(D) + etoileDeMer2(186, 352, 9, 0.8, "#F08A5A") + coquillage(120, 300, 4.4, "#FFE0D0") + galet2(D, 176, 300, 7, 4) + coque(300, 300, 1.3, -10) + valiseOuverte(352, 330, 1.1) + bouee(248, 288, 0.9) + planche(290, 262, 60, 8) + valise(380, 276, 0.8) + coque(392, 352, 0.9, 14);
-      const plage = plageCouchant(D, { soleil: 120, horizon: 186, rivage: 254, objets });
-      let s = `<g transform="translate(200 200)"><g>${uneFois("translate", "60 0;60 0;-56 6", "0;0.18;1", 6.4)}<g>${vaVient("translate", "0 0", "-4 2", 7, 0)}<g transform="scale(1.32) translate(-200 -200)">${plage}</g></g></g></g>`;
-      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFD8A0", 0], [0.75, "#3A1E2E", 0.18], [1, "#1A0E18", 0.55]], 200, 210, 300)}"/>`;
-      return D.out(s);
-    }
-    __name(greve01, "greve01");
     function vent03() {
       const D = Defs("ven");
       const h = 204;
@@ -20445,7 +20163,7 @@ var require_ouverture = __commonJS({
       return D.out(s);
     }
     __name(vent03, "vent03");
-    module.exports = { greve01, vent03, racines01, paupieres01, carte01, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait: trait2, hash, f, W: W2, galet: galet2, coquillage, algue, etoileDeMer: etoileDeMer2, planche };
+    module.exports = { vent03, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait: trait2, hash, f, W: W2, galet: galet2, coquillage, algue, etoileDeMer: etoileDeMer2, planche };
   }
 });
 
@@ -20708,12 +20426,61 @@ var require_papier = __commonJS({
       return `<defs><pattern id="${pref}grain" patternUnits="userSpaceOnUse" width="64" height="64">${t}</pattern></defs><rect width="400" height="400" fill="url(#${pref}grain)"/>`;
     }
     __name(grain, "grain");
+    var ENCRE = "#1E1A22";
+    function rugueux(pts5, amp = 1.4, seed = 1, pas = 7) {
+      const out = [];
+      for (let i = 0; i < pts5.length; i++) {
+        const [ax, ay] = pts5[i], [bx, by] = pts5[(i + 1) % pts5.length], l = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(l / pas));
+        const nx = -(by - ay) / (l || 1), ny = (bx - ax) / (l || 1);
+        for (let k = 0; k < n; k++) {
+          const t = k / n, e = (hash(seed * 31 + i, k) - 0.5) * 2 * amp;
+          out.push([ax + (bx - ax) * t + nx * e, ay + (by - ay) * t + ny * e]);
+        }
+      }
+      return `M${out.map(([x, y]) => `${f(x)},${f(y)}`).join(" L")} Z`;
+    }
+    __name(rugueux, "rugueux");
+    var courbe = /* @__PURE__ */ __name((fn, n = 24) => Array.from({ length: n + 1 }, (_, k) => fn(k / n)), "courbe");
+    function piece(D, pts5, fill, o = {}) {
+      const d = rugueux(pts5, o.amp ?? 1.4, o.seed ?? 1);
+      let s = `<path d="${d}" fill="${fill}" stroke="${ENCRE}" stroke-width="${o.encre ?? 1.5}" stroke-linejoin="round"/>`;
+      if (o.texture) s += `<path d="${d}" fill="url(#${o.texture})" opacity="${o.textureA ?? 1}"/>`;
+      if (o.bord) {
+        const haut = pts5.slice(0, o.bordN ?? Math.ceil(pts5.length / 2));
+        s += `<path d="M${haut.map(([x, y]) => `${f(x)},${f(y + 1.2)}`).join(" L")}" fill="none" stroke="${o.bord}" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>`;
+      }
+      return s;
+    }
+    __name(piece, "piece");
+    function papiers(pref) {
+      const tache = /* @__PURE__ */ __name((x, y, r, c, a) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 0.6)}" fill="${c}" opacity="${f(a)}"/>`, "tache");
+      const fibres = /* @__PURE__ */ __name((n, c, a, k) => Array.from({ length: n }, (_, i) => {
+        const x = hash(i, k) * 80, y = hash(i, k + 1) * 80, an = hash(i, k + 2) * Math.PI, l = 2 + 5 * hash(i, k + 3);
+        return `<path d="M${f(x)},${f(y)} l${f(Math.cos(an) * l)},${f(Math.sin(an) * l)}" stroke="${c}" stroke-width="0.5" opacity="${f(a)}"/>`;
+      }).join(""), "fibres");
+      const motif = /* @__PURE__ */ __name((id2, corps, t = 80) => `<pattern id="${pref}${id2}" patternUnits="userSpaceOnUse" width="${t}" height="${t}">${corps}</pattern>`, "motif");
+      return `<defs>` + motif("ciel", Array.from({ length: 14 }, (_, i) => tache(hash(i, 1) * 200, hash(i, 2) * 200, 10 + 30 * hash(i, 3), i % 2 ? "#FFFFFF" : "#0A0E28", 0.025)).join("") + Array.from({ length: 70 }, (_, i) => {
+        const x = hash(i, 4) * 200, y = hash(i, 5) * 200, an = hash(i, 6) * Math.PI, l = 2 + 5 * hash(i, 7);
+        return `<path d="M${f(x)},${f(y)} l${f(Math.cos(an) * l)},${f(Math.sin(an) * l)}" stroke="#C8D0F0" stroke-width="0.5" opacity="0.1"/>`;
+      }).join(""), 200) + motif("pierre", Array.from({ length: 14 }, (_, i) => tache(hash(i, 11) * 80, hash(i, 12) * 80, 4 + 9 * hash(i, 13), i % 3 ? "#0A0C12" : "#A8B4C8", i % 3 ? 0.14 : 0.08)).join("") + Array.from({ length: 22 }, (_, i) => `<circle cx="${f(hash(i, 14) * 80)}" cy="${f(hash(i, 15) * 80)}" r="0.6" fill="#05070C" opacity="0.4"/>`).join("")) + motif("mer", Array.from({ length: 16 }, (_, i) => `<path d="M${f(hash(i, 21) * 80)},${f(hash(i, 22) * 80)} q8,-1 ${f(10 + 16 * hash(i, 23))},0" stroke="${i % 3 ? "#0A1430" : "#9AAAE0"}" stroke-width="${f(0.8 + hash(i, 24))}" fill="none" opacity="${i % 3 ? 0.3 : 0.18}" stroke-linecap="round"/>`).join("")) + motif("roc", Array.from({ length: 40 }, (_, i) => `<circle cx="${f(hash(i, 31) * 80)}" cy="${f(hash(i, 32) * 80)}" r="${f(0.4 + hash(i, 33))}" fill="${i % 4 ? "#06050A" : "#B8B4C8"}" opacity="${i % 4 ? 0.35 : 0.2}"/>`).join("") + fibres(12, "#B8B4C8", 0.15, 34)) + motif("bois", Array.from({ length: 10 }, (_, i) => `<path d="M${f(hash(i, 41) * 80)},0 q${f(2 - 4 * hash(i, 42))},40 0,80" stroke="#05080A" stroke-width="0.7" fill="none" opacity="0.35"/>`).join("")) + `</defs>`;
+    }
+    __name(papiers, "papiers");
+    var spirale = /* @__PURE__ */ __name((x, y, r, d = 1, tours = 1.6) => {
+      let s = `M${f(x)},${f(y)}`;
+      const n = Math.round(tours * 10);
+      for (let k = 1; k <= n; k++) {
+        const a = k / 10 * Math.PI * 2 * d - Math.PI / 2, rr = r * (1 - k / (n + 2));
+        s += ` L${f(x + Math.cos(a) * rr)},${f(y + r + Math.sin(a) * rr)}`;
+      }
+      return s;
+    }, "spirale");
+    var volute = /* @__PURE__ */ __name((d, couleur, dur, beg, w = 1.8) => `<path d="${d}" fill="none" stroke="${couleur}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="120" stroke-dashoffset="120"><animate attributeName="stroke-dashoffset" values="120;0;0;120" keyTimes="0;0.35;0.7;1" calcMode="spline" keySplines="0.4 0 0.2 1;0 0 1 1;0.6 0 0.8 1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`, "volute");
     function pantinAssis(c, view, x, y, s, m, id2, L, i, expr, geste, feu) {
       const { l, repere } = lumieresLocales(L, x, y, s, m);
       const box2 = [-4, -6, 56, 74];
       const p0 = assisPieces(c, view, 0, expr, geste), p1 = geste ? null : assisPieces(c, view, 1, expr, geste);
       const d = Math.hypot(x - feu[0], y - feu[1]) || 1, ox = f((x - feu[0]) / d * 0.7 * m), oy = f(0.7);
-      const piece = /* @__PURE__ */ __name((corps, k) => {
+      const piece2 = /* @__PURE__ */ __name((corps, k) => {
         if (!corps) return "";
         const lit2 = eclairerNuit(corps, `${id2}${k}`, box2, l);
         return `<use href="#${id2}${k}S" color="${NUIT}" opacity="0.4" transform="translate(${ox} ${oy})"/>${lit2}`;
@@ -20722,9 +20489,9 @@ var require_papier = __commonJS({
       const [eg, ed] = p0.epaules, cou = p0.cou;
       const tourne = /* @__PURE__ */ __name((a0, a1, [px, py], dur, beg) => vaVient("rotate", `${a0} ${f(px)} ${f(py)}`, `${a1} ${f(px)} ${f(py)}`, dur, beg), "tourne");
       const amp = geste ? 5 : 1.6;
-      const brasG = p0.brasG ? `<g>${tourne(-amp, amp * 0.6, eg, t * 0.6, b)}${piece(p0.brasG, "g")}</g>` : "";
-      const brasD = p0.brasD ? `<g>${tourne(amp, -amp * 0.6, ed, t * 0.6, b + t * 0.3)}${piece(p0.brasD, "d")}</g>` : "";
-      let tete = piece(p0.tete, "t");
+      const brasG = p0.brasG ? `<g>${tourne(-amp, amp * 0.6, eg, t * 0.6, b)}${piece2(p0.brasG, "g")}</g>` : "";
+      const brasD = p0.brasD ? `<g>${tourne(amp, -amp * 0.6, ed, t * 0.6, b + t * 0.3)}${piece2(p0.brasD, "d")}</g>` : "";
+      let tete = piece2(p0.tete, "t");
       if (p1) {
         const per = 3.6 + i % 3 * 0.9, t0 = f(1 + i * 0.7);
         const cl = /* @__PURE__ */ __name((on) => `<animate attributeName="opacity" values="${on ? "1;0;1" : "0;1;0"}" keyTimes="0;${f(t0 / per)};${f((t0 + 0.16) / per)}" calcMode="discrete" dur="${f(per)}s" repeatCount="indefinite"/>`, "cl");
@@ -20732,11 +20499,11 @@ var require_papier = __commonJS({
       }
       tete = `<g>${tourne(-3, 3.5, cou, t * 1.3, b)}<g>${vaVient("translate", "0 0", "0 -0.45", t * 0.65, b)}${tete}</g></g>`;
       const vers = feu[0] > x ? 1 : -1, assise = 53.6;
-      const tout = piece(p0.corps, "c") + brasG + brasD + (p0.dessus ? eclairerNuit(p0.dessus, `${id2}o`, box2, l) : "") + tete;
+      const tout = piece2(p0.corps, "c") + brasG + brasD + (p0.dessus ? eclairerNuit(p0.dessus, `${id2}o`, box2, l) : "") + tete;
       return `<g transform="${repere}"><g>${tourne(f(vers * m * 0.4), f(vers * m * 2.2), [24, assise], t * 1.6, b)}<g transform="translate(24 ${assise})"><g>${vaVient("scale", "1 1", "1.012 1.025", t * 0.85, b)}<g transform="translate(-24 ${-assise})">${tout}</g></g></g></g></g>`;
     }
     __name(pantinAssis, "pantinAssis");
-    module.exports = { ombrePapier, plan, grain, pantinAssis };
+    module.exports = { ombrePapier, plan, grain, pantinAssis, ENCRE, rugueux, courbe, piece, papiers, spirale, volute };
   }
 });
 
@@ -21142,7 +20909,6 @@ var require_scenes7 = __commonJS({
     }
     __name(rocher2, "rocher");
     var greve = /* @__PURE__ */ __name((id2, horizon = 250, seed = 3) => ciel(id2 + "c", NUIT.ciel, horizon) + etoiles(26, horizon - 70, seed) + mer(id2 + "m", horizon - 54, horizon, NUIT.mer) + nappe(horizon - 40, 0.2, 14) + sable(id2 + "s", horizon), "greve");
-    var vignette = /* @__PURE__ */ __name((id2, a = 0.45, rgb = "2,4,10") => `<defs>${rad(id2, [[0, `rgb(${rgb})`, 0], [0.55, `rgb(${rgb})`, 0], [1, `rgb(${rgb})`, a]], 0.5, 0.5, 0.74)}</defs><rect x="0" y="0" width="${W2}" height="${W2}" fill="url(#${id2})"/>`, "vignette");
     var tache = /* @__PURE__ */ __name((id2, x, y, rx, ry, rgb, a, dur = 3) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.5, `rgb(${rgb})`, a * 0.4], [1, `rgb(${rgb})`, 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="url(#${id2})">${palpite("opacity", "0.82;1;0.82", dur)}</ellipse>`, "tache");
     var ombreAvatar = /* @__PURE__ */ __name((id2, a, k = 0.34) => a ? `<defs>${rad(id2, [[0, "#000000", k], [0.65, "#000000", k * 0.45], [1, "#000000", 0]])}</defs><ellipse cx="${a.x}" cy="${f(a.y - 1)}" rx="${f(16 * a.echelle)}" ry="${f(4.4 * a.echelle)}" fill="url(#${id2})"/>` : "", "ombreAvatar");
     var lueurVoilee = /* @__PURE__ */ __name((id2, x, y, r, a = 0.2, rgb = "200,214,240", dur = 9) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.3, `rgb(${rgb})`, a * 0.45], [0.65, `rgb(${rgb})`, a * 0.12], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${x}" cy="${y}" r="${r}" fill="url(#${id2})">${palpite("opacity", "0.75;1;0.75", dur)}</circle>`, "lueurVoilee");
@@ -21254,35 +21020,6 @@ var require_scenes7 = __commonJS({
         }, "fond"),
         devant: /* @__PURE__ */ __name(() => pluie(34, 0.28, 13, 1.8), "devant")
       };
-      S["01_vague"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = ciel("vgC", TEMPETE.ciel) + `<rect x="0" y="250" width="400" height="150" fill="#6B4E36"/><rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>`;
-          s += `<defs>${lin("vgV", [[0, "#3E6890"], [0.4, "#1E3A60"], [1, "#0E1E38"]])}</defs>`;
-          const v = P2("M-30,560 L-30,270 Q120,150 260,190 Q340,204 368,250 Q340,270 300,262 Q330,300 420,320 L420,560 Z", "url(#vgV)", 3) + trait2("M10,250 Q130,150 250,200", "#9FB6CF", 4) + trait2("M260,190 Q330,200 362,244", "#E8F0F8", 6) + [[300, 240, 8], [330, 250, 6], [350, 232, 5], [272, 230, 5]].map(([x, y, r]) => E(x, y, r, r * 0.8, "#E8F0F8", 1)).join("");
-          s += `<g transform="translate(0 260)"><g>${uneFois("translate", "0 0;0 -150;0 -330", "0;0.45;1", 1.6)}<g>${vaVient("translate", "-8 0", "8 4", 1.8)}${v}</g></g></g>`;
-          return s + pluie(50, 0.35, 17);
-        }, "fond")
-      };
-      S["01_noir"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = `<defs>${lin("noC", [[0, "#02040A"], [0.7, "#060B18"], [1, "#0B1424"]])}${rad("noL", [[0, "rgb(110,130,170)", 0.2], [0.4, "rgb(110,130,170)", 0.07], [1, "rgb(110,130,170)", 0]])}${rad("noH", [[0, "rgb(70,95,140)", 0.3], [0.5, "rgb(70,95,140)", 0.12], [1, "rgb(70,95,140)", 0]])}${lin("noV", [[0, "#8FB0D8", 0.55], [0.5, "#4A6A98", 0.25], [1, "#4A6A98", 0]])}</defs><rect x="0" y="0" width="400" height="400" fill="url(#noC)"/>`;
-          s += `<circle cx="318" cy="74" r="110" fill="url(#noL)">${palpite("opacity", "0.6;1;0.6", 11)}</circle><ellipse cx="200" cy="288" rx="300" ry="52" fill="url(#noH)">${palpite("opacity", "0.7;1;0.7", 7)}</ellipse>`;
-          for (let i = 0; i < 4; i++) {
-            const y = [284, 298, 316, 342][i], per = 110 + i * 30, a = 3 + i * 2.5, n = Math.ceil(W2 / per) + 3;
-            let dp = `M${-per},${y}`;
-            for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.5)} ${f(per / 2)},0`;
-            dp += ` L${W2 + per * 2},${y + 10 + i * 4} L${-per},${y + 10 + i * 4} Z`;
-            s += `<g>${vaVient("translate", "0 -2", `0 ${2 + i}`, 5 + i * 1.3, i * 1.1)}<g>${defile("0 0", `${i % 2 ? per : -per} 0`, 14 + i * 3, i * 2.3)}<path d="${dp}" fill="url(#noV)" opacity="${f(0.12 + i * 0.06)}"/></g></g>`;
-          }
-          const g = rnd(23);
-          for (let i = 0; i < 9; i++) {
-            const x = f(g() * W2), y = f(286 + g() * 60), l = f(10 + g() * 26), d = f(4 + g() * 4);
-            s += `<rect x="${x}" y="${y}" width="${l}" height="1.6" rx="0.8" fill="#9FB8D8" opacity="0">${palpite("opacity", "0;0.3;0", d, g() * d)}</rect>`;
-          }
-          s += `<g opacity=".5">${scintille(318, 290, 5, "150,170,205", 0.3)}</g>`;
-          return s + vignette("noG", 0.6);
-        }, "fond")
-      };
       S["01_greve"] = {
         fond: /* @__PURE__ */ __name(() => ciel("gcC", NUIT.ciel, 240) + etoiles(20, 170, 41) + lune("gcL", 300, 70) + mer("gcM", 190, 250, NUIT.mer) + reflet(300, 196) + nappe(200, 0.18, 15) + sable("gcS", 250) + H.planche(40, 296, 96, -8) + H.planche(300, 326, 70, 12) + H.chaiseLongue(300, 286, 168) + nappe(300, 0.14, 19, 26, 1.2), "fond"),
         devant: /* @__PURE__ */ __name(() => nappe(370, 0.16, 17, 34, 1.4), "devant")
@@ -21352,63 +21089,3284 @@ var require_scenes7 = __commonJS({
   }
 });
 
+// atelier/gravure.js
+var require_gravure = __commonJS({
+  "atelier/gravure.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { rugueux, courbe } = require_papier();
+    var ENCRE = "#0D0905";
+    var ovale = /* @__PURE__ */ __name((x, y, rx, ry, n = 20, a0 = 0) => courbe((t) => [x + rx * Math.cos(a0 + t * Math.PI * 2), y + ry * Math.sin(a0 + t * Math.PI * 2)], n).slice(0, -1), "ovale");
+    function gonfle(pts5, d) {
+      const n = pts5.length;
+      let aire = 0;
+      for (let i = 0; i < n; i++) aire += pts5[i][0] * pts5[(i + 1) % n][1] - pts5[(i + 1) % n][0] * pts5[i][1];
+      const sens = aire >= 0 ? 1 : -1;
+      return pts5.map((p, i) => {
+        const a = pts5[(i - 1 + n) % n], b = pts5[(i + 1) % n], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1;
+        return [p[0] + sens * dy * d / l, p[1] - sens * dx * d / l];
+      });
+    }
+    __name(gonfle, "gonfle");
+    var chemin = /* @__PURE__ */ __name((pts5, ferme = false) => `M${pts5.map(([x, y]) => `${f(x)},${f(y)}`).join(" L")}${ferme ? " Z" : ""}`, "chemin");
+    function atelier(pref) {
+      let n = 0;
+      const defs = [];
+      const id2 = /* @__PURE__ */ __name(() => `${pref}${n++}`, "id");
+      const stops = /* @__PURE__ */ __name((list) => list.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}"${a < 1 ? ` stop-opacity="${a}"` : ""}/>`).join(""), "stops");
+      const A = {
+        lin(list, x1, y1, x2, y2) {
+          const i = id2();
+          defs.push(`<linearGradient id="${i}" gradientUnits="userSpaceOnUse" x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}">${stops(list)}</linearGradient>`);
+          return `url(#${i})`;
+        },
+        rad(list, cx, cy, r) {
+          const i = id2();
+          defs.push(`<radialGradient id="${i}" gradientUnits="userSpaceOnUse" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}">${stops(list)}</radialGradient>`);
+          return `url(#${i})`;
+        },
+        clip(d) {
+          const i = id2();
+          defs.push(`<clipPath id="${i}"><path d="${d}"/></clipPath>`);
+          return `url(#${i})`;
+        },
+        // un masque : ce qu'il montre (blanc) et cache (noir), sur un cadre
+        masque(peinture, [x, y, w, h]) {
+          const i = id2();
+          defs.push(`<mask id="${i}" maskUnits="userSpaceOnUse" x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}"><rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" fill="${peinture}"/></mask>`);
+          return `url(#${i})`;
+        },
+        // le papier vieilli : des taches et des fibres, posées sur une pièce
+        papier() {
+          if (A._papier) return A._papier;
+          const i = id2(), t = Array.from({ length: 10 }, (_, k) => `<ellipse cx="${f(hash(k, 1) * 90)}" cy="${f(hash(k, 2) * 90)}" rx="${f(8 + 14 * hash(k, 3))}" ry="${f(5 + 9 * hash(k, 4))}" fill="${k % 3 ? "#3A2408" : "#FFF4C0"}" opacity="${k % 3 ? 0.035 : 0.03}"/>`).join("") + Array.from({ length: 50 }, (_, k) => `<circle cx="${f(hash(k, 5) * 90)}" cy="${f(hash(k, 6) * 90)}" r="${f(0.3 + 0.5 * hash(k, 7))}" fill="#2A1A06" opacity="0.18"/>`).join("");
+          defs.push(`<pattern id="${i}" patternUnits="userSpaceOnUse" width="90" height="90">${t}</pattern>`);
+          return A._papier = `url(#${i})`;
+        },
+        out(body) {
+          return `<defs>${defs.join("")}</defs>${body}`;
+        }
+      };
+      return A;
+    }
+    __name(atelier, "atelier");
+    var LUMIERE = [0.55, -0.83];
+    var lumiere = /* @__PURE__ */ __name((v) => {
+      const l = Math.hypot(v[0], v[1]);
+      LUMIERE = [v[0] / l, v[1] / l];
+    }, "lumiere");
+    var STYLE = { papier: true, modele: "#1A0E04", reflet: "#FFF2C0", hachures: 1, lisere: null };
+    function avecStyle(style, dessin) {
+      const avant = { ...STYLE };
+      Object.assign(STYLE, style);
+      try {
+        return dessin();
+      } finally {
+        Object.assign(STYLE, avant);
+      }
+    }
+    __name(avecStyle, "avecStyle");
+    function hachures([x, y, w, h], angle, pas, seed) {
+      const a = angle * Math.PI / 180, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux, cx = x + w / 2, cy = y + h / 2, R = Math.hypot(w, h) / 2 + 2;
+      let d = "";
+      for (let k = -R, i = 0; k <= R; k += pas, i++) {
+        const j1 = (hash(i, seed) - 0.5) * pas * 0.5, j2 = (hash(i, seed + 1) - 0.5) * pas * 0.5;
+        d += `M${f(cx + nx * (k + j1) - ux * R)},${f(cy + ny * (k + j1) - uy * R)} L${f(cx + nx * (k + j2) + ux * R)},${f(cy + ny * (k + j2) + uy * R)} `;
+      }
+      return d;
+    }
+    __name(hachures, "hachures");
+    var boite = /* @__PURE__ */ __name((pts5) => {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const [x, y] of pts5) {
+        x0 = Math.min(x0, x);
+        y0 = Math.min(y0, y);
+        x1 = Math.max(x1, x);
+        y1 = Math.max(y1, y);
+      }
+      return [x0 - 3, y0 - 3, x1 - x0 + 6, y1 - y0 + 6];
+    }, "boite");
+    function gravure(A, pts5, couleur, o = {}) {
+      const amp = o.amp ?? 0.5, seed = o.seed ?? 1, d = rugueux(pts5, amp, seed, 6), b = o.boite || boite(pts5), [bx, by, bw, bh] = b;
+      const L = o.lumiere || LUMIERE, cx = bx + bw / 2, cy = by + bh / 2, R = Math.hypot(bw, bh) / 2, encre = o.encre ?? ENCRE;
+      const sens = /* @__PURE__ */ __name((debut, fin = 1) => A.masque(A.lin([[0, "#000"], [debut, "#000"], [fin, "#FFF"]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R), b), "sens");
+      const clip = A.clip(d), pas = o.pas ?? 3, angle = o.angle ?? 38;
+      let s = o.portee === 0 ? "" : `<path d="${d}" fill="#000" opacity="${o.portee ?? 0.4}" transform="translate(${o.dx ?? 3} ${o.dy ?? 4})"/>`;
+      s += `<path d="${d}" fill="${couleur}"/>${STYLE.papier ? `<path d="${d}" fill="${A.papier()}"/>` : ""}`;
+      s += `<g clip-path="${clip}">`;
+      s += `<rect x="${f(bx)}" y="${f(by)}" width="${f(bw)}" height="${f(bh)}" fill="${A.lin([[0, STYLE.reflet, o.reflet ?? 0.18], [0.45, STYLE.reflet, 0], [0.55, STYLE.modele, 0], [1, STYLE.modele, o.modele ?? 0.42]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R)}"/>`;
+      const leger = STYLE.hachures < 1 ? ` opacity="${STYLE.hachures}"` : "";
+      s += `<path d="${hachures(b, angle, pas, seed)}" stroke="${encre}" stroke-width="${o.epaisseur ?? 1.1}" mask="${sens(o.ombre ?? 0.22)}" fill="none"${leger}/>`;
+      if (o.noir !== false) s += `<path d="${hachures(b, angle + 74, pas * 1.05, seed + 7)}" stroke="${encre}" stroke-width="${(o.epaisseur ?? 1.1) * 0.9}" mask="${sens(o.noir ?? 0.55)}" fill="none"${leger}/>`;
+      const tailles = o.tailles ?? 2;
+      if (tailles) {
+        let t = "";
+        for (let k = 1; k <= tailles; k++) t += rugueux(gonfle(pts5, -k * (o.tailleP ?? 3)), amp * 0.6, seed + 20 + k, 6) + " ";
+        s += `<path d="${t}" stroke="${encre}" stroke-width="0.6" fill="none" mask="${sens(0.45)}"/>`;
+      }
+      if (o.dans) s += o.dans;
+      if (STYLE.lisere) s += `<path d="${d}" fill="none" stroke="${STYLE.lisere}" stroke-width="${f((o.trait ?? 2) * 1.3)}" stroke-opacity="0.6" transform="translate(${f(-L[0] * 2.2)} ${f(-L[1] * 2.2)})"/>`;
+      s += "</g>";
+      s += `<path d="${d}" fill="none" stroke="${encre}" stroke-width="${o.trait ?? 2}" stroke-linejoin="round"/>`;
+      return s;
+    }
+    __name(gravure, "gravure");
+    var trait2 = /* @__PURE__ */ __name((d, w = 1.2, c = ENCRE, op = 1) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${op < 1 ? ` opacity="${op}"` : ""}/>`, "trait");
+    module.exports = { atelier, gravure, hachures, trait: trait2, ovale, gonfle, chemin, boite, lumiere, avecStyle, ENCRE };
+  }
+});
+
+// atelier/theatre_pont.js
+var require_theatre_pont = __commonJS({
+  "atelier/theatre_pont.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe, spirale } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, chemin, lumiere, ENCRE } = require_gravure();
+    var W2 = 400;
+    var MARGE = 40;
+    var G = -MARGE;
+    var D_ = W2 + MARGE;
+    lumiere([-0.62, -0.78]);
+    var C = { ocre: "#D6AE48", creme: "#E6D29A", moutarde: "#B4862A", sarcelle: "#2C5A54", sarcelleC: "#467866", sarcelleS: "#1A3634", rouge: "#8A2214", brun: "#4E3218", coque: "#2C2822", fenetre: "#F2C24E", soufre: "#E8B030" };
+    var plein = /* @__PURE__ */ __name((A, peinture) => `<rect x="${G}" y="${G}" width="${D_ - G}" height="${D_ - G}" fill="${peinture}"/>`, "plein");
+    function bandeSpirale(x, y, r, sens = 1, tours = 1.7, w = 3) {
+      const n = Math.round(tours * 14), pts5 = Array.from({ length: n + 1 }, (_, k) => {
+        const a = k / 14 * Math.PI * 2 * sens - Math.PI / 2, rr = r * (1 - k / (n + 3));
+        return [x + Math.cos(a) * rr, y + Math.sin(a) * rr];
+      });
+      const bord = /* @__PURE__ */ __name((k, s2) => {
+        const [ax, ay] = pts5[Math.max(0, k - 1)], [bx, by] = pts5[Math.min(n, k + 1)], l = Math.hypot(bx - ax, by - ay) || 1, ww = w / 2 * (1 - k / n * 0.7);
+        return [pts5[k][0] + s2 * -(by - ay) * ww / l, pts5[k][1] + s2 * (bx - ax) * ww / l];
+      }, "bord");
+      return [...pts5.map((_, k) => bord(k, 1)), ...pts5.map((_, k) => bord(n - k, -1))];
+    }
+    __name(bandeSpirale, "bandeSpirale");
+    var volute = /* @__PURE__ */ __name((x, y, r, sens = 1, tours = 1.5, w = 2.2) => trait2(spirale(x, y, r, sens, tours), w + 1.4, ENCRE) + trait2(spirale(x, y, r, sens, tours), w * 0.5, C.creme, 0.9), "volute");
+    var DEF = { x: 0, y: 0, s: 1, r: 0, o: 1, z: 1 };
+    function valeur(cles, t, props) {
+      if (t <= cles[0][0]) return { ...cles[0][1] };
+      for (let i = 1; i < cles.length; i++) {
+        const [t1, c1] = cles[i];
+        if (t <= t1) {
+          const [t0, c0] = cles[i - 1], k = (t - t0) / (t1 - t0 || 1), v = {};
+          for (const p of props) {
+            const a = c0[p] ?? DEF[p], b = c1[p] ?? DEF[p];
+            if (c0[p] !== void 0 || c1[p] !== void 0) v[p] = Math.round((a + (b - a) * k) * 100) / 100;
+          }
+          if (c0.e) v.e = c0.e;
+          return v;
+        }
+      }
+      return { ...cles[cles.length - 1][1] };
+    }
+    __name(valeur, "valeur");
+    function parTemps(T, cles, props = ["x", "y", "s", "r", "o"]) {
+      const tri = [...cles].sort((a2, b) => a2[0] - b[0]);
+      let a = 0;
+      return T.map((d) => {
+        const b = a + d, dedans = tri.filter(([t]) => t > a && t < b).map(([t, c]) => [t - a, c]);
+        const out = [[0, valeur(tri, a, props)], ...dedans, [d, valeur(tri, b, props)]];
+        a = b;
+        return out;
+      });
+    }
+    __name(parTemps, "parTemps");
+    var balance = /* @__PURE__ */ __name((t0, t1, periode, val) => {
+      const out = [];
+      for (let t = t0, k = 0; t <= t1; t += periode / 2, k++) out.push([Math.round(t), { ...val(k, t), e: "ease-in-out" }]);
+      return out;
+    }, "balance");
+    var secoue = /* @__PURE__ */ __name((t, cle, amp, n = 6, pas = 60) => Array.from({ length: n }, (_, k) => [t + k * pas, { ...cle, x: (cle.x || 0) + (k % 2 ? -1 : 1) * amp * (1 - k / n), y: (cle.y || 0) + (k % 2 ? 1 : -1) * amp * 0.6 * (1 - k / n), e: "linear" }]).concat([[t + n * pas, { ...cle }]]), "secoue");
+    var bouffees = /* @__PURE__ */ __name((t0, t1, pas, de, vers, duree = pas) => {
+      const k = [];
+      for (let t = t0; t < t1; t += pas) k.push([t - 1, { ...de, o: 0, e: "linear" }], [t, { ...de, e: "ease-out" }], [t + duree - 1, { ...vers }]);
+      return [[0, { ...de, o: 0 }], ...k, [t1 + duree, { ...vers, o: 0 }]];
+    }, "bouffees");
+    var LUNE = [300, 104];
+    function fond(p) {
+      const A = atelier(`${p}F`);
+      let s = plein(A, A.lin([[0, "#0C1618"], [0.5, "#1C2C2A"], [1, "#2C3A30"]], 0, G, 0, 300));
+      s += plein(A, A.rad([[0, C.soufre, 0.55], [0.5, "#C87A20", 0.18], [1, "#C87A20", 0]], 80, 60, 230));
+      s += plein(A, A.rad([[0, C.creme, 0.3], [1, C.creme, 0]], LUNE[0], LUNE[1], 120));
+      for (let i = 0; i < 16; i++) {
+        const x = hash(i, 1) * 480 - 40, y = hash(i, 2) * 260 - 20, r = 40 + 70 * hash(i, 3);
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.4)}" ry="${f(r * 0.7)}" fill="${A.rad([[0, i % 3 ? "#4E5E52" : "#1A2424", 0.55], [1, "#4E5E52", 0]], x, y, r * 1.4)}"/>`;
+      }
+      for (let i = 0; i < 5; i++) s += `<path d="M${G},${f(60 + i * 46)} q120,${f(-20 + 40 * hash(i, 4))} 240,0 t240,0" fill="none" stroke="#0A1212" stroke-width="${f(10 + 10 * hash(i, 5))}" opacity="0.25"/>`;
+      return A.out(s);
+    }
+    __name(fond, "fond");
+    var brume = /* @__PURE__ */ __name((p, id2, y0, y1, c, op) => {
+      const A = atelier(`${p}${id2}`);
+      return A.out(plein(A, A.lin([[0, c, 0], [0.55, c, op], [1, c, 0]], 0, y0, 0, y1)));
+    }, "brume");
+    var lueur = /* @__PURE__ */ __name((p, id2, x, y, r, c) => {
+      const A = atelier(`${p}${id2}`);
+      return A.out(plein(A, A.rad([[0, c, 0.85], [0.4, c, 0.35], [1, c, 0]], x, y, r)));
+    }, "lueur");
+    function teinte(p) {
+      const A = atelier(`${p}T`);
+      const grain = Array.from({ length: 70 }, (_, k) => `<circle cx="${f(hash(k, 11) * 40)}" cy="${f(hash(k, 12) * 40)}" r="${f(0.3 + 0.4 * hash(k, 13))}" fill="${k % 2 ? "#000" : "#FFF4C8"}" opacity="${k % 2 ? 0.22 : 0.1}"/>`).join("");
+      return `<defs><pattern id="${p}Tg" patternUnits="userSpaceOnUse" width="40" height="40">${grain}</pattern></defs>` + A.out(plein(A, A.rad([[0, C.soufre, 0.1], [1, C.soufre, 0]], 80, 60, 300)) + plein(A, A.lin([[0, "#1A3A36", 0.12], [1, "#1A3A36", 0.2]], 0, 0, 0, 400)) + plein(A, A.rad([[0, "#000", 0], [0.6, "#000", 0.1], [1, "#000", 0.7]], 200, 200, 330)) + plein(A, `url(#${p}Tg)`));
+    }
+    __name(teinte, "teinte");
+    var SPIRALES = [[56, 50, 15, 1], [176, 28, 11, -1], [128, 112, 13, 1], [372, 50, 12, -1], [236, 176, 9, 1], [20, 150, 10, -1]];
+    function spiraleCiel(p, i) {
+      const [x, y, r, sens] = SPIRALES[i], A = atelier(`${p}s${i}`);
+      return A.out(gravure(A, bandeSpirale(x, y, r, sens, 1.9, 4), C.ocre, { seed: 400 + i, amp: 0.2, tailles: 0, trait: 1.6, pas: 2.4, portee: 0.5, dx: 2, dy: 3 }));
+    }
+    __name(spiraleCiel, "spiraleCiel");
+    function nuage(p, i, y, h, bosses, couleur) {
+      const A = atelier(`${p}n${i}`);
+      const festons = [];
+      for (let x = -110 + 30 * hash(i, 1), k = 0; x < 510; k++) {
+        const l = 620 / (bosses * 2) * (0.7 + 0.6 * hash(k, i + 3));
+        festons.push([x, l, h * (0.55 + 0.45 * hash(k, i + 5))]);
+        x += l;
+      }
+      const haut = festons.flatMap(([x, l, hh]) => courbe((t) => [x + l * t, y - hh * Math.sin(Math.PI * t) ** 0.8 + (t > 0.85 ? (t - 0.85) * hh * 1.2 : 0)], 12));
+      const bas = courbe((t) => [510 - 620 * t, y + 16 + 5 * Math.sin(t * 13 + i)], 20);
+      let s = gravure(A, [...haut, ...bas], couleur, { seed: 30 + i, amp: 0.4, angle: 18, tailles: 2, portee: 0.55, dy: 6, lumiere: [-0.4, -0.9] });
+      festons.forEach(([x, l, hh], k) => {
+        if (k % 2 === 0 || hash(k, i) < 0.5) s += volute(x + l * 0.82, y - hh * 0.42, Math.min(7, hh * 0.32), 1, 1.5, 1.5);
+        s += trait2(`M${f(x + l * 0.15)},${f(y - hh * 0.3)} q${f(l * 0.3)},${f(-hh * 0.45)} ${f(l * 0.6)},${f(-hh * 0.2)}`, 0.9, ENCRE, 0.7);
+      });
+      return A.out(s);
+    }
+    __name(nuage, "nuage");
+    var FOUDRE = [[104, -14], [92, 46], [114, 58], [84, 130], [104, 138], [74, 210]];
+    function foudre(p) {
+      const A = atelier(`${p}f`);
+      return A.out(gravure(A, [...FOUDRE.map(([x, y]) => [x + 5, y]), ...FOUDRE.slice().reverse().map(([x, y]) => [x - 5, y + 4])], "#FFF2B0", { seed: 40, amp: 0.3, tailles: 0, noir: false, ombre: 0.9, portee: 0, trait: 2.2 }));
+    }
+    __name(foudre, "foudre");
+    function rouleau(p, i, y, a, periode, couleur) {
+      const A = atelier(`${p}m${i}`);
+      const crete = /* @__PURE__ */ __name((t) => {
+        const x = -80 + 560 * t, ph = (x + i * 37) / periode % 1;
+        return [x, y - a * Math.pow(Math.sin(Math.PI * ph), 3) * (ph < 0.5 ? 1 : 0.7)];
+      }, "crete");
+      const haut = courbe(crete, 140);
+      const tailles = [6, 11, 17, 24, 32, 42].map((dy) => chemin(haut.map(([x, yy]) => [x, yy + dy + 2 * Math.sin(x * 0.05 + dy)]))).join(" ");
+      let s = gravure(A, [...haut, [480, y + 230], [-80, y + 230]], couleur, { seed: 50 + i, amp: 0.4, angle: 6, pas: 3.2, ombre: 0.1, tailles: 0, dy: 6, lumiere: [0, -1], dans: trait2(tailles, 0.8, ENCRE, 0.75) });
+      for (let x = -80 + periode * 0.5 - i * 37 % periode; x < 480; x += periode) {
+        const cy = y - a;
+        s += gravure(A, [[x - 13, cy + 7], [x - 6, cy - 1], [x + 1, cy + 2], [x + 8, cy - 3], [x + 15, cy + 8], [x + 2, cy + 6]], C.creme, { seed: 60 + i + Math.round(x), amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.4, dx: 1, dy: 2 });
+        s += volute(x + 18, cy + 9, 3.4 + i * 0.6, -1, 1.4, 1.4);
+      }
+      return A.out(s);
+    }
+    __name(rouleau, "rouleau");
+    function lame(p) {
+      const A = atelier(`${p}w`);
+      const dos = courbe((t) => [470 - 330 * t, 330 - 300 * Math.sin(t * Math.PI / 2) ** 1.5], 30);
+      const crete = courbe((t) => [140 - 110 * t, 30 - 22 * Math.sin(t * Math.PI) + 64 * t * t], 16).slice(1);
+      const creux = courbe((t) => [30 + 50 * t, 94 + 40 * t + 30 * t * t], 10).slice(1);
+      const face2 = courbe((t) => [80 - 160 * t, 164 + 160 * t * t], 12).slice(1);
+      const tailles = [0.06, 0.1, 0.14, 0.19, 0.24, 0.3, 0.36, 0.43, 0.5, 0.58, 0.66, 0.75].map((k) => chemin(courbe((t) => [470 - 300 * t * (1 - k * 0.2), 330 - 290 * Math.sin(t * Math.PI / 2) ** 1.5 + 90 * k], 22))).join(" ");
+      let s = gravure(A, [...dos, ...crete, ...creux, ...face2, [-90, 340], [470, 340]], A.lin([[0, C.sarcelleC], [0.5, C.sarcelle], [1, C.sarcelleS]], 0, 20, 0, 330), { seed: 130, amp: 0.6, angle: 60, pas: 2.4, ombre: 0.15, tailles: 0, dy: 8, dans: trait2(tailles, 1.2, ENCRE, 0.85) });
+      for (let i = 0; i < 9; i++) {
+        const [x, y] = crete[Math.min(crete.length - 1, i * 2)] || crete[crete.length - 1], l = 16 + 8 * hash(i, 3);
+        const g = courbe((t) => [x - l * t, y - 6 + l * 1.2 * t * t], 6);
+        s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 5 - j * 0.7, gy - 4 + j * 0.5])], C.creme, { seed: 131 + i, amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.5, dx: 2, dy: 3 });
+      }
+      for (let i = 0; i < 5; i++) s += volute(200 + i * 44, 130 + i * 34, 7 + i, -1, 1.5, 1.6);
+      s += volute(56, 106, 18, -1, 1.7, 2.6);
+      return A.out(s);
+    }
+    __name(lame, "lame");
+    function fissure2(p, id2, [x, y], sens = 1, longueur = 60) {
+      const A = atelier(`${p}${id2}`);
+      const branche = /* @__PURE__ */ __name((x0, y0, a, l, k) => {
+        const pts5 = [[x0, y0]];
+        let cx = x0, cy = y0;
+        for (let i = 1; i <= 6; i++) {
+          const aa = a + (hash(i, k) - 0.5) * 0.9;
+          cx += Math.cos(aa) * (l / 6);
+          cy += Math.sin(aa) * (l / 6);
+          pts5.push([cx, cy]);
+        }
+        return pts5;
+      }, "branche");
+      const lignes = [branche(x, y, sens > 0 ? -0.2 : Math.PI + 0.2, longueur, 1), branche(x, y, sens > 0 ? 0.5 : Math.PI - 0.5, longueur * 0.6, 2), branche(x, y, -Math.PI / 2 + 0.3 * sens, longueur * 0.4, 3), branche(x, y, Math.PI / 2 - 0.2 * sens, longueur * 0.35, 4)];
+      let s = "";
+      for (const l of lignes) s += trait2(chemin(l), 3.2, ENCRE) + trait2(chemin(l.map(([a, b]) => [a + 0.6, b - 0.8])), 0.9, C.soufre, 0.85);
+      for (const l of lignes.slice(0, 2)) {
+        const [a, b] = l[3];
+        s += trait2(chemin(branche(a, b, (sens > 0 ? 0 : Math.PI) + 1.1, longueur * 0.25, 5)), 2, ENCRE);
+      }
+      return A.out(s);
+    }
+    __name(fissure2, "fissure");
+    function cassure(p) {
+      const A = atelier(`${p}K`);
+      const zig = [[204, 204], [198, 216], [208, 226], [196, 240], [206, 252], [200, 268]];
+      let s = gravure(A, [...zig.map(([x, y]) => [x - 4, y]), ...zig.slice().reverse().map(([x, y]) => [x + 4, y])], "#030201", { seed: 930, amp: 0.4, tailles: 0, noir: false, portee: 0, trait: 2 });
+      s += trait2(chemin(zig.map(([x, y]) => [x - 5, y])), 1, C.soufre, 0.9) + trait2(chemin(zig.map(([x, y]) => [x + 5, y])), 1, C.creme, 0.6);
+      for (let k = 0; k < 5; k++) {
+        const [x, y] = zig[k], t = 3 + 2 * hash(k, 3), d = k % 2 ? 1 : -1;
+        s += gravure(A, [[x + d * 5, y], [x + d * (9 + t), y - t], [x + d * (8 + t), y + t * 0.6]], k % 2 ? C.coque : "#4A4238", { seed: 931 + k, amp: 0.2, tailles: 0, trait: 1, portee: 0.4, dx: 1, dy: 1, pas: 1.6 });
+      }
+      return A.out(s);
+    }
+    __name(cassure, "cassure");
+    function eclat(p, id2, [x, y], i) {
+      const A = atelier(`${p}${id2}`);
+      const l = 10 + 6 * hash(i, 1), h = 3 + 2 * hash(i, 2);
+      return A.out(gravure(A, [[x - l / 2, y - h / 2], [x + l / 2, y - h / 2 - 1], [x + l / 2 - 2, y + h / 2], [x - l / 2 + 1, y + h / 2 + 1]], i % 3 ? C.coque : i % 2 ? C.brun : C.rouge, { seed: 940 + i, amp: 0.3, tailles: 0, trait: 1.1, portee: 0.4, dx: 1, dy: 1, pas: 1.6 }) + `<circle cx="${f(x - l / 3)}" cy="${f(y)}" r="0.8" fill="${C.creme}"/>`);
+    }
+    __name(eclat, "eclat");
+    var projete = /* @__PURE__ */ __name((t, dx, dy, r) => [[0, { o: 0 }], [t - 1, { o: 0, e: "linear" }], [t, { o: 1, x: 0, y: 0, r: 0, e: "cubic-bezier(.2,.8,.4,1)" }], [t + 450, { o: 1, x: dx, y: dy, r: r * 0.5, e: "cubic-bezier(.5,0,.9,.5)" }], [t + 1200, { o: 1, x: dx * 1.7, y: 200, r }], [t + 1300, { o: 0, x: dx * 1.7, y: 220, r }]], "projete");
+    var NAV = { pivot: [205, 250] };
+    var garde = /* @__PURE__ */ __name((x0, x1, y, h = 6, pas = 7) => trait2(`M${x0},${y - h} L${x1},${y - h}`, 1, C.creme, 0.85) + trait2(Array.from({ length: Math.floor((x1 - x0) / pas) + 1 }, (_, k) => `M${f(x0 + k * pas)},${y} l0,${-h}`).join(" "), 0.6, C.creme, 0.7), "garde");
+    function navire(p) {
+      const A = atelier(`${p}v`);
+      let s = "";
+      for (const [x, k] of [[148, 1], [222, -1]]) s += gravure(A, [[x - 3, 172], [x + 3, 172], [x + 3, 152], [x + 3 + 9 * k, 146], [x + 3 + 10 * k, 155], [x, 152], [x - 3, 156]], C.moutarde, { seed: 66 + x, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4 });
+      s += gravure(A, [[166, 176], [206, 176], [210, 116], [170, 116]], C.rouge, { seed: 71, amp: 0.4, tailles: 1 });
+      s += gravure(A, [[169, 130], [209, 130], [210, 116], [170, 116]], "#14100C", { seed: 72, amp: 0.3, tailles: 0, portee: 0, trait: 1.6 });
+      s += `<path d="M178,154 q6,-6 10,-1 q4,-5 10,-2 q-6,1 -9,6 q-4,-3 -11,-3 Z" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.8"/>`;
+      s += gravure(A, [[108, 214], [302, 214], [302, 172], [108, 172]], C.creme, { seed: 73, amp: 0.5, tailles: 1, ombre: 0.4 });
+      s += trait2(Array.from({ length: 8 }, (_, k) => `M${112 + k * 24},176 l0,34`).join(" "), 0.7, ENCRE, 0.6);
+      for (let k = 0; k < 10; k++) s += `<circle cx="${122 + k * 17}" cy="193" r="3.8" fill="#3A3226" stroke="${ENCRE}" stroke-width="1.4"/>`;
+      s += garde(108, 302, 172, 5, 6);
+      s += gravure(A, [[244, 174], [302, 174], [308, 146], [248, 146]], C.creme, { seed: 74, amp: 0.4, tailles: 1, ombre: 0.4 });
+      for (let k = 0; k < 4; k++) s += `<rect x="${254 + k * 12}" y="151" width="9" height="12" fill="#3A3226" stroke="${ENCRE}" stroke-width="1.2"/>`;
+      s += gravure(A, [[244, 147], [312, 147], [310, 142], [246, 142]], "#14100C", { seed: 79, amp: 0.2, tailles: 0, portee: 0.4, trait: 1.4 });
+      s += gravure(A, [[50, 208], [356, 206], [368, 198], [348, 262], [96, 268], [58, 236]], C.coque, { seed: 90, amp: 0.6, angle: 70, tailles: 2, dy: 7 });
+      s += gravure(A, [[60, 236], [352, 234], [348, 248], [74, 252]], C.rouge, { seed: 91, amp: 0.4, tailles: 0, portee: 0, trait: 1.4 });
+      s += Array.from({ length: 40 }, (_, k) => `<circle cx="${f(62 + k * 7.4)}" cy="213" r="0.8" fill="${C.creme}" opacity="0.75"/>`).join("");
+      s += trait2(Array.from({ length: 13 }, (_, k) => `M${f(72 + k * 22)},216 l${f(-2 + k * 0.3)},18`).join(" "), 0.6, C.creme, 0.35);
+      s += trait2("M64,252 q12,-3 24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t20,-1", 1, C.creme, 0.6) + trait2("M340,214 l0,12 M335,219 l10,0 M333,224 q7,7 14,0", 1.2, C.creme, 0.9);
+      s += garde(52, 356, 207, 6, 7);
+      s += `<text x="292" y="230" font-family="Georgia, serif" font-size="8" font-weight="bold" letter-spacing="1.4" fill="${C.creme}" text-anchor="middle">L’HIRONDELLE</text>`;
+      return A.out(s);
+    }
+    __name(navire, "navire");
+    function guirlande(p) {
+      const A = atelier(`${p}g`);
+      const fil = /* @__PURE__ */ __name((x0, y0, x1, y1, creux, seed) => {
+        const pt = /* @__PURE__ */ __name((t) => [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + creux * 4 * t * (1 - t)], "pt");
+        let g = trait2(chemin(courbe(pt, 20)), 0.8, ENCRE, 0.9);
+        for (let k = 1; k < 9; k++) {
+          const [x, y] = pt(k / 9), c = ["#F2C24E", "#D8402A", "#5EB8B0", "#A8C850"][(k + seed) % 4];
+          g += `<circle cx="${f(x)}" cy="${f(y + 3)}" r="6" fill="${A.rad([[0, c, 0.5], [1, c, 0]], x, y + 3, 6)}"/><circle cx="${f(x)}" cy="${f(y + 3)}" r="1.9" fill="${c}" stroke="${ENCRE}" stroke-width="0.7"/>`;
+        }
+        return g;
+      }, "fil");
+      return A.out(fil(322, 108, 66, 204, 18, 0) + fil(322, 108, 354, 206, 6, 2));
+    }
+    __name(guirlande, "guirlande");
+    var CORNET = [323, 132];
+    function cornet(p) {
+      const A = atelier(`${p}c`);
+      return A.out(trait2("M323,132 L314,130", 2, ENCRE) + gravure(A, [[316, 127], [316, 133], [298, 142], [296, 120]], C.ocre, { seed: 94, amp: 0.2, tailles: 1, tailleP: 2, trait: 1.4, portee: 0.4, pas: 2 }) + `<ellipse cx="297" cy="131" rx="3" ry="11" fill="#1A120A" stroke="${ENCRE}" stroke-width="1.2"/>`);
+    }
+    __name(cornet, "cornet");
+    var onde = /* @__PURE__ */ __name((p, id2, [x, y], r, ouverture = 0.9) => {
+      const A = atelier(`${p}${id2}`), a0 = Math.PI - ouverture, a1 = Math.PI + ouverture;
+      const arc = /* @__PURE__ */ __name((rr) => courbe((t) => [x + Math.cos(a0 + (a1 - a0) * t) * rr, y + Math.sin(a0 + (a1 - a0) * t) * rr * 1.2], 16), "arc");
+      return A.out(gravure(A, [...arc(r), ...arc(r - Math.max(2, r * 0.16)).reverse()], C.creme, { seed: 97 + Math.round(r), amp: 0.2, tailles: 0, noir: false, ombre: 0.9, trait: 1.4, portee: 0.35, dx: 1, dy: 2 }));
+    }, "onde");
+    var FANION = [322, 100];
+    var fanion = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}a`);
+      return A.out(gravure(A, [[322, 98], [348, 101], [340, 104], [349, 108], [322, 108]], C.rouge, { seed: 95, amp: 0.3, tailles: 0, trait: 1.3, portee: 0.4, dx: 1, dy: 2 }));
+    }, "fanion");
+    var CHEMINEE = [190, 110];
+    function fumee(p, i) {
+      const A = atelier(`${p}u${i}`), [cx, cy] = CHEMINEE;
+      return A.out(gravure(A, bandeSpirale(cx, cy - 6, 9 + i * 1.5, i % 2 ? 1 : -1, 1.6, 6 + i), ["#5A6A5E", "#4E5E54", "#64746A", "#56665A", "#1E1A16", "#2A2420"][i], { seed: 96 + i, amp: 0.4, tailles: 0, trait: 1.5, pas: 2.4, portee: 0.45, dx: 2, dy: 3 }));
+    }
+    __name(fumee, "fumee");
+    var PROUE = [356, 236];
+    function embrun(p, i) {
+      const A = atelier(`${p}e${i}`), [x, y] = PROUE;
+      return A.out(Array.from({ length: 5 }, (_, k) => {
+        const a = -Math.PI / 2 + (k - 2) * 0.42 + i * 0.25, l = 14 + 12 * hash(k, i);
+        return gravure(A, [[x + Math.cos(a - 0.14) * 4, y + Math.sin(a - 0.14) * 4], [x + Math.cos(a) * l, y + Math.sin(a) * l], [x + Math.cos(a + 0.14) * 4, y + Math.sin(a + 0.14) * 4]], k % 2 ? "#8CC8B8" : C.creme, { seed: 98 + k + i * 5, amp: 0.2, tailles: 0, noir: false, trait: 1.1, portee: 0.35, dx: 1, dy: 1 });
+      }).join(""));
+    }
+    __name(embrun, "embrun");
+    var CANOT = [148, 142];
+    function canot(p) {
+      const A = atelier(`${p}k`);
+      let s = trait2("M128,174 Q126,142 148,140 M170,174 Q168,142 190,140", 3.4, ENCRE) + trait2("M128,174 Q126,142 148,140 M170,174 Q168,142 190,140", 1.2, C.creme, 0.8) + trait2("M148,140 L140,156 M190,140 L182,156", 0.8, C.creme, 0.8);
+      s += gravure(A, [[128, 156], [196, 156], [188, 169], [136, 169]], C.creme, { seed: 100, amp: 0.3, tailles: 1, tailleP: 2, portee: 0.45, dx: 2, dy: 3 }) + gravure(A, [[130, 160], [194, 160], [192, 163.4], [132, 163.4]], "#D86A2A", { seed: 101, amp: 0.2, tailles: 0, portee: 0, trait: 1 });
+      return A.out(s);
+    }
+    __name(canot, "canot");
+    var BRECHE = [322, 246];
+    var breche = /* @__PURE__ */ __name((p) => brecheEn(p, "b", BRECHE), "breche");
+    function brecheEn(p, id2, [bx, by]) {
+      const A = atelier(`${p}${id2}`);
+      const trou = Array.from({ length: 16 }, (_, k) => {
+        const a = k / 16 * Math.PI * 2, r = k % 2 ? 5 : 11 + 4 * hash(k, 1);
+        return [bx + Math.cos(a) * r * 1.3, by + Math.sin(a) * r * 0.8];
+      });
+      let s = gravure(A, trou, "#0A0604", { seed: 110, amp: 0.4, angle: 60, pas: 1.8, ombre: 0, tailles: 2, tailleP: 2.4, portee: 0, trait: 2.2, encre: "#5A4A3A" });
+      for (let k = 0; k < 6; k++) {
+        const a = k / 6 * Math.PI * 2 + 0.3, l = 12 + 5 * hash(k, 4), w = 0.32;
+        const base = /* @__PURE__ */ __name((da, r) => [bx + Math.cos(a + da) * r * 1.3, by + Math.sin(a + da) * r * 0.8], "base");
+        s += gravure(A, [base(-w, 9), base(-w * 0.4, l), [bx + Math.cos(a + 0.1) * (l + 5) * 1.3, by + Math.sin(a + 0.1) * (l + 5) * 0.8], base(w * 0.5, l * 0.9), base(w, 9)], k % 2 ? C.coque : "#4A4238", { seed: 112 + k, amp: 0.3, angle: 30, pas: 1.8, tailles: 0, trait: 1.3, portee: 0.5, dx: 1.5, dy: 2.5 });
+        const [rx, ry] = base(0, l * 0.75);
+        s += `<circle cx="${f(rx)}" cy="${f(ry)}" r="0.9" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.4"/>`;
+      }
+      const jet = courbe((t) => [bx - 4 - 30 * t, by - 2 - 10 * Math.sin(t * Math.PI) + 14 * t * t], 10);
+      s += gravure(A, [...jet.map(([x, y], k) => [x, y - 3 - k * 0.5]), ...jet.slice().reverse().map(([x, y], k) => [x, y + 3 + (10 - k) * 0.4])], "#8CC8B8", { seed: 118, amp: 0.3, angle: 0, pas: 2, ombre: 0.4, tailles: 1, tailleP: 2, trait: 1.3, portee: 0.35, dx: 1, dy: 2 });
+      for (let k = 0; k < 6; k++) s += `<circle cx="${f(bx - 20 - 22 * hash(k, 6))}" cy="${f(by - 14 + 22 * hash(k, 7))}" r="${f(1 + 1.6 * hash(k, 8))}" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.7"/>`;
+      return A.out(s);
+    }
+    __name(brecheEn, "brecheEn");
+    function impact(p, id2, [x, y], r, couleur = C.soufre) {
+      const A = atelier(`${p}${id2}`);
+      const etoileImpact = /* @__PURE__ */ __name((rr, n, seed) => Array.from({ length: n * 2 }, (_, k) => {
+        const a = k / (n * 2) * Math.PI * 2 + seed, l = k % 2 ? rr * 0.38 : rr * (0.8 + 0.4 * hash(k, seed * 10));
+        return [x + Math.cos(a) * l, y + Math.sin(a) * l];
+      }), "etoileImpact");
+      let s = gravure(A, etoileImpact(r, 9, 1), couleur, { seed: 900, amp: 0.3, angle: 40, pas: 2.2, ombre: 0.3, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.5, dx: 2, dy: 3 });
+      s += gravure(A, etoileImpact(r * 0.55, 7, 2), "#FFF4C8", { seed: 901, amp: 0.2, tailles: 0, noir: false, ombre: 0.6, trait: 1.3, portee: 0 });
+      for (let k = 0; k < 7; k++) {
+        const a = k * 0.9 + 0.4, l = r * (1.05 + 0.5 * hash(k, 9)), sx = x + Math.cos(a) * l, sy = y + Math.sin(a) * l, t = 2 + 3 * hash(k, 10);
+        s += gravure(A, [[sx - t, sy - t * 0.4], [sx + t * 1.4, sy - t * 0.6], [sx + t * 0.6, sy + t], [sx - t * 0.8, sy + t * 0.5]], k % 3 ? C.coque : C.brun, { seed: 902 + k, amp: 0.2, tailles: 0, trait: 1, portee: 0.4, dx: 1, dy: 1, pas: 1.6 });
+      }
+      for (let k = 0; k < 6; k++) {
+        const a = k * 1.1 + 0.1, l = r * (0.9 + 0.6 * hash(k, 11));
+        s += `<circle cx="${f(x + Math.cos(a) * l)}" cy="${f(y + Math.sin(a) * l)}" r="${f(1.2 + 1.4 * hash(k, 12))}" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.7"/>`;
+      }
+      s += volute(x, y, r * 0.18, 1, 1.5, 1.4);
+      return A.out(s);
+    }
+    __name(impact, "impact");
+    var eclate = /* @__PURE__ */ __name((t, duree = 520) => [[t - 1, { s: 0.2, o: 0, e: "linear" }], [t, { s: 0.3, o: 1, e: "cubic-bezier(.2,.9,.3,1.2)" }], [t + duree * 0.45, { s: 1.15, o: 1, r: 12, e: "ease-in" }], [t + duree, { s: 1.4, o: 0, r: 20 }]], "eclate");
+    var PASSAGERS = [
+      { id: "p1", x: 126, manteau: "#3A4A44", tete: "chapeau" },
+      { id: "p2", x: 152, manteau: C.rouge, tete: "foulard" },
+      { id: "p3", x: 282, manteau: C.creme, tete: "marin" }
+    ];
+    var PIED = 207;
+    var PEAU = "#EADCB0";
+    var g1 = /* @__PURE__ */ __name((seed, x = {}) => ({ seed, amp: 0.15, tailles: 0, trait: 1.1, pas: 1.6, epaisseur: 0.5, portee: 0.5, dx: 1, dy: 1.5, ...x }), "g1");
+    function passagerCorps(p, q) {
+      const A = atelier(`${p}${q.id}c`), x = q.x;
+      let s = gravure(A, [[x - 5, PIED - 10], [x - 6, PIED - 22], [x - 3, PIED - 26], [x + 3, PIED - 26], [x + 6, PIED - 22], [x + 5, PIED - 10]], q.manteau, g1(300 + x));
+      s += gravure(A, ovale(x, PIED - 30, 3.6, 4.4, 14), PEAU, g1(301 + x, { noir: false })) + `<ellipse cx="${x - 1.7}" cy="${PIED - 30.6}" rx="0.9" ry="1.1" fill="${ENCRE}"/><ellipse cx="${x + 0.8}" cy="${PIED - 30.6}" rx="0.8" ry="1" fill="${ENCRE}"/>`;
+      if (q.tete === "chapeau") s += gravure(A, [[x - 6, PIED - 33], [x + 5, PIED - 33], [x + 3, PIED - 34], [x + 3, PIED - 39], [x - 3, PIED - 39], [x - 3, PIED - 34]], "#14100C", g1(302 + x, { portee: 0.3 }));
+      if (q.tete === "foulard") s += gravure(A, [[x - 4.6, PIED - 29], [x - 4, PIED - 34], [x, PIED - 35.6], [x + 4.4, PIED - 33], [x + 4.6, PIED - 28], [x + 7, PIED - 24]], C.ocre, g1(303 + x, { portee: 0.3 }));
+      if (q.tete === "marin") s += gravure(A, [[x - 4.4, PIED - 32], [x + 4.4, PIED - 32], [x + 3.6, PIED - 36], [x - 3.6, PIED - 36]], "#F2E8C8", g1(304 + x, { portee: 0.3, noir: false })) + `<rect x="${x - 6}" y="${PIED - 22}" width="12" height="3" fill="#1C3048" stroke="${ENCRE}" stroke-width="0.6"/>`;
+      return A.out(s);
+    }
+    __name(passagerCorps, "passagerCorps");
+    var passagerJambe = /* @__PURE__ */ __name((p, q, k) => {
+      const A = atelier(`${p}${q.id}j${k}`), x = q.x + (k ? 1.4 : -1.4);
+      return A.out(gravure(A, [[x - 1.6, PIED - 11], [x + 1.6, PIED - 11], [x + 1.4, PIED - 1], [x + 3.6, PIED - 1], [x + 3.6, PIED + 0.6], [x - 1.6, PIED + 0.6]], "#14100C", g1(310 + q.x + k, { portee: 0.3, noir: false })));
+    }, "passagerJambe");
+    var passagerBras = /* @__PURE__ */ __name((p, q) => {
+      const A = atelier(`${p}${q.id}b`), x = q.x;
+      return A.out(gravure(A, [[x - 1, PIED - 24], [x + 2, PIED - 24], [x + 3, PIED - 13], [x, PIED - 13]], q.manteau, g1(320 + x, { portee: 0.35 })) + `<circle cx="${x + 1.6}" cy="${PIED - 12}" r="1.4" fill="${PEAU}" stroke="${ENCRE}" stroke-width="0.6"/>`);
+    }, "passagerBras");
+    var BOUCHE = [146, 180];
+    var ATTACHE = [352, 300];
+    function cor(p) {
+      const A = atelier(`${p}C`), [mx, my] = BOUCHE;
+      const yh = /* @__PURE__ */ __name((u) => 186 - 126 * Math.pow(1 - u, 2.6), "yh"), yb = /* @__PURE__ */ __name((u) => 206 + 98 * Math.pow(1 - u, 2.6), "yb"), xu = /* @__PURE__ */ __name((u) => mx + (330 - mx) * u, "xu");
+      const haut = courbe((u) => [xu(u), yh(u)], 28), bas = courbe((u) => [xu(1 - u), yb(1 - u)], 28);
+      let s = "";
+      s += gravure(A, [[326, 186], [346, 188], [364, 230], [362, 292], [344, 292], [346, 236], [328, 210]], C.moutarde, { seed: 140, amp: 0.3, tailles: 1, angle: 80 });
+      s += gravure(A, [[318, 288], [386, 288], [384, 320], [320, 320]], C.brun, { seed: 141, amp: 0.4, tailles: 1, angle: 20 }) + [330, 374].map((x) => `<circle cx="${x}" cy="304" r="3.2" fill="${C.ocre}" stroke="${ENCRE}" stroke-width="1.2"/>`).join("");
+      s += gravure(A, [...haut, [338, 190], [338, 206], ...bas], C.ocre, { seed: 142, amp: 0.4, angle: 30, tailles: 3, tailleP: 4, modele: 0.5 });
+      for (let k = 1; k < 7; k++) {
+        const v = k / 7;
+        s += trait2(chemin(courbe((u) => [xu(u), yh(u) + (yb(u) - yh(u)) * v], 24)), 1, ENCRE, 0.7);
+      }
+      for (let k = 1; k < 5; k++) {
+        const u = k / 5;
+        s += trait2(`M${f(xu(u))},${f(yh(u))} Q${f(xu(u) - 10 * (1 - u))},${f((yh(u) + yb(u)) / 2)} ${f(xu(u))},${f(yb(u))}`, 1.4, ENCRE, 0.85) + `<circle cx="${f(xu(u))}" cy="${f(yh(u) + 4)}" r="1.4" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.6"/><circle cx="${f(xu(u))}" cy="${f(yb(u) - 4)}" r="1.4" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.6"/>`;
+      }
+      s += gravure(A, ovale(mx, my + 3, 30, 124, 40), C.moutarde, { seed: 143, amp: 0.3, tailles: 2, tailleP: 2.6, trait: 2.4 });
+      s += gravure(A, ovale(mx + 3, my + 3, 23, 112, 40), "#1A120A", { seed: 144, amp: 0.3, tailles: 0, noir: false, portee: 0, trait: 1.6 });
+      for (let k = 1; k < 5; k++) s += trait2(chemin(ovale(mx + 3 + k * 4, my + 3, 23 - k * 4.6, 112 - k * 22, 30), true), 1, "#6A4A20", 0.8);
+      s += `<ellipse cx="${mx + 20}" cy="${my + 3}" rx="3" ry="10" fill="${A.rad([[0, C.soufre, 0.9], [1, C.soufre, 0]], mx + 20, my + 3, 10)}"/>`;
+      return A.out(s);
+    }
+    __name(cor, "cor");
+    var ondeGrosse = /* @__PURE__ */ __name((p, i) => onde(p, `O${i}`, BOUCHE, 46 + i * 6, 1.05), "ondeGrosse");
+    function boucle(p, i) {
+      const A = atelier(`${p}B${i}`), [x, y] = BOUCHE;
+      return A.out(gravure(A, bandeSpirale(x - 40, y - 30 + i * 60, 10 + i * 2, i % 2 ? 1 : -1, 1.8, 3.4), C.creme, { seed: 150 + i, amp: 0.15, tailles: 0, noir: false, trait: 1.3, portee: 0.4, dx: 1, dy: 2 }));
+    }
+    __name(boucle, "boucle");
+    var etoile = /* @__PURE__ */ __name((x, y, r, a) => Array.from({ length: 8 }, (_, k) => {
+      const an = a + k / 8 * Math.PI * 2, rr = k % 2 ? r * 0.32 : r;
+      return [x + Math.cos(an) * rr, y + Math.sin(an) * rr];
+    }), "etoile");
+    function etincelles2(p, id2, [x, y]) {
+      const A = atelier(`${p}${id2}`);
+      let s = `<circle cx="${x}" cy="${y}" r="34" fill="${A.rad([[0, C.soufre, 0.55], [1, C.soufre, 0]], x, y, 34)}"/>`;
+      for (let k = 0; k < 8; k++) {
+        const a = k * 0.8 + 0.3, l = 8 + 20 * hash(k, 7);
+        s += gravure(A, etoile(x + Math.cos(a) * l, y + Math.sin(a) * l, 4 + 4 * hash(k, 8), a), k % 2 ? "#F2C24E" : "#D8402A", { seed: 160 + k, amp: 0.15, tailles: 0, noir: false, trait: 1.2, portee: 0.4, dx: 1, dy: 1 });
+      }
+      return A.out(s);
+    }
+    __name(etincelles2, "etincelles");
+    var felure = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}f`);
+      return A.out(trait2("M210,120 L228,138 L222,150 L242,166 M228,138 L246,128 M222,150 L206,170", 2.6, ENCRE) + trait2("M210,120 L228,138 L222,150 L242,166", 0.8, C.soufre, 0.9));
+    }, "felure");
+    var voluteVive = /* @__PURE__ */ __name((d, dur, beg) => `<path d="${d}" fill="none" stroke="${ENCRE}" stroke-width="2.6" stroke-linecap="round" opacity="0.8" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path><path d="${d}" fill="none" stroke="${C.creme}" stroke-width="1" stroke-linecap="round" opacity="0.9" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`, "voluteVive");
+    function vivant() {
+      let s = "";
+      [[1, 0.8, 0.5], [0.7, 1.15, 0.36], [0.45, 1.7, 0.24]].forEach(([k, dur, o], j) => {
+        let traits = "";
+        for (let i = 0; i < Math.round(48 * k + 10); i++) {
+          const x = hash(i, 601 + j) * 520 - 60, y = hash(i, 611 + j) * 400, l = 12 + 20 * k;
+          traits += `M${f(x)},${f(y)} l${f(-l * 0.32)},${f(l)} `;
+        }
+        s += `<g opacity="${f(o)}"><animateTransform attributeName="transform" type="translate" from="0 -400" to="-128 0" dur="${f(dur)}s" repeatCount="indefinite"/><path d="${traits}" stroke="${C.creme}" stroke-width="${f(0.6 + k)}" stroke-linecap="round"/><path d="${traits}" transform="translate(128 -400)" stroke="${C.creme}" stroke-width="${f(0.6 + k)}" stroke-linecap="round"/></g>`;
+      });
+      for (const [x, y, r, sens, dur, beg] of [[40, 90, 9, 1, 5, 0], [150, 70, 7, -1, 6, 2], [250, 40, 8, 1, 5.5, 4], [350, 130, 7, -1, 6.5, 1], [90, 150, 6, 1, 4.8, 3], [210, 120, 6, -1, 5.2, 0.5], [330, 20, 6, 1, 6, 2.5], [20, 30, 7, -1, 5.8, 1.5]]) s += voluteVive(spirale(x, y, r, sens, 1.6), dur, beg);
+      return s;
+    }
+    __name(vivant, "vivant");
+    var MAT = [322, 214];
+    function mat(p) {
+      const A = atelier(`${p}t`);
+      return A.out(trait2("M322,104 L62,206 M322,104 L356,212 M322,132 L300,172", 0.8, C.creme, 0.55) + gravure(A, [[319, 214], [325, 214], [324, 98], [320, 98]], C.brun, { seed: 70, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4, dx: 2, dy: 3 }) + gravure(A, [[312, 116], [334, 116], [331, 126], [315, 126]], C.brun, { seed: 69, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4 }));
+    }
+    __name(mat, "mat");
+    var fenteMat = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}y`);
+      return A.out(trait2("M321,150 L325,160 L320,168 L326,178", 2.2, ENCRE) + trait2("M321,150 L325,160 L320,168", 0.8, C.soufre, 0.9));
+    }, "fenteMat");
+    function lumieres(p) {
+      const A = atelier(`${p}h`);
+      let s = "";
+      for (let k = 0; k < 10; k++) {
+        const x = 122 + k * 17;
+        s += `<circle cx="${x}" cy="193" r="9" fill="${A.rad([[0, C.fenetre, 0.55], [1, C.fenetre, 0]], x, 193, 9)}"/><circle cx="${x}" cy="193" r="3.8" fill="${C.fenetre}" stroke="${ENCRE}" stroke-width="1.4"/><path d="M${x - 1.6},191.6 a1.8,1.8 0 0 1 2.6,-0.6" stroke="#FFF8D8" stroke-width="0.8" fill="none"/>`;
+      }
+      for (let k = 0; k < 4; k++) s += `<rect x="${250 + k * 12}" y="147" width="17" height="20" fill="${A.rad([[0, C.fenetre, 0.5], [1, C.fenetre, 0]], 258 + k * 12, 157, 12)}"/><rect x="${254 + k * 12}" y="151" width="9" height="12" fill="${C.fenetre}" stroke="${ENCRE}" stroke-width="1.2"/>`;
+      return A.out(s);
+    }
+    __name(lumieres, "lumieres");
+    function racinePts(p0, c1, c2, p3, w0, w1 = 0.8, n = 24) {
+      const bz = /* @__PURE__ */ __name((t) => {
+        const u = 1 - t;
+        return [0, 1].map((j) => u * u * u * p0[j] + 3 * u * u * t * c1[j] + 3 * u * t * t * c2[j] + t * t * t * p3[j]);
+      }, "bz");
+      const g = [], d = [];
+      for (let k = 0; k <= n; k++) {
+        const t = k / n, [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + 0.01)), [x1, y1] = bz(Math.max(0, t - 0.01));
+        const l = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / l, ny = (x2 - x1) / l, w = w0 / 2 * (1 - t) + w1 / 2 * t;
+        const noeud = 1 + 0.16 * Math.max(0, Math.sin(t * 19)), epine = k % 5 === 2 ? 1.35 : 1;
+        g.push([x + nx * w * noeud * epine, y + ny * w * noeud * epine]);
+        d.push([x - nx * w * noeud, y - ny * w * noeud]);
+      }
+      return { pts: [...g, ...d.reverse()], bz };
+    }
+    __name(racinePts, "racinePts");
+    function racine(p, id2, p0, c1, c2, p3, w0, w1, seed) {
+      const A = atelier(`${p}${id2}`), { pts: pts5, bz } = racinePts(p0, c1, c2, p3, w0, w1);
+      const tailles = [-0.28, 0, 0.28].map((k) => chemin(courbe((t) => {
+        const [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + 0.01)), l = Math.hypot(x2 - x, y2 - y) || 1;
+        return [x - (y2 - y) / l * k * ((w0 * (1 - t) + w1 * t) / 2), y + (x2 - x) / l * k * ((w0 * (1 - t) + w1 * t) / 2)];
+      }, 20))).join(" ");
+      let s = gravure(A, pts5, A.lin([[0, "#140E08"], [1, "#3A2814"]], p0[0], p0[1], p3[0], p3[1]), { seed, amp: 0.6, angle: 50, tailles: 0, pas: 2.6, ombre: 0.1, portee: 0.55, dx: 3, dy: 5, reflet: 0.12, modele: 0.5, dans: trait2(tailles, 1, "#D8B060", 0.5) });
+      s += trait2(chemin(pts5.slice(0, Math.floor(pts5.length / 2))), 1.2, C.ocre, 0.75);
+      for (const t of [0.35, 0.62]) {
+        const [x, y] = bz(t);
+        s += volute(x + 6, y - 8, 5 + 4 * (1 - t), t > 0.5 ? 1 : -1, 1.6, 1.6);
+      }
+      return A.out(s);
+    }
+    __name(racine, "racine");
+    var SOLEIL = [300, 86];
+    function fondJour(p) {
+      const A = atelier(`${p}J`);
+      let s = plein(A, A.lin([[0, "#6E9A90"], [0.55, "#A8C4AC"], [1, "#D8D4A0"]], 0, G, 0, 260));
+      s += plein(A, A.rad([[0, "#FFF0B0", 0.75], [0.35, "#F2D880", 0.3], [1, "#F2D880", 0]], SOLEIL[0], SOLEIL[1], 240));
+      for (let i = 0; i < 9; i++) {
+        const x = hash(i, 21) * 480 - 40, y = 30 + hash(i, 22) * 160, r = 30 + 40 * hash(i, 23);
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.6)}" ry="${f(r * 0.6)}" fill="${A.rad([[0, "#F4ECD0", 0.55], [1, "#F4ECD0", 0]], x, y, r * 1.6)}"/>`;
+      }
+      return A.out(s);
+    }
+    __name(fondJour, "fondJour");
+    function soleil(p) {
+      const A = atelier(`${p}S`), [x, y] = SOLEIL;
+      const rayons = Array.from({ length: 32 }, (_, k) => {
+        const a = k / 32 * Math.PI * 2, r = k % 2 ? 34 : 50 + 6 * (k % 4 === 0);
+        return [x + Math.cos(a) * r, y + Math.sin(a) * r];
+      });
+      return A.out(gravure(A, rayons, C.ocre, { seed: 22, amp: 0.3, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.3, lumiere: [-0.7, -0.7] }) + gravure(A, ovale(x, y, 28, 28, 30), C.creme, { seed: 23, tailles: 3, tailleP: 2.6, lumiere: [-0.7, -0.7], portee: 0 }) + volute(x - 6, y - 8, 8, 1, 1.6, 1.8));
+    }
+    __name(soleil, "soleil");
+    var REPERES = { COR_IN: 4300, COUPE: 5500, CHOC: 6500, RACCORD: 7600, SORT: 8800, ARRACHE: 13300, RETOUR: 15100, KRR: 15700, CRI: 16300, CHUTE: 16900 };
+    function pont01() {
+      const p = "tp", T = [4200, 5200, 5200, 4600], FIN = 19200;
+      const cumulus = [[0, 40, 16, 2, "#E8DCB0"], [1, 126, 14, 3, "#D8D0A8"]];
+      const nuages = [[0, 34, 22, 3, "#4A625A"], [1, 66, 18, 4, "#3E5650"], [2, 164, 26, 3, "#344A46"], [3, 198, 18, 5, "#2C403E"]];
+      const mers = [[1, 214, 12, 70, "#2E5650"], [2, 236, 16, 92, C.sarcelle], [3, 264, 22, 116, "#24484A"], [4, 302, 28, 146, C.sarcelleS]];
+      const m = { marge: MARGE };
+      const RA = { base: ["racineA", [430, 430], [400, 360], [372, 330], [352, 300], 46, 26], bout: ["racineA-bout", [352, 300], [340, 280], [336, 262], [324, 248], 26, 2] };
+      const RB = { base: ["racineB", [-30, 400], [10, 300], [40, 220], [92, 150], 54, 30], bout: ["racineB-bout", [92, 150], [124, 110], [160, 112], [164, 150], 30, 2] };
+      const RC = { base: ["racineC", [-40, 330], [30, 290], [80, 300], [140, 262], 40, 22], bout: ["racineC-bout", [140, 262], [190, 236], [240, 250], [290, 236], 22, 2] };
+      const ECLATS = [
+        ["eclat1", [322, 240], 40, -60, 300, 1],
+        ["eclat2", [318, 246], 70, -30, -260, 2],
+        ["eclat3", [326, 250], 20, -80, 420, 3],
+        ["eclat4", [186, 230], -50, -70, -340, 4],
+        ["eclat5", [190, 236], -20, -90, 260, 5],
+        ["eclat6", [182, 228], 30, -60, 380, 6],
+        ["eclat7", [110, 244], -60, -50, 320, 7],
+        ["eclat8", [114, 250], -30, -80, -300, 8],
+        ["eclat9", [200, 236], 10, -70, 400, 9]
+      ];
+      const racinePlans = /* @__PURE__ */ __name((R, prof, devant) => [
+        { id: R.base[0], profondeur: prof, cadre: [-80, 60, 560, 400], pivot: R.base[1], dessin: /* @__PURE__ */ __name(() => racine(p, R.base[0], ...R.base.slice(1, 5), R.base[5], R.base[6], 500 + R.base[1][0]), "dessin") },
+        { id: R.bout[0], dans: R.base[0], derriere: !devant, cadre: [-80, 60, 560, 400], pivot: R.bout[1], dessin: /* @__PURE__ */ __name(() => racine(p, R.bout[0], ...R.bout.slice(1, 5), R.bout[5], R.bout[6], 600 + R.bout[1][0]), "dessin") }
+      ], "racinePlans");
+      const plans = [
+        { id: "jour", profondeur: 0.03, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => fondJour(p), "dessin") },
+        { id: "fond", profondeur: 0.03, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => fond(p), "dessin") },
+        { id: "lueur", profondeur: 0.05, ...m, flou: 0.15, dessin: /* @__PURE__ */ __name(() => lueur(p, "L", 96, 40, 260, C.soufre), "dessin") },
+        { id: "soleil", profondeur: 0.06, cadre: [240, 26, 120, 120], pivot: SOLEIL, dessin: /* @__PURE__ */ __name(() => soleil(p), "dessin") },
+        ...SPIRALES.map(([x, y], i) => ({ id: `spirale${i}`, profondeur: 0.06 + i * 0.01, cadre: [x - 30, y - 30, 60, 60], pivot: [x, y], dessin: /* @__PURE__ */ __name(() => spiraleCiel(p, i), "dessin") })),
+        ...cumulus.map(([i, y, h, b, c]) => ({ id: `cumulus${i}`, profondeur: 0.08 + i * 0.03, cadre: [-120, y - h - 16, 640, h + 50], dessin: /* @__PURE__ */ __name(() => nuage(p, 10 + i, y, h, b, c), "dessin") })),
+        ...nuages.slice(0, 2).map(([i, y, h, b, c]) => ({ id: `nuage${i}`, profondeur: 0.1 + i * 0.04, cadre: [-120, y - h - 16, 640, h + 50], dessin: /* @__PURE__ */ __name(() => nuage(p, i, y, h, b, c), "dessin") })),
+        { id: "foudre", profondeur: 0.1, cadre: [60, -24, 72, 244], pivot: [104, -14], dessin: /* @__PURE__ */ __name(() => foudre(p), "dessin") },
+        ...nuages.slice(2).map(([i, y, h, b, c]) => ({ id: `nuage${i}`, profondeur: 0.1 + i * 0.04, cadre: [-120, y - h - 16, 640, h + 50], dessin: /* @__PURE__ */ __name(() => nuage(p, i, y, h, b, c), "dessin") })),
+        { id: "brume1", profondeur: 0.15, ...m, flou: 0.15, dessin: /* @__PURE__ */ __name(() => brume(p, "b1", 150, 300, "#4E6A5A", 0.5), "dessin") },
+        { id: "lame", profondeur: 0.3, cadre: [-100, -14, 600, 364], pivot: [300, 300], dessin: /* @__PURE__ */ __name(() => lame(p), "dessin") },
+        ...mers.slice(0, 2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.1, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => rouleau(p, i, y, a, per, c), "dessin") })),
+        { id: "brume2", profondeur: 0.45, ...m, flou: 0.15, dessin: /* @__PURE__ */ __name(() => brume(p, "b2", 190, 300, "#3E5A50", 0.4), "dessin") },
+        ...racinePlans(RB, 0.55, false),
+        { id: "navire", profondeur: 0.6, cadre: [36, 92, 344, 190], ...NAV, dessin: /* @__PURE__ */ __name(() => navire(p), "dessin") },
+        ...[0, 1, 2, 3, 4, 5].map((i) => ({ id: `fumee${i}`, dans: "navire", derriere: true, cadre: [140, 50, 100, 80], pivot: CHEMINEE, dessin: /* @__PURE__ */ __name(() => fumee(p, i), "dessin") })),
+        { id: "lumieres", dans: "navire", cadre: [112, 140, 200, 64], dessin: /* @__PURE__ */ __name(() => lumieres(p), "dessin") },
+        { id: "mat", dans: "navire", cadre: [56, 92, 306, 124], pivot: MAT, dessin: /* @__PURE__ */ __name(() => mat(p), "dessin") },
+        { id: "fente-mat", dans: "mat", cadre: [312, 144, 20, 40], dessin: /* @__PURE__ */ __name(() => fenteMat(p), "dessin") },
+        { id: "guirlande", dans: "mat", cadre: [56, 98, 306, 120], dessin: /* @__PURE__ */ __name(() => guirlande(p), "dessin") },
+        { id: "fanion", dans: "mat", cadre: [316, 92, 40, 22], pivot: FANION, dessin: /* @__PURE__ */ __name(() => fanion(p), "dessin") },
+        { id: "cornet", dans: "mat", cadre: [290, 114, 40, 34], pivot: CORNET, dessin: /* @__PURE__ */ __name(() => cornet(p), "dessin") },
+        ...[0, 1].map((i) => ({ id: `onde${i}`, dans: "cornet", cadre: [270, 104, 34, 54], pivot: [297, 131], dessin: /* @__PURE__ */ __name(() => onde(p, `o${i}`, [297, 131], 14 + i * 4, 0.9), "dessin") })),
+        { id: "canot", dans: "navire", cadre: [120, 132, 84, 46], pivot: CANOT, dessin: /* @__PURE__ */ __name(() => canot(p), "dessin") },
+        { id: "breche", dans: "navire", cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: /* @__PURE__ */ __name(() => breche(p), "dessin") },
+        { id: "breche2", dans: "navire", cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: /* @__PURE__ */ __name(() => brecheEn(p, "b2", [110, 248]), "dessin") },
+        { id: "breche3", dans: "navire", cadre: [156, 210, 62, 44], pivot: [186, 234], dessin: /* @__PURE__ */ __name(() => brecheEn(p, "b3", [186, 234]), "dessin") },
+        { id: "fissure1", dans: "navire", cadre: [232, 190, 130, 96], pivot: BRECHE, dessin: /* @__PURE__ */ __name(() => fissure2(p, "f1", BRECHE, -1, 70), "dessin") },
+        { id: "fissure2", dans: "navire", cadre: [116, 190, 140, 96], pivot: [186, 234], dessin: /* @__PURE__ */ __name(() => fissure2(p, "f2", [186, 234], 1, 64), "dessin") },
+        { id: "fissure3", dans: "navire", cadre: [60, 196, 130, 96], pivot: [110, 248], dessin: /* @__PURE__ */ __name(() => fissure2(p, "f3", [110, 248], 1, 70), "dessin") },
+        { id: "cassure", dans: "navire", cadre: [176, 196, 52, 80], pivot: [202, 236], dessin: /* @__PURE__ */ __name(() => cassure(p), "dessin") },
+        ...ECLATS.map(([id2, c, , , , i]) => ({ id: id2, dans: "navire", cadre: [c[0] - 14, c[1] - 10, 28, 20], pivot: c, dessin: /* @__PURE__ */ __name(() => eclat(p, id2, c, i), "dessin") })),
+        { id: "impact-proue", dans: "navire", cadre: [262, 186, 120, 120], pivot: BRECHE, dessin: /* @__PURE__ */ __name(() => impact(p, "i1", BRECHE, 44), "dessin") },
+        { id: "impact-canot", dans: "navire", cadre: [120, 120, 90, 90], pivot: [164, 164], dessin: /* @__PURE__ */ __name(() => impact(p, "i2", [164, 164], 32, C.creme), "dessin") },
+        { id: "impact-poupe", dans: "navire", cadre: [50, 188, 120, 120], pivot: [110, 248], dessin: /* @__PURE__ */ __name(() => impact(p, "i3", [110, 248], 44), "dessin") },
+        ...PASSAGERS.flatMap((q) => [
+          { id: q.id, dans: "navire", cadre: [q.x - 12, PIED - 44, 26, 48], pivot: [q.x, PIED - 11], dessin: /* @__PURE__ */ __name(() => passagerCorps(p, q), "dessin") },
+          { id: `${q.id}-jambe0`, dans: q.id, derriere: true, cadre: [q.x - 6, PIED - 14, 14, 18], pivot: [q.x - 1.4, PIED - 11], dessin: /* @__PURE__ */ __name(() => passagerJambe(p, q, 0), "dessin") },
+          { id: `${q.id}-jambe1`, dans: q.id, derriere: true, cadre: [q.x - 4, PIED - 14, 14, 18], pivot: [q.x + 1.4, PIED - 11], dessin: /* @__PURE__ */ __name(() => passagerJambe(p, q, 1), "dessin") },
+          { id: `${q.id}-bras`, dans: q.id, cadre: [q.x - 4, PIED - 28, 12, 20], pivot: [q.x + 0.5, PIED - 24], dessin: /* @__PURE__ */ __name(() => passagerBras(p, q), "dessin") }
+        ]),
+        ...[0, 1].map((i) => ({ id: `embrun${i}`, dans: "navire", cadre: [324, 204, 64, 42], pivot: PROUE, dessin: /* @__PURE__ */ __name(() => embrun(p, i), "dessin") })),
+        ...racinePlans(RC, 0.62, true),
+        ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => rouleau(p, i, y, a, per, c), "dessin") })),
+        ...racinePlans(RA, 0.85, true),
+        { id: "anime", profondeur: 0.8, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") },
+        { id: "assombri", profondeur: 0, ...m, flou: 0.1, dessin: /* @__PURE__ */ __name(() => plein(null, "#081214"), "dessin") },
+        { id: "voile", profondeur: 0, ...m, flou: 0.1, dessin: /* @__PURE__ */ __name(() => plein(null, "#06080A"), "dessin") },
+        { id: "lueur-cor", profondeur: 0, ...m, flou: 0.15, dessin: /* @__PURE__ */ __name(() => lueur(p, "K", 150, 180, 230, "#E89A30"), "dessin") },
+        { id: "cor", profondeur: 0, cadre: [96, 40, 300, 290], pivot: ATTACHE, dessin: /* @__PURE__ */ __name(() => cor(p), "dessin") },
+        ...[0, 1, 2].map((i) => ({ id: `grosse-onde${i}`, dans: "cor", derriere: true, cadre: [70, 40, 90, 290], pivot: BOUCHE, dessin: /* @__PURE__ */ __name(() => ondeGrosse(p, i), "dessin") })),
+        ...[0, 1].map((i) => ({ id: `boucle${i}`, dans: "cor", cadre: [76, 110 + i * 60, 60, 60], pivot: [BOUCHE[0] - 40, BOUCHE[1] - 30 + i * 60], dessin: /* @__PURE__ */ __name(() => boucle(p, i), "dessin") })),
+        { id: "felure", dans: "cor", cadre: [200, 110, 52, 70], dessin: /* @__PURE__ */ __name(() => felure(p), "dessin") },
+        { id: "etincelles", dans: "cor", cadre: [104, 60, 90, 90], pivot: [150, 100], dessin: /* @__PURE__ */ __name(() => etincelles2(p, "x", [150, 100]), "dessin") },
+        { id: "teinte", profondeur: 0, ...m, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") },
+        { id: "eclair", profondeur: 0, ...m, flou: 0.1, dessin: /* @__PURE__ */ __name(() => plein(null, "#F4E8B0"), "dessin") }
+      ];
+      const P2 = {};
+      const force = /* @__PURE__ */ __name((t) => t < 4200 ? 0.45 : t < 9400 ? 0.45 + 0.55 * (t - 4200) / 5200 : t < 14600 ? 1 + 0.5 * (t - 9400) / 5200 : 2.3, "force");
+      const { COR_IN, COUPE, CHOC, RACCORD, SORT, ARRACHE, RETOUR, KRR, CRI, CHUTE } = REPERES;
+      const FRAPPE = CRI + 350;
+      P2.fond = [[0, { o: 0 }], [4600, { o: 0, e: "ease-in" }], [11e3, { o: 1 }]];
+      P2.lueur = [[0, { o: 0 }], [6e3, { o: 0 }], [1e4, { o: 0.3 }]];
+      P2.soleil = [[0, { y: 160, r: 0 }], [200, { y: 160, e: "cubic-bezier(.2,.8,.3,1)" }], [1500, { y: 0, r: 20 }], [5e3, { y: 0, r: 60, o: 1 }], [10500, { y: 30, r: 140, o: 0.12 }], [FIN, { y: 40, r: 200, o: 0 }]];
+      cumulus.forEach(([i]) => {
+        const sens = i ? -1 : 1;
+        P2[`cumulus${i}`] = [[0, { x: sens * 470 }], [100 + i * 250, { x: sens * 470, e: "cubic-bezier(.2,.85,.3,1)" }], [1300 + i * 250, { x: 0 }], [6e3, { x: -sens * 30, o: 1 }], [11e3, { x: -sens * 120, o: 0 }]];
+      });
+      const entrees = [4400, 6200, 9700, 11500];
+      nuages.forEach(([i]) => {
+        const sens = i % 2 ? 1 : -1, t0 = entrees[i];
+        P2[`nuage${i}`] = [[0, { x: sens * 480 }], [t0, { x: sens * 480, e: "cubic-bezier(.3,.7,.3,1)" }], [t0 + 2400, { x: 0 }], ...balance(t0 + 2400, FIN, 6e3 + i * 900, (k) => ({ x: (k % 2 ? 1 : -1) * sens * (12 + i * 5) }))];
+      });
+      SPIRALES.forEach(([, , , sens], i) => {
+        P2[`spirale${i}`] = [[0, { s: 0, r: -180 * sens }], [300 + i * 140, { s: 0, r: -180 * sens, e: "cubic-bezier(.2,.9,.3,1.3)" }], [1200 + i * 140, { s: 1, r: 0, e: "linear" }], [FIN, { s: 1, r: sens * 420, x: (i % 2 ? 1 : -1) * 30 }]];
+      });
+      mers.forEach(([i], j) => {
+        const t0 = 400 + j * 180;
+        P2[`mer${i}`] = [[0, { y: 300 }], [t0, { y: 300, e: "cubic-bezier(.2,.9,.3,1.05)" }], [t0 + 900, { y: 0 }], ...balance(t0 + 900, FIN, 2300 + j * 300, (k, t) => ({ x: (k % 2 ? 1 : -1) * (8 + j * 3) * force(t), r: (k % 2 ? -1 : 1) * (1.4 + j * 0.3) * force(t), y: (k % 2 ? -1 : 1) * 3 * Math.max(0, force(t) - 1) }))];
+      });
+      P2.navire = [
+        [0, { x: -470 }],
+        [700, { x: -470, e: "cubic-bezier(.25,.8,.35,1)" }],
+        [2800, { x: 0 }],
+        ...balance(2800, CHOC, 2600, (k, t) => ({ r: (k % 2 ? 1 : -1) * 2.4 * force(t), y: (k % 2 ? -3 : 3) * force(t) })),
+        ...secoue(CHOC, { r: 7, x: -6 }, 16, 8, 55),
+        ...balance(CHOC + 480, ARRACHE, 2400, (k, t) => ({ r: 3.5 + (k % 2 ? 2.5 : -2.5) * force(t), y: k % 2 ? -4 : 4 })),
+        ...secoue(ARRACHE, { r: 9, x: 5 }, 14, 8, 55),
+        ...balance(ARRACHE + 480, FRAPPE, 2e3, (k) => ({ r: 6 + (k % 2 ? 3 : -3), y: k % 2 ? -5 : 5 })),
+        ...secoue(FRAPPE, { r: 10 }, 16, 9, 55),
+        [FRAPPE + 520, { r: 9, y: 6, e: "linear" }],
+        [FRAPPE + 600, { r: 14, y: 10, e: "ease-out" }],
+        [FRAPPE + 800, { r: 12, y: 8, e: "ease-in-out" }],
+        ...balance(FRAPPE + 800, FIN, 1400, (k) => ({ r: 12 + (k % 2 ? -3 : 3), y: 8 }))
+      ];
+      [0, 1, 2, 3].forEach((i) => {
+        const k = [];
+        for (let t = -i * 700; t < FIN; t += 2800) {
+          const a = Math.max(0, t);
+          k.push([a, { x: 0, y: 0, s: 0.3, o: 0, e: "linear" }], [a + 1, { x: 0, y: 0, s: 0.3, o: 1, e: "ease-out" }], [t + 2800 - 1, { x: -70 - i * 10, y: -60, s: 1.7, r: (i % 2 ? 1 : -1) * 90, o: 0 }]);
+        }
+        P2[`fumee${i}`] = k.filter(([t]) => t >= 0);
+      });
+      [4, 5].forEach((i) => {
+        P2[`fumee${i}`] = bouffees(CHOC + 300 + (i - 4) * 900, FIN, 1800, { x: 0, y: 0, s: 0.4, r: 0, o: 1 }, { x: -110, y: -50, s: 2.2, r: (i % 2 ? 1 : -1) * 120, o: 0 });
+      });
+      const vacille = /* @__PURE__ */ __name((t) => [[t, { o: 1, e: "linear" }], [t + 40, { o: 0.1, e: "linear" }], [t + 110, { o: 0.9, e: "linear" }], [t + 160, { o: 0.2, e: "linear" }], [t + 260, { o: 1 }]], "vacille");
+      P2.lumieres = [[0, { o: 1 }], ...vacille(CHOC), ...vacille(ARRACHE), ...vacille(KRR), [FRAPPE, { o: 1, e: "linear" }], [FRAPPE + 40, { o: 0, e: "linear" }], [FRAPPE + 140, { o: 0.6, e: "linear" }], [FRAPPE + 200, { o: 0 }]];
+      P2.mat = [[0, { r: 0 }], [FRAPPE, { r: 0, e: "linear" }], [FRAPPE + 80, { r: -4 }], [FRAPPE + 600, { r: -16, e: "ease-in" }], [FRAPPE + 900, { r: -14 }], ...balance(FRAPPE + 900, FIN, 900, (k) => ({ r: k % 2 ? -18 : -13 }))];
+      P2["fente-mat"] = [[0, { o: 0 }], [FRAPPE, { o: 0, e: "linear" }], [FRAPPE + 40, { o: 1 }]];
+      P2.fanion = balance(0, FIN, 360, (k, t) => ({ r: (k % 2 ? 1 : -1) * 8 * Math.max(0.6, force(t)) }));
+      [0, 1].forEach((i) => {
+        const k = [[0, { s: 0, o: 0 }]];
+        for (let t = 5200 + i * 650; t < FIN; t += 1300) k.push([t, { s: 0.2, o: 1, e: "ease-out" }], [t + 360, { s: 1.1, o: 1, e: "ease-in" }], [t + 700, { s: 1.3, o: 0 }]);
+        P2[`embrun${i}`] = k;
+      });
+      P2.canot = [[0, { r: 0 }], ...balance(2800, SORT + 200, 2600, (k) => ({ r: k % 2 ? 3 : -3 })), ...[0, 1, 2].flatMap((k) => [[SORT + 600 + k * 700, { y: k * 11, r: k % 2 ? 4 : -4, e: "ease-in" }], [SORT + 900 + k * 700, { y: k * 11 + 9, r: k % 2 ? -5 : 5 }]]), [ARRACHE, { y: 31, r: -3, e: "ease-out" }], [ARRACHE + 160, { y: 10, x: -20, r: -50 }], [ARRACHE + 900, { y: 260, x: -60, r: -140, e: "ease-in" }]];
+      P2.breche = [[0, { o: 0, s: 0.2 }], [CHOC, { o: 0, s: 0.2, e: "linear" }], [CHOC + 60, { o: 1, s: 1.3, e: "ease-out" }], [CHOC + 300, { o: 1, s: 1 }]];
+      P2.breche3 = [[0, { o: 0, s: 0.2 }], [ARRACHE + 40, { o: 0, s: 0.2, e: "linear" }], [ARRACHE + 100, { o: 1, s: 1.3, e: "ease-out" }], [ARRACHE + 340, { o: 1, s: 1 }]];
+      const fend = /* @__PURE__ */ __name((t, s0 = 0.15, s1 = 1) => [[t - 1, { o: 0, s: s0, e: "linear" }], [t, { o: 1, s: s0, e: "cubic-bezier(.2,.9,.3,1)" }], [t + 120, { o: 1, s: s1 * 0.7, e: "linear" }], [t + 200, { o: 1, s: s1 * 0.75, e: "cubic-bezier(.2,.9,.3,1)" }], [t + 420, { o: 1, s: s1 }]], "fend");
+      P2.fissure1 = [[0, { o: 0, s: 0.15 }], ...fend(CHOC + 40, 0.15, 0.8), [ARRACHE, { o: 1, s: 0.8, e: "linear" }], [ARRACHE + 100, { o: 1, s: 1.05 }], [FRAPPE, { o: 1, s: 1.05, e: "linear" }], [FRAPPE + 120, { o: 1, s: 1.25 }]];
+      P2.fissure2 = [[0, { o: 0, s: 0.15 }], ...fend(ARRACHE + 60, 0.15, 0.85), [FRAPPE, { o: 1, s: 0.85, e: "linear" }], [FRAPPE + 120, { o: 1, s: 1.15 }]];
+      P2.fissure3 = [[0, { o: 0, s: 0.15 }], ...fend(FRAPPE + 140, 0.15, 1)];
+      P2.cassure = [[0, { o: 0, s: 0.2 }], ...fend(FRAPPE + 520, 0.2, 1), [FIN, { o: 1, s: 1.1 }]];
+      ECLATS.forEach(([id2, , dx, dy, r, i]) => {
+        const t = i <= 3 ? CHOC : i <= 6 ? ARRACHE + 60 : FRAPPE + 120 + (i === 9 ? 400 : 0);
+        P2[id2] = projete(t + i % 3 * 30, dx, dy, r);
+      });
+      P2["impact-proue"] = [[0, { o: 0, s: 0.2 }], ...eclate(CHOC, 620)];
+      P2["impact-canot"] = [[0, { o: 0, s: 0.2 }], ...eclate(ARRACHE, 560)];
+      P2["impact-poupe"] = [[0, { o: 0, s: 0.2 }], ...eclate(FRAPPE + 100, 620)];
+      P2.breche2 = [[0, { o: 0, s: 0.2 }], [FRAPPE + 100, { o: 0, s: 0.2, e: "linear" }], [FRAPPE + 160, { o: 1, s: 1.3, e: "ease-out" }], [FRAPPE + 400, { o: 1, s: 1 }]];
+      P2.racineA = [[0, { y: 260 }], [CHOC - 700, { y: 260, e: "cubic-bezier(.2,.9,.3,1.1)" }], [CHOC - 250, { y: 0, r: 6 }], [CHOC + 300, { r: 0 }], ...balance(CHOC + 300, ARRACHE, 1800, (k) => ({ r: k % 2 ? 3 : -2 })), [ARRACHE, { y: 0 }], [ARRACHE + 1200, { y: 120, r: 10, e: "ease-in-out" }], [CRI - 400, { y: 30, r: 0 }], ...balance(CRI - 400, FIN, 1600, (k) => ({ y: 30, r: k % 2 ? 4 : -3 }))];
+      P2["racineA-bout"] = [[0, { r: -60 }], [CHOC - 250, { r: -60, e: "cubic-bezier(.7,0,1,1)" }], [CHOC, { r: 0, e: "ease-out" }], [CHOC + 200, { r: 6 }], [CHOC + 700, { r: -10 }], ...balance(CHOC + 700, FIN, 1400, (k) => ({ r: k % 2 ? -18 : -4 }))];
+      P2.racineB = [[0, { y: 320 }], [ARRACHE - 1800, { y: 320, e: "cubic-bezier(.3,.8,.3,1)" }], [ARRACHE - 500, { y: 0, r: -4 }], [ARRACHE, { r: 2 }], ...balance(ARRACHE + 200, FIN, 2e3, (k) => ({ r: k % 2 ? 4 : -3, y: k % 2 ? 6 : 0 }))];
+      P2["racineB-bout"] = [[0, { r: 50 }], [ARRACHE - 400, { r: 50, e: "cubic-bezier(.7,0,1,1)" }], [ARRACHE, { r: 0, e: "ease-out" }], [ARRACHE + 200, { r: -14 }], [ARRACHE + 900, { r: 30 }], ...balance(ARRACHE + 900, FIN, 1500, (k) => ({ r: k % 2 ? 40 : 18 }))];
+      P2.racineC = [[0, { y: 200, x: -60 }], [FRAPPE - 900, { y: 200, x: -60, e: "cubic-bezier(.2,.9,.3,1.05)" }], [FRAPPE - 200, { y: 0, x: 0 }], ...balance(FRAPPE, FIN, 1200, (k) => ({ r: k % 2 ? 3 : -2 }))];
+      P2["racineC-bout"] = [[0, { r: 70 }], [FRAPPE - 300, { r: 70, e: "cubic-bezier(.7,0,1,1)" }], [FRAPPE + 100, { r: 0, e: "ease-out" }], [FRAPPE + 300, { r: -6 }], ...balance(FRAPPE + 300, FIN, 900, (k) => ({ r: k % 2 ? 4 : -4 }))];
+      PASSAGERS.forEach((q, j) => {
+        const course = [-30, -52, -136][j], depart = SORT + 400 + j * 250, arrivee = SORT + 3e3 + j * 300;
+        P2[q.id] = [
+          [0, { x: 0 }],
+          [CHOC, { x: 0, r: 0 }],
+          [CHOC + 120, { r: -14, x: -3 }],
+          [CHOC + 500, { r: 6 }],
+          [CHOC + 900, { r: 0, x: 0 }],
+          [depart, { x: 0, r: 0 }],
+          ...balance(depart, arrivee, 360, (k, t) => ({ x: course * ((t - depart) / (arrivee - depart)), y: k % 2 ? -1.2 : 0, r: -6 })),
+          [arrivee, { x: course, r: 0 }],
+          [ARRACHE, { x: course, r: 0 }],
+          [ARRACHE + 200, { x: course + 16, r: 18 }],
+          [ARRACHE + 700, { x: course + 22, r: 4 }],
+          [FRAPPE, { x: course + 22, r: 4 }],
+          [FRAPPE + 300, { x: course + 34, r: 74, y: 3 }]
+        ];
+        for (const g of [0, 1]) P2[`${q.id}-jambe${g}`] = [[0, { r: 0 }], [depart, { r: 0 }], ...balance(depart, arrivee, 360, (k) => ({ r: (k % 2 ? 1 : -1) * (g ? -32 : 32) })), [arrivee + 100, { r: 0 }], [ARRACHE + 100, { r: g ? 20 : -14 }], [ARRACHE + 600, { r: 0 }], [FRAPPE + 300, { r: g ? 40 : -20 }]];
+        P2[`${q.id}-bras`] = [[0, { r: 0 }], [CHOC, { r: 0 }], [CHOC + 150, { r: -110 }], [CHOC + 900, { r: -20 }], [depart, { r: -20 }], ...balance(depart, arrivee, 360, (k) => ({ r: k % 2 ? -50 : 30 })), [arrivee + 100, { r: -150 }], [ARRACHE + 200, { r: -170 }], [FRAPPE + 300, { r: -170 }]];
+      });
+      P2.cornet = [[0, { r: 0 }], ...balance(SORT + 200, RETOUR - 200, 160, (k) => ({ r: k % 2 ? 3 : -2 })), [RETOUR, { r: 0 }]];
+      [0, 1].forEach((i) => {
+        P2[`onde${i}`] = bouffees(SORT + 300 + i * 300, RETOUR - 400, 600, { s: 0.4, o: 1, x: 0 }, { s: 1.8, o: 0, x: -10 });
+      });
+      P2.anime = [[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]];
+      const coups = [[11200, 0.8], [FRAPPE, 1], [18600, 1]];
+      P2.foudre = [[0, { s: 0.05, o: 0 }], ...coups.flatMap(([t]) => [[t - 1, { s: 0.05, o: 0, e: "linear" }], [t, { s: 0.05, o: 1, e: "ease-out" }], [t + 110, { s: 1, o: 1 }], [t + 320, { s: 1, o: 1, e: "ease-in" }], [t + 600, { s: 1, o: 0 }]])];
+      P2.lueur.push(...coups.flatMap(([t, a]) => [[t - 1, { o: 0.3, e: "linear" }], [t + 40, { o: a, e: "linear" }], [t + 160, { o: 0.5 * a, e: "linear" }], [t + 220, { o: a, e: "ease-out" }], [t + 900, { o: 0.3 }]]));
+      P2.eclair = [[0, { o: 0 }], ...[...coups, [CHOC, 0.7], [ARRACHE, 0.6], [FRAPPE + 520, 0.5]].sort((u, v) => u[0] - v[0]).flatMap(([t, a]) => [[t - 1, { o: 0, e: "linear" }], [t + 40, { o: 0.3 * a, e: "linear" }], [t + 100, { o: 0.05, e: "linear" }], [t + 160, { o: 0.2 * a, e: "ease-out" }], [t + 420, { o: 0 }]])];
+      P2.assombri = [[0, { o: 0 }], [4600, { o: 0, e: "ease-in" }], [11e3, { o: 0.32 }], [FIN, { o: 0.42 }]];
+      P2.lame = [[0, { y: 330, o: 0 }], [CHUTE - 401, { y: 330, o: 0, e: "linear" }], [CHUTE - 400, { y: 330, o: 1, e: "cubic-bezier(.3,0,.2,1)" }], [FIN, { y: 0, o: 1 }]];
+      P2.voile = [[0, { o: 0 }], [COR_IN, { o: 0 }], [COR_IN + 600, { o: 0.6 }], [COUPE, { o: 0.6 }], [COUPE + 350, { o: 0 }], [RACCORD, { o: 0 }], [RACCORD + 450, { o: 0.6 }], [SORT, { o: 0.6 }], [SORT + 500, { o: 0 }], [RETOUR, { o: 0 }], [RETOUR + 450, { o: 0.6 }], [CRI + 60, { o: 0.6 }], [CRI + 380, { o: 0 }]];
+      P2["lueur-cor"] = P2.voile.map(([t, c]) => [t, { o: c.o * 1.2 }]);
+      const vibre = /* @__PURE__ */ __name((t0, t1, a = 1) => balance(t0, t1, 140, (k) => ({ s: k % 2 ? 1 + 0.018 * a : 1, r: k % 2 ? 0.6 * a : -0.6 * a })), "vibre");
+      P2.cor = [
+        [0, { x: 470, r: 10 }],
+        [COR_IN, { x: 470, r: 10, e: "cubic-bezier(.2,.9,.3,1.12)" }],
+        [COR_IN + 700, { x: 0, r: -1.5 }],
+        [COR_IN + 900, { x: 0, r: 0 }],
+        ...vibre(COR_IN + 900, COUPE - 100),
+        [COUPE, { x: 0, r: 0, e: "cubic-bezier(.6,0,.8,.4)" }],
+        [COUPE + 450, { x: 480, r: 14 }],
+        [RACCORD, { x: 480, r: 14, e: "cubic-bezier(.2,.9,.3,1.12)" }],
+        [RACCORD + 550, { x: 0, r: -1.5 }],
+        [RACCORD + 700, { x: 0, r: 0 }],
+        ...secoue(RACCORD + 700, { r: 2 }, 8),
+        ...vibre(RACCORD + 1100, SORT - 100),
+        [SORT, { x: 0, r: 0, e: "cubic-bezier(.6,0,.8,.4)" }],
+        [SORT + 600, { x: 480, r: 14 }],
+        [RETOUR - 1, { x: 480, r: 14, e: "linear" }],
+        [RETOUR, { x: 0, y: -460, r: -6, e: "cubic-bezier(.3,1.35,.5,1)" }],
+        [RETOUR + 550, { x: 0, y: 0, r: 0 }],
+        ...vibre(RETOUR + 600, KRR, 1.4),
+        ...secoue(KRR, { r: 3 }, 10, 10, 60),
+        [CRI, { r: 6, e: "linear" }],
+        [CRI + 80, { r: -12, x: -14, y: 6, e: "cubic-bezier(.4,0,.9,.6)" }],
+        [CRI + 520, { r: -56, x: -90, y: 480 }]
+      ];
+      [0, 1, 2].forEach((i) => {
+        P2[`grosse-onde${i}`] = [...bouffees(COR_IN + 1e3 + i * 220, COUPE - 300, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }), ...bouffees(RACCORD + 900 + i * 220, SORT - 300, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1), ...bouffees(RETOUR + 700 + i * 220, KRR, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1)];
+      });
+      [0, 1].forEach((i) => {
+        P2[`boucle${i}`] = [...bouffees(RACCORD + 1e3 + i * 600, SORT - 400, 1400, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: i ? 40 : -40, r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }), ...bouffees(RETOUR + 900 + i * 500, KRR, 1e3, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: i ? 40 : -40, r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }).slice(1)];
+      });
+      P2.etincelles = [[0, { o: 0, s: 0.3 }], ...[KRR, KRR + 260, KRR + 520, CRI - 100, CRI + 120].flatMap((t, i) => [[t, { o: 0, s: 0.3, e: "linear" }], [t + 30, { o: 1, s: 0.8 + 0.2 * i, r: i * 40, e: "ease-out" }], [t + 220, { o: 0, s: 1.5 + 0.2 * i, r: i * 40 + 30 }]])];
+      P2.felure = [[0, { o: 0, s: 0.4 }], [KRR + 500, { o: 0, s: 0.4, e: "linear" }], [KRR + 540, { o: 1, s: 1 }]];
+      const camera = [[0, { z: 1.02 }], [4200, { z: 1.05 }], [COUPE, { z: 1.05 }], [CHOC - 100, { z: 1.22, x: 50, y: 20 }], ...secoue(CHOC, { z: 1.22, x: 50, y: 20 }, 13, 8, 50), [RACCORD + 300, { z: 1.08, x: 20, y: 6 }], [SORT + 300, { z: 1.05, x: 0, y: 0 }], [SORT + 2e3, { z: 1.3, x: -40, y: 8 }], [ARRACHE - 200, { z: 1.3, x: -56, y: 0 }], ...secoue(ARRACHE, { z: 1.3, x: -56, y: 0 }, 11, 8, 50), [RETOUR + 200, { z: 1.08, x: 0, y: 0 }], ...secoue(FRAPPE, { z: 1.08 }, 13, 9, 50), ...secoue(FRAPPE + 520, { z: 1.08 }, 8, 6, 50), [FRAPPE + 1e3, { z: 1.08, x: 0, y: 0 }], [FIN, { z: 1.02, x: 6, y: -24, r: -4 }]];
+      const temps = T.map((d) => ({ duree: d, camera: [], pistes: {} }));
+      parTemps(T, camera, ["x", "y", "z", "r"]).forEach((c, n) => {
+        temps[n].camera = c;
+      });
+      for (const [id2, cles] of Object.entries(P2)) parTemps(T, cles).forEach((c, n) => {
+        temps[n].pistes[id2] = c;
+      });
+      return { plans, partition: { temps } };
+    }
+    __name(pont01, "pont01");
+    module.exports = { pont01, valeur, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, navire, REPERES, C, MARGE, G, D_ };
+  }
+});
+
+// atelier/gravure_plage.js
+var require_gravure_plage = __commonJS({
+  "atelier/gravure_plage.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe, spirale } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, chemin, ENCRE } = require_gravure();
+    var T = require_theatre_pont();
+    var { parTemps, balance, bouffees, volute, bandeSpirale, teinte, plein, C, MARGE, G, D_ } = T;
+    var HORIZON = 186;
+    var RIVAGE = 252;
+    var SOLEIL = [236, 186];
+    var SABLE2 = "#D2A650";
+    var SABLE_MOUILLE = "#8A7A58";
+    var unTemps = /* @__PURE__ */ __name((D, camera, P2) => {
+      const pistes = {};
+      for (const [id2, cles] of Object.entries(P2)) pistes[id2] = parTemps([D], cles)[0];
+      return { duree: D, camera: parTemps([D], camera, ["x", "y", "z", "r"])[0], pistes };
+    }, "unTemps");
+    function ciel(p) {
+      const A = atelier(`${p}c`);
+      let s = plein(A, A.lin([[0, "#1E2E3A"], [0.4, "#4A4A52"], [0.75, "#C8783A"], [1, "#F2C25A"]], 0, G, 0, HORIZON + 10));
+      s += plein(A, A.rad([[0, "#FFE8A0", 0.9], [0.25, "#F2B048", 0.5], [1, "#C8602A", 0]], SOLEIL[0], SOLEIL[1], 260));
+      for (let i = 0; i < 12; i++) {
+        const x = hash(i, 51) * 480 - 40, y = 20 + hash(i, 52) * 130, r = 30 + 50 * hash(i, 53);
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.8)}" ry="${f(r * 0.45)}" fill="${A.rad([[0, i % 3 ? "#5A3A48" : "#E8A050", 0.55], [1, "#5A3A48", 0]], x, y, r * 1.8)}"/>`;
+      }
+      return A.out(s);
+    }
+    __name(ciel, "ciel");
+    function soleil(p) {
+      const A = atelier(`${p}s`), [x, y] = SOLEIL;
+      const rayons = Array.from({ length: 32 }, (_, k) => {
+        const a = Math.PI + k / 31 * Math.PI, r = k % 2 ? 30 : 46 + 6 * (k % 4 === 0);
+        return [x + Math.cos(a) * r, y + Math.sin(a) * r];
+      });
+      return A.out(gravure(A, [...rayons, [x + 30, y + 2], [x - 30, y + 2]], C.ocre, { seed: 31, amp: 0.3, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.3, lumiere: [0, -1] }) + gravure(A, [...courbe((t) => [x + 26 * Math.cos(Math.PI + t * Math.PI), y + 26 * Math.sin(Math.PI + t * Math.PI)], 20), [x + 26, y + 2], [x - 26, y + 2]], "#FFE8A8", { seed: 32, tailles: 2, tailleP: 2.6, portee: 0, lumiere: [0, -1] }) + volute(x - 4, y - 14, 7, 1, 1.5, 1.6));
+    }
+    __name(soleil, "soleil");
+    function nuage(p, i, y, h, couleur, x0 = -60, l0 = 520) {
+      const A = atelier(`${p}n${i}`);
+      const fest = [];
+      for (let x = x0, k = 0; x < x0 + l0; k++) {
+        const l = 50 * (0.7 + 0.6 * hash(k, i + 3));
+        fest.push([x, l, h * (0.55 + 0.45 * hash(k, i + 5))]);
+        x += l;
+      }
+      const haut = fest.flatMap(([x, l, hh]) => courbe((t) => [x + l * t, y - hh * Math.sin(Math.PI * t) ** 0.8], 10));
+      let s = gravure(A, [...haut, [x0 + l0, y + 12], [x0, y + 14]], couleur, { seed: 40 + i, amp: 0.4, angle: 16, tailles: 1, portee: 0.5, dy: 5, lumiere: [0, 1] });
+      fest.forEach(([x, l, hh], k) => {
+        if (k % 2 === 0) s += volute(x + l * 0.8, y - hh * 0.4, Math.min(6, hh * 0.3), 1, 1.5, 1.4);
+      });
+      return A.out(s);
+    }
+    __name(nuage, "nuage");
+    function mer(p, or = true) {
+      const A = atelier(`${p}m`);
+      let s = gravure(A, [[G, HORIZON - 1], [D_, HORIZON - 1], [D_, RIVAGE + 20], [G, RIVAGE + 20]], A.lin([[0, "#4A5A62"], [0.5, "#2C4A4C"], [1, "#1E3A3C"]], 0, HORIZON, 0, RIVAGE), { seed: 50, amp: 0, angle: 4, pas: 3.4, ombre: 0.3, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
+      const rangee = /* @__PURE__ */ __name((y, a, w, c, i) => {
+        const haut = courbe((t) => {
+          const x = G + (D_ - G) * t, ph = (x + i * 23) / w % 1;
+          return [x, y - a * Math.pow(Math.sin(Math.PI * ph), 2)];
+        }, 80);
+        return gravure(A, [...haut, [D_, y + 40], [G, y + 40]], c, { seed: 51 + i, amp: 0.3, angle: 4, pas: 3.2, ombre: 0.25, tailles: 0, portee: 0.35, dy: 3, trait: 1.4, lumiere: [0, -1], dans: trait2(chemin(haut.map(([x, yy]) => [x, yy + 7])), 0.8, ENCRE, 0.6) });
+      }, "rangee");
+      s += rangee(HORIZON + 18, 3, 40, "#3E5458", 0) + rangee(HORIZON + 36, 4, 54, "#304A4C", 1) + rangee(HORIZON + 54, 5, 70, "#264244", 2);
+      if (or) for (let i = 0; i < 12; i++) {
+        const t = i / 12, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 30 * t + 8 * hash(i, 3), x = SOLEIL[0] + (hash(i, 5) - 0.5) * (14 + 50 * t);
+        s += gravure(A, [[x - w / 2, y], [x + w / 2, y - 0.6], [x + w / 2 - 1, y + 2 + t * 1.6], [x - w / 2 + 1, y + 2.2 + t * 1.6]], "#F2C25A", { seed: 60 + i, amp: 0.2, tailles: 0, noir: false, trait: 1, portee: 0 });
+      }
+      return A.out(s);
+    }
+    __name(mer, "mer");
+    function plage(p) {
+      const A = atelier(`${p}p`);
+      let s = gravure(A, [...courbe((t) => [G + (D_ - G) * t, RIVAGE - 4 + 5 * Math.sin(t * 9)], 30), [D_, D_], [G, D_]], SABLE_MOUILLE, { seed: 70, amp: 0.4, angle: 6, pas: 3, ombre: 0.3, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
+      s += `<ellipse cx="${SOLEIL[0]}" cy="${RIVAGE + 10}" rx="40" ry="10" fill="${A.rad([[0, "#F2C25A", 0.6], [1, "#F2C25A", 0]], SOLEIL[0], RIVAGE + 10, 40)}"/>`;
+      const dentelle = courbe((t) => [G + (D_ - G) * t, RIVAGE + 3 + 4 * Math.sin(t * 13) + 1.6 * Math.sin(t * 47)], 60);
+      s += gravure(A, [...dentelle, ...dentelle.slice().reverse().map(([x, y], k) => [x, y + 4 + 2 * Math.sin(k)])], C.creme, { seed: 71, amp: 0.3, tailles: 0, noir: false, trait: 1.1, portee: 0.3 });
+      const sec = [...courbe((t) => [G + (D_ - G) * t, RIVAGE + 22 + 8 * Math.sin(t * 5 + 1) + 3 * Math.sin(t * 17)], 34), [D_, D_], [G, D_]];
+      s += gravure(A, sec, SABLE2, { seed: 72, amp: 0.6, angle: 14, pas: 3.2, ombre: 0.35, tailles: 2, tailleP: 5, portee: 0.4, dy: 4, lumiere: [-0.2, -1] });
+      for (let i = 0; i < 40; i++) s += `<circle cx="${f(G + hash(i, 81) * (D_ - G))}" cy="${f(RIVAGE + 30 + hash(i, 83) * 180)}" r="${f(0.6 + hash(i, 85))}" fill="${ENCRE}" opacity="0.5"/>`;
+      const coquillage = /* @__PURE__ */ __name((x, y, r, c) => gravure(A, courbe((t) => [x + r * Math.cos(Math.PI + t * Math.PI), y - r * 1.2 * Math.sin(t * Math.PI)], 10), c, { seed: x, amp: 0.15, tailles: 0, noir: false, trait: 1, portee: 0.3, dx: 1, dy: 1 }) + trait2(`M${x},${y} L${x},${f(y - r)} M${f(x - r * 0.5)},${y} L${f(x - r * 0.2)},${f(y - r * 0.9)} M${f(x + r * 0.5)},${y} L${f(x + r * 0.2)},${f(y - r * 0.9)}`, 0.6, ENCRE), "coquillage");
+      const etoile = /* @__PURE__ */ __name((x, y, r, a, c) => gravure(A, Array.from({ length: 10 }, (_, k) => {
+        const an = a + k / 10 * Math.PI * 2, rr = k % 2 ? r * 0.42 : r;
+        return [x + Math.cos(an) * rr, y + Math.sin(an) * rr * 0.7];
+      }), c, { seed: x + 7, amp: 0.2, tailles: 0, trait: 1.1, portee: 0.35, dx: 1, dy: 1, pas: 2 }), "etoile");
+      s += coquillage(150, 342, 5, C.creme) + coquillage(262, 368, 4, "#E8B8A0") + coquillage(60, 362, 4.4, C.creme) + etoile(232, 340, 10, 0.3, "#D86A3A") + etoile(96, 384, 7, 1.1, C.rouge);
+      for (const [x, y, k] of [[22, 322, 1.1], [304, 306, 0.8], [190, 380, 0.9]]) s += trait2(`M${x},${y} q${f(6 * k)},${f(-4 * k)} ${f(14 * k)},${f(-1 * k)} t${f(12 * k)},${f(-2 * k)} t${f(10 * k)},${f(2 * k)}`, 3.4 * k, ENCRE) + trait2(`M${x},${y} q${f(6 * k)},${f(-4 * k)} ${f(14 * k)},${f(-1 * k)} t${f(12 * k)},${f(-2 * k)} t${f(10 * k)},${f(2 * k)}`, 1.6 * k, "#4E6A3A");
+      for (const [x, y, rx, ry, i] of [[70, 346, 9, 5, 0], [330, 360, 12, 6, 1], [300, 322, 6, 3.4, 2], [380, 396, 10, 5, 3]]) s += gravure(A, ovale(x, y, rx, ry, 14), "#6A6A62", { seed: 90 + i, amp: 0.3, tailles: 0, trait: 1.2, portee: 0.4, dx: 1, dy: 2, pas: 2 });
+      return A.out(s);
+    }
+    __name(plage, "plage");
+    function vivant() {
+      let s = "";
+      for (let i = 0; i < 9; i++) {
+        const t = i / 9, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 8 + 26 * t, x = SOLEIL[0] + (hash(i, 15) - 0.5) * (16 + 50 * t), d = 1 + hash(i, 17) * 1.4;
+        s += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1.4 + 1.4 * t)}" fill="#FFF0B8" opacity="0"><animate attributeName="opacity" values="0;0.95;0" dur="${f(d)}s" begin="${f(-hash(i, 19) * d)}s" repeatCount="indefinite"/></rect>`;
+      }
+      s += `<g><animateMotion path="M-30,110 Q120,70 240,96 T460,60" dur="16s" repeatCount="indefinite"/><path d="M-8,0 Q-4,-4 0,0 Q4,-4 8,0" fill="none" stroke="${ENCRE}" stroke-width="2" stroke-linecap="round"><animateTransform attributeName="transform" type="scale" values="1 1;1 -0.5;1 1" dur="0.6s" repeatCount="indefinite"/></path></g>`;
+      for (const [x, y, r, sens, dur, beg] of [[60, 60, 8, 1, 6, 0], [170, 40, 6, -1, 7, 2], [330, 70, 7, 1, 6.5, 4], [380, 140, 5, -1, 5.5, 1], [110, 130, 6, 1, 7.5, 3]]) s += `<path d="${spirale(x, y, r, sens, 1.6)}" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round" opacity="0.7" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`;
+      return s;
+    }
+    __name(vivant, "vivant");
+    function premier(p) {
+      const A = atelier(`${p}f`);
+      return A.out(gravure(A, ovale(40, 434, 50, 28, 20), "#4A4038", { seed: 95, amp: 0.8, tailles: 0, trait: 2, portee: 0 }) + trait2("M300,450 q10,-40 -6,-70 M316,450 q4,-36 18,-62 M330,452 q-2,-30 -20,-50", 9, ENCRE) + trait2("M300,450 q10,-40 -6,-70 M316,450 q4,-36 18,-62 M330,452 q-2,-30 -20,-50", 5, "#3E5A32"));
+    }
+    __name(premier, "premier");
+    var regard = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}g`);
+      return A.out(plein(A, A.rad([[0, "#000", 0], [0.68, "#2A1208", 0.2], [1, "#0A0402", 0.7]], 200, 210, 300)));
+    }, "regard");
+    var decor = /* @__PURE__ */ __name((p, prof = {}) => [
+      { id: "ciel", profondeur: prof.ciel ?? 0.1, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => ciel(p), "dessin") },
+      { id: "soleil", profondeur: prof.ciel ?? 0.12, cadre: [180, 130, 112, 64], pivot: SOLEIL, dessin: /* @__PURE__ */ __name(() => soleil(p), "dessin") },
+      { id: "nuage0", profondeur: 0.14, cadre: [-80, 24, 600, 60], dessin: /* @__PURE__ */ __name(() => nuage(p, 0, 60, 18, "#5A4A58"), "dessin") },
+      { id: "nuage1", profondeur: 0.18, cadre: [-80, 100, 600, 56], dessin: /* @__PURE__ */ __name(() => nuage(p, 1, 134, 14, "#7A5A58", -40, 480), "dessin") },
+      { id: "mer", profondeur: prof.mer ?? 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p), "dessin") },
+      { id: "plage", profondeur: prof.plage ?? 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => plage(p), "dessin") }
+    ], "decor");
+    function paupiere(p, haut) {
+      const A = atelier(`${p}${haut ? "h" : "b"}`);
+      const bord = haut ? courbe((t) => [G - 10 + (D_ - G + 20) * t, 196 + 26 * Math.sin(Math.PI * t)], 34) : courbe((t) => [G - 10 + (D_ - G + 20) * t, 214 - 22 * Math.sin(Math.PI * t)], 34);
+      const loin = haut ? G - 340 : D_ + 320;
+      const pts5 = haut ? [[G - 10, loin], [D_ + 10, loin], ...bord.slice().reverse()] : [...bord, [D_ + 10, loin], [G - 10, loin]];
+      let s = gravure(A, pts5, "#2A140C", { seed: haut ? 100 : 101, amp: 0.6, angle: 20, pas: 2.6, ombre: 0, tailles: 3, tailleP: 5, portee: 0, trait: 2.6, lumiere: haut ? [0, 1] : [0, -1] });
+      s += trait2(chemin(bord.map(([x, y]) => [x, y + (haut ? -4 : 4)])), 5, "#6A3020", 0.8);
+      if (haut) s += trait2(bord.filter((_, k) => k % 2).map(([x, y], k) => `M${f(x)},${f(y - 1)} q${f(-2 + k % 3)},${f(5)} ${f(-4 + k % 3)},${f(9 + 3 * hash(k, 9))}`).join(" "), 1.8, ENCRE);
+      return A.out(s);
+    }
+    __name(paupiere, "paupiere");
+    function paupieres01() {
+      const p = "gp", D = 3800;
+      const plans = [
+        ...decor(p),
+        { id: "anime", profondeur: 0.4, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") },
+        // (le flou du réveil : la même vue, peinte toute petite, agrandie ; elle se dissipe)
+        { id: "flou", profondeur: 0.4, marge: MARGE, flou: 0.05, dessin: /* @__PURE__ */ __name(() => ciel(p) + mer(p) + plage(p), "dessin") },
+        { id: "premier", profondeur: 1, marge: MARGE, flou: 0.3, dessin: /* @__PURE__ */ __name(() => premier(p), "dessin") },
+        { id: "regard", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => regard(p), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") },
+        { id: "paupiere-haut", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => paupiere(p, true), "dessin") },
+        { id: "paupiere-bas", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => paupiere(p, false), "dessin") }
+      ];
+      const P2 = {
+        "paupiere-haut": [[0, { y: 0 }], [700, { y: 0, e: "ease-out" }], [1150, { y: -86, e: "ease-in" }], [1500, { y: 0 }], [2150, { y: -176, e: "ease-in" }], [2550, { y: -8 }], [2900, { y: -8, e: "ease-in-out" }], [D, { y: -340 }]],
+        "paupiere-bas": [[0, { y: 0 }], [700, { y: 0, e: "ease-out" }], [1150, { y: 70, e: "ease-in" }], [1500, { y: 0 }], [2150, { y: 150, e: "ease-in" }], [2550, { y: 5 }], [2900, { y: 5, e: "ease-in-out" }], [D, { y: 320 }]],
+        flou: [[0, { o: 1 }], [900, { o: 1 }], [1250, { o: 0.78 }], [1600, { o: 0.92 }], [2300, { o: 0.45 }], [2800, { o: 0.62 }], [D, { o: 0 }]],
+        soleil: [[0, { r: 0 }], [D, { r: 14 }]]
+      };
+      return { plans, partition: { temps: [unTemps(D, [[0, { y: 10, z: 1.16, r: -7 }], [D, { y: 0, z: 1.06, r: -3.5 }]], P2)], repos: { duree: 14e3, camera: { x: -5, z: 0.03, r: 0.8 } } } };
+    }
+    __name(paupieres01, "paupieres01");
+    function epave(p) {
+      const A = atelier(`${p}d`);
+      let s = "";
+      s += gravure(A, [[150, 318], [290, 282], [292, 288], [152, 325]], C.brun, { seed: 200, amp: 0.3, tailles: 0, trait: 1.6, portee: 0.5, dy: 4 }) + gravure(A, [[286, 276], [306, 270], [300, 278], [308, 282], [290, 286]], C.rouge, { seed: 201, amp: 0.3, tailles: 0, trait: 1.3, portee: 0.4 });
+      s += gravure(A, [[256, 330], [300, 324], [306, 268], [296, 262], [286, 270], [276, 262], [262, 272]], C.rouge, { seed: 202, amp: 0.4, tailles: 1, portee: 0.55, dy: 5 });
+      s += gravure(A, [[258, 300], [302, 296], [303, 286], [260, 290]], "#14100C", { seed: 203, amp: 0.2, tailles: 0, portee: 0, trait: 1.3 }) + `<path d="M268,316 q6,-6 10,-1 q4,-5 10,-2 q-6,1 -9,6 q-4,-3 -11,-3 Z" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.8"/>`;
+      s += gravure(A, [[318, 330], [356, 300], [362, 312], [330, 338]], C.ocre, { seed: 204, amp: 0.4, tailles: 1, tailleP: 3, portee: 0.5, dy: 4 }) + gravure(A, ovale(358, 306, 9, 15, 18, 0.6), C.moutarde, { seed: 205, amp: 0.3, tailles: 1, tailleP: 2, trait: 1.6, portee: 0 }) + `<ellipse cx="359" cy="306" rx="5" ry="10" transform="rotate(34 359 306)" fill="#1A120A"/>`;
+      s += gravure(A, [[190, 352], [236, 352], [233, 336], [193, 336]], "#7A4A28", { seed: 206, amp: 0.4, tailles: 1, portee: 0.5, dy: 4 }) + gravure(A, [[193, 336], [180, 312], [228, 306], [233, 336]], "#8E5A30", { seed: 207, amp: 0.4, tailles: 0, portee: 0.4 });
+      s += gravure(A, [[236, 350], [254, 342], [272, 350], [258, 358]], "#3A6A8A", { seed: 208, amp: 0.3, tailles: 0, trait: 1.2, portee: 0.35 }) + gravure(A, [[186, 354], [168, 360], [160, 352], [178, 346]], C.ocre, { seed: 209, amp: 0.3, tailles: 0, trait: 1.2, portee: 0.35 });
+      s += gravure(A, ovale(130, 334, 20, 8, 20), C.creme, { seed: 210, amp: 0.3, tailles: 0, trait: 1.4, portee: 0.4 });
+      for (let k = 0; k < 4; k++) {
+        const a = k / 4 * Math.PI * 2 + 0.4;
+        s += `<path d="M${f(130 + Math.cos(a) * 10)},${f(334 + Math.sin(a) * 4)} L${f(130 + Math.cos(a) * 20)},${f(334 + Math.sin(a) * 8)} L${f(130 + Math.cos(a + 0.7) * 20)},${f(334 + Math.sin(a + 0.7) * 8)} L${f(130 + Math.cos(a + 0.7) * 10)},${f(334 + Math.sin(a + 0.7) * 4)} Z" fill="${C.rouge}" stroke="${ENCRE}" stroke-width="0.8"/>`;
+      }
+      s += `<ellipse cx="130" cy="334" rx="9" ry="3.4" fill="${SABLE_MOUILLE}" stroke="${ENCRE}" stroke-width="1"/>`;
+      const fil = courbe((t) => [60 + 110 * t, 364 + 8 * Math.sin(t * 9) + 10 * t], 24);
+      s += trait2(chemin(fil), 1, ENCRE);
+      fil.filter((_, k) => k % 4 === 2).forEach(([x, y], k) => {
+        s += `<circle cx="${f(x + 2)}" cy="${f(y + 4)}" r="2.6" fill="${["#A8882E", "#8A3A2A", "#4A7A78", "#6A8A3A"][k % 4]}" stroke="${ENCRE}" stroke-width="0.8"/>`;
+      });
+      return A.out(s);
+    }
+    __name(epave, "epave");
+    function greve01() {
+      const p = "gg", D = 6400;
+      const plans = [...decor(p), { id: "anime", profondeur: 0.3, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") }, { id: "epave", profondeur: 0.62, marge: MARGE, dessin: /* @__PURE__ */ __name(() => epave(p), "dessin") }, { id: "premier", profondeur: 1, marge: MARGE, flou: 0.3, dessin: /* @__PURE__ */ __name(() => premier(p), "dessin") }, { id: "regard", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => regard(p), "dessin") }, { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }];
+      return { plans, partition: { temps: [unTemps(D, [[0, { x: -80, y: -6, z: 1.32 }], [1100, { x: -76, y: -6, z: 1.32 }], [D, { x: 64, y: 8, z: 1.34 }]], { soleil: [[0, { r: 0 }], [D, { r: 20 }]] })], repos: { duree: 9e3, camera: { x: -5, y: 2, z: 0.02 } } } };
+    }
+    __name(greve01, "greve01");
+    var CARTE = { x: 200, y: 206, a: -14 };
+    var surCarte = /* @__PURE__ */ __name((corps) => `<g transform="translate(${CARTE.x} ${CARTE.y}) rotate(${CARTE.a}) translate(-130 -84)">${corps}</g>`, "surCarte");
+    function carteGravee(p) {
+      const A = atelier(`${p}k`);
+      let s = gravure(A, [[0, 0], [260, 0], [260, 140], [246, 150], [252, 158], [240, 168], [0, 168]], C.creme, { seed: 300, amp: 0.6, angle: 30, pas: 3.2, ombre: 0.5, tailles: 1, tailleP: 5, portee: 0.55, dx: 4, dy: 6, lumiere: [-0.5, -0.85] });
+      s += gravure(A, [[3, 3], [257, 3], [257, 36], [3, 36]], "#22385C", { seed: 301, amp: 0.3, tailles: 0, portee: 0, trait: 1.2, pas: 2.6 });
+      s += `<text x="44" y="25" font-family="Georgia, serif" font-size="14" font-weight="bold" letter-spacing="1.6" fill="${C.creme}">L’HIRONDELLE</text><path d="M18,22 q6,-6 10,-1 q4,-5 10,-2 q-6,1 -9,6 q-4,-3 -11,-3 Z" fill="${C.ocre}" stroke="${ENCRE}" stroke-width="0.6"/>`;
+      s += gravure(A, [[16, 50], [76, 48], [78, 124], [18, 126]], "#F4ECD8", { seed: 302, amp: 0.3, tailles: 0, noir: false, trait: 1.2, portee: 0.35 }) + gravure(A, [[22, 56], [72, 54], [73, 112], [23, 114]], "#B8C0C0", { seed: 303, amp: 0.2, tailles: 0, trait: 0.8, portee: 0, pas: 2.4 });
+      s += `<text x="92" y="60" font-family="Georgia, serif" font-size="11" font-style="italic" fill="#22385C">Carte d’embarquement</text>`;
+      s += trait2("M92,84 L240,84 M92,108 L170,108 M180,108 L240,108 M92,132 L240,132", 0.9, ENCRE, 0.7) + `<text x="92" y="80" font-family="Georgia, serif" font-size="6" fill="${ENCRE}">NOM</text><text x="92" y="104" font-family="Georgia, serif" font-size="6" fill="${ENCRE}">DÉPART</text><text x="180" y="104" font-family="Georgia, serif" font-size="6" fill="${ENCRE}">CABINE</text><text x="200" y="104" font-family="Georgia, serif" font-size="9" font-weight="bold" fill="#22385C">7</text>`;
+      s += trait2(Array.from({ length: 10 }, (_, k) => `M${f(96 + k * 14)},${f(110 + 4 * hash(k, 1))} q1,${f(4 + 5 * hash(k, 2))} 0,${f(8 + 6 * hash(k, 2))}`).join(" "), 0.8, "#22385C", 0.4);
+      for (const [x, y, rx, ry] of [[170, 120, 34, 20], [50, 150, 26, 12], [220, 60, 20, 30]]) s += `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#8A7A58" opacity="0.14" stroke="#5A4A30" stroke-width="0.8" stroke-opacity="0.4"/>`;
+      s += trait2("M84,0 Q96,84 110,168", 1.2, "#FFFFFF", 0.5) + trait2("M86,0 Q98,84 112,168", 0.7, ENCRE, 0.35);
+      return A.out(surCarte(s));
+    }
+    __name(carteGravee, "carteGravee");
+    var encreTampon = /* @__PURE__ */ __name((p) => surCarte(`<g transform="rotate(-11 190 140)" opacity="0.9"><rect x="146" y="124" width="92" height="32" rx="5" fill="none" stroke="#B8301E" stroke-width="2.8"/><rect x="150" y="128" width="84" height="24" rx="3" fill="none" stroke="#B8301E" stroke-width="1"/><text x="192" y="145" font-family="Georgia, serif" font-size="12" font-weight="bold" letter-spacing="1" fill="#B8301E" text-anchor="middle">EMBARQUÉ</text>${Array.from({ length: 30 }, (_, k) => `<circle cx="${f(148 + hash(k, 3) * 90)}" cy="${f(124 + hash(k, 4) * 32)}" r="${f(0.4 + 0.8 * hash(k, 5))}" fill="${C.creme}"/>`).join("")}</g>`), "encreTampon");
+    function sablePres(p, empreinte = false) {
+      const A = atelier(`${p}z`);
+      let s = gravure(A, [[G, G], [D_, G], [D_, D_], [G, D_]], A.lin([[0, "#C89A4A"], [1, "#8A6A3A"]], 0, G, 140, D_), { seed: 320, amp: 0, angle: 10, pas: 3.6, ombre: 0.4, tailles: 0, portee: 0, trait: 0, lumiere: [-0.5, -0.85] });
+      for (let i = 0; i < 10; i++) {
+        const y = G + 10 + i * 48, ride = courbe((t) => [G + (D_ - G) * t, y + 7 * Math.sin(t * 8 + i) + 4 * Math.sin(t * 21)], 40);
+        s += gravure(A, [...ride, ...ride.slice().reverse().map(([x, yy]) => [x, yy + 12])], i % 2 ? "#B88C48" : "#A88044", { seed: 321 + i, amp: 0.4, angle: 6, pas: 2.6, ombre: 0.4, tailles: 0, trait: 1.2, portee: 0.3, dy: 2, lumiere: [0, -1] });
+      }
+      for (let i = 0; i < 30; i++) s += `<circle cx="${f(G + hash(i, 81) * (D_ - G))}" cy="${f(G + hash(i, 83) * (D_ - G))}" r="${f(0.8 + 1.4 * hash(i, 85))}" fill="${hash(i, 87) < 0.5 ? C.creme : ENCRE}" stroke="${ENCRE}" stroke-width="0.5"/>`;
+      s += gravure(A, courbe((t) => [60 + 12 * Math.cos(Math.PI + t * Math.PI), 340 - 14 * Math.sin(t * Math.PI)], 10), C.creme, { seed: 340, amp: 0.2, tailles: 0, noir: false, trait: 1.2, portee: 0.4 }) + trait2("M330,350 q16,-10 34,-2 t30,-4", 7, ENCRE) + trait2("M330,350 q16,-10 34,-2 t30,-4", 3.4, "#4E6A3A");
+      if (empreinte) s += surCarte(`<path d="M0,0 L260,0 L260,140 L246,150 L252,158 L240,168 L0,168 Z" fill="#5A4024" opacity="0.5"/>`);
+      return A.out(s);
+    }
+    __name(sablePres, "sablePres");
+    function ecumeBord(p) {
+      const A = atelier(`${p}u`);
+      const bord = courbe((t) => [G + (D_ - G) * t, 34 + 10 * Math.sin(t * 7 + 1) + 5 * Math.sin(t * 19)], 60);
+      let s = gravure(A, [[G, G - 60], [D_, G - 60], ...bord.slice().reverse()], "#5A6A5E", { seed: 350, amp: 0.4, angle: 4, pas: 3, tailles: 0, trait: 1.4, portee: 0.4, dy: 3, lumiere: [0, -1] });
+      s += gravure(A, [...bord, ...bord.slice().reverse().map(([x, y], k) => [x, y - 6 - 3 * Math.abs(Math.sin(k * 0.9))])], C.creme, { seed: 351, amp: 0.3, tailles: 0, noir: false, trait: 1.2, portee: 0.3 });
+      return A.out(s);
+    }
+    __name(ecumeBord, "ecumeBord");
+    var TACHE = [128, 296];
+    var tache = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}t`);
+      return A.out(`<g transform="rotate(-12 ${TACHE[0]} ${TACHE[1]})"><rect x="${TACHE[0] - 6}" y="${TACHE[1] - 3.6}" width="12" height="7.2" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.8"/><rect x="${TACHE[0] - 6}" y="${TACHE[1] - 3.6}" width="12" height="2.2" fill="#22385C"/></g>`);
+    }, "tache");
+    var vivantTache = /* @__PURE__ */ __name(() => `<circle cx="${TACHE[0] + 4}" cy="${TACHE[1] - 2}" r="2.4" fill="#FFF8D8"><animate attributeName="opacity" values="0.2;1;0.4;0.2" dur="1.6s" repeatCount="indefinite"/><animate attributeName="r" values="1.4;3.4;1.8;1.4" dur="1.6s" repeatCount="indefinite"/></circle><path d="M${TACHE[0] + 4},${TACHE[1] - 9} v14 M${TACHE[0] - 3},${TACHE[1] - 2} h14" stroke="#FFF8D8" stroke-width="1" opacity="0"><animate attributeName="opacity" values="0;0;0.9;0" keyTimes="0;0.5;0.6;1" dur="3.2s" repeatCount="indefinite"/></path>`, "vivantTache");
+    function carte01() {
+      const p = "gc", d = 0.55;
+      const vise = /* @__PURE__ */ __name((z, part = 1) => {
+        const S = 1 + (z - 1) * d;
+        return { x: Math.round(part * S * (TACHE[0] - 200) / d), y: Math.round(part * S * (TACHE[1] - 200) / d), z };
+      }, "vise");
+      const c0 = { x: -20, y: 0, z: 1.1 }, c1 = vise(1.35, 0.62), c2 = vise(2), c3 = vise(4.5);
+      const pres = /* @__PURE__ */ __name((cles) => ({ "sable-pres": cles, carte: cles }), "pres");
+      const cache = /* @__PURE__ */ __name((t) => [[0, { o: 0 }], [t, { o: 0 }]], "cache");
+      const plans = [
+        ...decor(p, { plage: d }),
+        { id: "tache", profondeur: d, marge: MARGE, dessin: /* @__PURE__ */ __name(() => tache(p), "dessin") },
+        { id: "anime", profondeur: d, dessin: /* @__PURE__ */ __name(() => vivantTache(), "dessin") },
+        { id: "sable-pres", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => sablePres(p), "dessin") },
+        { id: "carte", profondeur: 0, marge: MARGE, pivot: [CARTE.x, CARTE.y], dessin: /* @__PURE__ */ __name(() => carteGravee(p), "dessin") },
+        { id: "ecume", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => ecumeBord(p), "dessin") },
+        { id: "regard", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => regard(p), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const temps = [
+        unTemps(5e3, [[0, c0], [800, c0], [5e3, c1]], { ...pres(cache(5e3)), ecume: cache(5e3) }),
+        unTemps(2600, [[0, c1], [1e3, { ...c2, e: "ease-in" }], [1900, c3], [2600, c3]], { ...pres([[0, { o: 0, s: 1.3 }], [1e3, { o: 0, s: 1.3, e: "ease-out" }], [1800, { o: 1, s: 1.06 }], [2600, { o: 1, s: 1 }]]), ecume: [[0, { o: 0, y: -60 }], [1e3, { o: 0, y: -60 }], [1800, { o: 1, y: -50 }], [2600, { o: 1, y: -60 }]] }),
+        unTemps(8e3, [[0, c3], [8e3, c3]], { ...pres([[0, { o: 1, s: 1 }], [8e3, { o: 1, s: 1.07 }]]), ecume: [[0, { o: 1, y: -60 }], [2600, { o: 1, y: 0 }], [4600, { o: 1, y: -50 }], [7e3, { o: 1, y: -8 }], [8e3, { o: 1, y: -40 }]] })
+      ];
+      return { plans, partition: { temps, repos: { duree: 9e3, camera: { x: -6, y: 3, z: 0.02 } } } };
+    }
+    __name(carte01, "carte01");
+    var TAMPON_ICI = (() => {
+      const a = CARTE.a * Math.PI / 180, x = 192 - 130, y = 140 - 84;
+      return [CARTE.x + x * Math.cos(a) - y * Math.sin(a), CARTE.y + x * Math.sin(a) + y * Math.cos(a)];
+    })();
+    function outil(p) {
+      const A = atelier(`${p}o`), [tx, ty] = TAMPON_ICI;
+      let s = `<g transform="translate(${f(tx)} ${f(ty)}) rotate(${CARTE.a - 11})">`;
+      s += gravure(A, [[-48, -16], [48, -16], [48, 20], [-48, 20]], "#B8301E", { seed: 360, amp: 0.3, tailles: 0, portee: 0, trait: 1.4 });
+      s += gravure(A, [[-46, -20], [46, -20], [46, 16], [-46, 16]], "#7A4A28", { seed: 361, amp: 0.4, angle: 0, tailles: 1, portee: 0.5, dx: 6, dy: 8 });
+      s += gravure(A, ovale(-2, -6, 22, 20, 22), "#A87040", { seed: 362, amp: 0.4, tailles: 2, tailleP: 4, portee: 0.5, dx: 4, dy: 6 }) + volute(-4, -8, 7, 1, 1.5, 1.6);
+      return A.out(s + "</g>");
+    }
+    __name(outil, "outil");
+    function vent() {
+      let s = "";
+      for (let i = 0; i < 6; i++) {
+        const y = 40 + i * 62, d = 1.4 + hash(i, 2);
+        s += `<path d="M-60,${y} q60,-16 120,0 t120,-4" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round" opacity="0.6"><animateTransform attributeName="transform" type="translate" from="-80 20" to="480 -60" dur="${f(d)}s" begin="${f(-hash(i, 3) * d)}s" repeatCount="indefinite"/></path>`;
+      }
+      let grains = "";
+      for (let i = 0; i < 40; i++) grains += `<circle cx="${f(hash(i, 5) * 400)}" cy="${f(hash(i, 6) * 400)}" r="${f(0.8 + hash(i, 7))}"/>`;
+      return s + `<g fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.4"><animateTransform attributeName="transform" type="translate" from="-400 30" to="0 0" dur="1.2s" repeatCount="indefinite"/>${grains}<g transform="translate(400 -30)">${grains}</g></g>`;
+    }
+    __name(vent, "vent");
+    function tampon00() {
+      const p = "gt", D = 3600, HIT = 560;
+      const vol = [[1500, {}], [1800, { y: -4, r: -3, s: 1.02 }], [2250, { x: 50, y: -70, r: 18, s: 1.16, e: "ease-in-out" }], [2850, { x: 170, y: -220, r: 62, s: 1.05 }], [D, { x: 320, y: -440, r: 120, s: 0.8 }]];
+      const plans = [
+        { id: "sable-pres", profondeur: 0.2, marge: MARGE, dessin: /* @__PURE__ */ __name(() => sablePres(p, true), "dessin") },
+        { id: "carte", profondeur: 0.2, marge: MARGE, pivot: [CARTE.x, CARTE.y], dessin: /* @__PURE__ */ __name(() => carteGravee(p), "dessin") },
+        { id: "encre", profondeur: 0.2, marge: MARGE, pivot: [CARTE.x, CARTE.y], dessin: /* @__PURE__ */ __name(() => encreTampon(p), "dessin") },
+        { id: "tampon", profondeur: 0.35, marge: MARGE, pivot: TAMPON_ICI, dessin: /* @__PURE__ */ __name(() => outil(p), "dessin") },
+        { id: "anime", profondeur: 0.3, dessin: /* @__PURE__ */ __name(() => vent(), "dessin") },
+        { id: "regard", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => regard(p), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const P2 = {
+        tampon: [[0, { y: -300, x: 60, s: 1.8 }], [HIT, { y: 0, x: 0, s: 1, e: "linear" }], [HIT + 160, { s: 0.98 }], [HIT + 320, { s: 1, e: "ease-in" }], [1350, { y: -320, x: 80, s: 1.8 }], [D, { y: -320, x: 80, s: 1.8 }]],
+        carte: [[0, {}], [HIT, { e: "linear" }], [HIT + 60, { y: 2.4 }], ...vol],
+        encre: [[0, { o: 0 }], [HIT, { o: 0, e: "linear" }], [HIT + 40, { o: 1, y: 2.4 }], [HIT + 220, { o: 1 }], ...vol.map(([t, c]) => [t, { ...c, o: 1 }])],
+        anime: [[0, { o: 0 }], [1400, { o: 0 }], [1900, { o: 1 }], [D, { o: 1 }]]
+      };
+      const cam = { x: 0, y: 0, z: 1.04 };
+      return { plans, partition: { temps: [unTemps(D, [[0, cam], ...T.secoue(HIT, cam, 4, 4), [1500, cam], [D, { x: 10, y: -14, z: 1.08 }]], P2)] } };
+    }
+    __name(tampon00, "tampon00");
+    module.exports = { paupieres01, greve01, carte01, tampon00, decor, ciel, nuage, mer, plage, vivant, premier, unTemps, HORIZON, RIVAGE, SOLEIL, SABLE: SABLE2, SABLE_MOUILLE };
+  }
+});
+
+// atelier/gravure_rencontre.js
+var require_gravure_rencontre = __commonJS({
+  "atelier/gravure_rencontre.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe, spirale } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, ENCRE } = require_gravure();
+    var { volute, teinte, plein, secoue, C, MARGE, G, D_ } = require_theatre_pont();
+    var { decor, ciel, nuage, mer, plage, vivant, premier, unTemps, HORIZON, RIVAGE } = require_gravure_plage();
+    var { brumeFrame, flamePath } = require_brume();
+    function debris(p) {
+      const A = atelier(`${p}d`);
+      let s = gravure(A, [[226, 338], [288, 330], [290, 337], [228, 346]], C.brun, { seed: 400, amp: 0.3, tailles: 0, trait: 1.5, portee: 0.5, dy: 4 });
+      s += gravure(A, [[22, 318], [62, 316], [60, 300], [24, 302]], "#7A4A28", { seed: 401, amp: 0.4, tailles: 1, portee: 0.5, dy: 4 }) + trait2("M36,302 q6,-6 12,0", 2, ENCRE) + gravure(A, [[40, 300], [46, 300], [46, 318], [40, 318]], C.ocre, { seed: 402, amp: 0.1, tailles: 0, trait: 0.8, portee: 0 });
+      s += gravure(A, [[318, 334], [380, 326], [376, 312], [322, 318]], C.creme, { seed: 403, amp: 0.4, tailles: 1, portee: 0.5, dy: 4 }) + gravure(A, [[320, 328], [378, 320], [377, 316], [321, 323]], C.rouge, { seed: 404, amp: 0.2, tailles: 0, trait: 0.9, portee: 0 }) + `<circle cx="346" cy="318" r="2.6" fill="#2C3A44" stroke="${ENCRE}" stroke-width="0.9"/>`;
+      return A.out(s);
+    }
+    __name(debris, "debris");
+    function lechee(p) {
+      const A = atelier(`${p}l`);
+      const bord = courbe((t) => [G + (D_ - G) * t, RIVAGE + 12 + 5 * Math.sin(t * 7 + 0.6) + 2 * Math.sin(t * 23)], 60);
+      let s = gravure(A, [[G, RIVAGE - 6], [D_, RIVAGE - 6], ...bord.slice().reverse()], "#5A6A62", { seed: 410, amp: 0.3, angle: 4, pas: 3, ombre: 0.2, tailles: 0, portee: 0, trait: 1.2, lumiere: [0, -1] });
+      s += gravure(A, [...bord, ...bord.slice().reverse().map(([x, y], k) => [x, y - 4 - 2 * Math.abs(Math.sin(k * 0.8))])], C.creme, { seed: 411, amp: 0.3, tailles: 0, noir: false, trait: 1.1, portee: 0.3 });
+      return A.out(s);
+    }
+    __name(lechee, "lechee");
+    function ombreLongue(p, [x, y], l = 70) {
+      const A = atelier(`${p}o`);
+      return A.out(gravure(A, [[x - 18, y - 2], [x + 16, y - 3], [x - l * 0.45, y + l], [x - l * 0.95, y + l * 0.9]], "#2A1A10", { seed: 420, amp: 0.4, angle: 50, pas: 2.6, ombre: 0, tailles: 0, trait: 0, portee: 0, noir: false }));
+    }
+    __name(ombreLongue, "ombreLongue");
+    var contreJour = /* @__PURE__ */ __name((p, [x, y]) => {
+      const A = atelier(`${p}j`);
+      return A.out(plein(A, A.rad([[0, "#1A0E08", 0.3], [0.5, "#1A0E08", 0.12], [1, "#1A0E08", 0]], x, y - 90, 150)));
+    }, "contreJour");
+    var crepuscule = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}k`);
+      return A.out(plein(A, A.lin([[0, "#14183A", 0.62], [0.4, "#2A2448", 0.42], [0.55, "#3A2A48", 0.22], [1, "#1A1628", 0.42]], 0, G, 0, D_)));
+    }, "crepuscule");
+    var voile = /* @__PURE__ */ __name((p, i, y, h, op = 0.6) => {
+      const A = atelier(`${p}v${i}`);
+      return A.out(plein(A, A.lin([[0, "#C8C4DC", 0], [0.35, "#CCD2E8", op * 0.85], [0.5, "#D2DCEE", op], [0.7, "#C4C6DE", op * 0.8], [1, "#B4B0CC", 0]], 0, y - h, 0, y + h)));
+    }, "voile");
+    var escarbilles = /* @__PURE__ */ __name(() => [[60, 300, 7], [150, 226, 9], [236, 330, 8], [300, 212, 10], [388, 290, 7.5], [110, 350, 8.5]].map(([x, y, d], i) => `<circle cx="${x}" cy="${y}" r="${f(1.2 + hash(i, 3))}" fill="#E8F6FF" opacity="0"><animate attributeName="opacity" values="0;0.9;0.3;0.8;0" dur="${f(d * 0.6)}s" begin="${f(-hash(i, 5) * d)}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;${f(14 - 28 * hash(i, 7))} -16;${f(10 - 20 * hash(i, 9))} -30" dur="${f(d)}s" begin="${f(-hash(i, 11) * d)}s" repeatCount="indefinite"/></circle>`).join(""), "escarbilles");
+    function filets(p, i, liste2) {
+      const A = atelier(`${p}f${i}`);
+      let s = "";
+      liste2.forEach(([x0, y, l, a, w], k) => {
+        const axe = /* @__PURE__ */ __name((t) => [x0 + l * t, y + a * Math.sin(Math.PI * 2 * (t * 1.2 + k * 0.37))], "axe"), ep = /* @__PURE__ */ __name((t) => w * Math.sin(Math.PI * t) ** 0.6 + 0.6, "ep");
+        const pts5 = courbe((t) => t, 40).map((t) => {
+          const [x, yy] = axe(t), [x2, y2] = axe(Math.min(1, t + 0.01)), [x1, y1] = axe(Math.max(0, t - 0.01)), l2 = Math.hypot(x2 - x1, y2 - y1) || 1;
+          return [x, yy, -(y2 - y1) / l2, (x2 - x1) / l2, ep(t)];
+        });
+        s += gravure(A, [...pts5.map(([x, yy, nx, ny, e]) => [x + nx * e, yy + ny * e]), ...pts5.slice().reverse().map(([x, yy, nx, ny, e]) => [x - nx * e * 0.6, yy - ny * e * 0.6])], A.lin([[0, "#E2DCEA"], [1, "#A8A4C2"]], 0, y - w, 0, y + w), { seed: 440 + i * 7 + k, amp: 0.3, angle: 8, pas: 2.6, ombre: 0.2, tailles: 0, trait: 1.3, portee: 0, lumiere: [0, 1] });
+        const [ax, ay] = axe(0), [bx, by] = axe(1);
+        s += volute(ax + 2, ay - 5, 5 + w * 0.3, -1, 1.5, 1.3) + volute(bx - 2, by - 5, 5 + w * 0.3, 1, 1.5, 1.3);
+      });
+      return A.out(s);
+    }
+    __name(filets, "filets");
+    var BLOC = [[164, 306], [156, 262, 176, 232], [190, 206, 214, 204], [236, 190, 262, 198], [296, 204, 312, 232], [330, 262, 326, 306], [290, 316, 244, 314], [196, 316, 164, 306]];
+    var blocPts = /* @__PURE__ */ __name(() => {
+      const pts5 = [];
+      let [x0, y0] = BLOC[0];
+      for (const [cx, cy, x, y] of BLOC.slice(1)) {
+        for (let i = 1; i <= 8; i++) {
+          const t = i / 8, u = 1 - t;
+          pts5.push([u * u * x0 + 2 * u * t * cx + t * t * x, u * u * y0 + 2 * u * t * cy + t * t * y]);
+        }
+        [x0, y0] = [x, y];
+      }
+      return pts5;
+    }, "blocPts");
+    function rocher2(p) {
+      const A = atelier(`${p}r`);
+      let s = gravure(A, blocPts(), A.lin([[0, "#857D88"], [1, "#3E3846"]], 0, 190, 0, 316), { seed: 460, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2.2, portee: 0.5, dy: 6, lumiere: [-0.6, -0.8] });
+      s += gravure(A, [[178, 232], [190, 208], [214, 205], [236, 192], [262, 199], [294, 206], [310, 232], [286, 238], [254, 222], [222, 230], [196, 244]], "#9A92A0", { seed: 461, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.3, tailles: 1, trait: 1.2, portee: 0, lumiere: [-0.6, -0.8] });
+      s += gravure(A, [[286, 238], [310, 232], [324, 262], [324, 304], [292, 311], [278, 280]], "#2E2834", { seed: 462, amp: 0.4, angle: 70, pas: 2.4, ombre: 0.2, tailles: 0, trait: 1.2, portee: 0 });
+      s += trait2("M226,206 q4,20 -2,40 q-4,16 4,30 M290,240 q-6,14 0,28 M190,250 q10,6 12,22", 1.6, ENCRE);
+      for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += gravure(A, ovale(x, y, r, r * 0.6, 12), "#5E6A3E", { seed: 463 + x, amp: 0.3, tailles: 0, trait: 0.9, portee: 0, pas: 1.8 });
+      return A.out(s + volute(236, 224, 6, 1, 1.5, 1.4));
+    }
+    __name(rocher2, "rocher");
+    var reflet = /* @__PURE__ */ __name((p, d) => {
+      const A = atelier(`${p}e`);
+      return A.out(trait2(d, 1.6, "#DFF4FF", 0.5) + trait2(d, 5, "#DFF4FF", 0.1));
+    }, "reflet");
+    var ARETE_DROITE = "M300,214 Q312,232 318,248 Q328,272 326,300";
+    var ARETE_HAUT = "M196,212 Q212,203 226,200 Q244,192 262,198";
+    var lumiereFroide = /* @__PURE__ */ __name((p, [x, y]) => {
+      const A = atelier(`${p}f`);
+      return A.out(plein(A, A.rad([[0, "#CFE8F4", 0.18], [0.5, "#9AB8D0", 0.06], [1, "#9AB8D0", 0]], x, y, 220)));
+    }, "lumiereFroide");
+    var borne = /* @__PURE__ */ __name((v) => Math.max(0, Math.min(1, v)), "borne");
+    var soir = /* @__PURE__ */ __name((k) => ({
+      soleil: { y: 6 + 64 * k, r: 16 + 24 * k },
+      mer: { o: borne(1 - k * 1.4) },
+      crepuscule: { o: k },
+      voile0: { o: borne(k * 1.6) },
+      "voile-mer": { o: borne((k - 0.15) / 0.6) },
+      filets0: { o: 0.85 * borne(k * 1.6 - 0.1), x: -16 * k },
+      voile1: { o: borne((k - 0.45) / 0.55) },
+      filets1: { o: 0.8 * borne((k - 0.5) / 0.5), x: -12 + 28 * k },
+      voile3: { o: borne((k - 0.25) / 0.6) },
+      filets3: { o: 0.75 * borne((k - 0.35) / 0.55), x: 18 - 30 * k },
+      voile2: { o: 0.9 * borne((k - 0.6) / 0.4) },
+      filets2: { o: 0.7 * borne((k - 0.65) / 0.35), x: -24 + 36 * k },
+      ombre: { o: 0.55 * borne(1 - k * 1.5) },
+      "contre-jour": { o: borne(1 - k * 1.2) }
+    }), "soir");
+    var soirDe = /* @__PURE__ */ __name((plans, D, k0, k1) => {
+      const a = soir(k0), b = soir(k1), ids = new Set(plans.map((q) => q.id)), P2 = {};
+      for (const id2 of Object.keys(a)) if (ids.has(id2)) P2[id2] = [[0, a[id2]], [D, { ...b[id2], e: "ease-in-out" }]];
+      return P2;
+    }, "soirDe");
+    var ROC_PIVOT = [244, 310];
+    var ROC_LOIN = { x: 106, y: -42, s: 0.3 };
+    var ROC_PRES = { x: 0, y: 0, s: 1 };
+    var decorSoir = /* @__PURE__ */ __name((p, avantRocher = []) => [
+      ...decor(p).filter((q) => q.id !== "mer" && q.id !== "plage"),
+      { id: "mer-soir", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p, false), "dessin") },
+      { id: "mer", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p), "dessin") },
+      { id: "plage", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => plage(p), "dessin") },
+      { id: "lechee", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lechee(p), "dessin") },
+      { id: "crepuscule", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => crepuscule(p), "dessin") },
+      { id: "voile0", profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 0, HORIZON + 6, 34, 0.92), "dessin") },
+      { id: "voile-mer", profondeur: 0.34, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 4, 222, 40, 0.72), "dessin") },
+      { id: "filets0", profondeur: 0.36, cadre: [-100, HORIZON - 24, 600, 60], dessin: /* @__PURE__ */ __name(() => filets(p, 0, [[-40, HORIZON + 6, 200, 3, 7], [150, HORIZON + 14, 270, 4, 8], [40, HORIZON + 24, 180, 3, 6]]), "dessin") },
+      { id: "voile1", profondeur: 0.48, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 1, 240, 38, 0.74), "dessin") },
+      { id: "filets1", profondeur: 0.5, cadre: [-100, 206, 600, 70], dessin: /* @__PURE__ */ __name(() => filets(p, 1, [[-30, 234, 210, 4, 9], [180, 246, 250, 4, 10], [60, 222, 170, 3, 7]]), "dessin") },
+      ...avantRocher,
+      { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], pivot: ROC_PIVOT, dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
+      // (la brume au ras du sable, au pied du rocher, entre la mer et l'avatar)
+      { id: "voile3", profondeur: 0.62, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 3, 322, 46, 0.74), "dessin") },
+      { id: "filets3", profondeur: 0.64, cadre: [-100, 280, 600, 80], dessin: /* @__PURE__ */ __name(() => filets(p, 3, [[-50, 306, 240, 4, 10], [180, 320, 260, 5, 11], [70, 336, 200, 4, 8]]), "dessin") }
+    ], "decorSoir");
+    var brumeDevant = /* @__PURE__ */ __name((p) => [
+      { id: "voile2", profondeur: 0.85, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 2, 398, 42, 0.64), "dessin") },
+      { id: "filets2", profondeur: 0.9, cadre: [-100, 336, 600, 90], dessin: /* @__PURE__ */ __name(() => filets(p, 2, [[-60, 362, 250, 5, 11], [210, 374, 250, 6, 12]]), "dessin") }
+    ], "brumeDevant");
+    var lecheeVa = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [D * 0.4, { y: 8, e: "ease-in-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "lecheeVa");
+    var NEUTRES = /* @__PURE__ */ new Set(["repos", "marche", "arret"]);
+    var joue = /* @__PURE__ */ __name((...clips) => clips.map(([t, anim, dir, expr = NEUTRES.has(anim) ? "neutre" : void 0]) => [t, expr ? { anim, dir, expr } : { anim, dir }]), "joue");
+    var COUCHANT = { teinte: "#2A140A", force: 0.24, cote: 1 };
+    var FROIDE = { teinte: "#1C2242", force: 0.26, cote: -1 };
+    var derniere = /* @__PURE__ */ __name((cles) => {
+      const { e, ...c } = cles[cles.length - 1][1];
+      return c;
+    }, "derniere");
+    var tenir = /* @__PURE__ */ __name((prec, D, acteur, pistes = {}) => ({
+      duree: D,
+      camera: [[0, derniere(prec.camera)], [D, derniere(prec.camera)]],
+      pistes: { ...Object.fromEntries(Object.entries(prec.pistes).map(([id2, cles]) => [id2, [[0, derniere(cles)], [D, derniere(cles)]]])), ...pistes },
+      acteur
+    }), "tenir");
+    var PIEDS_PLAGE = [144, 376];
+    function plage02() {
+      const p = "rp";
+      const plans = [
+        ...decorSoir(p),
+        { id: "anime", profondeur: 0.3, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") },
+        { id: "debris", profondeur: 0.62, marge: MARGE, dessin: /* @__PURE__ */ __name(() => debris(p), "dessin") },
+        { id: "ombre", profondeur: 0.66, marge: MARGE, dessin: /* @__PURE__ */ __name(() => ombreLongue(p, PIEDS_PLAGE), "dessin") },
+        { id: "avatar", profondeur: 0.66, pivot: PIEDS_PLAGE },
+        { id: "contre-jour", profondeur: 0.66, marge: MARGE, dessin: /* @__PURE__ */ __name(() => contreJour(p, PIEDS_PLAGE), "dessin") },
+        ...brumeDevant(p),
+        { id: "premier", profondeur: 1, marge: MARGE, flou: 0.3, dessin: /* @__PURE__ */ __name(() => premier(p), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const SOIR = [[0, 0.06, 6e3], [0.06, 0.16, 5e3], [0.16, 0.3, 5e3], [0.3, 0.44, 5e3], [0.44, 0.6, 5e3]];
+      const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -40, y: 22, z: 1.22 }, { x: -34, y: 18, z: 1.2 }, { x: -6, y: 2, z: 1.1 }];
+      const ACTEUR = [
+        joue([0, "repos", "haut_droite"]),
+        joue([0, "repos", "haut_droite"], [1400, "repos", "haut_gauche"], [3400, "repos", "haut_droite"]),
+        joue([0, "repos", "haut_droite"], [500, "repos", "bas_droite"], [900, "pose_frisson", "bas_droite"]),
+        joue([0, "pose_frisson", "bas_droite"], [600, "repos", "bas_droite"], [1e3, "pose_visiere", "bas_droite"]),
+        joue([0, "repos", "bas_droite"], [600, "repos", "haut_droite"], [1e3, "marche", "haut_droite"], [3e3, "repos", "haut_droite"])
+      ];
+      const pas = /* @__PURE__ */ __name((D) => [[0, { x: 0, y: 0, s: 1 }], [1e3, { x: 0, y: 0, s: 1 }], [3e3, { x: 46, y: -34, s: 0.8, e: "linear" }], [D, { x: 46, y: -34, s: 0.8 }]], "pas");
+      const temps = SOIR.map(([k0, k1, D], n) => ({ ...unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? "ease-in-out" : "ease-out" }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), rocher: [[0, ROC_LOIN], [D, ROC_LOIN]], anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]], ...n === 4 ? { avatar: pas(D) } : {} }), acteur: ACTEUR[n] }));
+      return { plans, partition: { lumiere: COUCHANT, temps, repos: { duree: 9e3, camera: { x: -5, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(plage02, "plage02");
+    function brumeGravee(pref, n, expr = "neutre") {
+      const r = 8, ph = n % 4 / 4, sway = Math.sin(ph * Math.PI * 2) * r * 0.32, jit = [[0, 0], [0.5, -0.2], [-0.4, 0.2], [0.3, 0.3]][n % 4];
+      const x = 20 + jit[0], y = 32 + [0, -0.6, -1, -0.6][n % 4] + jit[1], contour = flamePath(x, y, r, sway), id2 = `${pref}${n}`;
+      const hach = Array.from({ length: 9 }, (_, k) => `M${f(x - 2 + k * 1.6)},${f(y + r + 2)} l${f(8)},${f(-22)}`).join(" ");
+      return `<path d="${contour}" fill="none" stroke="${ENCRE}" stroke-width="2.6" stroke-linejoin="round"/>` + brumeFrame("s0", n, expr === "dos" ? "neutre" : expr, expr !== "dos").replace(/bhs0(\d)/g, `${id2}h$1`) + `<defs><clipPath id="${id2}c"><path d="${contour}"/></clipPath></defs><g clip-path="url(#${id2}c)"><path d="${hach}" fill="none" stroke="#6E8792" stroke-width="0.45" opacity="0.7"/></g>`;
+    }
+    __name(brumeGravee, "brumeGravee");
+    var HALO = /* @__PURE__ */ __name((p) => `<radialGradient id="${p}H"><stop offset="0" stop-color="#E4F6FF" stop-opacity="0.6"/><stop offset="0.35" stop-color="#BFE2F6" stop-opacity="0.26"/><stop offset="1" stop-color="#BFE2F6" stop-opacity="0"/></radialGradient>`, "HALO");
+    function brumeVive(pref, s, expr = "neutre", cligne = [4.2, 2.6]) {
+      const ordre = [0, 1, 2, 1], [per, t0] = cligne, kc = `0;${f(t0 / per)};${f((t0 + 0.14) / per)}`;
+      const images = [0, 1, 2].map((n) => `<g opacity="${n ? 0 : 1}"><animate attributeName="opacity" values="${ordre.map((k) => k === n ? 1 : 0).join(";")}" keyTimes="0;0.25;0.5;0.75" calcMode="discrete" dur="0.84s" repeatCount="indefinite"/>${brumeGravee(`${pref}v`, n, expr)}</g>`).join("");
+      return `<g transform="scale(${s}) translate(-20 -32)"><g><animate attributeName="opacity" values="1;0;1" keyTimes="${kc}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${images}</g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="${kc}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${brumeGravee(`${pref}k`, 0, "cligne")}</g></g>`;
+    }
+    __name(brumeVive, "brumeVive");
+    var brumePiece = /* @__PURE__ */ __name((p, [x, y], s, expr) => {
+      const A = atelier(`${p}`);
+      return A.out(`<defs>${HALO(p)}</defs><circle cx="${x}" cy="${f(y - 8 * s / 1.4)}" r="${f(38 * s / 1.4 + 16)}" fill="url(#${p}H)"/><g transform="translate(${x} ${y}) scale(${s}) translate(-20 -32)">${brumeGravee(`${p}b`, 0, expr)}</g>`);
+    }, "brumePiece");
+    var flaque = /* @__PURE__ */ __name((p, [x, y], rx) => `<defs><radialGradient id="${p}F"><stop offset="0" stop-color="#D8F0FF" stop-opacity="0.5"/><stop offset="1" stop-color="#D8F0FF" stop-opacity="0"/></radialGradient></defs><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${f(rx * 0.24)}" fill="url(#${p}F)"/>`, "flaque");
+    var spirales = /* @__PURE__ */ __name(() => [[70, 56, 8, 1, 6, 0], [190, 34, 6, -1, 7, 2.5], [340, 64, 7, 1, 6.5, 4]].map(([x, y, r, sens, dur, beg]) => `<path d="${spirale(x, y, r, sens, 1.6)}" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round" opacity="0.6" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`).join(""), "spirales");
+    var PRES_ROCHER = [352, 262];
+    var PIEDS_LUEUR = [120, 384];
+    function lueurVive(p) {
+      const [x, y] = PRES_ROCHER;
+      let s = `<defs>${HALO(p)}</defs>${flaque(p, [x, y + 36], 42)}`;
+      s += `<g transform="translate(${x} ${y})"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-8" r="54" fill="url(#${p}H)"/>${brumeVive(p, 1.4)}</g></g>`;
+      return s + spirales() + escarbilles();
+    }
+    __name(lueurVive, "lueurVive");
+    function lueur02() {
+      const p = "rl";
+      const plans = [
+        ...decorSoir(p),
+        { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_DROITE), "dessin") },
+        { id: "venue", profondeur: 0.6, marge: MARGE, pivot: PRES_ROCHER, dessin: /* @__PURE__ */ __name(() => brumePiece(`${p}w`, PRES_ROCHER, 1.4, "curieuse"), "dessin") },
+        { id: "anime", profondeur: 0.6, dessin: /* @__PURE__ */ __name(() => lueurVive(p), "dessin") },
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_LUEUR },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p, PRES_ROCHER), "dessin") },
+        ...brumeDevant(p),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const D0 = 3600, D1 = 4e3, POSE = D0 - 200, c0 = { x: 0, y: 0, z: 1.06 }, c1 = { x: 4, y: 2, z: 1.12 }, c2 = { x: 2, y: 2, z: 1.13 };
+      const venue = [
+        [0, { x: -64, y: -66, s: 0.18, o: 0 }],
+        [300, { x: -64, y: -66, s: 0.18, o: 0, e: "ease-out" }],
+        [600, { x: -64, y: -66, s: 0.22, o: 1 }],
+        [950, { x: -62, y: -64, s: 0.18, o: 0.5 }],
+        [1300, { x: -58, y: -62, s: 0.24, o: 1 }],
+        [2e3, { x: -38, y: -46, s: 0.36, o: 1, e: "ease-in-out" }],
+        [2450, { x: -14, y: -26, s: 0.62, e: "ease-out" }],
+        [2800, { x: -24, y: -22, s: 0.6, e: "ease-in-out" }],
+        [POSE, { x: 0, y: 0, s: 1, o: 1, e: "ease-in-out" }],
+        [D0 - 1, { x: 0, y: 0, s: 1, o: 1, e: "linear" }],
+        [D0, { o: 0 }]
+      ];
+      const pose = [[0, { o: 0 }], [D0 - 1, { o: 0, e: "linear" }], [D0, { o: 1 }]], luit = [[0, { o: 0 }], [1300, { o: 0, e: "ease-in" }], [POSE, { o: 1 }], [D0, { o: 1 }]], reste = /* @__PURE__ */ __name((D) => [[0, { o: 1 }], [D, { o: 1 }]], "reste");
+      const marche = [[0, { x: -70, y: -16, s: 0.88 }], [1500, { x: 0, y: 0, s: 1, e: "linear" }], [2150, { x: 0, y: 0, s: 1 }], [2300, { x: -3, y: -7, s: 1, e: "ease-out" }], [2500, { x: -9, y: 0, s: 1, e: "ease-in" }], [D0, { x: -9, y: 0, s: 1 }]];
+      const temps = [
+        {
+          ...unTemps(D0, [[0, c0], [D0, { ...c1, e: "ease-in-out" }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit, avatar: marche }),
+          acteur: joue([0, "marche", "bas_droite"], [1500, "arret", "bas_droite"], [2020, "repos", "bas_droite"], [2150, "pose_sursaut", "bas_droite"], [2900, "repos", "bas_droite", "surprise"])
+        },
+        {
+          ...unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1), avatar: [[0, { x: -9 }], [2300, { x: -9, e: "ease-out" }], [2550, { x: -17, y: -3 }], [2750, { x: -19, y: 0, e: "ease-in" }], [D1, { x: -19, y: 0 }]] }),
+          acteur: joue([0, "repos", "bas_droite", "surprise"], [500, "pose_pointe", "bas_droite"], [2300, "pose_tete", "face"])
+        }
+      ];
+      return { plans, partition: { lumiere: FROIDE, temps, repos: { duree: 1e4, camera: { x: 5, y: -2, z: 0.02 }, pistes: { anime: [6e3, { x: -10, y: -5 }], filets0: [12e3, { x: 14 }], filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(lueur02, "lueur02");
+    var TOUT_PRES = [244, 296];
+    function approche02() {
+      const p = "ra", D = 1400, ARRIVE = 560;
+      const plans = [
+        ...decorSoir(p),
+        { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_HAUT), "dessin") },
+        { id: "flaque", profondeur: 0.62, marge: MARGE, pivot: [TOUT_PRES[0], 316], dessin: /* @__PURE__ */ __name(() => {
+          const A = atelier(`${p}q`);
+          return A.out(flaque(`${p}q`, [TOUT_PRES[0], 316], 70));
+        }, "dessin") },
+        { id: "brume", profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: /* @__PURE__ */ __name(() => brumePiece(`${p}b`, TOUT_PRES, 3, "curieuse"), "dessin") },
+        { id: "avatar", profondeur: 0.7, pivot: [108, 376] },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p, [TOUT_PRES[0], 260]), "dessin") },
+        ...brumeDevant(p),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const loin = { x: PRES_ROCHER[0] - TOUT_PRES[0], y: PRES_ROCHER[1] - TOUT_PRES[1], s: 1.4 / 3 };
+      const P2 = {
+        ...soirDe(plans, D, 1, 1),
+        brume: [[0, loin], [140, { ...loin, e: "cubic-bezier(.7,0,.9,.6)" }], [ARRIVE, { x: 0, y: 0, s: 1.08, e: "cubic-bezier(.2,.8,.4,1)" }], [ARRIVE + 260, { x: 2, y: -6, s: 1 }], [D, { x: 0, y: -2, s: 1, r: -9, e: "ease-in-out" }]],
+        flaque: [[0, { x: loin.x, y: -18, s: 0.4, o: 0.6 }], [140, { x: loin.x, y: -18, s: 0.4, o: 0.6, e: "cubic-bezier(.7,0,.9,.6)" }], [ARRIVE, { x: 0, y: 0, s: 1.1, o: 1, e: "ease-out" }], [D, { s: 1, o: 1 }]],
+        filets1: [[0, { ...soir(1).filets1 }], [140, { ...soir(1).filets1, e: "ease-out" }], [ARRIVE + 200, { o: 0.3, x: -60 }], [D, { o: 0.45, x: -44 }]],
+        voile1: [[0, { o: 1 }], [140, { o: 1, e: "ease-out" }], [ARRIVE + 200, { o: 0.45 }], [D, { o: 0.6 }]],
+        filets3: [[0, { ...soir(1).filets3 }], [140, { ...soir(1).filets3, e: "ease-out" }], [ARRIVE + 200, { o: 0.3, x: 50 }], [D, { o: 0.45, x: 36 }]],
+        reflet: [[0, { o: 0 }], [ARRIVE, { o: 0, e: "ease-out" }], [D, { o: 1 }]],
+        lechee: lecheeVa(D),
+        // (il recule d'un bond quand elle arrive sur lui)
+        avatar: [[0, { x: -6, y: 0 }], [ARRIVE - 80, { x: -6, y: 0, e: "ease-out" }], [ARRIVE + 120, { x: -12, y: -10 }], [ARRIVE + 300, { x: -18, y: 0, e: "ease-in" }], [D, { x: -18, y: 0 }]]
+      };
+      const cam = { x: 4, y: 2, z: 1.12 }, arrivee = { x: 0, y: 6, z: 1.2 };
+      const acteur = joue([0, "pose_tete", "face"], [ARRIVE - 80, "pose_sursaut", "bas_droite"], [ARRIVE + 420, "pose_tete", "face"]);
+      return { plans, partition: { lumiere: FROIDE, temps: [{ ...unTemps(D, [[0, cam], [ARRIVE, { ...arrivee, e: "ease-out" }], ...secoue(ARRIVE + 10, arrivee, 3, 4), [D, arrivee]], P2), acteur }], repos: { duree: 9e3, camera: { x: -3, y: 2, z: 0.02 } } } };
+    }
+    __name(approche02, "approche02");
+    var CACHEE = [212, 194];
+    function rocherVive(p) {
+      const cache = '<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;0.5;0.56;0.66;0.74;1" calcMode="spline" keySplines="0 0 1 1;0.5 0 0.8 1;0 0 1 1;0.3 0 0.4 1;0 0 1 1" dur="7s" begin="4s" repeatCount="indefinite" additive="sum"/>';
+      const regard = '<animateTransform attributeName="transform" type="rotate" values="0;-6;0;5;0" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" dur="4.6s" repeatCount="indefinite" additive="sum"/>';
+      return `<defs>${HALO(p)}</defs><g transform="translate(${CACHEE[0]} ${CACHEE[1]})"><g>${cache}<g>${regard}<circle cx="0" cy="-14" r="60" fill="url(#${p}H)"/>${brumeVive(p, 2.3, "gene", [3.2, 1])}</g></g></g>` + spirales() + escarbilles();
+    }
+    __name(rocherVive, "rocherVive");
+    function rocher02() {
+      const p = "rr", D = 2600, HAUT = 620;
+      const plans = [
+        ...decorSoir(p, [{ id: "anime", profondeur: 0.58, dessin: /* @__PURE__ */ __name(() => rocherVive(p), "dessin") }]),
+        { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_HAUT), "dessin") },
+        { id: "brume", profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: /* @__PURE__ */ __name(() => brumePiece(`${p}b`, TOUT_PRES, 3, "surpris"), "dessin") },
+        // (le rocher, encore, devant Brume qui retombe : elle passe derrière lui)
+        { id: "rocher-devant", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(`${p}d`), "dessin") },
+        { id: "avatar", profondeur: 0.7, pivot: [116, 366] },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p, [CACHEE[0], 210]), "dessin") },
+        ...brumeDevant(p),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const [cx, cy] = CACHEE, [tx, ty] = TOUT_PRES;
+      const P2 = {
+        ...soirDe(plans, D, 1, 1),
+        // (le sursaut : elle bondit en l'air au-dessus du rocher, rapetisse en s'éloignant, retombe derrière lui)
+        brume: [[0, { x: 0, y: 0, s: 1, r: -9 }], [160, { x: 0, y: -40, s: 1.04, r: 0, e: "cubic-bezier(.2,.8,.4,1)" }], [HAUT, { x: cx + 16 - tx, y: 166 - ty, s: 0.84, r: 6, e: "cubic-bezier(.4,0,.6,1)" }], [1080, { x: cx - tx, y: 262 - ty, s: 0.77, r: 0, e: "ease-in" }], [1100, { x: cx - tx, y: 262 - ty, s: 0.77, o: 0 }]],
+        "rocher-devant": [[0, { o: 0 }], [HAUT, { o: 0, e: "linear" }], [HAUT + 1, { o: 1 }], [D, { o: 1 }]],
+        // (puis, derrière, vivante : elle remonte et passe la tête)
+        anime: [[0, { o: 0, y: 60 }], [1100, { o: 0, y: 60, e: "linear" }], [1101, { o: 1, y: 60 }], [1500, { o: 1, y: 60, e: "cubic-bezier(.3,0,.4,1)" }], [2200, { o: 1, y: 0 }], [D, { o: 1, y: 0 }]],
+        reflet: [[0, { o: 0.4 }], [1500, { o: 0.4, e: "ease-out" }], [2200, { o: 1 }], [D, { o: 1 }]],
+        lechee: lecheeVa(D),
+        avatar: [[0, { x: -10 }], [D, { x: -10 }]]
+      };
+      const cam = { x: 0, y: 6, z: 1.2 }, fin = { x: 0, y: 2, z: 1.14 };
+      const t0 = { ...unTemps(D, [[0, cam], [D, { ...fin, e: "ease-in-out" }]], P2), acteur: joue([0, "pose_tete", "face"], [1300, "repos", "bas_droite", "surprise"]) };
+      const t1 = tenir(t0, 2600, joue([0, "pose_pointe", "bas_droite"], [1900, "repos", "bas_droite", "surprise"]));
+      const t2 = tenir(t1, 2600, joue([0, "repos", "bas_droite", "surprise"], [700, "pose_hausse", "bas_droite"]));
+      const t3 = tenir(t2, 2e3, joue([0, "repos", "bas_droite"]));
+      const t4 = tenir(t3, 2400, joue([0, "marche", "bas_droite"], [1300, "arret", "bas_droite"], [1820, "repos", "bas_droite"]), { avatar: [[0, { x: -10, y: 0, s: 1 }], [1300, { x: 40, y: -12, s: 0.96, e: "linear" }], [2400, { x: 40, y: -12, s: 0.96 }]] });
+      const t5 = tenir(t4, 2600, joue([0, "pose_poings", "bas_droite"]));
+      const t6 = tenir(t5, 2600, joue([0, "pose_croises", "bas_droite"], [1800, "repos", "bas_droite"]));
+      const t7 = tenir(t6, 2600, joue([0, "repos", "bas_droite"]));
+      return { plans, partition: { lumiere: FROIDE, temps: [t0, t1, t2, t3, t4, t5, t6, t7], repos: { duree: 1e4, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(rocher02, "rocher02");
+    module.exports = { plage02, lueur02, approche02, rocher02, voile, filets, escarbilles, lechee, brumeGravee, HALO, joue, tenir, borne, decorSoir, brumeDevant, soir, soirDe, rocher: rocher2, reflet, ARETE_HAUT, lumiereFroide, brumePiece, brumeVive, flaque, spirales, lecheeVa, FROIDE, CACHEE };
+  }
+});
+
+// atelier/figurants.js
+var require_figurants = __commonJS({
+  "atelier/figurants.js"(exports, module) {
+    var ENCRE = "#1A1410";
+    var cleImage = /* @__PURE__ */ __name(({ anim, dir, expr }, n) => `${anim}|${dir}|${expr || ""}|${n}`, "cleImage");
+    var posesDe = /* @__PURE__ */ __name((temps, id2) => {
+      const vues = /* @__PURE__ */ new Map();
+      for (const t of temps) for (const [, clip] of t.jeux && t.jeux[id2] || []) vues.set(cleImage(clip, 0), clip);
+      return [...vues.values()];
+    }, "posesDe");
+    function gravee(corps, uid2, { teinte = "#2A2448", force = 0.2, cote = 1 } = {}) {
+      const hach = Array.from({ length: 34 }, (_, k) => `M${-16 + k * 2},68 l36,-76`).join(" ");
+      const [x1, x2] = cote > 0 ? [0, 1] : [1, 0];
+      return `<style>.c${uid2} *{fill:${ENCRE}!important;stroke:${ENCRE}!important;stroke-width:2.4px!important}.m${uid2} *{fill:#fff!important;stroke:#fff!important}</style><defs><mask id="k${uid2}" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="64"><g class="m${uid2}">${corps}</g></mask><linearGradient id="g${uid2}" x1="${x1}" y1="0" x2="${x2}" y2="0.3"><stop offset="0.38" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient><mask id="h${uid2}" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="64"><rect width="48" height="64" fill="url(#g${uid2})"/></mask></defs><g class="c${uid2}">${corps}</g>${corps}<g mask="url(#k${uid2})"><rect width="48" height="64" fill="${teinte}" opacity="${force}"/><g mask="url(#h${uid2})"><path d="${hach}" fill="none" stroke="${ENCRE}" stroke-width="0.45" opacity="0.8"/></g></g>`;
+    }
+    __name(gravee, "gravee");
+    var pose = /* @__PURE__ */ __name((corps, [x, y], s) => `<g transform="translate(${x - 24 * s} ${y - 62 * s}) scale(${s})">${corps}</g>`, "pose");
+    var LIMITES = { repos: 2 };
+    function figurant(plan, anims, poses, dessiner) {
+      const images = [], vues = /* @__PURE__ */ new Set(), nb = /* @__PURE__ */ __name((a) => Math.min(anims[a].images, LIMITES[a] || Infinity), "nb");
+      for (const p of poses) {
+        for (let n = 0; n < nb(p.anim); n++) {
+          const cle = cleImage(p, n);
+          if (vues.has(cle)) continue;
+          vues.add(cle);
+          images.push({ id: `${plan.id}--${images.length}`, imageDe: plan.id, cle, cadre: plan.cadre, marge: plan.marge, dessin: /* @__PURE__ */ __name(() => dessiner(p.anim, p.dir, n, p.expr), "dessin") });
+        }
+      }
+      const utiles = Object.fromEntries([...new Set(poses.map((p) => p.anim))].map((a) => [a, { images: nb(a), dt: anims[a].dt * anims[a].images / nb(a) }]));
+      return [{ ...plan, figurant: { anims: utiles }, dessin: images[0].dessin }, ...images];
+    }
+    __name(figurant, "figurant");
+    module.exports = { cleImage, posesDe, gravee, pose, figurant };
+  }
+});
+
+// atelier/gravure_lorena.js
+var require_gravure_lorena = __commonJS({
+  "atelier/gravure_lorena.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, chemin, ENCRE } = require_gravure();
+    var { volute, teinte, plein, C, MARGE, G, D_ } = require_theatre_pont();
+    var { nuage, plage, unTemps, HORIZON, RIVAGE } = require_gravure_plage();
+    var R = require_gravure_rencontre();
+    var { figurant, posesDe, gravee, pose } = require_figurants();
+    var { fige } = require_figer();
+    var { flamePath } = require_brume();
+    var { habiller } = require_lorena_tenues();
+    var LORENA = require_lorena_anims();
+    function cielMatin(p) {
+      const A = atelier(`${p}c`);
+      let s = plein(A, A.lin([[0, "#6E7A92"], [0.5, "#A8AAB8"], [0.85, "#D8CCC8"], [1, "#EAD8CC"]], 0, G, 0, HORIZON + 10));
+      s += plein(A, A.rad([[0, "#FFF0DC", 0.85], [0.3, "#F2D2B8", 0.4], [1, "#C8B0B0", 0]], 92, HORIZON - 10, 230));
+      for (let i = 0; i < 10; i++) {
+        const x = hash(i, 61) * 480 - 40, y = 20 + hash(i, 62) * 140, r = 30 + 50 * hash(i, 63);
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.9)}" ry="${f(r * 0.45)}" fill="${A.rad([[0, i % 3 ? "#8A8EA4" : "#E8D2C4", 0.5], [1, "#8A8EA4", 0]], x, y, r * 1.9)}"/>`;
+      }
+      return A.out(s);
+    }
+    __name(cielMatin, "cielMatin");
+    function merMatin(p) {
+      const A = atelier(`${p}m`);
+      let s = gravure(A, [[G, HORIZON - 1], [D_, HORIZON - 1], [D_, RIVAGE + 20], [G, RIVAGE + 20]], A.lin([[0, "#9AA2B2"], [0.5, "#6E8090"], [1, "#4E6274"]], 0, HORIZON, 0, RIVAGE), { seed: 500, amp: 0, angle: 4, pas: 3.4, ombre: 0.25, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
+      const rangee = /* @__PURE__ */ __name((y, a, w, c, i) => {
+        const haut = courbe((t) => {
+          const x = G + (D_ - G) * t, ph = (x + i * 31) / w % 1;
+          return [x, y - a * Math.pow(Math.sin(Math.PI * ph), 2)];
+        }, 80);
+        return gravure(A, [...haut, [D_, y + 40], [G, y + 40]], c, { seed: 501 + i, amp: 0.3, angle: 4, pas: 3.2, ombre: 0.22, tailles: 0, portee: 0.3, dy: 3, trait: 1.3, lumiere: [0, -1], dans: trait2(chemin(haut.map(([x, yy]) => [x, yy + 7])), 0.8, ENCRE, 0.5) });
+      }, "rangee");
+      s += rangee(HORIZON + 18, 2.5, 46, "#8090A0", 0) + rangee(HORIZON + 36, 3.5, 60, "#6A7E8E", 1) + rangee(HORIZON + 54, 4.5, 76, "#586C7E", 2);
+      for (let i = 0; i < 9; i++) {
+        const t = i / 9, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 24 * t, x = 92 + (hash(i, 7) - 0.5) * (14 + 40 * t);
+        s += gravure(A, [[x - w / 2, y], [x + w / 2, y - 0.5], [x + w / 2 - 1, y + 1.8 + t], [x - w / 2 + 1, y + 2 + t]], "#E8E0D4", { seed: 510 + i, amp: 0.2, tailles: 0, noir: false, trait: 0.9, portee: 0 });
+      }
+      return A.out(s);
+    }
+    __name(merMatin, "merMatin");
+    var fraicheur = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}k`);
+      return A.out(plein(A, A.lin([[0, "#5A6680", 0.22], [0.5, "#7A8498", 0.12], [1, "#4A5266", 0.24]], 0, G, 0, D_)));
+    }, "fraicheur");
+    function epave(p) {
+      const A = atelier(`${p}e`);
+      const roc = /* @__PURE__ */ __name((pts5, i) => gravure(A, pts5, A.lin([[0, "#6A6470"], [1, "#2E2A34"]], 0, Math.min(...pts5.map((q) => q[1])), 0, Math.max(...pts5.map((q) => q[1]))), { seed: 520 + i, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2, portee: 0.5, dy: 5, lumiere: [-0.7, -0.7] }), "roc");
+      let s = roc([[244, 268], [252, 232], [276, 206], [306, 196], [338, 200], [372, 186], [404, 204], [430, 236], [440, 270]], 0);
+      s += gravure(A, [[262, 214], [404, 188], [410, 214], [272, 244]], C.creme, { seed: 530, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.4, tailles: 2, tailleP: 4, trait: 1.8, portee: 0.5, dy: 5, lumiere: [-0.7, -0.7] });
+      s += gravure(A, [[270, 236], [408, 208], [409, 214], [272, 243]], C.rouge, { seed: 531, amp: 0.2, tailles: 0, trait: 1, portee: 0 });
+      for (let i = 0; i < 6; i++) {
+        const x = 290 + i * 20, y = 222 - i * 4;
+        s += `<circle cx="${x}" cy="${f(y)}" r="3.2" fill="#2C3A44" stroke="${ENCRE}" stroke-width="1.1"/><circle cx="${x - 0.9}" cy="${f(y - 0.9)}" r="0.9" fill="#C8D8DC"/>`;
+      }
+      s += trait2("M266,212 L270,196 M286,208 L288,190 M306,204 Q310,188 318,186 M330,200 L328,182 L340,176 M352,196 L354,180 M378,192 L382,174", 1.8, ENCRE) + trait2("M268,198 Q300,186 330,182 T384,174", 1.6, ENCRE);
+      s += gravure(A, [[206, 278], [222, 262], [270, 258], [292, 270], [286, 280]], "#4E6A7E", { seed: 532, amp: 0.4, angle: 10, tailles: 1, trait: 1.6, portee: 0.5, dy: 4, lumiere: [-0.7, -0.7] }) + trait2("M214,272 L284,268", 1, ENCRE, 0.7);
+      for (const [x, y, w, i] of [[300, 262, 22, 0], [318, 252, 18, 1], [330, 268, 20, 2]]) s += gravure(A, [[x, y], [x + w, y - 2], [x + w + 1, y + w * 0.7], [x + 1, y + w * 0.72]], "#8A6440", { seed: 540 + i, amp: 0.3, tailles: 1, tailleP: 3, trait: 1.4, portee: 0.4, dy: 3, lumiere: [-0.7, -0.7] }) + trait2(`M${x + 2},${y + 4} L${x + w - 2},${y + w * 0.6} M${x + w - 2},${y + 3} L${x + 3},${y + w * 0.6}`, 1.2, "#C8A86A");
+      s += trait2("M296,276 Q310,286 328,280 T360,288", 2, "#C8A86A") + trait2("M296,276 Q310,286 328,280 T360,288", 0.7, ENCRE, 0.6);
+      return A.out(s + volute(352, 214, 5, 1, 1.4, 1.2));
+    }
+    __name(epave, "epave");
+    var decorMatin = /* @__PURE__ */ __name((p) => [
+      { id: "ciel", profondeur: 0.1, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => cielMatin(p), "dessin") },
+      { id: "nuage0", profondeur: 0.14, cadre: [-80, 24, 600, 60], dessin: /* @__PURE__ */ __name(() => nuage(p, 0, 60, 16, "#7A7E92"), "dessin") },
+      { id: "nuage1", profondeur: 0.18, cadre: [-80, 100, 600, 56], dessin: /* @__PURE__ */ __name(() => nuage(p, 1, 132, 12, "#9A92A0", -40, 480), "dessin") },
+      { id: "mer", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => merMatin(p), "dessin") },
+      // (la brume tient au large : le Vent n'a ouvert que la plage proche, l'épave en est sortie)
+      { id: "voile-large", profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => R.voile(p, 5, HORIZON + 4, 30, 0.85), "dessin") },
+      { id: "filets-large", profondeur: 0.34, cadre: [-100, HORIZON - 24, 600, 56], dessin: /* @__PURE__ */ __name(() => R.filets(p, 5, [[-40, HORIZON + 6, 210, 3, 7], [170, HORIZON + 12, 260, 4, 8]]), "dessin") },
+      { id: "epave", profondeur: 0.45, cadre: [190, 160, 260, 140], dessin: /* @__PURE__ */ __name(() => epave(p), "dessin") },
+      { id: "plage", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => plage(p), "dessin") },
+      { id: "lechee", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lechee(p), "dessin") },
+      { id: "fraicheur", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => fraicheur(p), "dessin") }
+    ], "decorMatin");
+    var lecheeVa = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [D * 0.4, { y: 8, e: "ease-in-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "lecheeVa");
+    var MATIN = { teinte: "#3A4458", force: 0.16, cote: 1 };
+    function nageuse() {
+      return `<g><animateTransform attributeName="transform" type="translate" values="0 0;-26 6" dur="14s" fill="freeze"/><g transform="translate(232 238)"><animateTransform attributeName="transform" type="translate" values="232 238;232 240;232 238" dur="1.6s" repeatCount="indefinite"/><path d="M-14,4 q7,-3 14,0 t14,0" fill="none" stroke="#E8E0D4" stroke-width="1.4" stroke-linecap="round"/><circle cx="0" cy="0" r="3.2" fill="#5A3A28" stroke="${ENCRE}" stroke-width="1"/><path d="M2,0 q4,-7 9,-5" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round"><animate attributeName="d" values="M2,0 q4,-7 9,-5;M2,0 q-2,-6 -7,-6;M2,0 q4,-7 9,-5" dur="1.6s" repeatCount="indefinite"/></path><path d="M2,0 q4,-7 9,-5" fill="none" stroke="#E8C080" stroke-width="1.1" stroke-linecap="round"><animate attributeName="d" values="M2,0 q4,-7 9,-5;M2,0 q-2,-6 -7,-6;M2,0 q4,-7 9,-5" dur="1.6s" repeatCount="indefinite"/></path></g></g>` + R.escarbilles();
+    }
+    __name(nageuse, "nageuse");
+    var regardMatin = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}g`);
+      return A.out(plein(A, A.rad([[0, "#000", 0], [0.68, "#1A1C24", 0.18], [1, "#08080C", 0.6]], 200, 210, 300)));
+    }, "regardMatin");
+    function epave10() {
+      const p = "le";
+      const plans = [...decorMatin(p), { id: "anime", profondeur: 0.45, dessin: /* @__PURE__ */ __name(() => nageuse(), "dessin") }, { id: "regard", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => regardMatin(p), "dessin") }, { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }];
+      const D0 = 6e3, D1 = 5e3;
+      const temps = [
+        unTemps(D0, [[0, { x: -50, y: 0, z: 1.1 }], [D0, { x: 40, y: 6, z: 1.22, e: "ease-in-out" }]], { lechee: lecheeVa(D0) }),
+        unTemps(D1, [[0, { x: 40, y: 6, z: 1.22 }], [D1, { x: 56, y: 10, z: 1.34, e: "ease-in-out" }]], { lechee: lecheeVa(D1) })
+      ];
+      return { plans, partition: { temps, repos: { duree: 9e3, camera: { x: -4, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(epave10, "epave10");
+    var PIEDS_AVATAR = [76, 396];
+    var PIEDS_LORENA = [262, 368];
+    var BRUME = [158, 236];
+    var LORENA_C = habiller("cire", null, "naufragee");
+    var lorenaImage = /* @__PURE__ */ __name((anim, dir, n, expr) => pose(gravee(fige(LORENA.dessiner({ ...LORENA_C, uid: `lo${anim}${dir}${n}${expr || ""}` }, anim, dir, n, expr), 0), `lo${anim.slice(0, 3)}${dir.slice(0, 2)}${n}${(expr || "").slice(0, 3)}`, MATIN), PIEDS_LORENA, 3), "lorenaImage");
+    var BRUME_ANIMS = { flotte: { images: 3, dt: 0.28 } };
+    var brumeImage = /* @__PURE__ */ __name((anim, dir, n, expr) => {
+      const k = n, id2 = `lb${n}${(expr || "n").slice(0, 3)}`;
+      return `<defs>${R.HALO(id2)}</defs><circle cx="${BRUME[0]}" cy="${BRUME[1] - 12}" r="44" fill="url(#${id2}H)"/><g transform="translate(${BRUME[0]} ${BRUME[1]}) scale(1.6) translate(-20 -32)">${R.brumeGravee(id2, k, expr || "neutre")}</g>`;
+    }, "brumeImage");
+    function eauDevant(p) {
+      const id2 = `${p}we`;
+      return `<defs><linearGradient id="${id2}g" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.2" stop-color="#fff"/><stop offset="0.8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="${id2}" maskUnits="userSpaceOnUse" x="250" y="220" width="100" height="70"><rect x="250" y="220" width="100" height="70" fill="url(#${id2}g)"/></mask></defs><g mask="url(#${id2})">${R.lechee(p)}</g>`;
+    }
+    __name(eauDevant, "eauDevant");
+    function aster10() {
+      const p = "la";
+      const { joue, tenir } = R;
+      const L = /* @__PURE__ */ __name((anim, dir, expr) => [anim, dir, expr], "L"), B = /* @__PURE__ */ __name((expr) => ["flotte", "face", expr], "B");
+      const plan = /* @__PURE__ */ __name((cam, z) => ({ ...cam, z }), "plan");
+      const LARGE = { x: 10, y: 4, z: 1.06 }, DEUX = { x: 20, y: 18, z: 1.18 }, SUR_LORENA = { x: 56, y: 22, z: 1.32 }, SUR_BRUME = { x: -24, y: -6, z: 1.34 }, SUR_AVATAR = { x: -46, y: 30, z: 1.3 };
+      const R0 = [
+        // 0 « Ho, du feu ! … donne-moi la main » : elle sort de l'eau et vient ; lui sursaute, puis va vers elle
+        [4800, LARGE, joue([0, "repos", "bas_droite", "surprise"], [700, "pose_sursaut", "bas_droite"], [1800, "marche", "bas_droite"], [2900, "arret", "bas_droite"], [3420, "repos", "bas_droite"]), [[0, L("marche", "bas_gauche", "soulagee")], [3200, L("arret", "bas_gauche", "soulagee")], [3720, L("repos", "bas_gauche", "soulagee")]], [[0, B("curieuse")]]],
+        // 1 « Lorena, navigatrice. Officier de quart… »
+        [3600, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_poings", "bas_gauche", "sourire")]], [[0, B("curieuse")]]],
+        // 2 « deux requins… un tentacule immense… Bref ! »
+        [4200, SUR_LORENA, joue([0, "repos", "bas_droite", "surprise"]), [[0, L("pose_tete", "bas_gauche", "peur")], [2600, L("pose_hausse", "bas_gauche", "ironique")]], [[0, B("surpris")]]],
+        // 3 « Un requin ? Un tentacule géant ? … halluciné ? »
+        [3600, SUR_AVATAR, joue([0, "pose_hausse", "bas_droite"]), [[0, L("repos", "bas_gauche", "mefiante")]], [[0, B("neutre")]]],
+        // 4 « J'aurais préféré, crois-moi. »
+        [3e3, SUR_LORENA, joue([0, "repos", "bas_droite"]), [[0, L("repos", "bas_gauche", "pensive")]], [[0, B("triste")]]],
+        // 5 « En tout cas ! La mer rend ce qu'elle a pris… »
+        [3800, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_joie", "bas_gauche", "sourire")], [1700, L("repos", "bas_gauche", "sourire")]], [[0, B("content")]]],
+        // 6 « On ? Parce que… tu t'installes avec nous ? »
+        [3200, SUR_AVATAR, joue([0, "repos", "bas_droite", "surprise"], [500, "pose_pointe", "bas_droite"]), [[0, L("repos", "bas_gauche", "sourire")]], [[0, B("curieuse")]]],
+        // 7 « Pourquoi ? … Et ton animal domestique ? » : elle montre Brume du doigt
+        [4200, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_poings", "bas_gauche", "decidee")], [1900, L("pose_pointe", "bas_gauche", "ironique")]], [[0, B("neutre")], [2e3, B("surpris")]]],
+        // 8 « Je ne suis PAS un animal ! … Je suis Brume ! » : elle s'enfle, outrée ; lui sursaute à côté d'elle
+        [3800, SUR_BRUME, joue([0, "pose_sursaut", "bas_droite"], [900, "repos", "bas_droite", "surprise"]), [[0, L("repos", "bas_gauche", "surprise")]], [[0, B("surpris")]]],
+        // 9 « Oh, mais ça parle ! »
+        [3200, SUR_LORENA, joue([0, "repos", "bas_droite", "surprise"]), [[0, L("pose_sursaut", "bas_gauche", "surprise")]], [[0, B("gene")]]],
+        // 10 « … la flammèche qui parle, c'est la goutte d'eau, c'est ça ? »
+        [4200, SUR_AVATAR, joue([0, "pose_croises", "bas_droite", "ironique"]), [[0, L("repos", "bas_gauche", "genee")]], [[0, B("content")]]],
+        // 11 « Je… Je n'avais juste jamais… parlé à une entité… magique ! »
+        [3800, SUR_LORENA, joue([0, "repos", "bas_droite"]), [[0, L("pose_hausse", "bas_gauche", "genee")]], [[0, B("gene")]]],
+        // 12 « Quoi qu'il en soit ! On va devoir trouver un moyen de survivre… »
+        [3800, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("pose_poings", "bas_gauche", "decidee")]], [[0, B("neutre")]]],
+        // 13 « Construisons-nous un véritable abri de naufragés. »
+        [3200, LARGE, joue([0, "pose_poings", "bas_droite", "neutre"]), [[0, L("pose_pointe", "face", "decidee")]], [[0, B("content")]]],
+        // 14 « Elle a raison. Ici… Il arrive des choses… » : elle baisse, la voix basse
+        [4200, SUR_BRUME, joue([0, "repos", "bas_droite"]), [[0, L("repos", "bas_gauche", "inquiete")]], [[0, B("triste")]]],
+        // 15 « Euuh… Brume ? Ça va ? »
+        [3e3, SUR_AVATAR, joue([0, "repos", "bas_droite", "surprise"]), [[0, L("repos", "bas_gauche", "inquiete")]], [[0, B("triste")]]],
+        // 16 « Oubliez ça. Je vous aiderai à bien tout comprendre. »
+        [3600, DEUX, joue([0, "repos", "bas_droite"]), [[0, L("repos", "bas_gauche", "sourire")]], [[0, B("content")]]]
+      ];
+      const clips = /* @__PURE__ */ __name((list) => list.map(([t, [anim, dir, expr]]) => [t, expr ? { anim, dir, expr } : { anim, dir }]), "clips");
+      const entree2 = /* @__PURE__ */ __name((D) => [[0, { x: 38, y: -124, s: 0.44 }], [1100, { x: 34, y: -110, s: 0.5, e: "linear" }], [3200, { x: 0, y: 0, s: 1, e: "cubic-bezier(.3,0,.4,1)" }], [D, { x: 0, y: 0, s: 1 }]], "entree");
+      const vague0 = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [700, { y: -7, e: "ease-in" }], [1300, { y: -2, e: "linear" }], [D * 0.4, { y: 8, e: "ease-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "vague0");
+      const vaVers = /* @__PURE__ */ __name((D) => [[0, { x: 0, y: 0 }], [1800, { x: 0, y: 0 }], [2900, { x: 34, y: -6, e: "linear" }], [D, { x: 34, y: -6 }]], "vaVers");
+      const outree = /* @__PURE__ */ __name((D) => [[0, { y: 0, s: 1 }], [200, { y: -26, s: 1.3, e: "cubic-bezier(.2,.8,.4,1.3)" }], [D - 600, { y: -20, s: 1.24 }], [D, { y: -6, s: 1.08, e: "ease-in-out" }]], "outree");
+      const baisse = /* @__PURE__ */ __name((D) => [[0, { y: -6, s: 1.08 }], [900, { y: 14, s: 0.92, e: "ease-in-out" }], [D, { y: 14, s: 0.92 }]], "baisse");
+      const temps = [];
+      R0.forEach(([D, cam, acteur, lo, br], n) => {
+        const jeux = { lorena: clips(lo), brume: clips(br) };
+        if (!n) {
+          temps.push({ ...unTemps(D, [[0, plan(LARGE, 1.04)], [D, { ...cam, e: "ease-out" }]], { lechee: vague0(D), lorena: entree2(D), "eau-devant": vague0(D).map(([t2, c]) => [t2, { ...c, o: t2 < 1300 ? 1 : 0 }]), avatar: vaVers(D), brume: [[0, { y: 0, s: 1 }], [D, { y: -6, s: 1.08 }]] }), acteur, jeux });
+          return;
+        }
+        const prec = temps[n - 1], pistes = { lechee: lecheeVa(D) };
+        if (n === 8) pistes.brume = outree(D);
+        if (n === 14) pistes.brume = baisse(D);
+        if (n === 16) pistes.brume = [[0, { y: 14, s: 0.92 }], [800, { y: -4, s: 1.06, e: "cubic-bezier(.2,.8,.4,1.2)" }], [D, { y: -6, s: 1.08 }]];
+        const t = tenir(prec, D, acteur, pistes);
+        t.camera = [[0, { ...prec.camera[prec.camera.length - 1][1], e: void 0 }], [Math.min(900, D), { ...cam, e: "ease-in-out" }], [D, cam]];
+        t.jeux = jeux;
+        temps.push(t);
+      });
+      for (const t of temps) t.camera.forEach(([, c]) => {
+        if (c.e === void 0) delete c.e;
+      });
+      const plans = [
+        ...decorMatin(p),
+        ...figurant({ id: "lorena", profondeur: 0.62, cadre: [180, 160, 170, 220], pivot: PIEDS_LORENA }, LORENA.ANIMS, posesDe(temps, "lorena"), lorenaImage),
+        { id: "eau-devant", profondeur: 0.55, cadre: [250, 220, 100, 70], dessin: /* @__PURE__ */ __name(() => eauDevant(p), "dessin") },
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_AVATAR },
+        ...figurant({ id: "brume", profondeur: 0.68, cadre: [100, 170, 116, 116], pivot: [BRUME[0], BRUME[1] + 10] }, BRUME_ANIMS, posesDe(temps, "brume"), brumeImage),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      return { plans, partition: { lumiere: MATIN, temps, repos: { duree: 9e3, camera: { x: -3, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(aster10, "aster10");
+    module.exports = { epave10, aster10 };
+  }
+});
+
+// atelier/gravure_vent.js
+var require_gravure_vent = __commonJS({
+  "atelier/gravure_vent.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, ENCRE } = require_gravure();
+    var { volute, teinte, plein, secoue, C, MARGE, G, D_ } = require_theatre_pont();
+    var { unTemps } = require_gravure_plage();
+    var R = require_gravure_rencontre();
+    var { figurant, posesDe } = require_figurants();
+    var SCEAUX = ["#C8402E", "#D8A030", "#5E9A44", "#3E7EB8", "#8A5EB0", "#D06A22", "#E2DCCC"];
+    function livreFerme(A, seed = 600) {
+      let s = `<ellipse cx="2" cy="14" rx="38" ry="6" fill="#000" opacity="0.4"/>`;
+      s += gravure(A, [[-30, 7], [34, 3], [34, 9], [-29, 13]], "#E6D8B4", { seed, amp: 0.2, tailles: 0, trait: 1.3, portee: 0, noir: false, pas: 1.6, angle: 2, lumiere: [0, -1] });
+      s += gravure(A, [[-32, -12], [-37, -2], [-31, 9], [-29, 13], [-35, 3]], "#3A1E10", { seed: seed + 1, amp: 0.2, tailles: 0, trait: 1.3, portee: 0 });
+      s += gravure(A, [[-32, -12], [32, -14], [34, 3], [-30, 7]], "#6E3E22", { seed: seed + 2, amp: 0.3, angle: 30, pas: 2, tailles: 1, tailleP: 2, trait: 1.8, portee: 0, lumiere: [-0.5, -0.9] });
+      s += trait2("M-26,-9.4 L26.6,-11 L28,1.4 L-24.6,4.4 Z", 1.1, "#D8B060");
+      for (const [x, y] of [[-31, -11.6], [31, -13.4], [33, 2.2], [-29, 6]]) s += `<circle cx="${x}" cy="${y}" r="2.6" fill="#C8A04A" stroke="${ENCRE}" stroke-width="0.8"/>`;
+      s += gravure(A, [[-8, -13], [-4, -13.2], [-3.6, -17], [-7.6, -16.8]], "#B08A3A", { seed: seed + 3, amp: 0.1, tailles: 0, trait: 0.8, portee: 0, noir: false }) + gravure(A, [[6, -13.6], [10, -13.8], [10.4, -17.6], [6.4, -17.4]], "#B08A3A", { seed: seed + 4, amp: 0.1, tailles: 0, trait: 0.8, portee: 0, noir: false });
+      SCEAUX.forEach((c, i) => {
+        const [x, y] = sceau(i);
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="2.5" fill="${c}" stroke="${ENCRE}" stroke-width="0.8"/><circle cx="${f(x - 0.8)}" cy="${f(y - 0.8)}" r="0.7" fill="#FFF4D8" opacity="0.8"/>`;
+      });
+      return s;
+    }
+    __name(livreFerme, "livreFerme");
+    var sceau = /* @__PURE__ */ __name((i) => [-18 + i * 6.2, -4.2 - i * 0.24], "sceau");
+    function livreOuvert(A, seed = 620) {
+      let s = `<ellipse cx="0" cy="13" rx="46" ry="6" fill="#000" opacity="0.4"/>`;
+      s += gravure(A, [[-42, -8], [0, -4], [42, -10], [44, 8], [0, 14], [-44, 10]], "#4A2614", { seed, amp: 0.3, tailles: 0, trait: 1.6, portee: 0 });
+      s += gravure(A, [[-39, -9], [-1, -5], [-1, 11], [-41, 7]], "#EADCB8", { seed: seed + 1, amp: 0.25, angle: 80, pas: 2.2, ombre: 0.6, tailles: 0, trait: 1.3, portee: 0, noir: false, lumiere: [-1, 0] });
+      s += gravure(A, [[1, -5], [39, -11], [41, 5], [1, 11]], "#EADCB8", { seed: seed + 2, amp: 0.25, angle: 100, pas: 2.2, ombre: 0.6, tailles: 0, trait: 1.3, portee: 0, noir: false, lumiere: [1, 0] });
+      s += trait2("M0,-5 L0,11", 1.4, "#6A4A2A");
+      s += volute(-20, 0, 5, 1, 1.6, 1.2) + trait2("M-34,-4 l9,0.6 M-34,5 l10,0.5 M-12,-3 l8,0.4 M-12,6 l8,0.3", 0.6, "#6A5A40", 0.8);
+      s += trait2("M8,-4 l12,-1.6 M8,1 l7,-0.9", 0.5, "#6A5A40", 0.4);
+      return s;
+    }
+    __name(livreOuvert, "livreOuvert");
+    var PIEDS_LIVRE = [156, 354];
+    var CREUX = [262, 262];
+    var LIVRE = [248, 344];
+    var S_LIVRE = 1.15;
+    var BR = [262, 258];
+    var S_BR = 2.2;
+    function creux(p) {
+      const A = atelier(`${p}c`), [x, y] = CREUX;
+      return A.out(gravure(A, ovale(x, y, 22, 14, 18), "#100C14", { seed: 640, amp: 0.5, tailles: 0, trait: 1.8, portee: 0, noir: false }) + gravure(A, ovale(x + 2, y - 2, 15, 8, 14), "#050308", { seed: 641, amp: 0.4, tailles: 0, trait: 0, portee: 0, noir: false }));
+    }
+    __name(creux, "creux");
+    function levre(p) {
+      const A = atelier(`${p}v`), [x, y] = CREUX;
+      return A.out(gravure(A, [[x - 23, y - 1], [x - 10, y + 9], [x + 10, y + 9], [x + 23, y - 2], [x + 22, y + 10], [x, y + 16], [x - 22, y + 10]], "#5A5260", { seed: 642, amp: 0.4, angle: 40, pas: 2.4, tailles: 0, trait: 1.6, portee: 0, lumiere: [-0.6, -0.8] }));
+    }
+    __name(levre, "levre");
+    var posePiece = /* @__PURE__ */ __name((A, [x, y], s, corps, r = 0) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${corps}</g>`, "posePiece");
+    var livrePiece = /* @__PURE__ */ __name((p, seed) => {
+      const A = atelier(`${p}`);
+      return A.out(posePiece(A, LIVRE, S_LIVRE, livreFerme(A, seed)));
+    }, "livrePiece");
+    function poussiere(p) {
+      const A = atelier(`${p}s`), [x, y] = LIVRE;
+      let s = "";
+      for (let i = 0; i < 9; i++) {
+        const a = Math.PI + i / 8 * Math.PI;
+        s += gravure(A, ovale(x + Math.cos(a) * 30, y + 10 + Math.sin(a) * 9, 5 + hash(i, 3) * 4, 3 + hash(i, 4) * 2, 10), "#C8A060", { seed: 650 + i, amp: 0.4, tailles: 0, trait: 1, portee: 0, noir: false, pas: 2 });
+      }
+      return A.out(s);
+    }
+    __name(poussiere, "poussiere");
+    var lueurLivre = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}o`), [x, y] = LIVRE;
+      return A.out(`<ellipse cx="${x}" cy="${y + 4}" rx="62" ry="20" fill="${A.rad([[0, "#FFD88A", 0.42], [1, "#FFD88A", 0]], x, y + 4, 62)}"/>`);
+    }, "lueurLivre");
+    var BR_FIN = [250, 300];
+    function livreVif(p) {
+      const A = atelier(`${p}a`), [x, y] = LIVRE;
+      let s = `<ellipse cx="${x}" cy="${y + 4}" rx="48" ry="16" fill="${A.rad([[0, "#FFE6A8", 0.4], [1, "#FFE6A8", 0]], x, y + 4, 48)}" opacity="0"><animate attributeName="opacity" values="0;0.9;0" dur="3.4s" repeatCount="indefinite"/></ellipse>`;
+      s += `<g transform="translate(${x} ${y}) rotate(4) scale(${S_LIVRE})">` + SCEAUX.map((c, i) => {
+        const [sx, sy] = sceau(i);
+        return `<circle cx="${f(sx)}" cy="${f(sy)}" r="4.6" fill="${c}" opacity="0"><animate attributeName="opacity" values="0;0.85;0;0" keyTimes="0;0.07;0.16;1" dur="4.2s" begin="${f(0.4 + i * 0.36)}s" repeatCount="indefinite"/></circle>`;
+      }).join("") + "</g>";
+      s += `<defs>${R.HALO(`${p}a`)}</defs><g transform="translate(${BR_FIN[0]} ${BR_FIN[1]})"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-12" r="62" fill="url(#${p}aH)"/>${R.brumeVive(`${p}a`, S_BR * 1.05, "content", [3.6, 2.2])}</g></g>`;
+      return A.out(s);
+    }
+    __name(livreVif, "livreVif");
+    function livre03() {
+      const p = "li", D0 = 4400, D1 = 4200;
+      const plans = [
+        ...R.decorSoir(p),
+        // (le rocher, net, devant la brume du bas : comme à la fin de 02_rocher)
+        { id: "rocher-devant", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => R.rocher(`${p}d`), "dessin") },
+        { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => R.reflet(p, R.ARETE_HAUT), "dessin") },
+        { id: "creux", profondeur: 0.6, cadre: [230, 240, 64, 44], dessin: /* @__PURE__ */ __name(() => creux(p), "dessin") },
+        { id: "livre", profondeur: 0.6, marge: MARGE, pivot: LIVRE, dessin: /* @__PURE__ */ __name(() => livrePiece(`${p}l`, 600), "dessin") },
+        { id: "levre", profondeur: 0.6, cadre: [230, 252, 64, 32], dessin: /* @__PURE__ */ __name(() => levre(p), "dessin") },
+        { id: "livre-dehors", profondeur: 0.62, marge: MARGE, pivot: LIVRE, dessin: /* @__PURE__ */ __name(() => livrePiece(`${p}m`, 600), "dessin") },
+        { id: "lueur", profondeur: 0.62, cadre: [176, 316, 144, 56], dessin: /* @__PURE__ */ __name(() => lueurLivre(p), "dessin") },
+        { id: "poussiere", profondeur: 0.62, cadre: [196, 320, 104, 44], pivot: LIVRE, dessin: /* @__PURE__ */ __name(() => poussiere(p), "dessin") },
+        // (Brume en trois visages, qui se relaient : curieuse, gênée par l'effort, contente ; tous au même mouvement)
+        ...[["brume-c", "curieuse"], ["brume-g", "gene"], ["brume-j", "content"]].map(([id2, expr]) => ({ id: id2, profondeur: 0.62, marge: MARGE, pivot: BR, dessin: /* @__PURE__ */ __name(() => R.brumePiece(`${p}${id2.slice(-1)}`, BR, S_BR, expr), "dessin") })),
+        { id: "anime", profondeur: 0.62, dessin: /* @__PURE__ */ __name(() => livreVif(p), "dessin") },
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_LIVRE },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lumiereFroide(p, [250, 270]), "dessin") },
+        ...R.brumeDevant(p),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const [bx, by] = BR, OUT4 = 2700, TOMBE = 3100, FIN = { x: BR_FIN[0] - bx, y: BR_FIN[1] - by, s: 1.05, r: 0 };
+      const brume = [
+        [0, { x: 212 - bx, y: 170 - by, s: 0.9, o: 0, e: "ease-out" }],
+        [250, { x: 212 - bx, y: 160 - by, s: 0.92, o: 1, e: "cubic-bezier(.3,0,.4,1)" }],
+        [800, { x: 0, y: 0, s: 0.95 }],
+        [1100, { x: -6, y: 2, s: 0.95, r: -8 }],
+        [1400, { x: 0, y: 0, s: 0.95, r: 0 }],
+        [1700, { x: -9, y: 3, s: 0.95, r: -10 }],
+        [2e3, { x: -1, y: 0, s: 0.95, r: 0 }],
+        [2300, { x: -12, y: 4, s: 0.95, r: -12 }],
+        [2600, { x: -2, y: 0, s: 0.95, r: 2, e: "cubic-bezier(.2,.8,.4,1)" }],
+        [OUT4, { x: -34, y: 12, s: 0.95, r: -22 }],
+        [TOMBE, { x: -38, y: 30, s: 0.95, r: -8, e: "ease-out" }],
+        [3800, FIN],
+        [D0, FIN]
+      ];
+      const visages = [...brume, [799, valeurA(brume, 799)], [TOMBE - 1, valeurA(brume, TOMBE - 1)]].sort((u, v) => u[0] - v[0]);
+      const visage = /* @__PURE__ */ __name((de, a) => visages.map(([t, c]) => [t, { ...c, o: t >= de && t < a ? c.o ?? 1 : 0 }]), "visage");
+      const [lx, ly] = LIVRE, [cx, cy] = CREUX, dedans = { x: cx - lx, y: cy - ly + 4, s: 0.44, r: 0 };
+      const livre = [
+        [0, { ...dedans, o: 0 }],
+        [600, { ...dedans, o: 0 }],
+        [900, dedans],
+        [1400, { ...dedans, x: dedans.x - 2, r: -4 }],
+        [2e3, { ...dedans, x: dedans.x - 3, r: -6 }],
+        [2600, { ...dedans, x: dedans.x - 5, s: 0.5, r: -8, e: "cubic-bezier(.2,.8,.4,1)" }],
+        [OUT4, { x: -4, y: -64, s: 0.72, r: -30, e: "cubic-bezier(.5,0,.9,.5)" }],
+        [TOMBE, { x: 0, y: 0, s: 1, r: 6, e: "ease-out" }],
+        [3260, { x: 0, y: -6, s: 1, r: 3, e: "ease-in" }],
+        [3420, { x: 0, y: 0, s: 1, r: 4 }],
+        [D0, { x: 0, y: 0, s: 1, r: 4 }]
+      ];
+      const livres = [...livre, [OUT4 + 1, valeurA(livre, OUT4 + 1)]].sort((u, v) => u[0] - v[0]);
+      const P2 = {
+        ...R.soirDe(plans, D0, 1, 1),
+        "brume-c": visage(0, 800),
+        "brume-g": visage(800, TOMBE),
+        "brume-j": visage(TOMBE, D0 + 1),
+        livre: livres.map(([t, c]) => [t, { ...c, o: t <= OUT4 ? c.o ?? 1 : 0 }]),
+        "livre-dehors": livres.map(([t, c]) => [t, { ...c, o: t > OUT4 ? 1 : 0 }]),
+        poussiere: [[0, { s: 0.6, o: 0 }], [TOMBE, { s: 0.6, o: 0, e: "linear" }], [TOMBE + 60, { s: 0.8, o: 0.9, e: "ease-out" }], [TOMBE + 700, { s: 1.5, o: 0 }], [D0, { s: 1.5, o: 0 }]],
+        lueur: [[0, { o: 0 }], [3420, { o: 0 }], [D0, { o: 1 }]],
+        anime: [[0, { o: 0 }], [D0 - 1, { o: 0, e: "linear" }], [D0, { o: 1 }]],
+        reflet: [[0, { o: 0.5 }], [800, { o: 1 }], [D0, { o: 1 }]],
+        lechee: R.lecheeVa(D0),
+        // (il sursaute quand le livre tombe à côté de lui, recule d'un pas)
+        avatar: [[0, { x: 0, y: 0 }], [TOMBE - 50, { x: 0, y: 0, e: "ease-out" }], [TOMBE + 150, { x: -6, y: -8, e: "ease-in" }], [TOMBE + 350, { x: -10, y: 0 }], [D0, { x: -10, y: 0 }]]
+      };
+      const cam0 = { x: 0, y: 2, z: 1.14 }, cam1 = { x: 12, y: 6, z: 1.2 }, chute = { x: 8, y: 12, z: 1.18 };
+      const t0 = {
+        ...unTemps(D0, [[0, cam0], [2600, { ...cam1, e: "ease-in" }], [TOMBE, chute], ...secoue(TOMBE + 10, chute, 3, 3), [D0, chute]], P2),
+        acteur: R.joue([0, "repos", "bas_droite", "surprise"], [TOMBE - 50, "pose_sursaut", "bas_droite"], [3800, "repos", "bas_droite", "surprise"])
+      };
+      const pres = { x: 30, y: 30, z: 1.32 };
+      const t1 = R.tenir(t0, D1, R.joue([0, "repos", "bas_droite", "surprise"], [500, "marche", "bas_droite"], [1700, "arret", "bas_droite"], [2220, "repos", "bas_droite"]), {
+        avatar: [[0, { x: -10, y: 0 }], [500, { x: -10, y: 0, e: "linear" }], [1700, { x: 26, y: -6, s: 0.98 }], [D1, { x: 26, y: -6, s: 0.98 }]],
+        lechee: R.lecheeVa(D1)
+      });
+      t1.camera = [[0, chute], [D1, pres]];
+      return { plans, partition: { lumiere: R.FROIDE, temps: [t0, t1], repos: { duree: 1e4, camera: { x: 3, y: -2, z: 0.02 }, pistes: { filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(livre03, "livre03");
+    function valeurA(cles, t) {
+      let i = 1;
+      while (i < cles.length && cles[i][0] < t) i++;
+      if (i >= cles.length) return { ...cles[cles.length - 1][1] };
+      const [t0, a] = cles[i - 1], [t1, b] = cles[i], k = t1 > t0 ? (t - t0) / (t1 - t0) : 1, v = {};
+      for (const key of /* @__PURE__ */ new Set([...Object.keys(a), ...Object.keys(b)])) {
+        if (key === "e") continue;
+        const u = a[key] ?? (key === "s" || key === "o" ? 1 : 0), w = b[key] ?? (key === "s" || key === "o" ? 1 : 0);
+        v[key] = u + (w - u) * k;
+      }
+      return v;
+    }
+    __name(valeurA, "valeurA");
+    var ETOILES = Array.from({ length: 22 }, (_, i) => [G + 30 + hash(i, 61) * (D_ - G - 60), 16 + hash(i, 63) * 150, 1.4 + hash(i, 65) * 2.2].map((v) => Number(f(v))));
+    var etoile = /* @__PURE__ */ __name((x, y, r) => `<path d="M${x},${f(y - r * 1.8)} Q${f(x + r * 0.3)},${f(y - r * 0.3)} ${f(x + r * 1.8)},${y} Q${f(x + r * 0.3)},${f(y + r * 0.3)} ${x},${f(y + r * 1.8)} Q${f(x - r * 0.3)},${f(y + r * 0.3)} ${f(x - r * 1.8)},${y} Q${f(x - r * 0.3)},${f(y - r * 0.3)} ${x},${f(y - r * 1.8)} Z" fill="#F2ECD8" stroke="${ENCRE}" stroke-width="0.8" stroke-linejoin="round"/>`, "etoile");
+    var etoiles = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}s`);
+      return A.out(ETOILES.map(([x, y, r]) => etoile(x, y, r)).join(""));
+    }, "etoiles");
+    var scintille = /* @__PURE__ */ __name(() => ETOILES.filter((e, i) => i % 3 === 0).map(([x, y, r], i) => `<circle cx="${x}" cy="${y}" r="${f(r * 2.4)}" fill="#FFF8E0" opacity="0"><animate attributeName="opacity" values="0;0.5;0" dur="${f(2.4 + hash(i, 67) * 2)}s" begin="${f(-hash(i, 69) * 3)}s" repeatCount="indefinite"/></circle>`).join(""), "scintille");
+    var nuit = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}n`);
+      return A.out(plein(A, A.lin([[0, "#060A22", 0.62], [0.5, "#0C1230", 0.4], [1, "#080C20", 0.5]], 0, G, 0, D_)));
+    }, "nuit");
+    var LUNE = [86, 66];
+    function lune(p) {
+      const A = atelier(`${p}u`), [x, y] = LUNE;
+      const bord = [...courbe((t) => [x + 17 * Math.cos(Math.PI * (0.5 + t)), y + 17 * Math.sin(Math.PI * (0.5 + t))], 18), ...courbe((t) => [x - 6 + 12 * Math.cos(Math.PI * (1.5 - t)), y + 15 * Math.sin(Math.PI * (1.5 - t))], 16)];
+      return A.out(`<circle cx="${x}" cy="${y}" r="70" fill="${A.rad([[0, "#DDE6F4", 0.32], [1, "#DDE6F4", 0]], x, y, 70)}"/>` + gravure(A, bord, "#EDE4C8", { seed: 680, amp: 0.3, tailles: 2, tailleP: 2, trait: 1.8, portee: 0, lumiere: [-1, 0] }));
+    }
+    __name(lune, "lune");
+    function rafale(p, i, y, l = 560, a = 10, w = 13) {
+      const A = atelier(`${p}w${i}`), x0 = -80;
+      const axe = /* @__PURE__ */ __name((t) => [x0 + l * t, y + a * Math.sin(Math.PI * 2 * (t * 1.1 + i * 0.3))], "axe"), ep = /* @__PURE__ */ __name((t) => w * Math.sin(Math.PI * t) ** 0.7 + 0.5, "ep");
+      const pts5 = courbe((t) => t, 48).map((t) => {
+        const [x, yy] = axe(t), [x2, y2] = axe(Math.min(1, t + 0.01)), [x1, y1] = axe(Math.max(0, t - 0.01)), n = Math.hypot(x2 - x1, y2 - y1) || 1;
+        return [x, yy, -(y2 - y1) / n, (x2 - x1) / n, ep(t)];
+      });
+      let s = gravure(A, [...pts5.map(([x, yy, nx, ny, e]) => [x + nx * e, yy + ny * e]), ...pts5.slice().reverse().map(([x, yy, nx, ny, e]) => [x - nx * e * 0.5, yy - ny * e * 0.5])], A.lin([[0, "#FBF6F0"], [1, "#C4BCD8"]], 0, y - w, 0, y + w), { seed: 700 + i, amp: 0.3, angle: 6, pas: 2.6, ombre: 0.4, tailles: 0, trait: 2, portee: 0.3, lumiere: [0, -1] });
+      const [bx, by] = axe(1), [mx, my] = axe(0.55);
+      s += volute(bx + 4, by - 8, 10, 1, 1.7, 1.8) + volute(mx, my - 12, 6, -1, 1.4, 1.3);
+      s += [0, 1, 2].map((k) => trait2(`M${f(bx + 20 + k * 6)},${f(by - 14 + k * 12)} l${26 - k * 6},${f(-1 + k)}`, 1.4, ENCRE, 0.7)).join("");
+      return A.out(s);
+    }
+    __name(rafale, "rafale");
+    var livreOuvertPiece = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}`);
+      return A.out(posePiece(A, LIVRE, S_LIVRE, livreOuvert(A), 4));
+    }, "livreOuvertPiece");
+    var livreFermePiece = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}`);
+      return A.out(posePiece(A, LIVRE, S_LIVRE, livreFerme(A, 600), 4));
+    }, "livreFermePiece");
+    function pagesVives(p, volutes, livre = true) {
+      const A = atelier(`${p}a`), [x, y] = LIVRE;
+      let s = !livre ? "" : `<ellipse cx="${x}" cy="${y + 4}" rx="56" ry="18" fill="${A.rad([[0, "#FFE6A8", 0.45], [1, "#FFE6A8", 0]], x, y + 4, 56)}" opacity="0.3"><animate attributeName="opacity" values="0.3;0.9;0.3" dur="3.4s" repeatCount="indefinite"/></ellipse>`;
+      if (volutes) s += [[-10, 0, 1, 3.2, 0], [8, -4, -1, 3.6, 1.2], [-2, -2, 1, 3, 2.2]].map(([dx, dy, sens, dur, beg]) => `<g opacity="0"><animate attributeName="opacity" values="0;0.8;0" dur="${dur}s" begin="${-beg}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;${sens * 10} -40" dur="${dur}s" begin="${-beg}s" repeatCount="indefinite"/>${volute(x + dx, y - 10 + dy, 6, sens, 1.5, 1.4)}</g>`).join("");
+      return A.out(s + scintille());
+    }
+    __name(pagesVives, "pagesVives");
+    var BRUME_ANIMS = { flotte: { images: 3, dt: 0.28 } };
+    var brumeImage = /* @__PURE__ */ __name((pos, s) => (anim, dir, n, expr) => {
+      const id2 = `vb${n}${(expr || "n").slice(0, 3)}`;
+      return `<defs>${R.HALO(id2)}</defs><circle cx="${pos[0]}" cy="${f(pos[1] - 8 * s)}" r="${f(28 * s)}" fill="url(#${id2}H)"/><g transform="translate(${pos[0]} ${pos[1]}) scale(${s}) translate(-20 -32)">${R.brumeGravee(id2, n, expr || "neutre")}</g>`;
+    }, "brumeImage");
+    var brumeFigurant = /* @__PURE__ */ __name((temps, pos, s, prof = 0.68) => figurant({ id: "brume", profondeur: prof, cadre: [pos[0] - 34 * s, pos[1] - 44 * s, 68 * s, 56 * s], pivot: pos }, BRUME_ANIMS, posesDe(temps, "brume"), brumeImage(pos, s)), "brumeFigurant");
+    var B = /* @__PURE__ */ __name((...clips) => clips.map(([t, expr]) => [t, { anim: "flotte", dir: "face", expr }]), "B");
+    function repliques(t0, liste2) {
+      const temps = [t0];
+      for (const [D, cam, acteur, brume, pistes = {}] of liste2) {
+        const prec = temps[temps.length - 1], t = R.tenir(prec, D, acteur, { lechee: R.lecheeVa(D), ...pistes });
+        const de = prec.camera[prec.camera.length - 1][1];
+        t.camera = [[0, { ...de, e: void 0 }], [Math.min(900, D), cam], [D, cam]];
+        t.camera.forEach(([, c]) => {
+          if (c.e === void 0) delete c.e;
+        });
+        t.jeux = { brume };
+        temps.push(t);
+      }
+      return temps;
+    }
+    __name(repliques, "repliques");
+    var PIEDS_VENT = [182, 348];
+    var BV = [281, 290];
+    var S_BV = 2;
+    function decorApres(p, { brumeBasse = false, livre = "ouvert", nuitee = false, anime }) {
+      const base = R.decorSoir(p).filter((q) => brumeBasse || !["voile-mer", "voile1", "filets1", "voile3", "filets3"].includes(q.id));
+      base.splice(base.findIndex((q) => q.id === "mer-soir"), 0, { id: "etoiles", profondeur: 0.1, marge: MARGE, dessin: /* @__PURE__ */ __name(() => etoiles(p), "dessin") }, ...nuitee ? [{ id: "lune", profondeur: 0.12, cadre: [10, 0, 150, 140], dessin: /* @__PURE__ */ __name(() => lune(p), "dessin") }] : []);
+      return [
+        ...base,
+        { id: "nuit", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => nuit(p), "dessin") },
+        ...livre ? [{ id: "livre", profondeur: 0.62, marge: MARGE, pivot: LIVRE, dessin: /* @__PURE__ */ __name(() => livre === "ouvert" ? livreOuvertPiece(`${p}l`) : livreFermePiece(`${p}l`), "dessin") }] : [],
+        { id: "anime", profondeur: 0.62, dessin: anime }
+      ];
+    }
+    __name(decorApres, "decorApres");
+    var fin = /* @__PURE__ */ __name((plans, temps, lumiere, repos = {}) => ({ plans, partition: { lumiere, temps, repos: { duree: 1e4, camera: { x: 3, y: -2, z: 0.02 }, pistes: { filets0: [12e3, { x: 14 }], lechee: [2600, { y: 12 }], ...repos } } } }), "fin");
+    function vent03() {
+      const p = "ve", D0 = 2600;
+      const temps0 = [];
+      const plans = [
+        ...decorApres(p, { brumeBasse: true, anime: /* @__PURE__ */ __name(() => pagesVives(p, true), "anime") }),
+        ...[0, 1, 2].map((i) => ({ id: `rafale${i}`, profondeur: 0.5 + i * 0.14, cadre: [-200, [130, 236, 322][i] - 40, 800, 80], dessin: /* @__PURE__ */ __name(() => rafale(p, i, [130, 236, 322][i]), "dessin") })),
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_VENT },
+        null,
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lumiereFroide(p, BV), "dessin") },
+        ...R.brumeDevant(p),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const s1 = R.soir(1), file = /* @__PURE__ */ __name((id2, t02, t1, dx) => {
+        const v = id2.startsWith("voile") ? 20 : dx;
+        return [[0, s1[id2]], [t02, { ...s1[id2], e: "ease-in" }], [t1, { ...s1[id2], x: (s1[id2].x || 0) + v, o: 0 }], [D0, { ...s1[id2], x: (s1[id2].x || 0) + v, o: 0 }]];
+      }, "file");
+      const passe = /* @__PURE__ */ __name((t02, t1) => [[0, { x: -560, o: 0 }], [t02, { x: -560, o: 1, e: "cubic-bezier(.35,0,.65,1)" }], [t1, { x: 520, o: 1, e: "linear" }], [t1 + 1, { x: 520, o: 0 }], [D0, { x: 520, o: 0 }]], "passe");
+      const P2 = {
+        ...R.soirDe(plans.filter(Boolean), D0, 1, 1),
+        voile2: file("voile2", 200, 1200, 300),
+        filets2: file("filets2", 200, 1200, 340),
+        voile3: file("voile3", 400, 1500, 280),
+        filets3: file("filets3", 400, 1500, 320),
+        voile1: file("voile1", 650, 1900, 260),
+        filets1: file("filets1", 650, 1900, 300),
+        "voile-mer": file("voile-mer", 900, 2300, 240),
+        voile0: [[0, s1.voile0], [D0, { o: 0.78 }]],
+        filets0: [[0, s1.filets0], [D0, { ...s1.filets0, x: s1.filets0.x + 30 }]],
+        nuage0: [[0, { x: 0 }], [D0, { x: 16 }]],
+        nuage1: [[0, { x: 0 }], [D0, { x: 16 }]],
+        etoiles: [[0, { o: 0 }], [1300, { o: 0 }], [D0, { o: 1 }]],
+        nuit: [[0, { o: 0 }], [D0, { o: 0 }]],
+        rafale0: passe(0, 1900),
+        rafale1: passe(250, 2250),
+        rafale2: passe(500, 2550),
+        lechee: R.lecheeVa(D0),
+        // (Brume secouée par le vent ; lui recule d'un pas sous la rafale)
+        brume: [[0, { x: -20, y: 0 }], [400, { x: -10, y: -4, r: 14 }], [900, { x: -26, y: 2, r: -8 }], [1400, { x: -14, y: -2, r: 10 }], [2e3, { x: -20, y: 0, r: 0 }], [D0, { x: -20, y: 0 }]],
+        avatar: [[0, { x: 0 }], [300, { x: 0, e: "ease-out" }], [800, { x: -8 }], [D0, { x: -8 }]]
+      };
+      const t0 = {
+        ...unTemps(D0, [[0, { x: -6, y: 16, z: 1.22 }], [300, { x: -6, y: 16, z: 1.22, e: "linear" }], ...secoue(320, { x: -6, y: 16, z: 1.22 }, 2.4, 5), [D0, { x: 4, y: 0, z: 1.04 }]], P2),
+        acteur: R.joue([0, "repos", "haut_droite"]),
+        jeux: { brume: B([0, "surpris"]) }
+      };
+      temps0.push(t0);
+      const DEUX2 = { x: 10, y: 10, z: 1.12 }, SUR_AVATAR2 = { x: -12, y: 22, z: 1.26 }, GESTE = { x: 10, y: 6, z: 1.12 };
+      const temps = repliques(t0, [
+        // « Oh ! Mais toi aussi, tu sais commander aux éléments ?! » : elle bondit, deux fois, ravie ; lui se retourne
+        [3600, DEUX2, R.joue([0, "repos", "bas_droite", "surprise"]), B([0, "surpris"], [700, "content"]), { brume: [[0, { x: -20, y: 0 }], [300, { x: -20, y: -22, e: "ease-in" }], [600, { x: -20, y: 0, e: "ease-out" }], [900, { x: -20, y: -16, e: "ease-in" }], [1200, { x: -20, y: 0 }], [3600, { x: -20, y: 0 }]] }],
+        // « Je… J'ignore ce qui s'est passé. C'est moi qui ai fait ça ? »
+        [3800, SUR_AVATAR2, R.joue([0, "pose_hausse", "bas_droite", "surprise"], [2400, "repos", "bas_droite", "surprise"]), B([0, "curieuse"])],
+        // « Oui ! Tu es comme eux ! Tu peux créer… » : elle tourne autour de lui, toute à sa joie
+        [4e3, DEUX2, R.joue([0, "repos", "bas_droite", "surprise"], [1600, "repos", "bas_droite"]), B([0, "content"]), { brume: [[0, { x: -20, y: 0 }], [700, { x: -48, y: -30, s: 1.06 }], [1400, { x: -70, y: -6, s: 1.04 }], [2100, { x: -52, y: 12, s: 0.98 }], [2900, { x: -20, y: 0, s: 1 }], [4e3, { x: -20, y: 0, s: 1 }]] }],
+        // « Moi, je ne le comprends pas. Je le garde pour celui qui doit le recevoir… et on dirait que… c'est toi. » : elle
+        // se pose au-dessus du livre, l'y invite (« Tourner la page »)
+        [4600, GESTE, R.joue([0, "repos", "bas_droite"]), B([0, "gene"], [2600, "content"]), { brume: [[0, { x: -20, y: 0 }], [1800, { x: 0, y: 0 }], [4600, { x: 0, y: 0 }]] }]
+      ]);
+      plans.splice(plans.indexOf(null), 1, ...brumeFigurant(temps, BV, S_BV));
+      return fin(plans, temps, R.FROIDE, { brume: [3e3, { y: -4 }] });
+    }
+    __name(vent03, "vent03");
+    var BC = [200, 352];
+    var filante = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}e`);
+      return A.out(trait2("M150,52 L268,22", 3.4, ENCRE) + trait2("M150,52 L268,22", 1.4, "#FFF4D8") + etoile(268, 22, 2.6));
+    }, "filante");
+    function ciel03() {
+      const p = "ci", D = 2200;
+      const plans = [
+        ...decorApres(p, { livre: null, anime: /* @__PURE__ */ __name(() => pagesVives(p, false, false), "anime") }).filter((q) => !["rocher", "lechee"].includes(q.id)),
+        { id: "filante", profondeur: 0.1, cadre: [130, 0, 160, 70], pivot: [268, 22], dessin: /* @__PURE__ */ __name(() => filante(p), "dessin") },
+        null,
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lumiereFroide(p, BC), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const P2 = {
+        ...R.soirDe(plans.filter(Boolean), D, 1, 1),
+        voile0: [[0, { o: 0.78 }], [D, { o: 0.78 }]],
+        filets0: [[0, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }], [D, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }]],
+        nuit: [[0, { o: 0.2 }], [D, { o: 0.24 }]],
+        etoiles: [[0, { o: 1 }], [D, { o: 1 }]],
+        // (l'étoile file quand le regard est monté : longtemps, lentement)
+        filante: [[0, { x: 60, y: -16, o: 0 }], [950, { x: 60, y: -16, o: 0, e: "linear" }], [1050, { x: 52, y: -14, o: 1, e: "linear" }], [2e3, { x: -40, y: 12, o: 1 }], [D, { x: -56, y: 16, o: 0 }]],
+        // (elle se retourne d'un petit bond, puis reste de dos, les yeux au ciel, et s'élève un peu)
+        brume: [[0, { y: 0, r: 0 }], [420, { y: 0, r: 0, e: "ease-out" }], [540, { y: -9, r: -6, e: "ease-in" }], [680, { y: 0, r: 0 }], [D, { y: -10 }]]
+      };
+      const t0 = { ...unTemps(D, [[0, { x: 0, y: 70, z: 1.5 }], [650, { x: 0, y: 70, z: 1.5 }], [1500, { x: 0, y: -70, z: 1.24 }], [D, { x: 0, y: -74, z: 1.24 }]], P2), jeux: { brume: B([0, "curieuse"], [540, "dos"]) } };
+      plans.splice(plans.indexOf(null), 1, ...brumeFigurant([t0], BC, 2.6, 0.62));
+      return fin(plans, [t0], R.FROIDE);
+    }
+    __name(ciel03, "ciel03");
+    var LARGE = { x: 4, y: 2, z: 1.06 };
+    var DEUX = { x: 10, y: 10, z: 1.12 };
+    var SUR_AVATAR = { x: -12, y: 22, z: 1.26 };
+    var SUR_BRUME = { x: 26, y: 12, z: 1.28 };
+    var apresVent = /* @__PURE__ */ __name((plans, D, nuitDe, nuitA) => ({
+      ...R.soirDe(plans, D, 1, 1),
+      voile0: [[0, { o: 0.78 }], [D, { o: 0.78 }]],
+      filets0: [[0, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }], [D, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }]],
+      nuit: [[0, { o: nuitDe }], [D, { o: nuitA }]],
+      etoiles: [[0, { o: 1 }], [D, { o: 1 }]],
+      lechee: R.lecheeVa(D)
+    }), "apresVent");
+    function trouee03() {
+      const p = "tr", D0 = 3400;
+      const plans = [
+        ...decorApres(p, { anime: /* @__PURE__ */ __name(() => pagesVives(p, false), "anime") }),
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_VENT },
+        null,
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lumiereFroide(p, BV), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const t0 = {
+        ...unTemps(D0, [[0, LARGE], [D0, LARGE]], { ...apresVent(plans.filter(Boolean), D0, 0, 0.06), brume: [[0, { x: 0, y: 0 }], [D0, { x: 0, y: 0 }]] }),
+        acteur: R.joue([0, "repos", "haut_gauche"], [1400, "repos", "bas_droite"]),
+        jeux: { brume: B([0, "curieuse"]) }
+      };
+      const nuitee = /* @__PURE__ */ __name((D, a, b) => ({ nuit: [[0, { o: a }], [D, { o: b }]] }), "nuitee");
+      const temps = repliques(t0, [
+        // « Ceux d'avant savaient beaucoup… Mais depuis ce jour, je ne me rappelle plus rien. » : elle s'éloigne un peu vers
+        // la mer, pâlit
+        [5e3, SUR_BRUME, R.joue([0, "repos", "bas_droite"]), B([0, "content"], [2400, "triste"]), { ...nuitee(5e3, 0.06, 0.1), brume: [[0, { x: 0, y: 0, s: 1 }], [3200, { x: 30, y: -14, s: 0.92 }], [5e3, { x: 34, y: -16, s: 0.92 }]] }],
+        // « Quel jour ? » : il fait un pas vers elle
+        [2600, SUR_AVATAR, R.joue([0, "marche", "bas_droite"], [800, "arret", "bas_droite"], [1320, "repos", "bas_droite", "surprise"]), B([0, "triste"]), { ...nuitee(2600, 0.1, 0.12), avatar: [[0, { x: 0, y: 0 }], [800, { x: 16, y: -4, s: 0.98, e: "linear" }], [2600, { x: 16, y: -4, s: 0.98 }]] }],
+        // (03_ciel) « Peu importe. Ce livre a d'autres choses pour toi… il est très gros… » : elle se secoue, file au livre
+        [4600, { x: 18, y: 22, z: 1.2 }, R.joue([0, "repos", "bas_droite"]), B([0, "gene"], [700, "content"]), { ...nuitee(4600, 0.12, 0.16), brume: [[0, { x: 34, y: -16, s: 0.92 }], [500, { x: 34, y: -34, s: 0.96, e: "ease-in" }], [1600, { x: -30, y: 28, s: 1 }], [4600, { x: -30, y: 28, s: 1 }]] }],
+        // « … et ses pages ont l'air d'avoir oublié, elles aussi, ce qu'elles contenaient. » : elle reste penchée sur la page
+        // vide ; lui croise les bras ; puis elle lève les yeux vers le ciel, et le regard monte avec elle (« Lever les yeux »)
+        [4400, { x: 0, y: -36, z: 1.1 }, R.joue([0, "repos", "bas_droite"], [1200, "pose_croises", "bas_droite"]), B([0, "triste"], [2800, "curieuse"]), { ...nuitee(4400, 0.16, 0.2), brume: [[0, { x: -30, y: 28 }], [2800, { x: -30, y: 28, e: "ease-out" }], [3600, { x: -30, y: 6 }], [4400, { x: -30, y: 6 }]] }]
+      ]);
+      const der = temps[4];
+      der.camera = [[0, der.camera[0][1]], [900, { x: 18, y: 22, z: 1.2 }], [2800, { x: 18, y: 22, z: 1.2 }], [4400, { x: 0, y: -36, z: 1.1 }]];
+      plans.splice(plans.indexOf(null), 1, ...brumeFigurant(temps, BV, S_BV));
+      return fin(plans, temps, R.FROIDE, { brume: [3e3, { y: -4 }] });
+    }
+    __name(trouee03, "trouee03");
+    var NUIT = { teinte: "#141C3A", force: 0.32, cote: -1 };
+    var eclat = /* @__PURE__ */ __name((p, [x, y]) => {
+      const A = atelier(`${p}x`);
+      return A.out(`<circle cx="${x}" cy="${y - 16}" r="120" fill="${A.rad([[0, "#E4F6FF", 0.4], [0.4, "#BFE2F6", 0.16], [1, "#BFE2F6", 0]], x, y - 16, 120)}"/>`);
+    }, "eclat");
+    function nuit03() {
+      const p = "nu", D0 = 4600;
+      const plans = [
+        ...decorApres(p, { livre: "ferme", nuitee: true, anime: /* @__PURE__ */ __name(() => pagesVives(p, false), "anime") }),
+        { id: "eclat", profondeur: 0.68, marge: MARGE, pivot: BV, dessin: /* @__PURE__ */ __name(() => eclat(p, BV), "dessin") },
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_VENT },
+        null,
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lumiereFroide(p, BV), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const NUIT_O = 0.36;
+      const t0 = {
+        ...unTemps(D0, [[0, SUR_AVATAR], [D0, { ...SUR_AVATAR, x: -8 }]], { ...apresVent(plans.filter(Boolean), D0, NUIT_O, NUIT_O + 0.02), brume: [[0, { x: -20, y: 0 }], [D0, { x: -20, y: 0 }]], eclat: [[0, { o: 0 }], [D0, { o: 0 }]] }),
+        acteur: R.joue([0, "pose_frisson", "bas_droite", "neutre"]),
+        jeux: { brume: B([0, "curieuse"], [2400, "triste"]) }
+      };
+      const PRES = { x: 238 - BV[0], y: 246 - BV[1] };
+      const temps = repliques(t0, [
+        // « Non, non, ne t'en fais pas. Je ne réchauffe pas beaucoup, mais je brille… » : elle vient tout près de lui et se
+        // fait lumière
+        [5e3, DEUX, R.joue([0, "pose_frisson", "bas_droite", "neutre"], [2600, "repos", "bas_droite"]), B([0, "content"]), { brume: [[0, { x: -20, y: 0 }], [1400, { ...PRES, s: 1.06 }], [5e3, { ...PRES, s: 1.06 }]], eclat: [[0, { o: 0, x: -20, y: 0 }], [1400, { ...PRES, o: 0.4 }], [2400, { ...PRES, o: 1, s: 1.12 }], [5e3, { ...PRES, o: 1, s: 1.12 }]] }],
+        // « Bon… D'accord, Brume. On suit ton plan… mais je vais quand même mourir de froid ! » : les bras croisés, puis il
+        // regrelotte ; elle, gênée : elle avait oublié
+        [5e3, SUR_AVATAR, R.joue([0, "pose_croises", "bas_droite", "neutre"], [3e3, "pose_frisson", "bas_droite", "neutre"]), B([0, "content"], [3e3, "gene"])],
+        // « Ah… C'est vrai ! Viens, par là. » : elle sursaute, file vers le haut de la plage, et l'attend (« Suivre Brume »)
+        [3600, { x: 0, y: 0, z: 1.04 }, R.joue([0, "repos", "bas_droite", "surprise"], [900, "repos", "haut_droite"]), B([0, "surpris"], [600, "content"]), { brume: [[0, { ...PRES, s: 1.06 }], [300, { ...PRES, y: PRES.y - 12, s: 1.06, e: "cubic-bezier(.3,0,.3,1)" }], [1400, { x: -26, y: -172, s: 0.9 }], [3600, { x: -26, y: -172, s: 0.9 }]], eclat: [[0, { ...PRES, o: 1, s: 1.12 }], [300, { ...PRES, o: 1, s: 1.12, e: "cubic-bezier(.3,0,.3,1)" }], [1400, { x: -26, y: -172, o: 0.5, s: 0.9 }], [3600, { x: -26, y: -172, o: 0.5, s: 0.9 }]] }]
+      ]);
+      plans.splice(plans.indexOf(null), 1, ...brumeFigurant(temps, BV, S_BV));
+      return fin(plans, temps, NUIT, { brume: [3e3, { y: -4 }], eclat: [3e3, { y: -4 }] });
+    }
+    __name(nuit03, "nuit03");
+    module.exports = { livre03, vent03, ciel03, trouee03, nuit03, decorApres, B, brumeFigurant, repliques, fin, NUIT };
+  }
+});
+
+// atelier/neon_pont.js
+var require_neon_pont = __commonJS({
+  "atelier/neon_pont.js"(exports, module) {
+    var hsl = /* @__PURE__ */ __name((hex) => {
+      const n = hex.length === 4 ? hex.slice(1).split("").map((c) => parseInt(c + c, 16) / 255) : [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+      const [r, g, b] = n, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      if (!d) return [0, 0, l];
+      const s = d / (1 - Math.abs(2 * l - 1));
+      const h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      return [(h * 60 + 360) % 360, s, l];
+    }, "hsl");
+    var versHex = /* @__PURE__ */ __name((h, s, l) => {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }, "versHex");
+    var borne = /* @__PURE__ */ __name((v, a, b) => Math.min(b, Math.max(a, v)), "borne");
+    function neon(hex) {
+      const [h, s, l] = hsl(hex);
+      if (l < 0.13) return versHex(258, 0.6, borne(l + 0.05, 0.07, 0.15));
+      if (s < 0.12) return versHex(250, 0.35, borne(l, 0.15, 0.9));
+      if (h >= 20 && h < 75 && l > 0.72) return versHex(325, 0.85, borne(l + 0.04, 0.8, 0.93));
+      if (h >= 38 && h < 75 && s > 0.7) return versHex(78, 0.9, borne(l + 0.04, 0.5, 0.75));
+      if (h >= 30 && h < 75 && l >= 0.35) return versHex(14, 0.92, borne(l + 0.06, 0.45, 0.7));
+      if (h >= 15 && h < 75) return versHex(300, 0.55, borne(l + 0.06, 0.16, 0.4));
+      if (h < 15 || h >= 340) return versHex(328, 0.9, borne(l + 0.08, 0.4, 0.65));
+      if (h < 150) return l > 0.4 ? versHex(88, 0.85, borne(l, 0.45, 0.7)) : versHex(165, 0.8, borne(l + 0.05, 0.18, 0.4));
+      if (h < 200) return versHex(l > 0.5 ? 182 : 174, 0.85, borne(l * 1.15, 0.18, 0.75));
+      if (h < 250) return versHex(228, 0.8, borne(l + 0.05, 0.2, 0.7));
+      return versHex(278, 0.75, borne(l + 0.05, 0.2, 0.7));
+    }
+    __name(neon, "neon");
+    module.exports = { neon };
+  }
+});
+
+// atelier/neon_naufrage.js
+var require_neon_naufrage = __commonJS({
+  "atelier/neon_naufrage.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure, avecStyle } = require_gravure();
+    var TP = require_theatre_pont();
+    var { parTemps, balance, secoue, bouffees, REPERES, MARGE, G, D_ } = TP;
+    var { neon } = require_neon_pont();
+    var NOIR = "#03020A";
+    var ENCRE = "#0A0418";
+    var CYAN = "#5CF2E6";
+    var ACIDE = "#D4FF7A";
+    var MAGENTA = "#FF3FA8";
+    var CORAIL = "#FF6A4A";
+    var ORANGE = "#FFA040";
+    var VIOLET2 = "#9A5AF0";
+    var NUIT = { papier: false, modele: "#06020F", reflet: "#C8FFF4", hachures: 0.35, lisere: null };
+    var plein = /* @__PURE__ */ __name((peinture) => `<rect x="${G - 60}" y="${G - 60}" width="${D_ - G + 120}" height="${D_ - G + 120}" fill="${peinture}"/>`, "plein");
+    var chemin = /* @__PURE__ */ __name((pts5, ferme) => `M${pts5.map(([x, y]) => `${f(x)},${f(y)}`).join(" L")}${ferme ? " Z" : ""}`, "chemin");
+    var melange = /* @__PURE__ */ __name((a, b, k) => "#" + [0, 2, 4].map((i) => Math.round(parseInt(a.slice(1 + i, 3 + i), 16) * (1 - k) + parseInt(b.slice(1 + i, 3 + i), 16) * k).toString(16).padStart(2, "0")).join(""), "melange");
+    var lumineux = /* @__PURE__ */ __name((d, c, w = 1.6, halo = 0.14) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w * 6)}" stroke-opacity="${halo}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w * 2.4)}" stroke-opacity="${f(Math.min(1, halo * 2.2))}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#FFFFFF" stroke-width="${f(w * 0.35)}" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>`, "lumineux");
+    var etoiles = /* @__PURE__ */ __name((n, seed, y0, y1) => Array.from({ length: n }, (_, i) => {
+      const x = hash(i, seed) * 480 - 40, y = y0 + hash(i, seed + 1) * (y1 - y0), r = 0.4 + 1.4 * hash(i, seed + 2) ** 3;
+      return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${hash(i, seed + 3) < 0.7 ? "#F0F6FF" : hash(i, seed + 3) < 0.85 ? ACIDE : "#FFB8E8"}" opacity="${f(0.4 + 0.6 * hash(i, seed + 4))}"/>`;
+    }).join(""), "etoiles");
+    var rayons = /* @__PURE__ */ __name((A, [x, y], n, R, c, op, seed, a0 = 0, a1 = Math.PI * 2) => Array.from({ length: n }, (_, i) => {
+      const a = a0 + (i + 0.5) / n * (a1 - a0) + (hash(i, seed) - 0.5) * 0.2, w = 0.02 + 0.045 * hash(i, seed + 1);
+      return `<path d="M${x},${y} L${f(x + R * Math.cos(a - w))},${f(y + R * Math.sin(a - w))} L${f(x + R * Math.cos(a + w))},${f(y + R * Math.sin(a + w))} Z" fill="${A.rad([[0, c, op * (0.5 + 0.5 * hash(i, seed + 2))], [1, c, 0]], x, y, R)}"/>`;
+    }).join(""), "rayons");
+    var enNeon = /* @__PURE__ */ __name((dessin) => avecStyle(NUIT, dessin), "enNeon");
+    var HORIZON = 206;
+    var SOLEIL = [96, 150];
+    function ciel(p, horizon = HORIZON, [sx, sy] = SOLEIL) {
+      const A = atelier(`${p}C`);
+      return A.out(plein(A.lin([[0, "#03021A"], [0.3, "#140846"], [0.55, "#4A127E"], [0.75, "#B0287E"], [0.88, "#FF4F78"], [0.96, "#FF8A50"], [1, "#FFC070"]], 0, G, 0, horizon + 6)) + plein(A.rad([[0, "#FF6AA0", 0.55], [0.4, "#FF3FA8", 0.22], [1, "#FF3FA8", 0]], sx, sy, 260)));
+    }
+    __name(ciel, "ciel");
+    function cielNuit(p) {
+      const A = atelier(`${p}N`);
+      return A.out(plein(A.lin([[0, NOIR], [0.45, "#0C0428"], [0.8, "#2A0A50"], [0.94, "#6A1470"], [1, "#A01E78"]], 0, G, 0, HORIZON + 6)));
+    }
+    __name(cielNuit, "cielNuit");
+    var etoilesCiel = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}E`);
+      return A.out(etoiles(90, 31, G, 150));
+    }, "etoilesCiel");
+    function soleil(p, [x, y] = SOLEIL) {
+      const A = atelier(`${p}S`);
+      let s = rayons(A, [x, y], 26, 200, "#FFE0B0", 0.22, 7);
+      const anneaux = [[78, "#5A1488", VIOLET2], [62, "#B0207E", MAGENTA], [48, "#F0445A", CORAIL], [36, "#FF8A3A", ORANGE]];
+      anneaux.forEach(([r, c, lum], i) => {
+        const n = 14 + i * 2, bord = courbe((t) => {
+          const a = t * Math.PI * 2, q = t * n % 1;
+          const rr = r * (1 + 0.07 * Math.sin(Math.PI * q) ** 2);
+          return [x + rr * Math.cos(a), y + rr * Math.sin(a)];
+        }, n * 10);
+        s += `<path d="${chemin(bord, true)}" fill="${A.rad([[0, melange(c, "#FFFFFF", 0.25)], [0.8, c], [1, melange(c, NOIR, 0.35)]], x, y, r * 1.07)}" stroke="${ENCRE}" stroke-width="1.6"/>` + lumineux(chemin(bord, true), lum, 0.5, 0.06);
+      });
+      s += `<circle cx="${x}" cy="${y}" r="26" fill="${A.rad([[0, "#FFFFFF"], [0.45, "#FFFDE0"], [0.8, ACIDE], [1, "#FFD060"]], x, y, 26)}" stroke="${ENCRE}" stroke-width="1.4"/>`;
+      return A.out(s);
+    }
+    __name(soleil, "soleil");
+    function strate(p, i, y, lum) {
+      const A = atelier(`${p}T${i}`), bord = courbe((t) => [G - 100 + (D_ - G + 200) * t, y + 4 * Math.sin(t * 13 + i) + 2.5 * Math.sin(t * 37 + i * 2)], 90);
+      return A.out(`<path d="${chemin([[G - 100, y - 18], [D_ + 100, y - 18], ...bord.slice().reverse()], true)}" fill="${A.lin([[0, "#0A0626", 0], [0.6, "#2A0E5A", 0.75], [1, "#4A1A7A", 0.95]], 0, y - 18, 0, y)}"/>` + lumineux(chemin(bord), lum, 0.5, 0.08));
+    }
+    __name(strate, "strate");
+    function orage(p, i, y, a, couleur, lum) {
+      const A = atelier(`${p}O${i}`), n = 5 + i * 2;
+      const bord = courbe((t) => {
+        const x = G - 120 + (D_ - G + 240) * t, q = (t * n + i * 0.37) % 1;
+        return [x, y + a * Math.sin(Math.PI * q) ** 0.7 + 3 * Math.sin(t * 41)];
+      }, n * 18);
+      let s = gravure(A, [[G - 120, G - 160], [D_ + 120, G - 160], ...bord.slice().reverse()], A.lin([[0, NOIR], [0.6, melange(couleur, NOIR, 0.4)], [1, couleur]], 0, y - 60, 0, y + a), { seed: 1600 + i, amp: 0.4, angle: 20, pas: 3.2, tailles: 1, trait: 1.8, portee: 0.5, lumiere: [0, 1] });
+      return A.out(s + lumineux(chemin(bord), lum, 0.7, 0.1));
+    }
+    __name(orage, "orage");
+    var OEIL = [200, 40];
+    var N_OEIL = 5;
+    var R_OEIL = [26, 58, 100, 156, 226, 320];
+    function anneauOeil(p, i) {
+      const A = atelier(`${p}A${i}`), [cx, cy] = OEIL, r = R_OEIL[i], R = R_OEIL[i + 1] * 1.08, k = i / (N_OEIL - 1), n = 9 + i * 2;
+      const bord = courbe((t) => {
+        const a = t * Math.PI * 2 + i, q = t * n % 1, b = Math.sin(Math.PI * q) ** 1.5;
+        return [cx + r * (1 - 0.14 * b) * Math.cos(a), cy + r * (1 - 0.14 * b) * Math.sin(a)];
+      }, n * 20);
+      const lit2 = melange(ACIDE, CYAN, Math.min(1, k * 2.2)), corps = melange("#4A1AA0", "#2A0A60", k), nuit = melange("#14063A", "#06020F", k);
+      const dehors = courbe((t) => [cx + R * Math.cos(t * Math.PI * 2), cy + R * Math.sin(t * Math.PI * 2)], 60);
+      const pos = /* @__PURE__ */ __name((v) => f(Math.min(1, v / R)), "pos");
+      return A.out(`<path d="${chemin(dehors, true)} ${chemin(bord, true)}" fill-rule="evenodd" fill="${A.rad([[pos(r * 0.85), melange(lit2, "#FFFFFF", 0.2)], [pos(r + (R - r) * 0.1), corps], [pos(r + (R - r) * 0.55), nuit], [0.9, nuit, 0.85], [1, nuit, 0]], cx, cy, R)}"/><path d="${chemin(bord, true)}" fill="none" stroke="${ENCRE}" stroke-width="${f(1.6 + k * 1.4)}" stroke-linejoin="round"/>` + lumineux(chemin(bord, true), lit2, 0.6 + k * 0.4, 0.07));
+    }
+    __name(anneauOeil, "anneauOeil");
+    var coeurOeil = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}K`), [x, y] = OEIL;
+      return A.out(`<circle cx="${x}" cy="${y}" r="60" fill="${A.rad([[0, "#FFFFFF", 1], [0.15, "#F6FFD8", 1], [0.35, ACIDE, 0.75], [0.6, "#3EE8B0", 0.3], [1, "#3EE8B0", 0]], x, y, 60)}"/>` + rayons(A, OEIL, 18, 46, "#FFFFF0", 0.5, 15));
+    }, "coeurOeil");
+    var FOUDRE = [[96, -20], [84, 40], [104, 52], [72, 120], [94, 128], [58, 206]];
+    var foudre = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}F`);
+      return A.out(lumineux(chemin(FOUDRE), ACIDE, 2.4, 0.28) + lumineux("M84,40 L60,70 L66,84", ACIDE, 1, 0.2) + lumineux("M72,120 L100,150", ACIDE, 0.9, 0.2));
+    }, "foudre");
+    var brumeLoin = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}B`);
+      return A.out(plein(A.lin([[0, "#7A3ABA", 0], [0.5, "#9A4ACA", 0.4], [1, "#3A1A6A", 0]], 0, HORIZON - 40, 0, HORIZON + 30)));
+    }, "brumeLoin");
+    var MERS = [[HORIZON + 4, 4, 34, ["#3E8AB8", "#1E4A7A", "#0E2A4A"], "#FFB8D8"], [HORIZON + 18, 6, 46, ["#1E7A98", "#0E3A5A", "#082238"], "#B8FFF0"], [HORIZON + 38, 9, 62, ["#0E6A78", "#0A3A4A", "#041C26"], CYAN], [HORIZON + 66, 13, 84, ["#0A4A5A", "#06242E", "#020E14"], CYAN], [HORIZON + 104, 18, 110, ["#08323E", "#03141C", "#01080C"], "#3EC8E8"], [HORIZON + 152, 24, 140, ["#062430", "#020A10", NOIR], "#2AA8D8"]];
+    function vague(p, i, [y, h, l, couleurs, lum] = MERS[i]) {
+      const A = atelier(`${p}M${i}`), pts5 = [];
+      for (let x = G - 140 - l; x < D_ + 140 + l; x += l) {
+        const w = l * (0.8 + 0.4 * hash(Math.round(x), i)), hh = h * (0.7 + 0.6 * hash(Math.round(x), i + 3));
+        for (let j = 0; j <= 14; j++) {
+          const t = j / 14;
+          pts5.push([x + w * t, y - hh * Math.sin(Math.PI * t) ** 1.4 + (t > 0.62 ? (t - 0.62) * hh * 0.9 : 0)]);
+        }
+      }
+      const crete = pts5.filter(([x]) => x > G - 140 && x < D_ + 140);
+      let s = gravure(A, [...crete, [D_ + 140, D_ + 160], [G - 140, D_ + 160]], A.lin([[0, couleurs[0]], [0.35, couleurs[1]], [1, couleurs[2]]], 0, y - h, 0, y + 90), { seed: 1200 + i, amp: 0.2, angle: 6, pas: 3, ombre: 0.35, tailles: 1, tailleP: 4, trait: 1.4 + i * 0.3, portee: 0.55, dy: 5, lumiere: [0, -1] });
+      s += lumineux(chemin(crete), lum, 0.5 + i * 0.25, 0.09);
+      for (let k = 0; k < 9 - i; k++) {
+        const x = G + hash(k, 90 + i) * (D_ - G), yy = y + 8 + hash(k, 91 + i) * (24 + i * 10), w = 8 + 14 * hash(k, 92 + i);
+        s += lumineux(`M${f(x)},${f(yy)} q${f(w / 2)},-3 ${f(w)},0`, i < 2 ? "#FFB8D8" : CYAN, 0.4 + i * 0.1, 0.06);
+      }
+      return A.out(s);
+    }
+    __name(vague, "vague");
+    function houle(p) {
+      const A = atelier(`${p}H`), y = 372;
+      const crete = courbe((t) => {
+        const x = G - 100 + (D_ - G + 200) * t;
+        return [x, y - 20 * Math.sin(Math.PI * 2 * (x / 230) + 0.6) - 8 * Math.sin(Math.PI * 2 * (x / 97))];
+      }, 90);
+      return A.out(gravure(A, [...crete, [D_ + 100, D_ + 100], [G - 100, D_ + 100]], A.lin([[0, "#0A3A50"], [0.3, "#04182A"], [1, NOIR]], 0, y - 28, 0, y + 70), { seed: 1500, amp: 0.3, angle: 6, pas: 3.2, ombre: 0.35, tailles: 1, tailleP: 5, trait: 2.6, portee: 0.6, dy: 6, lumiere: [0, -1] }) + lumineux(chemin(crete), CYAN, 1.4, 0.12));
+    }
+    __name(houle, "houle");
+    var pluie = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}R`);
+      return A.out(Array.from({ length: 34 }, (_, i) => {
+        const x = G + hash(i, 81) * (D_ - G + 60), y = G - 200 + hash(i, 82) * 800, l = 30 + 30 * hash(i, 83);
+        return `<path d="M${f(x)},${f(y)} l${f(-l * 0.28)},${f(l)}" stroke="#9AFAF0" stroke-width="${f(1 + 1.4 * hash(i, 84))}" stroke-linecap="round" opacity="${f(0.25 + 0.35 * hash(i, 85))}"/>`;
+      }).join(""));
+    }, "pluie");
+    var embruns = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}Y${i}`);
+      return A.out(Array.from({ length: 22 }, (_, k) => {
+        const x = G + hash(k, 140 + i) * (D_ - G), y = 260 + hash(k, 141 + i) * 160, r = 1 + 3.5 * hash(k, 142 + i) ** 2;
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 2.6)}" fill="${CYAN}" opacity="0.1"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="#E8FFFA" opacity="${f(0.5 + 0.5 * hash(k, 143 + i))}"/>`;
+      }).join(""));
+    }, "embruns");
+    var dosLame = /* @__PURE__ */ __name((x) => 40 + 40 * ((x - 120) / 400) ** 2 + 10 * Math.sin(x / 31) + 5 * Math.sin(x / 11), "dosLame");
+    function lame(p) {
+      const A = atelier(`${p}L`), haut = courbe((t) => {
+        const x = G - 100 + (D_ - G + 200) * t;
+        return [x, dosLame(x)];
+      }, 120);
+      let s = `<path d="${chemin([...haut, [D_ + 100, 400], [G - 100, 400]], true)}" fill="${A.lin([[0, "#5CF2E6", 0.55], [0.12, "#1AA8B8", 0.8], [0.4, "#0A4A6A", 0.95], [0.75, "#062033"], [1, "#020A12"]], 0, 20, 0, 400)}"/>`;
+      for (let k = 0; k < 34; k++) {
+        const x0 = G - 100 + (k + 0.5) / 34 * (D_ - G + 200) + (hash(k, 7) - 0.5) * 14, top = dosLame(x0 + 30) + 6, h = 380 - top;
+        const d = chemin(courbe((t) => [x0 + 34 * t ** 2 + 8 * Math.sin(t * 6 + k), 380 - h * t * (0.75 + 0.25 * hash(k, 8))], 18));
+        s += lumineux(d, k % 5 === 2 ? MAGENTA : k % 3 ? CYAN : "#9AFFF0", 0.35 + 0.35 * hash(k, 9), 0.05);
+      }
+      for (let k = 0; k < 10; k++) {
+        const x = G + hash(k, 11) * (D_ - G), y = 120 + hash(k, 12) * 200, r = 6 + 8 * hash(k, 13);
+        s += lumineux(chemin(courbe((t) => [x + r * (1 - t * 0.6) * Math.cos(t * 7), y + r * (1 - t * 0.6) * Math.sin(t * 7) * 0.7], 20)), "#9AFFF0", 0.4, 0.05);
+      }
+      s += lumineux(chemin(haut), "#E8FFFA", 1.2, 0.14);
+      return A.out(s);
+    }
+    __name(lame, "lame");
+    function levre(p, k) {
+      const A = atelier(`${p}V${Math.round(k * 10)}`), xs = courbe((t) => G - 100 + (D_ - G + 200) * t, 70);
+      const dos = xs.map((x) => [x, dosLame(x) + 2]);
+      const bout = xs.map((x, i) => [x + 20 * k, dosLame(x) - 14 + 84 * k + 10 * k * Math.sin(x / 37 + 1) - 3 * hash(i, 5)]);
+      const haut = xs.map((x, i) => [x + 10 * k, dosLame(x) - 10 - 26 * Math.sin(Math.PI * Math.min(1, k * 1.4)) - 2 * hash(i, 6)]);
+      let s = "";
+      if (k > 0) s += `<path d="${chemin([...bout, ...bout.slice().reverse().map(([x, y]) => [x - 6, y + 40 * k])], true)}" fill="${A.lin([[0, "#021420", 0.6], [1, "#021420", 0]], 0, 50 + 84 * k, 0, 50 + 124 * k)}"/>`;
+      s += `<path d="${chemin([...dos, ...haut.slice().reverse()], true)}" fill="${A.lin([[0, "#E8FFFA", 0.95], [1, "#5CF2E6", 0.9]], 0, 0, 0, 90)}"/>`;
+      if (k > 0) s += `<path d="${chemin([...haut, ...bout.slice().reverse()], true)}" fill="${A.lin([[0, "#F0FFFC", 0.97], [0.35, "#8AFAF0", 0.95], [1, "#1AB8C8", 0.95]], 0, 10, 0, 50 + 84 * k)}"/>`;
+      s += lumineux(chemin(haut), "#FFFFFF", 1.3, 0.18);
+      if (k > 0) s += lumineux(chemin(bout), "#E8FFFA", 0.9 + 0.6 * k, 0.14);
+      if (k > 0) for (let i = 0; i < 70; i += 5) {
+        const [x0, y0] = haut[i], [x1, y1] = bout[i];
+        s += lumineux(`M${f(x0)},${f(y0)} Q${f(x0 + 18 * k)},${f((y0 + y1) / 2)} ${f(x1)},${f(y1)}`, CYAN, 0.4, 0.06);
+      }
+      for (let i = 0; i < 26; i++) {
+        const j = Math.min(69, Math.round((i + 0.3 * hash(i, 3)) * 70 / 26)), [x, y] = k > 0 ? bout[j] : haut[j], l = (8 + 16 * hash(i, 4)) * (0.6 + k);
+        s += lumineux(chemin(courbe((t) => [x + l * 0.5 * t, y + (k > 0 ? 1 : -0.6) * l * t * t * 1.1 - l * 0.3 * t], 8)), i % 4 ? "#E8FFFA" : ACIDE, 0.6 + 0.5 * hash(i, 6), 0.12);
+      }
+      s += Array.from({ length: 30 }, (_, i) => {
+        const x = G + hash(i, 21) * (D_ - G), y = dosLame(x) - 30 - 40 * hash(i, 22) - 20 * k;
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.8 + 2 * hash(i, 23))}" fill="#E8FFFA" opacity="${f(0.5 + 0.5 * hash(i, 24))}"/>`;
+      }).join("");
+      return A.out(s);
+    }
+    __name(levre, "levre");
+    function rideau2(p) {
+      const A = atelier(`${p}D`), bas = courbe((t) => {
+        const x = G - 60 + (D_ - G + 120) * t;
+        return [x, 430 + 16 * Math.sin(t * 17) + 9 * Math.sin(t * 43)];
+      }, 90);
+      let s = `<path d="${chemin([[G - 60, -480], [D_ + 60, -480], ...bas.slice().reverse()], true)}" fill="${A.lin([[0, "#020A18"], [0.5, "#052A44"], [0.82, "#0A5A78"], [0.95, "#3ADAD8"], [1, "#E8FFFA"]], 0, -480, 0, 440)}"/>`;
+      for (let k = 0; k < 40; k++) {
+        const x0 = G - 60 + hash(k, 31) * (D_ - G + 120), y0 = -480 + hash(k, 32) * 760, l = 120 + 200 * hash(k, 33);
+        s += lumineux(chemin(courbe((t) => [x0 + 10 * Math.sin(t * 5 + k), y0 + l * t], 10)), k % 5 === 1 ? MAGENTA : k % 4 ? CYAN : "#E8FFFA", 0.4 + 0.5 * hash(k, 34), 0.05);
+      }
+      s += Array.from({ length: 40 }, (_, k) => {
+        const x = G + hash(k, 38) * (D_ - G), y = -60 + hash(k, 39) * 480, r = 1.5 + 7 * hash(k, 40) ** 2;
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${CYAN}" fill-opacity="0.12" stroke="#E8FFFA" stroke-width="${f(0.6 + r * 0.12)}" stroke-opacity="0.8"/>`;
+      }).join("");
+      for (let k = 0; k < 30; k++) {
+        const [x, y] = bas[Math.floor(hash(k, 35) * bas.length)], l = 14 + 20 * hash(k, 36);
+        s += lumineux(chemin(courbe((t) => [x + (hash(k, 37) - 0.5) * l * t, y - 6 + l * t * t], 6)), "#FFFFFF", 0.8, 0.14);
+      }
+      s += lumineux(chemin(bas), "#FFFFFF", 1.6, 0.2);
+      return A.out(s);
+    }
+    __name(rideau2, "rideau");
+    var remous = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}W${i}`);
+      return A.out(Array.from({ length: 9 }, (_, k) => {
+        const x = G + hash(k, 50 + i) * (D_ - G), y = G + hash(k, 51 + i) * (D_ - G), r = 14 + 26 * hash(k, 52 + i), s = hash(k, 53 + i) < 0.5 ? 1 : -1;
+        return lumineux(chemin(courbe((t) => [x + r * (1 - t * 0.7) * Math.cos(s * t * 8), y + r * (1 - t * 0.7) * Math.sin(s * t * 8) * 0.8], 26)), [CYAN, "#E8FFFA", MAGENTA][(k + i) % 3], 0.7, 0.08);
+      }).join(""));
+    }, "remous");
+    var abysse = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}Z`);
+      return A.out(plein(A.lin([[0, "#0E7A8A"], [0.18, "#0A4A7A"], [0.5, "#140A4A"], [0.8, "#08041E"], [1, NOIR]], 0, G, 0, D_)));
+    }, "abysse");
+    function surface(p) {
+      const A = atelier(`${p}U`), y = 30, ligne = courbe((t) => {
+        const x = G - 80 + (D_ - G + 160) * t;
+        return [x, y + 6 * Math.sin(t * 19) + 3 * Math.sin(t * 47)];
+      }, 120);
+      let s = `<path d="${chemin([[G - 80, -260], [D_ + 80, -260], ...ligne.slice().reverse()], true)}" fill="${A.lin([[0, "#1AA8B8"], [0.85, "#5CF2E6"], [1, "#E8FFFA"]], 0, -260, 0, y + 6)}"/>`;
+      for (let k = 0; k < 24; k++) {
+        const x = G - 60 + hash(k, 61) * (D_ - G + 120), yy = y - 20 - 200 * hash(k, 62), w = 20 + 30 * hash(k, 63);
+        s += lumineux(chemin(courbe((t) => [x + w * t, yy + 6 * Math.sin(t * 6 + k)], 8)), "#E8FFFA", 0.5, 0.08);
+      }
+      s += lumineux(chemin(ligne), "#FFFFFF", 1.4, 0.22);
+      return A.out(s + rayons(A, [200, -60], 16, 560, "#B8FFF4", 0.22, 70, Math.PI * 0.22, Math.PI * 0.78));
+    }
+    __name(surface, "surface");
+    var bulles = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}Q${i}`);
+      return A.out(Array.from({ length: 16 }, (_, k) => {
+        const x = G + 20 + hash(k, 70 + i) * (D_ - G - 40), y = 100 + hash(k, 71 + i) * 320, r = 1.5 + 6 * hash(k, 72 + i) ** 2;
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${CYAN}" fill-opacity="0.12" stroke="#E8FFFA" stroke-width="${f(0.6 + r * 0.12)}" stroke-opacity="0.85"/><circle cx="${f(x - r * 0.35)}" cy="${f(y - r * 0.35)}" r="${f(r * 0.25)}" fill="#FFFFFF" opacity="0.9"/>`;
+      }).join(""));
+    }, "bulles");
+    function racineNeon(p, id2, p0, c1, c2, p3, w0, w1, couleurs, seed) {
+      const A = atelier(`${p}${id2}`);
+      const bz = /* @__PURE__ */ __name((t) => {
+        const u = 1 - t;
+        return [0, 1].map((j) => u * u * u * p0[j] + 3 * u * u * t * c1[j] + 3 * u * t * t * c2[j] + t * t * t * p3[j]);
+      }, "bz");
+      const at = /* @__PURE__ */ __name((t) => {
+        const [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + 0.01)), [x1, y1] = bz(Math.max(0, t - 0.01)), n = Math.hypot(x2 - x1, y2 - y1) || 1;
+        return [x, y, -(y2 - y1) / n, (x2 - x1) / n];
+      }, "at");
+      const larg = /* @__PURE__ */ __name((t) => w0 / 2 * (1 - t) + w1 / 2 * t, "larg");
+      const T2 = courbe((t) => t, 40), g = T2.map((t) => {
+        const [x, y, nx, ny] = at(t), w = larg(t);
+        return [x + nx * w, y + ny * w];
+      }), d = T2.map((t) => {
+        const [x, y, nx, ny] = at(t), w = larg(t);
+        return [x - nx * w, y - ny * w];
+      });
+      let s = gravure(A, [...g, ...d.slice().reverse()], A.lin([[0, couleurs[0]], [1, couleurs[1]]], ...p0, ...p3), { seed, amp: 0.6, angle: 50, pas: 2.4, ombre: 0.35, tailles: 2, tailleP: 4, trait: 2.4, portee: 0.6, dx: 4, dy: 5 });
+      for (let k = 1; k < 10; k++) {
+        const t = k / 10, [x, y, nx, ny] = at(t), w = larg(t);
+        s += `<path d="M${f(x + nx * w)},${f(y + ny * w)} Q${f(x - ny * w * 0.4)},${f(y + nx * w * 0.4)} ${f(x - nx * w)},${f(y - ny * w)}" fill="none" stroke="${ENCRE}" stroke-width="${f(1 + w / 16)}" opacity="0.7"/>`;
+      }
+      for (let k = 1; k < 8; k++) {
+        const t = k / 8, [x, y, nx, ny] = at(t), w = larg(t), c = k % 2 ? 1 : -1, l = 5 + w * 0.4;
+        s += `<path d="M${f(x + c * nx * w - ny * 3)},${f(y + c * ny * w + nx * 3)} L${f(x + c * nx * (w + l) + ny * l * 0.4)},${f(y + c * ny * (w + l) - nx * l * 0.4)} L${f(x + c * nx * w + ny * 3)},${f(y + c * ny * w - nx * 3)} Z" fill="${couleurs[1]}" stroke="${ENCRE}" stroke-width="1.2" stroke-linejoin="round"/>`;
+      }
+      s += lumineux(chemin(courbe((t) => t * 0.98, 30).map((t) => at(t).slice(0, 2))), couleurs[2], 1 + w0 / 60, 0.14);
+      for (let k = 1; k < 6; k++) {
+        const t = k / 6 * 0.9, [x, y, nx, ny] = at(t), w = larg(t) * 0.7, c = k % 2 ? 1 : -1;
+        s += lumineux(`M${f(x)},${f(y)} q${f(c * nx * w * 0.6 + ny * w * 0.4)},${f(c * ny * w * 0.6 - nx * w * 0.4)} ${f(c * nx * w)},${f(c * ny * w)}`, couleurs[2], 0.6, 0.1);
+      }
+      return A.out(s);
+    }
+    __name(racineNeon, "racineNeon");
+    var boucle = /* @__PURE__ */ __name((x, y, r, sens, tours = 1.8) => chemin(courbe((t) => {
+      const a = sens * t * tours * Math.PI * 2, rr = r * (1 - 0.85 * t);
+      return [x + rr * Math.cos(a), y + rr * Math.sin(a)];
+    }, Math.round(tours * 24))), "boucle");
+    var SPIRALES = [[40, 40, 14, 1, MAGENTA], [332, 34, 13, 1, ACIDE], [372, 120, 10, -1, CYAN], [236, 112, 9, 1, "#FFB8D8"]];
+    var spiraleCiel = /* @__PURE__ */ __name((p, i) => {
+      const [x, y, r, sens, c] = SPIRALES[i], A = atelier(`${p}s${i}`);
+      return A.out(`<circle cx="${x}" cy="${y}" r="${f(r * 1.6)}" fill="${A.rad([[0, c, 0.22], [1, c, 0]], x, y, r * 1.6)}"/>` + lumineux(boucle(x, y, r, sens), c, 0.9, 0.14) + `<circle cx="${x}" cy="${y}" r="1.4" fill="#FFFFFF"/>`);
+    }, "spiraleCiel");
+    var scintilles = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}c${i}`);
+      return A.out(Array.from({ length: 14 }, (_, k) => {
+        const x = hash(k, 160 + i) * 440 - 20, y = hash(k, 161 + i) * 180, l = 2 + 4 * hash(k, 162 + i), c = [ACIDE, "#FFFFFF", "#FFB8E8", CYAN][k % 4];
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(l * 1.8)}" fill="${A.rad([[0, c, 0.35], [1, c, 0]], x, y, l * 1.8)}"/>` + lumineux(`M${f(x - l)},${f(y)} L${f(x + l)},${f(y)} M${f(x)},${f(y - l)} L${f(x)},${f(y + l)}`, c, 0.5, 0.1);
+      }).join(""));
+    }, "scintilles");
+    var LUEURS = [[80, 60, 110, MAGENTA], [310, 90, 120, CYAN]];
+    var lueurNuage = /* @__PURE__ */ __name((p, i) => {
+      const [x, y, r, c] = LUEURS[i], A = atelier(`${p}l${i}`);
+      return A.out(`<circle cx="${x}" cy="${y}" r="${r}" fill="${A.rad([[0, "#FFFFFF", 0.5], [0.25, c, 0.45], [1, c, 0]], x, y, r)}"/>`);
+    }, "lueurNuage");
+    var voluteNuage = /* @__PURE__ */ __name((i, y, a, lum) => [[70, 300, 160, 360][i], y + a * 0.55, 8 + i * 1.5, i % 2 ? 1 : -1, lum], "voluteNuage");
+    var voluteOrage = /* @__PURE__ */ __name((p, i, y, a, lum) => {
+      const [x, yy, r, sens] = voluteNuage(i, y, a, lum), A = atelier(`${p}v${i}`);
+      return A.out(`<circle cx="${x}" cy="${yy}" r="${f(r * 1.2)}" fill="${A.rad([[0, "#2A0A60", 0.9], [1, "#2A0A60", 0]], x, yy, r * 1.2)}"/>` + lumineux(boucle(x, yy, r, sens, 2), lum, 0.8, 0.12));
+    }, "voluteOrage");
+    function cretes(i) {
+      const [y, h, l] = MERS[i], out = [];
+      for (let x = G - 140 - l; x < D_ + 140 + l; x += l) {
+        const w = l * (0.8 + 0.4 * hash(Math.round(x), i)), hh = h * (0.7 + 0.6 * hash(Math.round(x), i + 3));
+        out.push([x + w * 0.6, y - hh * 0.93 + 0.04 * hh, w]);
+      }
+      return out.filter(([x]) => x > G - 20 && x < D_ + 20);
+    }
+    __name(cretes, "cretes");
+    var ecume2 = /* @__PURE__ */ __name((p, i, n) => {
+      const A = atelier(`${p}e${i}${n}`);
+      return A.out(cretes(i).filter((_, k) => k % 2 === n).map(([x, y, w], k) => {
+        const l = w * 0.3;
+        return lumineux(`M${f(x - l * 0.45)},${f(y + 1)} q${f(l * 0.45)},${f(-3 - i * 0.5)} ${f(l)},${f(2 + i * 0.6)}`, k % 3 ? "#E8FFFA" : CYAN, 0.45 + i * 0.13, 0.12) + [0, 1, 2].map((j) => `<circle cx="${f(x - l * 0.3 + j * l * 0.35)}" cy="${f(y - 3 - i - 4 * hash(k, j + i))}" r="${f(0.6 + 0.3 * i * hash(j, k))}" fill="#E8FFFA"/>`).join("");
+      }).join(""));
+    }, "ecume");
+    var GOUTTES = [[222, 262, 0.7], [270, 336, 1], [330, 410, 1.5]];
+    var gouttes = /* @__PURE__ */ __name((p, j, n) => {
+      const [y0, y1, k] = GOUTTES[j], A = atelier(`${p}g${j}${n}`);
+      return A.out(Array.from({ length: 16 }, (_, q) => {
+        const x = G + hash(q, 180 + j * 2 + n) * (D_ - G), y = y0 + hash(q, 181 + j * 2 + n) * (y1 - y0), r = 3 * k;
+        return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 0.35)}" fill="none" stroke="#B8FFF4" stroke-width="${f(0.6 * k)}" opacity="0.85"/>` + lumineux(`M${f(x - r * 0.6)},${f(y - 1)} l${f(-r * 0.3)},${f(-r)} M${f(x)},${f(y - 1)} l0,${f(-r * 1.3)} M${f(x + r * 0.6)},${f(y - 1)} l${f(r * 0.3)},${f(-r)}`, "#E8FFFA", 0.35 * k, 0.1);
+      }).join(""));
+    }, "gouttes");
+    var FILANTES = [[300, 40], [150, 76]];
+    var filante = /* @__PURE__ */ __name((p, i) => {
+      const [x, y] = FILANTES[i], A = atelier(`${p}f${i}`);
+      return A.out(`<path d="M${x},${y} L${x + 60},${y - 22} L${x + 60},${y - 18} Z" fill="${A.lin([[0, "#FFFFFF", 0.9], [1, "#FFB8E8", 0]], x, y, x + 60, y - 20)}"/><circle cx="${x}" cy="${y}" r="5" fill="${A.rad([[0, "#FFFFFF", 0.9], [1, ACIDE, 0]], x, y, 5)}"/><circle cx="${x}" cy="${y}" r="1.4" fill="#FFFFFF"/>`);
+    }, "filante");
+    var rafale = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}w${i}`);
+      return A.out(Array.from({ length: 6 }, (_, k) => {
+        const x = hash(k, 200 + i) * 200, y = 40 + hash(k, 201 + i) * 330, l = 110 + 110 * hash(k, 202 + i);
+        return lumineux(`M${f(x)},${f(y)} q${f(l / 2)},${f(-4 - 6 * hash(k, 203))} ${f(l)},${f(2)}`, k % 3 ? "#B8FFF4" : "#E0C8FF", 0.4 + 0.4 * hash(k, 204 + i), 0.06);
+      }).join(""));
+    }, "rafale");
+    var plancton = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}k${i}`);
+      return A.out(Array.from({ length: 26 }, (_, k) => {
+        const x = hash(k, 210 + i) * 440 - 20, y = 60 + hash(k, 211 + i) * 380, r = 0.8 + 1.6 * hash(k, 212 + i) ** 2, c = [CYAN, ACIDE, "#FF8AD0", "#E8FFFA"][k % 4];
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 4)}" fill="${A.rad([[0, c, 0.35], [1, c, 0]], x, y, r * 4)}"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${c}"/>`;
+      }).join(""));
+    }, "plancton");
+    var pluieLoin = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}r`);
+      return A.out(Array.from({ length: 60 }, (_, i) => {
+        const x = G + hash(i, 86) * (D_ - G + 60), y = G - 200 + hash(i, 87) * 800, l = 10 + 10 * hash(i, 88);
+        return `<path d="M${f(x)},${f(y)} l${f(-l * 0.28)},${f(l)}" stroke="#C8B8FF" stroke-width="0.6" stroke-linecap="round" opacity="${f(0.25 + 0.3 * hash(i, 89))}"/>`;
+      }).join(""));
+    }, "pluieLoin");
+    var enCouleurs = /* @__PURE__ */ __name((svg) => svg.replace(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g, (c) => neon(c)), "enCouleurs");
+    function pluieVive() {
+      return [[1, 0.8, 0.55], [0.7, 1.15, 0.4], [0.45, 1.7, 0.28]].map(([k, dur, o], j) => {
+        let traits = "";
+        for (let i = 0; i < Math.round(48 * k + 10); i++) {
+          const x = hash(i, 601 + j) * 520 - 60, y = hash(i, 611 + j) * 400, l = 12 + 20 * k;
+          traits += `M${f(x)},${f(y)} l${f(-l * 0.32)},${f(l)} `;
+        }
+        return `<g opacity="${f(o)}"><animateTransform attributeName="transform" type="translate" from="0 -400" to="-128 0" dur="${f(dur)}s" repeatCount="indefinite"/><path d="${traits}" stroke="#9AFAF0" stroke-width="${f(0.6 + k)}" stroke-linecap="round"/><path d="${traits}" transform="translate(128 -400)" stroke="#9AFAF0" stroke-width="${f(0.6 + k)}" stroke-linecap="round"/></g>`;
+      }).join("");
+    }
+    __name(pluieVive, "pluieVive");
+    var traitHorizon = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}I`);
+      return A.out(lumineux(`M${G - 90},${HORIZON + 2} L${D_ + 90},${HORIZON + 2}`, ACIDE, 1.4, 0.25) + `<ellipse cx="200" cy="${HORIZON + 2}" rx="160" ry="10" fill="${A.rad([[0, "#FFFFFF", 0.6], [1, ACIDE, 0]], 200, HORIZON + 2, 160)}"/>`);
+    }, "traitHorizon");
+    var vignette = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}G`);
+      return A.out(plein(A.lin([[0, MAGENTA, 0.08], [0.4, MAGENTA, 0], [0.7, "#00E0C8", 0], [1, "#00C8D8", 0.06]], 0, 0, 0, 400)) + plein(A.rad([[0, "#000", 0], [0.6, "#000", 0.12], [1, "#020008", 0.7]], 200, 200, 320)));
+    }, "vignette");
+    var T = [4200, 5200, 5200, 4600, 2600, 3e3, 3e3];
+    var FIN = T.reduce((a, b) => a + b, 0);
+    var LENT = 1.6;
+    var PONT = 19200;
+    var NOYADE = 20100;
+    var PROPS = ["x", "y", "s", "r", "o"];
+    function rejoint(temps) {
+      const P2 = {};
+      let a = 0;
+      for (const t of temps) {
+        for (const [id2, cles] of Object.entries(t.pistes)) (P2[id2] = P2[id2] || []).push(...cles.map(([u, c]) => [a + u, c]));
+        a += t.duree;
+      }
+      return P2;
+    }
+    __name(rejoint, "rejoint");
+    var cache = /* @__PURE__ */ __name((cles, t) => [...cles.filter(([u]) => u < t - 1), [t - 1, { ...TP.valeur(cles, t - 1, PROPS), e: "linear" }], [t, { ...TP.valeur(cles, t, PROPS), o: 0 }]], "cache");
+    var RA = { base: ["racineA", [430, 430], [400, 360], [372, 330], [352, 300], 46, 26], bout: ["racineA-bout", [352, 300], [340, 280], [336, 262], [324, 248], 26, 2] };
+    var RB = { base: ["racineB", [-30, 400], [10, 300], [40, 220], [92, 150], 54, 30], bout: ["racineB-bout", [92, 150], [124, 110], [160, 112], [164, 150], 30, 2] };
+    var RC = { base: ["racineC", [-40, 330], [30, 290], [80, 300], [140, 262], 40, 22], bout: ["racineC-bout", [140, 262], [190, 236], [240, 250], [290, 236], 22, 2] };
+    var ABIME = [
+      ["abime0", [330, 470], [380, 360], [300, 280], [236, 196], 72, 5, ["#24042C", "#6A1660", MAGENTA], 0.45],
+      ["abime1", [40, 480], [0, 380], [110, 300], [170, 216], 84, 5, ["#14042C", "#4A1474", ACIDE], 0.8],
+      ["abime2", [430, 500], [470, 420], [380, 380], [326, 320], 58, 4, ["#1A0A3E", "#3A1A8A", CYAN], 1]
+    ];
+    var FOND_ABIME = [[[60, 520], [120, 420], [40, 340], [90, 260], 40], [[250, 520], [200, 430], [300, 380], [260, 300], 34], [[380, 520], [330, 450], [420, 400], [360, 330], 30]];
+    var racinesFond = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}P`);
+      return A.out(FOND_ABIME.map(([a, b, c, d, w], i) => racineNeon(p, `P${i}`, a, b, c, d, w, 3, ["#0A0420", "#1E0A44", i % 2 ? MAGENTA : "#7A6AF0"], 1700 + i)).join(""));
+    }, "racinesFond");
+    function naufrage() {
+      const p = "nn", sc = TP.pont01(), P0 = rejoint(sc.partition.temps);
+      const { COR_IN, COUPE, CHOC, RACCORD, SORT, ARRACHE, RETOUR, CRI, CHUTE } = REPERES, FRAPPE = CRI + 350;
+      const sous = /* @__PURE__ */ __name((id2) => [id2, ...sc.plans.filter((q) => q.dans === id2).flatMap((q) => sous(q.id))], "sous");
+      const DU_NAVIRE = new Set(sous("navire")), DU_COR = /* @__PURE__ */ new Set([...sous("cor"), "voile", "lueur-cor"]);
+      const garde = /* @__PURE__ */ __name((ids) => sc.plans.filter((q) => ids.has(q.id)).map((q) => {
+        const d = q.dessin;
+        return { ...q, dessin: /* @__PURE__ */ __name(() => enNeon(() => enCouleurs(d())), "dessin") };
+      }), "garde");
+      const m = { marge: MARGE };
+      const racinePlans = /* @__PURE__ */ __name((R, prof, devant, c) => [
+        { id: R.base[0], profondeur: prof, cadre: [-80, 60, 560, 400], pivot: R.base[1], dessin: /* @__PURE__ */ __name(() => enNeon(() => racineNeon(p, R.base[0], ...R.base.slice(1), c, 500 + R.base[1][0])), "dessin") },
+        { id: R.bout[0], dans: R.base[0], derriere: !devant, cadre: [-80, 60, 560, 400], pivot: R.bout[1], dessin: /* @__PURE__ */ __name(() => enNeon(() => racineNeon(p, R.bout[0], ...R.bout.slice(1), c, 600 + R.bout[1][0])), "dessin") }
+      ], "racinePlans");
+      const ORAGES = [[0, 26, 20, "#5A1A9A", MAGENTA], [1, 58, 16, "#3A1478", CYAN], [2, 96, 18, "#2A0A60", "#C870F0"], [3, 128, 14, "#1A0848", MAGENTA]];
+      const STRATES = [[0, 150, "#FFB8D8"], [1, 178, "#FF8A70"]];
+      const POSES = [0, 0.3, 0.55, 0.8, 1];
+      const merPlan = /* @__PURE__ */ __name((i) => {
+        const [y, h] = MERS[i];
+        return { id: `mer${i}`, profondeur: [0.24, 0.3, 0.4, 0.7, 0.85, 1][i], cadre: [-110, y - h - 30, 620, 470 - (y - h - 30)], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => enNeon(() => vague(p, i)), "dessin") };
+      }, "merPlan");
+      const ecumePlans = /* @__PURE__ */ __name((i) => {
+        const [y, h] = MERS[i];
+        return [0, 1].map((n) => ({ id: `ecume${i}-${n}`, dans: `mer${i}`, cadre: [-60, y - h - 2 * i - 18, 520, h + 2 * i + 26], dessin: /* @__PURE__ */ __name(() => ecume2(p, i, n), "dessin") }));
+      }, "ecumePlans");
+      const gouttesPlans = /* @__PURE__ */ __name((j) => [0, 1].map((n) => ({ id: `gouttes${j}-${n}`, profondeur: [0.45, 0.78, 1.05][j], cadre: [G, GOUTTES[j][0] - 14, D_ - G, GOUTTES[j][1] - GOUTTES[j][0] + 20], dessin: /* @__PURE__ */ __name(() => gouttes(p, j, n), "dessin") })), "gouttesPlans");
+      const plans = [
+        { id: "ciel", profondeur: 0.02, ...m, flou: 0.25, dessin: /* @__PURE__ */ __name(() => ciel(p), "dessin") },
+        { id: "ciel-nuit", profondeur: 0.02, ...m, flou: 0.25, dessin: /* @__PURE__ */ __name(() => cielNuit(p), "dessin") },
+        { id: "etoiles", profondeur: 0.03, ...m, dessin: /* @__PURE__ */ __name(() => etoilesCiel(p), "dessin") },
+        { id: "soleil", profondeur: 0.05, cadre: [SOLEIL[0] - 200, SOLEIL[1] - 200, 400, 400], pivot: SOLEIL, dessin: /* @__PURE__ */ __name(() => soleil(p), "dessin") },
+        ...STRATES.map(([i, y, lum]) => ({ id: `strate${i}`, profondeur: 0.08 + i * 0.03, cadre: [G - 100, y - 24, D_ - G + 200, 34], dessin: /* @__PURE__ */ __name(() => strate(p, i, y, lum), "dessin") })),
+        // (une volute au bord des bancs 1 et 3 seulement)
+        ...ORAGES.flatMap(([i, y, a, c, lum]) => {
+          const [vx, vy, vr] = voluteNuage(i, y, a, lum);
+          return [
+            { id: `orage${i}`, profondeur: 0.12 + i * 0.04, cadre: [G - 120, G - 160, D_ - G + 240, y + a - G + 172], dessin: /* @__PURE__ */ __name(() => enNeon(() => orage(p, i, y, a, c, lum)), "dessin") },
+            ...i % 2 ? [{ id: `volute${i}`, dans: `orage${i}`, cadre: [vx - vr * 1.4, vy - vr * 1.4, vr * 2.8, vr * 2.8], pivot: [vx, vy], dessin: /* @__PURE__ */ __name(() => voluteOrage(p, i, y, a, lum), "dessin") }] : []
+          ];
+        }),
+        ...[4, 3, 2, 1, 0].map((i) => {
+          const R = R_OEIL[i + 1] * 1.08;
+          return { id: `oeil${i}`, profondeur: 0.06 + (4 - i) * 0.015, flou: 0.6, cadre: [OEIL[0] - R, OEIL[1] - R, 2 * R, 2 * R], pivot: OEIL, dessin: /* @__PURE__ */ __name(() => anneauOeil(p, i), "dessin") };
+        }),
+        ...LUEURS.map((_, i) => ({ id: `lueur-nuage${i}`, profondeur: 0.13, flou: 0.4, cadre: [LUEURS[i][0] - LUEURS[i][2], LUEURS[i][1] - LUEURS[i][2], 2 * LUEURS[i][2], 2 * LUEURS[i][2]], dessin: /* @__PURE__ */ __name(() => lueurNuage(p, i), "dessin") })),
+        { id: "coeur", profondeur: 0.06, cadre: [OEIL[0] - 62, OEIL[1] - 62, 124, 124], pivot: OEIL, dessin: /* @__PURE__ */ __name(() => coeurOeil(p), "dessin") },
+        ...SPIRALES.map(([x, y, r], i) => ({ id: `spirale${i}`, profondeur: 0.07 + i * 0.012, cadre: [x - r * 2, y - r * 2, r * 4, r * 4], pivot: [x, y], dessin: /* @__PURE__ */ __name(() => spiraleCiel(p, i), "dessin") })),
+        ...[0, 1].map((i) => ({ id: `scintilles${i}`, profondeur: 0.04, cadre: [-40, -20, 480, 220], dessin: /* @__PURE__ */ __name(() => scintilles(p, i), "dessin") })),
+        ...FILANTES.map(([x, y], i) => ({ id: `filante${i}`, profondeur: 0.03, cadre: [x - 8, y - 30, 76, 40], dessin: /* @__PURE__ */ __name(() => filante(p, i), "dessin") })),
+        { id: "foudre", profondeur: 0.14, cadre: [36, -36, 90, 260], pivot: FOUDRE[0], dessin: /* @__PURE__ */ __name(() => foudre(p), "dessin") },
+        { id: "brume-loin", profondeur: 0.2, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => brumeLoin(p), "dessin") },
+        { id: "pluie-loin", profondeur: 0.3, cadre: [G, G - 200, D_ - G + 60, 800], dessin: /* @__PURE__ */ __name(() => pluieLoin(p), "dessin") },
+        { id: "trait-horizon", profondeur: 0.22, cadre: [G - 100, HORIZON - 20, D_ - G + 200, 44], pivot: [200, HORIZON + 2], dessin: /* @__PURE__ */ __name(() => traitHorizon(p), "dessin") },
+        merPlan(0),
+        merPlan(1),
+        ...ecumePlans(1),
+        { id: "lame", profondeur: 0.34, cadre: [G - 100, 0, D_ - G + 200, 410], pivot: [200, 380], dessin: /* @__PURE__ */ __name(() => lame(p), "dessin") },
+        ...POSES.map((k, i) => ({ id: `levre${i}`, dans: "lame", cadre: [G - 100, -70, D_ - G + 220, 280], dessin: /* @__PURE__ */ __name(() => levre(p, k), "dessin") })),
+        merPlan(2),
+        ...ecumePlans(2),
+        ...gouttesPlans(0),
+        // (sous la surface : l'abîme couvre tout ce qui est derrière lui ; devant lui, le navire et les racines)
+        { id: "abysse", profondeur: 0.04, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => abysse(p), "dessin") },
+        { id: "surface", profondeur: 0.1, flou: 0.6, cadre: [G - 80, -260, D_ - G + 160, 760], pivot: [200, -60], dessin: /* @__PURE__ */ __name(() => surface(p), "dessin") },
+        { id: "racines-fond", profondeur: 0.25, flou: 0.7, cadre: [-20, 240, 460, 300], dessin: /* @__PURE__ */ __name(() => enNeon(() => racinesFond(p)), "dessin") },
+        ...ABIME.slice(0, 1).map(([id2, a, b, c, d, w0, w1, cs, prof]) => ({ id: id2, profondeur: prof, cadre: [-80, 150, 580, 380], pivot: a, dessin: /* @__PURE__ */ __name(() => enNeon(() => racineNeon(p, id2, a, b, c, d, w0, w1, cs, 1800)), "dessin") })),
+        ...racinePlans(RB, 0.55, false, ["#24042C", "#6A1660", MAGENTA]),
+        ...garde(DU_NAVIRE),
+        ...racinePlans(RC, 0.62, true, ["#1A0A3E", "#5A1A8A", CYAN]),
+        merPlan(3),
+        ...ecumePlans(3),
+        merPlan(4),
+        ...ecumePlans(4),
+        ...gouttesPlans(1),
+        ...racinePlans(RA, 0.85, true, ["#14042C", "#4A1474", ACIDE]),
+        merPlan(5),
+        ...ecumePlans(5),
+        ...gouttesPlans(2),
+        ...ABIME.slice(1).map(([id2, a, b, c, d, w0, w1, cs, prof], j) => ({ id: id2, profondeur: prof, cadre: [-80, 150, 580, 380], pivot: a, dessin: /* @__PURE__ */ __name(() => enNeon(() => racineNeon(p, id2, a, b, c, d, w0, w1, cs, 1801 + j)), "dessin") })),
+        { id: "anime", profondeur: 0.8, dessin: /* @__PURE__ */ __name(() => pluieVive(), "dessin") },
+        { id: "houle", profondeur: 1.3, cadre: [G - 100, 320, D_ - G + 200, 160], pivot: [200, 380], dessin: /* @__PURE__ */ __name(() => enNeon(() => houle(p)), "dessin") },
+        ...[0, 1].map((i) => ({ id: `embruns${i}`, profondeur: 1.5, cadre: [G - 20, 230, D_ - G + 40, 220], dessin: /* @__PURE__ */ __name(() => embruns(p, i), "dessin") })),
+        { id: "pluie-devant", profondeur: 1.6, cadre: [G, G - 200, D_ - G + 60, 800], dessin: /* @__PURE__ */ __name(() => pluie(p), "dessin") },
+        ...[0, 1].map((i) => ({ id: `rafale${i}`, profondeur: 0.9, cadre: [-20, 20, 460, 370], dessin: /* @__PURE__ */ __name(() => rafale(p, i), "dessin") })),
+        { id: "plancton0", profondeur: 0.5, cadre: [-40, 40, 480, 420], dessin: /* @__PURE__ */ __name(() => plancton(p, 0), "dessin") },
+        ...[0, 1, 2].map((i) => ({ id: `bulles${i}`, profondeur: 0.9 + i * 0.3, cadre: [G, 80, D_ - G, 360], dessin: /* @__PURE__ */ __name(() => bulles(p, i), "dessin") })),
+        ...garde(DU_COR),
+        { id: "rideau", profondeur: 0, flou: 0.7, cadre: [G - 60, -480, D_ - G + 120, 960], dessin: /* @__PURE__ */ __name(() => rideau2(p), "dessin") },
+        ...[0, 1].map((i) => ({ id: `remous${i}`, profondeur: 0, cadre: [G, G, D_ - G, D_ - G], pivot: [200, 200], dessin: /* @__PURE__ */ __name(() => remous(p, i), "dessin") })),
+        { id: "assombri", profondeur: 0, ...m, flou: 0.1, dessin: /* @__PURE__ */ __name(() => plein(NOIR), "dessin") },
+        { id: "plancton1", profondeur: 1, cadre: [-40, 40, 480, 420], dessin: /* @__PURE__ */ __name(() => plancton(p, 1), "dessin") },
+        { id: "vignette", profondeur: 0, ...m, flou: 0.5, dessin: /* @__PURE__ */ __name(() => vignette(p), "dessin") },
+        { id: "eclair", profondeur: 0, ...m, flou: 0.1, dessin: /* @__PURE__ */ __name(() => plein("#FFE8FF"), "dessin") }
+      ];
+      const P2 = {};
+      for (const id2 of [...DU_NAVIRE, ...DU_COR]) if (P0[id2]) P2[id2] = P0[id2];
+      const force = /* @__PURE__ */ __name((t) => t < 4200 ? 0.45 : t < 9400 ? 0.45 + 0.55 * (t - 4200) / 5200 : t < 14600 ? 1 + 0.5 * (t - 9400) / 5200 : 2.3, "force");
+      const jusquA = /* @__PURE__ */ __name((cles, t = NOYADE) => cache(cles, t), "jusquA");
+      P2["trait-horizon"] = [[0, { o: 1, s: 0.02 }], [150, { o: 1, s: 0.02, e: "cubic-bezier(.3,0,.2,1)" }], [1e3, { o: 1, s: 1 }], [1400, { o: 1, s: 1, e: "ease-in" }], [2400, { o: 0, s: 1 }]];
+      P2.ciel = jusquA([[0, { o: 0 }], [500, { o: 0, e: "ease-in-out" }], [1900, { o: 1 }]]);
+      P2.etoiles = [[0, { o: 0 }], [900, { o: 0 }], [2300, { o: 1 }], ...balance(2300, 7e3, 1400, (k) => ({ o: k % 2 ? 0.6 : 1 })), [9600, { o: 0 }]];
+      P2.soleil = [[0, { y: 90, o: 0, r: 0 }], [600, { y: 90, o: 0, r: 0, e: "cubic-bezier(.2,.8,.3,1)" }], [2600, { y: 0, o: 1, r: 12 }], [5200, { y: 8, o: 1, r: 26 }], [10500, { y: 80, o: 0, r: 60 }]];
+      STRATES.forEach(([i]) => {
+        const sens = i ? -1 : 1;
+        P2[`strate${i}`] = jusquA([[0, { x: sens * 460, o: 0 }], [400 + i * 200, { x: sens * 460, o: 0, e: "cubic-bezier(.2,.85,.3,1)" }], [2e3 + i * 200, { x: 0, o: 1 }], ...balance(2e3 + i * 200, PONT, 7e3, (k) => ({ x: (k % 2 ? 1 : -1) * sens * 16, o: 1 }))]);
+      });
+      P2["ciel-nuit"] = jusquA([[0, { o: 0 }], [4600, { o: 0, e: "ease-in" }], [11e3, { o: 1 }]]);
+      P2["brume-loin"] = jusquA([[0, { o: 0 }], [1200, { o: 0 }], [2800, { o: 0.6 }], [11e3, { o: 1 }]]);
+      const entrees = [4400, 6200, 9700, 11500];
+      ORAGES.forEach(([i]) => {
+        const sens = i % 2 ? 1 : -1, t0 = entrees[i];
+        P2[`orage${i}`] = jusquA([[0, { x: sens * 560 }], [t0, { x: sens * 560, e: "cubic-bezier(.3,.7,.3,1)" }], [t0 + 2400, { x: 0 }], ...balance(t0 + 2400, PONT + 800, 6e3 + i * 900, (k) => ({ x: (k % 2 ? 1 : -1) * sens * (14 + i * 6) }))]);
+      });
+      [0, 1, 2, 3, 4].forEach((i) => {
+        const t0 = 9200 + (4 - i) * 250, sp = [70, 48, 34, 24, 16][i], rot = /* @__PURE__ */ __name((t) => Math.round(sp * (t - t0) / 10) / 100, "rot");
+        P2[`oeil${i}`] = [[0, { o: 0, s: 0.4, r: 0 }], [t0, { o: 0, s: 0.4, r: 0, e: "ease-out" }], [t0 + 3e3, { o: 1, s: 1, r: rot(t0 + 3e3), e: "linear" }], [NOYADE - 1, { o: 1, s: 1, r: rot(NOYADE - 1), e: "linear" }], [NOYADE, { o: 0, s: 1, r: rot(NOYADE) }]];
+      });
+      P2.coeur = jusquA([[0, { o: 0, s: 0.5 }], [10200, { o: 0, s: 0.5, e: "ease-out" }], [12800, { o: 1, s: 1 }], ...balance(12800, PONT + 900, 900, (k) => ({ o: 1, s: k % 2 ? 1.18 : 1 }))]);
+      const coups = [[11200, 0.8], [FRAPPE, 1], [18600, 1]];
+      P2.foudre = [[0, { s: 0.05, o: 0 }], ...coups.flatMap(([t]) => [[t - 1, { s: 0.05, o: 0, e: "linear" }], [t, { s: 0.05, o: 1, e: "ease-out" }], [t + 110, { s: 1, o: 1 }], [t + 320, { s: 1, o: 1, e: "ease-in" }], [t + 600, { s: 1, o: 0 }]])];
+      P2.eclair = [[0, { o: 0 }], ...[...coups, [CHOC, 0.7], [ARRACHE, 0.6], [FRAPPE + 520, 0.5], [19920, 0.8]].sort((u, v) => u[0] - v[0]).flatMap(([t, a]) => [[t - 1, { o: 0, e: "linear" }], [t + 40, { o: 0.3 * a, e: "linear" }], [t + 100, { o: 0.05, e: "linear" }], [t + 160, { o: 0.2 * a, e: "ease-out" }], [t + 420, { o: 0 }]])];
+      MERS.forEach((_, i) => {
+        const t0 = 300 + i * 150;
+        P2[`mer${i}`] = jusquA([[0, { y: 320 }], [t0, { y: 320, e: "cubic-bezier(.2,.9,.3,1.05)" }], [t0 + 1e3, { y: 0 }], ...balance(t0 + 1e3, PONT + 900, 2300 + i * 250, (k, t) => ({ x: (k % 2 ? 1 : -1) * (4 + i * 3) * force(t), r: (k % 2 ? -1 : 1) * (0.5 + i * 0.22) * force(t), y: (k % 2 ? -1 : 1) * (1 + i) * Math.max(0.3, force(t) - 0.6) }))]);
+      });
+      P2.houle = jusquA([[0, { y: 140 }], [900, { y: 140, e: "cubic-bezier(.2,.8,.3,1)" }], [2300, { y: 20 }], ...balance(2300, PONT + 900, 2600, (k, t) => ({ y: (k % 2 ? 10 : 30) - Math.min(1, t / 14e3) * 26, x: k % 2 ? -14 : 14 }))]);
+      [0, 1].forEach((i) => {
+        P2[`embruns${i}`] = jusquA(bouffees(6600 + i * 700, PONT + 600, 1400, { x: -90, y: 70, s: 0.8, o: 0.9 }, { x: 130, y: -90, s: 1.25, o: 0.9 }), NOYADE);
+      });
+      P2["pluie-devant"] = jusquA([[0, { o: 0, x: 0, y: 0 }], ...bouffees(6e3, PONT + 700, 900, { x: 0, y: -260, o: 0.9 }, { x: -70, y: 140, o: 0.9 }).slice(1)]);
+      P2.anime = jusquA([[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]]);
+      P2.vignette = [[0, { o: 1 }]];
+      const vitesse = /* @__PURE__ */ __name((t) => 50 + 150 * Math.min(1, Math.max(0, (t - 4200) / 1e4)), "vitesse");
+      const tourne = /* @__PURE__ */ __name((t0, t1, sens, k = 1, derive = 6) => {
+        const out = [];
+        let r = 0;
+        for (let t = t0, n = 0; t < t1; n++) {
+          out.push([t, { s: n % 2 ? 1.14 : 1, r: Math.round(r), x: (n % 2 ? 1 : -1) * derive * force(t), o: 1, e: "linear" }]);
+          const dt = Math.min(1100, t1 - t);
+          r += sens * k * vitesse(t) * dt / 1e3;
+          t += dt;
+        }
+        out.push([t1, { s: 1, r: Math.round(r), x: 0, o: 1 }]);
+        return out;
+      }, "tourne");
+      SPIRALES.forEach(([x, y, , sens], i) => {
+        const t0 = 700 + i * 300, t1 = 9600 + i * 450, k = tourne(t0 + 900, t1, sens, 1, 6 + i), [, fin] = k[k.length - 1];
+        P2[`spirale${i}`] = [[0, { s: 0, r: -200 * sens, x: 0, y: 0, o: 1 }], [t0, { s: 0, r: -200 * sens, x: 0, y: 0, o: 1, e: "cubic-bezier(.2,.9,.3,1.3)" }], ...k.slice(0, -1), [t1, { ...fin, y: 0, e: "cubic-bezier(.6,0,.9,.6)" }], [t1 + 2200, { s: 0.15, r: fin.r + sens * 700, x: OEIL[0] - x, y: OEIL[1] - y, o: 0 }]];
+      });
+      ORAGES.forEach(([i]) => {
+        if (i % 2) P2[`volute${i}`] = tourne(0, PONT + 900, 1, 1.6, 0);
+      });
+      [0, 1].forEach((i) => {
+        P2[`scintilles${i}`] = [[0, { o: 0 }], [1400 + i * 500, { o: 0 }], ...balance(1400 + i * 500, 6e3, 1500 + i * 500, (k) => ({ o: k % 2 ? 0.15 : 1 })), [7800, { o: 0 }]];
+      });
+      FILANTES.forEach((_, i) => {
+        const t = [1900, 3400][i];
+        P2[`filante${i}`] = [[0, { o: 0, x: 0, y: 0 }], [t - 1, { o: 0, x: 0, y: 0, e: "linear" }], [t, { o: 1, x: 0, y: 0, e: "cubic-bezier(.3,0,.7,1)" }], [t + 700, { o: 0, x: -170, y: 62 }]];
+      });
+      [0, 1].forEach((i) => {
+        const k = [[0, { o: 0, x: -520 }]];
+        for (let t = 8300 + i * 900, n = 0; t < PONT; n++, t += 1500 + Math.round(hash(n, 220 + i) * 1700)) k.push([t - 1, { o: 0, x: -520, e: "linear" }], [t, { o: 0.9, x: -520, e: "cubic-bezier(.4,0,.6,1)" }], [t + 540, { o: 0.9, x: 520, e: "linear" }], [t + 541, { o: 0, x: 520 }]);
+        P2[`rafale${i}`] = k;
+      });
+      [0, 1].forEach((j) => {
+        const t0 = NOYADE + 400 + j * 600, k = [[0, { o: 0, y: 40 }], [t0, { o: 0, y: 40, e: "ease-out" }]];
+        for (let t = t0 + 1600, n = 0; t < FIN; n++, t += 900) k.push([t, { o: j && t > 26400 ? Math.max(0, 1 - (t - 26400) / 1100) : n % 2 ? 0.55 : 1, y: -Math.round((t - t0) * 0.012), e: "ease-in-out" }]);
+        P2[`plancton${j}`] = k;
+      });
+      LUEURS.forEach((_, i) => {
+        const k = [[0, { o: 0 }]];
+        for (let t = 6800 + i * 450, n = 0; t < PONT; n++, t += 700 + Math.round(hash(n, 190 + i) * 1100)) k.push([t - 1, { o: 0, e: "linear" }], [t + 60, { o: 0.85, e: "linear" }], [t + 140, { o: 0.25, e: "linear" }], [t + 220, { o: 0.65, e: "ease-out" }], [t + 620, { o: 0 }]);
+        P2[`lueur-nuage${i}`] = jusquA(k);
+      });
+      [1, 2, 3, 4, 5].forEach((i) => [0, 1].forEach((n) => {
+        const per = 1300 + i * 160, k = [[0, { o: 0, y: 2 }]];
+        for (let t = 1600 + n * per / 2 + i * 90; t < NOYADE - per; t += per) k.push([t, { o: 0, y: 2, e: "ease-out" }], [t + per * 0.3, { o: 1, y: 0, e: "linear" }], [t + per * 0.7, { o: 0.9, y: -3, e: "ease-in" }], [t + per - 1, { o: 0, y: -5 }]);
+        P2[`ecume${i}-${n}`] = k;
+      }));
+      [0, 1, 2].forEach((j) => [0, 1].forEach((n) => {
+        const per = 520 + j * 90, k = [[0, { o: 0 }]];
+        for (let t = 6800 + n * per / 2; t < NOYADE - per; t += per) k.push([t, { o: 0, e: "ease-out" }], [t + 70, { o: 1, e: "ease-in" }], [t + per * 0.8, { o: 0 }]);
+        P2[`gouttes${j}-${n}`] = k;
+      }));
+      P2["pluie-loin"] = jusquA([[0, { o: 0, x: 0, y: 0 }], ...bouffees(5800, PONT + 700, 1300, { x: 0, y: -260, o: 0.8 }, { x: -50, y: 140, o: 0.8 }).slice(1)]);
+      const nav = [...P0.navire, [19800, { x: -10, y: -36, r: -16, s: 1, e: "linear" }], [NOYADE - 1, { x: -10, y: -36, r: -16, s: 1, e: "linear" }], [NOYADE, { x: 10, y: 30, r: 26, s: 0.82, e: "ease-out" }], [21800, { x: 18, y: 56, r: 31, s: 0.79, e: "linear" }], [24800, { x: 30, y: 110, r: 38, s: 0.71, e: "ease-in" }], [FIN, { x: 36, y: 150, r: 42, s: 0.66 }]];
+      P2.navire = nav;
+      for (const id2 of DU_NAVIRE) if (/^(fumee|embrun|onde)/.test(id2) && P2[id2]) P2[id2] = jusquA(P2[id2]);
+      for (const R of [RA, RB, RC]) P2[R.base[0]] = jusquA(P0[R.base[0]]);
+      for (const R of [RA, RB, RC]) P2[R.bout[0]] = P0[R.bout[0]];
+      P2.lame = [[0, { y: 380, s: 1, o: 0 }], [CHUTE - 401, { y: 380, s: 1, o: 0, e: "linear" }], [CHUTE - 400, { y: 380, s: 1, o: 1, e: "cubic-bezier(.3,0,.3,1)" }], [PONT, { y: 60, s: 1, o: 1, e: "cubic-bezier(.45,0,.7,1)" }], [19900, { y: -30, s: 1.25, o: 1, e: "linear" }], [NOYADE - 1, { y: -30, s: 1.25, o: 1, e: "linear" }], [NOYADE, { y: -30, s: 1.25, o: 0 }]];
+      const PT = [0, 19300, 19480, 19660, 19840];
+      POSES.forEach((_, i) => {
+        const k = [[0, { o: i ? 0 : 1 }]];
+        if (i) k.push([PT[i] - 1, { o: 0, e: "linear" }], [PT[i], { o: 1 }]);
+        if (i < POSES.length - 1) k.push([PT[i + 1] - 1, { o: 1, e: "linear" }], [PT[i + 1], { o: 0 }]);
+        P2[`levre${i}`] = k;
+      });
+      P2.rideau = [[0, { y: -960, o: 1 }], [19650, { y: -960, o: 1, e: "cubic-bezier(.55,0,.85,.4)" }], [20050, { y: 0, o: 1 }], [20500, { y: 0, o: 1, e: "ease-in-out" }], [21600, { y: 380, o: 0 }]];
+      [0, 1].forEach((i) => {
+        const sens = i ? -1 : 1;
+        P2[`remous${i}`] = [[0, { o: 0, r: 0, s: 1, y: 0 }], [19950, { o: 0, r: 0, s: 1, y: 0, e: "ease-out" }], [20250, { o: 1, r: sens * 30, s: 1.05, y: -10, e: "linear" }], [21e3, { o: 0.9, r: sens * 90, s: 1.2, y: -70, e: "ease-in" }], [21700, { o: 0, r: sens * 130, s: 1.3, y: -140 }]];
+      });
+      P2.abysse = [[0, { o: 0 }], [NOYADE - 1, { o: 0, e: "linear" }], [NOYADE, { o: 1 }]];
+      P2.surface = [[0, { o: 0, y: 0, r: 0 }], [NOYADE - 1, { o: 0, y: 0, r: 0, e: "linear" }], [NOYADE, { o: 1, y: 0, r: 0 }], ...balance(NOYADE, 26500, 2200, (k, t) => ({ o: Math.max(0.3, 1 - Math.max(0, t - 23e3) / 4500), y: -Math.max(0, t - 21800) * 0.06, r: k % 2 ? 2 : -2 }))];
+      P2["racines-fond"] = [[0, { o: 0, y: 140 }], [20800, { o: 0, y: 140, e: "ease-out" }], [23600, { o: 0.75, y: 0 }]];
+      ABIME.forEach(([id2], j) => {
+        const t0 = 20500 + j * 350;
+        P2[id2] = [[0, { y: 430, r: 0 }], [t0, { y: 430, r: 0, e: "cubic-bezier(.2,.8,.3,1)" }], [t0 + 2800, { y: 0, r: j % 2 ? -4 : 4 }], ...balance(t0 + 2800, FIN, 2400 + j * 300, (k) => ({ y: k % 2 ? 6 : 0, r: (k % 2 ? 1 : -1) * (3 + j) }))];
+      });
+      [0, 1, 2].forEach((j) => {
+        P2[`bulles${j}`] = bouffees(NOYADE - 100 + j * 250, 26600, [2600, 1900, 1400][j], { x: 0, y: 160, o: 1 }, { x: j % 2 ? 16 : -16, y: -420, o: 1 });
+      });
+      P2.assombri = [[0, { o: 0 }], [22400, { o: 0, e: "ease-in-out" }], [24800, { o: 0.5 }], [26300, { o: 0.94 }], [FIN, { o: 1 }]];
+      const camera = [
+        [0, { x: 30, y: -110, z: 1.7 }],
+        [400, { x: 30, y: -110, z: 1.7, e: "cubic-bezier(.5,0,.2,1)" }],
+        [3900, { x: 0, y: 6, z: 1.06 }],
+        [COUPE, { x: -10, y: 4, z: 1.1 }],
+        [CHOC - 100, { z: 1.36, x: 70, y: 30, e: "linear" }],
+        ...secoue(CHOC, { z: 1.36, x: 70, y: 30 }, 15, 8, 50),
+        [RACCORD + 300, { z: 1.12, x: 24, y: 8 }],
+        [SORT + 400, { z: 1.3, x: -70, y: 18 }],
+        [ARRACHE - 200, { z: 1.3, x: 54, y: 12, e: "linear" }],
+        ...secoue(ARRACHE, { z: 1.3, x: 54, y: 12 }, 12, 6, 50),
+        [RETOUR, { z: 1.12, x: 10, y: 4 }],
+        [FRAPPE - 100, { z: 1.38, x: -20, y: 30, e: "linear" }],
+        ...secoue(FRAPPE, { z: 1.38, x: -20, y: 30 }, 14, 7, 50),
+        [CHUTE + 200, { z: 1.1, x: 0, y: -10 }],
+        [PONT, { z: 1.2, x: 0, y: -70, e: "cubic-bezier(.5,0,.9,.5)" }],
+        [19850, { z: 1.42, x: 6, y: -96, e: "linear" }],
+        ...secoue(19900, { z: 1.42, x: 6, y: -96 }, 14, 3, 50),
+        [NOYADE - 1, { z: 1.42, x: 6, y: -96, e: "linear" }],
+        [NOYADE, { z: 1.02, x: 0, y: 0, e: "ease-out" }],
+        [21800, { z: 1.06, x: -6, y: 20, e: "linear" }],
+        [24800, { z: 1.14, x: -12, y: 60, e: "ease-out" }],
+        [FIN, { z: 1.22, x: -16, y: 90 }]
+      ];
+      const lent = /* @__PURE__ */ __name((cles) => cles.map(([t, c]) => [Math.round(t * LENT), c]), "lent"), TL = T.map((d) => Math.round(d * LENT));
+      const temps = TL.map((d) => ({ duree: d, camera: [], pistes: {} }));
+      parTemps(TL, lent(camera), ["x", "y", "z", "r"]).forEach((c, n) => {
+        temps[n].camera = c;
+      });
+      for (const [id2, cles] of Object.entries(P2)) parTemps(TL, lent(cles)).forEach((c, n) => {
+        temps[n].pistes[id2] = c;
+      });
+      return { plans, partition: { temps } };
+    }
+    __name(naufrage, "naufrage");
+    module.exports = { vignette, rayons, etoiles, naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau: rideau2, remous, abysse, surface, bulles, racineNeon, enCouleurs, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET: VIOLET2, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
+  }
+});
+
+// atelier/neon_reveil.js
+var require_neon_reveil = __commonJS({
+  "atelier/neon_reveil.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure } = require_gravure();
+    var GP = require_gravure_plage();
+    var N = require_neon_naufrage();
+    var { neon } = require_neon_pont();
+    var { G, D_ } = require_theatre_pont();
+    var { HORIZON, RIVAGE, SOLEIL } = GP;
+    var { lumineux, enNeon, enCouleurs, plein, chemin, ENCRE, CYAN, ACIDE, MAGENTA } = N;
+    var ciel = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}E`);
+      return N.ciel(p, HORIZON, SOLEIL) + A.out(N.etoiles(60, 41, G, 120));
+    }, "ciel");
+    var soleil = /* @__PURE__ */ __name((p) => N.soleil(p, SOLEIL), "soleil");
+    var NUAGES = [[0, 60, "#FFB8D8"], [1, 134, "#FF8A70"]];
+    var RANGEES = [[HORIZON + 4, 3, 30, ["#4A7AB8", "#2A4A7A", "#14284A"], "#FFB8D8"], [HORIZON + 16, 4, 40, ["#2A7A9A", "#14405A", "#0A2238"], "#FFD0E0"], [HORIZON + 32, 6, 52, ["#1A6A7A", "#0A3A4A", "#06202A"], "#B8FFF0"], [HORIZON + 50, 8, 66, ["#0E5A6A", "#082E3A", "#04161E"], CYAN]];
+    function mer(p, lumiere = true) {
+      let s = RANGEES.map((r, i) => N.vague(`${p}r`, 10 + i, r)).join("");
+      const A = atelier(`${p}O`);
+      if (lumiere) for (let i = 0; i < 16; i++) {
+        const t = i / 16, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 30 * t + 8 * hash(i, 3), x = SOLEIL[0] + (hash(i, 5) - 0.5) * (14 + 60 * t);
+        s += lumineux(`M${f(x - w / 2)},${f(y)} L${f(x + w / 2)},${f(y - 0.6)}`, i % 3 ? "#FFB060" : MAGENTA, 0.8 + t * 1.2, 0.12);
+      }
+      return A.out(s);
+    }
+    __name(mer, "mer");
+    function plage(p) {
+      const A = atelier(`${p}P`);
+      let s = gravure(A, [...courbe((t) => [G + (D_ - G) * t, RIVAGE - 4 + 5 * Math.sin(t * 9)], 30), [D_, D_], [G, D_]], A.lin([[0, "#4A1A7A"], [1, "#1E0A40"]], 0, RIVAGE - 4, 0, RIVAGE + 40), { seed: 70, amp: 0.4, angle: 6, pas: 3, ombre: 0.3, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
+      s += `<ellipse cx="${SOLEIL[0]}" cy="${RIVAGE + 10}" rx="56" ry="12" fill="${A.rad([[0, "#FF8AC0", 0.7], [0.5, MAGENTA, 0.3], [1, MAGENTA, 0]], SOLEIL[0], RIVAGE + 10, 56)}"/>`;
+      const dentelle = courbe((t) => [G + (D_ - G) * t, RIVAGE + 3 + 4 * Math.sin(t * 13) + 1.6 * Math.sin(t * 47)], 60);
+      s += lumineux(chemin(dentelle), "#E8FFFA", 1.2, 0.16) + lumineux(chemin(dentelle.map(([x, y], k) => [x, y + 5 + 2 * Math.sin(k)])), CYAN, 0.6, 0.1);
+      const sec = [...courbe((t) => [G + (D_ - G) * t, RIVAGE + 22 + 8 * Math.sin(t * 5 + 1) + 3 * Math.sin(t * 17)], 34), [D_, D_], [G, D_]];
+      s += gravure(A, sec, A.lin([[0, "#3A1868"], [0.5, "#24104A"], [1, "#100626"]], 0, RIVAGE + 20, 0, D_), { seed: 72, amp: 0.6, angle: 14, pas: 3.2, ombre: 0.35, tailles: 2, tailleP: 5, portee: 0.4, dy: 4, lumiere: [-0.2, -1] });
+      s += lumineux(chemin(sec.slice(0, -2)), "#C870F0", 0.5, 0.08);
+      for (let i = 0; i < 40; i++) s += `<circle cx="${f(G + hash(i, 81) * (D_ - G))}" cy="${f(RIVAGE + 30 + hash(i, 83) * 180)}" r="${f(0.6 + hash(i, 85))}" fill="${i % 5 ? "#9A7AF0" : ACIDE}" opacity="0.6"/>`;
+      for (let i = 0; i < 14; i++) {
+        const x = G + hash(i, 91) * (D_ - G), y = RIVAGE + 6 + hash(i, 92) * 12;
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="4" fill="${A.rad([[0, CYAN, 0.5], [1, CYAN, 0]], x, y, 4)}"/><circle cx="${f(x)}" cy="${f(y)}" r="0.9" fill="#E8FFFA"/>`;
+      }
+      const coquillage = /* @__PURE__ */ __name((x, y, r, c) => gravure(A, courbe((t) => [x + r * Math.cos(Math.PI + t * Math.PI), y - r * 1.2 * Math.sin(t * Math.PI)], 10), c, { seed: x, amp: 0.15, tailles: 0, noir: false, trait: 1, portee: 0.3, dx: 1, dy: 1 }) + `<path d="M${x},${y} L${x},${f(y - r)} M${f(x - r * 0.5)},${y} L${f(x - r * 0.2)},${f(y - r * 0.9)} M${f(x + r * 0.5)},${y} L${f(x + r * 0.2)},${f(y - r * 0.9)}" stroke="${ENCRE}" stroke-width="0.6"/>`, "coquillage");
+      const etoile = /* @__PURE__ */ __name((x, y, r, a, c) => gravure(A, Array.from({ length: 10 }, (_, k) => {
+        const an = a + k / 10 * Math.PI * 2, rr = k % 2 ? r * 0.42 : r;
+        return [x + Math.cos(an) * rr, y + Math.sin(an) * rr * 0.7];
+      }), c, { seed: x + 7, amp: 0.2, tailles: 0, trait: 1.1, portee: 0.35, dx: 1, dy: 1, pas: 2 }), "etoile");
+      s += coquillage(150, 342, 5, "#FFD0EC") + coquillage(262, 368, 4, "#FF9AD0") + coquillage(60, 362, 4.4, "#FFD0EC") + etoile(232, 340, 10, 0.3, "#FF6A4A") + etoile(96, 384, 7, 1.1, MAGENTA);
+      for (const [x, y, k] of [[22, 322, 1.1], [304, 306, 0.8], [190, 380, 0.9]]) {
+        const d = `M${x},${y} q${f(6 * k)},${f(-4 * k)} ${f(14 * k)},${f(-1 * k)} t${f(12 * k)},${f(-2 * k)} t${f(10 * k)},${f(2 * k)}`;
+        s += `<path d="${d}" fill="none" stroke="${ENCRE}" stroke-width="${f(3.4 * k)}" stroke-linecap="round"/>` + lumineux(d, "#3AE8B0", 0.9 * k, 0.1);
+      }
+      for (const [x, y, rx, ry, i] of [[70, 346, 9, 5, 0], [330, 360, 12, 6, 1], [300, 322, 6, 3.4, 2], [380, 396, 10, 5, 3]]) s += gravure(A, courbe((t) => [x + rx * Math.cos(t * Math.PI * 2), y + ry * Math.sin(t * Math.PI * 2)], 14), "#4A3A8A", { seed: 90 + i, amp: 0.3, tailles: 0, trait: 1.2, portee: 0.4, dx: 1, dy: 2, pas: 2 });
+      return A.out(s);
+    }
+    __name(plage, "plage");
+    function vivant() {
+      let s = "";
+      for (let i = 0; i < 9; i++) {
+        const t = i / 9, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 8 + 26 * t, x = SOLEIL[0] + (hash(i, 15) - 0.5) * (16 + 60 * t), d = 1 + hash(i, 17) * 1.4;
+        s += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1.4 + 1.4 * t)}" fill="#FFF0F8" opacity="0"><animate attributeName="opacity" values="0;0.95;0" dur="${f(d)}s" begin="${f(-hash(i, 19) * d)}s" repeatCount="indefinite"/></rect>`;
+      }
+      s += `<g><animateMotion path="M-30,110 Q120,70 240,96 T460,60" dur="16s" repeatCount="indefinite"/><path d="M-8,0 Q-4,-4 0,0 Q4,-4 8,0" fill="none" stroke="${CYAN}" stroke-width="3.4" stroke-opacity="0.25" stroke-linecap="round"/><path d="M-8,0 Q-4,-4 0,0 Q4,-4 8,0" fill="none" stroke="#E8FFFA" stroke-width="1.4" stroke-linecap="round"><animateTransform attributeName="transform" type="scale" values="1 1;1 -0.5;1 1" dur="0.6s" repeatCount="indefinite"/></path></g>`;
+      for (const [x, y, d, beg, c] of [[60, 50, 2.2, 0, ACIDE], [170, 30, 2.8, 1, "#FFFFFF"], [330, 64, 2.4, 0.6, "#FFB8E8"], [380, 130, 3, 1.8, CYAN], [110, 118, 2.6, 1.2, "#FFFFFF"]]) s += `<path d="M${x - 4},${y} L${x + 4},${y} M${x},${y - 4} L${x},${y + 4}" stroke="${c}" stroke-width="1.2" stroke-linecap="round" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="${d}s" begin="${-beg}s" repeatCount="indefinite"/></path>`;
+      return s;
+    }
+    __name(vivant, "vivant");
+    var premier = /* @__PURE__ */ __name((p) => enNeon(() => enCouleurs(GP.premier(p))), "premier");
+    var regard = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}R`);
+      return A.out(plein(A.rad([[0, "#000", 0], [0.66, "#14062A", 0.22], [1, "#05010F", 0.72]], 200, 210, 300)));
+    }, "regard");
+    var DECOR = {
+      ciel: /* @__PURE__ */ __name((p) => ciel(p), "ciel"),
+      soleil: /* @__PURE__ */ __name((p) => soleil(p), "soleil"),
+      mer: /* @__PURE__ */ __name((p) => enNeon(() => mer(p)), "mer"),
+      "mer-soir": /* @__PURE__ */ __name((p) => enNeon(() => mer(`${p}s`, false)), "mer-soir"),
+      plage: /* @__PURE__ */ __name((p) => enNeon(() => plage(p)), "plage"),
+      nuage0: /* @__PURE__ */ __name((p) => N.strate(p, 0, NUAGES[0][1], NUAGES[0][2]), "nuage0"),
+      nuage1: /* @__PURE__ */ __name((p) => N.strate(p, 1, NUAGES[1][1], NUAGES[1][2]), "nuage1"),
+      flou: /* @__PURE__ */ __name((p) => ciel(p) + enNeon(() => mer(p) + plage(p)), "flou"),
+      premier: /* @__PURE__ */ __name((p) => premier(p), "premier"),
+      regard: /* @__PURE__ */ __name((p) => regard(p), "regard"),
+      teinte: /* @__PURE__ */ __name((p) => N.vignette(p), "teinte")
+    };
+    var OBJETS = /* @__PURE__ */ __name(() => {
+      const g = GP.greve01().plans, c = GP.carte01().plans;
+      return { epave: g.find((q) => q.id === "epave"), tache: c.find((q) => q.id === "tache"), premier: g.find((q) => q.id === "premier") };
+    }, "OBJETS");
+    function memesObjets(plans) {
+      const O = OBJETS(), a = /* @__PURE__ */ __name((id2) => plans.some((q) => q.id === id2), "a"), apres = /* @__PURE__ */ __name((id2, q) => plans.splice(plans.findIndex((k) => k.id === id2) + 1, 0, q), "apres");
+      if (!a("epave")) apres("plage", O.epave);
+      if (!a("tache")) apres("epave", O.tache);
+      if (!a("premier")) plans.splice(plans.findIndex((q) => q.id === "sable-pres" || q.id === "regard"), 0, O.premier);
+    }
+    __name(memesObjets, "memesObjets");
+    var recolore = /* @__PURE__ */ __name((svg) => svg.replace(/(?<!url\()(?<!href=")#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g, (c) => neon(c)), "recolore");
+    var hexHsl = /* @__PURE__ */ __name((hex) => {
+      const n = hex.length === 4 ? [1, 2, 3].map((i) => parseInt(hex[i] + hex[i], 16) / 255) : [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255), [r, g, b] = n, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      if (!d) return [0, 0, l];
+      const sa = d / (1 - Math.abs(2 * l - 1)), h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      return [(h * 60 + 360) % 360, sa, l];
+    }, "hexHsl");
+    var hslHex = /* @__PURE__ */ __name((h, sa, l) => {
+      const c = (1 - Math.abs(2 * l - 1)) * sa, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2, [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }, "hslHex");
+    function ravive(hex) {
+      const [h, sa, l] = hexHsl(hex);
+      if (l < 0.16) return hslHex(258, 0.55, Math.max(0.06, l));
+      if (sa < 0.06) return hslHex(255, 0.18, l);
+      return hslHex(h, Math.min(1, sa + 0.25, sa * 1.4 + 0.08), l);
+    }
+    __name(ravive, "ravive");
+    var ravivee = /* @__PURE__ */ __name((svg) => svg.replace(/(?<!url\()(?<!href=")#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g, (c) => ravive(c)), "ravivee");
+    var LUMIERES = {
+      couchant: { ambiance: "#2A0A5A", eclat: "#FF7AB0", lisere: "#FFA8D0", force: 1.1 },
+      nuit: { ambiance: "#140A48", eclat: "#7AB8FF", lisere: "#7AF8EE", force: 1.3 },
+      matin: { ambiance: "#3A1A6A", eclat: "#FFC8D8", lisere: "#FFD8E8" },
+      feu: { ambiance: "#1A0A40", eclat: "#FF9A40", lisere: "#FFB070", force: 1.15 },
+      jour: { ambiance: "#3A2A7A", eclat: "#FFE8F4", lisere: "#B8FFF4", force: 0.7 }
+    };
+    var PERSONNAGES = /* @__PURE__ */ new Set(["lorena"]);
+    function enNeonScene(scene2, p, propres = {}, plage2 = false, decor = true, lumiere = "couchant") {
+      const sc = scene2();
+      if (plage2) memesObjets(sc.plans);
+      if (sc.partition.lumiere || sc.plans.some((q) => q.id === "avatar")) sc.partition.lumiere = { cote: (sc.partition.lumiere || {}).cote || 1, ...LUMIERES[lumiere], neon: true };
+      for (const pl of sc.plans) {
+        const d = pl.dessin, a = propres[pl.id] || (decor || pl.id === "teinte" ? DECOR[pl.id] : null);
+        if (pl.id === "anime") {
+          if (d && !propres.anime) pl.dessin = () => recolore(d());
+          continue;
+        }
+        if (!d) continue;
+        const perso = PERSONNAGES.has(pl.id) || PERSONNAGES.has(pl.imageDe);
+        pl.dessin = a ? () => a(p) : perso ? () => enNeon(() => ravivee(d())) : () => enNeon(() => recolore(d()));
+        if (!decor) continue;
+        if (/^nuage\d$/.test(pl.id)) pl.cadre = [G - 100, NUAGES[+pl.id.slice(-1)][1] - 24, D_ - G + 200, 34];
+        if (pl.id === "soleil") pl.cadre = [SOLEIL[0] - 200, SOLEIL[1] - 200, 400, 400];
+      }
+      const anime = sc.plans.find((q) => q.id === "anime");
+      if (anime && propres.anime) anime.dessin = propres.anime;
+      return sc;
+    }
+    __name(enNeonScene, "enNeonScene");
+    function sablePres(p, empreinte = false) {
+      const A = atelier(`${p}Z`);
+      let s = gravure(A, [[G, G], [D_, G], [D_, D_], [G, D_]], A.lin([[0, "#3A1868"], [1, "#14062E"]], 0, G, 140, D_), { seed: 320, amp: 0, angle: 10, pas: 3.6, ombre: 0.4, tailles: 0, portee: 0, trait: 0, lumiere: [-0.5, -0.85] });
+      for (let i = 0; i < 10; i++) {
+        const y = G + 10 + i * 48, ride = courbe((t) => [G + (D_ - G) * t, y + 7 * Math.sin(t * 8 + i) + 4 * Math.sin(t * 21)], 40);
+        s += gravure(A, [...ride, ...ride.slice().reverse().map(([x, yy]) => [x, yy + 12])], i % 2 ? "#4A2080" : "#3E1A70", { seed: 321 + i, amp: 0.4, angle: 6, pas: 2.6, ombre: 0.4, tailles: 0, trait: 1.2, portee: 0.3, dy: 2, lumiere: [0, -1] }) + lumineux(chemin(ride), i % 3 ? "#9A6AF0" : MAGENTA, 0.4, 0.06);
+      }
+      for (let i = 0; i < 30; i++) s += `<circle cx="${f(G + hash(i, 81) * (D_ - G))}" cy="${f(G + hash(i, 83) * (D_ - G))}" r="${f(0.8 + 1.4 * hash(i, 85))}" fill="${hash(i, 87) < 0.5 ? "#FFD0EC" : "#7A5AE0"}" stroke="${ENCRE}" stroke-width="0.5"/>`;
+      s += gravure(A, courbe((t) => [60 + 12 * Math.cos(Math.PI + t * Math.PI), 340 - 14 * Math.sin(t * Math.PI)], 10), "#FFD0EC", { seed: 340, amp: 0.2, tailles: 0, noir: false, trait: 1.2, portee: 0.4 }) + `<path d="M330,350 q16,-10 34,-2 t30,-4" fill="none" stroke="${ENCRE}" stroke-width="7" stroke-linecap="round"/>` + lumineux("M330,350 q16,-10 34,-2 t30,-4", "#3AE8B0", 1.6, 0.1);
+      if (empreinte) s += `<g transform="translate(200 206) rotate(-14) translate(-130 -84)"><path d="M0,0 L260,0 L260,140 L246,150 L252,158 L240,168 L0,168 Z" fill="#0A0420" opacity="0.5"/></g>`;
+      return A.out(s);
+    }
+    __name(sablePres, "sablePres");
+    function ecumeBord(p) {
+      const A = atelier(`${p}U`), bord = courbe((t) => [G + (D_ - G) * t, 34 + 10 * Math.sin(t * 7 + 1) + 5 * Math.sin(t * 19)], 60);
+      return A.out(gravure(A, [[G, G - 60], [D_, G - 60], ...bord.slice().reverse()], A.lin([[0, "#04202A"], [1, "#0E6A7A"]], 0, G - 60, 0, 40), { seed: 350, amp: 0.4, angle: 4, pas: 3, tailles: 0, trait: 1.4, portee: 0.4, dy: 3, lumiere: [0, -1] }) + lumineux(chemin(bord), "#E8FFFA", 1.3, 0.16) + lumineux(chemin(bord.map(([x, y], k) => [x, y - 6 - 3 * Math.abs(Math.sin(k * 0.9))])), CYAN, 0.7, 0.1));
+    }
+    __name(ecumeBord, "ecumeBord");
+    var TACHE = [128, 296];
+    var vivantTache = /* @__PURE__ */ __name(() => `<circle cx="${TACHE[0] + 4}" cy="${TACHE[1] - 2}" r="2.4" fill="${ACIDE}"><animate attributeName="opacity" values="0.2;1;0.4;0.2" dur="1.6s" repeatCount="indefinite"/><animate attributeName="r" values="1.4;3.4;1.8;1.4" dur="1.6s" repeatCount="indefinite"/></circle><path d="M${TACHE[0] + 4},${TACHE[1] - 9} v14 M${TACHE[0] - 3},${TACHE[1] - 2} h14" stroke="#FFFFFF" stroke-width="1" opacity="0"><animate attributeName="opacity" values="0;0;0.9;0" keyTimes="0;0.5;0.6;1" dur="3.2s" repeatCount="indefinite"/></path>`, "vivantTache");
+    function vent() {
+      let s = "";
+      for (let i = 0; i < 6; i++) {
+        const y = 40 + i * 62, d = 1.4 + hash(i, 2);
+        s += `<path d="M-60,${y} q60,-16 120,0 t120,-4" fill="none" stroke="#B8FFF4" stroke-width="2" stroke-linecap="round" opacity="0.7"><animateTransform attributeName="transform" type="translate" from="-80 20" to="480 -60" dur="${f(d)}s" begin="${f(-hash(i, 3) * d)}s" repeatCount="indefinite"/></path>`;
+      }
+      let grains = "";
+      for (let i = 0; i < 40; i++) grains += `<circle cx="${f(hash(i, 5) * 400)}" cy="${f(hash(i, 6) * 400)}" r="${f(0.8 + hash(i, 7))}"/>`;
+      return s + `<g fill="#FFD0EC" stroke="${ENCRE}" stroke-width="0.4"><animateTransform attributeName="transform" type="translate" from="-400 30" to="0 0" dur="1.2s" repeatCount="indefinite"/>${grains}<g transform="translate(400 -30)">${grains}</g></g>`;
+    }
+    __name(vent, "vent");
+    var paupieres01 = /* @__PURE__ */ __name(() => enNeonScene(GP.paupieres01, "np", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }, true), "paupieres01");
+    var greve01 = /* @__PURE__ */ __name(() => enNeonScene(GP.greve01, "ng", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }, true), "greve01");
+    var carte01 = /* @__PURE__ */ __name(() => enNeonScene(GP.carte01, "nc", { anime: /* @__PURE__ */ __name(() => vivant() + vivantTache(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p)), "sable-pres"), ecume: /* @__PURE__ */ __name((p) => enNeon(() => ecumeBord(p)), "ecume") }, true), "carte01");
+    var tampon00 = /* @__PURE__ */ __name(() => enNeonScene(GP.tampon00, "nt", { anime: /* @__PURE__ */ __name(() => vent(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p, true)), "sable-pres") }), "tampon00");
+    module.exports = { paupieres01, greve01, carte01, tampon00, enNeonScene, recolore, ravivee, LUMIERES };
+  }
+});
+
+// atelier/gravure_cercle.js
+var require_gravure_cercle = __commonJS({
+  "atelier/gravure_cercle.js"(exports, module) {
+    var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
+    var { atelier, gravure, trait: trait2, ovale, ENCRE } = require_gravure();
+    var { balance, teinte, navire, MARGE, G, D_ } = require_theatre_pont();
+    var { unTemps } = require_gravure_plage();
+    var { flamePath } = require_brume();
+    var R = require_gravure_rencontre();
+    var V = require_gravure_vent();
+    var C0 = [236, 318];
+    var LISIERE = 262;
+    function herbe(p) {
+      const A = atelier(`${p}h`);
+      const bord = courbe((t) => [G + (D_ - G) * t, LISIERE + 5 * Math.sin(t * 9 + 1) + 3 * Math.sin(t * 23)], 50);
+      let s = gravure(A, [...bord, [D_, D_ + 20], [G, D_ + 20]], A.lin([[0, "#5A7A4A"], [0.4, "#3E5E36"], [1, "#1E3420"]], 0, LISIERE, 0, D_), { seed: 760, amp: 0.4, angle: 16, pas: 2.6, ombre: 0.3, tailles: 2, tailleP: 4, trait: 2.2, portee: 0, lumiere: [0.3, -1] });
+      const touffes = [];
+      for (let i = 0; i < 40; i++) {
+        const x = G + 10 + hash(i, 71) * (D_ - G - 20), y = LISIERE + 12 + hash(i, 73) ** 0.85 * (D_ - LISIERE - 10);
+        if (Math.hypot((x - C0[0]) / 104, (y - C0[1]) / 34) < 1) continue;
+        touffes.push([x, y, 0.5 + (y - LISIERE) / 140]);
+      }
+      for (const [x, y, k] of touffes.sort((a, b) => a[1] - b[1])) {
+        const pts5 = [[x - 7 * k, y], [x - 11 * k, y - 11 * k], [x - 3 * k, y - 4 * k], [x - 1 * k, y - 17 * k], [x + 2.5 * k, y - 4 * k], [x + 10 * k, y - 13 * k], [x + 7 * k, y]];
+        s += gravure(A, pts5, "#6E9A56", { seed: 780 + Math.round(x), amp: 0.2, angle: 70, pas: 1.8, ombre: 0.45, tailles: 0, trait: 1.3, portee: 0.3, dy: 2, lumiere: [0.3, -1] });
+      }
+      for (let i = 0; i < 14; i++) {
+        const x = G + 20 + hash(i, 75) * (D_ - G - 40), y = LISIERE + 16 + hash(i, 77) * (D_ - LISIERE - 30);
+        if (Math.hypot((x - C0[0]) / 110, (y - C0[1]) / 38) < 1) continue;
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.6 + hash(i, 79))}" fill="${i % 3 ? "#E6DCB0" : "#C8B4D8"}" stroke="${ENCRE}" stroke-width="0.7"/>`;
+      }
+      return A.out(s);
+    }
+    __name(herbe, "herbe");
+    var PIERRES = Array.from({ length: 11 }, (_, i) => {
+      const a = i / 11 * Math.PI * 2 + 0.3;
+      return [C0[0] + 84 * Math.cos(a), C0[1] + 26 * Math.sin(a), 8 + 4 * hash(i, 81), a];
+    });
+    function pierres(p, devant) {
+      const A = atelier(`${p}p${devant ? "d" : "f"}`);
+      let s = "";
+      if (!devant) s += gravure(A, ovale(C0[0], C0[1] + 2, 54, 15, 22), "#2A2422", { seed: 800, amp: 0.6, angle: 10, pas: 2.2, tailles: 1, trait: 1.6, portee: 0, noir: false }) + [[220, 318], [244, 322], [232, 314], [252, 316]].map(([x, y], k) => `<path d="M${x - 6},${y} l12,${k % 2 ? -2 : 2}" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round"/>`).join("");
+      for (const [x, y, r, a] of PIERRES.filter(([, y2]) => y2 > C0[1] === devant).sort((u, v) => u[1] - v[1])) {
+        const k = 0.75 + 0.25 * Math.sin(a);
+        s += gravure(A, ovale(x, y - r * 0.4 * k, r * k * 1.15, r * k * 0.75, 12, hash(Math.round(x), 3)), A.lin([[0, "#5A5560"], [0.55, "#3A363E"], [1, "#1A1618"]], 0, y - r, 0, y + r * 0.4), { seed: 820 + Math.round(x), amp: 0.5, angle: 40, pas: 2, ombre: 0.35, tailles: 1, tailleP: 2, trait: 1.8, portee: 0.4, dy: 3, lumiere: [0.4, -0.9] });
+      }
+      return A.out(s);
+    }
+    __name(pierres, "pierres");
+    function flammes(p, orange) {
+      const A = atelier(`${p}${orange ? "o" : "g"}`), [x, y] = C0;
+      const ext = orange ? A.lin([[0, "#F2C24E"], [1, "#D8602A"]], 0, y - 60, 0, y) : A.lin([[0, "#E8F2F8"], [1, "#A8C4D8"]], 0, y - 60, 0, y);
+      const int = orange ? "#FFE8A0" : "#F4FAFF";
+      let s = "";
+      for (const [dx, r, sway] of [[-18, 11, -4], [16, 10, 5], [0, 15, 2]]) s += `<path d="${flamePath(x + dx, y - r, r, sway)}" fill="${ext}" stroke="${ENCRE}" stroke-width="2.2" stroke-linejoin="round"/><path d="${flamePath(x + dx, y - r * 0.7, r * 0.5, sway * 0.6)}" fill="${int}" stroke="${ENCRE}" stroke-width="1" stroke-linejoin="round"/>`;
+      return A.out(s);
+    }
+    __name(flammes, "flammes");
+    var DANSEURS = [[150, 300, 1, "haut"], [190, 288, 0.9, "large"], [282, 286, 0.9, "haut"], [326, 302, 1, "large"], [118, 330, 1.1, "large"], [356, 334, 1.1, "haut"]];
+    function danseur(p, i) {
+      const [x, y, k, bras] = DANSEURS[i], A = atelier(`${p}d${i}`);
+      const corps = [[x - 10 * k, y], [x - 6 * k, y - 30 * k], [x + 6 * k, y - 30 * k], [x + 10 * k, y]];
+      let s = gravure(A, corps, "#D8E6EE", { seed: 840 + i, amp: 0.4, angle: 60, pas: 2.2, ombre: 0.5, tailles: 0, trait: 1.8, portee: 0, lumiere: [-0.5, -0.8] });
+      const bd = bras === "haut" ? `M${x - 5 * k},${y - 27 * k} q-8,-8 -6,-20 M${x + 5 * k},${y - 27 * k} q8,-8 6,-20` : `M${x - 5 * k},${y - 26 * k} q-12,0 -16,-8 M${x + 5 * k},${y - 26 * k} q12,0 16,-8`;
+      s += trait2(bd, 4.4 * k, ENCRE) + trait2(bd, 2.2 * k, "#D8E6EE");
+      s += gravure(A, ovale(x, y - 38 * k, 7 * k, 7.6 * k, 14), "#E2EEF4", { seed: 850 + i, amp: 0.2, angle: 60, pas: 2, ombre: 0.55, tailles: 0, trait: 1.8, portee: 0, lumiere: [-0.5, -0.8] });
+      return A.out(s);
+    }
+    __name(danseur, "danseur");
+    var BCE = [262, 268];
+    var S_BCE = 2;
+    function grande(p) {
+      const A = atelier(`${p}g`), [x, y] = BCE;
+      return A.out(`<path d="${flamePath(x, y - 70, 52, 8)}" fill="${A.lin([[0, "#EAF6FF", 0.55], [1, "#9EC4DC", 0.2]], 0, y - 180, 0, y)}" stroke="${ENCRE}" stroke-width="2.4" stroke-linejoin="round" opacity="0.7"/>`);
+    }
+    __name(grande, "grande");
+    var NAVIRE = [306, 190];
+    var navireLoin = /* @__PURE__ */ __name((p) => `<g transform="translate(${NAVIRE[0]} ${NAVIRE[1]}) rotate(7) scale(0.26) translate(-205 -262)">${navire(`${p}n`)}</g>`, "navireLoin");
+    var sienne = /* @__PURE__ */ __name((p) => R.filets(`${p}s`, 6, [[BCE[0] - 70, BCE[1] - 10, 90, 3, 6], [BCE[0] + 6, BCE[1] + 6, 80, 3, 6]]), "sienne");
+    var PIEDS_CERCLE = [126, 384];
+    function decorCercle(p, souvenirs, auLarge = []) {
+      const base = V.decorApres(p, { livre: null, nuitee: true, anime: /* @__PURE__ */ __name(() => "", "anime") }).filter((q) => !["rocher", "anime"].includes(q.id));
+      base.splice(base.findIndex((q) => q.id === "voile0"), 0, ...auLarge);
+      base.splice(base.findIndex((q) => q.id === "nuit"), 0, { id: "herbe", profondeur: 0.58, marge: MARGE, dessin: /* @__PURE__ */ __name(() => herbe(p), "dessin") });
+      return [
+        ...base,
+        { id: "flaque", profondeur: 0.62, cadre: [130, 290, 212, 60], dessin: /* @__PURE__ */ __name(() => {
+          const A = atelier(`${p}q`);
+          return A.out(R.flaque(`${p}q`, [C0[0], C0[1] + 4], 100));
+        }, "dessin") },
+        { id: "pierres-fond", profondeur: 0.62, cadre: [130, 270, 212, 70], dessin: /* @__PURE__ */ __name(() => pierres(p, false), "dessin") },
+        ...souvenirs,
+        { id: "pierres-devant", profondeur: 0.62, cadre: [130, 300, 212, 70], dessin: /* @__PURE__ */ __name(() => pierres(p, true), "dessin") },
+        null,
+        { id: "avatar", profondeur: 0.7, pivot: PIEDS_CERCLE },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => R.lumiereFroide(p, BCE), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+    }
+    __name(decorCercle, "decorCercle");
+    var nuitFixe = /* @__PURE__ */ __name((plans, D) => ({
+      ...R.soirDe(plans, D, 1, 1),
+      voile0: [[0, { o: 0.78 }], [D, { o: 0.78 }]],
+      filets0: [[0, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }], [D, { ...R.soir(1).filets0, x: R.soir(1).filets0.x + 30 }]],
+      nuit: [[0, { o: 0.4 }], [D, { o: 0.4 }]],
+      etoiles: [[0, { o: 1 }], [D, { o: 1 }]]
+    }), "nuitFixe");
+    var LARGE = { x: 6, y: 6, z: 1.06 };
+    var SUR_CERCLE = { x: 30, y: 26, z: 1.2 };
+    var SUR_BRUME = { x: 40, y: 10, z: 1.28 };
+    var SUR_AVATAR = { x: -20, y: 24, z: 1.24 };
+    function cercle05() {
+      const p = "ce", D0 = 4600;
+      const souvenirs = [
+        { id: "flammes", profondeur: 0.62, cadre: [196, 250, 80, 72], pivot: C0, dessin: /* @__PURE__ */ __name(() => flammes(p, false), "dessin") },
+        { id: "flammes-orange", profondeur: 0.62, cadre: [196, 250, 80, 72], pivot: C0, dessin: /* @__PURE__ */ __name(() => flammes(p, true), "dessin") },
+        ...DANSEURS.map(([x, y, k], i) => ({ id: `danseur${i}`, profondeur: 0.62, cadre: [x - 34 * k, y - 60 * k, 68 * k, 66 * k], pivot: [x, y], dessin: /* @__PURE__ */ __name(() => danseur(p, i), "dessin") }))
+      ];
+      const plans = decorCercle(p, souvenirs);
+      const idx = DANSEURS.map((d, i) => `danseur${i}`), cache = /* @__PURE__ */ __name((D) => Object.fromEntries(idx.map((id2) => [id2, [[0, { o: 0 }], [D, { o: 0 }]]])), "cache");
+      const t0 = { ...unTemps(D0, [[0, { x: 20, y: -20, z: 1.1 }], [D0, LARGE]], {
+        ...nuitFixe(plans.filter(Boolean), D0),
+        ...Object.fromEntries(idx.map((id2, i) => [id2, [[0, { o: 0 }], [2600 + i * 150, { o: 0 }], [D0, { o: 0.4 }]]])),
+        flammes: [[0, { o: 0, s: 0.8 }], [1800, { o: 0, s: 0.8 }], [3e3, { o: 0.55, s: 1 }], [D0, { o: 0.5, s: 1 }]],
+        "flammes-orange": [[0, { o: 0 }], [D0, { o: 0 }]],
+        brume: [[0, { x: 20, y: -150, s: 0.9 }], [1400, { x: 0, y: 0, s: 1, e: "ease-out" }], [D0, { x: 0, y: 0 }]],
+        avatar: [[0, { x: -70, y: -8, s: 0.96 }], [1400, { x: 0, y: 0, s: 1, e: "linear" }], [D0, { x: 0, y: 0 }]]
+      }), acteur: R.joue([0, "marche", "bas_droite"], [1400, "arret", "bas_droite"], [1920, "repos", "bas_droite"]), jeux: { brume: V.B([0, "content"]) } };
+      const danse = /* @__PURE__ */ __name((D, i, o) => balance(0, D, 700 + i * 90, (k) => ({ x: (k % 2 ? 6 : -6) * (i % 2 ? 1 : -1), y: k % 2 ? -7 : 0, r: (k % 2 ? 8 : -8) * (i % 2 ? -1 : 1), o })), "danse");
+      const temps = V.repliques(t0, [
+        // « Ils parlaient, dansaient, chantaient, riaient. … Et parfois, plus tristement. » : ils dansent ; à la fin, plus lents
+        [5600, SUR_CERCLE, R.joue([0, "repos", "bas_droite"]), V.B([0, "content"], [4200, "triste"]), { ...Object.fromEntries(idx.map((id2, i) => [id2, danse(5600, i, 0.6)])), flammes: [[0, { o: 0.5, s: 1 }], [700, { o: 0.7, s: 1.08 }], [1400, { o: 0.55, s: 0.96 }], [2100, { o: 0.7, s: 1.08 }], [2800, { o: 0.55, s: 0.96 }], [3500, { o: 0.65, s: 1.04 }], [5600, { o: 0.45, s: 0.96 }]] }],
+        // « C'était un vrai lieu de vie. Je m'en souviens si peu, et tellement à la fois… » : ils s'effacent en montant
+        [5e3, SUR_BRUME, R.joue([0, "repos", "bas_droite"]), V.B([0, "triste"], [3e3, "gene"]), { ...Object.fromEntries(idx.map((id2, i) => [id2, [[0, { o: 0.6 }], [600 + i * 260, { o: 0.6, y: 0 }], [2600 + i * 260, { o: 0, y: -26 }], [5e3, { o: 0, y: -26 }]]])), flammes: [[0, { o: 0.45 }], [3600, { o: 0.15 }], [5e3, { o: 0.15 }]], brume: [[0, { x: 0, y: 0 }], [3e3, { x: 0, y: 10, s: 0.94 }], [5e3, { x: 0, y: 10, s: 0.94 }]] }],
+        // « Pas grave ! Regarde : c'est ici que dansaient les flammes orange. Tu pourrais peut-être les refaire ? » : elle se
+        // ressaisit, file au milieu du cercle ; les flammes orange s'y rallument un instant, puis s'éteignent ; il s'approche
+        [4600, SUR_CERCLE, R.joue([0, "repos", "bas_droite"], [1600, "marche", "bas_droite"], [2500, "arret", "bas_droite"], [3020, "repos", "bas_droite"]), V.B([0, "gene"], [400, "content"]), { ...cache(4600), flammes: [[0, { o: 0.15 }], [800, { o: 0 }], [4600, { o: 0 }]], "flammes-orange": [[0, { o: 0, s: 0.7 }], [900, { o: 0, s: 0.7, e: "ease-out" }], [1500, { o: 0.9, s: 1.06 }], [2600, { o: 0.75, s: 0.98 }], [3600, { o: 0, s: 0.9 }], [4600, { o: 0 }]], brume: [[0, { x: 0, y: 10, s: 0.94 }], [400, { x: 0, y: -8, s: 1, e: "ease-in" }], [1300, { x: C0[0] - BCE[0], y: C0[1] - 52 - BCE[1], s: 1 }], [4600, { x: C0[0] - BCE[0], y: C0[1] - 52 - BCE[1], s: 1 }]], avatar: [[0, { x: 0, y: 0 }], [1600, { x: 0, y: 0, e: "linear" }], [2500, { x: 26, y: -6, s: 0.98 }], [4600, { x: 26, y: -6, s: 0.98 }]] }]
+      ]);
+      plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
+      return V.fin(plans, temps, V.NUIT, { brume: [3e3, { y: -4 }] });
+    }
+    __name(cercle05, "cercle05");
+    function promesse05() {
+      const p = "pr", D0 = 4600;
+      const plans = decorCercle(p, [
+        { id: "grande", profondeur: 0.64, cadre: [190, 60, 144, 220], pivot: BCE, dessin: /* @__PURE__ */ __name(() => grande(p), "dessin") },
+        { id: "sienne", profondeur: 0.66, cadre: [-100, BCE[1] - 40, 600, 70], dessin: /* @__PURE__ */ __name(() => sienne(p), "dessin") }
+      ], [{ id: "navire", profondeur: 0.3, cadre: [240, 130, 130, 80], pivot: NAVIRE, dessin: /* @__PURE__ */ __name(() => navireLoin(p), "dessin") }]);
+      const derive = /* @__PURE__ */ __name((D, k) => [[0, { ...N[k], e: "linear" }], [D, N[k + 1]]], "derive");
+      const N = [{ x: 40, y: -4, s: 0.85, o: 0 }, { x: 22, y: -2, s: 0.92 }, { x: 10, y: 0, s: 0.98 }, { x: 0, y: 2, s: 1.03 }, { x: -8, y: 3, s: 1.07 }, { x: -14, y: 4, s: 1.1 }];
+      const t0 = { ...unTemps(D0, [[0, LARGE], [1200, LARGE], [D0, { x: 30, y: -40, z: 1.14 }]], {
+        ...nuitFixe(plans.filter(Boolean), D0),
+        navire: [[0, { ...N[0], e: "ease-out" }], [1600, { x: 34, y: -3, s: 0.88, o: 1, e: "linear" }], [D0, N[1]]],
+        grande: [[0, { o: 0, s: 0.8 }], [D0, { o: 0, s: 0.8 }]],
+        sienne: [[0, { o: 0, x: 0 }], [D0, { o: 0, x: 0 }]],
+        brume: [[0, { x: 0, y: 0 }], [D0, { x: 0, y: 0 }]]
+      }), acteur: R.joue([0, "repos", "bas_droite"], [900, "repos", "haut_droite"]), jeux: { brume: V.B([0, "curieuse"]) } };
+      const temps = V.repliques(t0, [
+        // « Tu es Brume, non ? Tu ne pourrais pas, justement, faire s'en aller la brume ? » : il se retourne vers elle
+        [4200, SUR_AVATAR, R.joue([0, "repos", "bas_droite"], [600, "pose_pointe", "bas_droite", "neutre"], [2600, "repos", "bas_droite"]), V.B([0, "curieuse"], [2400, "surpris"]), { navire: derive(4200, 1) }],
+        // « Oui… Pardon pour ça. Il y a longtemps que j'ai oublié comment la retenir. » : elle baisse, sa brume lui échappe
+        [4600, SUR_BRUME, R.joue([0, "repos", "bas_droite"]), V.B([0, "gene"]), { navire: derive(4600, 2), brume: [[0, { x: 0, y: 0 }], [1200, { x: 0, y: 12, s: 0.94 }], [4600, { x: 0, y: 12, s: 0.94 }]], sienne: [[0, { o: 0, x: 0 }], [600, { o: 0, x: 0 }], [1800, { o: 0.8, x: 20 }], [4600, { o: 0.5, x: 70 }]] }],
+        // « J'ai perdu la mémoire. Et le reste avec. Avant, j'étais plus grande. Bien plus forte aussi. » : derrière elle, sa
+        // grande flamme d'autrefois se lève, pâle, puis s'efface
+        [5200, { x: 34, y: -6, z: 1.16 }, R.joue([0, "repos", "bas_droite"]), V.B([0, "triste"]), { navire: derive(5200, 3), sienne: [[0, { o: 0.5, x: 70 }], [1500, { o: 0, x: 110 }], [5200, { o: 0, x: 110 }]], grande: [[0, { o: 0, s: 0.8 }], [1600, { o: 0, s: 0.8, e: "ease-out" }], [2800, { o: 0.85, s: 1 }], [4200, { o: 0.7, s: 1.02 }], [5200, { o: 0, s: 1.06 }]] }],
+        // « Euh… D'accord. Écoute, ce n'est pas grave. Déjà, installons-nous. » : il hausse les épaules ; elle remonte, rassurée
+        [4400, LARGE, R.joue([0, "pose_hausse", "bas_droite", "neutre"], [2e3, "repos", "bas_droite"]), V.B([0, "triste"], [1800, "content"]), { navire: derive(4400, 4), brume: [[0, { x: 0, y: 12, s: 0.94 }], [1800, { x: 0, y: 12, s: 0.94, e: "ease-out" }], [2600, { x: 0, y: 0, s: 1 }], [4400, { x: 0, y: 0, s: 1 }]] }]
+      ]);
+      plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
+      return V.fin(plans, temps, V.NUIT, { brume: [3e3, { y: -4 }], navire: [2600, { y: -1, r: 2 }] });
+    }
+    __name(promesse05, "promesse05");
+    module.exports = { cercle05, promesse05 };
+  }
+});
+
+// atelier/neon_jeu.js
+var require_neon_jeu = __commonJS({
+  "atelier/neon_jeu.js"(exports, module) {
+    var GR = require_gravure_rencontre();
+    var GV = require_gravure_vent();
+    var GC = require_gravure_cercle();
+    var GL = require_gravure_lorena();
+    var { enNeonScene } = require_neon_reveil();
+    var { melange } = require_neon_naufrage();
+    var CINEMATIQUES = [
+      ["02_plage", GR.plage02, "n2p"],
+      ["02_lueur", GR.lueur02, "n2l"],
+      ["02_approche", GR.approche02, "n2a"],
+      ["02_rocher", GR.rocher02, "n2r"],
+      ["03_livre", GV.livre03, "n3l"],
+      ["03_vent", GV.vent03, "n3v"],
+      ["03_trouee", GV.trouee03, "n3t", true, "nuit"],
+      ["03_ciel", GV.ciel03, "n3c", true, "nuit"],
+      ["03_nuit", GV.nuit03, "n3n", true, "nuit"],
+      ["05_cercle", GC.cercle05, "n5c", true, "nuit"],
+      ["05_promesse", GC.promesse05, "n5p", true, "nuit"],
+      ["10_epave", GL.epave10, "nae", false, "matin"],
+      ["10_aster", GL.aster10, "naa", false, "matin"]
+    ];
+    var NUIT = "#0A0420";
+    var SOMBRES = /* @__PURE__ */ new Set(["herbe"]);
+    var assombrit = /* @__PURE__ */ __name((svg) => svg.replace(/(?<!url\()(?<!href=")#[0-9a-fA-F]{6}\b/g, (c) => melange(c, NUIT, 0.45)), "assombrit");
+    function cinematique(scene2, p, decor, lumiere) {
+      const sc = enNeonScene(scene2, p, {}, false, decor, lumiere);
+      for (const pl of sc.plans) if (SOMBRES.has(pl.id)) {
+        const d = pl.dessin;
+        pl.dessin = () => assombrit(d());
+      }
+      return sc;
+    }
+    __name(cinematique, "cinematique");
+    var cinematiques = CINEMATIQUES.map(([id2, scene2, p, decor = true, lumiere = "couchant"]) => [id2, () => cinematique(scene2, p, decor, lumiere)]);
+    module.exports = { cinematiques };
+  }
+});
+
 // atelier/porte_phare.js
 var require_porte_phare = __commonJS({
   "atelier/porte_phare.js"(exports, module) {
     var { Defs, vaVient, boucle, defile, hash, f, W: W2 } = require_ouverture();
-    var { ombrePapier, plan, grain } = require_papier();
+    var { ombrePapier, plan, grain, rugueux, courbe, piece, papiers, spirale, volute } = require_papier();
     var { vif } = require_figer();
     var POUSSIERES_VIVES = 7;
     var OUT4 = "#1E1A22";
     var LUEUR = "#C8F4EE";
-    function rugueux(pts5, amp = 1.4, seed = 1, pas = 7) {
-      const out = [];
-      for (let i = 0; i < pts5.length; i++) {
-        const [ax, ay] = pts5[i], [bx, by] = pts5[(i + 1) % pts5.length], l = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(l / pas));
-        const nx = -(by - ay) / (l || 1), ny = (bx - ax) / (l || 1);
-        for (let k = 0; k < n; k++) {
-          const t = k / n, e = (hash(seed * 31 + i, k) - 0.5) * 2 * amp;
-          out.push([ax + (bx - ax) * t + nx * e, ay + (by - ay) * t + ny * e]);
-        }
-      }
-      return `M${out.map(([x, y]) => `${f(x)},${f(y)}`).join(" L")} Z`;
-    }
-    __name(rugueux, "rugueux");
-    var courbe = /* @__PURE__ */ __name((fn, n = 24) => Array.from({ length: n + 1 }, (_, k) => fn(k / n)), "courbe");
-    function piece(D, pts5, fill, o = {}) {
-      const d = rugueux(pts5, o.amp ?? 1.4, o.seed ?? 1);
-      let s = `<path d="${d}" fill="${fill}" stroke="${OUT4}" stroke-width="${o.encre ?? 1.5}" stroke-linejoin="round"/>`;
-      if (o.texture) s += `<path d="${d}" fill="url(#${o.texture})" opacity="${o.textureA ?? 1}"/>`;
-      if (o.bord) {
-        const haut = pts5.slice(0, o.bordN ?? Math.ceil(pts5.length / 2));
-        s += `<path d="M${haut.map(([x, y]) => `${f(x)},${f(y + 1.2)}`).join(" L")}" fill="none" stroke="${o.bord}" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>`;
-      }
-      return s;
-    }
-    __name(piece, "piece");
-    function papiers(pref) {
-      const tache = /* @__PURE__ */ __name((x, y, r, c, a) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 0.6)}" fill="${c}" opacity="${f(a)}"/>`, "tache");
-      const fibres = /* @__PURE__ */ __name((n, c, a, k) => Array.from({ length: n }, (_, i) => {
-        const x = hash(i, k) * 80, y = hash(i, k + 1) * 80, an = hash(i, k + 2) * Math.PI, l = 2 + 5 * hash(i, k + 3);
-        return `<path d="M${f(x)},${f(y)} l${f(Math.cos(an) * l)},${f(Math.sin(an) * l)}" stroke="${c}" stroke-width="0.5" opacity="${f(a)}"/>`;
-      }).join(""), "fibres");
-      const motif = /* @__PURE__ */ __name((id2, corps, t = 80) => `<pattern id="${pref}${id2}" patternUnits="userSpaceOnUse" width="${t}" height="${t}">${corps}</pattern>`, "motif");
-      return `<defs>` + motif("ciel", Array.from({ length: 14 }, (_, i) => tache(hash(i, 1) * 200, hash(i, 2) * 200, 10 + 30 * hash(i, 3), i % 2 ? "#FFFFFF" : "#0A0E28", 0.025)).join("") + Array.from({ length: 70 }, (_, i) => {
-        const x = hash(i, 4) * 200, y = hash(i, 5) * 200, an = hash(i, 6) * Math.PI, l = 2 + 5 * hash(i, 7);
-        return `<path d="M${f(x)},${f(y)} l${f(Math.cos(an) * l)},${f(Math.sin(an) * l)}" stroke="#C8D0F0" stroke-width="0.5" opacity="0.1"/>`;
-      }).join(""), 200) + motif("pierre", Array.from({ length: 14 }, (_, i) => tache(hash(i, 11) * 80, hash(i, 12) * 80, 4 + 9 * hash(i, 13), i % 3 ? "#0A0C12" : "#A8B4C8", i % 3 ? 0.14 : 0.08)).join("") + Array.from({ length: 22 }, (_, i) => `<circle cx="${f(hash(i, 14) * 80)}" cy="${f(hash(i, 15) * 80)}" r="0.6" fill="#05070C" opacity="0.4"/>`).join("")) + motif("mer", Array.from({ length: 16 }, (_, i) => `<path d="M${f(hash(i, 21) * 80)},${f(hash(i, 22) * 80)} q8,-1 ${f(10 + 16 * hash(i, 23))},0" stroke="${i % 3 ? "#0A1430" : "#9AAAE0"}" stroke-width="${f(0.8 + hash(i, 24))}" fill="none" opacity="${i % 3 ? 0.3 : 0.18}" stroke-linecap="round"/>`).join("")) + motif("roc", Array.from({ length: 40 }, (_, i) => `<circle cx="${f(hash(i, 31) * 80)}" cy="${f(hash(i, 32) * 80)}" r="${f(0.4 + hash(i, 33))}" fill="${i % 4 ? "#06050A" : "#B8B4C8"}" opacity="${i % 4 ? 0.35 : 0.2}"/>`).join("") + fibres(12, "#B8B4C8", 0.15, 34)) + motif("bois", Array.from({ length: 10 }, (_, i) => `<path d="M${f(hash(i, 41) * 80)},0 q${f(2 - 4 * hash(i, 42))},40 0,80" stroke="#05080A" stroke-width="0.7" fill="none" opacity="0.35"/>`).join("")) + `</defs>`;
-    }
-    __name(papiers, "papiers");
-    var spirale = /* @__PURE__ */ __name((x, y, r, d = 1, tours = 1.6) => {
-      let s = `M${f(x)},${f(y)}`;
-      const n = Math.round(tours * 10);
-      for (let k = 1; k <= n; k++) {
-        const a = k / 10 * Math.PI * 2 * d - Math.PI / 2, rr = r * (1 - k / (n + 2));
-        s += ` L${f(x + Math.cos(a) * rr)},${f(y + r + Math.sin(a) * rr)}`;
-      }
-      return s;
-    }, "spirale");
-    var volute = /* @__PURE__ */ __name((d, couleur, dur, beg, w = 1.8) => `<path d="${d}" fill="none" stroke="${couleur}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="120" stroke-dashoffset="120"><animate attributeName="stroke-dashoffset" values="120;0;0;120" keyTimes="0;0.35;0.7;1" calcMode="spline" keySplines="0.4 0 0.2 1;0 0 1 1;0.6 0 0.8 1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`, "volute");
     function portePhare() {
       const D = Defs("pp");
       const P2 = /* @__PURE__ */ __name((n) => `pp${n}`, "P");
@@ -21574,7 +24532,6 @@ var require_scenes6 = __commonJS({
     var NUIT = { ciel: "#16213F", cielBas: "#2C3D63", mer: "#1E3552", merH: "#2E4E72", ecume: "#8FA9C4", sable: "#5E5B57", roche: "#3E4352", rocheH: "#545B6E", brume: "220,230,242" };
     var AUBE = { ciel: "#5B6A9A", cielBas: "#F2B8A0", mer: "#4E6E96", merH: "#6E8EB4", ecume: "#E8D8D0", sable: "#B8A48A", roche: "#6E6A72", rocheH: "#8A8690", brume: "245,230,226" };
     var JOUR = { ciel: "#7EB6E0", cielBas: "#CDE6F2", mer: "#3E8EB8", merH: "#5EAAD0", ecume: "#F4FAFC", sable: "#E8D3A6", roche: "#8E8A84", rocheH: "#ABA79F", brume: "255,255,255" };
-    var TEMPETE = { ciel: "#0E1530", cielBas: "#24345A" };
     var trait2 = /* @__PURE__ */ __name((d, color, w, extra = "") => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`, "trait");
     var grad = /* @__PURE__ */ __name((id2, haut, bas) => `<defs><linearGradient id="${id2}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${haut}"/><stop offset="1" stop-color="${bas}"/></linearGradient></defs>`, "grad");
     var ciel = /* @__PURE__ */ __name((id2, c, y1 = W2) => grad(id2, c.ciel, c.cielBas) + `<rect x="0" y="0" width="${W2}" height="${y1}" fill="url(#${id2})"/>`, "ciel");
@@ -21594,10 +24551,6 @@ var require_scenes6 = __commonJS({
     __name(mer, "mer");
     var sable = /* @__PURE__ */ __name((y, c = NUIT) => P2(`M0,${y} Q${W2 * 0.3},${y - 14} ${W2 * 0.55},${y - 6} Q${W2 * 0.8},${y + 2} ${W2},${y - 10} L${W2},${W2} L0,${W2} Z`, c.sable, 2) + [[60, y + 40, 9], [300, y + 30, 7], [350, y + 70, 11], [120, y + 90, 6]].map(([x, yy, r]) => E(x, yy, r, r * 0.6, c.roche, 1.6) + E(x - r * 0.3, yy - r * 0.2, r * 0.35, r * 0.2, c.rocheH, 0)).join(""), "sable");
     var rocher2 = /* @__PURE__ */ __name((x, y, w, h, c = NUIT) => P2(`M${x},${y} Q${r22(x - w * 0.06)},${r22(y - h * 0.7)} ${r22(x + w * 0.3)},${r22(y - h)} Q${r22(x + w * 0.6)},${r22(y - h * 1.12)} ${r22(x + w * 0.86)},${r22(y - h * 0.8)} Q${r22(x + w * 1.04)},${r22(y - h * 0.4)} ${r22(x + w)},${y} Z`, c.roche, 2.4) + P2(`M${r22(x + w * 0.58)},${r22(y - h * 1.04)} Q${r22(x + w * 0.9)},${r22(y - h * 0.8)} ${r22(x + w)},${y} L${r22(x + w * 0.66)},${y} Q${r22(x + w * 0.74)},${r22(y - h * 0.5)} ${r22(x + w * 0.58)},${r22(y - h * 1.04)} Z`, "rgba(0,0,0,.18)", 0) + L([x + w * 0.2, y - h * 0.8], [x + w * 0.4, y - h * 0.96], c.rocheH, 3), "rocher");
-    var pluie = /* @__PURE__ */ __name((f, a = 0.35) => Array.from({ length: 46 }, (_, i) => {
-      const x = (i * 53 + f * 21) % 440 - 20, y = (i * 97 + f * 37) % 420 - 20;
-      return `<path d="M${x},${y} l-14,22" stroke="rgba(190,210,235,${a})" stroke-width="1.4" stroke-linecap="round"/>`;
-    }).join(""), "pluie");
     var poser = /* @__PURE__ */ __name((body, x, y, s, m = 1) => `<g transform="translate(${r22(x - 24 * s * m)} ${r22(y - 62 * s)}) scale(${r22(s * m)} ${r22(s)})">${body}</g>`, "poser");
     var brume = /* @__PURE__ */ __name((x, y, s, n, expr = "neutre") => `<g transform="translate(${r22(x - 20 * s)} ${r22(y - 32 * s)}) scale(${r22(s)})">${brumeFrame("s0", n % 4, expr)}</g>`, "brume");
     var lueur = /* @__PURE__ */ __name((x, y, r, rgb, a) => [1, 0.7, 0.45].map((k, i) => `<circle cx="${r22(x)}" cy="${r22(y)}" r="${r22(r * k)}" fill="rgba(${rgb},${r22(a * (0.25 + i * 0.25))})"/>`).join(""), "lueur");
@@ -21661,10 +24614,6 @@ var require_scenes6 = __commonJS({
       etapes: ["0c"],
       images: 3,
       ms: 500,
-      fond: /* @__PURE__ */ __name((f) => {
-        const [dx, dy, k] = [[0, 0, 1], [40, -30, 0.8], [130, -110, 0.45]][f];
-        return ciel("c1", NUIT) + etoiles(ETOILES, f) + (f ? trait2("M20,260 q60,-30 120,-10 q60,20 120,-20 M60,320 q70,-24 140,-4", "rgba(220,230,242,.45)", 3) : "") + `<g transform="translate(${200 + dx} ${200 + dy}) rotate(${f * 18}) scale(${k}) translate(-200 -200)">${carte(true)}</g>`;
-      }, "fond"),
       avatar: null
     });
     S("01_pont", {
@@ -21672,55 +24621,13 @@ var require_scenes6 = __commonJS({
       etapes: ["1a"],
       images: 3,
       ms: 160,
-      fond: /* @__PURE__ */ __name((f) => {
-        let s = ciel("pc", TEMPETE, 260);
-        s += mer(200, 300, f) + P2(`M0,${230 - f * 3} Q90,${170 - f * 6} 170,${210 - f * 2} Q240,240 320,${200 - f * 4} Q370,180 400,210 L400,300 L0,300 Z`, "#203A5C", 2) + trait2(`M80,${195 - f * 4} q30,-10 60,8 M250,${210 - f * 3} q30,-12 60,4`, "#9FB6CF", 3);
-        s += P2("M0,300 L400,300 L400,400 L0,400 Z", "#6B4E36", 2) + [318, 342, 370].map((y) => L([0, y], [400, y], "#5A3F2A", 2)).join("");
-        s += `<rect x="330" y="20" width="12" height="285" fill="#C9B79A" stroke="${OUT4}" stroke-width="2"/>`;
-        const guirlande = /* @__PURE__ */ __name((x0, y0, x1, y1, ph) => {
-          const cy = (y0 + y1) / 2 + 40 + [0, 10, -6][(f + ph) % 3];
-          let g = P2(`M${x0},${y0} Q${(x0 + x1) / 2},${cy} ${x1},${y1}`, "none", 1.6);
-          for (let k = 1; k < 8; k++) {
-            const t = k / 8, x = (1 - t) ** 2 * x0 + 2 * t * (1 - t) * ((x0 + x1) / 2) + t * t * x1, y = (1 - t) ** 2 * y0 + 2 * t * (1 - t) * cy + t * t * y1;
-            g += lueur(x, y + 6, 9, "255,220,140", 0.25) + E(x, y + 6, 3.4, 4.4, ["#FFD15A", "#F27A5A", "#7EC4E8", "#9BE07A"][k % 4], 1.2);
-          }
-          return g;
-        }, "guirlande");
-        s += guirlande(-10, 60, 336, 40, 0) + guirlande(-10, 130, 336, 110, 1);
-        s += [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => `<rect x="${i * 50 + 4}" y="250" width="7" height="58" fill="#EDE6D8" stroke="${OUT4}" stroke-width="1.6"/>`).join("") + `<rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>` + E(84, 268, 22, 22, "#E8562E", 2.4) + E(84, 268, 11, 11, "#6B4E36", 2) + [0, 90, 180, 270].map((a) => `<rect x="80" y="246" width="8" height="10" fill="#F4EEDF" transform="rotate(${a + 45} 84 268)"/>`).join("");
-        return s + pluie(f, 0.4);
-      }, "fond"),
-      devant: /* @__PURE__ */ __name((f) => pluie(f + 1, 0.25), "devant"),
       avatar: { x: 232, y: 352, echelle: 3.4, vue: "face", pose: "grelotter", naufrage: false }
-    });
-    S("01_vague", {
-      titre: "La vague",
-      etapes: ["1b"],
-      images: 3,
-      ms: 260,
-      fond: /* @__PURE__ */ __name((f) => {
-        const h = [130, 250, 440][f];
-        let s = ciel("vg", TEMPETE) + `<rect x="0" y="250" width="400" height="150" fill="#6B4E36"/><rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>`;
-        s += P2(`M-20,420 L-20,${400 - h} Q120,${360 - h * 1.25} 260,${380 - h * 1.1} Q330,${388 - h * 1.15} 360,${410 - h} Q330,${420 - h * 0.9} 300,${426 - h * 0.86} L420,${430 - h * 0.7} L420,420 Z`, "#1E3A60", 3) + trait2(`M10,${410 - h * 0.95} Q130,${370 - h * 1.15} 250,${392 - h * 1.05}`, "#9FB6CF", 4) + trait2(`M260,${380 - h * 1.1} q60,-4 96,28`, "#E8F0F8", 5);
-        return s + pluie(f, 0.35);
-      }, "fond"),
-      avatar: null
-    });
-    S("01_noir", {
-      titre: "Le noir ; la mer, très loin",
-      etapes: ["1b"],
-      images: 2,
-      ms: 1200,
-      fond: /* @__PURE__ */ __name((f) => `<rect x="0" y="0" width="400" height="400" fill="#05080F"/>` + trait2(`M60,${300 + f} q35,-3 70,0 t70,0 t70,0 t70,0`, "rgba(120,150,190,.35)", 2) + trait2(`M120,${312 - f} q30,-2 60,0 t60,0 t60,0`, "rgba(120,150,190,.2)", 1.6), "fond"),
-      avatar: null
     });
     S("01_greve", {
       titre: "La plage de Brumelune, la nuit, dans la brume",
       etapes: ["1c"],
       images: 3,
       ms: 400,
-      fond: /* @__PURE__ */ __name((f) => ciel("gc", NUIT, 240) + lueur(300, 70, 60, "220,230,245", 0.25) + E(300, 70, 16, 16, "#DCE4EF", 0) + mer(190, 250, f) + nappe(200, 0.18, f) + sable(250) + planche(40, 296, 96, -8) + planche(300, 326, 70, 12) + chaiseLongue(300, 286, 168) + nappe(300, 0.14, f, 1.2), "fond"),
-      devant: /* @__PURE__ */ __name((f) => nappe(370, 0.16, -f, 1.4), "devant"),
       avatar: { x: 200, y: 344, echelle: 3.6, vue: "face", pose: "grelotter", naufrage: true }
     });
     S("01_gilet", {
@@ -21877,7 +24784,7 @@ var require_scenes6 = __commonJS({
       avatar: { x: 76, y: 388, echelle: 3, vue: "avant", pose: "repos", naufrage: true }
     });
     S("10_aster", {
-      titre: "Aster tire une caisse des vagues",
+      titre: "Lorena sort de l’eau et vient au feu",
       etapes: ["10b"],
       images: 3,
       ms: 360,
@@ -22071,48 +24978,64 @@ var require_scenes6 = __commonJS({
     for (const [id2, feu2] of [["05_feu", [222, 334]], ["06_silhouette", [176, 336]]]) SCENES2[id2].devant = () => devantAvatar(`${id2.slice(3, 6)}a`, SCENES2[id2].avatar, feu2);
     var O = require_ouverture();
     var R = require_rencontre();
+    var APRES_VENT = { x: 182, y: 348, echelle: 3.25, vue: "avant", pose: "repos", naufrage: true };
+    var AU_CERCLE = { x: 126, y: 384, echelle: 3.1, vue: "avant", pose: "repos", naufrage: true };
     var OUVERTURE = [
-      ["01_racines", "01_vague", "Sous la surface, les racines", ["1b"], O.racines01, null],
-      ["01_paupieres", "01_noir", "Les paupières qui battent ; la plage au couchant", ["1c"], O.paupieres01, null],
-      ["01_carte", "01_greve", "Quelque chose de blanc sur le sable : la carte d’embarquement trempée", ["1d"], O.carte01, null],
+      ["01_paupieres", "01_pont", "Les paupières qui battent ; la plage au couchant", ["1c"], null, null],
+      ["01_carte", "01_greve", "Quelque chose de blanc sur le sable : la carte d’embarquement trempée", ["1d"], null, null],
       ["02_plage", "01_gilet", "Face à la mer, au couchant", ["2a"], O.plage02, { x: 144, y: 376, echelle: 3, vue: "dos", pose: "repos", naufrage: true }],
-      ["03_ciel", "03_vent", "Brume lève les yeux vers le ciel", ["3"], O.ciel03, null],
-      ["05_cercle", "03_vent", "Le cercle de pierres noircies ; au large, l’épave dans la brume", ["5"], O.cercle05, { x: 136, y: 386, echelle: 3, vue: "avant", pose: "repos", naufrage: true }],
-      ["10_epave", "09_rivet", "Le matin d’Hermine : l’épave contre les rochers", ["10"], O.epave10, null]
+      ["03_trouee", "03_vent", "La brume ouverte autour d’eux, les étoiles : ceux d’avant", ["3"], null, APRES_VENT],
+      ["03_ciel", "03_vent", "Brume lève les yeux vers le ciel", ["3"], null, null],
+      ["03_nuit", "03_vent", "La nuit tombe, froide ; Brume l’emmène vers le vieux cercle", ["3"], null, APRES_VENT],
+      ["05_cercle", "03_vent", "Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant", ["5"], null, AU_CERCLE],
+      ["05_promesse", "03_vent", "Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume", ["5"], null, AU_CERCLE],
+      ["10_epave", "09_rivet", "Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage", ["10"], null, null]
     ];
     {
       const ordre = Object.keys(SCENES2);
       for (const [id2, apres] of [...OUVERTURE].reverse()) ordre.splice(ordre.indexOf(apres) + 1, 0, id2);
-      const neuves = Object.fromEntries(OUVERTURE.map(([id2, , titre, etapes, dessin, avatar]) => [id2, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1e3, fond: /* @__PURE__ */ __name(() => dessin(), "fond"), avatar }]));
+      const neuves = Object.fromEntries(OUVERTURE.map(([id2, , titre, etapes, dessin, avatar]) => [id2, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1e3, ...dessin && { fond: /* @__PURE__ */ __name(() => dessin(), "fond") }, avatar }]));
       const refaites = {
-        "01_greve": { titre: "La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris", etapes: ["1c"], images: 1, ms: 1e3, fond: /* @__PURE__ */ __name(() => O.greve01(), "fond"), avatar: null },
-        "03_vent": { titre: "Le vent chasse la brume, à l’heure bleue", etapes: ["3e"], images: 1, ms: 900, fond: /* @__PURE__ */ __name(() => O.vent03(), "fond"), avatar: { x: 164, y: 368, echelle: 3, vue: "dos", pose: "repos", naufrage: true } },
+        "01_greve": { titre: "La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris", etapes: ["1c"], images: 1, ms: 1e3, avatar: null },
+        "03_vent": { titre: "Le Vent se lève et ouvre la brume autour d’eux", etapes: ["3e"], images: 1, ms: 900, avatar: APRES_VENT },
         // la rencontre, au crépuscule (rencontre.js), du soleil couché jusqu'à l'heure bleue du vent
         "02_lueur": { ...SCENES2["02_lueur"], titre: "Une lueur erre dans la brume, au crépuscule", fond: /* @__PURE__ */ __name(() => R.lueur02(), "fond"), devant: /* @__PURE__ */ __name(() => R.brumeDevant("lud", 0.04, 372), "devant") },
         "02_approche": { ...SCENES2["02_approche"], titre: "Brume approche d’un coup", fond: /* @__PURE__ */ __name(() => R.approche02(), "fond"), devant: /* @__PURE__ */ __name(() => R.brumeDevant("apd", 0.08, 384), "devant") },
         "02_rocher": { ...SCENES2["02_rocher"], titre: "Brume se cache derrière un rocher et passe la tête", fond: /* @__PURE__ */ __name(() => R.rocher02(), "fond") },
-        "03_livre": { ...SCENES2["03_livre"], titre: "Brume tire du rocher le livre aux sept sceaux", fond: /* @__PURE__ */ __name(() => R.livre03(), "fond") }
+        "03_livre": { ...SCENES2["03_livre"], titre: "Brume tire du rocher le livre aux sept sceaux", avatar: { x: 156, y: 354, echelle: 3.3, vue: "avant", pose: "repos", naufrage: true } }
       };
       const toutes = { ...SCENES2, ...neuves, ...refaites };
       for (const id2 of Object.keys(SCENES2)) delete SCENES2[id2];
       for (const id2 of ordre) SCENES2[id2] = toutes[id2];
     }
+    var GR = require_gravure_rencontre();
+    var GL = require_gravure_lorena();
+    var GV = require_gravure_vent();
+    var NN = require_neon_naufrage();
+    var NR = require_neon_reveil();
+    var NJ = require_neon_jeu();
+    var GC = require_gravure_cercle();
+    for (const [id2, scene2] of [["00_tampon", NR.tampon00], ["01_pont", NN.naufrage], ["01_paupieres", NR.paupieres01], ["01_greve", NR.greve01], ["01_carte", NR.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
+      const { fond, devant, ...garde } = SCENES2[id2];
+      SCENES2[id2] = { ...garde, images: 1, ...scene2() };
+    }
+    for (const [id2, scene2] of NJ.cinematiques) SCENES2[id2] = { ...SCENES2[id2], ...scene2() };
     S("30_phare_porte", { titre: "Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile", etapes: ["III"], images: 1, ms: 1e3, fond: /* @__PURE__ */ __name(() => require_porte_phare().portePhare(), "fond"), avatar: null });
     var FIGEES = {
       "30_phare_porte": Infinity,
       "12_veillee": Infinity,
       "12_habits": Infinity,
-      "01_racines": 0,
-      "01_paupieres": Infinity,
       "05_feu": Infinity,
-      "01_pont": Infinity,
-      "05_cercle": Infinity,
-      "03_livre": Infinity,
-      "06_silhouette": Infinity,
-      "01_carte": Infinity,
-      "02_rocher": Infinity
+      "06_silhouette": Infinity
     };
     for (const [id2, sc] of Object.entries(SCENES2)) {
+      if (sc.plans) {
+        for (const p of sc.plans) if (p.dessin) {
+          const d = p.dessin;
+          p.dessin = () => sansVif(d());
+        }
+        continue;
+      }
       const { fond, devant } = sc;
       if (devant) sc.devant = (n) => sansVif(devant(n));
       if (!Object.hasOwn(FIGEES, id2)) {
@@ -22124,6 +25047,14 @@ var require_scenes6 = __commonJS({
       sc.fond = (n) => part(n).fond;
       sc.anime = (n) => part(n).anime;
     }
+    var NEON_FIXES = { "05_feu": ["feu", -1], "06_silhouette": ["nuit", 1], "07_cannelle": ["jour", 1], "07_souvenir": ["jour", 1], "09_rivet": ["jour", 1], "11_ondin": ["jour", 1], "11_reveil": ["jour", 1], "12_veillee": ["feu", -1], "12_habits": ["feu", -1], "30_phare_porte": ["nuit", 1] };
+    for (const [id2, [lumiere, cote]] of Object.entries(NEON_FIXES)) {
+      const sc = SCENES2[id2], { fond, anime, devant } = sc, n0 = `nf${id2.replace(/\W/g, "")}`;
+      sc.fond = (n) => NR.ravivee(fond(n)) + NN.vignette(`${n0}${n}`);
+      if (anime) sc.anime = (n) => NR.ravivee(anime(n));
+      if (devant) sc.devant = (n) => NR.ravivee(devant(n));
+      if (sc.avatar) sc.avatar = { ...sc.avatar, neon: true, lumiere: { ...NR.LUMIERES[lumiere], cote } };
+    }
     module.exports = { SCENES: SCENES2, W: W2, CADRE_PHOTO: CADRE_PHOTO2 };
   }
 });
@@ -22134,13 +25065,16 @@ var r2 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
 var W = import_scenes6.default.W;
 var CADRE = [0, 0, W, W];
 var svgOf = /* @__PURE__ */ __name((body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(W)}" height="${r2(W)}" viewBox="0 0 ${W} ${W}">${body}</svg>`, "svgOf");
+var svgPlan = /* @__PURE__ */ __name((body, [x, y, w, h]) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(w)}" height="${r2(h)}" viewBox="${x} ${y} ${w} ${h}">${body}</svg>`, "svgPlan");
+var cadrePlan = /* @__PURE__ */ __name((p) => p.cadre || [-(p.marge || 0), -(p.marge || 0), W + 2 * (p.marge || 0), W + 2 * (p.marge || 0)], "cadrePlan");
+var plansDessines = /* @__PURE__ */ __name((sc) => (sc.plans || []).filter((p) => p.dessin), "plansDessines");
 var SCENES = Object.fromEntries(Object.entries(import_scenes6.default.SCENES).map(([id2, sc]) => [id2, {
   titre: sc.titre,
   etapes: sc.etapes,
   images: sc.images,
   ms_par_image: sc.ms,
-  calques: ["fond", "anime", "devant"].filter((c) => sc[c]),
-  avatar: sc.avatar
+  avatar: sc.avatar,
+  calques: sc.plans ? plansDessines(sc).map((p) => `plan-${p.id}`) : ["fond", "anime", "devant"].filter((c) => sc[c])
 }]));
 var CADRE_PHOTO = import_scenes6.default.CADRE_PHOTO;
 function scene(id2, calque, n = 1) {
@@ -22148,6 +25082,10 @@ function scene(id2, calque, n = 1) {
   if (!sc) throw new Error(`scène inconnue : ${id2} (${Object.keys(import_scenes6.default.SCENES).join(", ")})`);
   if (!SCENES[id2].calques.includes(calque)) throw new Error(`calque inconnu : ${calque} (${SCENES[id2].calques.join(", ")})`);
   if (!(n >= 1 && n <= sc.images)) throw new Error(`image ${n} : de 1 à ${sc.images}`);
+  if (sc.plans) {
+    const p = plansDessines(sc).find((q) => `plan-${q.id}` === calque), cadre = cadrePlan(p);
+    return { svg: svgPlan(p.dessin(), cadre), cadre, ms_par_image: null };
+  }
   return { svg: svgOf(sc[calque](n - 1)), cadre: CADRE, ms_par_image: sc.images > 1 ? sc.ms : null };
 }
 __name(scene, "scene");

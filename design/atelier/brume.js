@@ -165,4 +165,4 @@ function brumeEyes(n, expr = 'neutre') {
 }
 
 const svgB = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${40 * scale}" height="${48 * scale}" viewBox="0 0 40 48">${body}</svg>`;
-module.exports = { STAGES, brumeFrame, brumeEyes, svgB };
+module.exports = { STAGES, brumeFrame, brumeEyes, svgB, flamePath };

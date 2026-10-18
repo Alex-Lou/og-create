@@ -108,7 +108,7 @@ describe('le tutoriel', () => {
     // Son Ponton, le chemin entre les deux camps, ses quatre piquets en travers du passage des égarés (Brume dit à quoi
     // ils servent ; déplacer attend le jour de Nathan)
     expect(island({ id: 'premier-ponton', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-bois'] });
-    expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
+    expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse', 'ponton-moyens'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
     expect(island({ id: 'chemin-aster', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['voisins'] });
     expect(island({ id: 'clotures', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] });
@@ -125,10 +125,11 @@ describe('le tutoriel', () => {
     // Le jour d’Agathe : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
     expect(island({ id: 'soupe', done: false }, all)).toEqual({ phase: 'lines', lines: [], lesson: 'cannelle-parle' });
     expect(island({ id: 'soupe', done: false }, [...all, 'cannelle-parle'])).toEqual({ phase: 'lines', lines: ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] });
-    expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
+    expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'soupe-aster', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
     // La longue-vue de Lorena voit la cage (sa réplique y mène la caméra) ; ouverte, les poules s'échappent
     expect(island({ id: 'cage', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' });
-    expect(island({ id: 'cage', done: false }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['mes-filles'] });
+    expect(island({ id: 'cage', done: false }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['mes-filles', 'fine-bouche', 'miracles', 'miracles-suite'] });
+    expect(LINES.miracles).toMatchObject({ who: 'joueur' });
     expect(LINES['mes-filles']).toMatchObject({ look: 'cage' });
     expect(island({ id: 'cage', done: true }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['doucement'] });
     // Les attraper une à une, puis les nourrir (la Récolte rappelée s'il manque des vivres) ; leur poulailler ; le soir
@@ -138,9 +139,9 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres', 'recolte-nourrit'] });
     expect(island({ id: 'poules', done: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'poulailler', done: false }, all)).toEqual({ phase: 'lines', lines: ['un-toit'] });
-    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village', 'cage-bois'] });
+    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village', 'cage-bois', 'cage-agathe'] });
     // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
-    expect(island({ id: 'abri-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['marmite', 'se-plaint'] });
+    expect(island({ id: 'abri-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['marmite', 'se-plaint', 'entends'] });
     expect(island({ id: 'abri-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['toit-a-moi'] });
     expect(island({ id: 'enclos-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['cuisines', 'casseroles'] });
     expect(island({ id: 'enclos-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['en-ville'] });
@@ -149,33 +150,35 @@ describe('le tutoriel', () => {
     // (Nathan sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
+    expect(island({ id: 'deco', done: true }, all)).toEqual({ phase: 'lines', lines: ['lanterne-brille', 'lanterne-brume'] });
     // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
     expect(island({ id: 'torches-rivet', done: false }, all)).toEqual({ phase: 'lines', lines: ['torches-idee'] });
-    expect(island({ id: 'torches-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['torches-tiennent'] });
+    expect(island({ id: 'torches-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['torches-tiennent', 'ingenieur'] });
     for (const line of ['torches-idee', 'torches-tiennent']) expect(LINES[line], line).toBeTruthy();
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
-    expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' });
+    expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'marmite-agathe', 'souci', 'courants', 'courants-suite'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
     // Le matin de Léo (choix de l'auteur, 14 oct.) : Lorena voit une planche sur la vague ; vue, on le réveille
     expect(island({ id: 'eveil-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' });
-    expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: [] });
+    expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: ['respire'] });
+    expect(LINES.respire).toMatchObject({ who: 'joueur' });
     expect(island({ id: 'eveil-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: [] });
     expect(LINES['planche-dort']).toMatchObject({ who: 'ponton', look: 'planche' });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
-    expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
+    expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban', 'grimoire-vole', 'pas-expres', 'expres-brume'] });
     // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette de Léo frémit)
     expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 2)).toEqual(['pluie-brume', 'pluie-ondin']);
     expect([LINES['pluie-brume'].demo, LINES['pluie-ondin'].demo]).toEqual(['averse', 'averse']);
     expect(LINES['planche-vue']).toBeTruthy();
-    expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit'] });
+    expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'relier', 'relier-abri', 'communaute', 'produit', 'merci-puits', 'trois-fois-rien'] });
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
-    expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });
+    expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pieds-agathe', 'pierres'] });
     expect(island({ id: 'chemin', done: true }, all)).toEqual({ phase: 'lines', lines: ['sentier'] });
     // Le premier chemin réclamé : Le Campement clôt l'ancien prologue global.
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
     // Chaque réplique nommée existe
-    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'ponton-moyens', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'cage-bois', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin de Lorena.

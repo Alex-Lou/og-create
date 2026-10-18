@@ -1,7 +1,7 @@
 // Les scènes du tutoriel dessinées par la bibliothèque (game/sceneArt.js) : chaque scène a ses images, et l'avatar du
 // joueur trouve un dessin pour chacune de ses places, quel que soit l'exemple choisi sur la carte d'embarquement
 import { describe, it, expect } from 'vitest';
-import { sceneOf, avatarFrames, avatarBox, LOOKS, DEFAULT_LOOK } from '@/game/sceneArt';
+import { sceneOf, avatarFrames, avatarBox, playerFace, LOOKS, DEFAULT_LOOK } from '@/game/sceneArt';
 import { SCENES } from '@/texts/tutorial/scenes';
 
 const used = [...new Set(Object.values(SCENES).flat().map(frame => frame.scene).filter(Boolean))];
@@ -12,11 +12,17 @@ describe('les scènes de la bibliothèque', () => {
     expect(DEFAULT_LOOK).toBe('avatar-01');
     for (const look of LOOKS) expect(avatarFrames(look, { naufrage: true })[0], look).toMatch(/-naufrage_face_repos_1\.svg/);
   });
+  it('le joueur parle sur l’île avec son avatar de naufragé, de face ; l’exemple par défaut tant que le sien n’est pas dessiné', () => {
+    expect(playerFace('avatar-03')).toMatch(/avatar-03-naufrage_face_repos_1\.svg/);
+    expect(playerFace({ genre: 'femme' })).toMatch(/avatar-01-naufrage_face_repos_1\.svg/);
+  });
   it('chaque scène du tutoriel a toutes ses images, fond, ce qui bouge (s’il est à part) et devant', () => {
     for (const id of [...used, '00_carte']) {
       const scene = sceneOf(id);
       expect(scene, id).toBeTruthy();
-      expect(scene.back, id).toHaveLength(scene.frames);
+      // (une scène en plans : chacun de ses plans peints a son image, à la place du fond)
+      if (scene.plans) expect(scene.plans.every(p => p.href || ['anime', 'avatar'].includes(p.id)), id).toBe(true);
+      else expect(scene.back, id).toHaveLength(scene.frames);
       expect(scene.back.every(Boolean) && scene.live.every(Boolean) && scene.front.every(Boolean), id).toBe(true);
     }
     expect(sceneOf('inconnue')).toBe(null);
@@ -32,11 +38,13 @@ describe('les scènes de la bibliothèque', () => {
     expect(sceneOf('05_feu').still).toBe(false);
   });
   it('l’avatar a un dessin à chaque place, de face, de trois quarts (au repos) ou en saluant', () => {
+    // (une scène en néon fait passer tout avatar par le kit et son rendu néon : ces dessins de la bibliothèque sont alors
+    // son secours, si le kit n'a pas pu se charger)
     for (const id of [...used, '00_carte']) {
       const spot = sceneOf(id).avatar;
       if (!spot) continue;
       for (const look of LOOKS) {
-        const frames = avatarFrames(look, spot);
+        const frames = avatarFrames(look, { ...spot, neon: false });
         expect(frames.length, `${id} ${look}`).toBeGreaterThan(0);
         expect(frames.every(Boolean), `${id} ${look}`).toBe(true);
         expect(frames[0], `${id} ${look}`).toContain(spot.naufrage ? `${look}-naufrage/` : `${look}/`);

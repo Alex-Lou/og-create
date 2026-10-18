@@ -45,28 +45,16 @@ const GULL_BACK = 30;
 // l'image du jeu]. Le dauphin a ses trois images (il sort de l'eau, au sommet, il replonge) ; la baleine nage (deux
 // images) ; un poisson en l'air est la plus haute de ses deux images, celui qui replonge l'autre
 const LIBRARY = {
-  chicken: ['hen', 'blanche'], bee: ['bee', ''], butterfly: ['butterfly', null], frog: ['frog', ''], gull: ['gull', ''],
+  chicken: ['hen', 'blanche'], gull: ['gull', ''],
   dolphin: ['dolphin', '', frame => ({ pose: 'marche', n: frame + 1 })],
   whale: ['whaleBack', '', frame => ({ pose: 'marche', n: (frame || 0) + 1 })],
   fluke: ['whaleFluke', '', frame => ({ pose: 'marche', n: (frame || 0) + 1 })],
   fish: ['fish', null, frame => ({ pose: 'marche', n: frame === 0 ? 2 : 1 })]
 };
 
-// Les fleurs des papillons et la mare de la grenouille, cherchées une fois par décor (pas à chaque image)
-const PROPS_FOR = new WeakMap();
-function propsFor(props) {
-  if (!PROPS_FOR.has(props)) {
-    PROPS_FOR.set(props, {
-      flowers: props.filter(p => p.kind === 'flowers' || p.kind === 'bush').slice(0, 4),
-      pond: props.find(p => p.kind === 'lily' || p.kind === 'reeds')
-    });
-  }
-  return PROPS_FOR.get(props);
-}
-
 export default {
   // Petite vie de l'île, déterministe dans le temps : où est chaque animal, dans quelle image, de quel côté il regarde.
-  // Poules autour du Foyer, papillons et abeilles sur les fleurs (le jour), grenouille aux nénuphars, poisson près de la côte.
+  // Poules autour du Foyer, poisson près de la côte des quartiers à soi (les bêtes sauvages : world/village/wildLife.js).
   critters(t) {
     if (!this.state) return [];
     const phase = this.phase || this.skyAt(this.skyDate());
@@ -101,42 +89,14 @@ export default {
         touchable(`hen:${k}`, 'chicken', x, y, z);
       }
     }
-    // Papillons et abeilles : de jour, par temps sec, et seulement écrits dans le Grimoire (bible, Bestiaire : les
-    // écrire les fait venir) ; une fleur sans la bête de son tour prend l'autre, si elle est écrite
-    const written = this.elements || [];
-    const flutter = written.includes('Papillon'), buzz = written.includes('Abeille');
-    if ((flutter || buzz) && phase.night < 0.5 && rain < 0.2) {
-      const flowers = propsFor(this.props).flowers;
-      flowers.forEach((p, k) => {
-        const a = t * (0.6 + k * 0.1) + k;
-        const kind = (k % 2 ? buzz : !flutter) ? 'bee' : 'butterfly';
-        // Touché : il file vers le haut et revient au bout de 1,5 s
-        const away = fright(`fly:${k}`, 1.5);
-        const lift = away === null ? 0 : Math.sin(away * Math.PI);
-        const x = p.x + Math.cos(a) * 0.35 + lift * 0.8;
-        const y = p.y + Math.sin(a * 1.4) * 0.3 - lift * 0.4;
-        const z = 6 + Math.sin(t * 2 + k) * 3 + lift * 30;
-        // (les papillons de la bibliothèque : un jaune, un bleu)
-        out.push({ kind, species: k % 4 < 2 ? 'jaune' : 'bleu', x, y, z, frame: Math.floor(t * (kind === 'bee' ? 20 : 8) + k) % 2, flip: Math.cos(a) < 0 });
-        touchable(`fly:${k}`, kind, x, y, z);
-      });
-    }
-    const pond = propsFor(this.props).pond;
-    // La grenouille saute plus souvent sous la pluie
-    if (pond) {
-      const leap = fright('frog', 0.6);
-      const z = leap === null ? 0 : Math.sin(leap * Math.PI) * 8;
-      out.push({ kind: 'frog', x: pond.x + 0.12, y: pond.y + 0.1, z, frame: leap !== null || (t % (rain > 0.5 ? 1.6 : 4)) < 0.35 ? 1 : 0, flip: false });
-      touchable('frog', 'frog', pond.x + 0.12, pond.y + 0.1, z);
-    }
-    // Poisson : un saut toutes les 7 s, à un endroit différent du rivage (sardine, daurade) ; le poisson volant plane
-    // vers le large
+    // Poisson : un saut toutes les 7 s, à un endroit différent du rivage des quartiers à soi (sous la brume, rien :
+    // serve.js, fishShore ; sardine, daurade) ; le poisson volant plane vers le large
     const cycle = Math.floor(t / 7);
     const into = (t % 7) / 7;
     const species = FISH_SPECIES[Math.floor(hash(cycle, 5) * FISH_SPECIES.length)];
     const span = species === 'volant' ? 0.2 : 0.12;
-    if (into < span && this.shore.length) {
-      const spot = this.shore[Math.floor(hash(cycle, 2) * this.shore.length)];
+    if (into < span && this.fishShore.length) {
+      const spot = this.fishShore[Math.floor(hash(cycle, 2) * this.fishShore.length)];
       if (species === 'volant') {
         const k = into / span, alongX = hash(cycle, 3) < 0.5;
         out.push({ kind: 'fish', species, x: spot.x + 0.2 + (alongX ? k * 1.4 : 0), y: spot.y + 0.2 + (alongX ? 0 : k * 1.4), z: 0, frame: 0, flip: !alongX });
@@ -309,7 +269,7 @@ export default {
     const out = { standing: [], rings: [], gulls: [], jellies: null };
     const hits = [];
     const still = this.reduced();
-    const guests = seaGuests(new Set(this.state.map.zones.filter(z => z.owned).map(z => z.id)));
+    const guests = seaGuests(new Set(this.state.map.zones.filter(z => z.owned).map(z => z.id)), phase);
     const center = this.cellAt(view.x + view.w / 2, view.y + view.h / 2);
     const surface = (x, y) => { const c = this.world(x, y); return { x: c.x, y: c.y - SEA_Z * HS }; };
     if (!still && guests.dolphins) {
@@ -343,7 +303,7 @@ export default {
         if (w.fluke) out.standing.push({ kind: 'fluke', x: w.fluke.x, y: w.fluke.y, z: 0, e: w.fluke.e, flip: w.flip, frame: Math.floor(t / 0.42) % 2 });
       }
     }
-    if (guests.jellies && phase.night > 0.3) out.jellies = jelliesAt(this.sea.open, t);
+    if (guests.jellies) out.jellies = jelliesAt(this.sea.open, t);
     // Les bancs de poissons (faune/bancs.js) : on peut les toucher (ils fusent, des ronds là où ils étaient) ; le jour,
     // les mouettes plongent dans la boule de sardines
     if (!still) {

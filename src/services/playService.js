@@ -146,6 +146,10 @@ export default {
   landmarkFire(id) {
     return http.post('/play/world/landmark/fire', { id }).then(response => response.data);
   },
+  // Un animal rencontré sur l'île (le premier toucher), retenu au Bestiaire du compte → { animal, at, new }
+  meetAnimal(id) {
+    return http.post('/play/world/animal', { id }).then(response => response.data);
+  },
   // Une scène de l'arc du Phare vue (le conseil, la traversée manquée), retenue sur le compte → { scene }
   sceneSeen(id) {
     return http.post('/play/world/scene', { id }).then(response => response.data);

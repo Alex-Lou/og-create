@@ -19,7 +19,7 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 4 | Le réveil | **Comme l'ouverture de l'auteur** : vue subjective (paupières, flou), la plage, les débris, la carte d'embarquement aperçue sur le sable, ramassée, puis la création du personnage. | § 9 (contrat : « carte d'embarquement ») |
 | 5 | Les silhouettes qui nagent | **Les rescapés, en vrai** : Lorena, Agathe, Léo. Ce que le joueur a cru voir se confirme un à un. | § 7.1 |
 | 6 | Brume prise pour une étoile | **Un écho muet** : la méprise reste, Brume ne relève pas, un temps de silence ; rien n'est commenté. | § 7.5 (un indice de plus pour « Qu'est-ce qui est tombé du ciel ? ») |
-| 7 | Ce que Brume avoue à l'acte I | **Elle sent, sans savoir** : « Avant, j'étais autre chose », et elle se reprend ; « magie » et « essence » deviennent une image concrète (« Avant, j'étais plus grande. Bien plus. »). | § 7.5, § 13 |
+| 7 | Ce que Brume avoue à l'acte I | **Elle sent, sans savoir** : « Avant, j'étais autre chose », et elle se reprend ; « magie » et « essence » deviennent une image concrète (« Avant, j'étais plus grande. Bien plus forte aussi. »). | § 7.5, § 13 |
 | 7 bis | Sa faute | **Elle nie, puis elle doute** : démenti vexé à la rencontre (« Je suis gentille ! ») ; le doute le soir même, quand le joueur lui demande de chasser la brume ; la faute grandit ensuite (Agathe, la bouteille). L'arc : déni, doute, faute, pardon. | § 7.2 (« Ce que Brume croit »), § 8.2 (Brume, arc), § 7.5 |
 | 8 | Le Vent | **Une trouée, pas plus** : le Vent dégage la plage proche (les trouvailles, la place du feu) ; au-delà, la brume tient, et l'épave reste dedans. | § 9 (contrat : « le Vent ouvre le rivage ») |
 | 9 | « Créateurs » | **« Ceux d'avant »** est le nom que Brume leur donne ; « les Anciens » reste le mot de Robby et d'Héliane ; « créateurs » sort du texte. | § 7.2, § 13 |
@@ -38,10 +38,15 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 22 | « VivantE ! » (lot 01) | **Gardé tel quel**, majuscule comprise. | — |
 | 23 | Les mots des mini-jeux (lot 05) | **Bruits gardés, interjections retirées** : le système du 14 oct. (`design/conception/onomatopees.md`) reste pour les mini-jeux et les coffres (bruits de matière, paliers « Joli ! → Clair de lune ! ») ; « Miam », « Slurp », « Mmmh », « Tadaaa », « Bof », « Zut », « Ouille », « Ooh », « Hmm » changent. | — |
 | 24 | Les cris des bêtes sur l'île (lot 05) | **Une didascalie sobre** : « *(Elle meugle.)* », « *(Il chante.)* » ; sur l'île, on est dans le récit. | § 6.16 |
+| 25 | Le joueur sur l'île (lot 10, 18 oct.) | **Il parle aussi dans les bulles de l'île**, sous son nom, avec son avatar de naufragé ; il répond, ironise, s'inquiète (« Bienvenue au club. Ici, personne ne dort beaucoup. »). | § 6.17, § 8 « Toi, le joueur » (reporté) |
+| 26 | Brume et ce qu'elle est (lot 10) | **Elle proteste** quand on se trompe sur elle : un animal, un « il », une hallucination (« Je ne suis PAS un animal ! »). Une seule méprise lui plaît : la fée de Léo. L'étoile (décision 6) reste un écho muet. | § 8.2 (Brume, « Voix ») |
+| 27 | Le compte du soir (lot 10) | **Brume compte ses amis** chaque soir, depuis sa solitude (« Deux de plus qu'il y a deux jours… »), et finit par « Dormez, je veille sur vous ». Au Campement, elle ne compte plus à voix haute. | § 8.2 (Brume) |
+| 28 | Les scènes d'arrivée (lot 10) | **Assouplit la décision 14** : les scènes d'arrivée (Lorena, Agathe, Nathan, Léo) dépassent six bulles ; l'échange prime. Toujours 140 caractères par bulle : une réplique plus longue se coupe en deux. | § 7.4 |
+| 29 | « Tatie » (lot 10) | **Deux fois au réveil de Léo**, dans la même scène ; ensuite « Agathe » ou « tante Agathe » (assouplit § 4.6). | § 8.2 (Léo) |
 
 Le dépôt : le travail d'écriture se pousse sur `master`, dans `ecriture/` seulement, sous l'auteur `CybWu` (choix de l'auteur) ; on ne réécrit pas l'historique.
 
-Validés par l'auteur : cette bible de ton et le lot 01 (14 octobre) ; les lots 02 à 07 (14 et 15 octobre). Tout est prêt pour l'intégration par l'autre agent : les textes dans `src/texts/`, la bible dans `HISTOIRE.md` (lot 06), les quêtes dans le dépôt du serveur, `og-create-backend/src/texts/quests.js` (lot 07).
+Validés par l'auteur : cette bible de ton et le lot 01 (14 octobre) ; les lots 02 à 07 (14 et 15 octobre). Le lot 10 (17 et 18 octobre) est la réécriture de l'auteur lui-même : ses répliques remplacent celles des lots 01 à 03, et elles sont dans le jeu. Tout est prêt pour l'intégration par l'autre agent : les textes dans `src/texts/`, la bible dans `HISTOIRE.md` (lot 06), les quêtes dans le dépôt du serveur, `og-create-backend/src/texts/quests.js` (lot 07).
 
 ---
 
@@ -214,7 +219,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 
 | Avant | Après |
 |---|---|
-| « Doucement, mes jolies ! Attrape-les, ma brindille, elles ont eu peur. » | « Doucement. Elles ont vu la mer de trop près, elles aussi. » |
+| « Doucement, mes jolies ! Attrape-les, ma brindille, elles ont eu peur. » | « Doucement ! Elles ont vu la mer de trop près, elles aussi. » |
 | « Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe. » | « Un toit. » *(Elle pose la main sur le montant.)* « Ma brindille, je vais saler la soupe de travers. » |
 | « Moi, c'est ton ventre qui me fait rêver, ma brindille. On l'entend crier famine jusqu'aux rochers. » | « Ton ventre, je l'entends depuis les rochers. Assieds-toi. Un ventre vide ne bâtit rien. » |
 
@@ -234,7 +239,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 
 | Avant | Après |
 |---|---|
-| « Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. » | « Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n'est pas du génie, c'est de l'arithmétique. » |
+| « Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. » | « Cette nuit, depuis la brume, je les ai vus venir de trois côtés. Trois torches, une par côté. Pas du génie : de l'arithmétique. » |
 | « Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. » | « Quatre autour d'un feu. Il nous faudra une plus grande marmite. Ou un plus petit Nathan. » |
 | « Montre-moi tes mains. Hum. On va arranger ça. Clic ! » | « Montre-moi tes mains. … Des mains d'horloger. Gâchées par la navigation. » |
 
@@ -246,15 +251,15 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
   - il raconte ses rêves comme des faits ;
   - il écoute l'eau, la lune, les choses perdues.
 - **Il ne dit jamais** :
-  - de mot de bébé (« Tatie » n'est dit qu'une fois, au réveil, puis « Agathe » ou « tante Agathe ») ;
+  - de mot de bébé (« Tatie » n'est dit qu'au réveil, deux fois dans la même scène (décision 29), puis « Agathe » ou « tante Agathe ») ;
   - qu'il a peur de l'eau profonde, avant le troisième cœur ;
   - une phrase d'adulte qui explique.
 - **Exemples** :
 
 | Avant | Après |
 |---|---|
-| « Tatie… tu m'étouffes un peu. » | « Tatie ? … Tu sens la soupe. Alors c'est vrai. » |
-| « L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. » | « L'eau arrive jusqu'au feu à moitié. L'autre moitié reste dans l'herbe. Elle aime bien l'herbe. » |
+| « Tatie… tu m'étouffes un peu. » | « Tatie ? … Tu sens la soupe. Alors c'est vrai, je rêve plus… On est bien perdus sur une île, alors ? » |
+| « L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. » | « C'est très bien. Par contre, je suis pieds nus, et la terre n'est pas toujours très tendre. Il faudra des chemins entre nos abris. » |
 | « Chut… La lune m'a parlé. Elle dit que tu ne dors pas assez. Elle a raison, non ? » | « La lune m'a parlé cette nuit. Elle dit que tu ne dors pas. Moi non plus, je ne lui ai pas répondu. » |
 
 ### 4.7 Robby, le tailleur de runes

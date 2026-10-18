@@ -68,7 +68,7 @@ Les trois motifs de l'équipe traversent tout le jeu :
   voyageurs) ne remplacent pas ceux qu'on cherchait. L'espoir peut rester ouvert jusqu'au bout ;
 - **comprendre la brume** : les runes, les égarés, Héliane, et Brume qui apprend qui elle était (acte VI).
 
-Exemple de la scène (à écrire par l'agent écriture ; 6 bulles au plus par scène, la caméra entre les deux) :
+Exemple de la scène (à écrire par l'agent écriture ; 6 bulles au plus par scène, la caméra entre les deux). *Le texte en jeu, réécrit par l'auteur le 18 octobre, est au lot 10 (`lots/10_reecriture_auteur.md`, « Le conseil »).*
 - Lorena : « Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île. »
 - Agathe : « Et s'il y en a d'autres, de l'Hirondelle ? Et ce feu follet qui parle… c'est de la sorcellerie. »
 - Léo : « Là-bas ! Sur l'îlot ! »

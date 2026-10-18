@@ -264,40 +264,6 @@ module.exports = function scenesAnimees(H) {
     },
     devant: () => pluie(34, 0.28, 13, 1.8)
   };
-  // ===== 1b — la vague énorme monte et couvre l'écran (une fois), puis l'écume roule =====
-  S['01_vague'] = {
-    fond: () => {
-      let s = ciel('vgC', TEMPETE.ciel) + `<rect x="0" y="250" width="400" height="150" fill="#6B4E36"/><rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT}" stroke-width="2"/>`;
-      s += `<defs>${lin('vgV', [[0, '#3E6890'], [0.4, '#1E3A60'], [1, '#0E1E38']])}</defs>`;
-      const v = P('M-30,560 L-30,270 Q120,150 260,190 Q340,204 368,250 Q340,270 300,262 Q330,300 420,320 L420,560 Z', 'url(#vgV)', 3)
-        + trait('M10,250 Q130,150 250,200', '#9FB6CF', 4) + trait('M260,190 Q330,200 362,244', '#E8F0F8', 6)
-        + [[300, 240, 8], [330, 250, 6], [350, 232, 5], [272, 230, 5]].map(([x, y, r]) => E(x, y, r, r * 0.8, '#E8F0F8', 1)).join('');
-      // elle monte de 330 au-dessus du bas jusqu'à tout couvrir, puis roule sur place
-      s += `<g transform="translate(0 260)"><g>${uneFois('translate', '0 0;0 -150;0 -330', '0;0.45;1', 1.6)}<g>${vaVient('translate', '-8 0', '8 4', 1.8)}${v}</g></g></g>`;
-      return s + pluie(50, 0.35, 17);
-    }
-  };
-  // ===== 1b — le noir ; la mer, très loin : une nuit sans rien de net, la houle qui respire, une lune voilée =====
-  S['01_noir'] = {
-    fond: () => {
-      let s = `<defs>${lin('noC', [[0, '#02040A'], [0.7, '#060B18'], [1, '#0B1424']])}${rad('noL', [[0, 'rgb(110,130,170)', 0.2], [0.4, 'rgb(110,130,170)', 0.07], [1, 'rgb(110,130,170)', 0]])}${rad('noH', [[0, 'rgb(70,95,140)', 0.3], [0.5, 'rgb(70,95,140)', 0.12], [1, 'rgb(70,95,140)', 0]])}${lin('noV', [[0, '#8FB0D8', 0.55], [0.5, '#4A6A98', 0.25], [1, '#4A6A98', 0]])}</defs><rect x="0" y="0" width="400" height="400" fill="url(#noC)"/>`;
-      // la lune, derrière les nuages, qu'on devine à peine ; l'horizon, une bande un peu moins noire
-      s += `<circle cx="318" cy="74" r="110" fill="url(#noL)">${palpite('opacity', '0.6;1;0.6', 11)}</circle><ellipse cx="200" cy="288" rx="300" ry="52" fill="url(#noH)">${palpite('opacity', '0.7;1;0.7', 7)}</ellipse>`;
-      // la houle : quatre rangées lentes, de plus en plus larges vers nous, qui dérivent chacune à son pas
-      for (let i = 0; i < 4; i++) {
-        const y = [284, 298, 316, 342][i], per = 110 + i * 30, a = 3 + i * 2.5, n = Math.ceil(W / per) + 3;
-        let dp = `M${-per},${y}`;
-        for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.5)} ${f(per / 2)},0`;
-        dp += ` L${W + per * 2},${y + 10 + i * 4} L${-per},${y + 10 + i * 4} Z`;
-        s += `<g>${vaVient('translate', '0 -2', `0 ${2 + i}`, 5 + i * 1.3, i * 1.1)}<g>${defile('0 0', `${i % 2 ? per : -per} 0`, 14 + i * 3, i * 2.3)}<path d="${dp}" fill="url(#noV)" opacity="${f(0.12 + i * 0.06)}"/></g></g>`;
-      }
-      // des écumes qui naissent et s'éteignent lentement, et le reflet voilé de la lune, en traits qui vont et viennent
-      const g = rnd(23);
-      for (let i = 0; i < 9; i++) { const x = f(g() * W), y = f(286 + g() * 60), l = f(10 + g() * 26), d = f(4 + g() * 4); s += `<rect x="${x}" y="${y}" width="${l}" height="1.6" rx="0.8" fill="#9FB8D8" opacity="0">${palpite('opacity', '0;0.3;0', d, g() * d)}</rect>`; }
-      s += `<g opacity=".5">${scintille(318, 290, 5, '150,170,205', 0.3)}</g>`;
-      return s + vignette('noG', 0.6);
-    }
-  };
   // ===== 1c — la plage de Brumelune, la nuit, dans la brume ; des débris, la chaise longue retournée =====
   S['01_greve'] = {
     fond: () => ciel('gcC', NUIT.ciel, 240) + etoiles(20, 170, 41) + lune('gcL', 300, 70) + mer('gcM', 190, 250, NUIT.mer) + reflet(300, 196)

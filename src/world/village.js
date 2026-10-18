@@ -37,6 +37,8 @@ import { gridOf, route, doorOf } from './village/paths';
 import { residentsOf, plannerOf, drawResidents } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
 import { habitatsOf, wildPainter, drawWild, drawKoi, isWild } from './village/wild';
+import { homesOf, wildLifeOf } from './village/wildLife';
+import { creatureOf, creatureOfHit } from './creatures';
 import { drawAnya, anyaSign, storyInfo } from './village/anya';
 import { hash } from './village/beast';
 import { dayHourOf } from './gameClock';
@@ -49,7 +51,7 @@ export { BEAST_NAMES, isWild };
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
 // crafts : créations d'île posées ({ x, y }) ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
 // visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home }) ;
-// climates : climat de chaque quartier (par indice) ; avoid : cases à laisser libres autour (gisements, lieux remarquables) ;
+// zoneIds : l'identifiant de chaque quartier (par indice : les coins des bêtes sauvages, wildLife.js) ; avoid : cases à laisser libres autour (gisements, lieux remarquables) ;
 // camp : les cases des objets du camp des naufragés ({ x, y }), où l'on ne marche pas ;
 // troupe : la troupe rencontrée, vue du serveur ({ id, built, asleep } : bible, § 6.6), ou null (un par bâtiment bâti) ;
 // written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null ; anya : une fois Anya
@@ -62,7 +64,7 @@ export { BEAST_NAMES, isWild };
 // plage où il a débarqué ; 'site' : à son chantier, même pas encore bâti, plutôt qu'au camp du Feu), ou null
 // arrivals : les naufragés qui débarquent sous les yeux (Map rôle → { from: case près de l'épave, at: instant, s }) :
 // ils marchent de l'épave à leur place (ARRIVE_SPEED), s'y arrêtent ARRIVE_PAUSE, puis reprennent leur journée
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], camp = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [], posts = null, beds = null }) {
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], zoneIds = [], avoid = [], camp = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [], posts = null, beds = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes, camp });
   const bestiary = bestiaryOf(written);
   // Les bêtes des bois arrivent peu à peu, acte après acte (choix de l'auteur : pas toutes d'un coup sur l'île)
@@ -82,7 +84,11 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   const residents = residentsOf({ grid, M, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary });
   const planner = plannerOf({ grid, stops, home, calm, routeOf });
   const farm = farmOf({ grid, M, built, coop, bestiary });
-  const habitats = habitatsOf({ n, M, owned, grid, props, avoid, climates });
+  // Les coins des zones à soi (un seul parcours de l'île) ; les bêtes sauvages qui vivent de leur coin et de leurs
+  // conditions (pendant le tutoriel, aucune : elles arrivent à sa fin)
+  const homes = homesOf({ n, M, owned, grid, props, avoid });
+  const habitats = habitatsOf(homes);
+  const wildLife = calm ? null : wildLifeOf({ homes, zoneIds, grid, n });
 
   // Tout ce qui vit à l'instant t (secondes) sous ce ciel : [{ id, kind, species, x, y, z, flip, sprite: [clé, dessin] }]
   // et les lanternes [{ x, y }] ; scared : touchers récents (Map id → { at }) ; loose : les poules échappées du tutoriel
@@ -108,8 +114,9 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const f = { t, h, rain, day, islandDay, phase, tapped, out, lights, meets, dawn, dusk, dayTime, night };
     drawResidents(f, { residents, ...planner, arrivals, bestiary, calm });
     drawFarm(f, farm, loose);
-    const paint = wildPainter(f, calm);
-    drawWild(f, paint, { habitats, bestiary, doneAct, doors, home, climates });
+    const paint = wildPainter(f);
+    if (wildLife) wildLife.at(f, paint.put, { doneAct, bestiary });
+    drawWild(f, paint, { habitats, bestiary, doors, home });
     const here = drawAnya(f, paint, { anya, banks: habitats.banks, dame, home });
     drawKoi(f, habitats.water, calm);
     anyaSign(out, here);
@@ -194,6 +201,9 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     // Une poule d’Agathe : son prénom
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
     if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? TOUCH_HINTS.reactShe : TOUCH_HINTS.reactHe };
+    // Une créature du Bestiaire : son nom et sa phrase (texts/world/creatures.js)
+    const creature = creatureOf(creatureOfHit({ who }));
+    if (creature) return { title: creature.name, text: creature.text, hint: TOUCH_HINTS.startle };
     const [title, text] = BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];
     return { title, text, hint: isWild(who.species) ? TOUCH_HINTS.startle : TOUCH_HINTS.reactShe };
   }

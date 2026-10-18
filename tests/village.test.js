@@ -1,8 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
+import { CREATURE_TEXTS } from '@/texts/world/creatures';
 import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
@@ -259,18 +260,25 @@ describe('village : bêtes', () => {
     expect(closed.some(c => c.species === 'hen' || c.kind === 'egg')).toBe(false);
     expect(closed.some(c => c.species === 'cow')).toBe(true);
   });
-  it('les bêtes sauvages ont leurs heures ; touchées, elles sursautent, trottinent et reviennent, sans disparaître', () => {
-    const day = at(13);
-    const night = at(1);
-    expect(village.at(3, day).list.some(c => c.species === 'rabbit')).toBe(true);
-    expect(village.at(3, day).list.some(c => c.species === 'fox')).toBe(false);
-    expect(village.at(3, night).list.some(c => c.species === 'fox' || c.species === 'hedgehog')).toBe(true);
-    expect(village.at(3, day).list.some(c => c.species === 'koi')).toBe(true);
-    // Le lapin 0 regarde d'un côté ; touché, il bondit, trottine de ce côté (moins d'une demi-case), se retourne et revient
-    const rabbit = (time, scared) => village.at(time, day, scared).list.find(c => c.id === 'wild:rabbit:0');
+  it('les bêtes sauvages vivent à leurs heures, dans leurs zones ; touchées, elles sursautent, trottinent et reviennent, sans disparaître', () => {
+    vi.useFakeTimers({ now: new Date(2026, 9, 18, 12) });
+    const wild = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }], coop, acts: ['T', 'I', 'II', 'III'], zoneIds: ['coeur'] });
+    const species = h => wild.at(3, at(h)).list.map(c => c.species);
+    const days = Array.from({ length: 60 }, (_, i) => 8 + i * 0.16);
+    const nights = Array.from({ length: 30 }, (_, i) => 22.5 + i * 0.05);
+    // Le lapin vit au cœur, le jour ; le renard et le hérisson, à la Lisière et aux Jardins : jamais au cœur
+    expect(days.some(h => species(h).includes('rabbit'))).toBe(true);
+    expect(nights.some(h => species(h).includes('rabbit'))).toBe(false);
+    expect([...days, ...nights].some(h => species(h).includes('fox') || species(h).includes('hedgehog'))).toBe(false);
+    expect(species(13)).toContain('koi');
+    // Un lapin dehors regarde d'un côté ; touché, il bondit, trottine de ce côté (moins d'une demi-case), se retourne et
+    // revient
+    const h = days.find(x => wild.at(2, at(x)).list.some(c => c.species === 'rabbit'));
+    const id = wild.at(2, at(h)).list.find(c => c.species === 'rabbit').id;
+    const rabbit = (time, scared) => wild.at(time, at(h), scared).list.find(c => c.id === id);
     const calm = rabbit(2);
-    const scared = new Map([['wild:rabbit:0', { at: 2 }]]);
-    expect(rabbit(2.15, scared).z).toBeGreaterThan(0);
+    const scared = new Map([[id, { at: 2 }]]);
+    expect(rabbit(2.15, scared).z).toBeGreaterThan(calm.z);
     const away = rabbit(3.3, scared);
     const step = (calm.flip ? -1 : 1) * 0.35;
     expect(away.x - calm.x).toBeCloseTo(step, 1);
@@ -278,10 +286,11 @@ describe('village : bêtes', () => {
     expect(away.flip).toBe(calm.flip);
     expect(rabbit(4, scared).flip).toBe(!calm.flip);
     // Revenu à sa place, toujours là
-    const pose = c => ({ x: c.x, y: c.y, z: c.z, flip: c.flip, key: c.sprite[0] });
+    const pose = c => ({ x: c.x, y: c.y, flip: c.flip });
     expect(pose(rabbit(10, scared))).toEqual(pose(rabbit(10)));
-    expect(village.describe({ kind: 'beast', species: 'fox' }).hint).toBe('Toucher : il sursaute');
-    expect(village.say({ kind: 'beast', species: 'fox' }, night)).toBeNull();
+    expect(wild.describe({ kind: 'beast', species: 'fox' }).hint).toBe('Toucher : il sursaute');
+    expect(wild.say({ kind: 'beast', species: 'fox' }, at(1))).toBeNull();
+    vi.useRealTimers();
   });
   it('chaque dessin de bête et d’habitant se fait sans valeur manquante', () => {
     for (const breed of Object.keys(HEN_BREEDS)) [0, 1].forEach(f => expect(ANIMAL_SPRITES.hen(f, breed).svg).not.toMatch(/NaN|undefined/));
@@ -329,7 +338,8 @@ describe('village : bêtes', () => {
 });
 
 describe('village : bêtes des climats', () => {
-  // Deux quartiers : à l'ouest le cœur (sans climat), à l'est des dunes ; un cactus et un gisement à laisser libres
+  // Deux quartiers : à l'ouest le cœur (sans climat), à l'est un climat (les Dunes d'Or, ou l'Oasis cachée) ; un cactus et
+  // un gisement à laisser libres
   const dunesM = {
     ground: (x, y) => (x < 0 || y < 0 || x >= N || y >= N || x === 0 || y === 0 || x === N - 1 || y === N - 1 ? '~' : x >= 7 ? 's' : 'g'),
     height: () => 1,
@@ -337,46 +347,44 @@ describe('village : bêtes des climats', () => {
   };
   const props = [{ kind: 'cactus', x: 10, y: 3 }];
   const deposit = { x: 10, y: 9 };
-  const make = owned => villageOf({ n: N, M: dunesM, sites: [], owned, crafts: [], props, climates: [null, 'dunes'], avoid: [deposit] });
-  const dunes = make(new Set([0, 1]));
-  const climBeasts = (v, t, phase) => v.at(t, phase).list.filter(c => c.id.startsWith('clim:'));
-  const free = c => !(c.x === 10 && c.y === 3) && !(Math.abs(c.x - deposit.x) <= 1 && Math.abs(c.y - deposit.y) <= 1);
-  it('une bête de chaque par quartier à soi de son climat, sur une case libre ; aucune ailleurs', () => {
-    for (const h of [3, 13]) {
-      const list = climBeasts(dunes, 5, at(h));
-      expect(list.map(c => c.species).sort()).toEqual(['camel', 'fennec']);
-      // Celle qui dort est posée au centre de sa case : dans les dunes, hors du décor et de la clairière du gisement
-      const asleep = list.find(c => /rest$|_clignement$/.test(c.sprite[0]));
-      expect(dunesM.zone(asleep.x, asleep.y)).toBe(1);
-      expect(free(asleep)).toBe(true);
+  const make = (owned, east) => villageOf({ n: N, M: dunesM, sites: [], owned, crafts: [], props, zoneIds: ['coeur', east], avoid: [deposit] });
+  const beasts = (v, h, weather, t = 5, scared) => v.at(t, at(h, weather), scared).list.filter(c => c.id.startsWith('wild:'));
+  const free = c => !(Math.round(c.x) === 10 && Math.round(c.y) === 3) && !(Math.abs(Math.round(c.x) - deposit.x) <= 1 && Math.abs(Math.round(c.y) - deposit.y) <= 1);
+  const days = Array.from({ length: 60 }, (_, i) => 8 + i * 0.16);
+  afterEach(() => vi.useRealTimers());
+  it('le dromadaire de l’Oasis, le jour par temps clair, sur une case libre de sa zone ; aucun ailleurs, ni la nuit, ni sous la pluie', () => {
+    vi.useFakeTimers({ now: new Date(2026, 9, 18, 12) });
+    const oasis = make(new Set([0, 1]), 'oasis');
+    const seen = days.flatMap(h => beasts(oasis, h, 'clair'));
+    expect(seen.some(c => c.species === 'camel')).toBe(true);
+    for (const c of seen) {
+      expect(dunesM.zone(Math.round(c.x), Math.round(c.y))).toBe(1);
+      expect(free(c)).toBe(true);
     }
-    expect(climBeasts(make(new Set([0])), 5, at(13))).toEqual([]);
-  });
-  it('chacune à ses heures : le fennec dort le jour et trotte la nuit, le dromadaire l’inverse', () => {
-    const key = (h, s) => climBeasts(dunes, 5, at(h)).find(c => c.species === s).sprite[0];
-    // (couchée : rest, ou de la bibliothèque, couchée les yeux fermés)
-    const REST = /rest$|_clignement$/;
-    expect(key(13, 'fennec')).toMatch(REST);
-    expect(key(13, 'camel')).not.toMatch(REST);
-    expect(key(2, 'fennec')).not.toMatch(REST);
-    expect(key(2, 'camel')).toMatch(REST);
-    // Sous la pluie, le dromadaire se couche
-    expect(climBeasts(dunes, 5, at(13, 'pluie')).find(c => c.species === 'camel').sprite[0]).toMatch(REST);
+    expect(days.some(h => beasts(oasis, h, 'pluie').length)).toBe(false);
+    expect(Array.from({ length: 20 }, (_, i) => 23 + i * 0.1).some(h => beasts(oasis, h, 'clair').length)).toBe(false);
+    expect(days.some(h => beasts(make(new Set([0]), 'oasis'), h, 'clair').length)).toBe(false);
+    // (le fennec n'est pas de l'Oasis)
+    expect(seen.some(c => c.species === 'fennec')).toBe(false);
   });
   it('touchées, elles sursautent et reviennent, sans disparaître ; appui long : leur fiche', () => {
-    const id = climBeasts(dunes, 5, at(13)).find(c => c.species === 'camel').id;
+    vi.useFakeTimers({ now: new Date(2026, 9, 18, 12) });
+    const oasis = make(new Set([0, 1]), 'oasis');
+    const h = days.find(x => beasts(oasis, x, 'clair').some(c => c.species === 'camel'));
+    const id = beasts(oasis, h, 'clair').find(c => c.species === 'camel').id;
     const scared = new Map([[id, { at: 2 }]]);
-    const camel = (time, sc) => dunes.at(time, at(13), sc).list.find(c => c.id === id);
+    const camel = (time, sc) => beasts(oasis, h, 'clair', time, sc).find(c => c.id === id);
     expect(camel(2.5, scared)).toBeDefined();
-    const pose = c => ({ x: c.x, y: c.y, z: c.z, flip: c.flip, key: c.sprite[0] });
+    const pose = c => ({ x: c.x, y: c.y, flip: c.flip });
     expect(pose(camel(10, scared))).toEqual(pose(camel(10)));
     // Il reste dans sa case : moins d'une demi-case de chaque côté
     for (const time of [2.1, 2.5, 3, 3.3, 3.8, 4.2]) {
       expect(Math.abs(camel(time, scared).x - camel(time).x)).toBeLessThan(0.5);
       expect(Math.abs(camel(time, scared).y - camel(time).y)).toBeLessThan(0.5);
     }
-    expect(dunes.describe({ kind: 'beast', species: 'fennec' })).toEqual({ title: 'Fennec', text: 'Il dort le jour et trotte la nuit dans les Dunes.', hint: 'Toucher : il sursaute' });
-    expect(dunes.say({ kind: 'beast', species: 'camel' }, at(13))).toBeNull();
+    // (sa fiche : celle du Bestiaire, texts/world/creatures.js)
+    expect(oasis.describe({ kind: 'beast', species: 'camel', id })).toEqual({ title: CREATURE_TEXTS.chameau[0], text: CREATURE_TEXTS.chameau[1], hint: 'Toucher : il sursaute' });
+    expect(oasis.say({ kind: 'beast', species: 'camel' }, at(13))).toBeNull();
   });
   it('les douze dessins se font sans valeur manquante ni attribut en double, à chaque image', () => {
     const doubled = svg => [...svg.matchAll(/<(\w+)([^>]*)>/g)].filter(m => {

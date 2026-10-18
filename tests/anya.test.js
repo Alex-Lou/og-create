@@ -3,7 +3,7 @@
 // le Cercle fleuri.
 import { describe, it, expect } from 'vitest';
 import { TRACES, TRACE_COUNT, traceDue, traceFrames, tracesOf, seenOf, PRESENTIMENTS, revelationFrames, anyaHere, anyaSceneOf, anyaVisitClock } from '@/game/anya';
-import { anyaPath, anyaPose } from '@/world/village/anya';
+import { anyaPath, anyaPose, anyaSign } from '@/world/village/anya';
 import { anyaArt, cerfArt, frameOf, durationOf, ANYA_POSES } from '@/world/anyaArt';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
@@ -111,17 +111,15 @@ describe('Anya sur l’île', () => {
     expect(ids(island({}), 13).some(id => id.startsWith('anya:'))).toBe(false);
   });
   it('le signe de son passage : les bêtes alentour se tournent toutes vers elle', () => {
-    // Une tortue au bord de la mare (écrite dans le Grimoire) ; Anya passe juste à côté, d'un côté puis de l'autre
-    const facing = visit => {
-      const life = island({ written: ['Tortue'], anya: { visit } }).at(30, at(6)).list;
-      const b = life.find(c => c.id === 'best:tortoise');
-      const dame = life.find(c => c.id === 'anya:dame');
-      return { b, toward: (dame.x - b.x) - (dame.y - b.y) < 0 };
+    // Une bête à côté d'elle, d'un côté puis de l'autre : elle se retourne vers Anya ; trop loin, elle ne bouge pas
+    const turned = (x, y, flip) => {
+      const out = [{ id: 'wild:tortue:coeur:0', species: 'tortoise', x, y, flip }];
+      anyaSign(out, { x: 9, y: 9 });
+      return out[0].flip;
     };
-    const sides = [{ slot: 'aube', x: 6, y: 12 }, { slot: 'aube', x: 12, y: 6 }].map(facing);
-    for (const { b, toward } of sides) expect(b.flip).toBe(toward);
-    // D'un côté, puis de l'autre : elle se retourne vraiment
-    expect(sides[0].b.flip).not.toBe(sides[1].b.flip);
+    expect(turned(6, 12, true)).toBe(false);
+    expect(turned(12, 6, false)).toBe(true);
+    expect(turned(30, 30, false)).toBe(false);
   });
   it('le bol de soupe « pour la Dame », le soir, au bord du Foyer', () => {
     expect(ids(island({ dame: true }), 23)).toContain('dame:bol');

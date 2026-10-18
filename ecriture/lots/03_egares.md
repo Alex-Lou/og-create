@@ -1,5 +1,7 @@
 # Lot 03 — Les égarés
 
+> **Révision du 18 octobre 2026** : les répliques de la veillée des égarés (la deuxième nuit) ont été réécrites par l'auteur ; le texte en jeu est celui de `lots/10_reecriture_auteur.md` (jour 2, « La veillée »). Les égarés, leurs espèces et le bilan du matin ne changent pas.
+
 > Ce lot donne leur voix, ou plutôt leur silence, aux égarés : ce que Brume en dit au tutoriel, la veillée de la deuxième nuit, la fiche des nuits, le bilan du matin, leurs noms, et leur histoire pour la bible.
 > - Décisions appliquées : `ton.md` § 0 (3, 7 bis, 11, 12, 14, 21) et la fiche des égarés (`ton.md` § 4.13). L'agent du dessin a la consigne « sans grimace » (choix de l'auteur, 14 oct.).
 > - Leurs manières de nuit, déjà dans le jeu, sont suivies à la lettre : le Sans-Nom dévie vers la lumière ; la lumière ne fait rien au Dormeur, une clôture l'endort ; le Noyé sort de la mer ; la Racine passe sous les clôtures ; l'Esprit, repoussé, revient une fois, et seule la lumière le libère.

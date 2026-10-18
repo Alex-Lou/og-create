@@ -484,7 +484,17 @@
       :journal="journal"
       :start="shownLandmarks.length ? 'places' : 'journal'"
       @journal-read="readJournal"
+      @bestiary="openBestiary"
       @close="logOpen = false"
+    />
+    <!-- Le Bestiaire des animaux rencontrés, ouvert depuis le Carnet -->
+    <BestiaryBook
+      v-if="bestiaryOpen && state"
+      :met="state.animals || []"
+      :zones="state.map.zones"
+      :elements="elements"
+      :acts="(state.brume && state.brume.acts) || []"
+      @close="bestiaryOpen = false"
     />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
     <ChestHaul v-if="haul && state" :items="haulItems" :note="haulNote" :busy="busy" @wear="wearHauled" @close="haul = null" />
@@ -559,6 +569,7 @@ import BeastSheet from '../Folk/BeastSheet/BeastSheet.vue';
 import VisitorSheet from '../Folk/VisitorSheet/VisitorSheet.vue';
 import RenameSheet from '../Sites/RenameSheet/RenameSheet.vue';
 import ExplorerLog from '../Explore/ExplorerLog/ExplorerLog.vue';
+import BestiaryBook from '../Explore/BestiaryBook/BestiaryBook.vue';
 import FindsSheet from '../Explore/FindsSheet/FindsSheet.vue';
 import WreckScene from '../Explore/WreckScene/WreckScene.vue';
 import BrumeSheet from '../Explore/BrumeSheet/BrumeSheet.vue';
@@ -604,6 +615,7 @@ import annexes from './annexes';
 import nights from './nights';
 import coach from './coach';
 import explore from './explore';
+import bestiary from './bestiary';
 import terrain from './terrain';
 import sky from './sky';
 import roads from './roads';
@@ -636,8 +648,8 @@ export default {
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
-  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
-  components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
+  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, bestiary, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
+  components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, BestiaryBook, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
