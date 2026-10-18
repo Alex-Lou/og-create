@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createRequire } from 'node:module';
 import DATA from '../design/bibliotheque/svg/scenes/tutoriel/scenes.json';
-import { clipA, imageA, prochain, gravee } from '../src/game/acteur';
+import { clipA, imageA, prochain, gravee, neonCouleur } from '../src/game/acteur';
 
 // Les animations du kit de l'avatar (le jeu les lit dans generateur/avatar.mjs : MOUVEMENTS, les mêmes)
 const { ANIMS, DIRECTIONS } = createRequire(import.meta.url)('../design/personnages/refonte/mouvements.js');
@@ -31,6 +31,22 @@ describe('le jeu de l\'avatar dans une scène en plans', () => {
     expect(svg).toMatch(/^<svg [^>]*viewBox="0 0 48 64"/);
     expect(svg.match(/<path d="M1,1 L9,9" fill="red"\/>/g)).toHaveLength(3);
     expect(svg).not.toMatch(/<filter|filter=/);
+  });
+  it('en néon : ses couleurs ravivées, le cerne indigo, le liseré cyan du côté de la lumière, sans hachures', () => {
+    const svg = gravee('<path d="M1,1 L9,9" fill="#B08060" stroke="#3C2819"/><use href="#abc"/>', 'x', { cote: -1, neon: true });
+    expect(svg).toMatch(/^<svg [^>]*viewBox="0 0 48 64"/);
+    expect(svg).toContain(`fill="${neonCouleur('#B08060')}"`);
+    expect(svg).toContain('#0A0418');
+    expect(svg).toMatch(/\.lx \*\{fill:#7AF8EE/);
+    expect(svg).toContain('translate(1.3 -0.5)');
+    expect(svg).not.toMatch(/l36,-76/);
+    expect(svg).toContain('href="#abc"');
+    expect(svg).not.toMatch(/<filter|filter=/);
+  });
+  it('une couleur en néon : plus saturée, la même teinte ; les sombres vers l\'indigo', () => {
+    expect(neonCouleur('#B08060')).not.toBe('#B08060');
+    expect(neonCouleur('#B08060').slice(1, 3) > neonCouleur('#B08060').slice(5, 7)).toBe(true);
+    expect(neonCouleur('#0A0A0A')).toMatch(/^#[0-9A-F]{6}$/);
   });
 });
 

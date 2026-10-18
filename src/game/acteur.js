@@ -40,16 +40,48 @@ export function prochain(acteur, t, anims) {
 
 // Une image du kit (le contenu du cadre 48 × 64), gravée : une silhouette d'encre épaisse derrière elle (son cerne),
 // puis elle, puis, découpées à sa forme, la teinte de la lumière de la scène et des hachures du côté de l'ombre
-// (lumiere : { teinte, force, cote : 1 l'ombre à droite, -1 à gauche }). Sans filtre : le cerne est son propre dessin,
-// tout en encre (une règle de style), et la découpe un masque où il est tout blanc
-export function gravee(corps, uid, { teinte = '#2A2448', force = 0.2, cote = 1 } = {}) {
+// (lumiere : { teinte, force, cote : 1 l'ombre à droite, -1 à gauche, neon }). Sans filtre : le cerne est son propre
+// dessin, tout en encre (une règle de style), et la découpe un masque où il est tout blanc.
+// En néon (choix de l'auteur, 18 oct. : tout le jeu en papier néon, l'avatar du joueur aussi, quel qu'il soit) : ses
+// propres couleurs ravivées, le cerne indigo, un liseré de lumière cyan du côté éclairé (la même silhouette, décalée vers
+// la lumière, sous le cerne), pas de hachures
+export function gravee(corps, uid, { teinte = '#2A2448', force = 0.2, cote = 1, neon = false } = {}) {
   const hach = Array.from({ length: 34 }, (_, k) => `M${-16 + k * 2},68 l36,-76`).join(' ');
   const [x1, x2] = cote > 0 ? [0, 1] : [1, 0];
+  const encre = neon ? NEON_ENCRE : ENCRE, vif = neon ? enNeon(corps) : corps;
   return '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">'
-    + `<style>.c${uid} *{fill:${ENCRE}!important;stroke:${ENCRE}!important;stroke-width:2.4px!important}.m${uid} *{fill:#fff!important;stroke:#fff!important}</style>`
+    + `<style>.c${uid} *{fill:${encre}!important;stroke:${encre}!important;stroke-width:2.4px!important}.m${uid} *{fill:#fff!important;stroke:#fff!important}`
+    + (neon ? `.l${uid} *{fill:${NEON_LISERE}!important;stroke:${NEON_LISERE}!important;stroke-width:2.4px!important}` : '') + '</style>'
     + `<defs><mask id="k${uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="64"><g class="m${uid}">${corps}</g></mask>`
     + `<linearGradient id="g${uid}" x1="${x1}" y1="0" x2="${x2}" y2="0.3"><stop offset="0.38" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>`
     + `<mask id="h${uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="64"><rect width="48" height="64" fill="url(#g${uid})"/></mask></defs>`
-    + `<g class="c${uid}">${corps}</g>${corps}`
-    + `<g mask="url(#k${uid})"><rect width="48" height="64" fill="${teinte}" opacity="${force}"/><g mask="url(#h${uid})"><path d="${hach}" fill="none" stroke="${ENCRE}" stroke-width="0.45" opacity="0.8"/></g></g></svg>`;
+    + (neon ? `<g class="l${uid}" transform="translate(${-Math.sign(cote) * 1.3} -0.5)">${corps}</g>` : '')
+    + `<g class="c${uid}">${corps}</g>${vif}`
+    + `<g mask="url(#k${uid})"><rect width="48" height="64" fill="${teinte}" opacity="${force}"/>`
+    + (neon ? '' : `<g mask="url(#h${uid})"><path d="${hach}" fill="none" stroke="${ENCRE}" stroke-width="0.45" opacity="0.8"/></g>`) + '</g></svg>';
 }
+
+// ——— le néon ———
+const NEON_ENCRE = '#0A0418', NEON_LISERE = '#7AF8EE';
+const hsl = hex => {
+  const n = hex.length === 4 ? [1, 2, 3].map(i => parseInt(hex[i] + hex[i], 16) / 255) : [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const [r, g, b] = n, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+  if (!d) return [0, 0, l];
+  const s = d / (1 - Math.abs(2 * l - 1)), h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, s, l];
+};
+const versHex = (h, s, l) => {
+  const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return '#' + [r, g, b].map(v => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, '0')).join('').toUpperCase();
+};
+// une couleur de l'avatar en néon : plus saturée (sans perdre la couleur choisie : +0,25 au plus), les gris teintés de
+// violet, les sombres tirés vers l'indigo de la nuit
+export function neonCouleur(hex) {
+  const [h, s, l] = hsl(hex);
+  if (l < 0.16) return versHex(258, 0.55, Math.max(0.06, l));
+  if (s < 0.06) return versHex(255, 0.18, l);
+  return versHex(h, Math.min(1, s + 0.25, s * 1.4 + 0.08), l);
+}
+// (les couleurs des attributs et des styles, pas les références url(#…))
+const enNeon = corps => corps.replace(/((?:fill|stroke|stop-color|flood-color)\s*[=:]\s*["']?)(#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3})(?![0-9a-zA-Z])/g, (m, avant, c) => avant + neonCouleur(c));

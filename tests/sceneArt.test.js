@@ -34,11 +34,13 @@ describe('les scènes de la bibliothèque', () => {
     expect(sceneOf('05_feu').still).toBe(false);
   });
   it('l’avatar a un dessin à chaque place, de face, de trois quarts (au repos) ou en saluant', () => {
+    // (une scène en néon fait passer tout avatar par le kit et son rendu néon : ces dessins de la bibliothèque sont alors
+    // son secours, si le kit n'a pas pu se charger)
     for (const id of [...used, '00_carte']) {
       const spot = sceneOf(id).avatar;
       if (!spot) continue;
       for (const look of LOOKS) {
-        const frames = avatarFrames(look, spot);
+        const frames = avatarFrames(look, { ...spot, neon: false });
         expect(frames.length, `${id} ${look}`).toBeGreaterThan(0);
         expect(frames.every(Boolean), `${id} ${look}`).toBe(true);
         expect(frames[0], `${id} ${look}`).toContain(spot.naufrage ? `${look}-naufrage/` : `${look}/`);

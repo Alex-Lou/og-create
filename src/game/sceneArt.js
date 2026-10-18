@@ -7,7 +7,7 @@
 // choix, dessinés par le générateur : game/avatarKit.js).
 import DATA from '../../design/bibliotheque/svg/scenes/tutoriel/scenes.json';
 import CONSEIL from '../assets/scenes/conseil/conseil.json';
-import { isCustom, customFrames, kitFailed } from './avatarKit';
+import { isCustom, customFrames, kitFailed, choixDe } from './avatarKit';
 
 const ROOT = '/design/bibliotheque/svg/';
 const SCENE_URLS = import.meta.glob('/design/bibliotheque/svg/scenes/tutoriel/*/*.svg', { query: '?url', import: 'default', eager: true });
@@ -43,7 +43,12 @@ export const GESTES_DOS = ['assis-mains-tendues'];
 // Les images de l'avatar pour une scène. Les exemples n'ont pas toutes les poses : de trois quarts, le repos est
 // l'image de la marche où les pieds se rejoignent (la 2e), et le salut se fait de face. Un avatar composé : ses images
 // dessinées par le générateur ([] le temps qu'il se charge ; l'exemple par défaut s'il n'a pas pu l'être)
-export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = true } = {}) {
+// En néon (une scène en papier néon, son avatar.neon) : l'avatar, composé ou exemple, passe par le kit et son rendu néon
+export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = true, neon = false } = {}) {
+  if (neon) {
+    const choix = choixDe(look), frames = choix ? customFrames(choix, { vue, pose, naufrage, neon }) : [];
+    if (frames.length || !kitFailed()) return frames;
+  }
   if (isCustom(look)) {
     const frames = customFrames(look, { vue, pose, naufrage });
     if (frames.length || !kitFailed()) return frames;
