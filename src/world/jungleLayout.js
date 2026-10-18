@@ -30,7 +30,7 @@ const outsideOf = (x, y, [rx, ry, w, h]) => Math.max(rx - x, x - (rx + w - 1), r
 const outside = (x, y) => Math.min(...CLEARINGS.map(r => outsideOf(x, y, r)));
 // La jungle couvre le cœur, et déborde autour du noyau sur BAND cases, quel que soit le quartier : le noyau est fermé
 // de tous côtés ; plus loin, l'île garde sa flore
-const BAND = 7;
+const BAND = 10;
 export const inJungle = (x, y, coeur) => coeur || outside(x, y) <= BAND;
 
 // L'épaisseur de la jungle en une case (0 : clairière, 1 : cœur d'un massif)
@@ -41,7 +41,7 @@ export function thicknessAt(x, y) {
   const field = 0.62 * vnoise(x * 0.16 + 3, y * 0.16 + 11, 401) + 0.38 * vnoise(x * 0.42 + 7, y * 0.42 + 1, 402);
   // (dès le bord du noyau, serrée, des massifs plus hauts que d'autres, jamais de trouée ; elle s'éclaircit au bout de
   // la bande, où l'île reprend sa flore)
-  return clamp01((0.5 + 0.2 * ramp(0.5, 2.5, d) + (field - 0.45) * 0.7) * (1 - 0.6 * ramp(BAND - 2, BAND + 2, d)));
+  return clamp01((0.6 + 0.2 * ramp(0.5, 2, d) + (field - 0.45) * 0.6) * (1 - 0.5 * ramp(BAND - 2, BAND + 2, d)));
 }
 
 // Les étages : [épaisseur à partir de laquelle il pousse, ce qui y pousse]
