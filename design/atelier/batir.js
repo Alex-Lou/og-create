@@ -119,6 +119,18 @@ function boite(id, [u0, v0, u1, v1], z0, z1, { gauche, droite, dessus, voile = {
     + (dessus ? trait(ligne([iso(u0, v1, z1), iso(u1, v1, z1), iso(u1, v0, z1)]), ENCRE, 0.6, ' stroke-opacity=".7"') : '');
   return s;
 }
+// La neige posée sur un pan (dans son repère, W × H, y vers l'égout) : son bord qui ondule au-dessus de l'égout ; à
+// main levée, modelée (claire en haut, bleutée vers l'égout), ses bourrelets, son boudin qui déborde à l'égout
+function neigePan(id, W, H, sol) {
+  const bord = `M0,0 H${f(W)} V${f(H - 3)} ${Array.from({ length: 9 }, (_, i) => `Q${f(W * (1 - (i + 0.5) / 9))},${f(H - 0.6)} ${f(W * (1 - (i + 1) / 9))},${f(H - 3 - (i % 2) * 1.4)}`).join(' ')} Z`;
+  let s = `<path d="${bord}" fill="${sol ? NEIGE : mix(NEIGE, NEIGE_O, 0.55)}"/>`;
+  if (STYLE.organique) {
+    s += `<defs>${lin(`${id}g`, 0, 0, 0, H, [[0, '#FFFFFF', 0.55], [0.65, NEIGE_O, 0.12], [1, NEIGE_O, 0.5]])}</defs><path d="${bord}" fill="url(#${id}g)"/>`;
+    for (let y = 9; y < H - 7; y += 9) s += `<path d="M2,${f(y)} ${Array.from({ length: 6 }, (_, i) => `Q${f(W * (i + 0.5) / 6)},${f(y + 2.2)} ${f(W * (i + 1) / 6 - (i === 5 ? 2 : 0))},${f(y)}`).join(' ')}" fill="none" stroke="${NEIGE_O}" stroke-width=".7" opacity=".5"/>`;
+    s += `<path d="M1.5,${f(H - 1.8)} H${f(W - 1.5)}" stroke="${NEIGE_O}" stroke-width="4.6" stroke-linecap="round"/><path d="M1.5,${f(H - 2.6)} H${f(W - 1.5)}" stroke="${NEIGE}" stroke-width="3.6" stroke-linecap="round"/>`;
+  }
+  return s + `<path d="M0,0 H${f(W)}" stroke="#FFFFFF" stroke-width="2"/>`;
+}
 // Un toit à deux pans sur une boîte [u0, v0, u1, v1] posée à la hauteur z : le faîte le long de u (axe 'u') ou de v
 // ('v'), haut de rh au-dessus de z, débordant de o (en cases) ; le pan de derrière, le pignon (sa matière : pignon(W, H)),
 // le pan de devant ; tuilé par couvre(W, H, soleil) ; les rives, le faîtage, l'égout. Rend aussi les repères du pan de
@@ -144,8 +156,7 @@ function toit(id, [u0, v0, u1, v1], z, rh, o, axe, { couvre, pignon, faitage = '
   s += plaque(`${id}d`, R0, U, unite(Vd), Wr, Hd, couvre(Wr, Hd, soleil) + `<rect width="${f(Wr)}" height="${f(Hd)}" fill="${soleil ? SOLEIL : OMBRE_F}" opacity="${soleil ? 0.12 : 0.22}"/>`);
   // (l'hiver : la neige sur les deux pans, son bord qui ondule au-dessus de l'égout, ses glaçons)
   if (ETAT.hiver) {
-    const couche = (O, V, H, sol, k) => plaque(`${id}n${k}`, O, U, V, Wr, H, `<path d="M0,0 H${f(Wr)} V${f(H - 3)} ${Array.from({ length: 9 }, (_, i) => `Q${f(Wr * (1 - (i + 0.5) / 9))},${f(H - 0.6)} ${f(Wr * (1 - (i + 1) / 9))},${f(H - 3 - (i % 2) * 1.4)}`).join(' ')} Z" fill="${sol ? NEIGE : mix(NEIGE, NEIGE_O, 0.55)}"/>`
-      + `<path d="M0,0 H${f(Wr)}" stroke="#FFFFFF" stroke-width="2"/>`);
+    const couche = (O, V, H, sol, k) => plaque(`${id}n${k}`, O, U, V, Wr, H, neigePan(`${id}n${k}`, Wr, H, sol));
     s += couche(R0, unite(Vb), Hb, false, 'b');
     s = s.replace(`<path d="${poly([R0, R1, B1, B0])}"`, `<path d="${poly([R0, R1, B1, B0])}"`);
     s += couche(R0, unite(Vd), Hd, soleil, 'd');
@@ -308,7 +319,8 @@ function buche(x0, y0, x1, y1, r, g, { c = '#BF8049', bois = '#E0A96C', flotte =
     s += `<ellipse cx="${f(kn[0])}" cy="${f(kn[1])}" rx="${f(r * 0.32)}" ry="${f(r * 0.22)}" fill="#8A8272"/><ellipse cx="${f(kn[0])}" cy="${f(kn[1])}" rx="${f(r * 0.14)}" ry="${f(r * 0.09)}" fill="#5A5246"/>`;
     if (L > r * 6) { const sb = plus(plus([x0, y0], [x1 - x0, y1 - y0], 0.62), n, r * 0.9), se = plus(sb, plus(n, d, 0.6), r * 0.9); s += plan(`M${P2(...plus(sb, d, -r * 0.3))} L${P2(...se)} L${P2(...plus(se, d, r * 0.35))} L${P2(...plus(sb, d, r * 0.4))} Z`, '#C3BBA9', 0.6); }
   }
-  if (ETAT.hiver && r > 1.4) s += trait(ligne([plus([x0, y0], n, -r * 0.75), plus([x1, y1], n, -r * 0.75)]), NEIGE, r * 0.9);
+  // (la neige sur son dos, s'il est couché : pas sur un poteau debout)
+  if (ETAT.hiver && r > 1.4 && Math.abs(d[1]) < 0.85) s += trait(ligne([plus([x0, y0], n, -r * 0.75), plus([x1, y1], n, -r * 0.75)]), NEIGE, r * 0.9);
   const a = Math.atan2(d[1], d[0]) * 180 / Math.PI;
   s += `<ellipse cx="${f(x1)}" cy="${f(y1)}" rx="${f(r * 0.45)}" ry="${f(ry)}" transform="rotate(${f(a)} ${f(x1)} ${f(y1)})" fill="${bois}" stroke="${ENCRE}" stroke-width="${TRAIT}"/>`
     + `<ellipse cx="${f(x1)}" cy="${f(y1)}" rx="${f(r * 0.25)}" ry="${f(ry * 0.55)}" transform="rotate(${f(a)} ${f(x1)} ${f(y1)})" fill="none" stroke="${mix(bois, '#8A5A36', 0.6)}" stroke-width=".5"/>`;
@@ -501,12 +513,14 @@ function buisson(id, x, y, r, g, { feuille = '#2E8A5A', fleurs = [] } = {}) {
   s += `<defs>${rad(`${id}r`, x - r * 0.5, y - r * 1.1, r * 2, [[0, mix(feuille, '#E8FF9A', 0.55)], [0.5, feuille], [1, mix(feuille, '#0A2A22', 0.6)]])}</defs>`;
   s += touffes.sort((a, b) => a[1] - b[1]).map(([tx, ty, tr]) => `<circle cx="${f(tx)}" cy="${f(ty)}" r="${f(tr)}" fill="url(#${id}r)" stroke="${mix(feuille, '#0A2A22', 0.55)}" stroke-width=".7"/>`
     + `<path d="M${P2(tx - tr * 0.55, ty - tr * 0.2)} Q${P2(tx - tr * 0.2, ty - tr * 0.75)} ${P2(tx + tr * 0.35, ty - tr * 0.6)}" stroke="#FFFFFF" stroke-width=".8" opacity=".35" fill="none" stroke-linecap="round"/>`).join('');
+  // (l'hiver : la neige sur le haut des touffes, pas de fleurs)
+  if (ETAT.hiver) return s + touffes.map(([tx, ty, tr]) => `<path d="M${P2(tx - tr * 0.8, ty - tr * 0.25)} Q${P2(tx - tr * 0.5, ty - tr * 1.05)} ${P2(tx, ty - tr * 1.02)} Q${P2(tx + tr * 0.6, ty - tr * 1)} ${P2(tx + tr * 0.75, ty - tr * 0.35)} Q${P2(tx, ty - tr * 0.6)} ${P2(tx - tr * 0.8, ty - tr * 0.25)} Z" fill="${NEIGE}" stroke="${NEIGE_O}" stroke-width=".4"/>`).join('');
   fleurs.forEach((c, i) => { const [tx, ty, tr] = touffes[(i * 2 + 1) % touffes.length]; const fx = tx + (g() - 0.5) * tr, fy = ty - tr * 0.3 + (g() - 0.5) * tr * 0.6; s += [0, 1, 2, 3, 4].map(k => { const a = k * 1.256; return `<circle cx="${f(fx + Math.cos(a) * 1.3)}" cy="${f(fy + Math.sin(a) * 1.1)}" r="1.1" fill="${c}"/>`; }).join('') + `<circle cx="${f(fx)}" cy="${f(fy)}" r=".7" fill="#FFF4C8"/>`; });
   return s;
 }
 
 module.exports = {
-  f, rnd, setHiver, hiver, NEIGE, NEIGE_O, BORD, ombrePortee, STYLE, tremble, tChaumeDodu, buisson, ENCRE, TRAIT, SOLEIL, OMBRE_F, HERBE, SABLE, CYAN, MAGENTA, ACIDE, CHAUD, VIOLET,
+  f, rnd, setHiver, hiver, NEIGE, NEIGE_O, neigePan, BORD, ombrePortee, STYLE, tremble, tChaumeDodu, buisson, ENCRE, TRAIT, SOLEIL, OMBRE_F, HERBE, SABLE, CYAN, MAGENTA, ACIDE, CHAUD, VIOLET,
   P2, poly, ligne, lin, rad, plan, trait, ovale, lueur, neon, mix, plus, moins, norme, unite,
   iso, PAS, AXE_U, AXE_V, plaque, voileFace, boite, toit, surPan,
   tPierres, tBriques, tPlanches, tRondins, tTuiles, tChaume, tColombage, tTole, tBordages, tPalmes, tTresse, tArgile, bambou,

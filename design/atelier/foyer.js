@@ -159,7 +159,8 @@ function palier1(n = 0) {
   const g = rnd(11), p = 'f1';
   let s = sol(p, 64, 32, g) + ombreSol(`${p}o`, 2, 8, 40, 18, 0.22) + pas(-62, 30, -20, 14, 7);
   // (au fond : le banc de bois flotté, sa couverture, le bol)
-  s += contact(-16, -22, 30, 0.25) + buche(-44, -12, 12, -36, 5.6, g, { flotte: true });
+  s += B.buisson(`${p}b1`, -54, -30, 12, g, { feuille: '#1E7A50', fleurs: ['#FF4FAE', '#FF4FAE', '#FFD04A'] }) + B.buisson(`${p}b2`, 50, -26, 9, g, { feuille: '#3E9A6A', fleurs: [B.ACIDE] });
+  s += contact(-16, -22, 30, 0.25) + buche(-44, -12, 12, -36, 6.4, g, { flotte: true });
   // (la couverture pliée, drapée sur le tronc : ses plis, ses carreaux, sa frange)
   s += plan(`M${P2(-27, -32)} Q${P2(-18, -37)} ${P2(-9, -39)} Q${P2(-6, -33)} ${P2(-7, -25)} Q${P2(-16, -21)} ${P2(-25, -17)} Q${P2(-29, -24)} ${P2(-27, -32)} Z`, toile('#D8664A'), 0.7)
     + `<path d="M${P2(-26, -26)} Q${P2(-17, -29)} ${P2(-8, -32)}" stroke="#F4E4C8" stroke-width="1.2" fill="none"/><path d="M${P2(-19, -35)} Q${P2(-18, -28)} ${P2(-16, -20)}" stroke="#F4E4C8" stroke-width="1.2" fill="none"/>`
@@ -171,20 +172,21 @@ function palier1(n = 0) {
 
   // (la voile roulée qui sert de couche, devant à gauche : dessinée avant le feu, elle prend la couleur du skin)
   s += contact(-46, 12, 14, 0.25) + voileRoulee(-58, 6, -34, 18, g);
+  s += B.buisson(`${p}b3`, 60, 20, 6, g, { feuille: '#2E8A5A', fleurs: ['#FF8A5A'] });
   // (le foyer : les galets de derrière, les cendres, le tipi, les deux fourches de la broche)
   const fx = 0, fy = 6;
-  s += flaque(`${p}fl`, fx, fy, 46) + cercle(fx, fy, 20, 11, g, false) + cendres(fx, fy, 13, g);
-  s += [[-10, 3, -1, -10], [10, 1, 1, -11], [-3, -4, 0, -12]].map(([x0, y0, x1, y1]) => buche(fx + x0, fy + y0, fx + x1, fy + y1, 1.8, g, { flotte: true })).join('');
+  s += flaque(`${p}fl`, fx, fy, 46) + cercle(fx, fy, 21, 9, g, false, 0.3) + cendres(fx, fy, 13, g);
+  s += [[-10, 3, -1, -10], [10, 1, 1, -11], [-3, -4, 0, -12]].map(([x0, y0, x1, y1]) => buche(fx + x0, fy + y0, fx + x1, fy + y1, 2.4, g, { flotte: true })).join('');
   const fourche = x => trait(`M${P2(x, fy + 2)} L${P2(x, fy - 20)} M${P2(x, fy - 17)} L${P2(x - 2.6, fy - 22)} M${P2(x, fy - 17)} L${P2(x + 2.6, fy - 22)}`, ENCRE, 2.6) + trait(`M${P2(x, fy + 2)} L${P2(x, fy - 20)} M${P2(x, fy - 17)} L${P2(x - 2.6, fy - 22)} M${P2(x, fy - 17)} L${P2(x + 2.6, fy - 22)}`, '#C3BBA9', 1.3);
   s += fourche(fx - 22) + fourche(fx + 22);
   // (le feu, animé)
   s += flammes(`${p}fe${n}`, fx, fy - 2, 1.3, n);
   // (la broche et ses poissons, au-dessus du feu ; les galets de devant, la bûche en travers)
   s += trait(`M${P2(fx - 25, fy - 19.6)} L${P2(fx + 25, fy - 20.4)}`, ENCRE, 2) + trait(`M${P2(fx - 25, fy - 19.6)} L${P2(fx + 25, fy - 20.4)}`, '#D8CDB4', 0.9) + poisson(fx - 7, fy - 20) + poisson(fx + 8, fy - 20.2, -1);
-  s += buche(fx - 10, fy + 5, fx + 9, fy + 3, 1.9, g, { flotte: true }) + cercle(fx, fy, 20, 11, g, true);
+  s += buche(fx - 10, fy + 5, fx + 9, fy + 3, 2.5, g, { flotte: true }) + cercle(fx, fy, 21, 9, g, true, 0.3);
   // (devant : la marmite, la voile roulée qui sert de couche ; les herbes qui mangent les pieds)
   s += contact(26, 18, 6) + marmite(26, 18);
-  s += pied([[-60, 14], [-34, 20], [44, -2], [56, -6], [46, 24], [18, -40], [-48, -6], [62, 8], [-6, 36]], g) + chaleur(`${p}ch`, fx, fy - 6, 44);
+  s += pied([[-60, 14], [-34, 20], [44, -2], [18, -40], [-48, -6], [-6, 36]], g) + chaleur(`${p}ch`, fx, fy - 6, 44);
   return s;
 }
 
@@ -194,9 +196,10 @@ function palier1(n = 0) {
 // feu, son trépied et sa marmite ; le tonneau et la caisse de l'épave, le filet qui sèche ; SOS écrit en galets
 function palier2(n = 0) {
   const g = rnd(23), p = 'f2';
-  let s = sol(p, 70, 34, g) + ombreSol(`${p}o`, -8, 0, 54, 24, 0.22);
-  // ——— la tente ———
   const u0 = -0.92, u1 = 0.22, v0 = -0.98, v1 = -0.18, vm = (v0 + v1) / 2, h = 44;
+  let s = sol(p, 70, 34, g) + B.ombrePortee(`${p}op`, [iso(u0, v1, 0), iso(u1, v1, 0), iso(u1, v0, 0), iso(u0, v0, 0)], h, 0.3);
+  s += B.buisson(`${p}b1`, 46, -34, 11, g, { feuille: '#1E7A50', fleurs: ['#FF4FAE', '#FFD04A'] }) + B.buisson(`${p}b2`, -60, -12, 9, g, { feuille: '#3E9A6A', fleurs: ['#FF8A5A', '#FF8A5A'] });
+  // ——— la tente ———
   // (l'intérieur, au pignon ouvert : l'ombre, la couche de palmes, la couverture, la lanterne)
   s += `<path d="${poly([iso(u1, v0, 0), iso(u1, vm, h), iso(u1, v1, 0)])}" fill="#22302C"/>`
     + `<path d="${poly([iso(u1, v0 + 0.08, 0), iso(u1 - 0.6, v0 + 0.08, 0), iso(u1 - 0.6, v1 - 0.08, 0), iso(u1, v1 - 0.08, 0)])}" fill="#3A8068"/>`
@@ -215,10 +218,10 @@ function palier2(n = 0) {
   s += `<path d="M${P2(...R0)} L${P2(...R1)}" stroke="${ENCRE}" stroke-width="${B.TRAIT}"/>` + plaque(`${p}vc`, R0, AXE_U, V, Wr, Hd, `<path d="${feston}" fill="none" stroke="${ENCRE}" stroke-width="${f(B.TRAIT)}"/>`)
     + trait(ligne([R0, E0]), ENCRE, B.TRAIT) + trait(ligne([R1, plus(E0, [R1[0] - R0[0], R1[1] - R0[1]])]), ENCRE, B.TRAIT);
   // (deux palmes jetées sur la voile, depuis le faîte)
-  s += palme(...plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.25), ...plus(plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.12), Vd, 0.8), 6, g)
-    + palme(...plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.62), ...plus(plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.78), Vd, 0.72), 5.4, g);
+  s += palme(...plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.25), ...plus(plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.12), Vd, 0.8), 7.6, g)
+    + palme(...plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.62), ...plus(plus(R0, [R1[0] - R0[0], R1[1] - R0[1]], 0.78), Vd, 0.72), 7, g);
   // (les pierres qui tiennent le bas de la voile)
-  s += [0.08, 0.5, 0.92].map(t => galet(...plus(plus(E0, [R1[0] - R0[0], R1[1] - R0[1]], t), V, -1.5), 3.2, g, '#C8C0B0', true)).join('');
+  s += [0.08, 0.5, 0.92].map(t => galet(...plus(plus(E0, [R1[0] - R0[0], R1[1] - R0[1]], t), V, -1.5), 4, g, '#C8C0B0', true)).join('');
   // (aux deux bouts, deux avirons de la chaloupe croisés, pales en l'air, ligaturés ; la gaffe en perche de faîte)
   for (const u of [u0 - 0.02, u1 + 0.02]) {
     const c = iso(u, vm, h + 1), a = iso(u, v0 + 0.02, 0), b = iso(u, v1 - 0.02, 0);
@@ -226,21 +229,22 @@ function palier2(n = 0) {
       + trait(`M${P2(c[0] - 2.6, c[1] - 1)} l5.2,2 M${P2(c[0] - 2.6, c[1] + 1)} l5.2,-2`, '#E0C08A', 1.1);
   }
   s += buche(...iso(u0 - 0.2, vm, h + 1), ...iso(u1 + 0.2, vm, h + 1), 1.4, g, { c: '#9A6A3A' }) + trait(`M${P2(...iso(u1 + 0.2, vm, h + 1))} l3,-2 l-1,3`, '#7A8090', 1.2);
+  s += B.buisson(`${p}b3`, -24, 40, 6, g, { feuille: '#2E8A5A', fleurs: ['#FFFFFF'] });
   // ——— le feu devant, le trépied et sa marmite ———
   const fx = 18, fy = 24, tete = [fx, fy - 32];
-  s += flaque(`${p}fl`, fx, fy, 40) + cercle(fx, fy, 15, 10, g, false) + cendres(fx, fy, 10, g);
-  s += buche(fx + 1, fy - 6, tete[0], tete[1], 1.1, g, { flotte: true }) + buche(fx - 8, fy + 2, fx + 7, fy, 1.5, g, { flotte: true });
+  s += flaque(`${p}fl`, fx, fy, 40) + cercle(fx, fy, 17, 9, g, false, 0.3) + cendres(fx, fy, 10, g);
+  s += buche(fx + 1, fy - 6, tete[0], tete[1], 1.4, g, { flotte: true }) + buche(fx - 8, fy + 2, fx + 7, fy, 2.1, g, { flotte: true });
   s += flammes(`${p}fe${n}`, fx, fy - 1, 1, n);
   s += trait(ligne([tete, [fx, fy - 16]]), '#4A4048', 0.8, ' stroke-dasharray="1 .5"') + marmite(fx, fy - 9, 4.2);
-  s += [[-15, 6], [15, 4]].map(([dx, dy]) => buche(fx + dx, fy + dy, tete[0], tete[1], 1.1, g, { flotte: true })).join('') + trait(`M${P2(tete[0] - 2.4, tete[1] + 3)} l4.8,1.4 M${P2(tete[0] - 2.4, tete[1] + 5)} l4.8,1.4`, '#E0C08A', 1);
-  s += cercle(fx, fy, 15, 10, g, true);
+  s += [[-15, 6], [15, 4]].map(([dx, dy]) => buche(fx + dx, fy + dy, tete[0], tete[1], 1.4, g, { flotte: true })).join('') + trait(`M${P2(tete[0] - 2.4, tete[1] + 3)} l4.8,1.4 M${P2(tete[0] - 2.4, tete[1] + 5)} l4.8,1.4`, '#E0C08A', 1);
+  s += cercle(fx, fy, 17, 9, g, true, 0.3);
   // ——— à gauche : le tonneau et la caisse de l'épave, le filet qui sèche dessus ———
   s += contact(-50, 16, 9) + tonneau(-50, 16, 6, 14, g) + contact(...iso(-0.34, 0.86, 0), 13, 0.3) + caisse(`${p}c`, -0.34, 0.86, 0.36, 10, g);
   const cz = iso(-0.34, 0.86, 10);
   s += Array.from({ length: 5 }, (_, i) => trait(`M${P2(cz[0] - 9 + i * 4, cz[1] - 3)} Q${P2(cz[0] - 8 + i * 4, cz[1] + 4)} ${P2(cz[0] - 10 + i * 4.4, cz[1] + 10)}`, '#5A8AA8', 0.6)).join('')
     + Array.from({ length: 4 }, (_, i) => trait(`M${P2(cz[0] - 10, cz[1] - 1 + i * 3)} Q${P2(cz[0], cz[1] + 1 + i * 3)} ${P2(cz[0] + 9, cz[1] - 3 + i * 3)}`, '#5A8AA8', 0.6)).join('')
     + [[-6, 4], [4, 7]].map(([dx, dy]) => `<circle cx="${f(cz[0] + dx)}" cy="${f(cz[1] + dy)}" r="1.3" fill="#EBC46F" stroke="${ENCRE}" stroke-width=".4"/>`).join('');
-  s += pied([[-64, 6], [-56, 22], [-40, 30], [58, 10], [34, 40], [62, -6], [-70, -10], [-30, -36], [40, -20]], g) + chaleur(`${p}ch`, fx, fy - 6, 40);
+  s += pied([[-56, 22], [-40, 30], [58, 10], [34, 40], [62, -6], [-30, -36]], g) + chaleur(`${p}ch`, fx, fy - 6, 40);
   return s;
 }
 
@@ -252,22 +256,23 @@ function palier2(n = 0) {
 function palier3(n = 0) {
   let g = rnd(37);
   const p = 'f3';
-  const u0 = -0.9, u1 = 0.22, v0 = -0.78, v1 = 0.18, hS = 4, hM = 30, vm = (v0 + v1) / 2;
-  let s = sol(p, 68, 33, g, { sable: 0.45 }) + ombreSol(`${p}o`, -6, 2, 58, 26, 0.3);
+  const u0 = -0.9, u1 = 0.22, v0 = -0.78, v1 = 0.18, hS = 5, hM = 30, vm = (v0 + v1) / 2;
+  let s = sol(p, 68, 33, g, { sable: 0.45 }) + B.ombrePortee(`${p}op`, [iso(u0, v1, 0), iso(u1, v1, 0), iso(u1, v0, 0), iso(u0, v0, 0)], hM + 24, 0.32);
+  s += B.buisson(`${p}b1`, 30, -46, 10, g, { feuille: '#1E7A50', fleurs: ['#FF4FAE'] });
   // ——— les murs ———
-  s += boite(`${p}s`, [u0, v0, u1, v1], 0, hS, { gauche: (W, H) => tPierres(W, H, g, { haut: 2.4, long: 4.6, mousse: 0.35 }), droite: (W, H) => tPierres(W, H, g, { haut: 2.4, long: 4.6, mousse: 0.35 }), voile: { pied: 0.15, haut: 0 }, arete: null });
+  s += boite(`${p}s`, [u0, v0, u1, v1], 0, hS, { gauche: (W, H) => tPierres(W, H, g, { haut: 4, long: 7, mousse: 0.45 }), droite: (W, H) => tPierres(W, H, g, { haut: 4, long: 7, mousse: 0.45 }), voile: { pied: 0.15, haut: 0 }, arete: null });
   const xp = 0.56;
   s += boite(`${p}m`, [u0, v0, u1, v1], hS, hM, {
-    gauche: (W, H) => B.tBordages(W, H, g)
+    gauche: (W, H) => B.tBordages(W, H, g, { larg: 5.4 })
       + hublot(`${p}h1`, W * 0.24, H * 0.42, 4.2)
       // (la porte de planches brutes, ses traverses en Z, sa poignée de corde)
       + `<rect x="${f(W * xp)}" y="3" width="12" height="${f(H - 3)}" fill="#A8743E" stroke="${ENCRE}" stroke-width=".7"/>` + [1, 2].map(i => `<rect x="${f(W * xp + i * 4)}" y="3" width=".6" height="${f(H - 3)}" fill="#6A4428"/>`).join('')
       + `<path d="M${P2(W * xp + 0.5, 7)} H${f(W * xp + 11.5)} L${f(W * xp + 0.5)},${f(H - 4)} H${f(W * xp + 11.5)}" fill="none" stroke="#6A4428" stroke-width="1.6"/>`
       + `<circle cx="${f(W * xp + 9.6)}" cy="${f(H * 0.55)}" r="1.4" fill="none" stroke="#E0C08A" stroke-width=".9"/>`,
-    droite: (W, H) => B.tBordages(W, H, g)
+    droite: (W, H) => B.tBordages(W, H, g, { larg: 5.4 })
   });
   // ——— le toit de palmes ———
-  const t = toit(`${p}t`, [u0, v0, u1, v1], hM, 24, 0.13, 'v', { couvre: couverture(g, (W, H, soleil) => B.tPalmes(W, H, g, soleil)), pignon: (W, H) => B.tBordages(W, H, g) + hublot(`${p}h0`, W / 2, H * 0.62, 3), faitage: '#6A5A2A' });
+  const t = toit(`${p}t`, [u0, v0, u1, v1], hM, 24, 0.13, 'v', { couvre: couverture(g, (W, H, soleil) => B.tPalmes(W, H, g, soleil, { haut: 7.5 })), pignon: (W, H) => B.tBordages(W, H, g, { larg: 5.4 }) + hublot(`${p}h0`, W / 2, H * 0.62, 3), faitage: '#6A5A2A' });
   // (la suite tire ses hasards à part : le toit d'un skin n'en consomme pas autant que les palmes)
   g = rnd(38);
   s += t.svg + trait(ligne([surPan(t, 0.02, 0.03), surPan(t, 0.98, 0.03)]), '#E0C08A', 1.3) + [0.15, 0.45, 0.75].map(x => trait(ligne([surPan(t, x, 0), surPan(t, x + 0.015, 0.14)]), '#E0C08A', 1)).join('');
@@ -283,16 +288,17 @@ function palier3(n = 0) {
   const g0 = surPan(t, 0.6, 1.02), g1 = surPan(t, 0.98, 1.02), gb = [bc[0], bc[1] - 13];
   s += trait(ligne([g0, g1, gb]), '#6A5A2A', 2.4) + trait(ligne([g0, g1, gb]), '#C8B060', 1.5) + trait(ligne([plus(g0, [0, -0.5]), plus(g1, [0, -0.5]), plus(gb, [0.5, 0])]), '#F0E0A0', 0.5);
   s += contact(bc[0], bc[1], 8) + tonneau(bc[0], bc[1], 5.2, 12, g) + `<ellipse cx="${f(bc[0])}" cy="${f(bc[1] - 12)}" rx="4" ry="1.9" fill="#5FB0DD"/><ellipse cx="${f(bc[0] - 1)}" cy="${f(bc[1] - 12.4)}" rx="1.6" ry=".6" fill="#FFFFFF" opacity=".7"/>`;
+  s += B.buisson(`${p}b2`, -60, -6, 10, g, { feuille: '#3E9A6A', fleurs: ['#FF8A5A', '#FFD04A'] }) + B.buisson(`${p}b3`, 54, 30, 6, g, { feuille: '#2E8A5A', fleurs: ['#FF4FAE'] });
   // ——— dehors : le feu gardé dans son cercle, sa grille de fer et sa bouilloire ———
   const [fx, fy] = iso(-0.12, 0.74, 0);
-  s += flaque(`${p}fl`, fx, fy, 38) + cercle(fx, fy, 14, 10, g, false) + cendres(fx, fy, 9, g);
-  s += buche(fx - 7, fy + 1, fx + 1, fy - 7, 1.5, g) + buche(fx + 7, fy, fx - 1, fy - 7, 1.5, g);
+  s += flaque(`${p}fl`, fx, fy, 38) + cercle(fx, fy, 16, 9, g, false, 0.3) + cendres(fx, fy, 9, g);
+  s += buche(fx - 7, fy + 1, fx + 1, fy - 7, 2, g) + buche(fx + 7, fy, fx - 1, fy - 7, 2, g);
   s += flammes(`${p}fe${n}`, fx, fy - 1, 0.85, n);
   s += plan(`M${P2(fx - 12, fy - 9)} L${P2(fx + 12, fy - 9)} L${P2(fx + 12, fy - 7.6)} L${P2(fx - 12, fy - 7.6)} Z`, '#3A3A44', 0.6) + [-8, -4, 0, 4, 8].map(dx => trait(`M${P2(fx + dx, fy - 9)} l1.6,-.4`, '#5A5A66', 0.7)).join('')
     + plan(`M${P2(fx + 1, fy - 9)} Q${P2(fx, fy - 15)} ${P2(fx + 5, fy - 15)} Q${P2(fx + 10, fy - 15)} ${P2(fx + 9, fy - 9)} Z`, '#B87A48', 0.7) + plan(`M${P2(fx + 9, fy - 12.4)} L${P2(fx + 13, fy - 14)} L${P2(fx + 12.6, fy - 13)} L${P2(fx + 9, fy - 11.4)} Z`, '#B87A48', 0.5)
     + trait(`M${P2(fx + 2, fy - 14)} Q${P2(fx + 5, fy - 19)} ${P2(fx + 8, fy - 14)}`, '#4A4A54', 0.8);
-  s += cercle(fx, fy, 14, 10, g, true);
-  s += pied([[-66, 0], [-52, 22], [-66, -14], [58, 16], [64, -2], [26, 42], [-12, 38], [46, 30]], g) + chaleur(`${p}ch`, fx, fy - 6, 34);
+  s += cercle(fx, fy, 16, 9, g, true, 0.3);
+  s += pied([[-52, 22], [58, 16], [64, -2], [26, 42], [-12, 38]], g) + chaleur(`${p}ch`, fx, fy - 6, 34);
   return s;
 }
 
@@ -304,9 +310,10 @@ function palier4(n = 0) {
   let g = rnd(41);
   const p = 'f4';
   const zP = 16, D0 = [-1.15, -1.05, 0.62, 0.6];
-  let s = sol(p, 104, 50, g, { sable: 0.35 }) + ombreSol(`${p}o`, -6, 6, 92, 42, 0.32);
+  let s = sol(p, 104, 50, g, { sable: 0.35 }) + B.ombrePortee(`${p}op`, [iso(D0[0], D0[3], 0), iso(D0[2], D0[3], 0), iso(D0[2], D0[1], 0), iso(D0[0], D0[1], 0)], 90, 0.32);
+  s += B.buisson(`${p}b1`, 70, -50, 12, g, { feuille: '#1E7A50', fleurs: ['#FF4FAE', '#FFD04A'] });
   // ——— les pilotis de derrière (sous la plateforme), puis la plateforme ———
-  const pil = (u, v) => { const a = iso(u, v, 0), b = iso(u, v, zP + 2); return contact(a[0], a[1], 4, 0.3) + bambou(a[0], a[1], b[0], b[1], 1.8); };
+  const pil = (u, v) => { const a = iso(u, v, 0), b = iso(u, v, zP + 2); return contact(a[0], a[1], 5, 0.3) + bambou(a[0], a[1], b[0], b[1], 2.5); };
   s += pil(D0[0] + 0.05, D0[1] + 0.05) + pil(D0[2] - 0.05, D0[1] + 0.05) + pil(D0[0] + 0.05, D0[3] - 0.05);
   // (les croix de contreventement sous la plateforme, de face)
   s += [[D0[0] + 0.05, D0[3] - 0.05, (D0[0] + D0[2]) / 2, D0[3] - 0.05], [(D0[0] + D0[2]) / 2, D0[3] - 0.05, D0[2] - 0.05, D0[3] - 0.05]].map(([ua, va, ub, vb]) => { const a = iso(ua, va, 1), b = iso(ub, vb, zP - 1), c = iso(ua, va, zP - 1), d = iso(ub, vb, 1); return bambou(...a, ...b, 0.9) + bambou(...c, ...d, 0.9); }).join('');
@@ -332,9 +339,11 @@ function palier4(n = 0) {
   // (les poteaux d'angle de bambou de la case)
   for (const [u, v] of [[C[0], C[3]], [C[2], C[3]], [C[2], C[1]]]) { const a = iso(u, v, zB), b = iso(u, v, hM); s += bambou(a[0], a[1], b[0], b[1], 1.6); }
   // ——— le toit de paille dorée, haut et pentu ———
-  const t = toit(`${p}t`, C, hM, 36, 0.2, 'v', { couvre: couverture(g, (W, H, soleil) => tChaume(W, H, g, soleil, { fonce: '#A8782A', clair: '#F4D27A', haut: 4.5 })), pignon: (W, H) => B.tTresse(W, H, g, { c: '#D8B070' }), faitage: '#8A6A2A' });
+  const t = toit(`${p}t`, C, hM, 36, 0.22, 'v', { couvre: couverture(g, (W, H, soleil) => B.tChaumeDodu(W, H, g, soleil, { fonce: '#A8782A', clair: '#F8D87E', mousse: 0.15, haut: 8 })), pignon: (W, H) => B.tTresse(W, H, g, { c: '#D8B070' }), faitage: '#8A6A2A' });
   g = rnd(42);
   s += t.svg + trait(ligne([surPan(t, 0.02, 0.03), surPan(t, 0.98, 0.03)]), '#6A5A2A', 2.4) + [0.1, 0.35, 0.6, 0.85].map(x => trait(ligne([surPan(t, x, 0), surPan(t, x + 0.01, 0.12)]), '#6A5A2A', 1.2)).join('');
+  // (l'égout qui roule en boudin de paille)
+  { const e0 = surPan(t, 0, 1), e1 = surPan(t, 1, 1); s += `<path d="M${P2(e0[0], e0[1] - 1)} L${P2(e1[0], e1[1] - 1)}" stroke="#6A4A1A" stroke-width="5" stroke-linecap="round" opacity=".9"/><path d="M${P2(e0[0], e0[1] - 1.6)} L${P2(e1[0], e1[1] - 1.6)}" stroke="#C8963A" stroke-width="3.4" stroke-linecap="round"/><path d="M${P2(e0[0], e0[1] - 2.6)} L${P2(e1[0], e1[1] - 2.6)}" stroke="#F8D87E" stroke-width="1.1" stroke-linecap="round" opacity=".8"/>`; }
   for (let x = 0.01; x < 0.99; x += 0.01) { const q = surPan(t, x, 1); s += trait(`M${P2(q[0], q[1] - 1)} l${f((g() - 0.5) * 1.2)},${f(2.4 + g() * 3)}`, g() < 0.5 ? '#C99A45' : '#F0D07A', 0.9); }
   for (let k = 0.04; k < 0.98; k += 0.05) { const q = plus(t.R1, [t.B1[0] - t.R1[0], t.B1[1] - t.R1[1]], k); s += trait(`M${P2(q[0], q[1])} l${f(-0.6 + g() * 0.6)},${f(2.4 + g() * 2.4)}`, g() < 0.5 ? '#C99A45' : '#F0D07A', 0.9); }
   // ——— la véranda : sa rambarde de bambou, le hamac, la lanterne de l'épave ———
@@ -346,6 +355,7 @@ function palier4(n = 0) {
   // ——— l'échelle de bambou, de la véranda au sol ———
   const e0 = iso(D0[0] + 0.4, D0[3] + 0.32, 0), e1 = iso(D0[0] + 0.4, D0[3], zP + 3);
   s += bambou(e0[0] - 4, e0[1], e1[0] - 4, e1[1], 1.1) + bambou(e0[0] + 4, e0[1], e1[0] + 4, e1[1], 1.1) + [0.2, 0.4, 0.6, 0.8].map(k => { const q = plus([e0[0], e0[1]], [e1[0] - e0[0], e1[1] - e0[1]], k); return trait(`M${P2(q[0] - 4, q[1])} L${P2(q[0] + 4, q[1])}`, '#B89A4A', 1.4); }).join('');
+  s += B.buisson(`${p}b2`, -90, 14, 12, g, { feuille: '#3E9A6A', fleurs: ['#FF8A5A', '#FFFFFF'] }) + B.buisson(`${p}b3`, 96, 24, 8, g, { feuille: '#2E8A5A', fleurs: ['#FF4FAE'] });
   // ——— au pied : le feu du Foyer et sa jarre d'eau, le séchoir à poissons ———
   const [fx, fy] = iso(1.28, 0.92, 0);
   s += flaque(`${p}fl`, fx, fy, 44) + cercle(fx, fy, 15, 11, g, false) + cendres(fx, fy, 10, g);
@@ -360,7 +370,7 @@ function palier4(n = 0) {
   const sx = iso(1.25, -0.25, 0);
   s += contact(sx[0], sx[1], 14, 0.25) + bambou(sx[0] - 12, sx[1] + 4, sx[0] - 12, sx[1] - 26, 1.2) + bambou(sx[0] + 12, sx[1] - 4, sx[0] + 12, sx[1] - 34, 1.2) + bambou(sx[0] - 13, sx[1] - 25, sx[0] + 13, sx[1] - 33, 1.1)
     + [-6, 0, 6].map((dx, i) => { const q = [sx[0] + dx, sx[1] - 29 - dx * 0.33]; return trait(`M${P2(...q)} l0,3`, '#5A4A3A', 0.5) + `<g transform="translate(${f(q[0])} ${f(q[1] + 8)}) rotate(90)">${poisson(0, 0, i % 2 ? 1 : -1)}</g>`; }).join('');
-  s += pied([[-100, 10], [-80, 30], [90, 20], [100, 0], [40, 58], [-30, 56], [-104, -16], [70, 44]], g) + chaleur(`${p}ch`, fx, fy - 6, 40);
+  s += pied([[-80, 30], [100, 0], [40, 58], [-30, 56], [70, 44]], g) + chaleur(`${p}ch`, fx, fy - 6, 40);
   return s;
 }
 
@@ -396,80 +406,16 @@ const fleurs = (a, b, g, n = 6, cols = ['#FF7AA8', '#FFD04A', '#FFFFFF', '#B898F
 
 // L'abri à bois du palier V (contre le mur de droite) et ses poteaux, dessinés à un hasard fixe : le calque du bois
 // repeint celui de devant par-dessus les bûches
-const ABRI5 = [0.32, -0.75, 0.7, -0.15];
-const poteauAbri5 = v => { const a = iso(ABRI5[2], v, 0), b = iso(ABRI5[2], v, 24); return buche(a[0], a[1], b[0], b[1], 1.4, rnd(59), { c: '#8A5A36' }); };
+const ABRI5 = [0.32, -0.78, 0.72, -0.12];
+const poteauAbri5 = v => { const a = iso(ABRI5[2], v, 0), b = iso(ABRI5[2], v, 27); return buche(a[0], a[1], b[0], b[1], 1.6, rnd(59), { c: '#8A5A36' }); };
 
-// ═══ palier V : la maison de rondins ═══
-// Des rondins sur un soubassement de pierres moussues, un toit de chaume épais, sombre et moussu, sa cheminée de pierre
-// qui fume (le feu est entré dans la maison) ; au pignon la porte et l'hirondelle de proue, les fenêtres à volets et
-// leurs jardinières ; l'abri à bois en appentis ; le mât de l'épave planté en vigie ; le banc, l'allée de
-// dalles, les lanternes
-function palier5() {
-  const g = rnd(53), p = 'f5';
-  const M = [-1.2, -1.1, 0.32, 0.2], hS = 8, hM = 42;
-  let s = sol(p, 108, 52, g, { sable: 0.1 }) + ombreSol(`${p}o`, -10, 4, 96, 44, 0.32);
-  { const pd = iso(M[0] + (M[2] - M[0]) * 0.49, M[3], 0); s += allee(`${p}al`, pd[0], pd[1], pd[0] - 30, pd[1] + 36, 7); }
-  // ——— le mât-vigie, derrière à droite ———
-  s += vigie(`${p}v`, 0.95, -1.1, 104, g);
-  // ——— la maison ———
-  s += boite(`${p}s`, M, 0, hS, { gauche: (W, H) => tPierres(W, H, g, { haut: 4, long: 7, mousse: 0.4 }), droite: (W, H) => tPierres(W, H, g, { haut: 4, long: 7, mousse: 0.4 }), voile: { pied: 0.2, haut: 0 }, arete: null });
-  const xp = 0.42;
-  s += boite(`${p}m`, M, hS, hM, {
-    gauche: (W, H) => tRondins(W, H, g, { haut: 5.6 })
-      + fenetre(`${p}w1`, W * 0.1, 9, 10, 11, { volets: '#3E8A7A', fleurs: ['#FF5A8A', '#FFD04A', '#FFFFFF'] })
-      + fenetre(`${p}w2`, W * 0.74, 9, 10, 11, { volets: '#3E8A7A', fleurs: ['#B898F0', '#FF8A5A', '#FFFFFF'] })
-      // (la porte cintrée, ses planches, ses pentures, son heurtoir)
-      + `<path d="M${P2(W * xp, H)} L${P2(W * xp, 9)} Q${P2(W * xp + 8, 1)} ${P2(W * xp + 16, 9)} L${P2(W * xp + 16, H)} Z" fill="#9A5A32" stroke="${ENCRE}" stroke-width=".8"/>`
-      + [1, 2, 3].map(i => `<rect x="${f(W * xp + i * 4)}" y="4" width=".6" height="${f(H - 4)}" fill="#6A3A1E"/>`).join('') + [12, H - 7].map(y => `<rect x="${f(W * xp)}" y="${f(y)}" width="11" height="1.6" fill="#3A3A42"/>`).join('')
-      + `<circle cx="${f(W * xp + 12.5)}" cy="${f(H * 0.58)}" r="1.5" fill="none" stroke="#C8963A" stroke-width="1"/>`,
-    droite: (W, H) => tRondins(W, H, g, { haut: 5.6 }) + fenetre(`${p}w3`, W * 0.2, 9, 9, 10, { volets: '#3E8A7A' }) + fenetre(`${p}w4`, W * 0.66, 9, 9, 10, { volets: '#3E8A7A' })
-  });
-  for (let z = hS + 2.8, r = 0; z < hM; z += 5.6, r++) for (const [cu, cv, du, dv] of [[M[2], M[3], 1, 0], [M[2], M[3], 0, 1], [M[0], M[3], -1, 0]]) {
-    if ((r + (du ? 0 : 1)) % 2) continue;
-    const q = iso(cu + du * 0.04, cv + dv * 0.04, z);
-    s += ovale(q[0], q[1], 2.8, 2.7, '#E0A96C', 0.6) + `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="1.2" fill="none" stroke="#B87A48" stroke-width=".4"/>`;
-  }
-  // ——— le toit de chaume épais, sombre et moussu ———
-  const t = toit(`${p}t`, M, hM, 38, 0.18, 'v', { couvre: couverture(g, (W, H, soleil) => tChaume(W, H, g, soleil, { fonce: '#6A5A2A', clair: '#C8A85A', haut: 4.6 })), pignon: (W, H) => tRondins(W, H, g, { haut: 5.6 }) + fenetre(`${p}wp`, W / 2 - 4.5, H * 0.45, 9, 9, { arc: true }), faitage: '#4A4A2A' });
-  s += t.svg;
-  // (le faîtage de mottes herbues, les touffes de mousse sur le chaume, l'égout coupé net)
-  s += trait(ligne([surPan(t, 0.01, 0.02), surPan(t, 0.99, 0.02)]), '#4E8A48', 3.6) + trait(ligne([surPan(t, 0.01, 0.0), surPan(t, 0.99, 0.0)]), '#81BA5E', 1.4);
-  s += [[0.15, 0.4], [0.42, 0.7], [0.7, 0.3], [0.85, 0.75], [0.3, 0.85]].map(([x, y]) => { const q = surPan(t, x, y); return `<ellipse cx="${f(q[0])}" cy="${f(q[1])}" rx="5" ry="2.4" fill="#4E8A48" opacity=".7"/><ellipse cx="${f(q[0] - 1)}" cy="${f(q[1] - 0.8)}" rx="2.6" ry="1.2" fill="#81BA5E" opacity=".8"/>`; }).join('');
-  for (let x = 0.01; x < 0.99; x += 0.01) { const q = surPan(t, x, 1); s += trait(`M${P2(q[0], q[1] - 1.4)} l${f((g() - 0.5) * 0.8)},${f(2 + g() * 1.6)}`, g() < 0.5 ? '#8A7A3A' : '#C8A85A', 1); }
-  // (l'hirondelle de proue, au-dessus de la porte)
-  s += hirondelle(...iso(M[0] + (M[2] - M[0]) * (xp + 0.07), M[3], hM - 1), 0.9);
-  // ——— la cheminée de pierre, sur le pan de droite ———
-  const pierre = (W, H) => tPierres(W, H, g, { haut: 3.6, long: 6, mousse: 0.25 });
-  const cu = (M[0] + M[2]) / 2, cv = -0.62, zr = hM + 38;
-  s += boite(`${p}ch`, [cu - 0.12, cv - 0.12, cu + 0.12, cv + 0.12], zr - 6, zr + 18, { gauche: pierre, droite: pierre }) + boite(`${p}chc`, [cu - 0.15, cv - 0.15, cu + 0.15, cv + 0.15], zr + 18, zr + 21, { gauche: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#C3BBA9"/>`, droite: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#9B927F"/>`, dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6E6656"/><ellipse cx="${f(W / 2)}" cy="${f(H / 2)}" rx="${f(W * 0.3)}" ry="${f(H * 0.3)}" fill="#2A221E"/>` });
-  // ——— l'abri à bois en appentis contre le mur de droite, vide (les réserves de bois ne se montrent que si la maison en
-  // a : choix de l'auteur, 18 oct.) ———
-  const A = ABRI5;
-  s += poteauAbri5(A[1]) + poteauAbri5(A[3]);
-  s += plaque(`${p}ap`, iso(M[2] - 0.02, A[1] - 0.06, 30), B.AXE_V, B.unite([iso(A[2] + 0.06, 0, 23)[0] - iso(M[2] - 0.02, 0, 30)[0], iso(A[2] + 0.06, 0, 23)[1] - iso(M[2] - 0.02, 0, 30)[1]]), (A[3] - A[1] + 0.12) * PAS, Math.hypot(...[iso(A[2] + 0.06, 0, 23)[0] - iso(M[2] - 0.02, 0, 30)[0], iso(A[2] + 0.06, 0, 23)[1] - iso(M[2] - 0.02, 0, 30)[1]]),
-    B.tPlanches((A[3] - A[1] + 0.12) * PAS, 24, g, { c: '#9A6A3A', larg: 3 }));
-  // ——— devant : l'allée de dalles, le banc, la lanterne sur son poteau (pas de potager : les vrais champs viendront du
-  // jeu, choix de l'auteur, 18 oct.) ———
-  const pd = iso(M[0] + (M[2] - M[0]) * (xp + 0.07), M[3], 0);
-  s += fleurs(iso(M[0], M[3] + 0.04, 0), iso(M[0] + (M[2] - M[0]) * (xp - 0.02), M[3] + 0.04, 0), g, 4) + fleurs(iso(M[0] + (M[2] - M[0]) * (xp + 0.2), M[3] + 0.04, 0), iso(M[2], M[3] + 0.04, 0), g, 4);
-  s += [[0, 6], [-4, 13], [2, 20], [-3, 28]].map(([dx, dy], i) => ovale(pd[0] + dx - 4 - i * 3, pd[1] + dy, 6, 2.6, i % 2 ? '#C3BBA9' : '#D8D2C2', 0.6)).join('');
-  const bn = iso(M[0] + 0.15, M[3] + 0.2, 0);
-  s += contact(bn[0], bn[1], 12, 0.25) + boite(`${p}bn`, [M[0] + 0.05, M[3] + 0.12, M[0] + 0.45, M[3] + 0.24], 6, 8, { gauche: (W, H) => B.tPlanches(W, H, g, { horiz: true, larg: 2 }), droite: (W, H) => B.tPlanches(W, H, g, { horiz: true, larg: 2 }), dessus: (W, H) => B.tPlanches(W, H, g, { larg: 3 }), arete: null })
-    + [[M[0] + 0.08, M[3] + 0.22], [M[0] + 0.42, M[3] + 0.22]].map(([u, v]) => { const a = iso(u, v, 0), b = iso(u, v, 6); return trait(`M${P2(...a)} L${P2(...b)}`, '#6A4428', 2); }).join('');
-  const lt = iso(M[0] + (M[2] - M[0]) * (xp + 0.32), M[3] + 0.5, 0);
-  s += contact(lt[0], lt[1], 4) + trait(`M${P2(...lt)} L${P2(lt[0], lt[1] - 30)} l5,0`, '#3A3038', 1.6) + lanterne(`${p}la`, lt[0] + 5, lt[1] - 30, 2);
-  s += pied([[-110, 6], [-90, 30], [100, 10], [104, -16], [20, 60], [-40, 58], [-112, -20], [70, 56]], g);
-  return s;
-}
-
-// ═══ palier V, trapu et généreux (proposition, choix de l'auteur, 18 oct. : « pas de vie », « tape au mieux ») ═══
-// La même maison, dessinée autrement : des rondins plus gros, un soubassement de grosses pierres, un toit de chaume dodu
+// ═══ palier V : la maison de rondins, trapue et généreuse (la direction choisie par l'auteur, 18 oct.) ═══
+// Le feu est entré dans la maison : des rondins plus gros, un soubassement de grosses pierres, un toit de chaume dodu
 // et doré en gros bourrelets moussus, son égout qui roule en boudin ; une lumière franche (le soleil chaud, l'ombre
 // froide et profonde) ; des buissons aux grandes feuilles et des fleurs qui mangent le pied de la maison ; des fenêtres
-// qui luisent, la fumée en nuages ronds
+// qui luisent ; l'abri à bois en appentis ; le mât de l'épave planté en vigie
 function palier5b() {
-  B.STYLE.organique = true; B.BORD.doux = true;
-  try {
+  {
     const g = rnd(53), p = 'f5b';
     const M = [-1.2, -1.1, 0.32, 0.2], hS = 9, hM = 44, xp = 0.4;
     let s = sol(p, 112, 54, g, { sable: 0.15 }) + B.ombrePortee(`${p}op`, [iso(M[0], M[3], 0), iso(M[2], M[3], 0), iso(M[2], M[1], 0), iso(M[0], M[1], 0)], 70, 0.32);
@@ -503,10 +449,10 @@ function palier5b() {
     const cu = (M[0] + M[2]) / 2, cv = -0.62, zr = hM + 40;
     s += boite(`${p}ch`, [cu - 0.14, cv - 0.14, cu + 0.14, cv + 0.14], zr - 6, zr + 18, { gauche: pierre, droite: pierre }) + boite(`${p}chc`, [cu - 0.17, cv - 0.17, cu + 0.17, cv + 0.17], zr + 18, zr + 22, { gauche: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#D8D2C2"/>`, droite: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#9B927F"/>`, dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6E6656"/><ellipse cx="${f(W / 2)}" cy="${f(H / 2)}" rx="${f(W * 0.3)}" ry="${f(H * 0.3)}" fill="#2A221E"/>` });
     // ——— l'abri à bois, vide (les réserves ne se montrent que si la maison en a) ———
-    const A = [M[2], -0.78, M[2] + 0.4, -0.12];
-    for (const v of [A[1], A[3]]) { const a = iso(A[2], v, 0), b2 = iso(A[2], v, 27); s += buche(a[0], a[1], b2[0], b2[1], 1.6, g, { c: '#8A5A36' }); }
+    const A = ABRI5;
+    s += poteauAbri5(A[1]) + poteauAbri5(A[3]);
     s += plaque(`${p}ap`, iso(M[2] - 0.02, A[1] - 0.06, 33), B.AXE_V, B.unite([iso(A[2] + 0.08, 0, 25)[0] - iso(M[2] - 0.02, 0, 33)[0], iso(A[2] + 0.08, 0, 25)[1] - iso(M[2] - 0.02, 0, 33)[1]]), (A[3] - A[1] + 0.12) * PAS, Math.hypot(iso(A[2] + 0.08, 0, 25)[0] - iso(M[2] - 0.02, 0, 33)[0], iso(A[2] + 0.08, 0, 25)[1] - iso(M[2] - 0.02, 0, 33)[1]),
-      B.tChaumeDodu((A[3] - A[1] + 0.12) * PAS, 26, g, false, { haut: 6, mousse: 0.3 }));
+      B.tChaumeDodu((A[3] - A[1] + 0.12) * PAS, 26, g, false, { haut: 6, mousse: 0.3 }) + (B.hiver() ? B.neigePan(`${p}apn`, (A[3] - A[1] + 0.12) * PAS, 26, false) : ''));
     // ——— la végétation qui mange le pied : buissons aux grandes feuilles, fleurs ———
     s += B.buisson(`${p}b1`, ...iso(M[0] - 0.08, M[3] + 0.12, 0), 11, g, { fleurs: ['#FF4FAE', '#FF4FAE', '#FFD04A'] })
       + B.buisson(`${p}b2`, ...iso(M[2] + 0.1, M[3] + 0.12, 0), 9, g, { feuille: '#3E9A6A', fleurs: ['#FF8A5A', '#FFFFFF'] });
@@ -516,11 +462,8 @@ function palier5b() {
     s += contact(lt[0], lt[1], 4) + trait(`M${P2(...lt)} L${P2(lt[0], lt[1] - 30)} l5,0`, '#3A3038', 1.6) + lanterne(`${p}la`, lt[0] + 5, lt[1] - 30, 2);
     s += B.buisson(`${p}b4`, ...iso(1.32, 0.95, 0), 7, g, { feuille: '#3E9A6A' });
     s += pied([[-112, 6], [-92, 30], [104, 10], [108, -16], [20, 62], [-40, 60], [70, 58]], g);
-    // (la fumée en nuages ronds)
-    const fm = iso(cu, cv, zr + 24);
-    s += [0, 1, 2].map(i => `<circle cx="${f(fm[0] + 3 + i * 4)}" cy="${f(fm[1] - 6 - i * 9)}" r="${f(4 + i * 2.4)}" fill="#F4F2F8" opacity="${f(0.85 - i * 0.22)}" stroke="#C8C8D8" stroke-width=".6"/>`).join('');
     return s;
-  } finally { B.STYLE.organique = false; B.BORD.doux = false; }
+  }
 }
 
 // Le phare, au pied en (u, v) : la tour ronde de pierre chaulée qui s'affine, sa bande sarcelle, ses meurtrières, sa
@@ -611,14 +554,14 @@ function bougainvillee(x, y, h, g, sens = 1) {
 function palier6(n = 0, fort = false) {
   let g = rnd(67);
   const p = fort ? 'f7' : 'f6', N = 8;
-  const M = [-1.25, -0.95, 0.15, 0.3], hS = 7, hM = 40, xp = 0.42;
+  const M = [-1.25, -0.95, 0.15, 0.3], hS = 9, hM = 40, xp = 0.42;
   let brasero = '';
-  let s = sol(p, 110, 54, g, { sable: fort ? 0.6 : 0.1 }) + '<!--allee-->' + ombreSol(`${p}o`, -6, 4, 98, 46, 0.32);
+  let s = sol(p, 110, 54, g, { sable: fort ? 0.6 : 0.1 }) + '<!--allee-->' + B.ombrePortee(`${p}op`, [iso(M[0], M[3], 0), iso(M[2], M[3], 0), iso(M[2], M[1], 0), iso(M[0], M[1], 0)], 74, 0.32);
   // ——— le phare, derrière à droite ———
   const PH = [0.92, -0.92];
   s += phare(`${p}ph`, PH[0], PH[1], 128, g, n, N, { fort });
   // ——— la maison ———
-  s += boite(`${p}s`, M, 0, hS, { gauche: (W, H) => tPierres(W, H, g, { haut: 3.6, long: 7, mousse: fort ? 0.1 : 0.25 }), droite: (W, H) => tPierres(W, H, g, { haut: 3.6, long: 7, mousse: fort ? 0.1 : 0.25 }), voile: { pied: 0.2, haut: 0 }, arete: null });
+  s += boite(`${p}s`, M, 0, hS, { gauche: (W, H) => tPierres(W, H, g, { haut: 4.6, long: 9, mousse: fort ? 0.1 : 0.4 }), droite: (W, H) => tPierres(W, H, g, { haut: 4.6, long: 9, mousse: fort ? 0.1 : 0.4 }), voile: { pied: 0.2, haut: 0 }, arete: null });
   const linteau = (x, y, w) => `<rect x="${f(x - 2)}" y="${f(y - 2.6)}" width="${f(w + 4)}" height="2.6" fill="#8A5A36" stroke="${ENCRE}" stroke-width=".5"/>`;
   const volet = fort ? null : '#3E9A96';
   const fen = (id, x, y, w, h) => fort
@@ -662,9 +605,9 @@ function palier6(n = 0, fort = false) {
     s += boite(`${p}ta`, [T[0] + 0.18, T[1] + 0.2, T[2] - 0.18, T[3] - 0.2], 10, 12, { gauche: (W, H) => B.tPlanches(W, H, g, { horiz: true, larg: 2 }), droite: (W, H) => B.tPlanches(W, H, g, { horiz: true, larg: 2 }), dessus: (W, H) => B.tPlanches(W, H, g, { larg: 3, c: '#D8A868' }) + `<ellipse cx="${f(W * 0.4)}" cy="${f(H * 0.5)}" rx="3" ry="1.6" fill="#E8F4F0" stroke="${ENCRE}" stroke-width=".4"/>`, arete: null })
       + [[T[0] + 0.22, T[3] - 0.22], [T[2] - 0.22, T[3] - 0.22]].map(([u, v]) => { const a = iso(u, v, 0), b = iso(u, v, 10); return trait(`M${P2(...a)} L${P2(...b)}`, '#6A4428', 1.8); }).join('');
     // (les poteaux de la tonnelle, ses traverses, la vigne qui la couvre)
-    for (const [u, v] of pt4) { const a = iso(u, v, 0), b = iso(u, v, tz); s += buche(a[0], a[1], b[0], b[1], 1.3, g, { c: '#9A6A3A' }); }
+    for (const [u, v] of pt4) { const a = iso(u, v, 0), b = iso(u, v, tz); s += buche(a[0], a[1], b[0], b[1], 1.9, g, { c: '#9A6A3A' }); }
     const c0 = iso(T[0], T[3], tz), c1 = iso(T[2], T[3], tz), c2 = iso(T[2], T[1], tz), c3 = iso(T[0], T[1], tz);
-    s += [[c0, c1], [c1, c2], [c3, c0], [c2, c3]].map(([a, b]) => buche(a[0], a[1], b[0], b[1], 1.1, g, { c: '#9A6A3A' })).join('');
+    s += [[c0, c1], [c1, c2], [c3, c0], [c2, c3]].map(([a, b]) => buche(a[0], a[1], b[0], b[1], 1.6, g, { c: '#9A6A3A' })).join('');
     for (let i = 0; i < 46; i++) { const a = g(), b = g(), q = plus(plus(c3, [c0[0] - c3[0], c0[1] - c3[1]], a), [c2[0] - c3[0], c2[1] - c3[1]], b); s += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="${f(2 + g() * 1.6)}" fill="${g() < 0.5 ? '#4E9A5A' : '#81BA5E'}" stroke="#2E5A3A" stroke-width=".4"/>`; if (g() < 0.2) s += `<circle cx="${f(q[0] + 1)}" cy="${f(q[1] + 2.4)}" r="1.4" fill="#8A4AB8" stroke="${ENCRE}" stroke-width=".3"/>`; }
     // (la guirlande de lampions, de la maison au phare)
     s += guirlande(`${p}gl`, iso(M[2], M[3], hM - 2), iso(PH[0] - 0.12, PH[1] + 0.12, 34)) + guirlande(`${p}gm`, iso(M[2], M[1] + 0.3, hM - 2), c2);
@@ -692,7 +635,8 @@ function palier6(n = 0, fort = false) {
     // (les lanternes de garde magenta sur les pieux d'angle : elles repoussent la brume)
     for (const [u, v] of [[-1.38, 1.42], [1.42, 1.42], [1.42, -0.98]]) { const q = iso(u, v, 26); s += B.lueur(`${p}g${u}${v}`, q[0], q[1] + 4, 12, MAGENTA, 0.6) + `<rect x="${f(q[0] - 2)}" y="${f(q[1])}" width="4" height="6" fill="${MAGENTA}" stroke="${ENCRE}" stroke-width=".5"/><rect x="${f(q[0] - 2.6)}" y="${f(q[1] - 1.4)}" width="5.2" height="1.6" fill="#3A3A42"/>`; }
   }
-  s += pied([[-112, 8], [-92, 32], [104, 12], [108, -18], [24, 62], [-42, 60], [-114, -22], [74, 58]], g);
+  if (!fort) s += B.buisson(`${p}b2`, ...iso(M[0] + 0.05, M[3] + 0.55, 0), 9, g, { feuille: '#3E9A6A', fleurs: ['#FFD04A', '#FF8A5A'] }) + B.buisson(`${p}b3`, 112, -8, 8, g, { feuille: '#2E8A5A', fleurs: ['#FFFFFF'] });
+  s += pied([[-92, 32], [104, 12], [24, 62], [-42, 60], [74, 58]], g);
   // (ce qui bouge, à la fin : les flammes du brasero, le faisceau du phare)
   return s + brasero + faisceau(`${p}ph`, PH[0], PH[1], 128, n, N, fort);
 }
@@ -765,9 +709,9 @@ const BOIS = [
   { moitie: [0.66, -0.45, 3, 2], plein: [0.6, -0.45, 4, 3] },
   // (III : contre le mur de droite, les bouts vers nous à droite)
   { moitie: [0.5, -0.5, 3, 2], plein: [0.5, -0.56, 4, 3], options: { axe: 'u', l: 0.26 } },
-  { moitie: [0.84, 0.4, 3, 2], plein: [0.78, 0.4, 4, 3] },
+  { moitie: [0.84, 0.25, 3, 2], plein: [0.78, 0.25, 4, 3] },
   // (V : rangé dans l'abri à bois, les bouts vers l'ouverture, sous le toit ; son poteau de devant repeint par-dessus)
-  { moitie: [0.64, -0.64, 3, 2], plein: [0.64, -0.64, 3, 3], options: { axe: 'u', droit: true, abrite: true, l: 0.3, r: 3.1 }, devant: () => poteauAbri5(ABRI5[3]) },
+  { moitie: [0.66, -0.68, 3, 2], plein: [0.66, -0.68, 3, 3], options: { axe: 'u', droit: true, abrite: true, l: 0.3, r: 3.1 }, devant: () => poteauAbri5(ABRI5[3]) },
   // (VI : rangé droit contre la façade, à gauche de la porte, sous la fenêtre ; VII : contre le mur de droite, derrière,
   // la porte a ses sacs de sable)
   { moitie: [-1.17, 0.58, 3, 2], plein: [-1.17, 0.58, 3, 3], options: { droit: true, l: 0.26, r: 3.2 } },
@@ -777,8 +721,8 @@ const BOIS_ETATS = ['moitie', 'plein'];
 // Le calque du bois d'un palier (le SVG complet, au cadre du palier : il se pose sur lui), à moitié ou plein ; l'hiver
 function bois(lv, etat, { hiver = false } = {}) {
   const [u, v, n, rangs] = BOIS[lv - 1][etat];
-  B.setHiver(hiver); B.BORD.doux = true;
-  try { return svgDe(PALIERS[lv - 1].cadre, tasBois(u, v, n, rangs, rnd(lv * 7 + n), BOIS[lv - 1].options) + (BOIS[lv - 1].devant ? BOIS[lv - 1].devant() : '')); } finally { B.setHiver(false); B.BORD.doux = false; }
+  B.setHiver(hiver); B.STYLE.organique = true; B.BORD.doux = true;
+  try { return svgDe(PALIERS[lv - 1].cadre, tasBois(u, v, n, rangs, rnd(lv * 7 + n), BOIS[lv - 1].options) + (BOIS[lv - 1].devant ? BOIS[lv - 1].devant() : '')); } finally { B.setHiver(false); B.STYLE.organique = false; B.BORD.doux = false; }
 }
 
 // Les images d'un palier (le SVG complet, comme la bibliothèque : le cadre, l'échelle × 1,25 autour)
@@ -792,18 +736,19 @@ const PALIERS = [
   { dessin: palier2, images: 10, cadre: CADRE2, ms: 83, animations: [FEU], lumieres: [L(0.83, 0.38, 10, 44), L(0.08, -0.58, 30, 16)], fumees: [FU(0.83, 0.38, 30)] },
   { dessin: palier3, images: 10, cadre: CADRE2, ms: 83, animations: [FEU], lumieres: [L(-0.12, 0.74, 10, 40), L(-0.34, 0.18, 21, 16), L(-0.63, 0.18, 19, 14)], fumees: [FU(-0.12, 0.74, 26)] },
   { dessin: palier4, images: 10, cadre: CADRE3, ms: 83, animations: [FEU], lumieres: [L(1.28, 0.92, 10, 44), L(-0.75, 0.13, 40, 16), L(-0.84, 0.05, 35, 14)], fumees: [FU(1.28, 0.92, 28)] },
-  { dessin: palier5, images: 1, cadre: CADRE3, lumieres: [L(-0.94, 0.2, 27, 14), L(0.03, 0.2, 27, 14), L(0.32, -0.16, 27, 14), L(0.32, -0.76, 27, 14), L(-0.07, 0.7, 26, 16)], fumees: [FU(-0.44, -0.62, 101)] },
+  { dessin: palier5b, images: 1, cadre: CADRE3, lumieres: [L(-0.94, 0.2, 27, 14), L(0.03, 0.2, 27, 14), L(0.32, -0.16, 27, 14), L(0.32, -0.76, 27, 14), L(-0.07, 0.7, 26, 16)], fumees: [FU(-0.44, -0.62, 106)] },
   { dessin: palier6, images: 8, cadre: CADRE_PHARE, ms: 250, animations: ['beam (8 images, 4/s)'], lumieres: [L(-1.0, 0.3, 26, 14), L(0.05, 0.3, 26, 14), L(0.15, -0.3, 26, 14), L(0.92, -0.92, 140, 36), L(0.4, 0.6, 26, 18)], fumees: [FU(-0.55, -0.5, 93)] },
   { dessin: palier7, images: 8, cadre: CADRE_PHARE, ms: 125, animations: ['beam, brasero (8 images, 8/s)'], lumieres: [L(0.92, -0.92, 140, 28), L(-0.25, 1.15, 12, 32), L(-1.38, 1.42, 26, 12), L(1.42, 1.42, 26, 12), L(1.42, -0.98, 26, 12)], fumees: [FU(-0.55, -0.5, 93), FU(-0.25, 1.15, 22)] }
 ];
 const svgDe = (cadre, corps) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(' ')}"><g transform="scale(1.25)">${corps}</g></svg>`;
-// Une image d'un palier : n (de 0), l'hiver (les toits sous la neige), un skin
+// Une image d'un palier : n (de 0), l'hiver (les toits sous la neige), un skin ; dans la direction trapue et généreuse
+// (choix de l'auteur, 18 oct.) : tracé à main levée, bords doux, lumière peinte
 function image(lv, n = 0, { hiver = false, skin = '' } = {}) {
   const P = PALIERS[lv - 1];
-  B.setHiver(hiver); SKIN = skin;
-  try { return svgDe(P.cadre, P.dessin(n)); } finally { B.setHiver(false); SKIN = ''; }
+  B.setHiver(hiver); SKIN = skin; B.STYLE.organique = true; B.BORD.doux = true;
+  try { return svgDe(P.cadre, P.dessin(n)); } finally { B.setHiver(false); SKIN = ''; B.STYLE.organique = false; B.BORD.doux = false; }
 }
 
 // Les skins du Foyer que ce dessin sait faire
 const SKINS = Object.keys(TOITS);
-module.exports = { palier5b, PALIERS, SKINS, image, bois, BOIS_ETATS, palier1, palier2, palier3, palier4, palier5, palier6, palier7 };
+module.exports = { PALIERS, SKINS, image, bois, BOIS_ETATS, palier1, palier2, palier3, palier4, palier5b, palier6, palier7 };
