@@ -8,7 +8,7 @@ import { noteOf, openableOf } from '@/world/chest';
 import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 import { LINES } from '@/texts/tutorial/scenes';
-import { bubbleFace, builtOf, NAMES } from '@/world/faces';
+import { bubbleFace, builtOf, NAMES, playerBubble } from '@/world/faces';
 import { FAILED } from '@/texts/world/screens/alerts';
 
 export default {
@@ -96,20 +96,22 @@ export default {
       };
     },
     // La première bouteille (choix de l'auteur, 12 oct.) : la mer ne rend rien pendant le tutoriel (le serveur) ; à la
-    // première qui s'échoue, la caméra y va, Lorena la voit et explique le courant, Brume parle de sa brume ; un « ! » la
+    // première qui s'échoue, la caméra y va, Lorena la voit et explique le courant, Brume parle de sa brume, le joueur
+// s'étonne des mots (choix de l'auteur, 18 oct.) ; un « ! » la
     // marque jusqu'à ce qu'on l'ouvre (draw/marks.js). Appelé à chaque vue de l'île (serve.js), après bottleSpotOf
     bottleAshore(state) {
       const opened = guide.state.seen.has('bouteille-h') || guide.state.queue.some(entry => entry.id === 'bouteille-h');
       this.bottleFirst = Boolean(this.bottleSpot) && !opened && !this.thickMist(state);
-      if (this.bottleFirst) this.sayBottle(['bouteille-ecume', 'bouteille-courant', 'bouteille-brume'], state);
+      if (this.bottleFirst) this.sayBottle(['bouteille-ecume', 'bouteille-courant', 'bouteille-brume', 'bouteille-mots'], state);
     },
     // La première bouteille ouverte : le « H. » trouble Brume ; le premier mot d'Héliane rappelle à Lorena le phare de sa
-    // grand-mère (dites une fois la fenêtre du coffre refermée, avant les aides qui attendaient : game/guide.js, hold)
+    // grand-mère, et Nathan compte les coïncidences (dites une fois la fenêtre du coffre refermée, avant les aides qui
+    // attendaient : game/guide.js, hold)
     bottleOpened(chests) {
       const bottle = chests.find(chest => chest.source.startsWith('bouteille:'));
       if (!bottle || guide.state.seen.has('bouteille-h')) return;
       this.bottleFirst = false;
-      this.sayBottle(bottle.story === 'I' ? ['bouteille-phare', 'bouteille-h'] : ['bouteille-h'], this.state, true);
+      this.sayBottle(bottle.story === 'I' ? ['bouteille-nathan', 'bouteille-phare', 'bouteille-h'] : ['bouteille-h'], this.state, true);
     },
     // Des répliques de la bouteille (texts/tutorial/scenes.js : LINES), chacune dite une fois, et seulement sur l'île
     // (game/guide.js : island ; au Grimoire, elles attendent le retour) ; state : la vue de l'île
@@ -120,7 +122,8 @@ export default {
       for (const id of ids) {
         const entry = LINES[id];
         const { who, text, mood, look } = typeof entry === 'string' ? { text: entry } : entry;
-        guide.say({ id, text, island: true, ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !built.includes(who), mood }) } : {}) }, { first });
+        const speaker = who === 'joueur' ? playerBubble(state.avatar) : who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !built.includes(who), mood }) } : {};
+        guide.say({ id, text, island: true, ...(look ? { look } : {}), ...speaker }, { first });
       }
     },
     // Montre un coffre ouvert : sa série (coffre du jour), le mot de la bouteille, l'aperçu du bâtiment paré

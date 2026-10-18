@@ -216,8 +216,11 @@ export default {
   },
   // Fin de l'annonce : la caméra va vers le quartier où dort le naufragé
   closeWreck() {
-    const zone = this.wreck && this.state && this.state.map.zones.find(z => z.id === this.wreck.zone);
+    const wreck = this.wreck;
+    const zone = wreck && this.state && this.state.map.zones.find(z => z.id === wreck.zone);
     this.wreck = null;
+    // (ce qu'on en dit, l'annonce refermée : WorldView, phare.js)
+    if (wreck && wreck.after) this.sayArc(`naufrage-${wreck.id}`, wreck.after);
     // (les scènes et le tutoriel attendaient que l'annonce se referme)
     this.emitQuest();
     if (zone && zone.anchor) this.lookAtCell(zone.anchor.x, zone.anchor.y);

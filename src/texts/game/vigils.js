@@ -56,7 +56,14 @@ export const VIGILS = {
   },
   // Les répliques propres à chaque veillée, dans l'ordre (récit : sans personne qui parle). {peuple} : le nom du peuple
   lines: {
-    I: { brume: 'Une. Hier, il n’y en avait aucune.', brumeToutes: 'Allumons-les toutes. Que la mer sache qu’on est là.' },
+    // (le joueur, Brume qui compte ses amis : choix de l'auteur, 18 oct.)
+    I: {
+      brume: 'Une. Hier, il n’y en avait aucune.',
+      joueur: 'Une lanterne, et tu comptes déjà. Tu vas compter jusqu’où, comme ça ?',
+      brumeMer: 'Jusqu’à ce que la mer nous voie.',
+      brumeToutes: 'Allumons-les toutes. Que la mer sache qu’on est là.',
+      brumeSix: 'Six. Six visages autour du feu… et un renard. Dormez, je veille sur vous.'
+    },
     III: { flore: 'Deux naufrages en une saison. Et des naufragés d’avant, qui vivaient déjà là. Ça ne vous étonne pas ?', recit: 'Brume baisse les yeux.' },
     V: { recit: 'Les autres t’appellent « Alchimiste ».', agathe: 'Du sel ! Je sens le sel !' },
     VI: { lorena: 'Moi aussi, je croyais que c’était ma faute.', recit: 'Maerys, qui avait peur du feu, allume la flamme.', phenix: 'Phénix : Brume renaît, plus vive que jamais.' },

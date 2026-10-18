@@ -1,4 +1,4 @@
-# Lot 10 — La réécriture de l'auteur : le tutoriel, du naufrage au conseil
+# Lot 10 — La réécriture de l'auteur : le tutoriel, du naufrage au conseil, puis le jour de Maerys
 
 > Ce lot donne **le texte du tutoriel tel qu'il est dans le jeu**, jour par jour, après la réécriture de l'auteur des 17 et 18 octobre 2026 (PR « Tutoriel : réécriture des trois premiers jours, et le joueur parle sur l'île »). Il **remplace, pour les répliques**, les lots 01 (l'ouverture), 02 (le tutoriel) et 03 (la veillée des égarés) ; ceux-ci gardent leurs intentions, leurs images et leurs décisions.
 > - **Écrit par l'auteur**, corrigé seulement pour l'orthographe, la ponctuation et la limite de 140 caractères par bulle (une réplique trop longue est coupée en deux bulles, sans retirer un mot quand c'est possible).
@@ -156,7 +156,7 @@ Les moments de l'histoire, les quêtes et l'ordre des étapes ne changent pas (`
 
 ### La caisse
 - **Lorena** *(surprise)* : Mes affaires ! Je n’arrive pas à y croire ! Aidez-moi à l’attraper !
-- **Lorena** *(émue)* : Ma longue-vue, mon compas… intacts. Et mon filet ! Tant pis pour le reste, on se débrouillera avec ce qu’on a déjà là !
+- **Lorena** *(émue)* : Ma longue-vue, mon carnet de quart… intacts. Et mon filet ! Tant pis pour le reste, on se débrouillera avec ce qu’on a déjà là !
 - **Brume** : La mer rend ce qu’elle a pris. C’est toi qui l’as dit.
 
 ### La longue-vue, la Récolte
@@ -408,3 +408,82 @@ Les moments de l'histoire, les quêtes et l'ordre des étapes ne changent pas (`
 - **Joueur** : Et depuis ?
 - **Brume** : … Il n’y a plus que la brume. Ma brume.
 - *(pensée)* Alors on y va. Un pas après l’autre.
+
+## Jour 6 — Maerys (l'acte I)
+
+> Après le conseil, le tutoriel est fini : l'acte I se joue en jeu libre, au rythme des quêtes de Brume. Le « jour 6 » est le lendemain du conseil, jusqu'à la veillée I. **`[serveur]`** : ce que dit Brume pour la quête (`og-create-backend`, `src/texts/quests.js`), inchangé ; le reste est dans ce dépôt (`src/texts/tutorial/scenes.js` : la bouteille ; `src/texts/world/screens/explore.js` : les nuits ; `src/texts/story.js` : La Lisière, la rencontre de Maerys ; `src/texts/world/phare.js` : les répliques à la réclamation d'une quête ; `src/texts/game/anya.js` : la Vie ; `src/texts/game/vigils.js` : la veillée I).
+
+### La première bouteille
+- **Lorena** *(surprise)* : Là, dans l’écume ! Une bouteille. La mer rend ce qu’elle a pris.
+- **Lorena** *(pensive)* : Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les.
+- **Brume** : Ma brume avale les navires… Ce qu’elle ne sait pas garder, la mer le recrache. Du verre, des caisses. Des mots, parfois.
+- **Joueur** : Des mots ? Quelqu’un écrit, sur cette île ?
+- *(ouverte)* « Si tu lis ceci, l’île t’a choisi. Allume les lumières : toutes. — H. »
+- **Brume** : « H. »… Ce H, je l’ai sur le bout de la flamme.
+- **Lorena** *(émue)* : « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil.
+- **Nathan** *(pensif)* : Un phare, des lumières, et un H. Ça fait beaucoup de coïncidences pour une seule bouteille.
+
+### Les nuits deviennent vraies
+- **Brume** : La nuit, des égarés sortent de la brume. Ils cherchent ce qui brille, et ce qu’ils touchent oublie son travail.
+- **Brume** : Tes lumières les changent en lucioles. Presque tous. Tes clôtures les arrêtent, et ta main peut en renvoyer un.
+- **Brume** : Un bâtiment embrumé se répare, et rien ne se perd. Jusqu’ici, ils regardaient. À partir de ce soir, ils viendront pour de bon.
+- **Joueur** : Génial. Moi qui commençais à bien dormir.
+
+### La Lisière
+- **Brume** `[serveur]` : Le bois flotté ne suffira pas. À l’ouest, des arbres dorment sous la brume. Et une lueur, entre eux.
+- **Brume** : Là-bas, à la lisière, une lueur entre les arbres. Pas une lanterne. Quelqu’un vit là, je crois.
+- **Lorena** *(malicieuse)* : Une lueur dans les arbres, sur une île déserte. Une de plus. Je ne pose même plus de questions.
+- *(La Lisière achetée)* **Léo** *(émerveillé)* : Chut… Un renard. Il a une queue de flamme. Il nous regarde.
+
+### Maerys (sa rencontre, à son réveil, en bulles sur l'île)
+- **Brume** `[serveur]` : Quelqu’un vit dans ces arbres, et se cache. Une queue rousse t’a montré le chemin. Approche sans bruit.
+- **Maerys** : Chut. Pas de bruit. Mousse a peur.
+- **Joueur** : Mousse ? … Le renard ? C’est plutôt nous qui avons eu peur.
+- **Maerys** *(effrayée)* : Feu ! Feu qui vole ! Loin. Loin des arbres.
+- **Brume** : Je ne brûle rien ! Je ne réchauffe même pas ! … Demande-leur.
+- **Agathe** *(malicieuse)* : C’est vrai, ma grande. Pour la soupe, elle ne sert à rien.
+- **Brume** : … Merci, Agathe. Vraiment.
+- **Maerys** *(émue)* : … Petite. Perdue. Comme moi. (Elle baisse la branche.)
+- **Maerys** : Maerys. Ici, ma forêt. Pas de feu dedans.
+- **Nathan** *(gêné)* : Noté. Aucun feu. … Je range mes allumettes.
+- *(Mousse file se cacher derrière Maerys.)*
+
+### La Vie
+- **Brume** : Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu’un pour les tenir ensemble.
+- **Brume** `[serveur]` : Air, Eau, Feu, Terre… Les quatre Souffles ensemble. Je crois que c’est ça, la Vie.
+- *(la Vie écrite)* **Une voix** : « … Merci. »
+- **Brume** : Tu as entendu ?
+- **Joueur** : Entendu quoi ?
+- **Brume** : … Non. Rien.
+
+### L'Arbre, le Bosquet
+- **Brume** `[serveur]` : De la Vie naît la Plante, et de la Plante, l’Arbre. Maerys se souviendra de sa forêt.
+- **Maerys** : Arbre… Je me souviens. Ma forêt. Mes mains savent planter.
+- **Léo** *(pensif)* : Elle parle comme moi quand je rêve.
+- **Brume** `[serveur]` : Maerys ramassera le bois mort. Pas un arbre ne tombera : elle y veille.
+- **Maerys** : Mon Bosquet garde le bois mort pour toi. *(aide : À la Récolte, le bois compte double.)*
+- **Lorena** *(rieuse)* : Du bois sans couper un arbre. Nathan, prends des notes.
+- **Nathan** *(gêné)* : … Je prends des notes.
+
+### La première lanterne
+- **Brume** `[serveur]` : Le Feu, et l’Éclair d’un orage… Une lumière qui ne s’éteint pas.
+- **Brume** `[serveur]` : Une lumière de plus. Je les compterai toutes.
+- **Lorena** : La première. Ma grand-mère disait qu’on allume toujours la plus petite d’abord. En attendant le phare.
+- **Maerys** : Il y en a de vieilles, dans les branches. Pour les bêtes perdues. Celle-là ne mord pas. Je veux bien.
+
+### La veillée I
+- > *La nuit, le feu du Foyer. La troupe se rassemble en cercle ; Brume veille au-dessus.*
+- **Maerys** : Chut. Les arbres se réveillent. Tu entends ?
+- *Le rite (Lanterne = Feu + Lumière) : la première lanterne s’allume, et la brume recule d’un cran sur toute la côte.*
+- *La Vie à quatre* — **Brume** : Lorena, Léo, Agathe, Nathan. Air, Eau, Feu, Terre. Ensemble… la Vie.
+- *La soupe et la source* — **Agathe** : Léo. Tu dors debout. / **Léo** : Je ne dors pas. J’écoute l’eau. / **Léo** : Demain, je te trouverai l’eau la plus claire de l’île. Pour ta soupe. / **Agathe** : … Va dormir, mon caneton.
+- **Brume** : Une. Hier, il n’y en avait aucune.
+- **Joueur** : Une lanterne, et tu comptes déjà. Tu vas compter jusqu’où, comme ça ?
+- **Brume** : Jusqu’à ce que la mer nous voie.
+- **Brume** : Allumons-les toutes. Que la mer sache qu’on est là.
+- **Brume** : Six. Six visages autour du feu… et un renard. Dormez, je veille sur vous.
+- *Étape : Le Camp des naufragés*
+
+### À côté
+- **Léo**, sa première réplique de bavardage (il en avait la même qu'à son réveil) : « Tatie dit que je dors debout. Moi, je dis que j’écoute. »
+

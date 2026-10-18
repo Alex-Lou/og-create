@@ -2,15 +2,15 @@
 // Rien n'est décidé ici : la quête active et les quêtes réclamées viennent du serveur ; seuls les naufrages déjà vus
 // sont retenus sur l'appareil.
 
-import { WRECK_TEXTS, MEMORY_LINES } from '@/texts/story';
+import { WRECK_TEXTS, WRECK_AFTER, MEMORY_LINES } from '@/texts/story';
 
 // Les naufragés déjà vus débarquer sur cet appareil (WorldView/castaways.js : arrivalsOf ; « Recommencer l'île » l'oublie)
 export const ARRIVED_KEY = 'oc_arrived';
 
 // Chaque manque amène un naufrage, annoncé quand la quête qui ouvre son acte devient active : l'image d'une nuit, une
-// épave au loin, et Brume. zone : où dort le naufragé
+// épave au loin, et Brume. zone : où dort le naufragé ; after : ce qu'on dit, l'annonce refermée
 export const WRECKS = {
-  lisiere: { villager: 'bosquet', zone: 'lisiere', wreck: 'raft', text: WRECK_TEXTS.lisiere },
+  lisiere: { villager: 'bosquet', zone: 'lisiere', wreck: 'raft', text: WRECK_TEXTS.lisiere, after: WRECK_AFTER.lisiere },
   colline: { villager: 'carriere', zone: 'colline', wreck: 'boat', text: WRECK_TEXTS.colline },
   jardins: { villager: 'potager', zone: 'jardins', wreck: 'barque', text: WRECK_TEXTS.jardins }
 };

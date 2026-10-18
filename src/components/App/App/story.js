@@ -7,11 +7,11 @@ import * as storage from '@/utils/storage';
 import { guide } from '@/game/guide';
 import { loadPrologue, savePrologue, prologueStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire, sceneDelayOf } from '@/game/prologue';
 import { coach } from '@/game/coach';
-import { bubbleFace, NAMES } from '@/world/faces';
+import { bubbleFace, NAMES, playerBubble } from '@/world/faces';
 import { LINES as PROLOGUE_LINES, SCENES as PROLOGUE_SCENES } from '@/texts/tutorial/scenes';
-import { DEFAULT_LOOK, sceneOf, playerFace } from '@/game/sceneArt';
+import { DEFAULT_LOOK, sceneOf } from '@/game/sceneArt';
 import { preparePlans } from '@/components/Prologue/SceneArt/raster';
-import { setPlayer, player } from '@/game/accord';
+import { setPlayer } from '@/game/accord';
 import { TAB_OPENED, TAB_CALLS, PLAN_WRITTEN } from '@/texts/tutorial/tabs';
 import { COACH, TAB_HELP, LINE_HELP, TIP_HELP } from '@/texts/tutorial/coach';
 
@@ -319,7 +319,7 @@ export default {
     },
     // Qui parle dans une bulle du tutoriel : { who, face, bust? } (le joueur, sous son nom ; sinon un membre de la troupe)
     lineSpeaker(who, mood) {
-      if (who === 'joueur') return { who: player.name || 'Toi', face: playerFace(this.prologueLook) };
+      if (who === 'joueur') return playerBubble(this.prologueLook);
       return { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) };
     },
     // Le livre est chargé : la page du Vent s'ouvre, si elle attendait

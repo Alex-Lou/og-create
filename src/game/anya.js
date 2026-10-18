@@ -44,6 +44,7 @@ export const PRESENTIMENTS = {
   vie: [
     { id: 'anya-vie-voix', who: 'Une voix', text: SAID.vieVoix },
     { id: 'anya-vie-brume', text: SAID.vieBrume },
+    { id: 'anya-vie-joueur', who: 'joueur', text: SAID.vieJoueur },
     { id: 'anya-vie-brume-rien', text: SAID.vieBrumeRien }
   ],
   rune: [

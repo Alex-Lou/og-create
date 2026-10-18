@@ -33,5 +33,7 @@ export const FINDS = {
 export const NIGHT_INTRO = [
   'La nuit, des égarés sortent de la brume. Ils cherchent ce qui brille, et ce qu’ils touchent oublie son travail.',
   'Tes lumières les changent en lucioles. Presque tous. Tes clôtures les arrêtent, et ta main peut en renvoyer un.',
-  'Un bâtiment embrumé se répare, et rien ne se perd. La première nuit vient demain.'
+  'Un bâtiment embrumé se répare, et rien ne se perd. Jusqu’ici, ils regardaient. À partir de ce soir, ils viendront pour de bon.'
 ];
+// Ce que répond le joueur, la présentation refermée (choix de l'auteur, 18 oct.)
+export const NIGHT_REPLY = 'Génial. Moi qui commençais à bien dormir.';

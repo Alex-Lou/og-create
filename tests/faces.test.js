@@ -1,9 +1,17 @@
 // Les portraits de la troupe hors de l'île (bulles du guide, scènes) : le dessin de la bibliothèque, en naufragé tant que
 // son bâtiment n'est pas fondé ; le générateur pour qui n'a pas de dessin.
 import { describe, it, expect } from 'vitest';
-import { faceHref, builtOf, lineFace } from '@/world/faces';
+import { faceHref, builtOf, lineFace, playerBubble } from '@/world/faces';
+import { player } from '@/game/accord';
 
 describe('les portraits de la troupe', () => {
+  it('le joueur parle dans une bulle de l’île : sous son nom, avec son avatar de naufragé', () => {
+    player.name = 'Ada';
+    expect(playerBubble('avatar-03')).toMatchObject({ who: 'Ada', face: expect.stringMatching(/avatar-03-naufrage_face_repos_1\.svg/) });
+    player.name = null;
+    expect(playerBubble(null).who).toBe('Toi');
+  });
+
   it('un maître : son dessin de la bibliothèque, en naufragé ou en maître', () => {
     expect(faceHref('ponton', { castaway: true })).toMatch(/aster-naufrage_face_repos_1\.svg$/);
     expect(faceHref('ponton')).toMatch(/aster_face_repos_1\.svg$/);

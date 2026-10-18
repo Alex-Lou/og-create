@@ -33,7 +33,8 @@ export const TALKS = {
   ],
   // Léo, petit sourcier : chuchote, raconte ses rêves comme s'ils étaient vrais
   puits: [
-    'J’ai dormi combien de temps ? L’eau a un goût de nuage.',
+    // (son réveil a sa propre réplique : choix de l'auteur, 18 oct.)
+    'Tatie dit que je dors debout. Moi, je dis que j’écoute.',
     'Cette nuit, j’ai rêvé que la mer était un grand bain. Les poissons me prêtaient leurs bulles. C’était vrai, je crois.',
     'La lune m’a parlé, cette nuit. Elle dit que tu ne dors pas. Je ne lui ai pas répondu non plus.',
     'J’ai peur de l’eau profonde. C’est bête, pour un sourcier. Lorena dit que c’est normal. Elle aussi, des fois.',

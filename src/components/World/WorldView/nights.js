@@ -11,6 +11,8 @@ import { SOUNDS } from '@/texts/village';
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
 import { FAILED } from '@/texts/world/screens/alerts';
+import { NIGHT_REPLY } from '@/texts/world/screens/explore';
+import { playerBubble } from '@/world/faces';
 
 // Le bilan d'une nuit se dit une fois par appareil (la dernière nuit racontée)
 const TOLD_KEY = 'oc_night_told';
@@ -107,6 +109,8 @@ export default {
         try { localStorage.setItem(TOLD_KEY, sheet.id); } catch (e) { /* le confort seulement */ }
         return;
       }
+      // (la présentation refermée : le joueur répond, sur l'île)
+      guide.say({ id: 'nuits-joueur', text: NIGHT_REPLY, island: true, ...playerBubble(this.state && this.state.avatar) });
       try {
         this.apply((await playService.nightsStart()).world);
       } catch (error) {

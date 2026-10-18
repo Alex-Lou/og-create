@@ -35,6 +35,10 @@ describe('les veillées et la civilisation', () => {
     expect(vigilFrames('VII', { people: 'Les Lucioles' }).some(frame => /Les Lucioles/.test(frame.text))).toBe(true);
     // Les nouveaux venus se présentent : Maerys à la veillée I
     expect(vigilFrames('I').some(frame => frame.who === 'Maerys')).toBe(true);
+    // (le joueur y parle, et Brume finit sur son compte : choix de l'auteur, 18 oct.)
+    const veilleeI = vigilFrames('I');
+    expect(veilleeI.some(frame => frame.who === 'joueur')).toBe(true);
+    expect(veilleeI[veilleeI.length - 2]).toMatchObject({ who: 'Brume', text: expect.stringMatching(/^Six\. /) });
   });
   it('les neuf liens réunissent des naufragés de la troupe, chacun avec sa recette', () => {
     expect(LINKS.length).toBe(9);

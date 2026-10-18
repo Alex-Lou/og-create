@@ -22,6 +22,7 @@ import { CLIMATE_NAMES } from '@/world/climates';
 import { gatheredBetween } from '@/world/pending';
 import { dueIn } from '@/world/due';
 import { TOASTS } from '@/texts/world/screens/alerts';
+import { ARRIVAL_LINES } from '@/texts/story';
 
 export default {
   watch: {
@@ -127,6 +128,8 @@ export default {
         const slept = new Set((this.state.villagers || []).filter(v => v.asleep).map(v => v.id));
         (state.villagers || []).filter(v => slept.has(v.id) && !v.asleep).forEach(v => {
           this.$emit('show-alert', TOASTS.awake(v.name));
+          // (celui qui se cachait : sa rencontre, en bulles ; texts/story.js)
+          if (ARRIVAL_LINES[v.id]) this.sayArc(`arrivee-${v.id}`, ARRIVAL_LINES[v.id]);
           // (réveillé loin de sa place, à l'orée de sa forêt : il y marche, sous nos yeux ; castaways.js, bedsOf)
           this.wakeWalk(state, v.id);
         });
