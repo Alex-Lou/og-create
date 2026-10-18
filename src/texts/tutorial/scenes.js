@@ -389,7 +389,7 @@ export const LINES = {
   courants: { who: 'ponton', mood: 'pensif', text: 'Les courants d’ici ramènent tout sur nos plages. Tout, Agathe. Nous finirons bien par le retrouver.' },
   'courants-suite': { who: 'ponton', mood: 'determine', text: 'S’il est comme toi, il a dû s’en sortir, pour sûr !' },
   // Le matin de Léo (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue de Lorena voit une planche sur la vague ;
-  // touchée, elle s'échoue un peu plus loin que le Ponton (look : la caméra la suit, WorldView coach.js)
+  // touchée, elle s'échoue sur le rivage, sous le Feu (look : la caméra la suit, WorldView coach.js)
   'planche-vue': { who: 'ponton', mood: 'surpris', text: 'Ohé ! Là, sur la vague… une planche. Et… quelqu’un dessus ?' },
   'planche-dort': { who: 'ponton', mood: 'emu', text: 'Un enfant… Il dort. La vague l’a posé sur le sable, tout doucement. Décidément, on trouve de tout sur cette plage…', look: 'planche' },
   respire: { who: 'joueur', text: 'Il respire ? … Il respire.' },
