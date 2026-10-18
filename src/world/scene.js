@@ -5,6 +5,7 @@
 import { skyAt, sunTimes, WEATHERS, OPUS } from './sky';
 import { tuilesOf, TUILE } from './tuiles';
 import { rond } from './textures';
+import { soleilOf } from './lumiere/soleil';
 
 // Ciel de l'île à une date (voir sky.js) : moment, nuit, chaleur, lumières, teinte, mer, nuages, soleil, météo
 export const phaseAt = (date = new Date(), forced = {}) => skyAt(date, forced);
@@ -146,12 +147,14 @@ const bancImg = () => rond('banc-de-brume', 128, [[0, 'rgba(244,246,249,1)'], [1
 // de l'île) : la grande lueur chaude du soleil bas, venue du bord de l'île où il se lève ou se couche ; les bancs de
 // brume qui dérivent lentement au-dessus des terres (par carreaux : climates.js, tuilesOf). brumeSaison : la brume des
 // matins d'automne (lumiere/saisons.js), qui n'épaissit que ces bancs
+// (la place de la lueur du soleil bas, en fraction de la largeur de l'île : du côté où il est, soleil.js)
+export const lueurAt = sun => 0.5 + 0.45 * soleilOf(sun).est;
 export function drawWeatherMonde(ctx, view, t, phase, bounds, brumeSaison = 0) {
   const { weather, sun } = phase;
   ctx.save();
   const low = sun.up > 0 ? Math.pow(1 - sun.up, 1.6) * (1 - weather.cover) : 0;
   if (low > 0.02) {
-    const x = bounds.x + bounds.w * (0.95 - 0.9 * sun.progress);
+    const x = bounds.x + bounds.w * lueurAt(sun);
     const y = bounds.y - bounds.h * 0.05;
     const r = Math.max(bounds.w, bounds.h) * 0.6;
     const g = ctx.createRadialGradient(x, y, 0, x, y, r);

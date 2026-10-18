@@ -2,14 +2,15 @@
 // vers l'autre bord ; les ombres, longues, se teintent de mauve ; un liseré doré se pose sur les bords des toits et des
 // arbres tournés vers le soleil. Doux, jamais éblouissant ; rien sous un ciel couvert ni sous la pluie.
 import { entre } from '../maths';
+import { soleilOf } from './soleil';
 
 // Force de l'heure dorée (0 à 1) : elle monte vite au lever, culmine soleil bas, s'éteint avant la matinée ; le
-// couchant de même. Le côté du soleil : 1 le matin (il est à droite), -1 le soir
+// couchant de même. Le côté du soleil (soleil.js) : 1 le matin (il est à droite), -1 le soir
 export function goldenOf(phase) {
   const { sun, weather } = phase;
   if (sun.up <= 0.01) return { k: 0, side: 1 };
   const k = entre(0.01, 0.07, sun.up) * (1 - entre(0.12, 0.38, sun.up)) * Math.pow(1 - weather.cover, 1.5) * (1 - weather.rain);
-  return { k, side: sun.progress < 0.5 ? 1 : -1 };
+  return { k, side: soleilOf(sun).cote };
 }
 
 // La lumière de l'heure dorée, posée sur l'île : chaude du côté du soleil, mauve de l'autre (en lumière douce), d'un
