@@ -14,7 +14,9 @@ export default [
     },
     rules: {
       // ESLint 9 signale aussi les erreurs attrapées inutilisées (`catch (error) {}`) ; ESLint 7 ne le faisait pas
-      'no-unused-vars': ['error', { caughtErrors: 'none' }]
+      'no-unused-vars': ['error', { caughtErrors: 'none' }],
+      // ESLint 10 ajoute à ses règles recommandées la valeur initiale jamais lue (`let x = 0; try { x = … } catch { x = 0; }`)
+      'no-useless-assignment': 'off'
     }
   }
 ];
