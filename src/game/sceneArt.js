@@ -103,7 +103,7 @@ const STILL = {
 // Les images nouvelles des lots d'écriture (choix de l'auteur, 14 oct. : ecriture/lots/01 et 02), en attendant leurs
 // dessins : une image proche de la bibliothèque. Une image livrée prend la place de la sienne
 const STANDIN = {
-  '01_racines': '01_vague', '01_paupieres': '01_greve', '01_carte': '01_gilet', '02_plage': '01_greve',
+  '01_paupieres': '01_greve', '01_carte': '01_gilet', '02_plage': '01_greve',
   '03_ciel': '03_vent', '05_cercle': '02_village', '10_epave': '02_epave',
   // (la traversée manquée, lot 08 § 8 : la barque, la brume autour de la tour, le retour, une voile)
   t_depart: '10_aster', t_brume: '03_vent', t_retour: '02_plage', t_voile: '02_plage',
