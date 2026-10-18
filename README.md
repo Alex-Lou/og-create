@@ -24,4 +24,4 @@ npm run build      # site statique dans dist/
 - `src/utils/` : fonctions pures et petits outils (familles et ères, effets, stockage local, recherche…).
 - `tests/` : tests unitaires des fonctions pures.
 
-Déploiement (Render, base Neon) : voir `DEPLOY.md`.
+Déploiement (VPS OVH) : voir `deploy/ovh/README.md`.
