@@ -269,7 +269,9 @@ export default {
         // Le tutoriel : chacun à sa place, pas encore de bêtes des bois ; les naufragés qui débarquent (castaways.js)
         calm: this.thickMist(state),
         acts: state.brume ? state.brume.acts : [],
-        arrivals: this.arrivals
+        arrivals: this.arrivals,
+        // (le village d'avant : ses chemins et ses tournées resservent, chacun repart d'où il se tenait)
+        before: this.village
       });
       this.showArrivals();
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux

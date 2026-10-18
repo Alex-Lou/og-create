@@ -57,4 +57,9 @@ describe('le journal de l’île', () => {
     expect(day(298)).not.toMatch(/Lorena/);
     expect(day(300)).toContain('Lorena a guetté');
   });
+  it('un camarade qui arrive ne réécrit pas les jours d’avant lui', () => {
+    const before = masters.filter(m => m.role !== 'atelier');
+    const after = [...before, { ...masters.find(m => m.role === 'atelier'), since: { day: 500, hour: 8 } }];
+    for (let d = 200; d < 260; d++) expect(dayLines(after, d, 24, sky(clear)), String(d)).toEqual(dayLines(before, d, 24, sky(clear)));
+  });
 });

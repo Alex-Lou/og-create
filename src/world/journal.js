@@ -2,7 +2,7 @@
 // ce que la troupe a vécu chaque jour de l'île. Rien n'est gardé : tout se déduit de la troupe, de son agenda
 // (village/agenda.js : rituels, repas, visites) et du ciel de chaque heure (sky.js), comme l'île elle-même ; un jour
 // passé se réécrit à l'identique, sur tous les appareils. Aujourd'hui s'écrit au fil des heures.
-import { visitOf } from './village/agenda';
+import { visitOf, matesOf } from './village/agenda';
 import { hash } from './village/beast';
 import { MEETINGS } from '@/texts/village';
 import { JOURNAL } from '@/texts/world/journal';
@@ -43,8 +43,8 @@ export function dayLines(masters, day, upto, skyOf) {
     add(12.9, 2, JOURNAL.repas[stormy(w) ? 'orage' : rainy(w) ? 'pluie' : 'clair']);
   }
   // (les visites du jour dont les deux étaient là, avec la première bulle de leur rencontre, dans un sens ou dans
-  // l'autre ; le village les tire parmi toute la troupe éveillée)
-  const visits = masters.map(m => ({ m, v: visitOf(m, day, masters.filter(o => o !== m).map(o => o.role)) }))
+  // l'autre ; tirées comme au village, parmi tous ses camarades : agenda.js, matesOf)
+  const visits = masters.map(m => ({ m, v: visitOf(m, day, matesOf(m.role)) }))
     .filter(({ m, v }) => v && hereAt(m, day, v.from) && masters.some(o => o.role === v.who && hereAt(o, day, v.from)));
   for (const { m, v } of visits.sort((a, b) => a.v.from - b.v.from).slice(0, MAX_VISITS)) {
     const host = masters.find(o => o.role === v.who);

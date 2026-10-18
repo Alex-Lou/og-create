@@ -403,3 +403,59 @@ describe('village : bêtes des climats', () => {
     }
   });
 });
+
+// Les fondations de la vie (choix de l'auteur, 18 oct.) : un rang fixe par habitant, un village refait sans saut ni
+// calcul pour rien, un voyageur installé qui ne prend pas la place de son maître
+describe('village : fondations de la vie', () => {
+  const base = { n: N, M, sites, owned: new Set([0]), crafts: [], props: [] };
+  const people = (v, t, h = 10) => v.at(t, at(h)).list.filter(c => c.kind === 'villager');
+  it('un rang fixe : celui de la troupe, puis les voyageurs installés, puis le voyageur de passage', () => {
+    const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
+    const v = villageOf({ ...base, settlers, visitor: { id: 3, seed: 77, name: 'Iris', role: 'Cartographe', site: 'ponton' } });
+    expect(v.residents.map(r => [r.id, r.k])).toEqual([['vil:potager', 0], ['vil:ponton', 4], ['vil:foyer', 6], ['vil:v5', 7], ['vis:3', 11]]);
+    // (un maître de plus dans la troupe ne change pas le rang des autres)
+    const fewer = villageOf({ ...base, troupe: [{ id: 'potager', built: true }, { id: 'foyer', built: true }] });
+    expect(fewer.residents.map(r => [r.role, r.k])).toEqual([['potager', 0], ['foyer', 6]]);
+  });
+  it('refait à l’identique, le village garde ses tournées : personne ne bouge d’une image à l’autre', () => {
+    const v1 = villageOf(base);
+    people(v1, 30);
+    const before = people(v1, 300);
+    const v2 = villageOf({ ...base, before: v1 });
+    expect(v2.life.planner).toBe(v1.life.planner);
+    for (const p of people(v2, 300.016)) {
+      const q = before.find(b => b.id === p.id);
+      expect(Math.hypot(p.x - q.x, p.y - q.y), p.id).toBeLessThan(0.1);
+    }
+  });
+  it('refait autrement (une création posée), chacun repart de là où il se tenait : rien ne saute', () => {
+    const v1 = villageOf(base);
+    people(v1, 30);
+    const before = people(v1, 300);
+    const v2 = villageOf({ ...base, crafts: [{ craft: 'banc', x: 2, y: 12 }], before: v1 });
+    expect(v2.life.planner).not.toBe(v1.life.planner);
+    for (const p of people(v2, 300.016)) {
+      const q = before.find(b => b.id === p.id);
+      expect(Math.hypot(p.x - q.x, p.y - q.y), p.id).toBeLessThan(0.1);
+    }
+  });
+  it('d’une image à l’autre, personne ne saute : ni quand l’agenda change (le repas), ni aux virages', () => {
+    const v = villageOf(base);
+    let prev = null;
+    let worst = 0;
+    for (let i = 0; i < 2400; i++) {
+      const list = people(v, 30 + i * 0.016, 11.4 + i * 0.0005);
+      if (prev) for (const p of list) { const q = prev.find(o => o.id === p.id); if (q) worst = Math.max(worst, Math.hypot(p.x - q.x, p.y - q.y)); }
+      prev = list;
+    }
+    // (un pas d'une image : bien moins d'une case)
+    expect(worst).toBeLessThan(0.05);
+  });
+  it('un voyageur installé n’attend pas l’arrivée du maître de son bâtiment', () => {
+    const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
+    const arrivals = new Map([['potager', { from: { x: 1, y: 1 }, at: 1000 }]]);
+    const ids = people(villageOf({ ...base, settlers, arrivals }), 30).map(p => p.id);
+    expect(ids).toContain('vil:v5');
+    expect(ids).not.toContain('vil:potager');
+  });
+});

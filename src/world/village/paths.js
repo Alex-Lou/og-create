@@ -36,6 +36,22 @@ export function gridOf({ n, M, sites, owned, crafts, props, annexes, camp = [] }
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (walk(x, y)) walkable.push({ x, y });
   return { n, M, walk, through, step, free, walkable };
 }
+// L'empreinte d'une grille (un entier) : les cases où l'on marche, leur sol, leur hauteur, leur pavé, les portes qu'on
+// traverse. Deux grilles de même empreinte donnent les mêmes chemins (le village refait garde alors les siens)
+export function gridKeyOf(grid) {
+  const { n, M, walkable } = grid;
+  const pass = grid.through || (() => false);
+  let h = 2166136261;
+  const mix = v => { h = Math.imul(h ^ v, 16777619); };
+  for (const { x, y } of walkable) {
+    mix(y * n + x);
+    mix(M.ground(x, y).charCodeAt(0));
+    mix(M.height(x, y));
+    mix(pavedAt(M, x, y) ? 1 : 0);
+  }
+  for (let i = 0; i < n * n; i++) if (pass(i % n, Math.floor(i / n))) mix(-1 - i);
+  return h >>> 0;
+}
 // Plus court chemin (les chemins coûtent moitié moins que l'herbe, le pavé encore moins : stepCost) : liste de cases,
 // ou null
 export function route(grid, from, to) {
