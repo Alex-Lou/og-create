@@ -629,13 +629,14 @@ for (const [id, sc] of Object.entries(SCENES)) {
 // Tout le jeu en papier néon (choix de l'auteur, 18 oct.) : les scènes fixes ravivées (neon_reveil.js : ravivee), l'étalonnage
 // néon sous l'avatar, l'avatar rendu en néon (game/acteur.js : gravee)
 // (leurs personnages y sont dessinés avec le décor : leurs couleurs gardent leur teinte, ravivées, comme celles de l'avatar)
-const NEON_FIXES = ['05_feu', '06_silhouette', '07_cannelle', '07_souvenir', '09_rivet', '11_ondin', '11_reveil', '12_veillee', '12_habits', '30_phare_porte'];
-for (const id of NEON_FIXES) {
+// (la lumière sur l'avatar : [laquelle, d'où elle vient (1 : de la gauche, -1 : de la droite, le feu)])
+const NEON_FIXES = { '05_feu': ['feu', -1], '06_silhouette': ['nuit', 1], '07_cannelle': ['jour', 1], '07_souvenir': ['jour', 1], '09_rivet': ['jour', 1], '11_ondin': ['jour', 1], '11_reveil': ['jour', 1], '12_veillee': ['feu', -1], '12_habits': ['feu', -1], '30_phare_porte': ['nuit', 1] };
+for (const [id, [lumiere, cote]] of Object.entries(NEON_FIXES)) {
   const sc = SCENES[id], { fond, anime, devant } = sc, n0 = `nf${id.replace(/\W/g, '')}`;
   sc.fond = n => NR.ravivee(fond(n)) + NN.vignette(`${n0}${n}`);
   if (anime) sc.anime = n => NR.ravivee(anime(n));
   if (devant) sc.devant = n => NR.ravivee(devant(n));
-  if (sc.avatar) sc.avatar = { ...sc.avatar, neon: true };
+  if (sc.avatar) sc.avatar = { ...sc.avatar, neon: true, lumiere: { ...NR.LUMIERES[lumiere], cote } };
 }
 
 module.exports = { SCENES, W, CADRE_PHOTO };

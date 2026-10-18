@@ -45094,8 +45094,10 @@
    "partition": {
     "lumiere": {
      "cote": 1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#2A0A5A",
+     "eclat": "#FF7AB0",
+     "lisere": "#FFA8D0",
+     "force": 1.1,
      "neon": true
     },
     "temps": [
@@ -46962,8 +46964,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#2A0A5A",
+     "eclat": "#FF7AB0",
+     "lisere": "#FFA8D0",
+     "force": 1.1,
      "neon": true
     },
     "temps": [
@@ -48152,8 +48156,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#2A0A5A",
+     "eclat": "#FF7AB0",
+     "lisere": "#FFA8D0",
+     "force": 1.1,
      "neon": true
     },
     "temps": [
@@ -48915,8 +48921,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#2A0A5A",
+     "eclat": "#FF7AB0",
+     "lisere": "#FFA8D0",
+     "force": 1.1,
      "neon": true
     },
     "temps": [
@@ -52056,8 +52064,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#2A0A5A",
+     "eclat": "#FF7AB0",
+     "lisere": "#FFA8D0",
+     "force": 1.1,
      "neon": true
     },
     "temps": [
@@ -54025,8 +54035,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#2A0A5A",
+     "eclat": "#FF7AB0",
+     "lisere": "#FFA8D0",
+     "force": 1.1,
      "neon": true
     },
     "temps": [
@@ -56648,8 +56660,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#140A48",
+     "eclat": "#7AB8FF",
+     "lisere": "#7AF8EE",
+     "force": 1.3,
      "neon": true
     },
     "temps": [
@@ -58020,8 +58034,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#140A48",
+     "eclat": "#7AB8FF",
+     "lisere": "#7AF8EE",
+     "force": 1.3,
      "neon": true
     },
     "temps": [
@@ -58532,8 +58548,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#140A48",
+     "eclat": "#7AB8FF",
+     "lisere": "#7AF8EE",
+     "force": 1.3,
      "neon": true
     },
     "temps": [
@@ -59901,8 +59919,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#140A48",
+     "eclat": "#7AB8FF",
+     "lisere": "#7AF8EE",
+     "force": 1.3,
      "neon": true
     },
     "temps": [
@@ -62555,8 +62575,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#140A48",
+     "eclat": "#7AB8FF",
+     "lisere": "#7AF8EE",
+     "force": 1.3,
      "neon": true
     },
     "temps": [
@@ -63973,7 +63995,14 @@
     "vue": "avant",
     "pose": "repos",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#1A0A40",
+     "eclat": "#FF9A40",
+     "lisere": "#FFB070",
+     "force": 1.15,
+     "cote": -1
+    }
    },
    "calques": {
     "fond": {
@@ -64014,7 +64043,14 @@
     "vue": "dos",
     "pose": "repos",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#140A48",
+     "eclat": "#7AB8FF",
+     "lisere": "#7AF8EE",
+     "force": 1.3,
+     "cote": 1
+    }
    },
    "calques": {
     "fond": {
@@ -64055,7 +64091,14 @@
     "vue": "avant",
     "pose": "salut",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#3A2A7A",
+     "eclat": "#FFE8F4",
+     "lisere": "#B8FFF4",
+     "force": 0.7,
+     "cote": 1
+    }
    },
    "calques": {
     "fond": {
@@ -64087,7 +64130,14 @@
     "vue": "avant",
     "pose": "repos",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#3A2A7A",
+     "eclat": "#FFE8F4",
+     "lisere": "#B8FFF4",
+     "force": 0.7,
+     "cote": 1
+    }
    },
    "calques": {
     "fond": {
@@ -64119,7 +64169,14 @@
     "vue": "avant",
     "pose": "repos",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#3A2A7A",
+     "eclat": "#FFE8F4",
+     "lisere": "#B8FFF4",
+     "force": 0.7,
+     "cote": 1
+    }
    },
    "calques": {
     "fond": {
@@ -64643,8 +64700,9 @@
    "partition": {
     "lumiere": {
      "cote": 1,
-     "teinte": "#3A0A5A",
-     "force": 0.14,
+     "ambiance": "#3A1A6A",
+     "eclat": "#FFC8D8",
+     "lisere": "#FFD8E8",
      "neon": true
     },
     "temps": [
@@ -67570,7 +67628,14 @@
     "vue": "avant",
     "pose": "repos",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#3A2A7A",
+     "eclat": "#FFE8F4",
+     "lisere": "#B8FFF4",
+     "force": 0.7,
+     "cote": 1
+    }
    },
    "calques": {
     "fond": {
@@ -67600,7 +67665,14 @@
     "vue": "avant",
     "pose": "repos",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#3A2A7A",
+     "eclat": "#FFE8F4",
+     "lisere": "#B8FFF4",
+     "force": 0.7,
+     "cote": 1
+    }
    },
    "calques": {
     "fond": {
@@ -67661,7 +67733,14 @@
     "vue": "avant",
     "pose": "assis-mains-tendues",
     "naufrage": false,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#1A0A40",
+     "eclat": "#FF9A40",
+     "lisere": "#FFB070",
+     "force": 1.15,
+     "cote": -1
+    }
    },
    "calques": {
     "fond": {
@@ -67702,7 +67781,14 @@
     "vue": "avant",
     "pose": "mains-tendues",
     "naufrage": true,
-    "neon": true
+    "neon": true,
+    "lumiere": {
+     "ambiance": "#1A0A40",
+     "eclat": "#FF9A40",
+     "lisere": "#FFB070",
+     "force": 1.15,
+     "cote": -1
+    }
    },
    "calques": {
     "fond": {

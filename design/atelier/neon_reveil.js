@@ -90,14 +90,21 @@ function ravive(hex) {
 }
 const ravivee = svg => svg.replace(/(?<!url\()(?<!href=")#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g, c => ravive(c));
 // la lumière de l'avatar dans une scène néon (game/acteur.js : gravee, son rendu néon) : un voile violet léger
-const LUMIERE_NEON = { teinte: '#3A0A5A', force: 0.14 };
+// (les lumières des scènes : l'ambiance où plonge le côté ombre, la couleur de la source sur le côté éclairé, le liseré)
+const LUMIERES = {
+  couchant: { ambiance: '#2A0A5A', eclat: '#FF7AB0', lisere: '#FFA8D0', force: 1.1 },
+  nuit: { ambiance: '#140A48', eclat: '#7AB8FF', lisere: '#7AF8EE', force: 1.3 },
+  matin: { ambiance: '#3A1A6A', eclat: '#FFC8D8', lisere: '#FFD8E8' },
+  feu: { ambiance: '#1A0A40', eclat: '#FF9A40', lisere: '#FFB070', force: 1.15 },
+  jour: { ambiance: '#3A2A7A', eclat: '#FFE8F4', lisere: '#B8FFF4', force: 0.7 }
+};
 const PERSONNAGES = new Set(['lorena']);
 // une scène gravée, passée au néon : ses pièces, sa caméra, ses temps ; le décor du couchant redessiné (decor : faux pour
 // une scène qui a son propre ciel), le reste recoloré ; l'avatar rendu en néon
-function enNeonScene(scene, p, propres = {}, plage = false, decor = true) {
+function enNeonScene(scene, p, propres = {}, plage = false, decor = true, lumiere = 'couchant') {
   const sc = scene();
   if (plage) memesObjets(sc.plans);
-  if (sc.partition.lumiere || sc.plans.some(q => q.id === 'avatar')) sc.partition.lumiere = { cote: 1, ...sc.partition.lumiere, ...LUMIERE_NEON, neon: true };
+  if (sc.partition.lumiere || sc.plans.some(q => q.id === 'avatar')) sc.partition.lumiere = { cote: (sc.partition.lumiere || {}).cote || 1, ...LUMIERES[lumiere], neon: true };
   for (const pl of sc.plans) {
     const d = pl.dessin, a = propres[pl.id] || (decor || pl.id === 'teinte' ? DECOR[pl.id] : null);
     if (pl.id === 'anime') { if (d && !propres.anime) pl.dessin = () => recolore(d()); continue; }
@@ -149,4 +156,4 @@ const greve01 = () => enNeonScene(GP.greve01, 'ng', { anime: () => vivant() }, t
 const carte01 = () => enNeonScene(GP.carte01, 'nc', { anime: () => vivant() + vivantTache(), 'sable-pres': p => enNeon(() => sablePres(p)), ecume: p => enNeon(() => ecumeBord(p)) }, true);
 const tampon00 = () => enNeonScene(GP.tampon00, 'nt', { anime: () => vent(), 'sable-pres': p => enNeon(() => sablePres(p, true)) });
 
-module.exports = { paupieres01, greve01, carte01, tampon00, enNeonScene, recolore, ravivee };
+module.exports = { paupieres01, greve01, carte01, tampon00, enNeonScene, recolore, ravivee, LUMIERES };

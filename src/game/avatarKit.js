@@ -61,13 +61,13 @@ function characterOf(kit, choices, naufrage) {
 // Les images de l'avatar composé pour une scène (mêmes vues et poses que les exemples, game/sceneArt.js) : des URL
 // data:, dans l'ordre ; [] tant que le générateur se charge, ou si un choix est inconnu. En néon (une scène en papier
 // néon) : chaque image passe par le rendu néon de game/acteur.js (ses couleurs ravivées, le cerne indigo, le liseré)
-export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage = true, neon = false } = {}) {
+export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage = true, neon = false, lumiere = {} } = {}) {
   const kit = kitNow();
   if (!kit) return [];
-  return memo(`${JSON.stringify(choices)}|${vue}|${pose}|${naufrage}|${neon}`, () => {
+  return memo(`${JSON.stringify(choices)}|${vue}|${pose}|${naufrage}|${neon}|${JSON.stringify(lumiere)}`, () => {
     const c = characterOf(kit, choices, naufrage);
     if (!c) return [];
-    const svg = neon ? body => gravee(body, 'n', NEON_STATIQUE) : body => kit.svg(body);
+    const svg = neon ? body => gravee(body, 'n', { ...NEON_STATIQUE, ...lumiere }) : body => kit.svg(body);
     if (vue === 'face' || pose === 'salut') {
       const [kitPose, n, geste] = FACE[pose] || FACE.repos;
       const who = geste ? { ...c, geste } : c;
@@ -86,8 +86,8 @@ export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage =
   });
 }
 
-// (la lumière d'une scène fixe en néon : un voile violet léger, la lumière à gauche)
-const NEON_STATIQUE = { neon: true, teinte: '#2A0A5A', force: 0.12, cote: 1 };
+// (la lumière d'une scène fixe en néon, si elle n'en donne pas (avatar.lumiere) : la nuit violette, la lumière à gauche)
+const NEON_STATIQUE = { neon: true, cote: 1 };
 
 // Les choix des exemples de la bibliothèque (avatar.json, avec le catalogue de l'éditeur : chargé à la demande), pour
 // qu'un joueur qui a choisi un exemple joue lui aussi les scènes (réactif, comme le kit)

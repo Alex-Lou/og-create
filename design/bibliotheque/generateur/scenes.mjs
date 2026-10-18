@@ -24531,12 +24531,18 @@ var require_neon_reveil = __commonJS({
     }
     __name(ravive, "ravive");
     var ravivee = /* @__PURE__ */ __name((svg) => svg.replace(/(?<!url\()(?<!href=")#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g, (c) => ravive(c)), "ravivee");
-    var LUMIERE_NEON = { teinte: "#3A0A5A", force: 0.14 };
+    var LUMIERES = {
+      couchant: { ambiance: "#2A0A5A", eclat: "#FF7AB0", lisere: "#FFA8D0", force: 1.1 },
+      nuit: { ambiance: "#140A48", eclat: "#7AB8FF", lisere: "#7AF8EE", force: 1.3 },
+      matin: { ambiance: "#3A1A6A", eclat: "#FFC8D8", lisere: "#FFD8E8" },
+      feu: { ambiance: "#1A0A40", eclat: "#FF9A40", lisere: "#FFB070", force: 1.15 },
+      jour: { ambiance: "#3A2A7A", eclat: "#FFE8F4", lisere: "#B8FFF4", force: 0.7 }
+    };
     var PERSONNAGES = /* @__PURE__ */ new Set(["lorena"]);
-    function enNeonScene(scene2, p, propres = {}, plage2 = false, decor = true) {
+    function enNeonScene(scene2, p, propres = {}, plage2 = false, decor = true, lumiere = "couchant") {
       const sc = scene2();
       if (plage2) memesObjets(sc.plans);
-      if (sc.partition.lumiere || sc.plans.some((q) => q.id === "avatar")) sc.partition.lumiere = { cote: 1, ...sc.partition.lumiere, ...LUMIERE_NEON, neon: true };
+      if (sc.partition.lumiere || sc.plans.some((q) => q.id === "avatar")) sc.partition.lumiere = { cote: (sc.partition.lumiere || {}).cote || 1, ...LUMIERES[lumiere], neon: true };
       for (const pl of sc.plans) {
         const d = pl.dessin, a = propres[pl.id] || (decor || pl.id === "teinte" ? DECOR[pl.id] : null);
         if (pl.id === "anime") {
@@ -24590,7 +24596,7 @@ var require_neon_reveil = __commonJS({
     var greve01 = /* @__PURE__ */ __name(() => enNeonScene(GP.greve01, "ng", { anime: /* @__PURE__ */ __name(() => vivant(), "anime") }, true), "greve01");
     var carte01 = /* @__PURE__ */ __name(() => enNeonScene(GP.carte01, "nc", { anime: /* @__PURE__ */ __name(() => vivant() + vivantTache(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p)), "sable-pres"), ecume: /* @__PURE__ */ __name((p) => enNeon(() => ecumeBord(p)), "ecume") }, true), "carte01");
     var tampon00 = /* @__PURE__ */ __name(() => enNeonScene(GP.tampon00, "nt", { anime: /* @__PURE__ */ __name(() => vent(), "anime"), "sable-pres": /* @__PURE__ */ __name((p) => enNeon(() => sablePres(p, true)), "sable-pres") }), "tampon00");
-    module.exports = { paupieres01, greve01, carte01, tampon00, enNeonScene, recolore, ravivee };
+    module.exports = { paupieres01, greve01, carte01, tampon00, enNeonScene, recolore, ravivee, LUMIERES };
   }
 });
 
@@ -24787,19 +24793,19 @@ var require_neon_jeu = __commonJS({
       ["02_rocher", GR.rocher02, "n2r"],
       ["03_livre", GV.livre03, "n3l"],
       ["03_vent", GV.vent03, "n3v"],
-      ["03_trouee", GV.trouee03, "n3t"],
-      ["03_ciel", GV.ciel03, "n3c"],
-      ["03_nuit", GV.nuit03, "n3n"],
-      ["05_cercle", GC.cercle05, "n5c"],
-      ["05_promesse", GC.promesse05, "n5p"],
-      ["10_epave", GL.epave10, "nae", false],
-      ["10_aster", GL.aster10, "naa", false]
+      ["03_trouee", GV.trouee03, "n3t", true, "nuit"],
+      ["03_ciel", GV.ciel03, "n3c", true, "nuit"],
+      ["03_nuit", GV.nuit03, "n3n", true, "nuit"],
+      ["05_cercle", GC.cercle05, "n5c", true, "nuit"],
+      ["05_promesse", GC.promesse05, "n5p", true, "nuit"],
+      ["10_epave", GL.epave10, "nae", false, "matin"],
+      ["10_aster", GL.aster10, "naa", false, "matin"]
     ];
     var NUIT = "#0A0420";
     var SOMBRES = /* @__PURE__ */ new Set(["herbe"]);
     var assombrit = /* @__PURE__ */ __name((svg) => svg.replace(/(?<!url\()(?<!href=")#[0-9a-fA-F]{6}\b/g, (c) => melange(c, NUIT, 0.45)), "assombrit");
-    function cinematique(scene2, p, decor) {
-      const sc = enNeonScene(scene2, p, {}, false, decor);
+    function cinematique(scene2, p, decor, lumiere) {
+      const sc = enNeonScene(scene2, p, {}, false, decor, lumiere);
       for (const pl of sc.plans) if (SOMBRES.has(pl.id)) {
         const d = pl.dessin;
         pl.dessin = () => assombrit(d());
@@ -24807,7 +24813,7 @@ var require_neon_jeu = __commonJS({
       return sc;
     }
     __name(cinematique, "cinematique");
-    var cinematiques = CINEMATIQUES.map(([id2, scene2, p, decor = true]) => [id2, () => cinematique(scene2, p, decor)]);
+    var cinematiques = CINEMATIQUES.map(([id2, scene2, p, decor = true, lumiere = "couchant"]) => [id2, () => cinematique(scene2, p, decor, lumiere)]);
     module.exports = { cinematiques };
   }
 });
@@ -25517,13 +25523,13 @@ var require_scenes6 = __commonJS({
       sc.fond = (n) => part(n).fond;
       sc.anime = (n) => part(n).anime;
     }
-    var NEON_FIXES = ["05_feu", "06_silhouette", "07_cannelle", "07_souvenir", "09_rivet", "11_ondin", "11_reveil", "12_veillee", "12_habits", "30_phare_porte"];
-    for (const id2 of NEON_FIXES) {
+    var NEON_FIXES = { "05_feu": ["feu", -1], "06_silhouette": ["nuit", 1], "07_cannelle": ["jour", 1], "07_souvenir": ["jour", 1], "09_rivet": ["jour", 1], "11_ondin": ["jour", 1], "11_reveil": ["jour", 1], "12_veillee": ["feu", -1], "12_habits": ["feu", -1], "30_phare_porte": ["nuit", 1] };
+    for (const [id2, [lumiere, cote]] of Object.entries(NEON_FIXES)) {
       const sc = SCENES2[id2], { fond, anime, devant } = sc, n0 = `nf${id2.replace(/\W/g, "")}`;
       sc.fond = (n) => NR.ravivee(fond(n)) + NN.vignette(`${n0}${n}`);
       if (anime) sc.anime = (n) => NR.ravivee(anime(n));
       if (devant) sc.devant = (n) => NR.ravivee(devant(n));
-      if (sc.avatar) sc.avatar = { ...sc.avatar, neon: true };
+      if (sc.avatar) sc.avatar = { ...sc.avatar, neon: true, lumiere: { ...NR.LUMIERES[lumiere], cote } };
     }
     module.exports = { SCENES: SCENES2, W: W2, CADRE_PHOTO: CADRE_PHOTO2 };
   }

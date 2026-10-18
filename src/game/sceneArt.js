@@ -43,10 +43,11 @@ export const GESTES_DOS = ['assis-mains-tendues'];
 // Les images de l'avatar pour une scène. Les exemples n'ont pas toutes les poses : de trois quarts, le repos est
 // l'image de la marche où les pieds se rejoignent (la 2e), et le salut se fait de face. Un avatar composé : ses images
 // dessinées par le générateur ([] le temps qu'il se charge ; l'exemple par défaut s'il n'a pas pu l'être)
-// En néon (une scène en papier néon, son avatar.neon) : l'avatar, composé ou exemple, passe par le kit et son rendu néon
-export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = true, neon = false } = {}) {
+// En néon (une scène en papier néon, son avatar.neon, sa lumière avatar.lumiere) : l'avatar, composé ou exemple, passe par
+// le kit et son rendu néon
+export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = true, neon = false, lumiere = {} } = {}) {
   if (neon) {
-    const choix = choixDe(look), frames = choix ? customFrames(choix, { vue, pose, naufrage, neon }) : [];
+    const choix = choixDe(look), frames = choix ? customFrames(choix, { vue, pose, naufrage, neon, lumiere }) : [];
     if (frames.length || !kitFailed()) return frames;
   }
   if (isCustom(look)) {
