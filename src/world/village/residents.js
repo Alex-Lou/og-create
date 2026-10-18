@@ -65,9 +65,46 @@ function edgeOf(grid, M, from, codes) {
   return best;
 }
 
+// Sa zone de vie (choix de l'auteur, 18 oct.) : l'emprise de son bâtiment (ou de sa maison) et ZONE_MARGIN cases
+// autour, où il flâne ; seulement les cases où l'on marche, que sa porte rejoint sans en sortir. Elle ne grandit pas :
+// ce sont les explorations du joueur qui ouvrent l'île. Une flânerie sur deux va vers le terrain de son métier
+// (TRADES), s'il y en a dans sa zone
+const ZONE_MARGIN = 3;
+const touches = (M, c, codes) => SIDES.some(([dx, dy]) => codes.includes(M.ground(c.x + dx, c.y + dy)));
+const TRADES = {
+  // Lorena, le sable et le rivage ; Maerys, les orées ; Léo, le bord de l'eau douce ; Maggy, l'herbe et les prés ;
+  // Robby, les hauteurs ; Nathan et Agathe, les chemins
+  ponton: (M, c) => 'sd'.includes(M.ground(c.x, c.y)) || touches(M, c, ['~']),
+  bosquet: (M, c) => touches(M, c, EDGES.forest),
+  puits: (M, c) => touches(M, c, EDGES.water),
+  potager: (M, c) => 'gm'.includes(M.ground(c.x, c.y)),
+  carriere: (M, c, from) => M.height(c.x, c.y) > M.height(from.x, from.y),
+  atelier: (M, c) => pavedAt(M, c.x, c.y) || M.ground(c.x, c.y) === 'p',
+  foyer: (M, c) => pavedAt(M, c.x, c.y) || M.ground(c.x, c.y) === 'p'
+};
+// rect : { x, y, w, h } ; from : sa porte → { cells, trade } (les cases du terrain de son métier parmi elles)
+export function lifeZoneOf(grid, rect, from, role) {
+  const inside = (x, y) => x >= rect.x - ZONE_MARGIN && x < rect.x + rect.w + ZONE_MARGIN && y >= rect.y - ZONE_MARGIN && y < rect.y + rect.h + ZONE_MARGIN;
+  const seen = new Set([from.y * grid.n + from.x]);
+  const cells = [from];
+  for (let i = 0; i < cells.length; i++) {
+    const c = cells[i];
+    for (const [dx, dy] of SIDES) {
+      const next = { x: c.x + dx, y: c.y + dy };
+      const key = next.y * grid.n + next.x;
+      if (seen.has(key) || !inside(next.x, next.y) || !grid.walk(next.x, next.y) || !grid.step(c, next)) continue;
+      seen.add(key);
+      cells.push(next);
+    }
+  }
+  const trade = TRADES[role] && grid.M ? cells.filter(c => TRADES[role](grid.M, c, from)) : [];
+  return { cells, trade };
+}
+
 // Habitants : la troupe rencontrée (7 maîtres). Chacun a son rang fixe (k : son allure, sa tournée, sa visite…) : les
 // maîtres dans l'ordre de la troupe (agenda.js : MASTERS), puis les voyageurs installés dans l'ordre où ils sont restés,
-// puis le voyageur de passage ; un nouveau venu ne change rien à la journée des autres. Son bâtiment bâti, chacun y travaille ; sans bâtiment, Lorena et Nathan
+// puis le voyageur de passage ; un nouveau venu ne change rien à la journée des autres. Son bâtiment bâti, chacun y
+// travaille, et flâne dans sa zone de vie (lifeZoneOf) ; sans bâtiment, Lorena et Nathan
 // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
 // beds : où dort un naufragé avant qu'on le réveille, quand ce n'est pas sa place (Map rôle → case : Maerys, à l'orée de sa
 // forêt ; WorldView, castaways.js : bedsOf)
@@ -105,7 +142,9 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
         field: (() => { const annex = who.built && annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })(),
         water: id === 'puits' ? edgeOf(grid, M, work, EDGES.water) : null,
-        forest: id === 'bosquet' ? edgeOf(grid, M, work, EDGES.forest) : null
+        forest: id === 'bosquet' ? edgeOf(grid, M, work, EDGES.forest) : null,
+        // (sans son bâtiment, autour de là où il se tient)
+        zone: lifeZoneOf(grid, who.built ? site : { x: work.x, y: work.y, w: 1, h: 1 }, work, id)
       });
     });
     // Visiteurs installés : au bâtiment de leur métier, et à leur maison (à la place de l'annexe)
@@ -116,8 +155,9 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
       residents.push({
         id: `vil:${s.id}`, k, row: residents.length, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name,
         look: visitorLook(s.seed, s.role), work: doors[s.site], wake: 6.6 + (k % 3) * 0.25, bed: 21.4 + (k % 3) * 0.3,
-        // (il dort à sa maison, sinon à la porte de son métier)
-        field, bedAt: field || doors[s.site]
+        // (il dort à sa maison, sinon à la porte de son métier ; sa zone de vie, autour de sa maison)
+        field, bedAt: field || doors[s.site],
+        zone: lifeZoneOf(grid, s.home ? { x: s.home.x, y: s.home.y, w: 1, h: 1 } : built.find(b => b.id === s.site), field || doors[s.site], s.site)
       });
     });
     // Le visiteur : il débarque au Ponton et flâne (il ne travaille pas)
@@ -154,8 +194,13 @@ export function plannerOf({ grid, stops, home, calm, routeOf, last = null }) {
     const around = RING.map(([dx, dy]) => ({ x: stop.x + dx, y: stop.y + dy })).filter((c, i) => i === 0 || grid.walk(c.x, c.y));
     return around[(Math.floor(hash(stop.x * 31 + stop.y, salt) * around.length) + r.k) % around.length];
   };
-  // Une case où flâner, à quelques pas de son travail (pendant le tutoriel, tout près)
+  // Une case où flâner : dans sa zone de vie, une fois sur deux sur le terrain de son métier ; pendant le tutoriel, tout
+  // près de sa place ; le voyageur de passage, à quelques pas
   const roamOf = (r, salt) => {
+    if (!calm && r.zone) {
+      const pool = r.zone.trade.length && hash(r.k * 31 + salt, 67) < 0.5 ? r.zone.trade : r.zone.cells;
+      return pool[Math.floor(hash(r.k * 29 + salt, 53) * pool.length)];
+    }
     const reach = calm ? CALM_REACH : 6;
     const near = grid.walkable.filter(c => Math.abs(c.x - r.work.x) + Math.abs(c.y - r.work.y) <= reach);
     return near.length ? near[Math.floor(hash(r.k * 29 + salt, 53) * near.length)] : r.work;

@@ -451,6 +451,36 @@ describe('village : fondations de la vie', () => {
     // (un pas d'une image : bien moins d'une case)
     expect(worst).toBeLessThan(0.05);
   });
+  it('chacun a sa zone de vie : son bâtiment et 3 cases autour, où l’on marche ; son terrain de métier y est', () => {
+    const v = villageOf(base);
+    for (const r of v.residents) {
+      const site = sites.find(s => s.id === r.role);
+      expect(r.zone.cells.length, r.id).toBeGreaterThan(1);
+      for (const c of r.zone.cells) {
+        expect(c.x >= site.x - 3 && c.x < site.x + site.w + 3 && c.y >= site.y - 3 && c.y < site.y + site.h + 3, `${r.id} ${c.x},${c.y}`).toBe(true);
+        expect(M.ground(c.x, c.y)).not.toBe('~');
+      }
+      expect(r.zone.trade.every(c => r.zone.cells.includes(c))).toBe(true);
+    }
+    // (Maggy, l'herbe ; Agathe, les chemins)
+    expect(v.residents.find(r => r.role === 'potager').zone.trade.every(c => M.ground(c.x, c.y) === 'g')).toBe(true);
+    expect(v.residents.find(r => r.role === 'foyer').zone.trade.length).toBeGreaterThan(0);
+  });
+  it('il flâne dans sa zone de vie : loin des portes, on le trouve toujours chez lui', () => {
+    const v = villageOf(base);
+    const doors = v.residents.map(r => r.work);
+    let checked = 0;
+    for (let i = 0; i < 1500; i++) {
+      for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
+        if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
+        const r = v.residents.find(o => o.id === p.id);
+        expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
+        checked++;
+      }
+    }
+    // (assez de flâneries vues pour que le test dise quelque chose)
+    expect(checked).toBeGreaterThan(100);
+  });
   it('un voyageur installé n’attend pas l’arrivée du maître de son bâtiment', () => {
     const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
     const arrivals = new Map([['potager', { from: { x: 1, y: 1 }, at: 1000 }]]);
