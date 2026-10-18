@@ -17,88 +17,13 @@ const BIB = path.join(__dirname, '..', 'bibliotheque', 'svg');
 // préfixés (deux dessins ne partagent jamais un identifiant) ; verni (vernis.js : contour, volume, reflets de lune ;
 // o : ses lumières, ses étincelles…), la lune derrière Anya, au centre
 const lire = rel => fs.readFileSync(path.join(BIB, rel), 'utf8');
-// (sansSol : sans sa grande ombre au sol, l'ovale transparent de son emprise ; sans : d'autres formes à retirer)
 function poser(rel, prefixe, x, y, k, o = {}) {
-  let src = lire(rel);
-  if (o.teinte) src = o.teinte(src);
-  if (o.sansSol) src = src.replace(/<ellipse [^>]*fill="rgba\(40,55,20,[^"]*"\/>/, '');
-  if (o.sans) src = src.replace(o.sans, '');
+  const src = lire(rel);
   const box = src.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
   const corps = src.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
     .replace(/id="([^"]+)"/g, `id="${prefixe}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${prefixe}$1)`).replace(/href="#([^"]+)"/g, `href="#${prefixe}$1"`);
   const verni = vernis(corps, `${prefixe}v`, box, { cote: x < 0 ? 1 : -1, trapu: 0.04, ...o });
-  return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${o.ravage === undefined ? verni : ravage(verni, prefixe, box, o.ravage)}</g>`;
-}
-// Une construction après dix ans d'apocalypse (choix de l'auteur, 18 oct. : « fissures, à moitié défoncés, armés et
-// barbelés, en feu ») : un coin arraché (la brèche, ses bords qui rougeoient, les gravats au pied), la suie qui monte du
-// sol, des fissures, des planches clouées en travers, des barbelés le long de la base. Fissures, suie et planches
-// restent dans la silhouette (le masque du vernis, vernis.js) ; n : le tirage de ses dégâts
-function ravage(verni, prefixe, [bx, by, bw, bh], n) {
-  const g = rnd(n * 97 + 13), id = `${prefixe}r`, gauche = n % 2 === 0;
-  const zone = `maskUnits="userSpaceOnUse" x="${f(bx - bw)}" y="${f(by - bh)}" width="${f(3 * bw)}" height="${f(3 * bh)}"`;
-  // (le dessin tient au milieu de son cadre : son pied en y = 0, son toit vers le haut du cadre)
-  const haut = by + bh * 0.08, pied = 0, H = pied - haut;
-  // la brèche : une morsure dans le haut, d'un côté du faîte, aux bords déchiquetés
-  const x0 = (gauche ? -1 : 1) * bw * (0.04 + g() * 0.08), sx = gauche ? -1 : 1, pr = bw * (0.16 + g() * 0.08), ht = H * (0.3 + g() * 0.12);
-  const breche = [[x0 - sx * pr * 0.2, by - 4], [x0 + sx * pr * 1.6, by - 4]];
-  for (let i = 1; i <= 6; i++) breche.push([x0 + sx * pr * (1.4 - i / 5) + (g() - 0.5) * bw * 0.04, haut + ht * Math.sin((i / 7) * Math.PI) * (0.8 + g() * 0.4)]);
-  breche.push([x0 - sx * pr * 0.2, haut]);
-  const bord = breche.slice(1, -1).map(([px, py]) => `${f(px)},${f(py)}`).join(' L');
-  const pts = breche.map(([px, py]) => `${f(px)},${f(py)}`).join(' ');
-  // les fissures : des zigzags qui partent de la brèche et du bas
-  let fissures = '';
-  for (let i = 0; i < 4; i++) {
-    let px = (g() - 0.5) * bw * 0.5, py = i < 2 ? haut + H * (0.3 + g() * 0.15) : pied - H * (0.05 + g() * 0.1);
-    let d = `M${f(px)},${f(py)}`;
-    for (let j = 0; j < 5; j++) { px += (g() - 0.5) * bw * 0.08; py += (i < 2 ? 1 : -1) * H * (0.04 + g() * 0.05); d += ` L${f(px)},${f(py)}`; }
-    fissures += `<path d="${d}" fill="none" stroke="#0A0418" stroke-width="${f(bw * 0.012 + 0.8)}" stroke-linejoin="round" opacity=".85"/>`;
-  }
-  // les planches clouées en travers, au milieu de la façade
-  const planches = [0, 1].map(i => { const cx = (i - 0.5) * bw * 0.2 + (g() - 0.5) * bw * 0.04, cy = pied - H * (0.3 + (g() - 0.5) * 0.1), a = (i ? -1 : 1) * (12 + g() * 14), l = bw * 0.17, e = bw * 0.03;
-    return `<g transform="translate(${f(cx)} ${f(cy)}) rotate(${f(a)})"><rect x="${f(-l / 2)}" y="${f(-e / 2)}" width="${f(l)}" height="${f(e)}" fill="#7A5A40" stroke="#1A0E0A" stroke-width="${f(e * 0.18)}"/><circle cx="${f(-l * 0.4)}" cy="0" r="${f(e * 0.16)}" fill="#C8C0B8"/><circle cx="${f(l * 0.4)}" cy="0" r="${f(e * 0.16)}" fill="#C8C0B8"/></g>`; }).join('');
-  // les barbelés : un rouleau de fil en accordéon (concertina) le long de la base, des boucles fines qui se chevauchent,
-  // penchées, leurs lames ; le métal gris bleuté, un reflet de lune sur le haut des boucles
-  const yb = pied - H * 0.05, r0 = H * 0.07 + 1.5, w0 = Math.max(0.5, r0 * 0.05);
-  let fil = '';
-  for (let xx = -bw * 0.26, i = 0; xx < bw * 0.26; xx += r0 * 0.42, i++) {
-    fil += `<ellipse cx="${f(xx)}" cy="${f(yb)}" rx="${f(r0 * 0.5)}" ry="${f(r0)}" transform="rotate(-18 ${f(xx)} ${f(yb)})" fill="none" stroke="#5A6272" stroke-width="${f(w0)}"/>`
-      + `<path d="M${f(xx - r0 * 0.45)},${f(yb - r0 * 0.55)} Q${f(xx)},${f(yb - r0 * 1.05)} ${f(xx + r0 * 0.3)},${f(yb - r0 * 0.75)}" fill="none" stroke="#C8D4E8" stroke-width="${f(w0 * 0.6)}" opacity=".7"/>`;
-    if (i % 2 === 0) { const lx = xx + r0 * 0.3, ly = yb - r0 * 0.85, e = r0 * 0.14; fil += `<path d="M${f(lx - e)},${f(ly - e)} L${f(lx + e)},${f(ly + e)} M${f(lx + e)},${f(ly - e)} L${f(lx - e)},${f(ly + e)}" stroke="#8A94A6" stroke-width="${f(w0 * 0.8)}"/>`; }
-  }
-  // les gravats au pied de la brèche
-  const gravats = [0, 1, 2, 3, 4].map(i => { const gx = x0 + sx * (g() * pr * 1.4), gy = pied + 2 + g() * 4, t = bw * (0.02 + g() * 0.025);
-    return `<path d="M${f(gx - t)},${f(gy)} L${f(gx - t * 0.4)},${f(gy - t * 0.9)} L${f(gx + t * 0.7)},${f(gy - t * 0.6)} L${f(gx + t)},${f(gy)} Z" fill="${i % 2 ? '#6A6474' : '#4A4454'}" stroke="#140A1A" stroke-width="${f(t * 0.15)}"/>`; }).join('');
-  return `<defs><mask id="${id}M" ${zone}><rect x="${f(bx - bw)}" y="${f(by - bh)}" width="${f(3 * bw)}" height="${f(3 * bh)}" fill="#FFFFFF"/><polygon points="${pts}" fill="#000000"/></mask>`
-    + `<linearGradient id="${id}S" gradientUnits="userSpaceOnUse" x1="0" y1="${f(haut)}" x2="0" y2="${f(pied)}"><stop offset="0" stop-color="#140A1A" stop-opacity=".25"/><stop offset=".6" stop-color="#140A1A" stop-opacity=".1"/><stop offset="1" stop-color="#0A0410" stop-opacity=".7"/></linearGradient></defs>`
-    + `<g mask="url(#${id}M)">${verni}<g mask="url(#${prefixe}vS)"><rect x="${f(bx)}" y="${f(by)}" width="${f(bw)}" height="${f(bh)}" fill="url(#${id}S)"/>${fissures}${planches}`
-    + `<path d="M${bord}" fill="none" stroke="#0A0418" stroke-width="${f(bw * 0.02 + 1)}"/><path d="M${bord}" fill="none" stroke="#FF6A2E" stroke-width="${f(bw * 0.008 + 0.5)}" opacity=".8">${palpite('opacity', '0.4;0.9;0.4', 1.8, n * 0.2)}</path></g></g>`
-    + gravats + fil;
-}
-// La nuit des constructions (choix de l'auteur, 18 oct. : « pas du tout dans le ton, trop simplistes, trop ressortants ») :
-// leurs couleurs plus sombres et moins vives, glissées vers l'indigo de la nuit, le trait brun devenu encre indigo ; seules
-// les lumières chaudes (fenêtres, lanternes, feux) gardent leur éclat
-const hexHsl = hex => { const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255), mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
-  if (!d) return [0, 0, l]; const sa = d / (1 - Math.abs(2 * l - 1)), h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return [(h * 60 + 360) % 360, sa, l]; };
-const hslHex = (h, sa, l) => { const c = (1 - Math.abs(2 * l - 1)) * sa, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2, [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
-  return '#' + [r, g, b].map(v => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, '0')).join('').toUpperCase(); };
-function deNuit(hex) {
-  const [h, sa, l] = hexHsl(hex);
-  // (une lumière chaude : on la garde, un peu plus vive)
-  if (l > 0.68 && sa > 0.45 && h >= 25 && h <= 60) return hslHex(h, Math.min(1, sa + 0.1), Math.min(0.9, l + 0.04));
-  if (l < 0.2) return hslHex(258, 0.5, Math.max(0.05, l * 0.8));
-  // (vers l'indigo, d'autant plus que la couleur est terne)
-  const vers = (a, b, t) => a + ((((b - a) % 360) + 540) % 360 - 180) * t;
-  return hslHex((vers(h, 255, 0.28 * (1 - sa * 0.5)) + 360) % 360, sa * 0.62, l * 0.58 + 0.03);
-}
-const enNuit = svg => svg.replace(/#[0-9A-Fa-f]{6}\b/g, deNuit).replace(/#3C2819/gi, '#0A0418');
-// Une construction à son dernier palier (batiments.json : son dessin, ses lumières de nuit), posée et vernie ; ses
-// lumières allumées (la case (u, v), la hauteur z : à l'écran, comme le jeu, iso.js, à l'échelle de la bibliothèque)
-const BATIMENTS = JSON.parse(lire('batiments/batiments.json')).paliers;
-function batiment(nom, prefixe, x, y, k, eclats, sans, ravages) {
-  const cle = Object.keys(BATIMENTS).filter(c => c.startsWith(`${nom}_palier`)).sort().pop();
-  const P = BATIMENTS[cle];
-  const lumieres = (P.lumieres || []).map(l => [40 * (l.u - l.v), 20 * (l.u + l.v) - l.z, l.rayon * 0.8, 20 * (l.u + l.v)]);
-  return poser(`batiments/${P.fichiers[0]}`, prefixe, x, y, k, { sol: P.cadre[2] * 0.16, lumieres, eclats, sansSol: true, sans, ravage: ravages, teinte: enNuit, contour: '#0A0418' });
+  return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${verni}</g>`;
 }
 // Les dessins qui reviennent (une même plante à dix places) : définis une fois (<symbol>), réutilisés (<use>) ; une plante
 // est vernie d'un seul côté (une seule définition). L'image reste légère
@@ -383,10 +308,8 @@ function ileVivante({ survie = false } = {}) {
   // Fontaine au milieu) ; devant, le Potager ; le Ponton s'avance sur la mer, au bord de la plage ; les vergers, les cultures, les bêtes. Tout à la
   // même échelle (K : celle du jeu entre eux), du fond vers l'avant (triés sur y) ; les bêtes respirent d'un rien
   const K = 0.55;
-  // (le Ponton s'avance sur la mer : sans le bassin d'eau claire où le jeu le pose, ses ovales autour de son ancrage)
-  const BASSIN = /<ellipse cx="-2\.4" [^>]*\/>/g;
-  const CONSTRUCTIONS = [['atelier', -212, -12, 8], ['carriere', -110, -36, 4], ['puits', 0, -44, 12], ['bosquet', 108, -36, 8],
-    ['foyer', 206, -12, 5], ['potager', -128, 52, 10], ['ponton', 246, 126, 4, BASSIN]].filter(([nom]) => !(survie && nom === 'potager'));
+  const CONSTRUCTIONS = [['atelier', -212, -12], ['carriere', -110, -36], ['puits', 0, -44], ['bosquet', 108, -36],
+    ['foyer', 206, -12], ['potager', -128, 52], ['ponton', 246, 126]].filter(([nom]) => !(survie && nom === 'potager'));
   // La flore et la faune du jeu, composées en masses et non semées (choix de l'auteur, 18 oct. : « des items random mal
   // harmonisés ») : au fond, une lisière de jungle continue qui cadre le village, comme le cocon du jeu ; sur les côtés,
   // ses massifs qui descendent, leurs fleurs en lisière ; devant, une palmeraie de part et d'autre du chemin, les roseaux
