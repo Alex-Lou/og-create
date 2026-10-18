@@ -6,7 +6,6 @@
 // (l'île les retourne pour la gauche) ; ancrage aux pieds, cadre serré. Images : 0 et 1 (pas, picore, broute, geste),
 // rest (couchée, la nuit).
 import { sprite } from './iso';
-import { anyaSprite } from './anyaSprite';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ell = (x, y, rx, ry, fill, extra = '') => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(rx)}" ry="${f2(ry)}" fill="${fill}"${extra}/>`;
@@ -100,11 +99,11 @@ export function goat(frame, variant = '') {
 }
 
 /* ---------- Bois ---------- */
-// Cerf : pelage brun, taches claires, bois ; 1 : tête baissée (il broute). Blanc : le grand cerf blanc d'Anya
-export function deer(frame, variant = '') {
+// Cerf : pelage brun, taches claires, bois ; 1 : tête baissée (il broute)
+export function deer(frame) {
   const graze = frame === 1;
   const [hx, hy] = graze ? [9, -9] : [9.4, -19];
-  const [coat, leg] = variant === 'blanc' ? ['#F4F6F8', '#C8D0D6'] : ['#B5793F', '#7A4E2C'];
+  const [coat, leg] = ['#B5793F', '#7A4E2C'];
   return sprite(shadow(9) + legs([-5, -3, 3.4, 5.4], -9, 9, leg, 0, 1.2)
     + ell(0, -12, 8, 4.4, coat, OUT) + [[-3, -13.4], [0, -14.2], [2.6, -13], [-1, -11.6]].map(([x, y]) => dot(x, y, 0.7, '#F4E2C0')).join('')
     + `<path d="M5,-14 Q7,-17 ${hx - 1},${hy + 2}" fill="none" stroke="${coat}" stroke-width="3"/>`
@@ -456,17 +455,11 @@ export function otter(frame) {
     + dot(5.4, -5.2, 2.4, B) + ell(6.2, -4.6, 1.3, 0.9, L) + eye(6, -5.8, 0.6) + dot(7.4, -4.8, 0.4, EYE) + cheek(6.2, -4.2, 0.5)
     + ln([-3, -1.4], [-3.4, 0], B, 1) + ln([3, -1.4], [3.4, 0], B, 1), SMALL);
 }
-// Le bol de soupe qu’Agathe pose chaque soir « pour la Dame » au bord du Foyer ; 0 et 1 : la vapeur monte
-export function soup(frame) {
-  const up = frame === 1 ? -1 : 0;
-  return sprite(shadow(4) + path('M-4.6,-3 Q-4.4,0 0,0.4 Q4.4,0 4.6,-3 Z', '#C46E45', OUT) + ell(0, -3, 4.6, 1.2, '#E8A86A', OUT)
-    + `<path d="M-1.2,${f2(-5 + up)} q-1,-1.6 0,-3.2 M1.4,${f2(-5.6 + up)} q1,-1.6 0,-3.2" fill="none" stroke="rgba(255,255,255,.7)" stroke-width=".6" stroke-linecap="round"/>`, { x: -6, y: -10, w: 12, h: 11 });
-}
 
 // Toutes les bêtes de l'île par sorte : dessin d'une image (0, 1 ou rest)
 export const ANIMAL_SPRITES = {
   hen: (frame, breed) => hen(breed, frame), rooster: frame => hen('rousse', frame), chick, cow, sheep, pig, goat, deer, fox, rabbit, hedgehog, squirrel,
   koi: (frame, color) => koi(color, frame), heron,
   snowFox, ibex, puffin, pony, frog, tortoise, fennec, camel, chameleon, toucan, salamander, crow,
-  bird, butterfly, firefly, bee, owl, tictac, bowl, kit, otter, soup, anya: anyaSprite
+  bird, butterfly, firefly, bee, owl, tictac, bowl, kit, otter
 };
