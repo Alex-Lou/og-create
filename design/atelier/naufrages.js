@@ -1,6 +1,7 @@
 // Réglages de chaque naufragé (voir naufrage.js) : couleurs délavées, lambeaux, trous, voile, algues, suie.
 const { castaway, weed, smudge, cord, fade, CANVAS } = require('./naufrage');
 const { OUT, P, E, L, clip, limb, r2, dechirure, filPendant } = require('./troupe');
+const { fondre } = require('../personnages/couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // y de l'ourlet en x pour une courbe symétrique (x0, y0) → (x1, y0), point de contrôle au milieu à la hauteur yc
 const hem = (x0, x1, y0, yc) => x => { const t = (x - x0) / (x1 - x0); return r2(y0 + 2 * (yc - y0) * t * (1 - t)); };
@@ -8,7 +9,7 @@ const hem = (x0, x1, y0, yc) => x => { const t = (x - x0) / (x1 - x0); return r2
 const lock = (d, color) => cord(d, 1.2, color);
 const walkSway = k => ctx => (ctx.walk ? ctx.ph * k : 0);
 
-const SPECS = {
+const SPECS = fondre({
   // Aster : ciré délavé et déchiré, pantalon retroussé, pieds nus, une voile nouée, une algue dans les cheveux
   Aster: (() => {
     const y = hem(13, 35, 47.5, 51), coatS = '#CC9A2F';
@@ -253,7 +254,7 @@ const SPECS = {
       }
     };
   })()
-};
+});
 
 const BASE = { Aster: require('./aster2'), Cannelle: require('./cannelle'), Rivet: require('./rivet'), Ondin: require('./ondin'), Sylve: require('./sylve'), Galet: require('./galet'), Melisse: require('./melisse') };
 const CAST = Object.entries(BASE).map(([k, c]) => ({ base: c, nau: castaway(c, SPECS[k]) }));

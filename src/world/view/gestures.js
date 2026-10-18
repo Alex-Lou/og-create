@@ -664,9 +664,10 @@ export default {
     }
     if (hit.animal) {
       if (hit.animal.who && this.village) return this.named(this.village.describe(hit.animal.who), hit.animal.who);
-      // (le Géant, le Kraken : ce qu'en dit le Bestiaire)
-      const creature = !hit.animal.stray && creatureOf(creatureOfHit(hit.animal));
-      const [title, text] = ANIMALS[hit.animal.kind] || (creature ? [creature.name, creature.text] : [UNKNOWN_BEAST, '']);
+      // (une légendaire, le Géant ou le Kraken : ce qu'en dit le Bestiaire)
+      const creature = creatureOf(creatureOfHit(hit.animal));
+      const legend = creature && creature.rarity === 'légendaire' ? [creature.name, creature.text] : null;
+      const [title, text] = ANIMALS[hit.animal.kind] || legend || [UNKNOWN_BEAST, ''];
       return { title, text, hint: TAP_HINTS.animal };
     }
     if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: TAP_HINTS.sheet };

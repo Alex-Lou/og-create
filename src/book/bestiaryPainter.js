@@ -133,22 +133,7 @@ function paintCell(ctx, u, creature, x, y, met, assets) {
   ctx.fillStyle = NOTE;
   ctx.textAlign = 'left';
   ctx.fillText(`N° ${String(creature.no).padStart(2, '0')}`, (x + 2.4) * u, (y + 4.6) * u);
-  // (la rareté : un, deux ou trois points d'or ; une légendaire, une étoile)
-  if (creature.rarity === 'légendaire') {
-    star(ctx, (x + CELL.w - 5.4) * u, (y + 3.4) * u, 2 * u);
-    ctx.fillStyle = GOLD.base;
-    ctx.fill();
-    ctx.strokeStyle = GOLD.edge;
-    ctx.lineWidth = 0.14 * u;
-    ctx.stroke();
-  } else {
-    for (let d = 0; d < 3; d++) {
-      ctx.beginPath();
-      ctx.arc((x + CELL.w - 3 - d * 2.4) * u, (y + 3.4) * u, 0.8 * u, 0, Math.PI * 2);
-      ctx.fillStyle = d < DOTS[creature.rarity] ? alpha(GOLD.base, 0.95) : alpha(FAINT, 0.35);
-      ctx.fill();
-    }
-  }
+  paintRarity(ctx, u, creature.rarity, x + CELL.w, y + 3.4);
   const img = assets.image(creature);
   if (img) {
     const box = { w: 24, h: 17 };
@@ -194,6 +179,26 @@ export function stamp(ctx, u, cx, cy, date, seed) {
     ctx.fill();
   }
   ctx.restore();
+}
+
+// La rareté, dans le coin haut de la case (right, cy : son bord droit et sa ligne, en u) : un, deux ou trois points d'or ;
+// une légendaire, une étoile
+function paintRarity(ctx, u, rarity, right, cy) {
+  if (rarity === 'légendaire') {
+    star(ctx, (right - 5.4) * u, cy * u, 2 * u);
+    ctx.fillStyle = GOLD.base;
+    ctx.fill();
+    ctx.strokeStyle = GOLD.edge;
+    ctx.lineWidth = 0.14 * u;
+    ctx.stroke();
+    return;
+  }
+  for (let d = 0; d < 3; d++) {
+    ctx.beginPath();
+    ctx.arc((right - 3 - d * 2.4) * u, cy * u, 0.8 * u, 0, Math.PI * 2);
+    ctx.fillStyle = d < DOTS[rarity] ? alpha(GOLD.base, 0.95) : alpha(FAINT, 0.35);
+    ctx.fill();
+  }
 }
 
 // Une étoile à cinq branches (son tracé : centre et rayon en pixels)

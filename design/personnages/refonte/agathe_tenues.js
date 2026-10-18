@@ -8,16 +8,17 @@ const { castaway, fade } = require('../../atelier/naufrage');
 const { SPECS } = require('../../atelier/naufrages');
 const { agathe, C } = require('./agathe_refonte');
 const { r2 } = require('../troupe');
+const { fondre, fondu } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les palettes de la robe : dress, son ombre, son reflet
-const PALETTES = {
+const PALETTES = fondre({
   cannelle: { nom: 'Cannelle', dress: C.dress, dressS: C.dressS, dressH: C.dressH },
   prune: { nom: 'Prune', dress: '#7E4A62', dressS: '#5E3348', dressH: '#A26F87' },
   olive: { nom: 'Olive', dress: '#7D7A3E', dressS: '#5C5A2A', dressH: '#A6A262' },
   indigo: { nom: 'Indigo', dress: '#3F5578', dressS: '#2C3D59', dressH: '#6F86AA' },
   ocre: { nom: 'Ocre', dress: '#B8853A', dressS: '#8C6226', dressH: '#DCAA60' },
   brique: { nom: 'Brique', dress: '#9C3E34', dressS: '#742A23', dressH: '#C2625A' }
-};
+});
 
 // Les tenues : la forme (agathe_refonte.js, corps), la palette par défaut, les manches
 const TENUES = {
@@ -81,7 +82,7 @@ function habiller(tenueId = 'robe', paletteId = null, etatId = 'rescapee') {
   c.teintes = [K.hair, salee.dress, salee.apron, K.copper];
   const S = SPECS.Cannelle, dS = salee.dressS;
   // (les lambeaux de la robe et du tablier dans ses couleurs à elle, déjà délavées : la transformation ne les recolore pas)
-  const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === '#84402B' ? dS : salee.apron, ...r])]));
+  const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === fondu('#84402B') ? dS : salee.apron, ...r])]));
   const spec = { ...S, sway: ctx => (ctx.walk ? r2(ctx.ph * 0.25) : 0), fade: [], k: 0.6, tatters, holes: Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, w]) => [x, y, w, assombrir(dS, 0.8)])])), head: undefined };
   const droite = castaway(c, spec);
   const gauche = castaway(c, { ...spec, tatters: retourner(spec.tatters, it => it[2] === salee.apron), holes: retourner(spec.holes, () => false), rips: retourner(spec.rips, () => true) });

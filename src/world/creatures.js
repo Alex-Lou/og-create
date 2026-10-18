@@ -10,7 +10,7 @@ import { CREATURE_TEXTS, CATEGORY_TITLES, WHEN } from '@/texts/world/creatures';
 
 export const CATEGORIES = Object.keys(CATEGORY_TITLES);
 // Le dessin de chaque créature (sorte et variante : beastArt.js ; un égaré, stray et son dessin : nightArt.js ; le Géant
-// et le Kraken, legend : faune/portraits.js), sa catégorie ; celles qui ne vivent pas par WILD_LIFE disent leur rareté et
+// et le Kraken, legend : leur silhouette, faune ; le portrait de chacune : creatureArt.js), sa catégorie ; celles qui ne vivent pas par WILD_LIFE disent leur rareté et
 // leur règle (les égarés, d'où ils sortent : serveur, services/nights.js ; la bête de brume, du climat de sa terre)
 const LIST = [
   ['lapin', 'bois', 'rabbit'], ['ecureuil', 'bois', 'squirrel'], ['mesange', 'bois', 'bird'], ['renard', 'bois', 'fox'],

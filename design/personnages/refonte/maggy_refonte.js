@@ -21,8 +21,9 @@ const { fabriquerBras } = require('./lorena_bras');
 const { jambe } = require('./membres');
 const { capucheRabattue, reperes } = require('../avatar_accessoires');
 const { hole, rip } = require('../../atelier/naufrage');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#C68A62', skinS: '#A9704C', lid: '#B97E58', under: '#8E5E44', nose: '#8E5A3E', cheek: '#E08A7A',
   eye: '#1E1620', iris: '#6E6A9E', irisL: '#B9B4E0', eyeRx: 1.8, eyeRy: 2.4, brow: '#1C1620', browW: 0.9, mouth: '#6A3028',
   hand: '#BA8A64', handDirt: '#7A5A40',
@@ -36,7 +37,7 @@ const C = {
   wood: '#A8743F', woodS: '#7E5530', woodH: '#C9965E', stock: '#5A4A44', stockS: '#463A35',
   iron: '#6E7480', ironS: '#545A65', ironH: '#9AA2AD', brass: '#C9A24A', glow: '#F6E7A0',
   mud: '#6B5138', salt: '#FFF8E8', leaf: '#5E9E4A', leafS: '#467A37', twig: '#8A6440', weed: '#5E9A62', patch: '#B07E4C'
-};
+});
 
 // Les marques sur elle, réglées par l'état (maggy_tenues.js) : la terre (dirt, 0 → 1 : aux mains et au bas de la robe) ;
 // poursuivie (ronces : le châle accroché, les feuilles dans le chapeau, la tresse défaite) ; le sel (salt) ; la pièce
