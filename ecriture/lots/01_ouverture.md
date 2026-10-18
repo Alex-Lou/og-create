@@ -1,5 +1,7 @@
 # Lot 01 — L'ouverture : le naufrage, Brume, le Grimoire, le premier feu
 
+> **Révision du 18 octobre 2026** : l'auteur a réécrit lui-même les répliques de ce lot ; le texte en jeu est celui de `lots/10_reecriture_auteur.md` (jour 1). Ce lot garde ses intentions, ses images et ses décisions ; ses tableaux de répliques sont une archive.
+
 > Ce lot réécrit la séquence de Brume, du naufrage à la première nuit, **sur l'ouverture écrite par l'auteur**. La structure, les intentions et l'humour sont les siens ; la langue est corrigée ; quelques endroits sont élevés. Chaque écart à son texte est signalé dans la colonne « Intention ».
 > - Décisions appliquées : `ton.md` § 0 (1, 2, 3, 4, 5, 6, 7, 7 bis, 8, 9, 10, 11, 12, 14).
 > - **Validé par l'auteur le 14 octobre**, avec les quatre recommandations du § 4 (décisions 19 à 22 de `ton.md`). Seul changement depuis : arrivee.2 reprend le mot de l'auteur avec les deux formes (décision 20).

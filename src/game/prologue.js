@@ -547,13 +547,13 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     if (!quest.done && !seen.has('cannelle-parle')) return { phase: 'lines', lines: [], lesson: 'cannelle-parle' };
-    return { phase: 'lines', lines: quest.done ? ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient', ...lines] : ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] };
+    return { phase: 'lines', lines: quest.done ? ['soupe', 'soupe-aster', 'bulles-reviennent', 'brume-avale', 'brume-retient', ...lines] : ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] };
   }
   // Des caquets sur l'eau : la longue-vue de Lorena (vu : « cage-vue ») voit la cage dériver jusqu'au bout de la plage ;
   // ouverte, les poules s'échappent
   if (quest.id === 'cage') {
     if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
-    return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles'] };
+    return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles', 'fine-bouche', 'miracles', 'miracles-suite'] };
   }
   // On les attrape (la chasse aux poules, une scène à part : vu « poule:<id> » ; game/stages.js, HENS), puis on les
   // nourrit (la scène finit sur « Les voilà toutes ! » : l'île passe à leur faim, choix de l'auteur, 13 oct.)
@@ -562,31 +562,33 @@ export function islandStep({ state, quest }) {
     return { phase: 'lines', lines: quest.done ? lines : ['deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
   }
   // Leur poulailler (posé, Lorena propose de démonter la cage vide) ; le soir à trois autour du feu, la troisième nuit
-  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', ...lines] : ['un-toit'] };
+  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', 'cage-agathe', ...lines] : ['un-toit'] };
   // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
-  if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint'] };
+  if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint', 'entends'] };
   if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
   // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
-    return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
+    return { phase: 'lines', lines: quest.done ? ['lanterne-brille', 'lanterne-brume', ...lines] : ['puzzle', 'or'] };
   }
   // Ses trois torches (choix de l'auteur, 13 oct.)
-  if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
+  if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent', 'ingenieur'] : ['torches-idee'] };
   // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Nathan autour du feu, Agathe inquiète pour son
   // Léo, la veille du jour où on le trouve ; la quatrième nuit
-  if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
+  if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'marmite-agathe', 'souci', 'courants', 'courants-suite'], line: 'soir-quatre' };
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
   // d'elle (vu : « planche ») ; la planche s'échoue, Léo endormi dessus : on le réveille
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
+  // (la planche échouée : le joueur s'approche ; on le réveille)
+  if (quest.id === 'eveil-ondin' && !quest.done) return { phase: 'lines', lines: ['respire'] };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
     // (la Pluie écrite : elle tombe sur l'île, la baguette frémit)
-    return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban'] };
+    return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban', 'grimoire-vole', 'pas-expres', 'expres-brume'] };
   }
-  if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
+  if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'relier', 'relier-abri', 'communaute', 'produit', 'merci-puits', 'trois-fois-rien', ...lines] : [] };
   // Léo glisse dans l'herbe mouillée avec ses seaux : le premier chemin
-  if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pierres'] };
+  if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pieds-agathe', 'pierres'] };
   return { phase: 'lines', lines };
 }
