@@ -11,6 +11,7 @@
 // geste : facultatif, un geste de design/atelier/gestes.js (mains tendues vers le feu…) fait assis : il place les bras
 // (et ce qu'il passe derrière le buste ou par-dessus) à partir des épaules descendues ; plus de clignement.
 const { arm, leg, limb, r2 } = require('./troupe');
+const { enPersonnage } = require('../personnages/couleurs');
 
 const KNEE = 53; // le haut des tibias, à hauteur d'assise
 const SEAT = 53.6; // le dessus du siège
@@ -55,8 +56,9 @@ function assisPieces(c, view, n, expr, geste) {
   corps += up(c.neck ? c.neck(cc, ctx) : '');
   const dessus = up(c.overArms ? c.overArms(cc, ctx) : '');
   const tete = up(c.head(cc, ctx, act || {})) + up(c.overHead ? c.overHead(cc, ctx) : '') + (act && act.over ? act.over : '');
+  // (un personnage : chaque pièce sort à l'encre des personnages)
   return {
-    corps, brasG: armL, brasD: view === 'front' ? armR : '', dessus, tete,
+    corps: enPersonnage(corps), brasG: enPersonnage(armL), brasD: view === 'front' ? enPersonnage(armR) : '', dessus: enPersonnage(dessus), tete: enPersonnage(tete),
     epaules: sh, cou: [24, r2(sh[0][1] - 1)]
   };
 }

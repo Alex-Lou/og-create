@@ -67,7 +67,7 @@ const catalogue = {
   regles: {
     noms: '<sujet>_<vue>_<pose>[_<variante>]_<n>.svg pour les personnages et les bêtes ; <sujet>_<état>_<n>.svg ailleurs. Un dessin fixe n\'a pas de numéro.',
     directions: 'avant : vient vers le bas à droite ; dos : s\'éloigne vers le haut à droite ; profil : tourné vers la droite. Le miroir (scaleX(-1)) donne le bas à gauche, le haut à gauche, la gauche. Les trois quarts avant du grand format (maîtres, naufragés, Anya, le Passeur) sortent du kit tournés vers le bas à gauche : ils sont publiés en miroir pour suivre cette règle.',
-    lumiere: 'En haut à gauche. Trait brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume.'
+    lumiere: 'En haut à gauche. Trait des personnages indigo #0A0418 (le papier néon, design/personnages/couleurs.js), trait du décor et des bêtes brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume.'
   },
   chapitres: C.CHAPITRES.map(([id, titre, resume]) => ({ id, titre, resume })),
   manquants: C.MANQUANTS.map(([parcours, quoi]) => ({ parcours, quoi })),

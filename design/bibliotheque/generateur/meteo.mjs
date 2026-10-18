@@ -26,6 +26,65 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
+// personnages/couleurs.js
+var require_couleurs = __commonJS({
+  "personnages/couleurs.js"(exports, module) {
+    var ENCRE = "#0A0418";
+    var ENCRE_KIT = "#3C2819";
+    var NUIT = "#2A1650";
+    var PASTEL = "#B4A8DC";
+    function memo(fn, max = 4096) {
+      const cache = /* @__PURE__ */ new Map();
+      return (...args) => {
+        const cle = args.join("|");
+        let v = cache.get(cle);
+        if (v === void 0) {
+          if (cache.size >= max) cache.clear();
+          v = fn(...args);
+          cache.set(cle, v);
+        }
+        return v;
+      };
+    }
+    __name(memo, "memo");
+    function hsl(c) {
+      const n = parseInt(c.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      let h = 0, s = 0;
+      if (d) {
+        s = d / (1 - Math.abs(2 * l - 1));
+        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+      }
+      return [h, s, l];
+    }
+    __name(hsl, "hsl");
+    function hex([h, s, l]) {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+    __name(hex, "hex");
+    var mix = memo((a, b, k) => {
+      const p = /* @__PURE__ */ __name((c) => [0, 2, 4].map((i) => parseInt(c.slice(1 + i, 3 + i), 16)), "p"), A = p(a), B = p(b);
+      return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join("").toUpperCase();
+    });
+    var ton = memo((c, k) => {
+      const [h, s, l] = hsl(c);
+      if (k >= 1) return hex([h, s, l + (1 - l) * (k - 1)]);
+      return mix(hex([h, s, l * k]), NUIT, Math.min(0.28, (1 - k) * 1.1));
+    });
+    var delave = memo((c, k = 1) => {
+      const [h, s, l] = hsl(c);
+      return mix(hex([h, s * (1 - 0.45 * k), l + (0.74 - l) * 0.26 * k]), PASTEL, 0.3 * k);
+    });
+    var clarte = /* @__PURE__ */ __name((c) => hsl(c)[2], "clarte");
+    var enPersonnage = /* @__PURE__ */ __name((svg) => svg.replaceAll(ENCRE_KIT, ENCRE), "enPersonnage");
+    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage };
+  }
+});
+
 // personnages/refonte/membres.js
 var require_membres = __commonJS({
   "personnages/refonte/membres.js"(exports, module) {
@@ -260,7 +319,7 @@ var require_membres = __commonJS({
 // personnages/troupe.js
 var require_troupe = __commonJS({
   "personnages/troupe.js"(exports, module) {
-    var OUT = "#3C2819";
+    var { ENCRE_KIT: OUT, hsl, ton, enPersonnage } = require_couleurs();
     var W = 1.1;
     var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
     var st = /* @__PURE__ */ __name((w = W) => `stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
@@ -271,27 +330,6 @@ var require_troupe = __commonJS({
     var clip = /* @__PURE__ */ __name((id, d, inner) => `<clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${inner}</g>`, "clip");
     var IMAGES = { repos: 4, marche: 8, salut: 4, action: 2 };
     var lerp = /* @__PURE__ */ __name((a, b, k) => Array.isArray(a) ? a.map((v, i) => r22(v + (b[i] - v) * k)) : r22(a + (b - a) * k), "lerp");
-    var hsl = /* @__PURE__ */ __name((hex2) => {
-      const n = parseInt(hex2.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
-      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
-      let h = 0, sat = 0;
-      if (d) {
-        sat = d / (1 - Math.abs(2 * l - 1));
-        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
-        h *= 60;
-        if (h < 0) h += 360;
-      }
-      return [h, sat, l];
-    }, "hsl");
-    var hex = /* @__PURE__ */ __name(([h, s, l]) => {
-      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
-      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
-      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
-    }, "hex");
-    var ton = /* @__PURE__ */ __name((c, k) => {
-      const [h, s, l] = hsl(c);
-      return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]);
-    }, "ton");
     var PRINCIPALES = ["skin", "hair", "top", "bas", "leg", "sleeve", "shoe", "coat", "base", "hand", "buzz"];
     function lumiere(c, id, k = 1) {
       const couleurs = /* @__PURE__ */ new Set();
@@ -622,7 +660,7 @@ var require_troupe = __commonJS({
       haut += act && act.over ? act.over : "";
       s += legs.join("") + (breath ? `<g transform="translate(0 ${breath})">${haut}</g>` : haut);
       const { defs, table } = lumiere(c, id);
-      return defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`;
+      return enPersonnage(defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`);
     }
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");

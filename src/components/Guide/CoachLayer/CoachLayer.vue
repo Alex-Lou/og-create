@@ -46,7 +46,7 @@
     <!-- Une quête qui compte (ramasser trois trouvailles, planter quatre piquets) : où l'on en est, près de la main -->
     <span v-if="tally" class="coach__tally" :style="tallyStyle" role="status">{{ tally }}</span>
     <transition name="coach-say" appear>
-      <p v-if="step.text && ready && !quiet" ref="say" :key="stepId" class="coach__say" :style="[sayStyle, speakerStyle]" role="status">
+      <p v-if="step.text && ready && !quiet" ref="say" :key="stepId" :class="['coach__say', { 'coach__say--side': side }]" :style="[sayStyle, speakerStyle]" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
         <button type="button" class="coach__close" aria-label="Fermer" @click="close">×</button>
@@ -79,6 +79,9 @@ const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"]
 // (chemin, déplacer, poser) et le menu d'une pose ; l'écart gardé avec eux (px)
 const DODGE = '.world__play--fab, .world__banner, .world__menu';
 const DODGE_GAP = 10;
+// Une bulle à côté de sa cible (quand elle ne tient pas dessous) : au moins tant de large, à tant d'elle et du bord (px)
+const SIDE_MIN = 200;
+const SIDE_GAP = 12;
 let count = 0;
 
 export default {
@@ -136,9 +139,31 @@ export default {
     // onglets), sinon au-dessus ; à sa hauteur mesurée (une consigne du Grimoire tient sur quatre lignes)
     // Puis elle s'écarte de ce qu'elle recouvrirait (DODGE) : au-dessus de lui quand elle est au-dessus de sa cible,
     // au-dessous sinon (la main montre toujours la cible)
+    // (elle tient sous sa cible, au-dessus de ce qui est fixé en bas)
+    below() {
+      const h = this.hole;
+      return Boolean(h) && h.y + h.h + PAD + this.sayH < (this.edge || this.view.h - 70);
+    },
+    // Sinon, à côté d'elle si la largeur libre y suffit (une tuile au bord de l'étagère : sa consigne ne recouvre plus la
+    // page au-dessus, l'énigme et l'Encre ; retour de l'auteur, 18 oct.) : { x, w }, ou null (alors au-dessus)
+    side() {
+      const h = this.hole;
+      // (pas pour une cible prise dans ce qui est fixé en bas, un onglet : la bulle n'y serait pas à sa hauteur)
+      if (!h || this.below || h.y + h.h / 2 + this.sayH / 2 > (this.edge || this.view.h - 70)) return null;
+      const right = this.view.w - (h.x + h.w) - SIDE_GAP - 12;
+      const left = h.x - SIDE_GAP - 12;
+      if (right >= SIDE_MIN && right >= left) return { x: h.x + h.w + SIDE_GAP, w: Math.min(340, right) };
+      if (left >= SIDE_MIN) return { x: h.x - SIDE_GAP - Math.min(340, left), w: Math.min(340, left) };
+      return null;
+    },
     sayStyle() {
       const h = this.hole;
-      const below = h.y + h.h + PAD + this.sayH < (this.edge || this.view.h - 70);
+      const below = this.below;
+      // (à côté : à hauteur de la cible, sans passer sous ce qui est fixé en bas)
+      if (this.side) {
+        const top = Math.max(12, Math.min(h.y + h.h / 2 - this.sayH / 2, (this.edge || this.view.h - 70) - this.sayH - 8));
+        return { top: `${top}px`, left: `${this.side.x}px`, width: `${this.side.w}px` };
+      }
       let top = below ? h.y + h.h + 14 : Math.max(12, h.y - this.sayH - 14);
       for (const o of this.across(this.sayW)) {
         if (top + this.sayH + DODGE_GAP <= o.y || top >= o.y + o.h + DODGE_GAP) continue;

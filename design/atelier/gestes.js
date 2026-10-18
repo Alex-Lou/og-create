@@ -7,6 +7,7 @@
 // - mains tendues vers le feu et applaudir (la veillée, HISTOIRE.md § 10), debout ou assis (design/atelier/assis.js).
 // Le travail est le geste du métier de chaque maître (sa pose « action »), dans les trois vues : rien à ajouter ici.
 const { OUT, P, E, L, limb, zee, r2, frame, arm } = require('./troupe');
+const { enPersonnage } = require('../personnages/couleurs');
 
 const CADRE_PARAPLUIE = [0, -18, 48, 82];
 const CADRE_COUCHE = [0, 0, 64, 48];
@@ -70,12 +71,13 @@ function couche(c, n = 0, couverture = { fond: '#C98F5A', motif: '#E8C07A' }) {
   const corps = frame(c, 'front', 'repos', 0, 'endormi').replace(ZEDS, '');
   const souffle = n ? -0.5 : 0;
   const couv = `M31,${r2(9.6 + souffle)} Q46,${r2(7.6 + souffle)} 60.6,10.4 Q62.8,24 60.6,37.6 Q46,40.4 31,${r2(38.4 - souffle)} Q28.6,24 31,${r2(9.6 + souffle)} Z`;
-  return `<ellipse cx="32" cy="26" rx="29" ry="14" fill="rgba(40,55,20,.16)"/>`
+  // (un personnage couché, son oreiller et sa couverture : à l'encre des personnages)
+  return enPersonnage(`<ellipse cx="32" cy="26" rx="29" ry="14" fill="rgba(40,55,20,.16)"/>`
     + E(9, 24, 7.6, 11, '#F4EEDF', 1.1) + L([4.6, 18], [6.4, 15.6], '#FFFFFF', 1)
     + `<g transform="translate(32 24) scale(0.95) translate(-32 -24)"><g transform="translate(0 48) rotate(-90)">${corps}</g></g>`
     + P(couv, couverture.fond, 1.2) + [16, 24, 32].map(y => L([33, y + souffle * 0.5], [59.2, y], couverture.motif, 1.1)).join('')
     + P(`M31,${r2(9.6 + souffle)} Q28.6,24 31,${r2(38.4 - souffle)} L34.6,${r2(38.2 - souffle)} Q32.4,24 34.6,${r2(9.8 + souffle)} Z`, couverture.motif, 0.9)
-    + (n ? zee(30.6, 6.4, 2) + zee(34, 2.4, 2.6) : zee(30, 7.4, 1.8) + zee(33, 3.6, 2.4));
+    + (n ? zee(30.6, 6.4, 2) + zee(34, 2.4, 2.6) : zee(30, 7.4, 1.8) + zee(33, 3.6, 2.4)));
 }
 
 // ---- les gestes de la veillée : la pose « action » du kit, remplacée ----

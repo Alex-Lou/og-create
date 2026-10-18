@@ -116,7 +116,7 @@ function casquette(c, { view }, [col]) {
     : `M${X(24)},5.4 L${X(24)},14.6 M${X(19)},6.2 Q${X(17)},10.4 ${X(17.2)},14.8 M${X(29)},6.2 Q${X(31)},10.4 ${X(30.8)},14.8`;
   let s = P(dome, col) + clip(`${c.uid}cq${view}`, dome, `<rect x="${X(27)}" y="4" width="12" height="13" fill="${S}" opacity=".7"/>`
     + `<path d="${coutures}" stroke="${S}" stroke-width=".5" fill="none"/>`
-    + (view === 'ne' ? `<path d="M${X(19)},15.6 Q${X(24)},11.6 ${X(29)},15.6 Z" fill="${c.hair || '#5A3A26'}"/><path d="M${X(17)},15.6 L${X(31)},15.6" stroke="${S}" stroke-width="1.2"/>` : '')) + P(dome, 'none')
+    + (view === 'ne' ? `<path d="M${X(19)},15.6 Q${X(24)},11.6 ${X(29)},15.6 Z" fill="${c.hair || '#543435'}"/><path d="M${X(17)},15.6 L${X(31)},15.6" stroke="${S}" stroke-width="1.2"/>` : '')) + P(dome, 'none')
     + E(+X(24), 5.3, 1.1, 0.75, S, 0.6) + L([X(15.4), 9.4], [X(19.6), 7.2], H, 0.9);
   if (view === 'front') {
     const v = `M${X(14.2)},15.2 Q${X(24)},12.8 ${X(33.8)},15.2 Q${X(34.6)},17.6 ${X(24)},18.6 Q${X(13.4)},17.6 ${X(14.2)},15.2 Z`;
@@ -136,7 +136,7 @@ function bandana(c, { view }, [col]) {
     : `M${X(11.2)},17 Q${X(11)},5.8 ${X(24)},5.6 Q${XD(37)},5.8 ${XD(36.8)},17 Q${X(24)},13.6 ${X(11.2)},17 Z`;
   const pois = [[15.6, 9.6], [20.4, 7.4], [26.4, 7.6], [31.6, 9.8], [18, 12.6], [24, 11], [29.8, 12.8], [14.4, 14.6], [33.6, 14.6]];
   let s = P(d, col) + clip(`${c.uid}bd${view}`, d, `<rect x="${X(27.6)}" y="4" width="12" height="16" fill="${S}" opacity=".7"/>`
-    + pois.map(([x, y]) => E(+X(x), y, 0.75, 0.62, '#FFF6E6', 0)).join('')
+    + pois.map(([x, y]) => E(+X(x), y, 0.75, 0.62, '#F6F0FA', 0)).join('')
     + `<path d="M${X(12.6)},${ne ? 16.4 : 15} Q${X(24)},${ne ? 13.6 : 12} ${X(35.4)},${ne ? 16.4 : 15}" stroke="${S}" stroke-width=".55" fill="none"/>`) + P(d, 'none')
     + L([X(15.6), 8.4], [X(20.4), 6.6], H, 0.9);
   if (ne) s += P(`M${X(23.2)},17 Q${X(21.2)},20.6 ${X(21.6)},24 Q${X(22.8)},22.8 ${X(23.8)},23.4 Q${X(23.4)},20.2 ${X(24.4)},17.2 Z`, S, 0.7)
@@ -384,9 +384,9 @@ function peluche(c, ctx, [col], h) {
 function panier(c, ctx, [col], h) {
   const [x, y] = [h[0], h[1] + 4.6];
   const basket = `M${r2(x - 4)},${y} L${r2(x + 4)},${y} L${r2(x + 3.2)},${r2(y + 4.4)} Q${x},${r2(y + 5.2)} ${r2(x - 3.2)},${r2(y + 4.4)} Z`;
-  return P(`M${r2(x - 3.4)},${r2(y + 0.2)} Q${x},${r2(y - 6.6)} ${r2(x + 3.4)},${r2(y + 0.2)}`, 'none', 1.6).replace(`stroke="${OUT}"`, 'stroke="#8A5A30"')
+  return P(`M${r2(x - 3.4)},${r2(y + 0.2)} Q${x},${r2(y - 6.6)} ${r2(x + 3.4)},${r2(y + 0.2)}`, 'none', 1.6).replace(`stroke="${OUT}"`, 'stroke="#74493B"')
     + fleurette(x - 2, y - 0.6, 1.05, col) + fleurette(x + 1.6, y - 0.9, 1.1, mix(col, '#FFFFFF', 0.5)) + feuille(x - 0.2, y - 0.4, -60, 0.9)
-    + P(basket, '#C9925A') + clip(`${c.uid}pn${ctx.view}`, basket, [1.4, 2.8].map(d => L([x - 4, y + d], [x + 4, y + d], '#9A6A3A', 0.5)).join('') + [-2, 0, 2].map(d => L([x + d, y], [x + d * 0.85, y + 5], '#9A6A3A', 0.5)).join('')) + P(basket, 'none');
+    + P(basket, '#9D6E57') + clip(`${c.uid}pn${ctx.view}`, basket, [1.4, 2.8].map(d => L([x - 4, y + d], [x + 4, y + d], '#7E5442', 0.5)).join('') + [-2, 0, 2].map(d => L([x + d, y], [x + d * 0.85, y + 5], '#7E5442', 0.5)).join('')) + P(basket, 'none');
 }
 // Ombrelle posée sur l'épaule : la toile derrière la tête, le manche dans la main
 function ombrelle(c, ctx, [col], h) {
@@ -394,7 +394,7 @@ function ombrelle(c, ctx, [col], h) {
   const [x, y] = h, tip = [Math.min(x + 3, 38.6), y - 17.4];
   const canopy = 'M-7,0 Q-6.7,-6.2 0,-6.7 Q6.7,-6.2 7,0 Q5.25,-1.2 3.5,0 Q1.75,-1.2 0,0 Q-1.75,-1.2 -3.5,0 Q-5.25,-1.2 -7,0 Z';
   const ribs = [-3.5, 0, 3.5].map(d => L([d * 0.5, -6.3], [d, -0.2], tone(col, 0.82), 0.5)).join('');
-  return limb([x, y + 0.4], tip, 0.7, '#8A5A30')
+  return limb([x, y + 0.4], tip, 0.7, '#74493B')
     + `<g transform="translate(${r2(tip[0])} ${r2(tip[1] + 1.6)}) rotate(16)">${P(canopy, col)}${ribs}${E(0, -6.9, 0.6, 0.6, tone(col, 0.8), 0.5)}</g>`;
 }
 
@@ -435,7 +435,7 @@ function colFourrure(o, view, col, y) {
   d += ' Z';
   return P(d, col, 0.9) + P(`M${r2(o - 5)},${Y(3.4)} Q${o},${Y(6.4)} ${r2(o + 5)},${Y(3.4)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${S}"`);
 }
-const BOIS = '#D9B27C';
+const BOIS = '#A7826D'; // (le bois et l'osier, comme le cuir : fondus vers l'aubergine du papier néon)
 function manteau(c, ctx, [col, fourrure]) {
   if (ctx.couche !== 'dessus') return '';
   const { view } = ctx, { cou: y, ourlet: H } = reperes(c), S = tone(col, 0.8), w = balance(ctx), Y = d => r2(y + d);
@@ -656,7 +656,7 @@ function pipe(c, ctx, [col, metal], h) {
   return `<path d="M${r2(x + 0.6)},${r2(y - 0.6)} Q${r2(x - 1.6)},${r2(y + 0.2)} ${r2(x - 3.2)},${r2(y - 1.6)}" fill="none" stroke="${OUT}" stroke-width="1.7" stroke-linecap="round"/>`
     + `<path d="M${r2(x + 0.6)},${r2(y - 0.6)} Q${r2(x - 1.6)},${r2(y + 0.2)} ${r2(x - 3.2)},${r2(y - 1.6)}" fill="none" stroke="${metal}" stroke-width=".85" stroke-linecap="round"/>`
     + P(fourneau, col, 0.8) + clip(`${c.uid}pp${ctx.view}`, fourneau, `<rect x="${r2(x + 2.2)}" y="${r2(y - 4)}" width="2" height="5" fill="${S}"/>`)
-    + E(x + 2, y - 3.4, 1.5, 0.5, '#3A2416', 0.5) + E(x + 2, y - 3.5, 0.8, 0.25, '#E8743A', 0) + L([x + 0.9, y - 2.6], [x + 0.9, y - 0.8], H, 0.45)
+    + E(x + 2, y - 3.4, 1.5, 0.5, '#40262A', 0.5) + E(x + 2, y - 3.5, 0.8, 0.25, '#E8743A', 0) + L([x + 0.9, y - 2.6], [x + 0.9, y - 0.8], H, 0.45)
     + `<path d="M${r2(x + 2)},${r2(y - 4.4)} Q${r2(x + 1)},${r2(y - 6)} ${r2(x + 2.2)},${r2(y - 7.4)} Q${r2(x + 3.2)},${r2(y - 8.8)} ${r2(x + 2.2)},${r2(y - 10)}" fill="none" stroke="#E8EEF2" stroke-width=".6" stroke-linecap="round" opacity=".7"/>`;
 }
 // Canne : un fût de bois verni (ombre, reflet), une poignée courbe, un embout et une bague de métal

@@ -9,7 +9,7 @@
  "regles": {
   "noms": "<sujet>_<vue>_<pose>[_<variante>]_<n>.svg pour les personnages et les bêtes ; <sujet>_<état>_<n>.svg ailleurs. Un dessin fixe n'a pas de numéro.",
   "directions": "avant : vient vers le bas à droite ; dos : s'éloigne vers le haut à droite ; profil : tourné vers la droite. Le miroir (scaleX(-1)) donne le bas à gauche, le haut à gauche, la gauche. Les trois quarts avant du grand format (maîtres, naufragés, Anya, le Passeur) sortent du kit tournés vers le bas à gauche : ils sont publiés en miroir pour suivre cette règle.",
-  "lumiere": "En haut à gauche. Trait brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume."
+  "lumiere": "En haut à gauche. Trait des personnages indigo #0A0418 (le papier néon, design/personnages/couleurs.js), trait du décor et des bêtes brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume."
  },
  "chapitres": [
   {
@@ -46315,6 +46315,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/00_tampon/00_tampon_fond",
+   "rubrique": "scenes",
+   "titre": "00 tampon fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/00_tampon/00_tampon_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/00_tampon/00_tampon_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan anime)",
@@ -46429,6 +46446,40 @@
     -40,
     480,
     480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_anime",
+   "rubrique": "scenes",
+   "titre": "01 carte anime",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_carte/01_carte_fond",
+   "rubrique": "scenes",
+   "titre": "01 carte fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46706,6 +46757,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_greve/01_greve_fond",
+   "rubrique": "scenes",
+   "titre": "01 greve fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_greve/01_greve_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_greve/01_greve_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan anime)",
@@ -46905,6 +46973,57 @@
     -40,
     480,
     480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_fond",
+   "rubrique": "scenes",
+   "titre": "01 noir fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_anime",
+   "rubrique": "scenes",
+   "titre": "01 paupieres anime",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_fond",
+   "rubrique": "scenes",
+   "titre": "01 paupieres fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47160,6 +47279,57 @@
     -40,
     480,
     480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_anime",
+   "rubrique": "scenes",
+   "titre": "01 pont anime",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_devant",
+   "rubrique": "scenes",
+   "titre": "01 pont devant",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_devant_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_fond",
+   "rubrique": "scenes",
+   "titre": "01 pont fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -49698,6 +49868,91 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_racines/01_racines_anime",
+   "rubrique": "scenes",
+   "titre": "01 racines anime",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_fond",
+   "rubrique": "scenes",
+   "titre": "01 racines fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_fond",
+   "rubrique": "scenes",
+   "titre": "01 vague fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_devant",
+   "rubrique": "scenes",
+   "titre": "02 approche devant",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_devant_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_fond",
+   "rubrique": "scenes",
+   "titre": "02 approche fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_approche/02_approche_plan-brume",
    "rubrique": "scenes",
    "titre": "Scène 2b : Brume approche d’un coup (02 approche plan brume)",
@@ -50157,6 +50412,40 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_devant",
+   "rubrique": "scenes",
+   "titre": "02 lueur devant",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_fond",
+   "rubrique": "scenes",
+   "titre": "02 lueur fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_lueur/02_lueur_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan anime)",
@@ -50560,6 +50849,23 @@
     -40,
     480,
     480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_fond",
+   "rubrique": "scenes",
+   "titre": "02 plage fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51013,6 +51319,40 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/02_proche/02_proche_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_anime",
+   "rubrique": "scenes",
+   "titre": "02 rocher anime",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_fond",
+   "rubrique": "scenes",
+   "titre": "02 rocher fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -51500,6 +51840,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_fond",
+   "rubrique": "scenes",
+   "titre": "03 ciel fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/03_ciel/03_ciel_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan anime)",
@@ -51886,6 +52243,40 @@
     -40,
     480,
     480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_anime",
+   "rubrique": "scenes",
+   "titre": "03 livre anime",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/03_livre/03_livre_fond",
+   "rubrique": "scenes",
+   "titre": "03 livre fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -53591,6 +53982,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/03_vent/03_vent_fond",
+   "rubrique": "scenes",
+   "titre": "03 vent fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_vent/03_vent_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/03_vent/03_vent_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan anime)",
@@ -54283,6 +54691,40 @@
     -40,
     480,
     480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/05_cercle/05_cercle_anime",
+   "rubrique": "scenes",
+   "titre": "05 cercle anime",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/05_cercle/05_cercle_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/05_cercle/05_cercle_fond",
+   "rubrique": "scenes",
+   "titre": "05 cercle fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/05_cercle/05_cercle_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -74742,6 +75184,25 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/10_aster/10_aster_fond",
+   "rubrique": "scenes",
+   "titre": "10 aster fond",
+   "images": 3,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_aster/10_aster_fond_1.svg",
+    "svg/scenes/tutoriel/10_aster/10_aster_fond_2.svg",
+    "svg/scenes/tutoriel/10_aster/10_aster_fond_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/10_aster/10_aster_plan-brume",
    "rubrique": "scenes",
    "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume)",
@@ -76063,6 +76524,23 @@
     -40,
     480,
     480
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_fond",
+   "rubrique": "scenes",
+   "titre": "10 epave fond",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
    ],
    "parcours": "tuto-3",
    "statut": "ok"

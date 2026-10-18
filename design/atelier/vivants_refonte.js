@@ -7,6 +7,7 @@ const A = require('./anya');
 const { IMAGES } = require('./troupe');
 const { bulle, apparitionSur, BULLES } = require('../personnages/refonte/anya_anims');
 const CL = require('../personnages/refonte/cerf_lune');
+const { enPersonnage } = require('../personnages/couleurs');
 
 const SAISONS = A.SAISONS_A;
 const suffixe = saison => (saison === 'ete' ? '' : `_${saison}`);
@@ -41,7 +42,8 @@ function anya(pose, vue, n, saison = 'ete') {
   if (!p[1].includes(vue)) throw new Error(`vue inconnue pour ${pose} : ${vue} (${p[1].join(', ')})`);
   if (!SAISONS.includes(saison)) throw new Error(`saison inconnue : ${saison} (${SAISONS.join(', ')})`);
   if (!(n >= 1 && n <= p[2])) throw new Error(`image ${n} : de 1 à ${p[2]}`);
-  return { lib: `vivants/anya/anya_${vue}_${pose}${suffixe(saison)}_${n}.svg`, svg: svgA(p[3](vue, n - 1, saison)), images: p[2] };
+  // (elle, et ce qu'elle fait naître autour d'elle, ses lucioles, sa bulle : à l'encre des personnages)
+  return { lib: `vivants/anya/anya_${vue}_${pose}${suffixe(saison)}_${n}.svg`, svg: svgA(enPersonnage(p[3](vue, n - 1, saison))), images: p[2] };
 }
 // Une expression d'Anya, de face, au repos ; { lib, svg, images }
 function anyaExpression(expr, n, saison = 'ete') {

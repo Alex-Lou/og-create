@@ -67,6 +67,9 @@
 }
 .coach-say-enter-active { transition: opacity .25s ease, transform .25s cubic-bezier(.2, 1.4, .4, 1); }
 .coach-say-enter-from { opacity: 0; transform: translate(-50%, 10px) scale(.96); }
+/* (à côté de sa cible : posée à gauche, sans se recentrer) */
+.coach__say--side { transform: none; }
+.coach__say--side.coach-say-enter-from { transform: translateY(10px) scale(.96); }
 @keyframes coach-ring { 0% { transform: scale(.7); opacity: 1; } 100% { transform: scale(1.25); opacity: 0; } }
 @keyframes coach-tap { 0%, 100% { transform: translate(6px, 10px); } 45% { transform: translate(0, 0); } 55% { transform: translate(0, 0) scale(.94); } }
 @keyframes coach-nudge { 0% { transform: translate(6px, 10px) scale(1.25); } 100% { transform: translate(6px, 10px) scale(1); } }

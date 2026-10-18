@@ -4,6 +4,7 @@
 // de fourrure dorée, des plumes et des papillons), pieds nus qui font éclore des fleurs, halo de lucioles.
 // Repère 80 × 128, pieds en bas au centre (40, 125). Vues face, trois quarts avant et dos.
 const { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre, TRAITS } = require('./troupe');
+const { enPersonnage } = require('../personnages/couleurs');
 
 const C = {
   skin: '#EFE6CF', skinS: '#D6CBB0', vein: '#E8B84A',
@@ -201,7 +202,7 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
   s += flies.filter(f => !f.back).map(f => firefly(f.x, f.y)).join('');
   // la lumière de la troupe, à l'échelle de son cadre : peau, chevelure, manteau, robe, col
   const { defs, table } = lumiere({ skin: C.skin, hair: C.hair, teintes: [M.fur, C.dress, M.collar, C.collar] }, uid, 80 / 48);
-  return defs + peindre(s, table);
+  return enPersonnage(defs + peindre(s, table));
 }
 
 const POSES_A = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_benediction', 'front', 'salut', IMAGES.salut], ['face_eveil', 'front', 'action', 2]];

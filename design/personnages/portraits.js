@@ -5,7 +5,9 @@
 // Marche pour tout personnage dessiné par frame() (troupe.js) : les maîtres, l'avatar du joueur quel que soit son choix.
 const T = require('./troupe');
 let G = null; // la géométrie du visage (troupe.js, l'expression « vide »)
-const OUT = '#3C2819', WHITE = '#FFFFFF';
+// le trait : celui de la troupe (couleurs.js)
+const { ENCRE: OUT } = require('./couleurs');
+const WHITE = '#FFFFFF';
 const f = n => Math.round(n * 100) / 100;
 const st = w => ` stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
 const P = (d, fill, w = 0.7) => `<path d="${d}" fill="${fill}"${w ? st(w) : ''}/>`;
