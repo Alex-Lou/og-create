@@ -1,6 +1,11 @@
 // Le Bestiaire des animaux rencontrés (world/creatures.js ; le livre : BestiaryBook) : le nom et la phrase de chaque
 // créature (aussi sa fiche courte sur l'île, appui long), les catégories, ce que disent le livre, sa fiche et l'île à
-// une rencontre, et les mots du « où et quand » (tirés des règles de chacune)
+// une rencontre, et les mots du « où et quand » (tirés des règles de chacune). La ferme, le cerf blanc et le Phénix
+// gardent leurs textes de l'île ; les familiers, les leurs (world/bestiary.js, FAMILIARS)
+import { BEAST_NAMES } from '../village';
+import { ANYA_TEXTS } from './anya';
+import { ANIMALS } from './gestures';
+
 export const CREATURE_TEXTS = {
   lapin: ['Lapin', 'Il ne tient pas en place, sauf quand on ne le regarde pas.'],
   ecureuil: ['Écureuil', 'Il saute d’arbre en arbre et cache ses noisettes partout.'],
@@ -35,6 +40,15 @@ export const CREATURE_TEXTS = {
   cameleon: ['Caméléon', 'Il ne se montre que sous la pluie, et change de teinte.'],
   corbeau: ['Corbeau des cendres', 'Il croasse sur les pentes du volcan, même sous l’orage.'],
   salamandre: ['Salamandre', 'Elle ne sort que pendant l’orage, sur les cendres du cratère.'],
+  poule: BEAST_NAMES.hen,
+  coq: ['Coq', 'Il chante au lever du jour, fier de sa basse-cour.'],
+  poussin: BEAST_NAMES.chick,
+  vache: BEAST_NAMES.cow,
+  mouton: BEAST_NAMES.sheep,
+  cochon: BEAST_NAMES.pig,
+  chevre: BEAST_NAMES.goat,
+  chat: ['Chat', 'Il dort au chaud, près de la porte du Foyer.'],
+  chien: ['Chien', 'Il monte la garde devant le Foyer et remue la queue.'],
   fantome: ['Le Sans-Nom', 'Le Voile lui a pris son nom. Il suit la moindre lumière.'],
   zombie: ['Le Dormeur', 'Il marche les yeux clos. Une clôture l’arrête et l’endort.'],
   noye: ['Le Noyé de l’Hirondelle', 'Il sort de la mer, plus souvent les nuits de pluie.'],
@@ -46,7 +60,9 @@ export const CREATURE_TEXTS = {
   'grenouille-de-brume': ['Grenouille de brume', 'Elle saute sans bruit hors des eaux du Marais.'],
   'fennec-de-brume': ['Fennec de brume', 'Il trotte hors des Dunes, léger comme le sable.'],
   'cameleon-de-brume': ['Caméléon de brume', 'Il sort de la Jungle, de la couleur de la nuit.'],
-  'salamandre-de-brume': ['Salamandre de brume', 'Elle sort du Volcan, froide comme la cendre.']
+  'salamandre-de-brume': ['Salamandre de brume', 'Elle sort du Volcan, froide comme la cendre.'],
+  'cerf-blanc': ['Le cerf blanc', ANYA_TEXTS.cerf.sheet],
+  phenix: ANIMALS.phenix
 };
 
 export const CATEGORY_TITLES = {
@@ -55,7 +71,9 @@ export const CATEGORY_TITLES = {
   eau: 'Eau douce',
   mer: 'Rivage et mer',
   lointain: 'Contrées lointaines',
-  brume: 'Créatures de la brume'
+  ferme: 'Ferme et familiers',
+  brume: 'Créatures de la brume',
+  legendes: 'Êtres de légende'
 };
 
 // Le « où et quand » : les heures, le temps, la pleine lune, et les lieux qui ne sont pas des zones
@@ -66,6 +84,8 @@ export const WHEN = {
   places: {
     potager: 'Autour du Potager', eau: 'L’eau douce des zones à soi', anya: 'Au bord de l’eau, quand Anya est là', plages: 'Les plages', mer: 'La mer',
     large: 'Au large',
+    'basse-cour': 'La basse-cour', foyer: 'Autour du Foyer', familier: 'Auprès de son maître',
+    dame: 'Auprès d’Anya, les jours de sa visite', ciel: 'Dans le ciel de l’île',
     // (les égarés : d'où ils sortent ; les bêtes de brume, de quel climat)
     voile: 'Au bord de la brume', rivage: 'Hors de la mer', lisiere: 'À la lisière des bois',
     tempere: 'Au bord de la brume, en terre tempérée', cimes: 'Au bord de la brume, dans les Cimes', landes: 'Au bord de la brume, dans les Landes',
@@ -96,6 +116,10 @@ export const BESTIARY = {
   toc: 'Sommaire',
   // L'île, à la première rencontre (une pastille)
   met: name => `Nouvelle créature au Bestiaire : ${name}`,
+  // Une catégorie complète : sa récompense (serveur : services/animals.js)
+  reward: (title, coins) => `Catégorie complète : ${title} ! +${coins} écus`,
+  // La fiche : les rencontres sur cet appareil (world/sightings.js)
+  seen: (n, date) => (n > 1 ? `Rencontré ${n} fois · la dernière le ${date}` : 'Rencontré une fois'),
   // Le petit signe des raretés : Brume, la première fois qu'une créature rare ou légendaire pas encore rencontrée sort
   // près de ce qu'on regarde (le Géant ; le Kraken a déjà la sienne : texts/world/kraken.js)
   rareLine: 'Chut… Regarde là-bas ! Une rareté : approche doucement, et touche-la pour le Bestiaire.',

@@ -295,6 +295,9 @@ export default {
       hit = under;
     }
     this.craftMenu = null;
+    // Une créature touchée (une bête, un familier, un égaré qu'on repousse…) : la première fois, elle entre au Bestiaire
+    // (WorldView, bestiary.js)
+    if (hit && hit.animal) this.meetCreature(hit.animal);
     // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Lorena qui mène à la Récolte, sa caisse…
     const acted = this.actOf(hit);
     if (acted === 'poule') {
@@ -314,11 +317,9 @@ export default {
       this.tapMark(hit.mark, px, py);
       return;
     }
-    // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume) ; la première fois, il
-    // entre au Bestiaire (WorldView, bestiary.js)
+    // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume)
     if (hit && hit.animal && hit.animal.stray) {
       this.dropPick();
-      this.meetCreature(hit.animal);
       this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
       return;
     }
@@ -381,9 +382,7 @@ export default {
       this.breatheAnya(px, py);
       return;
     } else if (hit.animal) {
-      // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages sursautent (et la première fois, une créature
-      // entre au Bestiaire : WorldView, bestiary.js)
-      this.meetCreature(hit.animal);
+      // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages sursautent
       const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who, true);
       if (said) this.showTip(px, py, said);
       if (this.reduced()) {

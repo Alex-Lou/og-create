@@ -5,6 +5,7 @@
       <p class="creature__where">{{ where }}</p>
       <p v-if="met" class="creature__text">« {{ creature.text }} »</p>
       <p v-if="met" class="creature__date">{{ T.metOn(longDate) }}</p>
+      <p v-if="met && seen" class="creature__date">{{ seen }}</p>
       <template v-else>
         <p v-if="arrival" class="creature__hint">{{ arrival }}</p>
         <p class="creature__hint">{{ notYet }}</p>
@@ -17,10 +18,12 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { creaturePortraitUrl } from '@/world/creatureArt';
 import { whereWhen, arrivalOf } from '@/world/creatures';
+import { sightingOf } from '@/world/sightings';
 import { BESTIARY as T } from '@/texts/world/creatures';
 
-// La fiche d'une créature du Bestiaire (BestiaryBook) : rencontrée, son dessin, où et quand elle vit, sa phrase et la
-// date de la rencontre ; sinon, sa silhouette, où et quand la chercher, et ce qui la fera venir sur l'île
+// La fiche d'une créature du Bestiaire (BestiaryBook) : rencontrée, son dessin, où et quand elle vit, sa phrase, la
+// date de la rencontre et ses rencontres sur cet appareil ; sinon, sa silhouette, où et quand la chercher, et ce qui la
+// fera venir sur l'île
 export default {
   name: 'CreatureSheet',
   components: { GModal },
@@ -50,6 +53,11 @@ export default {
     // (un égaré s'inscrit quand on le repousse, la nuit)
     notYet() {
       return this.creature.category === 'brume' ? T.notYetStray : T.notYet;
+    },
+    // (combien de fois sur cet appareil, et la dernière ; rien s'il ne l'a pas encore croisée ici)
+    seen() {
+      const { count, last } = sightingOf(this.creature.id);
+      return count ? T.seen(count, new Date(last).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })) : '';
     },
     longDate() {
       return new Date(this.met).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });

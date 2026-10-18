@@ -18,6 +18,8 @@ export const STAMP_AT = { dx: CELL.w - 6.6, dy: 12.6, k: 0.8 };
 const DOTS = { commun: 1, 'peu commun': 2, rare: 3 };
 // Les lignes de l'index : deux colonnes de INDEX_ROWS par page
 const INDEX_ROWS = 16;
+// Le sommaire : ses lignes entre top et bottom (u), de row de haut au plus, séparées de gap
+const TOC = { top: 37, bottom: 119, row: 10, gap: 1.6 };
 // L'encre du tampon, et celle des silhouettes
 const STAMP_INK = '#9C3A2B';
 const SHADOW_INK = '#4A3426';
@@ -73,9 +75,12 @@ function paintToc(ctx, u, model, index, assets) {
   ctx.fillText(T.subtitle(found, assets.creatures.length), 52 * u, 29 * u);
   rule(ctx, u, 33, 28, 76, true);
   const rows = [...model.rows.map(r => ({ ...r, title: CATEGORY_TITLES[r.category] })), { title: T.index, start: assets.indexPage, found: null }];
+  // (les lignes se resserrent pour tenir entre le filet et la note du bas)
+  const step = Math.min(TOC.row + TOC.gap, (TOC.bottom - TOC.top) / rows.length);
+  const hh = step - TOC.gap;
   rows.forEach((row, k) => {
-    const y = 37 + k * 12;
-    const hh = 10;
+    const y = TOC.top + k * step;
+    const base = y + hh * 0.66;
     rr(ctx, 12 * u, y * u, 80 * u, hh * u, 3 * u);
     ctx.fillStyle = alpha(IVORY, 0.7);
     ctx.fill();
@@ -84,12 +89,12 @@ function paintToc(ctx, u, model, index, assets) {
     ctx.stroke();
     ctx.fillStyle = INK;
     ctx.textAlign = 'left';
-    ctx.fillText(fitText(ctx, u, row.title, 50, 5.4, 4.2, FELL), 17 * u, (y + 6.6) * u);
+    ctx.fillText(fitText(ctx, u, row.title, 50, Math.min(5.4, hh * 0.6), 4.2, FELL), 17 * u, base * u);
     setFont(ctx, u, 4.6, FELL);
     ctx.textAlign = 'right';
     ctx.fillStyle = NOTE;
-    ctx.fillText(row.found === null ? String(row.start) : `${row.found}/${row.total}`, 88 * u, (y + 6.6) * u);
-    if (row.complete) seal(ctx, u, 72, y + hh / 2, 3.6);
+    ctx.fillText(row.found === null ? String(row.start) : `${row.found}/${row.total}`, 88 * u, base * u);
+    if (row.complete) seal(ctx, u, 72, y + hh / 2, Math.min(3.6, hh * 0.42));
     const label = row.found === null ? row.title : `${row.title}, ${row.found}/${row.total}${row.complete ? `, ${T.complete}` : ''}`;
     hotspots.push({ id: `toc-${k}`, x: 12, y, w: 80, h: hh, action: 'goto', data: row.start, label });
   });

@@ -4,7 +4,7 @@
 // de face, de trois quarts avant (vers le bas à droite) et de dos (vers le haut à droite) ; le miroir donne les deux
 // autres ; son manteau change avec la saison. Le cerf, refondu : debout et la marche, dans les mêmes vues. Chargés à la
 // demande, un fichier à la fois.
-import { librarySprite, textsOf } from './library';
+import { librarySprite, portraitOf, textsOf } from './library';
 
 const FILES = textsOf(import.meta.glob([
   '/design/bibliotheque/svg/vivants/anya/anya_{face,avant,dos}_{repos,marche,apparaitre,disparaitre,murmure1,murmure2,murmure3}_*.svg',
@@ -62,4 +62,9 @@ export function anyaArt(pose, view, n, { season = 'ete', phrase = 0 } = {}) {
 // Le cerf de lune : pose (debout, marche), vue (face, avant, dos), image n. { key, make }, ou null
 export function cerfArt(pose, view, n) {
   return spriteOf(`${ROOT}cerf-blanc/cerf-blanc_${view}_${pose}_${n}.svg`, CERF_BOX);
+}
+// Son portrait (le Bestiaire) : debout, de trois quarts avant, recadré (library.js : portraitOf) ; null sans dessin
+export function cerfPortraitUrl() {
+  const load = FILES[`${ROOT}cerf-blanc/cerf-blanc_avant_debout_1.svg`];
+  return load ? portraitOf('cerf-blanc', load) : null;
 }
