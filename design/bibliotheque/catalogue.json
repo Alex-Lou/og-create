@@ -46315,23 +46315,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/00_tampon/00_tampon_fond",
-   "rubrique": "scenes",
-   "titre": "00 tampon fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/00_tampon/00_tampon_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/00_tampon/00_tampon_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 0c : Embarqué : le vent emporte la carte (00 tampon plan anime)",
@@ -46446,40 +46429,6 @@
     -40,
     480,
     480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_carte/01_carte_anime",
-   "rubrique": "scenes",
-   "titre": "01 carte anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_carte/01_carte_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_carte/01_carte_fond",
-   "rubrique": "scenes",
-   "titre": "01 carte fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_carte/01_carte_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -46757,23 +46706,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_greve/01_greve_fond",
-   "rubrique": "scenes",
-   "titre": "01 greve fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_greve/01_greve_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/01_greve/01_greve_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (01 greve plan anime)",
@@ -46973,57 +46905,6 @@
     -40,
     480,
     480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_noir/01_noir_fond",
-   "rubrique": "scenes",
-   "titre": "01 noir fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_noir/01_noir_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_paupieres/01_paupieres_anime",
-   "rubrique": "scenes",
-   "titre": "01 paupieres anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_paupieres/01_paupieres_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_paupieres/01_paupieres_fond",
-   "rubrique": "scenes",
-   "titre": "01 paupieres fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_paupieres/01_paupieres_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47279,57 +47160,6 @@
     -40,
     480,
     480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_pont/01_pont_anime",
-   "rubrique": "scenes",
-   "titre": "01 pont anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_pont/01_pont_devant",
-   "rubrique": "scenes",
-   "titre": "01 pont devant",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_devant_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_pont/01_pont_fond",
-   "rubrique": "scenes",
-   "titre": "01 pont fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -49868,91 +49698,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_racines/01_racines_anime",
-   "rubrique": "scenes",
-   "titre": "01 racines anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_racines/01_racines_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_racines/01_racines_fond",
-   "rubrique": "scenes",
-   "titre": "01 racines fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_racines/01_racines_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_vague/01_vague_fond",
-   "rubrique": "scenes",
-   "titre": "01 vague fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_vague/01_vague_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/02_approche/02_approche_devant",
-   "rubrique": "scenes",
-   "titre": "02 approche devant",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/02_approche/02_approche_devant_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/02_approche/02_approche_fond",
-   "rubrique": "scenes",
-   "titre": "02 approche fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/02_approche/02_approche_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/02_approche/02_approche_plan-brume",
    "rubrique": "scenes",
    "titre": "Scène 2b : Brume approche d’un coup (02 approche plan brume)",
@@ -50412,40 +50157,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_lueur/02_lueur_devant",
-   "rubrique": "scenes",
-   "titre": "02 lueur devant",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/02_lueur/02_lueur_fond",
-   "rubrique": "scenes",
-   "titre": "02 lueur fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/02_lueur/02_lueur_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan anime)",
@@ -50849,23 +50560,6 @@
     -40,
     480,
     480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/02_plage/02_plage_fond",
-   "rubrique": "scenes",
-   "titre": "02 plage fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/02_plage/02_plage_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51319,40 +51013,6 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/02_proche/02_proche_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/02_rocher/02_rocher_anime",
-   "rubrique": "scenes",
-   "titre": "02 rocher anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/02_rocher/02_rocher_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/02_rocher/02_rocher_fond",
-   "rubrique": "scenes",
-   "titre": "02 rocher fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/02_rocher/02_rocher_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -51840,23 +51500,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/03_ciel/03_ciel_fond",
-   "rubrique": "scenes",
-   "titre": "03 ciel fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/03_ciel/03_ciel_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/03_ciel/03_ciel_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 3 : Brume lève les yeux vers le ciel (03 ciel plan anime)",
@@ -52243,40 +51886,6 @@
     -40,
     480,
     480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/03_livre/03_livre_anime",
-   "rubrique": "scenes",
-   "titre": "03 livre anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/03_livre/03_livre_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/03_livre/03_livre_fond",
-   "rubrique": "scenes",
-   "titre": "03 livre fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/03_livre/03_livre_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -53982,23 +53591,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/03_vent/03_vent_fond",
-   "rubrique": "scenes",
-   "titre": "03 vent fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/03_vent/03_vent_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/03_vent/03_vent_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 3e : Le Vent se lève et ouvre la brume autour d’eux (03 vent plan anime)",
@@ -54691,40 +54283,6 @@
     -40,
     480,
     480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/05_cercle/05_cercle_anime",
-   "rubrique": "scenes",
-   "titre": "05 cercle anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/05_cercle/05_cercle_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/05_cercle/05_cercle_fond",
-   "rubrique": "scenes",
-   "titre": "05 cercle fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/05_cercle/05_cercle_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -75184,25 +74742,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/10_aster/10_aster_fond",
-   "rubrique": "scenes",
-   "titre": "10 aster fond",
-   "images": 3,
-   "fichiers": [
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_1.svg",
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_2.svg",
-    "svg/scenes/tutoriel/10_aster/10_aster_fond_3.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-3",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/10_aster/10_aster_plan-brume",
    "rubrique": "scenes",
    "titre": "Scène 10b : Lorena sort de l’eau et vient au feu (10 aster plan brume)",
@@ -76524,23 +76063,6 @@
     -40,
     480,
     480
-   ],
-   "parcours": "tuto-3",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/10_epave/10_epave_fond",
-   "rubrique": "scenes",
-   "titre": "10 epave fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/10_epave/10_epave_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
    ],
    "parcours": "tuto-3",
    "statut": "ok"
@@ -169046,6 +168568,26 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/familiers/bol-soupe/bol-soupe",
+   "rubrique": "animaux",
+   "sujet": "bol-soupe",
+   "titre": "Bol soupe",
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/familiers/bol-soupe/bol-soupe_1.svg",
+    "svg/animaux/familiers/bol-soupe/bol-soupe_2.svg"
+   ],
+   "cadre": [
+    -7.5,
+    -12.5,
+    15,
+    13.75
+   ],
+   "ms_par_image": 260,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/mer/baleine-dos/baleine-dos_profil_nage",
    "rubrique": "animaux",
    "sujet": "baleine-dos",
@@ -180452,6 +179994,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/alocasia",
+   "rubrique": "plantes",
+   "titre": "Alocasia",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_nuit",
+   "rubrique": "plantes",
+   "titre": "Alocasia nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_petit",
+   "rubrique": "plantes",
+   "titre": "Alocasia petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Alocasia petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_sarcelle",
+   "rubrique": "plantes",
+   "titre": "Alocasia sarcelle",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_sarcelle.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_sarcelle_nuit",
+   "rubrique": "plantes",
+   "titre": "Alocasia sarcelle nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_sarcelle_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/arbre_hiver",
    "rubrique": "plantes",
    "titre": "Arbre d'hiver (grand, sous la neige, congère au pied)",
@@ -180645,6 +180289,142 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/arbre_printemps_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier",
+   "rubrique": "plantes",
+   "titre": "Bananier",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude_petit",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_petit",
+   "rubrique": "plantes",
+   "titre": "Bananier petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_petit_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -181030,6 +180810,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/bromelia",
+   "rubrique": "plantes",
+   "titre": "Bromelia",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_nuit",
+   "rubrique": "plantes",
+   "titre": "Bromelia nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_petite",
+   "rubrique": "plantes",
+   "titre": "Bromelia petite",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_petite_nuit",
+   "rubrique": "plantes",
+   "titre": "Bromelia petite nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_petite_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_rouge",
+   "rubrique": "plantes",
+   "titre": "Bromelia rouge",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_rouge.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_rouge_nuit",
+   "rubrique": "plantes",
+   "titre": "Bromelia rouge nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_rouge_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/bruyere",
    "rubrique": "plantes",
    "titre": "Bruyère (grande, mauve)",
@@ -181359,6 +181241,74 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/cactus_sans_fleur.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium",
+   "rubrique": "plantes",
+   "titre": "Caladium",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium_magenta",
+   "rubrique": "plantes",
+   "titre": "Caladium magenta",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium_magenta.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium_magenta_nuit",
+   "rubrique": "plantes",
+   "titre": "Caladium magenta nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium_magenta_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium_nuit",
+   "rubrique": "plantes",
+   "titre": "Caladium nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -181812,6 +181762,210 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/crosses",
+   "rubrique": "plantes",
+   "titre": "Crosses",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_acide",
+   "rubrique": "plantes",
+   "titre": "Crosses acide",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_acide.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_acide_nuit",
+   "rubrique": "plantes",
+   "titre": "Crosses acide nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_acide_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_nuit",
+   "rubrique": "plantes",
+   "titre": "Crosses nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_sarcelle",
+   "rubrique": "plantes",
+   "titre": "Crosses sarcelle",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_sarcelle.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_sarcelle_nuit",
+   "rubrique": "plantes",
+   "titre": "Crosses sarcelle nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_sarcelle_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton",
+   "rubrique": "plantes",
+   "titre": "Croton",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_corail",
+   "rubrique": "plantes",
+   "titre": "Croton corail",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_corail.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_corail_nuit",
+   "rubrique": "plantes",
+   "titre": "Croton corail nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_corail_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_nuit",
+   "rubrique": "plantes",
+   "titre": "Croton nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_violet",
+   "rubrique": "plantes",
+   "titre": "Croton violet",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_violet.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_violet_nuit",
+   "rubrique": "plantes",
+   "titre": "Croton violet nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_violet_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/erable",
    "rubrique": "plantes",
    "titre": "Érable rouge (grand, cramoisi)",
@@ -182050,6 +182204,278 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/fougere",
+   "rubrique": "plantes",
+   "titre": "Fougere",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide",
+   "rubrique": "plantes",
+   "titre": "Fougere acide",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere acide nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide_petite",
+   "rubrique": "plantes",
+   "titre": "Fougere acide petite",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide_petite_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere acide petite nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide_petite_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_petite",
+   "rubrique": "plantes",
+   "titre": "Fougere petite",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_petite_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere petite nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_petite_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager",
+   "rubrique": "plantes",
+   "titre": "Fromager",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude_nu",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude nu",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude_nu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude_nu_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude nu nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude_nu_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_nu",
+   "rubrique": "plantes",
+   "titre": "Fromager nu",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_nu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_nu_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager nu nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_nu_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/ginkgo",
    "rubrique": "plantes",
    "titre": "Ginkgo doré (grand, or)",
@@ -182141,6 +182567,142 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/ginkgo_petit_citron.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia",
+   "rubrique": "plantes",
+   "titre": "Heliconia",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange_petit",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_petit",
+   "rubrique": "plantes",
+   "titre": "Heliconia petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_petit_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -182345,6 +182907,142 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/magnolia_petit_blanc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera",
+   "rubrique": "plantes",
+   "titre": "Monstera",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_petit",
+   "rubrique": "plantes",
+   "titre": "Monstera petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle_petit",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle_petit_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -182628,6 +183326,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/orchidees",
+   "rubrique": "plantes",
+   "titre": "Orchidees",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_blanches",
+   "rubrique": "plantes",
+   "titre": "Orchidees blanches",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_blanches.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_blanches_nuit",
+   "rubrique": "plantes",
+   "titre": "Orchidees blanches nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_blanches_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_nuit",
+   "rubrique": "plantes",
+   "titre": "Orchidees nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_violettes",
+   "rubrique": "plantes",
+   "titre": "Orchidees violettes",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_violettes.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_violettes_nuit",
+   "rubrique": "plantes",
+   "titre": "Orchidees violettes nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_violettes_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/palmier",
    "rubrique": "plantes",
    "titre": "Palmier (grand, vert doux)",
@@ -182855,6 +183655,74 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/pin_parasol_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala",
+   "rubrique": "plantes",
+   "titre": "Ravenala",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala_nuit",
+   "rubrique": "plantes",
+   "titre": "Ravenala nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala_petit",
+   "rubrique": "plantes",
+   "titre": "Ravenala petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Ravenala petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala_petit_nuit.svg"
    ],
    "cadre": [
     -50,

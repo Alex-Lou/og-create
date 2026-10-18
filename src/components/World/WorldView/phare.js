@@ -16,7 +16,7 @@ import { prefetchSprite } from '@/world/spriteCache';
 import { sunTimes } from '@/world/sky';
 import { load, save } from '@/utils/storage';
 import { NEAR_SCALE, PAN_SCALE } from '@/world/view/constants';
-import { STALE_GAP_MS } from '@/world/terrain';
+import { STALE_GAP_MS, NEAR_BAKE } from '@/world/terrain';
 import { arcMomentsOf, fireLinesOf } from '@/world/arc';
 import { FLOATING_ZONE } from '@/world/islets';
 import { FAILED } from '@/texts/world/screens/alerts';
@@ -119,11 +119,11 @@ export default {
         const k = i / PREPARE_STEPS;
         const at = along(route.pts, k);
         const s = route.from + (FLIGHT_SCALE - route.from) * ease(Math.min(1, k * 3));
-        views.push({ view: { x: at.x - width / s / 2, y: at.y - height / s / 2, w: width / s, h: height / s }, scale: Math.min(s * dpr, PAN_SCALE), bake: s < NEAR_SCALE });
+        views.push({ view: { x: at.x - width / s / 2, y: at.y - height / s / 2, w: width / s, h: height / s }, scale: Math.min(s * dpr, PAN_SCALE), bake: s < NEAR_SCALE || NEAR_BAKE });
       }
       // (et l'arrêt sur la tour, où le sol reprend sa finesse : peint à l'arrivée, il saccadait)
       const end = route.pts[1];
-      views.push({ view: { x: end.x - width / FLIGHT_SCALE / 2, y: end.y - height / FLIGHT_SCALE / 2, w: width / FLIGHT_SCALE, h: height / FLIGHT_SCALE }, scale: FLIGHT_SCALE * dpr, bake: FLIGHT_SCALE < NEAR_SCALE });
+      views.push({ view: { x: end.x - width / FLIGHT_SCALE / 2, y: end.y - height / FLIGHT_SCALE / 2, w: width / FLIGHT_SCALE, h: height / FLIGHT_SCALE }, scale: FLIGHT_SCALE * dpr, bake: FLIGHT_SCALE < NEAR_SCALE || NEAR_BAKE });
       // (le trajet prêt, ses carrés à refaire se refont jusqu'au départ, un chemin ou un dessin du décor arrivé depuis ;
       // pas au-delà de RETOUCH_MS, si le vol ne vient pas)
       const retouchEnd = performance.now() + RETOUCH_MS;

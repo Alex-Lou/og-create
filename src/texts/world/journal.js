@@ -24,6 +24,11 @@ export const JOURNAL = {
     pluie: 'À midi, la pluie. On s’est serrés autour du feu, et la soupe a eu meilleur goût. Agathe l’avait dit.',
     orage: 'À midi, l’orage. Personne n’a parlé pendant le tonnerre. Puis quelqu’un a ri, et tout le monde avec.'
   },
+  // Le jour de marché au Foyer, selon le temps
+  marche: {
+    clair: 'Jour de marché au Foyer. Chacun a apporté quelque chose, et chacun est reparti avec autre chose.',
+    pluie: 'Jour de marché sous la pluie. On a tendu une toile au Foyer, et personne n’est rentré plus tôt.'
+  },
   // Une visite (a : le visiteur, b : son hôte ; elle : le visiteur est une femme ; line : ce qu'ils se sont dit, la
   // première bulle de leur rencontre, texts/village.js : MEETINGS)
   // (des espaces insécables autour des guillemets : le « » » ne reste jamais seul en fin de ligne)

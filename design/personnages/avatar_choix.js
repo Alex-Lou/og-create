@@ -307,7 +307,7 @@ const couleursAccessoire = a => a.couleurs.map((cle, i) => couleur(ACCESSOIRES[a
 const naufrageChoix = o => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a)) });
 
 // ---- au hasard ----
-// Un tirage harmonieux à partir d'une graine (le bouton « Au hasard », et plus tard les visiteurs) : cheveux naturels le
+// Un tirage à partir d'une graine (les visiteurs, les nouveaux venus et les portraits de la bibliothèque) : cheveux naturels le
 // plus souvent, un haut et un bas qui ne se confondent pas, deux accessoires au plus. gratuit : seulement ce qui est
 // libre à la création (pas d'accessoire ni de teinture à gagner).
 function graine(n) {
@@ -347,8 +347,80 @@ function auHasard(n, { gratuit = true } = {}) {
   return verifier(o);
 }
 
+// ---- assorti ----
+// Le tirage des arrivants et du bouton « Au hasard » de l'atelier (choix de l'auteur, 18 oct. : « Laisser le jeu
+// choisir » ; les combinaisons d'auHasard, tirées pièce par pièce, ne s'accordaient pas) : une tenue d'abord, prise dans des palettes accordées (le haut, le bas, les
+// chaussures, une couleur d'accent pour les accessoires et les motifs) ; des cheveux et des yeux naturels presque
+// toujours, et des cheveux qui vont avec l'âge ; au plus deux accessoires, sobres, dans les couleurs de la tenue. Les
+// tissus sont ceux du nuancier : la tenue reste au papier néon. auHasard ne change pas (les dessins de la bibliothèque
+// en dépendent).
+// [haut, bas, chaussures, accent, métal]
+const TENUES = [
+  [['blanc', 'creme'], ['marine', 'jean'], ['blanc', 'cuir'], ['rouge', 'soleil'], 'argent'],
+  [['lavande', 'rosepale'], ['charbon', 'marine'], ['blanc', 'noir'], ['menthe', 'creme'], 'argent'],
+  [['lagon', 'menthe'], ['creme', 'sable'], ['cuir', 'caramel'], ['corail', 'abricot'], 'or'],
+  [['foret', 'olive'], ['sable', 'cuir'], ['cuir', 'noir'], ['soleil', 'creme'], 'or'],
+  [['prune', 'bordeaux'], ['charbon', 'noir'], ['noir', 'cuir'], ['rosepale', 'creme'], 'argent'],
+  [['corail', 'abricot'], ['jean', 'marine'], ['blanc', 'creme'], ['ciel', 'creme'], 'or'],
+  [['ciel', 'blanc'], ['marine', 'sable'], ['blanc', 'cuir'], ['soleil', 'rouge'], 'argent'],
+  [['charbon', 'noir'], ['jean', 'charbon'], ['blanc', 'noir'], ['framboise', 'lagon'], 'argent'],
+  [['rose', 'rosepale'], ['creme', 'jean'], ['blanc', 'rosepale'], ['lavande', 'menthe'], 'orrose'],
+  [['soleil', 'abricot'], ['olive', 'marine'], ['cuir', 'caramel'], ['creme', 'foret'], 'or'],
+  [['caramel', 'sable'], ['creme', 'marine'], ['cuir', 'noir'], ['lagon', 'creme'], 'cuivre'],
+  [['rouge', 'framboise'], ['noir', 'charbon'], ['noir', 'blanc'], ['creme', 'soleil'], 'or']
+];
+// Les accessoires sobres, par emplacement (les gratuits ; la boutique en plus quand gratuit est faux) ; jamais à la main
+// (au travail, la main tient l'outil)
+const SOBRES = ['bonnet', 'paille', 'casquette', 'bandana', 'beret', 'lunettesRondes', 'lunettesCarrees', 'foulard', 'echarpe', 'coquillage', 'puces', 'anneaux', 'sacDos', 'besace'];
+const NATURELS_YEUX = ['brun', 'chocolat', 'noisette', 'ambre', 'olive', 'vert', 'eau', 'azur', 'bleu', 'grisbleu', 'gris'];
+const ROUX = ['auburn', 'roux', 'cuivre', 'venitien'];
+function assorti(n, { gratuit = true } = {}) {
+  const r = graine(n);
+  const un = list => list[Math.floor(r() * list.length) % list.length];
+  const cles = obj => Object.keys(obj);
+  const genre = r() < 0.5 ? 'homme' : 'femme';
+  const de = cle => cles(FORMES[cle]).filter(v => pourGenre(cle, v, genre));
+  const age = un(['jeune', 'adulte', 'adulte', 'adulte', 'mur', 'mur', 'age']);
+  // les cheveux : naturels, gris et blancs avec l'âge ; une fantaisie rare, jamais passé l'âge mûr
+  const naturels = CHEVEUX.slice(0, 13).map(([k]) => k).filter(k => k !== 'gris' && k !== 'blanc');
+  const fantaisie = ['poudre', 'lilas', 'ciel', 'menthe', 'corail'];
+  const cheveux = age === 'age' ? (r() < 0.85 ? un(['gris', 'blanc', 'blanc']) : un(naturels))
+    : age === 'mur' ? (r() < 0.3 ? 'gris' : un(naturels))
+      : r() < 0.06 ? un(fantaisie) : un(naturels);
+  const [hauts, bass, pieds, accents, metal] = un(TENUES);
+  const couleurHaut = un(hauts), accent = un(accents);
+  // un motif de temps en temps : des rayures de l'accent, ou un dégradé vers l'autre teinte du haut
+  const motif = r();
+  const motifHaut = motif < 0.8 ? 'uni' : motif < 0.9 ? 'raye' : 'degrade';
+  const couleurHaut2 = motifHaut === 'degrade' ? hauts.find(c => c !== couleurHaut) || accent : accent;
+  const couleurBas = un(bass);
+  const barbu = genre === 'homme' && age !== 'jeune';
+  const o = {
+    genre, age, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(de('visage')),
+    yeux: r() < 0.95 ? un(NATURELS_YEUX) : un(['violet', 'emeraude']), formeYeux: un(cles(FORMES.formeYeux)),
+    cils: genre === 'homme' ? 'sans' : un(de('cils')), sourcils: genre === 'homme' ? un(['epais', 'fins', 'doux']) : un(['fins', 'doux']),
+    barbe: barbu && r() < 0.3 ? un(['malRase', 'courte', 'collier', 'pleine']) : 'sans', moustache: barbu && r() < 0.15 ? un(['fine', 'epaisse', 'gauloise']) : 'sans',
+    bouche: un(['douce', 'douce', 'sourire', 'malice']), expression: 'neutre',
+    levres: genre === 'femme' && r() < 0.25 ? un(['rose', 'corail', 'nude', 'framboise']) : 'naturelles',
+    menton: genre === 'homme' ? un(['doux', 'fin', 'court', 'fort']) : 'doux', cicatrice: r() < 0.05 ? un(['sourcil', 'joue']) : 'sans',
+    rousseur: r() < (ROUX.includes(cheveux) ? 0.5 : 0.12) ? un(['legere', 'oui', 'nez']) : 'non', joues: un(de('joues')), grain: r() < 0.08 ? 'joue' : 'non',
+    coupe: un(de('coupe').concat(['locks'])), cheveux, meches: 'sans', couleurMeches: cheveux,
+    haut: un(cles(FORMES.haut)), couleurHaut, motifHaut, couleurHaut2, bas: un(de('bas')), couleurBas, motifBas: 'uni', couleurBas2: couleurBas,
+    chaussures: un(pieds), formeChaussures: un(de('formeChaussures')), accessoires: {}
+  };
+  // au plus deux accessoires, dans l'accent de la tenue (une seconde zone : sa teinte claire), le métal de la palette
+  const permis = SOBRES.map(id => [id, ACCESSOIRES[id]]).filter(([id, a]) => (!gratuit || a.source === 'gratuit') && pourGenre('accessoires', id, genre));
+  const nb = r() < 0.4 ? 0 : r() < 0.85 ? 1 : 2;
+  for (let i = 0; i < nb; i++) {
+    const [id, a] = un(permis);
+    if (o.accessoires[a.emplacement]) continue;
+    o.accessoires[a.emplacement] = { id, couleurs: a.zones.map((z, k) => (z === 'metal' ? metal : k ? 'creme' : accent)) };
+  }
+  return verifier(o);
+}
+
 module.exports = {
   NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, PRIX, FORMES, EMPLACEMENTS, ACCESSOIRES, CHOIX, DEFAUT,
-  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine, GENRES, DEFAUT_GENRE, LIES_AU_CORPS, genreDe, pourGenre, selonGenre, auGenre,
+  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, assorti, TENUES, graine, GENRES, DEFAUT_GENRE, LIES_AU_CORPS, genreDe, pourGenre, selonGenre, auGenre,
   hsl, hex, mix, tone, delave, clarte
 };

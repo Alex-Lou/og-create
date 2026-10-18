@@ -483,10 +483,12 @@ export default {
       };
       this.spinRaf = requestAnimationFrame(tick);
     },
+    // « Au hasard » : le tirage assorti (une tenue accordée, des accessoires sobres et gratuits : avatar_choix.js, assorti ;
+    // choix de l'auteur, 18 oct.)
     luck() {
       const kit = kitNow();
       if (!kit) return;
-      this.emit(kit.auHasard(Math.floor(Math.random() * 2 ** 31), { gratuit: true }));
+      this.emit(kit.assorti(Math.floor(Math.random() * 2 ** 31), { gratuit: true }));
       this.react('pied', 'startle');
     },
     worn(place) {

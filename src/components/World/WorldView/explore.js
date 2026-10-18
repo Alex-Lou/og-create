@@ -69,7 +69,7 @@ export default {
         const phase = this.skyAt(new Date(2026, 0, 1 + d, 0, 0, 0, Math.round(h * HOUR_MS)));
         return { rise: phase.rise, set: phase.set, weather: phase.weather };
       };
-      return journalOf({ masters: this.journalMasters, today: day, hour, skyOf });
+      return journalOf({ masters: this.journalMasters, today: day, hour, skyOf, marketOn: this.village ? this.village.marketOn : undefined });
     },
     // Un jour de l'île s'est écrit depuis la dernière lecture : le point du Carnet (rien ne s'ouvre tout seul)
     journalNew() {

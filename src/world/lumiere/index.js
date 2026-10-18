@@ -18,6 +18,7 @@ export { drawRays, drawFaisceaux, deLoin, drawMotes, raysOf, motesOf, motesIn } 
 export { goldenOf, drawGolden, rimOf, rimImage, clearRims, imageSuivanteRims } from './heureDoree';
 export { etalonnageOf, drawEtalonnage } from './etalonnage';
 export { aigrettesOf, aigrettesIn, drawAigrettes, braisesFor, braisesIn, drawBraises } from './petiteVie';
+export { drawJungleJour, drawJungleNuit, drawEffetsJour, drawEffetsNuit } from './jungle';
 export { wetKinds, darkOf, drawWetGround } from './mouille';
 export { aTapis, aTourbillons, drawTapis, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, neigeAuSol, drawNeigeSol, drawGlace, givreOf, drawGivre, roseeOf, drawRosee, chaleurOf, drawChaleurEte } from './saisons';
 export { SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo } from './aurore';

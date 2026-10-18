@@ -49,6 +49,7 @@ const PROFILS = [
   ['familiers', 'mousse', 'Mousse (renardeau de Sylve)', ...q('kit')],
   ['familiers', 'bocal_vide', 'Bocal d\'Ondin (vide)', 'BOWL', ['0'], () => Bt.bowl('vide', 0)],
   ['familiers', 'bocal_bulle', 'Bocal d\'Ondin (Bulle revenu)', 'BOWL', ['0', '1'], p => Bt.bowl('bulle', +p)],
+  ['familiers', 'bol_soupe', 'Le bol de soupe pour la Dame (la vapeur monte)', 'BOWL', ['0', '1'], p => Bt.soup(+p)],
   ['mer', 'dauphin', 'Dauphin', 'DOLPHIN', ['0', '1', '2'], p => Bt.dolphin(+p)],
   ['mer', 'baleine_dos', 'Baleine (dos qui souffle)', 'WHALE_BACK', ['0', '1'], p => Bt.whaleBack(+p)],
   ['mer', 'baleine_queue', 'Baleine (queue)', 'WHALE_FLUKE', ['0', '1'], p => Bt.whaleFluke(+p)],
