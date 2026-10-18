@@ -10,16 +10,17 @@
 const { castaway, fade } = require('../../atelier/naufrage');
 const { SPECS } = require('../../atelier/naufrages');
 const { nathan, C } = require('./nathan_refonte');
+const { fondre, fondu } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les palettes de la chemise : shirt, son ombre, son reflet
-const PALETTES = {
+const PALETTES = fondre({
   sarcelle: { nom: 'Sarcelle', shirt: C.shirt, shirtS: C.shirtS, shirtH: C.shirtH },
   bordeaux: { nom: 'Bordeaux', shirt: '#8A3A3A', shirtS: '#682828', shirtH: '#B0605A' },
   moutarde: { nom: 'Moutarde', shirt: '#B38A2E', shirtS: '#87661E', shirtH: '#D8B25A' },
   indigo: { nom: 'Indigo', shirt: '#3E5578', shirtS: '#2B3D59', shirtH: '#6E86AA' },
   ardoise: { nom: 'Ardoise', shirt: '#5E6B78', shirtS: '#434E5A', shirtH: '#8794A2' },
   bouteille: { nom: 'Vert bouteille', shirt: '#3E6E4A', shirtS: '#2B5134', shirtH: '#6A9A74' }
-};
+});
 
 // Les tenues : la forme (nathan_refonte.js, corps), la palette par défaut ; à la forge, les gants
 const TENUES = {
@@ -85,7 +86,7 @@ function habiller(tenueId = 'atelier', paletteId = null, etatId = 'rescape') {
   const S = SPECS.Rivet;
   // (les lambeaux de la chemise et du tablier dans ses couleurs à lui, déjà délavées : la transformation ne les recolore
   // pas ; le tablier se reconnaît à sa couleur de cuir)
-  const recol = col => (col === '#6B4328' ? salee.leatherS : col === '#3F8A86' ? salee.shirt : salee.shirtS);
+  const recol = col => (col === fondu('#6B4328') ? salee.leatherS : col === fondu('#3F8A86') ? salee.shirt : salee.shirtS);
   const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, recol(col), ...r])]));
   const holes = Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, w]) => [x, y, w, assombrir(salee.shirtS, 0.8)])]));
   const spec = { ...S, fade: [], map: {}, k: 0.6, tatters, holes, sleeves: 'torn', bandage: 'left', over: undefined, head: undefined };

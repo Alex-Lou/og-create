@@ -3,10 +3,11 @@
 // Action : baguette tenue à deux mains, pointe en l'air ; image 2 : elle plonge vers le sol et il se réveille d'un coup.
 const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2, lerp, TRAITS } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle remplace le bonnet de nuit
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
 
-const C = {
+const C = fondre({
   skin: '#F5CFA8', skinS: '#E0AE86',
   hair: '#E2B45A', hairS: '#B98A3A', hairH: '#F6D58E', brow: '#8C6526',
   coat: '#3D7CC9', coatS: '#2E5F9E', coatH: '#7DB0E8', lining: '#A9CBEF',
@@ -14,7 +15,7 @@ const C = {
   rope: '#D8C08A', wood: '#A8743F', leaf: '#7BB661',
   glass: '#D6ECF2', cork: '#B07E4C', water: '#A9DCFF',
   cheek: '#F6A0A0', mouth: '#7A3B30', tongue: '#E07A72'
-};
+});
 const HY = 4.4; // tête d'enfant : même taille que les adultes, posée plus bas sur un corps plus court
 
 // Corde : contour fin puis couleur, le long d'un chemin

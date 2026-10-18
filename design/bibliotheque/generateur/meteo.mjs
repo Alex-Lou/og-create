@@ -81,7 +81,44 @@ var require_couleurs = __commonJS({
     });
     var clarte = /* @__PURE__ */ __name((c) => hsl(c)[2], "clarte");
     var enPersonnage = /* @__PURE__ */ __name((svg) => svg.replaceAll(ENCRE_KIT, ENCRE), "enPersonnage");
-    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage };
+    var BANDES = [
+      [15, 350, 0.35],
+      [40, 6, 0.3],
+      [62, 28, 0.3],
+      [100, 165, 0.45],
+      [160, 172, 0.4],
+      [200, 186, 0.3],
+      [240, 232, 0.3],
+      [275, 262, 0.3],
+      [315, 300, 0.35],
+      [345, 328, 0.35],
+      [360, 350, 0.35]
+    ];
+    var vers = /* @__PURE__ */ __name((h, cible, k) => {
+      const d = (cible - h + 540) % 360 - 180;
+      return (h + d * k + 360) % 360;
+    }, "vers");
+    var fondu = memo((c) => {
+      const [h, s, l] = hsl(c);
+      if (s < 0.12) return hex([255, Math.max(s, 0.1), l]);
+      if (h >= 15 && h < 62 && s < 0.55) return hex([vers(h, l > 0.7 ? 300 : 330, 0.5), s * 0.8, l]);
+      if (h >= 62 && h < 100) return hex([vers(h, 165, 0.4), s * 0.85, l]);
+      const [, cible, k] = BANDES.find(([fin]) => h < fin);
+      return hex([vers(h, cible, k), Math.min(1, s * 1.04), l]);
+    });
+    var GARDER = /^(skin|lid|under|nose|hair|grey|stubble|beard|white|brow|eye|iris|cheek|mouth|tongue|freckle|lip|hand|vein|scar|mole|teeth|rim|brass|steel|copper|silver|iron|gem|glass|gold|glow|firefly|star|moon)/i;
+    var HEXA = /#[0-9A-Fa-f]{6}\b/g;
+    var UNE = /^#[0-9A-Fa-f]{6}$/;
+    var fonduTexte = /* @__PURE__ */ __name((s) => s.replace(HEXA, (m) => fondu(m.toUpperCase())), "fonduTexte");
+    function fondre(x, garder = GARDER) {
+      if (typeof x === "string") return fonduTexte(x);
+      if (typeof x === "function") return (...a) => fondre(x(...a), garder);
+      if (Array.isArray(x)) return x.map((v) => fondre(v, garder));
+      if (x && typeof x === "object") return Object.fromEntries(Object.entries(x).map(([k, v]) => garder.test(k) ? [k, v] : [UNE.test(k) ? fonduTexte(k) : k, fondre(v, garder)]));
+      return x;
+    }
+    __name(fondre, "fondre");
+    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage, fondu, fondre, GARDER };
   }
 });
 

@@ -3,11 +3,12 @@
 // repère 60 × 80, pieds en (30, 78) (voir svgP en bas).
 // Action : il lève sa lanterne, la lumière s'agrandit ; image 2 : des volutes de brume s'enroulent autour.
 const { OUT, P, E, L, limb, clip, expression, arm, r2 } = require('./troupe');
+const { fondre } = require('../personnages/couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#C9C4BC', skinS: '#A9A39A', shadow: '#3A3F4A', shadowS: '#2A2E37', glowEye: '#F6E7A0',
   feather: '#9AA0A8', featherS: '#7E848C', featherH: '#C2C7CE', pole: '#5A4632', iron: '#3E4248', light: '#FFE08A'
-};
+});
 const HY = -0.6; // un peu plus grand que les naufragés (la pointe de la capuche reste dans le cadre)
 
 // Rangées de plumes (festons) dans une zone découpée

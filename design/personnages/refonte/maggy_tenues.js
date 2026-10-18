@@ -9,16 +9,17 @@
 // déchiré, le châle noué à la taille, le bord du chapeau déchiré et une algue accrochée, un sabot perdu.
 const { fade } = require('../../atelier/naufrage');
 const { maggy, C } = require('./maggy_refonte');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les palettes du vêtement (la robe ; la pèlerine pour la pluie) : la couleur, son ombre, son reflet
-const PALETTES = {
+const PALETTES = fondre({
   sauge: { nom: 'Sauge', m: C.dress, mS: C.dressS, mH: C.dressH },
   lavande: { nom: 'Lavande', m: '#9A8AB8', mS: '#7A6A98', mH: '#BCAED6' },
   ocre: { nom: 'Ocre', m: '#C49A4A', mS: '#9C7634', mH: '#DDBA74' },
   rose: { nom: 'Rose thé', m: '#C98A86', mS: '#A66A66', mH: '#E2AEAA' },
   aubergine: { nom: 'Aubergine', m: C.cape, mS: C.capeS, mH: C.capeH },
   mousse: { nom: 'Mousse', m: '#6E8A5A', mS: '#546E44', mH: '#92AA7E' }
-};
+});
 
 // Les tenues : la forme (maggy_refonte.js), la palette par défaut, les couleurs qu'elle règle, les manches
 const TENUES = {
