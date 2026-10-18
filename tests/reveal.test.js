@@ -61,15 +61,18 @@ describe('le cœur se découvre', () => {
     };
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
     const shown = (x, y) => !v.has(y * 144 + x);
-    expect(shown(96, 96)).toBe(true); // l'épave, dans la plage
+    expect(shown(96, 96)).toBe(true); // dans le carré
     expect(shown(101, 93)).toBe(true); // dans le carré
     expect(shown(100, 95)).toBe(true); // le coin d’Agathe : du sable vide, dans le carré
     expect([shown(94, 90), shown(102, 90), shown(94, 98), shown(102, 98)]).toEqual([true, true, true, true]); // ses coins
     expect([shown(93, 94), shown(103, 94), shown(98, 89), shown(98, 99)]).toEqual([false, false, false, false]); // juste autour
-    // (l'anse de la grande Hirondelle, à l'ouest, se voit aussi : choix de l'auteur, 15 oct. ; au-delà, la brume)
-    expect([shown(90, 96), shown(84, 100), shown(83, 96), shown(94, 101)]).toEqual([true, true, false, false]);
+    // (l'anse de la grande Hirondelle, à l'ouest, et son épave restent sous la brume : choix de l'auteur, 18 oct.)
+    expect([shown(90, 96), shown(84, 100), shown(83, 96), shown(94, 101)]).toEqual([false, false, false, false]);
     expect(shown(96, 88)).toBe(false); // au nord, sous la brume
     expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
+    // (toute la première soirée, jusqu'au sommeil : la nuit autour du feu, encore le carré seul)
+    const night = veiledCellsOf({ state: { ...big, brume: { ...big.brume, quest: { id: 'nuit' } } }, n: 144, zoneOf: () => 0, prologue: true });
+    expect([night.has(93 * 144 + 101), night.has(96 * 144 + 90), night.has(94 * 144 + 103)]).toEqual([false, true, true]);
   });
   it('le sable de l’anse se voit dès l’arrivée de Lorena, jusqu’à une case à l’ouest de son camp (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas ; la première nuit, rien hors du carré', () => {
     const big = {
@@ -90,7 +93,7 @@ describe('le cœur se découvre', () => {
     expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
     // La première nuit (Brume seule) : le carré, rien d'autre, même le sable de l'anse
     const night = veiledCellsOf({ state: { ...big, brume: { ...big.brume, quest: { id: 'ramasser' } } }, n: 144, zoneOf: () => 0, prologue: true, groundOf });
-    expect([night.has(98 * 144 + 89), night.has(98 * 144 + 103), night.has(98 * 144 + 98)]).toEqual([false, true, false]);
+    expect([night.has(98 * 144 + 89), night.has(98 * 144 + 103), night.has(98 * 144 + 98)]).toEqual([true, true, false]);
   });
   it('ensuite : un morceau autour de chaque camp et de chaque chantier qui se montre', () => {
     const st = state('recolte', { camp: [{ id: 'aster', x: 9, y: 9, w: 2, h: 2 }], sites: [{ id: 'puits', x: 0, y: 0, w: 2, h: 2, hidden: true }] });
