@@ -25,6 +25,13 @@
   --sp-or-fonce: #ff3fa8;
   --sp-or-trait: #ff8ad0;
   --sp-or-contour: #2a0a50;
+  /* le bouton « Entrée » : l'argent de la lune (choix de l'auteur, 18 oct. : pas tout le jeu en néon rose) */
+  --sp-lune-clair: #ffffff;
+  --sp-lune: #dfe6f3;
+  --sp-lune-fonce: #9aa9c4;
+  --sp-lune-ombre: rgba(28, 34, 72, .62);
+  --sp-lune-lisere: rgba(240, 246, 255, .7);
+  --sp-lune-halo: rgba(214, 228, 255, .6);
   --sp-ciel: #9afff0;
   --sp-lueur: #5cf2e6;
   --sp-bleu: #9a5af0;
@@ -122,13 +129,13 @@
 
 /* « Entrée » : cachée pendant le chargement, elle paraît quand tout est prêt, et c'est elle qui ouvre le jeu */
 .splash__enter { display: none; position: relative; z-index: 4; min-width: min(280px, 74vw); padding: 15px 44px 16px; border: 0; border-radius: 999px;
-  background: linear-gradient(180deg, var(--sp-or-clair), var(--sp-or) 48%, var(--sp-or-fonce)); color: var(--sp-encre);
-  box-shadow: 0 6px 0 rgba(60, 10, 80, .6), 0 14px 30px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 220, 245, .45);
+  background: linear-gradient(180deg, var(--sp-lune-clair), var(--sp-lune) 48%, var(--sp-lune-fonce)); color: var(--sp-encre);
+  box-shadow: 0 6px 0 var(--sp-lune-ombre), 0 14px 30px rgba(0, 8, 26, .5), inset 0 0 0 1px var(--sp-lune-lisere);
   font: 900 19px var(--sp-police); letter-spacing: .18em; cursor: pointer; touch-action: manipulation; }
 .splash__enter::after { content: '→'; display: inline-block; margin-left: 12px; font-weight: 900; animation: splash-enter-arrow 1.6s ease-in-out infinite; }
 .splash__enter:hover, .splash__enter:focus-visible { filter: brightness(1.05); }
 .splash__enter:focus-visible { outline: 3px solid var(--sp-focus); outline-offset: 4px; }
-.splash__enter:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(60, 10, 80, .6), 0 10px 22px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 220, 245, .45); }
+.splash__enter:active { transform: translateY(2px); box-shadow: 0 4px 0 var(--sp-lune-ombre), 0 10px 22px rgba(0, 8, 26, .5), inset 0 0 0 1px var(--sp-lune-lisere); }
 .splash.is-ready .splash__enter { display: inline-block; animation: splash-enter-in .55s cubic-bezier(.2, .9, .3, 1.2) both, splash-enter-glow 2.6s ease-in-out .7s infinite; }
 
 /* le serveur tarde (is-slow), ou le jeu n'a pas pu démarrer (is-failed) : une ligne, et de quoi réessayer */
@@ -159,8 +166,8 @@
 @keyframes splash-enter-in { from { opacity: 0; transform: translateY(16px) scale(.86); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes splash-enter-arrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
 @keyframes splash-enter-glow {
-  0%, 100% { box-shadow: 0 6px 0 rgba(60, 10, 80, .6), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 0 var(--sp-neon); }
-  50% { box-shadow: 0 6px 0 rgba(60, 10, 80, .6), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(255, 63, 168, 0); }
+  0%, 100% { box-shadow: 0 6px 0 var(--sp-lune-ombre), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 0 var(--sp-lune-halo); }
+  50% { box-shadow: 0 6px 0 var(--sp-lune-ombre), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(214, 228, 255, 0); }
 }
 
 /* ═══ 5. L'orage ═══

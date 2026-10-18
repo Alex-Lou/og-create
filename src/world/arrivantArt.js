@@ -15,6 +15,9 @@ const FEET = [24, 62];
 // Les arrivants préparés, gardés (il y en a quatre au plus sur une île ; le plus ancien part au-delà)
 const MAX = 8;
 const cast = new Map();
+// (et par habitant tel que l'île le donne : l'île redemande son dessin à chaque image, sans refaire l'empreinte de ses
+// choix ni son tirage ; l'objet oublié, l'entrée part avec lui)
+const known = new WeakMap();
 
 // Une empreinte courte de ses choix : la clé de ses images change avec eux
 function tagOf(text) {
@@ -36,9 +39,13 @@ function flameOf(svg) {
 // Un arrivant préparé : ses fichiers (les noms de ses images, comme ceux d'un personnage de la bibliothèque), sa source
 // (poseOf, artOf : ses images, rendues tout de suite), sa lanterne. who : { seed, look }
 function castOf(kit, who) {
+  if (known.has(who)) return known.get(who);
   const choices = who.look || kit.assorti(who.seed, { gratuit: true });
   const tag = tagOf(JSON.stringify(choices));
-  if (cast.has(tag)) return cast.get(tag);
+  if (cast.has(tag)) {
+    known.set(who, cast.get(tag));
+    return cast.get(tag);
+  }
   const q = kit.quotidien(choices, `a${tag}`);
   const files = {};
   for (const name of NAMES) {
@@ -55,6 +62,7 @@ function castOf(kit, who) {
   };
   if (cast.size >= MAX) cast.delete(cast.keys().next().value);
   cast.set(tag, entry);
+  known.set(who, entry);
   return entry;
 }
 
@@ -67,9 +75,10 @@ export function arrivantSprite(who, site, { pose = 'idle', view = 'se', frame = 
   return poseOf(one.files, { pose, view, frame, lantern, umbrella, chore, work: VISITOR_WORK[site] || 'repos', flame: lantern ? one.flame() : null }, one.source);
 }
 
-// Son portrait (de face, au repos), en adresse d'image ; '' tant que le générateur n'est pas là
+// Son portrait (de face, au repos), en adresse d'image, fait une fois ; '' tant que le générateur n'est pas là
 export function arrivantPortrait(who) {
   const kit = kitNow();
   if (!kit || !who) return '';
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(castOf(kit, who).image('face_repos#1'))}`;
+  const one = castOf(kit, who);
+  return (one.portrait ??= `data:image/svg+xml;charset=utf-8,${encodeURIComponent(one.image('face_repos#1'))}`);
 }

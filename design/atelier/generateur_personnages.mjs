@@ -1,5 +1,4 @@
-// Le générateur des personnages au grand format (les maîtres, leurs naufragés, les visiteurs, les nouveaux venus de
-// l'épilogue), pour le jeu et pour l'outil (generer.mjs) : build_bundle.js en fait un module ESM, publié dans la
+// Le générateur des personnages au grand format (les maîtres, leurs naufragés, les nouveaux venus de l'épilogue), pour le jeu et pour l'outil (generer.mjs) : build_bundle.js en fait un module ESM, publié dans la
 // bibliothèque (generateur/personnages.mjs). Chaque fonction rend { svg, cadre, ms_par_image } : le SVG complet,
 // identique à l'octet au fichier de la bibliothèque (le fichier y ajoute un saut de ligne ; verif_generateurs.mjs le
 // vérifie), son cadre et sa vitesse. Les poses sont nommées comme dans la bibliothèque (<vue>_<pose>[_<variante>] :
@@ -45,18 +44,18 @@ function posesMaitre(base, c, naufrage) {
 
 // Les personnages : groupe -> clé -> { dossier, prefixe, poses() } (les poses se dessinent à la première demande)
 const memo = f => { let v; return () => (v ??= f()); };
-const GROUPES = { maitre: {}, naufrage: {}, visiteur: {}, arrivant: {} };
+const GROUPES = { maitre: {}, naufrage: {}, arrivant: {} };
 for (const { base, nau } of CAST_REFONTE) {
   const s = Q.slug(base.name);
   GROUPES.maitre[s] = { dossier: `maitres/${s}`, prefixe: s, poses: memo(() => posesMaitre(base, base, false)) };
   GROUPES.naufrage[s] = { dossier: `naufrages/${s}`, prefixe: `${s}-naufrage`, poses: memo(() => posesMaitre(base, nau, true)) };
 }
-for (const [groupe, liste, dossier] of [['visiteur', Q.VISITEURS, 'visiteurs'], ['arrivant', Q.ARRIVANTS, 'epilogue']]) {
+for (const [groupe, liste, dossier] of [['arrivant', Q.ARRIVANTS, 'epilogue']]) {
   for (const p of liste) GROUPES[groupe][p.i] = { dossier: `${dossier}/${p.cle}`, prefixe: p.cle, choix: p.choix, poses: memo(() => Q.poses(A.avatar(p.choix, { uid: p.uid }), p.opts).map(([pose, , vb, images]) => [pose, vb, images])) };
 }
 
-// Ce qu'on peut demander : les maîtres (par leur nom sans accent), les naufragés, les visiteurs (1 à 12) et les nouveaux
-// venus (1 à 8), avec les choix d'avatar de ces derniers ; poses(groupe, qui) donne leurs poses et leurs images
+// Ce qu'on peut demander : les maîtres (par leur nom sans accent), les naufragés et les nouveaux venus (1 à 8), avec les
+// choix d'avatar de ces derniers ; poses(groupe, qui) donne leurs poses et leurs images
 export const PERSONNAGES = Object.fromEntries(Object.entries(GROUPES).map(([g, t]) => [g, Object.fromEntries(Object.entries(t).map(([k, p]) => [k, p.choix ? { choix: p.choix } : {}]))]));
 const prendre = (groupe, qui) => {
   const p = GROUPES[groupe][qui];
@@ -87,8 +86,6 @@ const sans = ({ fichier, ...r }) => r;
 export const maitre = (nom, pose, n = 1) => sans(dessin('maitre', nom, pose, n));
 // Son naufragé (comme il arrive sur l'île)
 export const naufrage = (nom, pose, n = 1) => sans(dessin('naufrage', nom, pose, n));
-// Un visiteur (1 à 12)
-export const visiteur = (numero, pose, n = 1) => sans(dessin('visiteur', numero, pose, n));
 // Un nouveau venu de l'épilogue (1 à 8), en habits de voyage
 export const arrivant = (numero, pose, n = 1) => sans(dessin('arrivant', numero, pose, n));
 
@@ -96,7 +93,7 @@ export const arrivant = (numero, pose, n = 1) => sans(dessin('arrivant', numero,
 export function liste() {
   const out = [];
   for (const [g, t] of Object.entries(GROUPES)) for (const [k, p] of Object.entries(t)) {
-    const qui = g === 'visiteur' || g === 'arrivant' ? +k : k;
+    const qui = g === 'arrivant' ? +k : k;
     for (const [pose, , images] of p.poses()) for (let n = 1; n <= images.length; n++) out.push({ fichier: `personnages/${p.dossier}/${p.prefixe}_${pose}_${n}.svg`, fonction: g, args: [qui, pose, n] });
   }
   return out;

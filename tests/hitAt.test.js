@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import gestures from '@/world/view/gestures';
+import { coach } from '@/game/coach';
 import { TW } from '@/world/view/constants';
 
 // Une île réduite à ce qui se touche : le monde se confond avec l'écran (zoom s), rien n'est posé sauf ce qu'on donne
@@ -18,6 +19,27 @@ function islandWith(parts = {}, s = 1) {
   };
 }
 const hitAt = (island, x, y) => gestures.hitAt.call(island, x * island.cam.s, y * island.cam.s);
+
+describe('le cercle doré d’une étape du tutoriel se touche tout entier', () => {
+  afterEach(() => coach.state.lesson = null);
+  it('un doigt dans le cercle, à côté du dessin de la cible : la cible ; hors du cercle : rien', () => {
+    const cuisine = { id: 'cannelle', art: 'cannelle_debris', w: 1, x: 0, y: 0 };
+    const island = islandWith({
+      state: { sites: [], annexes: [], camp: [cuisine] },
+      thickMist: () => true,
+      coachWorld: name => (name === 'coin:cannelle' ? { x: 0, y: -20, r: 30 } : null),
+      toScreen: (x, y) => ({ x, y }),
+      tapAllowed: hit => Boolean(hit.campItem),
+      hitAt(...args) { return gestures.hitAt.apply(this, args); }
+    });
+    coach.state.lesson = { steps: [{ target: 'île:coin:cannelle' }, { target: '.world__tip-btn' }] };
+    // (le cercle : 30 de rayon, plus sa marge de 8 px)
+    expect(gestures.ringHit.call(island, 34, -20).campItem).toBe(cuisine);
+    expect(gestures.ringHit.call(island, 60, -20)).toBeNull();
+    coach.state.lesson = null;
+    expect(gestures.ringHit.call(island, 34, -20)).toBeNull();
+  });
+});
 
 describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
   const puits = { id: 'puits', w: 2, x: 0, y: 0, cx: 0, cy: 0 };
@@ -82,12 +104,26 @@ describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
     expect(hitAt(island, 38, -4).deposit).toBe(bois);
   });
 
-  it('sans ce qui vit (still), on touche ce qu’une mouette posée cache : la cage du tutoriel', () => {
+  it('ce qu’on accepte seulement (ok) : on touche ce qu’une mouette posée cache, la cage du tutoriel', () => {
     const cage = { id: 'cage', art: 'cage_coincee', w: 1, x: 0, y: 0 };
     const gull = { key: 'perch:0,0', kind: 'gull', x: 0, y: -6, r: 12 };
     const island = islandWith({ landHits: [gull], state: { sites: [], annexes: [], camp: [cage] } });
     expect(hitAt(island, 0, -6).animal).toBe(gull);
-    expect(gestures.hitAt.call(island, 0, -6, true).cage).toBe(cage);
+    expect(gestures.hitAt.call(island, 0, -6, hit => Boolean(hit.cage)).cage).toBe(cage);
+  });
+
+  it('une clôture ou une trouvaille devant le coin d’Agathe : la cible de l’étape se touche quand même', () => {
+    const cuisine = { id: 'cannelle', art: 'cannelle_debris', w: 2, h: 2, x: 0, y: 0, cx: 0, cy: 0 };
+    const cloture = { craft: 'cloture', x: 10, y: -10 };
+    const galet = { id: 'greve-galet', pickup: true, x: -40, y: -6 };
+    const island = islandWith({ state: { sites: [], annexes: [], camp: [cuisine] }, crafted: [cloture], groundFinds: [galet] });
+    // (sans filtre, ce qui est devant gagne ; avec, le coin)
+    expect(hitAt(island, 10, -14).craft).toBe(cloture);
+    expect(gestures.hitAt.call(island, 10, -14, hit => Boolean(hit.campItem)).campItem).toBe(cuisine);
+    expect(hitAt(island, -40, -10).deposit).toBe(galet);
+    expect(gestures.hitAt.call(island, -40, -10, hit => Boolean(hit.campItem)).campItem).toBe(cuisine);
+    // (rien d'accepté sous le doigt : rien)
+    expect(gestures.hitAt.call(island, 10, -14, () => false)).toBeNull();
   });
 
   it('la cage vide, le poulailler posé, garde son rang devant un coquillage voisin ; sans poulailler, elle cède', () => {

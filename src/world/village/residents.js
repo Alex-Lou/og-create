@@ -1,8 +1,7 @@
 // Le village (world/village.js) : les habitants. Qui vit où (la troupe rencontrée, les visiteurs installés, le visiteur
 // du moment), leurs tournées du jour et du soir, l'arrivée d'un naufragé, et ce qu'on dessine d'eux à chaque instant,
 // leur familier compris.
-import { ROLES, SKINS, HAIRS } from '../villagers';
-import { visitorLook } from '../visitors';
+import { ROLES } from '../roles';
 import { masterSprite } from '../masterArt';
 import { arrivantSprite } from '../arrivantArt';
 import { FAMILIARS } from '../bestiary';
@@ -139,7 +138,7 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
         plank: (post && post.plank) || null,
         // Naufragé tant que son bâtiment n'est pas fondé (dessin de la bibliothèque : masterArt.js)
         castaway: !who.built,
-        look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
+        look: { label: ROLES[id].label },
         work, wake: (HOURS[id] && HOURS[id].wake) || 6.4 + (k % 3) * 0.25, bed: (HOURS[id] && HOURS[id].bed) || 21.6 + (k % 3) * 0.3,
         master: true, mood: who.mood || null, bedAt: work,
         // Son familier, s'il est venu (bestiary.js)
@@ -160,7 +159,7 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
       residents.push({
         // (settler : sa graine et ses choix d'allure, pour son dessin : arrivantArt.js)
         id: `vil:${s.id}`, k, row: residents.length, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name, settler: { seed: s.seed, look: s.look || null },
-        look: visitorLook(s.seed, s.role), work: doors[s.site], wake: 6.6 + (k % 3) * 0.25, bed: 21.4 + (k % 3) * 0.3,
+        look: { label: s.role }, work: doors[s.site], wake: 6.6 + (k % 3) * 0.25, bed: 21.4 + (k % 3) * 0.3,
         // (il dort à sa maison, sinon à la porte de son métier ; sa zone de vie, autour de sa maison)
         field, bedAt: field || doors[s.site],
         zone: lifeZoneOf(grid, s.home ? { x: s.home.x, y: s.home.y, w: 1, h: 1 } : built.find(b => b.id === s.site), field || doors[s.site], s.site)
@@ -171,7 +170,7 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
       const k = MASTERS.length + SETTLERS_MAX;
       residents.push({
         id: `vis:${visitor.id}`, k, row: residents.length, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name, settler: { seed: visitor.seed, look: null },
-        look: visitorLook(visitor.seed, visitor.role), work: doors.ponton, wake: 7, bed: 21.3, field: null
+        look: { label: visitor.role || 'Visiteur' }, work: doors.ponton, wake: 7, bed: 21.3, field: null
       });
     }
   }

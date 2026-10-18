@@ -448,23 +448,6 @@
       @collect="collectBeasts()"
       @close="beastId = null"
     />
-    <!-- Visiteur arrivé en bateau : sa fiche (demande, récompense) -->
-    <VisitorSheet
-      v-if="visitorOpen && state && state.visitor"
-      :visitor="state.visitor"
-      :elapsed="clock - loadedAt"
-      :stock="stockPaid"
-      :charges="state.charges.count"
-      :houses="state.houses || undefined"
-      :work-name="siteName(state.visitor.site)"
-      :portrait="visitorPortrait(state.visitor)"
-      :said="visitorSaid"
-      :busy="busy"
-      @satisfy="satisfyVisitor"
-      @harvest="visitorHarvest"
-      @settle="settleVisitor"
-      @close="visitorOpen = false"
-    />
     <!-- Arrivant venu en barque au Ponton : son accueil (son allure, son métier, son prénom) -->
     <ArrivalWelcome
       v-if="arrivalOpen && state && state.arrival"
@@ -578,7 +561,6 @@ import NightSheet from '../Explore/NightSheet/NightSheet.vue';
 import PoseChoice from '../Sites/PoseChoice/PoseChoice.vue';
 import VillagerSheet from '../Folk/VillagerSheet/VillagerSheet.vue';
 import BeastSheet from '../Folk/BeastSheet/BeastSheet.vue';
-import VisitorSheet from '../Folk/VisitorSheet/VisitorSheet.vue';
 import RenameSheet from '../Sites/RenameSheet/RenameSheet.vue';
 import ExplorerLog from '../Explore/ExplorerLog/ExplorerLog.vue';
 import BestiaryBook from '../Explore/BestiaryBook/BestiaryBook.vue';
@@ -663,7 +645,7 @@ export default {
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
   mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, bestiary, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
-  components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, ArrivalWelcome, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, BestiaryBook, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
+  components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, ArrivalWelcome, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, BestiaryBook, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },

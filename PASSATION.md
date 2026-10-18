@@ -24,8 +24,9 @@ Jeu d'alchimie en français, sur mobile d'abord (PWA installable) :
 | `Alex-Lou/og-create` | front Vue 3 (Options API, Vite, aucune librairie de jeu) | `master` | `/home/user/og-create` |
 | `Alex-Lou/Og-create-backend` | API Express + PostgreSQL | `main` | `/home/user/og-create-backend` |
 
-- **Déploiement** : Render (front statique, API) et Neon (Postgres). Voir `DEPLOY.md`.
-  - Le build Render de l'API lance `npm run db:setup` : schéma et contenu, rejouable, sans toucher aux comptes.
+- **Déploiement** : un VPS OVH (nginx, l'API sous systemd, PostgreSQL). Voir `deploy/ovh/README.md`.
+  - La mise à jour se lance sur le VPS (`deploy/ovh/deploy.sh`) : les deux dépôts, le build du jeu, puis la base
+    (`db/setup.js` : schéma et contenu, rejouable, sans toucher aux comptes) et le redémarrage de l'API.
 - **Taille** : environ 30 700 lignes côté front, 6 300 côté serveur.
 - **Le serveur fait autorité sur tout** : recettes, écus, ressources, île, coffres. Le navigateur n'affiche que des
   résultats ; il ne décide jamais d'un gain.

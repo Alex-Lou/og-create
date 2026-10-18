@@ -11968,17 +11968,11 @@ var require_troupe_liste = __commonJS({
       "Mélisse": ["content", "rire", "triste"]
       // tranquille, les lunes, le chagrin caché
     };
-    var PARAPLUIES = ["#D9443A", "#3E78C8", "#F2C04B", "#7EC45B", "#C46AA8", "#2E3E66"];
-    var COUV = [{ fond: "#C98F5A", motif: "#E8C07A" }, { fond: "#6E8FC4", motif: "#DDE7F4" }, { fond: "#8BAE6A", motif: "#E2EDC9" }, { fond: "#B86A7A", motif: "#F2D2D8" }];
     var sansMain = /* @__PURE__ */ __name((o) => {
       const acc = { ...o.accessoires };
       delete acc.main;
       return { ...o, accessoires: acc };
     }, "sansMain");
-    var VISITEURS = Array.from({ length: 12 }, (_, j) => {
-      const i = j + 1, choix = sansMain(A2.auHasard(1e3 + i * 7, { gratuit: false }));
-      return { i, cle: `visiteur-${String(i).padStart(2, "0")}`, choix, uid: `v${i}`, opts: { lanterne: true, couverture: COUV[i % COUV.length], parapluie: PARAPLUIES[i % PARAPLUIES.length] } };
-    });
     var VOYAGE = [
       { haut: "veste", bas: "pantalon", tete: "paille", dos: "sacDos" },
       { haut: "chemise", bas: "jupe", tete: "beret", dos: "besace" },
@@ -11995,7 +11989,7 @@ var require_troupe_liste = __commonJS({
       const choix = A2.verifier({ ...base, haut: t.haut, bas: t.bas, accessoires: { ...base.accessoires, tete: { id: t.tete }, dos: { id: t.dos } } });
       return { i, cle: `arrivant-${String(i).padStart(2, "0")}`, choix, uid: `e${i}`, opts: { couche: false, valise: VALISES[j % VALISES.length] } };
     });
-    module.exports = { STD, VUE, slug, poses: poses2, COUVERTURES, VOILE, MOODS, VISITEURS, ARRIVANTS };
+    module.exports = { STD, VUE, slug, poses: poses2, COUVERTURES, VOILE, MOODS, ARRIVANTS };
   }
 });
 
@@ -12020,7 +12014,7 @@ var require_noms_personnages = __commonJS({
       return rel;
     }
     __name(nomPersonnage, "nomPersonnage");
-    var MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|personnages\/avatar\/avatar-\d+(?:-naufrage)?|personnages\/visiteurs\/visiteur-\d+|personnages\/epilogue\/arrivant-\d+|vivants\/(anya|passeur))\/[a-z0-9-]+_avant_/;
+    var MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|personnages\/avatar\/avatar-\d+(?:-naufrage)?|personnages\/epilogue\/arrivant-\d+|vivants\/(anya|passeur))\/[a-z0-9-]+_avant_/;
     function miroir(svg) {
       const m = svg.match(/^(<svg[^>]*viewBox="([^"]+)"[^>]*>)([\s\S]*)(<\/svg>\s*)$/);
       if (!m) throw new Error("SVG inattendu pour le miroir");
@@ -12095,13 +12089,13 @@ var memo = /* @__PURE__ */ __name((f) => {
   let v;
   return () => v ??= f();
 }, "memo");
-var GROUPES = { maitre: {}, naufrage: {}, visiteur: {}, arrivant: {} };
+var GROUPES = { maitre: {}, naufrage: {}, arrivant: {} };
 for (const { base, nau } of import_troupe_refonte.CAST_REFONTE) {
   const s = import_troupe_liste.default.slug(base.name);
   GROUPES.maitre[s] = { dossier: `maitres/${s}`, prefixe: s, poses: memo(() => posesMaitre(base, base, false)) };
   GROUPES.naufrage[s] = { dossier: `naufrages/${s}`, prefixe: `${s}-naufrage`, poses: memo(() => posesMaitre(base, nau, true)) };
 }
-for (const [groupe, liste2, dossier] of [["visiteur", import_troupe_liste.default.VISITEURS, "visiteurs"], ["arrivant", import_troupe_liste.default.ARRIVANTS, "epilogue"]]) {
+for (const [groupe, liste2, dossier] of [["arrivant", import_troupe_liste.default.ARRIVANTS, "epilogue"]]) {
   for (const p of liste2) GROUPES[groupe][p.i] = { dossier: `${dossier}/${p.cle}`, prefixe: p.cle, choix: p.choix, poses: memo(() => import_troupe_liste.default.poses(import_avatar.default.avatar(p.choix, { uid: p.uid }), p.opts).map(([pose, , vb, images]) => [pose, vb, images])) };
 }
 var PERSONNAGES = Object.fromEntries(Object.entries(GROUPES).map(([g, t]) => [g, Object.fromEntries(Object.entries(t).map(([k, p]) => [k, p.choix ? { choix: p.choix } : {}]))]));
@@ -12131,12 +12125,11 @@ __name(dessin, "dessin");
 var sans = /* @__PURE__ */ __name(({ fichier, ...r }) => r, "sans");
 var maitre = /* @__PURE__ */ __name((nom, pose, n = 1) => sans(dessin("maitre", nom, pose, n)), "maitre");
 var naufrage = /* @__PURE__ */ __name((nom, pose, n = 1) => sans(dessin("naufrage", nom, pose, n)), "naufrage");
-var visiteur = /* @__PURE__ */ __name((numero, pose, n = 1) => sans(dessin("visiteur", numero, pose, n)), "visiteur");
 var arrivant = /* @__PURE__ */ __name((numero, pose, n = 1) => sans(dessin("arrivant", numero, pose, n)), "arrivant");
 function liste() {
   const out = [];
   for (const [g, t] of Object.entries(GROUPES)) for (const [k, p] of Object.entries(t)) {
-    const qui = g === "visiteur" || g === "arrivant" ? +k : k;
+    const qui = g === "arrivant" ? +k : k;
     for (const [pose, , images] of p.poses()) for (let n = 1; n <= images.length; n++) out.push({ fichier: `personnages/${p.dossier}/${p.prefixe}_${pose}_${n}.svg`, fonction: g, args: [qui, pose, n] });
   }
   return out;
@@ -12148,6 +12141,5 @@ export {
   liste,
   maitre,
   naufrage,
-  poses,
-  visiteur
+  poses
 };

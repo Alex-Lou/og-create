@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { villageOf } from '@/world/village';
 import { loadKit } from '@/game/avatarKit';
 import { skyAt } from '@/world/sky';
-import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
+import { ROLES } from '@/world/roles';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
 import { CREATURE_TEXTS } from '@/texts/world/creatures';
 import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS } from '@/texts/village';
@@ -11,6 +11,10 @@ import { cycleStart, dayHourOf } from '@/world/gameClock';
 
 // (les habitants venus d'ailleurs se dessinent par le générateur de l'avatar, chargé à la demande : world/arrivantArt.js)
 beforeAll(() => loadKit());
+
+// (un jour de l'île où l'on marche et flâne : les tests de la vie qui le supposent le figent, l'heure réelle de la machine
+// changerait leur journée)
+const UN_JOUR = new Date('2026-10-19T09:00:00Z');
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
 const N = 14;
@@ -40,37 +44,41 @@ const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h
 describe('village : habitants', () => {
   it('un habitant par bâtiment bâti, plus la cuisinière du Foyer ; pas de chantier', () => {
     expect(village.residents.map(r => r.role)).toEqual(['potager', 'ponton', 'foyer']);
-    expect(village.residents.every(r => r.look.skin && r.look.hair && ROLES[r.role])).toBe(true);
-    // La peau et les cheveux fixés par la fiche l'emportent sur le tirage (Robby, peau de granit ; Nathan, mèche grise)
-    for (const r of village.residents) for (const k of ['skin', 'hair']) if (ROLES[r.role][k]) expect(r.look[k]).toBe(ROLES[r.role][k]);
+    // (chacun avec le nom de son métier)
+    expect(village.residents.every(r => r.look.label === ROLES[r.role].label)).toBe(true);
   });
   // (la nuit, chacun dort couché chez lui : choix de l'auteur, 16 oct. ; agenda.js)
   it('ils marchent par des cases praticables voisines, le jour ; dorment chez eux la nuit ; rentrent avec une lanterne le soir', () => {
-    const noon = at(13);
-    for (let t = 0; t < 600; t += 7) {
-      const people = village.at(t, noon).list.filter(c => c.kind === 'villager');
-      expect(people).toHaveLength(3);
-      for (const p of people) {
-        expect(M.ground(Math.round(p.x), Math.round(p.y))).toMatch(/[gp]/);
-        // Dessin du jeu (svg tout de suite) ou de la bibliothèque (un maître : cadre tout de suite, dessin à la lecture)
-        const drawn = p.sprite[1]();
-        expect(drawn.box.w).toBeGreaterThan(0);
-        if (drawn.svg) expect(drawn.svg).not.toMatch(/NaN|undefined/);
+    vi.useFakeTimers({ toFake: ['Date'], now: UN_JOUR });
+    try {
+      const noon = at(13);
+      for (let t = 0; t < 600; t += 7) {
+        const people = village.at(t, noon).list.filter(c => c.kind === 'villager');
+        expect(people).toHaveLength(3);
+        for (const p of people) {
+          expect(M.ground(Math.round(p.x), Math.round(p.y))).toMatch(/[gp]/);
+          // Dessin du jeu (svg tout de suite) ou de la bibliothèque (un maître : cadre tout de suite, dessin à la lecture)
+          const drawn = p.sprite[1]();
+          expect(drawn.box.w).toBeGreaterThan(0);
+          if (drawn.svg) expect(drawn.svg).not.toMatch(/NaN|undefined/);
+        }
       }
+      // Ils bougent : deux instants, deux places
+      const a = village.at(10, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
+      const b = village.at(200, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
+      expect(a).not.toBe(b);
+      // (le temps de rentrer chez soi : ils y marchent, puis s'y couchent)
+      village.at(5, at(2));
+      const night = village.at(400, at(2)).list.filter(c => c.kind === 'villager');
+      expect(night).toHaveLength(3);
+      expect(night.every(p => p.pose === 'sleep')).toBe(true);
+      const evening = at(22);
+      const life = village.at(5, evening);
+      expect(life.list.filter(c => c.kind === 'villager').length).toBeGreaterThan(0);
+      expect(life.lights.length).toBe(life.list.filter(c => c.kind === 'villager' && c.pose !== 'sleep').length);
+    } finally {
+      vi.useRealTimers();
     }
-    // Ils bougent : deux instants, deux places
-    const a = village.at(10, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
-    const b = village.at(200, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
-    expect(a).not.toBe(b);
-    // (le temps de rentrer chez soi : ils y marchent, puis s'y couchent)
-    village.at(5, at(2));
-    const night = village.at(400, at(2)).list.filter(c => c.kind === 'villager');
-    expect(night).toHaveLength(3);
-    expect(night.every(p => p.pose === 'sleep')).toBe(true);
-    const evening = at(22);
-    const life = village.at(5, evening);
-    expect(life.list.filter(c => c.kind === 'villager').length).toBeGreaterThan(0);
-    expect(life.lights.length).toBe(life.list.filter(c => c.kind === 'villager' && c.pose !== 'sleep').length);
   });
   // (choix de l'auteur, 16 oct. : celui qui s'abrite reste visible, à sa porte, sans parapluie)
   it('sous la pluie, un sur deux s’abrite à sa porte, les autres ont un parapluie', () => {
@@ -318,48 +326,10 @@ describe('village : bêtes', () => {
     expect(wild.say({ kind: 'beast', species: 'fox' }, at(1))).toBeNull();
     vi.useRealTimers();
   });
-  it('chaque dessin de bête et d’habitant se fait sans valeur manquante', () => {
+  it('chaque dessin de bête se fait sans valeur manquante', () => {
     for (const breed of Object.keys(HEN_BREEDS)) [0, 1].forEach(f => expect(ANIMAL_SPRITES.hen(f, breed).svg).not.toMatch(/NaN|undefined/));
     for (const k of ['cow', 'sheep', 'pig', 'goat']) [0, 1, 'rest'].forEach(f => expect(ANIMAL_SPRITES[k](f).svg).not.toMatch(/NaN|undefined/));
     for (const k of ['chick', 'deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron']) [0, 1].forEach(f => expect(ANIMAL_SPRITES[k](f).svg).not.toMatch(/NaN|undefined/));
-    for (const [id, role] of Object.entries(ROLES)) {
-      for (const pose of ['walk', 'idle', 'work', 'wave']) {
-        for (const view of VIEWS) {
-          for (const frame of [0, 1, 2, 3]) {
-            const { svg } = villagerSprite({ ...role, skin: '#F6D3B3', hair: '#3A2A1E' }, { pose, view, frame, lantern: true, umbrella: id === 'ponton' });
-            expect(svg).not.toMatch(/NaN|undefined/);
-          }
-        }
-      }
-    }
-    // Ancien nom de la vue de dos ; visiteurs tirés au hasard, toutes silhouettes et coiffures
-    expect(villagerSprite({ ...ROLES.potager, skin: '#F6D3B3', hair: '#3A2A1E' }, { back: true }).svg).toBe(villagerSprite({ ...ROLES.potager, skin: '#F6D3B3', hair: '#3A2A1E' }, { view: 'ne' }).svg);
-    const builds = new Set();
-    const styles = new Set();
-    for (let i = 0; i < 80; i++) {
-      const look = personOf(i * 7919 + 3);
-      builds.add(look.build);
-      styles.add(look.style);
-      for (const view of VIEWS) expect(villagerSprite(look, { pose: 'walk', view, frame: i % 4 }).svg).not.toMatch(/NaN|undefined|null/);
-    }
-    expect([...builds].sort()).toEqual(Object.keys(BUILDS).sort());
-    expect(styles.size).toBe(STYLES.length);
-    expect(personOf(42)).toEqual(personOf(42));
-  });
-  it('chaque habitant est un SVG bien formé (une image se charge seulement sans attribut en double)', () => {
-    const doubled = svg => [...svg.matchAll(/<(\w+)([^>]*)>/g)].filter(m => {
-      const names = [...m[2].matchAll(/\s([\w-]+)=/g)].map(x => x[1]);
-      return new Set(names).size !== names.length;
-    });
-    for (const role of Object.values(ROLES)) {
-      for (const view of VIEWS) {
-        for (const pose of ['walk', 'idle', 'work', 'wave']) {
-          const { svg } = villagerSprite({ ...role, skin: '#F6D3B3', hair: '#3A2A1E' }, { pose, view, frame: 1, lantern: true, umbrella: true });
-          expect(doubled(svg)).toEqual([]);
-        }
-      }
-    }
-    for (let i = 0; i < 30; i++) expect(doubled(villagerSprite(personOf(i * 31 + 1), { view: VIEWS[i % 3], pose: 'walk', frame: i % 4 }).svg)).toEqual([]);
   });
 });
 
@@ -493,19 +463,24 @@ describe('village : fondations de la vie', () => {
     expect(v.residents.find(r => r.role === 'foyer').zone.trade.length).toBeGreaterThan(0);
   });
   it('il flâne dans sa zone de vie : loin des portes, on le trouve toujours chez lui', () => {
-    const v = villageOf(base);
-    const doors = v.residents.map(r => r.work);
-    let checked = 0;
-    for (let i = 0; i < 1500; i++) {
-      for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
-        if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
-        const r = v.residents.find(o => o.id === p.id);
-        expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
-        checked++;
+    vi.useFakeTimers({ toFake: ['Date'], now: UN_JOUR });
+    try {
+      const v = villageOf(base);
+      const doors = v.residents.map(r => r.work);
+      let checked = 0;
+      for (let i = 0; i < 1500; i++) {
+        for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
+          if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
+          const r = v.residents.find(o => o.id === p.id);
+          expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
+          checked++;
+        }
       }
+      // (assez de flâneries vues pour que le test dise quelque chose)
+      expect(checked).toBeGreaterThan(100);
+    } finally {
+      vi.useRealTimers();
     }
-    // (assez de flâneries vues pour que le test dise quelque chose)
-    expect(checked).toBeGreaterThan(100);
   });
   it('la tournée du jour couvre la journée, de son lever au soir, sans boucle', () => {
     const v = villageOf(base);

@@ -2,7 +2,7 @@
 // le nom du peuple se déduisent des actes finis ; sur un autre appareil, seule la dernière veillée peut attendre.
 import { describe, it, expect } from 'vitest';
 import { ACTS, LINKS, stageOf, vigilDue, vigilFrames, linksOf } from '@/game/vigils';
-import { ROLES } from '@/world/villagers';
+import { ROLES } from '@/world/roles';
 
 const ARTS = ['veillee', 'rite', 'lien', 'horizon', 'phare', 'reflet', 'soleil', 'flammeche'];
 

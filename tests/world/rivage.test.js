@@ -12,7 +12,8 @@ describe('chemin de lumière sur la mer', () => {
     const haut = glitterOf(phase({ sun: { up: 1, progress: 0.5 } }), pleineLune);
     expect(bas.spread).toBeLessThan(haut.spread);
     expect(bas.color).toBe('255,214,150');
-    expect(bas.at).toBeGreaterThan(haut.at);
+    // (le soir, le soleil est à gauche : lumiere/soleil.js)
+    expect(bas.at).toBeLessThan(haut.at);
   });
 
   it('la nuit, la lune selon sa phase ; rien sous un ciel couvert', () => {

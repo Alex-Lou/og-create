@@ -1,5 +1,5 @@
 // Les gens et les bêtes de l'île (components/World/Folk) : la fiche d'une bête de ferme (BeastSheet), d'un habitant
-// (VillagerSheet), d'un visiteur (VisitorSheet), l'accueil d'un arrivant (ArrivalWelcome).
+// (VillagerSheet), l'accueil d'un arrivant (ArrivalWelcome).
 
 // La fiche d'une bête de ferme (BeastSheet) ; she : c'est une femelle
 export const BEAST_SHEET = {
@@ -18,14 +18,6 @@ export const VILLAGER_SHEET = {
   happy: effect => `Tous ses besoins comblés : ${effect.charAt(0).toLowerCase()}${effect.slice(1)}.`,
   talked: 'Vous avez bavardé aujourd’hui',
   gifted: '· cadeau déjà offert aujourd’hui'
-};
-
-// La fiche d'un visiteur (VisitorSheet)
-export const VISITOR_SHEET = {
-  leaves: when => `Son bateau repart ${when}`,
-  done: 'Demande comblée : merci !',
-  house: (name, work) => `Une maison est libre : ${name} pourrait s’installer et travailler à « ${work} ».`,
-  noHouse: name => `Pour que ${name} reste, pose une Maison près du Foyer (onglet Annexes du Foyer).`
 };
 
 // L'accueil d'un arrivant (ArrivalWelcome) : sa phrase, selon le moment du récit qui l'amène (serveur :

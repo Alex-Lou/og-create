@@ -9,7 +9,6 @@ import { DEPOSIT_SPRITES, depositLayer } from '@/world/depositSprites';
 import { annexArtLayer, depositArtLayer, annexArtThumb, signArtLayer, isletArtLayer, isletFrameAt, landmarkArtLayer, landmarkArtThumb } from '@/world/decorArt';
 import { LANDMARK_SPRITES, landmarkScale, landmarkLayers } from '@/world/landmarkSprites';
 import { ISLET_SPRITES } from '@/world/isletSprites';
-import { visitorBoat } from '@/world/visitors';
 import { BOTTLE } from '@/world/chest';
 import { SIGN } from '@/world/nature';
 import { NAME_SIGNS, NAME_SIGN_FRAME, nameSignSwing, nameSignLight } from '@/world/nameSigns';
@@ -108,8 +107,8 @@ describe('les enseignes de la bibliothèque', () => {
 });
 
 describe('les îlots et les objets de la mer de la bibliothèque', () => {
-  // Le dessin par code que chacun remplace
-  const GAME = { ponton: ISLET_SPRITES.landing, barque_volante: ISLET_SPRITES.ferry[0], bateau_visiteur: () => visitorBoat(0), bouteille: BOTTLE[0], panneau_quartier: SIGN };
+  // Le dessin par code que chacun remplace (le bateau des visiteurs : le cadre de celui d'avant, retiré)
+  const GAME = { ponton: ISLET_SPRITES.landing, barque_volante: ISLET_SPRITES.ferry[0], bateau_visiteur: () => ({ box: { x: -30, y: -56, w: 62, h: 64 } }), bouteille: BOTTLE[0], panneau_quartier: SIGN };
   it('au cadre du dessin par code qu’il remplace, × 1,25, et le fichier a ce cadre', () => {
     for (const [name, game] of Object.entries(GAME)) {
       const art = DECOR.ilots[name];
