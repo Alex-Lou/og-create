@@ -52,6 +52,13 @@ export const FIRST_FIRE = { who: 'brume', text: 'Notre feu était le premier de 
 // acheté
 export const ARC_LINES = {
   quests: {
+    // (le jour de Maerys, choix de l'auteur, 18 oct. : La Lisière achetée, Léo voit le renard ; l'Arbre écrit ; le Bosquet)
+    lisiere: [{ who: 'puits', mood: 'emerveille', text: 'Chut… Un renard. Il a une queue de flamme. Il nous regarde.' }],
+    'souvenir-sylve': [{ who: 'puits', mood: 'pensif', text: 'Elle parle comme moi quand je rêve.' }],
+    bosquet: [
+      { who: 'ponton', mood: 'rire', text: 'Du bois sans couper un arbre. Nathan, prends des notes.' },
+      { who: 'atelier', mood: 'gene', text: '… Je prends des notes.' }
+    ],
     // (§ 2.1 : la première lanterne ; La Lisière, § 7.1)
     lanterne: [
       { who: 'ponton', text: 'La première. Ma grand-mère disait qu’on allume toujours la plus petite d’abord. En attendant le phare.' },

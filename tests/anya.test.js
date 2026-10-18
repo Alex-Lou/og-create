@@ -45,6 +45,8 @@ describe('Anya : traces, pressentiments, Révélation', () => {
     expect(revelationFrames({ lit: true }).pop().text).toBe('Ta lumière guide la mer. La mienne gardera la terre.');
     expect(revelationFrames().some(frame => frame.who === 'Brume' && frame.text === '… Tu es revenue.')).toBe(true);
     expect(PRESENTIMENTS.vie[0]).toMatchObject({ who: 'Une voix', text: '« … Merci. »' });
+    // (« Tu as entendu ? » : le joueur répond, avant le « Non. Rien. » de Brume)
+    expect(PRESENTIMENTS.vie.map(line => line.who || 'Brume')).toEqual(['Une voix', 'Brume', 'joueur', 'Brume']);
   });
   it('sur l’île : la huitième trace d’abord, puis la Révélation, une seule fois', () => {
     const all = [1, 2, 3, 4, 5, 6, 7, 8];

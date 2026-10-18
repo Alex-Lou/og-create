@@ -3,6 +3,8 @@
 // fixes (sur l'île, peau et cheveux suivent le tirage du village).
 import { villagerSprite, ROLES } from './villagers';
 import { masterPortrait } from './masterPortraits';
+import { playerFace } from '@/game/sceneArt';
+import { player } from '@/game/accord';
 
 const LOOKS = {
   ponton: { skin: '#F2C9A0', hair: '#B94E3A' },
@@ -32,6 +34,10 @@ export function bubbleFace(id, { castaway = false, mood = 'neutre' } = {}) {
   const url = name && (portraitUrl(name, mood) || portraitUrl(name, 'neutre'));
   return url ? { face: url, bust: true } : { face: faceHref(id, { castaway }) };
 }
+
+// Le joueur quand il parle dans une bulle de l'île (who : 'joueur') : sous son nom, avec son avatar de naufragé (look :
+// son avatar ; l'exemple par défaut tant qu'il n'est pas dessiné). { who, face } pour guide.say
+export const playerBubble = look => ({ who: player.name || 'Toi', face: playerFace(look) });
 
 // Prénoms de la troupe (HISTOIRE.md, § 8.1), pour les bulles
 export const NAMES = { ponton: 'Lorena', foyer: 'Agathe', atelier: 'Nathan', puits: 'Léo', bosquet: 'Maerys', carriere: 'Robby', potager: 'Maggy' };

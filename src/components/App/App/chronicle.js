@@ -160,7 +160,7 @@ export default {
       // (jamais pendant le tutoriel : rien qui ne serve l'étape)
       if (this.prologueRunning) return;
       if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
-      if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
+      if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line.who === 'joueur' ? { ...line, ...this.lineSpeaker('joueur') } : line));
     },
     // Le vol de la caméra du conseil, sur l'île (WorldView, phare.js) ; tout de suite si l'île n'est pas à l'écran.
     // options : { rain } (la pluie jusqu'au matin : le conseil joué, pas revu)

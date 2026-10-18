@@ -290,7 +290,7 @@ export const LINES = {
   // sa longue-vue qui choisit son camp (look : la caméra y va, WorldView coach.js), sa Récolte, son Ponton, le chemin
   // entre son camp et le nôtre, ses quatre piquets ; le soir, autour du feu, la deuxième nuit
   caisse: { who: 'ponton', mood: 'surpris', text: 'Mes affaires ! Je n’arrive pas à y croire ! Aidez-moi à l’attraper !' },
-  tresors: { who: 'ponton', mood: 'emu', text: 'Ma longue-vue, mon compas… intacts. Et mon filet ! Tant pis pour le reste, on se débrouillera avec ce qu’on a déjà là !' },
+  tresors: { who: 'ponton', mood: 'emu', text: 'Ma longue-vue, mon carnet de quart… intacts. Et mon filet ! Tant pis pour le reste, on se débrouillera avec ce qu’on a déjà là !' },
   rend: 'La mer rend ce qu’elle a pris. C’est toi qui l’as dit.',
   installe: { who: 'ponton', mood: 'fier', text: 'Là, face à la mer : c’est là que je m’installe !', look: 'site:ponton' },
   rivage: { who: 'ponton', mood: 'determine', text: 'Viens au rivage. La marée laisse souvent des choses, mais elle les reprend vite aussi.' },
@@ -422,7 +422,9 @@ export const LINES = {
   // phare de sa grand-mère
   'bouteille-ecume': { who: 'ponton', mood: 'surpris', text: 'Là, dans l’écume ! Une bouteille. La mer rend ce qu’elle a pris.', look: 'bouteille' },
   'bouteille-courant': { who: 'ponton', mood: 'pensif', text: 'Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les.' },
+  'bouteille-mots': { who: 'joueur', text: 'Des mots ? Quelqu’un écrit, sur cette île ?' },
   'bouteille-brume': 'Ma brume avale les navires… Ce qu’elle ne sait pas garder, la mer le recrache. Du verre, des caisses. Des mots, parfois.',
   'bouteille-h': '« H. »… Ce H, je l’ai sur le bout de la flamme.',
-  'bouteille-phare': { who: 'ponton', mood: 'emu', text: '« Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil.' }
+  'bouteille-phare': { who: 'ponton', mood: 'emu', text: '« Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil.' },
+  'bouteille-nathan': { who: 'atelier', mood: 'pensif', text: 'Un phare, des lumières, et un H. Ça fait beaucoup de coïncidences pour une seule bouteille.' }
 };

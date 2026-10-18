@@ -19,6 +19,8 @@ export const PRESENTIMENT_LINES = {
   // (une voix sans nom, puis Brume)
   vieVoix: '« … Merci. »',
   vieBrume: 'Tu as entendu ?',
+  // (le joueur, choix de l'auteur, 18 oct.)
+  vieJoueur: 'Entendu quoi ?',
   vieBrumeRien: '… Non. Rien.',
   // (Robby, puis Maerys)
   runeGalet: '(Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l’éveillez qu’ensemble.',

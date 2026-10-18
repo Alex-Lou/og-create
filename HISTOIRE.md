@@ -98,6 +98,7 @@
 > - **Le compte du soir** : chaque soir, Brume compte ceux qui sont arrivés depuis sa solitude, et dit « Dormez, je veille sur vous ».
 > - **Les scènes d'arrivée sont plus longues** (assouplit la règle des six bulles : `ton.md`, décision 28) ; toujours 140 caractères par bulle.
 > - **Au Puits**, Léo sent la source, Nathan propose de la relier au hameau ; au Campement, Lorena (non plus Brume) dit qu'il manque un toit, et Brume ne compte plus ses amis à voix haute.
+> - **Le jour de Maerys (acte I)** : sa rencontre à son réveil, en bulles (elle a peur du feu, donc de Brume) ; le joueur répond à la bouteille, aux nuits, à la voix de la Vie et à la veillée I, que Brume finit sur son compte (« Six. Six visages autour du feu… et un renard. »).
 > - Rien ne change dans l'ordre des quêtes, les règles, l'économie ni les données.
 
 **Ce que les versions 4 et 5 changent.**
@@ -1020,7 +1021,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   3. le radeau ;
   4. pourquoi elle se cache ;
   5. « Ici, c'est ma forêt. Et vous, ma meute. »
-- **Première réplique** : « Chut. Les arbres se réveillent. Tu entends ? »
+- **Première réplique** : « Chut. Pas de bruit. Mousse a peur. » (sa rencontre, à son réveil : elle prend Brume pour un feu qui vole). À la veillée I : « Chut. Les arbres se réveillent. Tu entends ? »
 
 ---
 

@@ -49,7 +49,7 @@ const RITES = {
   VII: { recipe: 'Feu follet', text: T.rites.VII }
 };
 const LINES = {
-  I: [{ who: 'Brume', text: T.lines.I.brume }, { who: 'Brume', text: T.lines.I.brumeToutes }],
+  I: [{ who: 'Brume', text: T.lines.I.brume }, { who: 'joueur', text: T.lines.I.joueur }, { who: 'Brume', text: T.lines.I.brumeMer }, { who: 'Brume', text: T.lines.I.brumeToutes }, { who: 'Brume', text: T.lines.I.brumeSix }],
   III: [{ who: 'Maggy', text: T.lines.III.flore }, { text: T.lines.III.recit }],
   V: [{ text: T.lines.V.recit }, { who: 'Agathe', text: T.lines.V.agathe }],
   VI: [{ who: 'Lorena', text: T.lines.VI.lorena }, { text: T.lines.VI.recit }, { text: T.lines.VI.phenix }],

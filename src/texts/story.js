@@ -9,6 +9,29 @@ export const WRECK_TEXTS = {
   jardins: 'Cette nuit, un autre bateau s’est brisé dans ma brume. Une barque pleine de graines, au nord.'
 };
 
+// Ce qu'on dit, l'annonce d'un naufrage refermée (choix de l'auteur, 18 oct.) : [{ who, mood?, text }] (who : un
+// bâtiment, 'brume' ou 'joueur' ; WorldView, phare.js : arcSpeaker)
+export const WRECK_AFTER = {
+  lisiere: [{ who: 'ponton', mood: 'malicieux', text: 'Une lueur dans les arbres, sur une île déserte. Une de plus. Je ne pose même plus de questions.' }]
+};
+
+// La rencontre d'un naufragé qui se cachait, à son réveil, en bulles sur l'île (choix de l'auteur, 18 oct. : Maerys,
+// elle a peur du feu ; WorldView, serve.js) ; aside : une didascalie
+export const ARRIVAL_LINES = {
+  bosquet: [
+    { who: 'bosquet', text: 'Chut. Pas de bruit. Mousse a peur.' },
+    { who: 'joueur', text: 'Mousse ? … Le renard ? C’est plutôt nous qui avons eu peur.' },
+    { who: 'bosquet', mood: 'effraye', text: 'Feu ! Feu qui vole ! Loin. Loin des arbres.' },
+    { who: 'brume', text: 'Je ne brûle rien ! Je ne réchauffe même pas ! … Demande-leur.' },
+    { who: 'foyer', mood: 'malicieux', text: 'C’est vrai, ma grande. Pour la soupe, elle ne sert à rien.' },
+    { who: 'brume', text: '… Merci, Agathe. Vraiment.' },
+    { who: 'bosquet', mood: 'emu', text: '… Petite. Perdue. Comme moi. (Elle baisse la branche.)' },
+    { who: 'bosquet', text: 'Maerys. Ici, ma forêt. Pas de feu dedans.' },
+    { who: 'atelier', mood: 'gene', text: 'Noté. Aucun feu. … Je range mes allumettes.' },
+    { aside: true, text: '(Mousse file se cacher derrière Maerys.)' }
+  ]
+};
+
 // Ce que dit le naufragé quand on réclame la quête qui lui rend un souvenir (et Maerys, son Bosquet planté : choix de
 // l'auteur, 14 oct. ; ce qu'il donne à la Récolte est dans l'aide, texts/tutorial/coach.js : MEMORY_HELP)
 export const MEMORY_LINES = {

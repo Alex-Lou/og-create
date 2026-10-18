@@ -8,7 +8,7 @@ import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
-import { bubbleFace, builtOf, NAMES } from '@/world/faces';
+import { bubbleFace, builtOf, NAMES, playerBubble } from '@/world/faces';
 import { along, ease } from '@/world/flight';
 import { foudreAt } from '@/world/lumiere';
 import { phareArtLayer, phareArtLayers } from '@/world/decorArt';
@@ -54,12 +54,14 @@ const cancelIdle = task => {
   else if (task) clearTimeout(task.timer);
 };
 
-// Qui dit une réplique de l'arc (texts/world/phare.js) : une didascalie (aside), Brume, un maître (son nom et son
-// visage, de naufragé tant que son bâtiment n'est pas fondé ; built : ceux qui le sont), ou un nom écrit
-export function arcSpeaker(line, built) {
+// Qui dit une réplique de l'arc (texts/world/phare.js) : une didascalie (aside), Brume, le joueur (son nom et son
+// avatar : look), un maître (son nom et son visage, avec son expression : mood ; de naufragé tant que son bâtiment n'est
+// pas fondé ; built : ceux qui le sont), ou un nom écrit
+export function arcSpeaker(line, built, look = null) {
   if (line.aside) return { aside: true };
   if (line.who === 'brume') return {};
-  if (NAMES[line.who]) return { who: NAMES[line.who], ...bubbleFace(line.who, { castaway: !built.includes(line.who) }) };
+  if (line.who === 'joueur') return playerBubble(look);
+  if (NAMES[line.who]) return { who: NAMES[line.who], ...bubbleFace(line.who, { castaway: !built.includes(line.who), mood: line.mood }) };
   return { who: line.who };
 }
 
@@ -289,7 +291,7 @@ export default {
     sayArc(key, lines) {
       if (!this.state || !lines) return;
       const built = builtOf(this.state.villagers);
-      lines.forEach((line, i) => guide.say({ id: i ? `${key}-${i}` : key, text: line.text, ...arcSpeaker(line, built) }));
+      lines.forEach((line, i) => guide.say({ id: i ? `${key}-${i}` : key, text: line.text, ...arcSpeaker(line, built, this.state.avatar) }));
     },
     // Un nouvel état de l'île (serve.js : apply) : ce qui vient de se passer dans l'arc (world/arc.js), dit sur l'île
     arcLines(prev, next) {
