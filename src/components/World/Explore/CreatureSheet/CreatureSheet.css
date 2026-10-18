@@ -1,0 +1,8 @@
+.creature { display: grid; justify-items: center; gap: 8px; text-align: center; }
+.creature__art { width: min(180px, 52vw); height: 120px; object-fit: contain; }
+/* (pas encore rencontrée : sa silhouette d'encre) */
+.creature__art.is-shadow { filter: brightness(0) sepia(.6); opacity: .55; }
+.creature__where { margin: 0; color: var(--ink-700); font-weight: 700; }
+.creature__text { margin: 0; color: var(--ink-900); font-style: italic; }
+.creature__date { margin: 0; color: var(--ink-500); font-size: 14px; }
+.creature__hint { margin: 0; color: var(--ink-500); font-size: 14px; }

@@ -70,7 +70,7 @@ export function nearestOpen(open, x, y, far = 3) {
 // règle, comme les bêtes de l'île) : la mer grandit avec l'île (le quartier acheté de chacune) ; les dauphins et la
 // baleine se montrent le jour, les méduses luisent la nuit, et chacun a son temps (sous l'orage, aucun). phase : la vue
 // du ciel (scene.js : night, weather.kind)
-const SEA_RULES = {
+export const SEA_RULES = {
   dolphins: { zone: 'crique', night: false, weather: ['clair', 'voile'] },
   whale: { zone: 'hameau', night: false, weather: ['clair', 'voile', 'brume', 'pluie'] },
   jellies: { zone: 'phare', night: true, weather: ['clair', 'voile', 'brume', 'pluie'] }

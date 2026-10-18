@@ -168,15 +168,20 @@ export function flyingGull(t, phase = 0) {
 // Image de marche (1 ou 2) à l'instant t (secondes), à la cadence de la bibliothèque ; k décale les bêtes entre elles
 export const stepAt = (t, k = 0) => (Math.floor((t * 1000) / STEP_MS + k) % 2) + 1;
 
-// Portrait d'une bête (sa fiche) : de trois quarts avant, debout, recadré sur ce qu'il peint (le cadre de la
-// bibliothèque garde de la place autour d'elle). Lu et mesuré une fois, à la première demande ; une image vide pendant
-// ce temps. null si la bibliothèque ne l'a pas ou si la lecture échoue : le portrait par code reste
+// Portrait d'une bête (sa fiche, le Bestiaire) : de trois quarts avant, debout (une bête à une seule vue : sa première
+// image), recadré sur ce qu'il peint (le cadre de la bibliothèque garde de la place autour d'elle). Lu et mesuré une
+// fois, à la première demande ; une image vide pendant ce temps. null si la bibliothèque ne l'a pas ou si la lecture
+// échoue : le portrait par code reste
 const started = new Set();
 const portraits = reactive({});
+const portraitFile = (subject, art, alone) => (art
+  ? `${ROOT}${art.groupe}/${subject}/${subject}_avant_marche_1.svg`
+  : singleNames(subject, alone, 'marche', 1).map(name => `${ROOT}${alone.groupe}/${subject}/${name}.svg`).find(path => FILES[path]));
 export function beastPortraitUrl(species, variant) {
   const subject = subjectOf(species, variant);
   const art = subject && BEASTS[subject];
-  const load = art && FILES[`${ROOT}${art.groupe}/${subject}/${subject}_avant_marche_1.svg`];
+  const alone = subject && !art && SINGLE[subject];
+  const load = (art || (alone && alone.view)) && FILES[portraitFile(subject, art, alone)];
   if (!load) return null;
   if (!started.has(subject)) {
     started.add(subject);

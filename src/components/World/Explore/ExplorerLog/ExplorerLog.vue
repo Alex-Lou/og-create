@@ -6,6 +6,8 @@
       <button type="button" role="tab" :aria-selected="tab === 'places'" @click="tab = 'places'">Lieux</button>
       <button type="button" role="tab" :aria-selected="tab === 'chronicle'" @click="tab = 'chronicle'">Chronique</button>
       <button type="button" role="tab" :aria-selected="tab === 'journal'" @click="openJournal">{{ J.tab }}</button>
+      <!-- Le Bestiaire des animaux rencontrés : un livre à part, en plein écran -->
+      <button type="button" role="tab" aria-selected="false" @click="$emit('bestiary')">{{ BESTIARY.tab }}</button>
     </div>
     <!-- Le journal de l'île (world/journal.js) : ce que Brume a vu de la troupe, les sept derniers jours -->
     <div v-if="tab === 'journal'" class="log log--journal">
@@ -138,6 +140,7 @@ import { HELIANE } from '@/world/chest';
 import { TRACES, TRACE_COUNT, tracesOf } from '@/game/anya';
 import { EXPLORER_LOG as T } from '@/texts/world/screens/explore';
 import { JOURNAL as J } from '@/texts/world/journal';
+import { BESTIARY } from '@/texts/world/creatures';
 
 // Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
 const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
@@ -171,9 +174,9 @@ export default {
     // L'onglet ouvert d'emblée : les lieux, ou le journal tant qu'aucun lieu n'est connu
     start: { type: String, default: 'places' }
   },
-  emits: ['show', 'close', 'replay', 'replay-anya', 'journal-read'],
+  emits: ['show', 'close', 'replay', 'replay-anya', 'journal-read', 'bestiary'],
   data() {
-    return { T, J, tab: this.start, BEASTS, NAMES, TRACES, TRACE_COUNT };
+    return { T, J, BESTIARY, tab: this.start, BEASTS, NAMES, TRACES, TRACE_COUNT };
   },
   computed: {
     stage() {

@@ -36,23 +36,12 @@ export const HENS_FREED = 'Mes filles… Elles ont tenu bon.';
 export const ANYA_RESTED = 'Va. La terre se repose, elle aussi.';
 // Les cris des bêtes de la ferme, sur l'île : une didascalie sobre (choix de l'auteur, 15 oct. : décision 24)
 export const SOUNDS = { hen: '(Elle caquette.)', rooster: '(Il chante.)', chick: '(Il pépie.)', cow: '(Elle meugle.)', sheep: '(Il bêle.)', pig: '(Il grogne.)', goat: '(Elle bêle.)' };
+// Les bêtes de la ferme : leur nom et leur fiche (appui long) ; les créatures sauvages ont les leurs au Bestiaire
+// (texts/world/creatures.js)
 export const BEAST_NAMES = {
   hen: ['Poule', 'Elle picore au camp, près du feu.'], chick: ['Poussin', 'Il suit sa mère partout.'],
   cow: ['Vache', 'Elle broute près du Potager et dort couchée la nuit.'], sheep: ['Mouton', 'Il broute en troupeau près du Potager.'],
-  pig: ['Cochon', 'Il fouille la terre du bout du groin.'], goat: ['Chèvre', 'Elle grimpe partout où elle peut.'],
-  deer: ['Cerf', 'Il sort du bois à l’aube et au crépuscule.'], fox: ['Renard', 'Il rôde au crépuscule et la nuit.'],
-  rabbit: ['Lapin', 'Il gambade près du bois le jour.'], hedgehog: ['Hérisson', 'Il renifle les buissons la nuit.'],
-  squirrel: ['Écureuil', 'Il saute d’arbre en arbre.'], koi: ['Carpe koï', 'Elle nage dans l’eau douce.'], heron: ['Héron', 'Il pêche au bord de l’eau le matin.'],
-  snowFox: ['Renard des neiges', 'Il trotte sur la neige des Cimes.'], ibex: ['Bouquetin', 'Il broute entre les rochers des Cimes.'],
-  puffin: ['Macareux', 'Il bat des ailes au bord des Landes.'], pony: ['Poney', 'Il broute la bruyère des Landes.'],
-  frog: ['Grenouille', 'Elle saute dans le Marais, même sous la pluie.'], tortoise: ['Tortue', 'Elle avance tout doucement dans le Marais.'],
-  fennec: ['Fennec', 'Il dort le jour et trotte la nuit dans les Dunes.'], camel: ['Dromadaire', 'Il traverse les Dunes à pas lents.'],
-  chameleon: ['Caméléon', 'Il change de teinte sous les feuilles de la Jungle.'], toucan: ['Toucan', 'Il penche la tête sous les feuilles de la Jungle.'],
-  salamander: ['Salamandre', 'Elle sort la nuit et sous la pluie, sur les cendres du Volcan.'], crow: ['Corbeau des cendres', 'Il croasse sur les pentes du Volcan.'],
-  otter: ['Loutre', 'Une créature d’Anya : elle joue au bord de l’eau douce.'],
-  crab: ['Crabe', 'Il sort sur le sable la nuit, et marche de côté.'],
-  bird: ['Mésange', 'Elle sautille dans les arbres, le jour.'], butterfly: ['Papillon', 'Il volette au bord des bois, le jour.'],
-  firefly: ['Luciole', 'Elle s’allume la nuit, près de l’eau.'], bee: ['Abeille', 'Elle butine autour du Potager.'], owl: ['Hibou', 'Il veille la nuit, perché dans un arbre.']
+  pig: ['Cochon', 'Il fouille la terre du bout du groin.'], goat: ['Chèvre', 'Elle grimpe partout où elle peut.']
 };
 
 // À la Récolte, d'où vient le multiplicateur d'une ressource (HarvestGame.vue : harvest__boost ; serveur : le bâtiment

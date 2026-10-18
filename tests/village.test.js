@@ -3,6 +3,7 @@ import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
+import { CREATURE_TEXTS } from '@/texts/world/creatures';
 import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
@@ -381,7 +382,8 @@ describe('village : bêtes des climats', () => {
       expect(Math.abs(camel(time, scared).x - camel(time).x)).toBeLessThan(0.5);
       expect(Math.abs(camel(time, scared).y - camel(time).y)).toBeLessThan(0.5);
     }
-    expect(oasis.describe({ kind: 'beast', species: 'fennec' })).toEqual({ title: 'Fennec', text: 'Il dort le jour et trotte la nuit dans les Dunes.', hint: 'Toucher : il sursaute' });
+    // (sa fiche : celle du Bestiaire, texts/world/creatures.js)
+    expect(oasis.describe({ kind: 'beast', species: 'camel', id })).toEqual({ title: CREATURE_TEXTS.chameau[0], text: CREATURE_TEXTS.chameau[1], hint: 'Toucher : il sursaute' });
     expect(oasis.say({ kind: 'beast', species: 'camel' }, at(13))).toBeNull();
   });
   it('les douze dessins se font sans valeur manquante ni attribut en double, à chaque image', () => {
