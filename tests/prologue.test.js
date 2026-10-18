@@ -160,18 +160,19 @@ describe('le tutoriel', () => {
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
     // Le matin de Léo (choix de l'auteur, 14 oct.) : Lorena voit une planche sur la vague ; vue, on le réveille
     expect(island({ id: 'eveil-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' });
-    expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: [] });
+    expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: ['respire'] });
+    expect(LINES.respire).toMatchObject({ who: 'joueur' });
     expect(island({ id: 'eveil-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: [] });
     expect(LINES['planche-dort']).toMatchObject({ who: 'ponton', look: 'planche' });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
-    expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
+    expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban', 'grimoire-vole', 'pas-expres', 'expres-brume'] });
     // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette de Léo frémit)
     expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 2)).toEqual(['pluie-brume', 'pluie-ondin']);
     expect([LINES['pluie-brume'].demo, LINES['pluie-ondin'].demo]).toEqual(['averse', 'averse']);
     expect(LINES['planche-vue']).toBeTruthy();
-    expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit'] });
+    expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'relier', 'relier-abri', 'communaute', 'produit', 'merci-puits', 'trois-fois-rien'] });
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
-    expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });
+    expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pieds-agathe', 'pierres'] });
     expect(island({ id: 'chemin', done: true }, all)).toEqual({ phase: 'lines', lines: ['sentier'] });
     // Le premier chemin réclamé : Le Campement clôt l'ancien prologue global.
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });

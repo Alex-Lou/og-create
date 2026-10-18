@@ -188,17 +188,27 @@ export const SCENES = {
   ],
   // Léo réveillé à La Source, Agathe qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
   ondin: [
-    { scene: '11_ondin', who: 'Brume', text: 'Chut. Celui-là, la brume l’a gardé longtemps.' },
-    { scene: '11_reveil', who: 'Léo', text: 'J’ai dormi combien de temps ? L’eau a un goût de nuage.' },
-    { scene: '11_reveil', who: 'Agathe', mood: 'emu', text: 'Mon caneton.' },
-    { scene: '11_reveil', who: 'Léo', text: 'Tatie ? … Tu sens la soupe. Alors c’est vrai.' }
+    { scene: '11_ondin', who: 'Brume', text: 'Chut. Celui-là, ma brume l’a gardé longtemps. Mais attendez… Ne serait-ce pas… ?' },
+    { scene: '11_reveil', who: 'Léo', text: 'J’ai dormi combien de temps ? L’eau a un goût horrible, ici.' },
+    { scene: '11_reveil', who: 'Léo', mood: 'endormi', text: 'T’es une fée ? Moi, je suis Léo.' },
+    { scene: '11_reveil', who: 'Brume', text: '… Une fée. Oui. Ça, ça me plaît.' },
+    { scene: '11_reveil', who: 'Agathe', mood: 'emu', text: 'Mon caneton… Mon caneton !' },
+    { scene: '11_reveil', who: 'Léo', text: 'Tatie ? … Tu sens la soupe. Alors c’est vrai, je rêve plus… On est bien perdus sur une île, alors ?' },
+    { scene: '11_reveil', who: 'Agathe', mood: 'emu', text: 'Tu t’es réveillé… Tu t’es réveillé ! Je le savais, que tu savais nager.' },
+    { scene: '11_reveil', who: 'Léo', mood: 'surpris', text: 'Nager ? Je n’ai jamais su nager, Tatie… Je me suis réveillé sur une porte.' },
+    { scene: '11_reveil', who: 'Léo', text: 'Et ensuite, je me suis pris un coup sur la tête, et je me suis réveillé ici.' },
+    { scene: '11_reveil', who: 'joueur', text: 'Encore un qui a eu une chance inouïe…' },
+    { scene: '11_reveil', who: 'Nathan', mood: 'gene', text: '… Bon. Quelqu’un a un mouchoir ? C’est pour… Agathe.' }
   ],
   // Fin du tutoriel : l'étape « Le Campement » ; Agathe a recousu tes habits, Brume compte
   campement: [
     { scene: '12_habits', who: 'Agathe', text: 'Tiens. On ne reconstruit pas une île en guenilles.' },
-    { scene: '12_veillee', who: 'Brume', text: 'Un, deux, trois, quatre, cinq…' },
-    { scene: '12_veillee', who: 'Brume', text: 'Je n’avais jamais compté plus loin qu’un.' },
-    { scene: '12_veillee', who: 'Brume', text: 'Le feu, l’eau, des lumières… Il manque un toit. Et la mer ne rendra pas du bois éternellement.' }
+    { scene: '12_habits', who: 'joueur', text: 'Tu as recousu mes habits ? Quand ça ?' },
+    { scene: '12_habits', who: 'Agathe', mood: 'malicieux', text: 'Pendant que tu dormais. Moi, je ne dors pas beaucoup, ici. Personne, d’ailleurs. Pas avec ces… choses qui rôdent la nuit…' },
+    { scene: '12_veillee', who: 'Brume', text: 'Rassurez-vous : nous avons déjà de quoi nous défendre, même si vous ne le voyez pas encore.' },
+    { scene: '12_veillee', who: 'joueur', text: 'C’est vrai que les ressources sont partout. Encore faut-il savoir les utiliser à notre avantage.' },
+    { scene: '12_veillee', who: 'Lorena', text: 'Le feu, l’eau, des lumières… Il manque un toit digne de ce nom. Et la mer ne rendra pas du bois éternellement.' },
+    { scene: '12_veillee', who: 'Lorena', mood: 'determine', text: 'Il faudra vite trouver un autre moyen d’avoir du bois, et de s’en servir.' }
   ],
   // Le conseil de la première veillée (l'arc du Phare, choix de l'auteur, 15 oct. : ecriture/lots/08_charnieres.md § 1,
   // validé) : un geste, la bûche remise au feu ; partir, les survivants, la tour vue par Léo. Puis la caméra vole
@@ -212,13 +222,17 @@ export const SCENES = {
     { scene: 'conseil_veillee', meteo: { nuages: 0.1, pluie: 0 }, gesture: { label: 'Remettre une bûche dans le feu', x: 50, y: 64 } },
     // (sa réplique validée, en deux bulles : elle ne tient pas dans une seule)
     { scene: 'conseil_veillee', meteo: { nuages: 0.16, pluie: 0 }, who: 'Lorena', text: 'Bon. On mange, et on tâche de ne pas finir trempés : ces nuages-là arrivent droit sur nous.' },
-    { scene: 'conseil_veillee', meteo: { nuages: 0.2, pluie: 0 }, who: 'Lorena', text: 'Et après, on trouve un moyen de quitter cette île.' },
-    { scene: 'conseil_veillee', meteo: { nuages: 0.24, pluie: 0.3 }, who: 'Agathe', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde.' },
-    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Léo', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
+    { scene: 'conseil_veillee', meteo: { nuages: 0.2, pluie: 0 }, who: 'Lorena', text: 'Et après… on trouve un moyen de quitter cette île.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.22, pluie: 0 }, who: 'Nathan', mood: 'pensif', text: 'Quitter l’île… avec quoi ? Une porte de cabine et deux caisses ?' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.24, pluie: 0.3 }, who: 'Agathe', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde…' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.27, pluie: 0.6 }, who: 'joueur', text: 'Oui, il l’a dit… Juste avant qu’on soit tous engloutis par je ne sais quoi, d’ailleurs.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Léo', text: 'Là-bas, sur l’îlot. Une tour.' }
   ],
   'conseil-suite': [
     { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Lorena', text: 'Un phare. Éteint. S’il brillait, un navire nous verrait.' },
-    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Brume', text: 'Avant, il y avait des lumières partout. Je m’en souviens… un peu. Depuis, il n’y a plus que la brume.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Brume', text: 'Avant, il y avait des lumières partout. Je m’en souviens… un peu.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'joueur', text: 'Et depuis ?' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Brume', text: '… Il n’y a plus que la brume. Ma brume.' },
     { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, thought: true, text: 'Alors on y va. Un pas après l’autre.' }
   ],
   // La traversée manquée (acte IV, au Bateau écrit ; lot 08 § 3, validé) : Lorena prend la mer vers l'îlot, la brume
@@ -375,19 +389,29 @@ export const LINES = {
   'courants-suite': { who: 'ponton', mood: 'determine', text: 'S’il est comme toi, il a dû s’en sortir, pour sûr !' },
   // Le matin de Léo (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue de Lorena voit une planche sur la vague ;
   // touchée, elle s'échoue un peu plus loin que le Ponton (look : la caméra la suit, WorldView coach.js)
-  'planche-vue': { who: 'ponton', mood: 'surpris', text: 'Ohé ! Là, sur la vague… une planche. Et quelqu’un dessus.' },
-  'planche-dort': { who: 'ponton', mood: 'emu', text: 'Un enfant… Il dort. La vague l’a posé sur le sable, tout doucement.', look: 'planche' },
-  baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
-  ruban: 'La brume lui a pris son savoir. Le livre, lui, s’en souvient.',
-  chut: { who: 'puits', mood: 'emerveille', text: 'Chut… l’eau arrive.' },
-  produit: { who: 'foyer', mood: 'emu', text: 'Ça, mon caneton, c’est de l’eau.' },
-  glisse: { who: 'puits', mood: 'pensif', text: 'L’eau arrive jusqu’au feu à moitié. L’autre moitié reste dans l’herbe. Elle aime bien l’herbe.' },
-  pierres: 'Un chemin, du Puits jusqu’au feu. L’eau arrivera entière, et l’herbe s’en remettra.',
-  sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin. Mes seaux arrivent pleins, maintenant. L’herbe va s’ennuyer.' },
+  'planche-vue': { who: 'ponton', mood: 'surpris', text: 'Ohé ! Là, sur la vague… une planche. Et… quelqu’un dessus ?' },
+  'planche-dort': { who: 'ponton', mood: 'emu', text: 'Un enfant… Il dort. La vague l’a posé sur le sable, tout doucement. Décidément, on trouve de tout sur cette plage…', look: 'planche' },
+  respire: { who: 'joueur', text: 'Il respire ? … Il respire.' },
+  baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Ici, rien ne semble fonctionner normalement. Ni les baguettes, ni mes sens.' },
+  ruban: 'Si Léo savait beaucoup de choses, ma brume lui en a peut-être pris une partie. On devra les retrouver dans le Grimoire.',
+  'grimoire-vole': { who: 'ponton', mood: 'pensif', text: 'Cette histoire de Grimoire est des plus étranges. Il fabrique tout, mais vole des connaissances aux autres.' },
+  'pas-expres': { who: 'puits', mood: 'pensif', text: 'C’est pas grave. Tu l’as pas fait exprès… hein ?' },
+  'expres-brume': 'Non… Il n’y a plus rien que je fasse exprès, depuis que j’ai tout oublié.',
+  chut: { who: 'puits', mood: 'emerveille', text: 'Oui… Voilà ! Ça y est ! Je pense pouvoir sentir la source, et même peut-être l’atteindre avec… des outils…' },
+  relier: { who: 'atelier', mood: 'fier', text: 'Attends ! Avec quelques ressources et mes instruments, on va pouvoir relier cette source à notre hameau…' },
+  'relier-abri': { who: 'atelier', mood: 'fier', text: '… et même t’en faire un abri bien confortable !' },
+  communaute: { who: 'foyer', mood: 'emu', text: 'Nous ressemblons de plus en plus à une communauté de naufragés.' },
+  produit: { who: 'puits', mood: 'rire', text: 'Voilà ! L’eau arrive ! C’est génial. Même quand on dormira, elle viendra se stocker dans ce réservoir souterrain !' },
+  'merci-puits': 'Merci, Nathan ! Merci, Léo !',
+  'trois-fois-rien': { who: 'atelier', mood: 'gene', text: '… C’est trois fois rien !' },
+  glisse: { who: 'puits', mood: 'pensif', text: 'C’est très bien. Par contre, je suis pieds nus, et la terre n’est pas toujours très tendre. Il faudra des chemins entre nos abris.' },
+  'pieds-agathe': { who: 'foyer', mood: 'malicieux', text: 'Et mes pieds aussi apprécieront le confort d’un chemin !' },
+  pierres: 'Un chemin, un puits, de l’eau pour tous… Ça recommence. C’est comme avant.',
+  sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin. Mes seaux arrivent pleins, sans que j’aie à me ruiner les pieds !' },
   // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits ; 14 oct. : textes validés) : elle tombe sur l'île tant
   // que ces répliques se lisent (demo : WorldView, demos.js et sky.js), la baguette de Léo frémit
-  'pluie-brume': { text: 'Ta Pluie tombe sur l’île. Regarde Léo.', demo: 'averse', look: 'habitant:puits' },
-  'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.', demo: 'averse' },
+  'pluie-brume': { text: 'La Pluie tombe sur l’île. Regarde Léo.', demo: 'averse', look: 'habitant:puits' },
+  'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Je comprends mieux… Ce Grimoire a un vrai pouvoir. Mais ça ne me rend quand même pas mes sens de sourcier.', demo: 'averse' },
   // L'Athanor grandit (App : slotCount) : un emplacement de plus, puis quatre, juste avant la Vie
   'athanor-trois': 'L’Athanor s’élargit. Une place de plus. Ceux d’avant y mêlaient trois souffles, parfois… je l’avais oublié.',
   'athanor-quatre': 'Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu’un pour les tenir ensemble.',

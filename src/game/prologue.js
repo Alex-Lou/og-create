@@ -580,13 +580,15 @@ export function islandStep({ state, quest }) {
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
   // d'elle (vu : « planche ») ; la planche s'échoue, Léo endormi dessus : on le réveille
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
+  // (la planche échouée : le joueur s'approche ; on le réveille)
+  if (quest.id === 'eveil-ondin' && !quest.done) return { phase: 'lines', lines: ['respire'] };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
     // (la Pluie écrite : elle tombe sur l'île, la baguette frémit)
-    return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban'] };
+    return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban', 'grimoire-vole', 'pas-expres', 'expres-brume'] };
   }
-  if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
+  if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'relier', 'relier-abri', 'communaute', 'produit', 'merci-puits', 'trois-fois-rien', ...lines] : [] };
   // Léo glisse dans l'herbe mouillée avec ses seaux : le premier chemin
-  if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pierres'] };
+  if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pieds-agathe', 'pierres'] };
   return { phase: 'lines', lines };
 }

@@ -304,8 +304,8 @@ export default {
       if (this.islandScene) return;
       this.islandScene = scene;
       SCENES[scene].forEach((line, i) => {
-        // (Brume parle sans visage : c'est elle, la voix des bulles)
-        const face = lineFace(line, this.islandBuilt);
+        // (Brume parle sans visage : c'est elle, la voix des bulles ; le joueur, sous son nom, avec son avatar)
+        const face = line.who === 'joueur' ? this.lineSpeaker('joueur') : lineFace(line, this.islandBuilt);
         guide.say({ id: `scene-${scene}-${i}`, text: line.text, ...(face ? { who: line.who, ...face } : {}) });
       });
       if (!guide.state.queue.length) this.sceneSaid();

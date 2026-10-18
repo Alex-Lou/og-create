@@ -9,8 +9,11 @@ const island = (sites, met, { ready = () => true, deposits = 0, said = () => fal
 
 describe('les dialogues de première fois', () => {
   it('les bulles viennent du design, avant et après le geste', () => {
-    expect(momentLines('premier-chantier').map(l => l.id)).toEqual(['dlg-premier-chantier-1', 'dlg-premier-chantier-2']);
-    expect(momentLines('premier-chantier', true)).toMatchObject([{ id: 'dlg-premier-chantier-3', who: 'puits' }]);
+    expect(momentLines('premier-chantier').map(l => l.id)).toEqual(['dlg-premier-chantier-1', 'dlg-premier-chantier-1b', 'dlg-premier-chantier-1c', 'dlg-premier-chantier-2']);
+    // (Lorena et Agathe s'en mêlent, avec leur expression ; après le Puits, la quête parle : plus de bulle ici)
+    expect(momentLines('premier-chantier')[1]).toMatchObject({ who: 'ponton', mood: 'surpris' });
+    expect(momentLines('premier-chantier', true)).toEqual([]);
+    expect(momentLines('premiere-evolution', true)).toMatchObject([{ id: 'dlg-premiere-evolution-3', who: 'atelier' }]);
     expect(momentLines('inconnu')).toEqual([]);
   });
 

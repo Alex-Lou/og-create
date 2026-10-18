@@ -246,7 +246,7 @@ export default {
     sayMoment(id, after = false) {
       const built = builtOf(this.state && this.state.villagers);
       momentLines(id, after).forEach(line => guide.say({
-        id: line.id, text: line.text, ...(line.who === 'brume' ? {} : { who: NAMES[line.who], ...bubbleFace(line.who, { castaway: !built.includes(line.who) }) })
+        id: line.id, text: line.text, ...(line.who === 'brume' ? {} : { who: NAMES[line.who], ...bubbleFace(line.who, { castaway: !built.includes(line.who), mood: line.mood }) })
       }));
     },
     // Les Savoirs et le Bestiaire, dits une fois (bible, § 6.4 et § 6.5) : un maître à qui bavarder ; Bulle revenu dans
