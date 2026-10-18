@@ -1,10 +1,10 @@
 <template>
   <!-- Le mode debug (choix de l'auteur, 18 oct. : temporaire, pour son compte seul ; serveur : DEBUG_ACCOUNTS) : à tout
-       instant, en bas à droite au-dessus de l'onglet Sceau, « Recommencer l'île » d'un appui long (l'anneau se remplit en
+       instant, en bas à droite au-dessus de l'onglet Sceau (sur l'île, en bas à gauche), « Recommencer l'île » d'un appui long (l'anneau se remplit en
        HOLD_MS), sans menu ni mot à écrire ; le jeu reprend au naufrage (App : islandRestarted) -->
   <button
     type="button"
-    :class="['debug-reset', { 'is-holding': holding, 'is-busy': busy }]"
+    :class="['debug-reset', { 'is-left': left, 'is-holding': holding, 'is-busy': busy }]"
     :aria-label="ACCOUNT.restartLabel"
     :title="ACCOUNT.restartLabel"
     :disabled="busy"
@@ -36,6 +36,8 @@ const HOLD_MS = 1000;
 
 export default {
   name: 'DebugReset',
+  // left : sur l'île, en bas à gauche (à droite, le bouton Récolte le cachait)
+  props: { left: { type: Boolean, default: false } },
   emits: ['restarted', 'show-alert'],
   data() {
     return { ACCOUNT, HOLD_MS, holding: false, busy: false };

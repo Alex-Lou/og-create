@@ -136,7 +136,7 @@
     </div>
     <div v-if="modeVeil" class="oc-mode-veil" aria-hidden="true" @animationend="modeVeil = false"></div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" :locked="lockedTabs" @select="handleModeSelect" />
-    <DebugReset v-if="debugMode" @restarted="islandRestarted" @show-alert="showAlert" />
+    <DebugReset v-if="debugMode" :left="currentMode === 'world'" @restarted="islandRestarted" @show-alert="showAlert" />
     <!-- L'arrivée sur l'île : seulement si sa première vue n'est pas prête tout de suite -->
     <transition name="island-loader">
       <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />

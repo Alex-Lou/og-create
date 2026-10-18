@@ -1,4 +1,4 @@
-/* En bas à droite, à l'aplomb de l'onglet Sceau (le dernier des quatre), au-dessus du bouton Récolte de l'île ; sous Brume
+/* En bas à droite, à l'aplomb de l'onglet Sceau (le dernier des quatre) ; sur l'île, en bas à gauche ; sous Brume
    et sa bulle (elle passe devant le temps de parler), les scènes et les fenêtres ; sur PC (onglets à gauche), dans le coin */
 .debug-reset {
   --debug-ink: #fff4dc;
@@ -12,8 +12,11 @@
   display: grid; place-items: center; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none;
   -webkit-touch-callout: none; opacity: .8;
 }
+/* Sur l'île, en bas à gauche, juste au-dessus des onglets : à droite, le bouton Récolte le cachait */
+.debug-reset.is-left { right: auto; left: 12px; bottom: calc(var(--oc-tabbar-h) + 14px); }
 @media (min-width: 860px) {
   .debug-reset { right: 20px; bottom: 20px; }
+  .debug-reset.is-left { right: auto; left: calc(var(--oc-rail-w) + 20px); }
 }
 .debug-reset:focus-visible { outline: 3px solid var(--oc-gold); outline-offset: 2px; }
 .debug-reset.is-holding, .debug-reset.is-busy { opacity: 1; }
