@@ -6,6 +6,11 @@
     :aria-pressed="warping ? 'true' : 'false'"
     @click="$emit('warp')"
   >
+    <!-- Le jour vécu sur l'île, avant le cadran, séparé par un trait gravé dans le bois -->
+    <template v-if="day">
+      <span class="island-clock__day" aria-hidden="true">{{ dayText }}</span>
+      <span class="island-clock__rule" aria-hidden="true"></span>
+    </template>
     <!-- Cadran (dessin de la bibliothèque) : le ciel, la mer, l'arc du jour ; le soleil (ou la lune) à sa place -->
     <span :class="['island-clock__dial', { 'is-night': night }]" aria-hidden="true">
       <span :class="['island-clock__body', night ? 'is-moon' : 'is-sun']" :style="{ left: `${body.x - 6}px`, top: `${body.y - 6}px` }"></span>
@@ -37,7 +42,7 @@
 <script>
 import { CLOCK } from '@/texts/world/screens/hud';
 
-// Horloge de l'île : heure, soleil ou lune sur l'arc du jour, temps qu'il fait, moment de la journée. Son cadre de bois,
+// Horloge de l'île : le jour vécu sur l'île, heure, soleil ou lune sur l'arc du jour, temps qu'il fait, moment de la journée. Son cadre de bois,
 // son cadran, le soleil et la lune : la bibliothèque (design/bibliotheque/svg/hud).
 // Un toucher fait défiler toute la journée en accéléré (l'île la joue), un autre la rend à l'heure.
 export default {
@@ -51,7 +56,9 @@ export default {
     // Avancée du soleil (0 : lever, 1 : coucher) ou de la lune la nuit
     progress: { type: Number, default: 0.5 },
     night: { type: Boolean, default: false },
-    warping: { type: Boolean, default: false }
+    warping: { type: Boolean, default: false },
+    // Le jour vécu sur l'île (1, 2…), ou null (pas encore connu)
+    day: { type: Number, default: null }
   },
   emits: ['warp'],
   computed: {
@@ -60,8 +67,11 @@ export default {
       const a = Math.PI * Math.max(0, Math.min(1, this.progress));
       return { x: 20 - 14.4 * Math.cos(a), y: 19.6 - 14.4 * Math.sin(a) };
     },
+    dayText() {
+      return CLOCK.day(this.day);
+    },
     ariaLabel() {
-      const now = CLOCK.now(this.time, this.label.toLowerCase(), this.weatherLabel ? this.weatherLabel.toLowerCase() : '');
+      const now = CLOCK.now(this.time, this.label.toLowerCase(), this.weatherLabel ? this.weatherLabel.toLowerCase() : '', this.day);
       return this.warping ? CLOCK.warping(now) : CLOCK.still(now);
     }
   }

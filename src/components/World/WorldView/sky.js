@@ -4,8 +4,8 @@
 import { opusOf } from '@/game/opus';
 import { phaseAt } from '@/world/scene';
 import { clockText, fixSun, showerAt } from '@/world/sky';
-import { tutorialDate, TUTO_SUN } from '@/world/tutoClock';
-import { CYCLE_MS, gameDate, GAME_SUN } from '@/world/gameClock';
+import { tutorialDate, tutorialDay, TUTO_SUN } from '@/world/tutoClock';
+import { CYCLE_MS, dayHourOf, gameDate, GAME_SUN } from '@/world/gameClock';
 
 // Journée en accéléré (toucher sur l'horloge) : un cycle de l'horloge du jeu (24 h de l'île) en 30 s
 const WARP_MS = 30000;
@@ -89,13 +89,25 @@ export default {
     // pendant l'accéléré)
     syncClock(phase, date, now) {
       const time = clockText(date);
+      const day = this.lifeDay();
       const clock = this.skyClock;
-      if (clock && clock.time === time && clock.label === phase.label && clock.weather === phase.weather.kind) return;
+      if (clock && clock.time === time && clock.label === phase.label && clock.weather === phase.weather.kind && clock.day === day) return;
       if (this.warp && now - this.clockAt < 100) return;
       this.clockAt = now;
       const night = phase.sun.up <= 0;
       const progress = night ? ((phase.hour - phase.set + 24) % 24) / (24 - (phase.set - phase.rise)) : phase.sun.progress;
-      this.skyClock = { time, label: phase.label, weather: phase.weather.kind, weatherLabel: phase.weather.label, progress, night };
+      this.skyClock = { time, label: phase.label, weather: phase.weather.kind, weatherLabel: phase.weather.label, progress, night, day };
+    },
+    // Le jour vécu sur l'île (choix de l'auteur, 18 oct.) : pendant le tutoriel, celui de son étape ; ensuite, un de plus
+    // à chaque minuit de l'horloge du jeu depuis qu'il a été quitté (serveur : brume.days ; à l'heure, même pendant la
+    // journée en accéléré) ; null tant que le serveur ne le dit pas
+    lifeDay() {
+      const brume = this.state && this.state.brume;
+      if (!brume) return null;
+      if (this.thickMist()) return tutorialDay(brume.quest.id);
+      const from = brume.days;
+      if (!from) return null;
+      return (tutorialDay(from.quest) || 1) + dayHourOf(Date.now()).day - dayHourOf(from.at).day;
     },
     syncPhase() {
       const now = performance.now();

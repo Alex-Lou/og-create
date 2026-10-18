@@ -1,11 +1,10 @@
 // Anya, derrière l'île, pour l'écran de démarrage (splash.js) : l'initiale, la chevelure argentée (anya.js, son éveil, les
-// bras ouverts ; choix de l'auteur, 16 oct.), et son cerf de lune à côté d'elle (refonte/cerf_lune.js), sans rien changer à
-// leur forme, avec un rendu d'illustration posé dessus : la lune se lève juste derrière eux (contre-jour : le liseré de
-// lune sur leurs bords, une ombre fraîche qui gagne le bas), la lumière chaude de ses mains ouvertes, des étincelles.
-// Le bas de leur corps s'efface dans la brume (derrière l'île). Le fond est publié immobile (preview_splash.js).
-// Repère : celui de son dessin (80 × 128, ses pieds en (40, 125)) ; le cerf : 120 × 144, le sabot en (60, 141).
+// bras ouverts ; choix de l'auteur, 16 oct.), seule (sans son cerf : 17 oct.), sans rien changer à sa forme, avec un
+// rendu d'illustration posé dessus : la lune se lève juste derrière elle (contre-jour : le liseré de lune sur ses bords,
+// une ombre fraîche qui gagne le bas), la lumière chaude de ses mains ouvertes, des étincelles. Le bas de sa robe
+// s'efface dans la brume (derrière l'île). Le fond est publié immobile (preview_splash.js).
+// Repère : celui de son dessin (80 × 128, ses pieds en (40, 125)).
 const A = require('./anya');
-const CL = require('../personnages/refonte/cerf_lune');
 const { f, rnd } = require('./scenes7').outils;
 
 const SPLINE = '0.45 0 0.55 1'; // l'adoucissement de chaque étape
@@ -39,7 +38,7 @@ function eclairer(corps, id, [x, y, w, h], cote = 1, force = 1, contreJour = '#F
     + corps + aplat(`url(#${id}V)`) + aplat(`url(#${id}L)`);
 }
 
-// ═══ Anya et son cerf, devant la lune ═══
+// ═══ Anya, devant la lune ═══
 // Leur silhouette (pour les masques des lumières) : le dessin sans ses lueurs ni ses lucioles (les formes transparentes
 // ou en dégradé rayonnant), chaque forme pleine de la couleur courante (currentColor) : posée en blanc, elle ajoute à un
 // masque ; en noir, elle en retire. Les formes peintes d'un dégradé linéaire (la lumière de la troupe, troupe.js :
@@ -52,7 +51,7 @@ function silhouette(svg) {
     .replace(/fill="(?!none)[^"]*"/g, 'fill="currentColor"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="currentColor"');
 }
 
-// Le contre-jour de lune : la lune se lève juste derrière eux. Le dessin reste tel quel ; derrière lui, sa silhouette
+// Le contre-jour de lune : la lune se lève juste derrière elle. Le dessin reste tel quel ; derrière lui, sa silhouette
 // claire, un peu plus grande (le bord qui rayonne sur la nuit) ; par-dessus, découpés à sa silhouette : un voile de
 // lumière en haut, une ombre fraîche qui gagne le bas (le bas du corps rejoint la nuit et la brume), puis le liseré de lune, la lumière
 // qui déborde des bords tournés vers elle (la silhouette, moins elle-même décalée à l'opposé : une ligne fine le long du
@@ -110,18 +109,4 @@ function anyaVeille() {
   return defs + `<g mask="url(#saFondu)">${s}</g>`;
 }
 
-// Le cerf de lune, debout, de trois quarts avant, retourné (sa tête vers la gauche : vers elle, quand il est à sa
-// droite), à contre-jour comme elle ; sa lueur, derrière lui, reste hors de la lumière ; le bas de ses pattes s'efface
-// dans la brume, comme la robe d'Anya.
-function cerfVeille() {
-  const dessin = id => {
-    const corps = CL.cerfLune('se', 'debout', 0, { id });
-    const lueur = (corps.match(/<ellipse cx="60" cy="72"[^>]*>[\s\S]*?<\/ellipse>/) || [''])[0];
-    return `<g transform="translate(120 0) scale(-1 1)">${corps.replace(lueur, '')}</g>`;
-  };
-  const lueur = (CL.cerfLune('se', 'debout', 0, { id: 'scl' }).match(/<ellipse cx="60" cy="72"[^>]*>[\s\S]*?<\/ellipse>/) || [''])[0];
-  const fondu = `<defs>${degrade('sclFG', 0, 84, 0, 124, [[0, '#FFFFFF'], [0.5, '#FFFFFF', 0.55], [1, '#FFFFFF', 0]])}</defs><mask id="sclF"><rect x="-20" y="-20" width="160" height="190" fill="url(#sclFG)"/></mask>`;
-  return fondu + `<g mask="url(#sclF)">${lueur}${contreJour(dessin, 'sc', [0, 0, 120, 144], 84, 1, -1)}</g>`;
-}
-
-module.exports = { anyaVeille, cerfVeille, etincelle, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };
+module.exports = { anyaVeille, etincelle, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };

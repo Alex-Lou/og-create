@@ -15,10 +15,11 @@ export const ISLAND_BUTTONS = {
   road: 'Tracer un chemin'
 };
 
-// L'horloge (IslandClock) : l'heure, le moment et le temps qu'il fait ; puis ce que fait un toucher (la journée défile,
-// ou elle est rendue à l'heure)
+// L'horloge (IslandClock) : le jour (le compteur des jours vécus sur l'île), l'heure, le moment et le temps qu'il fait ;
+// puis ce que fait un toucher (la journée défile, ou elle est rendue à l'heure)
 export const CLOCK = {
-  now: (time, moment, weather) => `Sur ton île : ${time}, ${moment}${weather ? `, ${weather}` : ''}.`,
+  day: n => `Jour ${n}`,
+  now: (time, moment, weather, day) => `Sur ton île${day ? `, jour ${day}` : ''} : ${time}, ${moment}${weather ? `, ${weather}` : ''}.`,
   warping: now => `${now} La journée défile ; toucher pour revenir à l’heure.`,
   still: now => `${now} Toucher pour voir la journée défiler.`
 };
