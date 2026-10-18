@@ -12,24 +12,27 @@
 /* ═══ 1. Les jetons ═══ */
 .splash, #splash-curtain {
   /* couleurs */
-  --sp-nuit: #071430;
-  --sp-noir: #04060d;
-  --sp-encre: #4a2e0c;
-  --sp-texte: #fff7dc;
-  --sp-texte-doux: rgba(255, 247, 220, .86);
-  --sp-gris-bleu: rgba(225, 239, 242, .72);
-  --sp-or-clair: #fffbe7;
-  --sp-or: #f5dc98;
-  --sp-or-fonce: #d8a34f;
-  --sp-or-trait: #f4d88d;
-  --sp-or-contour: #5b3d23;
-  --sp-ciel: #c7edf2;
-  --sp-lueur: #bff5ff;
-  --sp-bleu: #50bde8;
-  --sp-focus: #5cc8f0;
-  --sp-vert: #8be4bd;
-  --sp-ombre: rgba(0, 8, 26, .8);
-  --sp-contour: #3c2819;
+  /* (en papier néon, choix de l'auteur, 18 oct. : la palette des cinématiques ; les « or » du titre et d'« Entrée »
+     deviennent un rose néon, le trait passe à l'indigo) */
+  --sp-nuit: #03020a;
+  --sp-noir: #020008;
+  --sp-encre: #0a0418;
+  --sp-texte: #f4ecff;
+  --sp-texte-doux: rgba(244, 236, 255, .86);
+  --sp-gris-bleu: rgba(200, 190, 240, .72);
+  --sp-or-clair: #ffffff;
+  --sp-or: #ffb8e8;
+  --sp-or-fonce: #ff3fa8;
+  --sp-or-trait: #ff8ad0;
+  --sp-or-contour: #2a0a50;
+  --sp-ciel: #9afff0;
+  --sp-lueur: #5cf2e6;
+  --sp-bleu: #9a5af0;
+  --sp-focus: #5cf2e6;
+  --sp-vert: #d4ff7a;
+  --sp-ombre: rgba(3, 2, 10, .8);
+  --sp-contour: #0a0418;
+  --sp-neon: rgba(255, 63, 168, .6);
   /* polices */
   --sp-police: 'Nunito', ui-rounded, system-ui, sans-serif;
   --sp-titre: 'Fraunces', 'Iowan Old Style', Georgia, serif;
@@ -94,7 +97,7 @@
 .splash__top { gap: 0; animation: splash-top-in 1.1s var(--sp-entree) both; }
 
 /* le titre */
-.splash__brand { position: relative; width: min(92vw, 620px, calc(var(--sp-titre-h) * 4.086)); aspect-ratio: 760 / 186; pointer-events: none; filter: drop-shadow(0 6px 10px var(--sp-ombre)); }
+.splash__brand { position: relative; width: min(92vw, 620px, calc(var(--sp-titre-h) * 4.086)); aspect-ratio: 760 / 186; pointer-events: none; filter: drop-shadow(0 6px 10px var(--sp-ombre)) drop-shadow(0 0 14px var(--sp-neon)); }
 .splash__logo { display: block; width: 100%; height: 100%; overflow: visible; }
 .splash__logo-title { fill: url(#splash-logo-gold); stroke: var(--sp-or-contour); stroke-width: 2.4px; paint-order: stroke fill; font: 800 72px var(--sp-titre); letter-spacing: .035em; }
 .splash__logo-kicker { fill: var(--sp-ciel); font: 900 11px var(--sp-police); letter-spacing: .34em; }
@@ -104,7 +107,7 @@
 /* le chargement : la barre, et les étapes cochées une à une */
 .splash__progress { width: min(520px, 92vw); display: grid; gap: 8px; }
 .splash__bar { height: 10px; padding: 2px; border: 1px solid rgba(201, 241, 255, .22); border-radius: 999px; background: rgba(4, 16, 40, .52); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .32), 0 0 20px rgba(92, 200, 240, .12); overflow: hidden; }
-.splash__bar span { position: relative; display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sp-bleu), var(--sp-lueur) 55%, #fbe39c); box-shadow: 0 0 14px rgba(126, 225, 255, .7); transition: width .35s ease-out; overflow: hidden; }
+.splash__bar span { position: relative; display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sp-bleu), var(--sp-lueur) 55%, var(--sp-vert)); box-shadow: 0 0 14px rgba(126, 225, 255, .7); transition: width .35s ease-out; overflow: hidden; }
 .splash__bar span::after { content: ''; position: absolute; inset: 0; width: 42%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .75), transparent); animation: splash-shine 1.8s linear infinite; }
 .splash__steps { margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; width: 100%; }
 .splash__steps li[hidden] { display: none; }
@@ -120,19 +123,19 @@
 /* « Entrée » : cachée pendant le chargement, elle paraît quand tout est prêt, et c'est elle qui ouvre le jeu */
 .splash__enter { display: none; position: relative; z-index: 4; min-width: min(280px, 74vw); padding: 15px 44px 16px; border: 0; border-radius: 999px;
   background: linear-gradient(180deg, var(--sp-or-clair), var(--sp-or) 48%, var(--sp-or-fonce)); color: var(--sp-encre);
-  box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 246, 200, .4);
+  box-shadow: 0 6px 0 rgba(60, 10, 80, .6), 0 14px 30px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 220, 245, .45);
   font: 900 19px var(--sp-police); letter-spacing: .18em; cursor: pointer; touch-action: manipulation; }
 .splash__enter::after { content: '→'; display: inline-block; margin-left: 12px; font-weight: 900; animation: splash-enter-arrow 1.6s ease-in-out infinite; }
 .splash__enter:hover, .splash__enter:focus-visible { filter: brightness(1.05); }
 .splash__enter:focus-visible { outline: 3px solid var(--sp-focus); outline-offset: 4px; }
-.splash__enter:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(90, 58, 18, .55), 0 10px 22px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 246, 200, .4); }
+.splash__enter:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(60, 10, 80, .6), 0 10px 22px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 220, 245, .45); }
 .splash.is-ready .splash__enter { display: inline-block; animation: splash-enter-in .55s cubic-bezier(.2, .9, .3, 1.2) both, splash-enter-glow 2.6s ease-in-out .7s infinite; }
 
 /* le serveur tarde (is-slow), ou le jeu n'a pas pu démarrer (is-failed) : une ligne, et de quoi réessayer */
 .splash__note, .splash__retry { display: none; }
 .splash__note { margin: 0; max-width: 420px; color: var(--sp-gris-bleu); font-size: 13px; font-weight: 800; }
 .splash.is-slow:not(.is-failed) .splash__note--slow, .splash.is-failed .splash__note--failed { display: block; }
-.splash.is-failed .splash__retry { display: inline-block; margin-top: 2px; padding: 11px 24px; border: 1px solid rgba(255, 255, 255, .36); border-radius: 999px; background: #fff0c4; color: #13233f;
+.splash.is-failed .splash__retry { display: inline-block; margin-top: 2px; padding: 11px 24px; border: 1px solid rgba(255, 255, 255, .36); border-radius: 999px; background: #ffd0ec; color: var(--sp-encre);
   box-shadow: 0 8px 22px rgba(0, 0, 0, .24); font: 900 14px var(--sp-police); cursor: pointer; }
 .splash__retry:focus-visible { outline: 3px solid var(--sp-focus); outline-offset: 2px; }
 
@@ -156,8 +159,8 @@
 @keyframes splash-enter-in { from { opacity: 0; transform: translateY(16px) scale(.86); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes splash-enter-arrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
 @keyframes splash-enter-glow {
-  0%, 100% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 0 rgba(255, 214, 120, .6); }
-  50% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(255, 214, 120, 0); }
+  0%, 100% { box-shadow: 0 6px 0 rgba(60, 10, 80, .6), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 0 var(--sp-neon); }
+  50% { box-shadow: 0 6px 0 rgba(60, 10, 80, .6), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(255, 63, 168, 0); }
 }
 
 /* ═══ 5. L'orage ═══
@@ -189,7 +192,7 @@
 .splash__nuage { position: absolute; top: -18%; left: -8%; width: 62%; height: 100%; will-change: transform; transform: translateX(-80%); }
 .splash__nuage--droite { left: auto; right: -8%; transform: scaleX(-1) translateX(-80%); }
 /* les lueurs au loin, sur l'horizon, avant l'orage */
-.splash__lueur { background: radial-gradient(ellipse 26% 12% at 18% 46%, rgba(190, 215, 255, .55), transparent 70%), radial-gradient(ellipse 22% 10% at 84% 44%, rgba(190, 215, 255, .45), transparent 70%); }
+.splash__lueur { background: radial-gradient(ellipse 26% 12% at 18% 46%, rgba(200, 120, 255, .5), transparent 70%), radial-gradient(ellipse 22% 10% at 84% 44%, rgba(255, 90, 190, .42), transparent 70%); }
 /* les éclairs : à gauche, à droite, et le grand, au centre, qui tombe sur l'île */
 .splash__eclairs svg { position: absolute; top: 0; height: 58%; width: min(24vw, 190px); }
 .splash__eclair--a { left: 9%; }
@@ -198,12 +201,12 @@
 /* la pluie : des traits fins, en deux couches qui tombent à deux vitesses, devant tout (sauf l'interface) */
 .splash__pluie { z-index: 2; overflow: hidden; }
 .splash__pluie::before, .splash__pluie::after { content: ''; position: absolute; left: 0; right: 0; top: -160px; bottom: 0; will-change: transform;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='160'%3E%3Cg stroke='%23d6e6ff' stroke-width='1.3' stroke-linecap='round' opacity='.55'%3E%3Cpath d='M12 4 l-4 22'/%3E%3Cpath d='M46 40 l-4 22'/%3E%3Cpath d='M78 14 l-4 22'/%3E%3Cpath d='M28 84 l-4 22'/%3E%3Cpath d='M64 110 l-4 22'/%3E%3Cpath d='M86 70 l-4 22'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 90px 160px; }
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='160'%3E%3Cg stroke='%23c8b8ff' stroke-width='1.3' stroke-linecap='round' opacity='.55'%3E%3Cpath d='M12 4 l-4 22'/%3E%3Cpath d='M46 40 l-4 22'/%3E%3Cpath d='M78 14 l-4 22'/%3E%3Cpath d='M28 84 l-4 22'/%3E%3Cpath d='M64 110 l-4 22'/%3E%3Cpath d='M86 70 l-4 22'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 90px 160px; }
 .splash__pluie::after { background-size: 140px 250px; opacity: .55; }
 /* le voile d'orage : la nuit s'épaissit, sauf autour de Brume, qui garde sa lumière */
-.splash__voile { z-index: 2; background: radial-gradient(ellipse 30% 20% at 50% 72%, rgba(4, 8, 22, 0), rgba(4, 8, 22, .5) 70%), linear-gradient(rgba(3, 6, 18, .62), rgba(3, 6, 18, .28) 60%, rgba(3, 6, 18, .4)); }
+.splash__voile { z-index: 2; background: radial-gradient(ellipse 30% 20% at 50% 72%, rgba(8, 2, 22, 0), rgba(8, 2, 22, .5) 70%), linear-gradient(rgba(6, 2, 18, .62), rgba(6, 2, 18, .28) 60%, rgba(6, 2, 18, .4)); }
 /* le flash : une lumière froide qui tombe du ciel */
-.splash__flash { z-index: 2; background: radial-gradient(ellipse 90% 70% at 50% 12%, rgba(236, 244, 255, .95), rgba(170, 200, 255, .5) 45%, rgba(120, 160, 255, 0) 85%); }
+.splash__flash { z-index: 2; background: radial-gradient(ellipse 90% 70% at 50% 12%, rgba(244, 255, 230, .95), rgba(212, 255, 122, .45) 45%, rgba(154, 255, 58, 0) 85%); }
 
 .splash.is-orage .splash__voile { animation: splash-orage-voile var(--sp-orage) linear infinite; }
 .splash.is-orage .splash__nuage { animation: splash-orage-nuage var(--sp-orage) ease-in-out infinite; }
