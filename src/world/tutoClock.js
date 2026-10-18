@@ -58,3 +58,17 @@ export function tutorialDate(quest, elapsed, today = new Date()) {
   date.setHours(0, 0, 0, 0);
   return new Date(date.getTime() + hours * HOUR_MS);
 }
+
+// Le jour du tutoriel d'une étape (le compteur de jours, à côté de l'heure) : 1, Brume seule ; un de plus à chaque étape
+// qui recommence au matin ; null hors du tutoriel
+export function tutorialDay(quest) {
+  if (!MOMENTS[quest]) return null;
+  let day = 1;
+  let last = -1;
+  for (const [id, [from]] of Object.entries(MOMENTS)) {
+    if (from < last) day++;
+    last = from;
+    if (id === quest) return day;
+  }
+  return null;
+}

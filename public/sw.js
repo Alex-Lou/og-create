@@ -10,17 +10,23 @@ const STATIC_PREFIXES = ['/js/', '/css/', '/img/', '/fonts/', '/icons/'];
 
 self.addEventListener('install', () => self.skipWaiting());
 
-// Les fichiers du build changent de nom à chaque version (« /js/index.CF9HPkaY.js ») : sans ménage, le cache
-// gardait toutes les versions. Retire ceux qu'une nouvelle page remplace (même nom, autre empreinte) ; un fichier
-// qu'elle ne cite pas (chargé à la demande) reste
-const nameOf = path => path.replace(/\.[^./]+\.(js|css)$/, '');
-function prune(cache, html) {
-  const current = new Set(html.match(/\/(?:js|css)\/[^"'\s>]+/g) || []);
-  const replaced = new Set([...current].map(nameOf));
-  return cache.keys().then(requests => Promise.all(requests.map(request => {
-    const { pathname } = new URL(request.url);
-    return !current.has(pathname) && replaced.has(nameOf(pathname)) ? cache.delete(request) : null;
-  })));
+// Les fichiers du build changent de nom à chaque version (« /js/index.CF9HPkaY.js ») : sans ménage, le cache gardait
+// toutes les versions. Le build liste les siens (fichiers.json, vite.config.mjs) ; ceux d'une autre version partent,
+// dessins et fichiers lus à la demande compris. La liste se relit à chaque ouverture en ligne (le serveur répond « pas
+// changé » tant qu'elle ne l'est pas) ; illisible (hors ligne, ou la page du jeu à sa place), rien ne part
+const PRUNED = ['/js/', '/css/', '/img/', '/fonts/'];
+function prune(cache) {
+  return fetch('/fichiers.json', { cache: 'no-cache' })
+    .then(response => (response.ok ? response.json() : null))
+    .then(files => {
+      if (!Array.isArray(files) || !files.length) return null;
+      const current = new Set(files);
+      return cache.keys().then(requests => Promise.all(requests.map(request => {
+        const { pathname } = new URL(request.url);
+        return PRUNED.some(prefix => pathname.startsWith(prefix)) && !current.has(pathname) ? cache.delete(request) : null;
+      })));
+    })
+    .catch(() => null);
 }
 
 self.addEventListener('activate', event => {
@@ -43,11 +49,7 @@ self.addEventListener('fetch', event => {
           // Une page d'erreur ne remplace pas la copie hors ligne
           if (response.ok) {
             const copy = response.clone();
-            const page = response.clone();
-            event.waitUntil(caches.open(CACHE).then(cache => Promise.all([
-              cache.put('/', copy),
-              page.text().then(html => prune(cache, html))
-            ])));
+            event.waitUntil(caches.open(CACHE).then(cache => Promise.all([cache.put('/', copy), prune(cache)])));
           }
           return response;
         })

@@ -4,7 +4,7 @@
 // intérieure qui respire, des reflets de verre, des particules qui montent dedans ; elle cligne doucement des yeux.
 // Repère : celui de son dessin (40 × 48 ; la flamme va de y = 13,5, la pointe, à y = 41, la base).
 const { degrade, rayonne } = require('./splash_anya').outils;
-const { f, palpite } = require('./scenes7').outils;
+const { f, rnd, palpite } = require('./scenes7').outils;
 
 const SPL = '0.45 0 0.55 1';
 // La flamme du jeu, et deux variantes où sa pointe penche (même suite de commandes : elles se fondent l'une dans l'autre)
@@ -50,4 +50,72 @@ function brumeHeroine() {
   return s;
 }
 
-module.exports = { brumeHeroine };
+// Son autre visage, pour l'orage (choix de l'auteur, 17 oct. : un démon de feu, qu'on ne voit qu'un instant, à travers
+// un éclair ; une goutte de flamme et deux yeux, rien de plus ; un aspect sérieux, pas une caricature). Ni trait noir ni
+// forme dessinée : tout se lit à la lumière. La goutte est une matière calcinée, sombre, veinée de braise, éclairée sur
+// ses bords par le feu qui la dévore ; au-dessus d'elle, de vraies flammes, fines, ondulantes, qui s'effilent en
+// transparence (rouge sombre derrière, puis orangé, or, et un cœur presque blanc) ; deux fentes de lumière pour les
+// yeux. Immobile (comme tout l'écran : preview_splash.js). Même repère que Brume ; les flammes débordent son cadre de
+// 40 × 48 (l'image de Brume a de la place autour : x de -8 à 48, y de -8 à 57). Pas de filtre : tout aux dégradés.
+// Une langue de feu : sa base en (x, y), sa demi-largeur w, sa hauteur h ; sa pointe penche de p, sa taille ondule de o
+function langue(x, y, w, h, p, o) {
+  return `M${f(x - w)},${f(y)} C${f(x - w * 1.1)},${f(y - h * 0.3)} ${f(x + p * 0.4 - w * 0.45 + o)},${f(y - h * 0.62)} ${f(x + p)},${f(y - h)}`
+    + ` C${f(x + p * 0.35 + w * 0.15 + o)},${f(y - h * 0.58)} ${f(x + w * 1.05)},${f(y - h * 0.3)} ${f(x + w)},${f(y)} Q${f(x)},${f(y + w)} ${f(x - w)},${f(y)} Z`;
+}
+// Une couche de flammes, tirées au hasard au-dessus de la goutte (n, leur hauteur, leur largeur), dans un dégradé qui
+// s'efface vers la pointe
+function flammes(g, n, hMin, hMax, wMin, wMax, fill) {
+  let d = '';
+  for (let i = 0; i < n; i++) {
+    const t = (i + 0.5) / n, x = 11 + t * 18 + (g() - 0.5) * 1.6, centre = 1 - Math.abs(t - 0.5) * 2;
+    const y = 33 - centre * 12 + g() * 2.4, h = Math.min(y + 6.5, (hMin + g() * (hMax - hMin)) * (0.55 + centre * 0.6));
+    d += `<path d="${langue(x, y, wMin + g() * (wMax - wMin), h, (t - 0.5) * 7 + (g() - 0.5) * 4, (g() - 0.5) * 3.2)}"/>`;
+  }
+  return `<g fill="${fill}">${d}</g>`;
+}
+// Une veine de braise : une fêlure brisée, sa lueur large et pâle, son cœur vif
+const veine = (pts, w) => {
+  const d = `M${pts.map(([x, y]) => `${f(x)},${f(y)}`).join(' L')}`;
+  return `<path d="${d}" fill="none" stroke="#FF6A1E" stroke-width="${f(w * 3.4)}" stroke-linecap="round" stroke-linejoin="round" opacity=".22"/>`
+    + `<path d="${d}" fill="none" stroke="#FFB43C" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>`;
+};
+function brumeDemon() {
+  const g = rnd(29);
+  const monte = (id, stops) => `<linearGradient id="${id}" x1="0" y1="1" x2="0" y2="0">${stops.map(([o, c, a]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join('')}</linearGradient>`;
+  const defs = '<defs>'
+    + rayonne('bdHalo', 20, 24, 27, [[0, '#E2501E', 0.55], [0.45, '#9E1C12', 0.25], [1, '#6A0E0C', 0]])
+    + monte('bdRouge', [[0, '#8E1A10', 0.95], [0.55, '#B82A16', 0.6], [1, '#C8381A', 0]])
+    + monte('bdOrange', [[0, '#F2701E', 0.95], [0.6, '#E2501E', 0.55], [1, '#E2501E', 0]])
+    + monte('bdOr', [[0, '#FFD06A', 0.95], [0.5, '#FFA83A', 0.55], [1, '#FF8A2A', 0]])
+    + monte('bdBlanc', [[0, '#FFF8E0', 0.95], [0.6, '#FFE6A0', 0.5], [1, '#FFD06A', 0]])
+    + rayonne('bdCorps', 20, 29, 15, [[0, '#2A0A06'], [0.55, '#1C0604'], [0.85, '#3A0C08'], [1, '#6A1A0C']])
+    + rayonne('bdFoyer', 20, 42, 12, [[0, '#FFE6A0', 0.95], [0.3, '#FF9A2E', 0.7], [0.7, '#E2401E', 0.25], [1, '#E2401E', 0]])
+    + rayonne('bdLueur', 0.5, 0.5, 0.5, [[0, '#FFE08A', 0.75], [0.4, '#FF9A2E', 0.35], [1, '#E2401E', 0]]).replace('gradientUnits="userSpaceOnUse" ', '')
+    + rayonne('bdOeil', 0.5, 0.5, 0.5, [[0, '#FFFFFF'], [0.4, '#FFF2C0'], [0.8, '#FFB43C'], [1, '#FF7A1E', 0.6]]).replace('gradientUnits="userSpaceOnUse" ', '')
+    + `<clipPath id="bdDedans"><path d="${flamme(0)}"/></clipPath>`
+    + '</defs>';
+  let s = defs + '<ellipse cx="20" cy="24" rx="27" ry="31" fill="url(#bdHalo)"/>';
+  // les flammes, du fond vers l'avant
+  s += flammes(g, 15, 22, 36, 2.2, 3.6, 'url(#bdRouge)');
+  s += flammes(g, 12, 16, 28, 1.6, 2.8, 'url(#bdOrange)');
+  s += flammes(g, 9, 11, 20, 1.1, 2, 'url(#bdOr)');
+  s += flammes(g, 5, 7, 12, 0.7, 1.3, 'url(#bdBlanc)');
+  // la goutte : la matière calcinée ; ses bords éclairés par le feu ; le foyer en bas ; ses veines de braise
+  s += `<path d="${flamme(0)}" fill="url(#bdCorps)"/><g clip-path="url(#bdDedans)">`;
+  s += `<path d="${flamme(0)}" fill="none" stroke="#E2501E" stroke-width="2.6" opacity=".55"/>`
+    + `<path d="${flamme(0)}" fill="none" stroke="#FFB43C" stroke-width=".8" opacity=".7"/>`
+    + '<ellipse cx="20" cy="42" rx="12" ry="9" fill="url(#bdFoyer)"/>';
+  s += veine([[20, 41], [19.2, 38.6], [20.4, 36.8], [19.6, 35.2]], 0.32) + veine([[13.4, 39.6], [14.8, 37.4], [14.2, 35.6], [15.6, 34.2]], 0.26)
+    + veine([[26.8, 39.8], [25.4, 37.8], [26.2, 36], [24.8, 34.6]], 0.26) + veine([[11.4, 36], [12.6, 34.8], [12.2, 33.2]], 0.2)
+    + veine([[28.8, 35.6], [27.6, 34.6], [28, 33]], 0.2);
+  s += '</g>';
+  // les yeux : deux fentes de lumière, inclinées vers le dedans, et leur lueur sur la matière autour
+  s += [[16.5, 1], [23.5, -1]].map(([x, k]) => `<ellipse cx="${f(x)}" cy="31.8" rx="4.2" ry="2.8" fill="url(#bdLueur)"/>`
+    + `<path d="M${f(x - k * 2.8)},${f(30.6)} Q${f(x - k * 0.4)},${f(30.9)} ${f(x + k * 2.4)},${f(32.5)} Q${f(x - k * 0.2)},${f(33.2)} ${f(x - k * 2.8)},${f(30.6)} Z" fill="url(#bdOeil)"/>`).join('');
+  // des braises qui montent, avec leur traînée
+  s += [[8, 10, 0.2], [32, 8, 0.18], [14, -2, 0.16], [26, -5, 0.16], [36, 18, 0.14], [4, 20, 0.14]]
+    .map(([x, y, r]) => `<path d="M${x},${f(y + 2.4)} L${x},${y}" stroke="#FF9A2E" stroke-width="${f(r * 1.4)}" stroke-linecap="round" opacity=".4"/><circle cx="${x}" cy="${y}" r="${r}" fill="#FFF0C0"/>`).join('');
+  return s;
+}
+
+module.exports = { brumeHeroine, brumeDemon };

@@ -91,7 +91,7 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
     }
   }
   if (anya && banks.length) {
-    [0, 1].forEach(k => wild(`anya:otter:${k}`, 'otter', k ? banks.slice().reverse() : banks, dayTime && rain < 0.6, c => {
+    [0, 1].forEach(k => wild(`anya:otter:${k}`, 'otter', k ? banks.slice().reverse() : banks, dayTime && rain < 0.6, 'jour', c => {
       const up = (t + k * 2) % 6 < 1.2;
       const flip = Math.cos(t * 0.2 + k) < 0;
       return { x: c.x + Math.sin(t * 0.2 + k) * 0.3, y: c.y, frame: up ? 1 : 0, flip, look: along(flip, up ? 1 : 0) };

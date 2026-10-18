@@ -3,7 +3,8 @@
      1. les jetons (couleurs, polices, durées, courbes, tailles) : on change l'apparence ici, pas dans les règles ;
      2. l'écran et ses calques : le fond, l'affiche, Brume et ses effets ;
      3. l'interface : le titre, le chargement, « Entrée », les messages, le rideau ;
-     4. les animations, puis les écrans particuliers (bas, étroit, mouvement réduit).
+     4. les animations ;
+     5. l'orage (qui reste sur l'écran voit le ciel tourner), puis les écrans particuliers (bas, étroit, mouvement réduit).
    Fluidité : les dessins (public/img/splash/*.svg) sont immobiles ; tout ce qui bouge le fait en CSS, en transformation
    et en opacité seulement, que le navigateur compose sans rien redessiner. Aucun script ne tourne : à la sortie,
    splash.js retire l'écran du document, et toutes ses animations avec. */
@@ -38,13 +39,14 @@
   --sp-sortie: cubic-bezier(.3, .8, .3, 1);
   --sp-fondu: cubic-bezier(.4, 0, .2, 1);
   --sp-tour: 14s; /* un tour des sept sceaux */
+  --sp-orage: 60s; /* un cycle de l'orage : le présage, l'orage, l'accalmie, le calme */
   /* tailles */
   --sp-marge: max(12px, env(safe-area-inset-top), env(safe-area-inset-bottom));
   --sp-titre-h: clamp(54px, 11vh, 120px);
-  --sp-affiche-l: min(118vw, 900px, 82vh);
+  --sp-affiche-l: min(100vw, 900px, 70vh); /* l'affiche tient dans la largeur : aucun maître coupé */
 }
 @supports (height: 1dvh) {
-  .splash { --sp-titre-h: clamp(54px, 11dvh, 120px); --sp-affiche-l: min(118vw, 900px, 82dvh); }
+  .splash { --sp-titre-h: clamp(54px, 11dvh, 120px); --sp-affiche-l: min(100vw, 900px, 70dvh); }
 }
 
 /* ═══ 2. L'écran et ses calques ═══ */
@@ -71,11 +73,12 @@
 .splash__onde { position: absolute; z-index: 1; left: 50%; top: 63%; width: 22%; aspect-ratio: 3.4; margin: -3.2% 0 0 -11%; border: 2px solid rgba(191, 239, 255, .8); border-radius: 50%; opacity: 0;
   will-change: transform, opacity; animation: splash-onde 4.4s cubic-bezier(.2, .6, .4, 1) infinite; }
 .splash__onde--2 { animation-delay: -2.2s; }
-/* les sept sceaux, qui tournent derrière elle sur une ellipse : le cercle est écrasé (scaleY), chaque perle tourne avec
-   son bras puis se redresse (rotation inverse, puis l'écrasement inverse) pour rester ronde ; --i : son rang, --c : sa couleur */
-.splash__orbite { position: absolute; z-index: 2; left: 50%; top: 46%; width: 40%; aspect-ratio: 1; margin: -20% 0 0 -20%; transform: scaleY(.3); }
+/* les sept sceaux, qui tournent derrière elle sur une ellipse serrée (ils ne passent sur aucun visage des maîtres) : le
+   cercle est écrasé (scaleY), chaque perle tourne avec son bras puis se redresse (rotation inverse, puis l'écrasement
+   inverse) pour rester ronde ; --i : son rang, --c : sa couleur */
+.splash__orbite { position: absolute; z-index: 2; left: 50%; top: 46%; width: 26%; aspect-ratio: 1; margin: -13% 0 0 -13%; transform: scaleY(.3); }
 .splash__orbite i { position: absolute; inset: 0; will-change: transform; animation: splash-tour var(--sp-tour) linear infinite; animation-delay: calc(var(--i) * var(--sp-tour) / -7); }
-.splash__orbite i::after { content: ''; position: absolute; left: 100%; top: 50%; width: 5.6%; aspect-ratio: 1; margin: -2.8% 0 0 -2.8%; border-radius: 50%;
+.splash__orbite i::after { content: ''; position: absolute; left: 100%; top: 50%; width: 8.6%; aspect-ratio: 1; margin: -4.3% 0 0 -4.3%; border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, #fff 0 18%, var(--c) 40%); box-shadow: 0 0 0 1.5px var(--sp-contour), 0 0 10px var(--c);
   will-change: transform; animation: splash-redresse var(--sp-tour) linear infinite; animation-delay: calc(var(--i) * var(--sp-tour) / -7); }
 /* les étincelles, qui montent du Grimoire ; --x : leur écart au centre */
@@ -84,7 +87,7 @@
   will-change: transform, opacity; animation: splash-etincelle 3.2s ease-out infinite; animation-delay: calc(var(--i) * -.53s); }
 
 /* ═══ 3. L'interface ═══ */
-.splash__card { position: relative; z-index: 2; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+.splash__card { position: relative; z-index: 3; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
   padding: var(--sp-marge) max(12px, env(safe-area-inset-right)) var(--sp-marge) max(12px, env(safe-area-inset-left)); transition: transform 1.1s var(--sp-sortie), filter 1.1s ease; }
 .splash.is-gone .splash__card { transform: scale(1.04); filter: blur(5px); }
 .splash__top, .splash__bottom { display: grid; justify-items: center; gap: 8px; width: 100%; }
@@ -96,7 +99,7 @@
 .splash__logo-title { fill: url(#splash-logo-gold); stroke: var(--sp-or-contour); stroke-width: 2.4px; paint-order: stroke fill; font: 800 72px var(--sp-titre); letter-spacing: .035em; }
 .splash__logo-kicker { fill: var(--sp-ciel); font: 900 11px var(--sp-police); letter-spacing: .34em; }
 .splash__logo-flourish { fill: none; stroke: var(--sp-or-trait); stroke-linecap: round; opacity: .75; }
-.splash__subtitle { margin: 2px 0 0; color: var(--sp-texte-doux); font-family: var(--sp-titre); font-size: clamp(12px, 1.8vw, 16px); font-style: italic; line-height: 1.2; letter-spacing: .01em; text-shadow: 0 3px 12px var(--sp-ombre); }
+.splash__subtitle { display: grid; margin: 2px 0 0; color: var(--sp-texte-doux); font-family: var(--sp-titre); font-size: clamp(12px, 1.8vw, 16px); font-style: italic; line-height: 1.2; letter-spacing: .01em; text-shadow: 0 3px 12px var(--sp-ombre); }
 
 /* le chargement : la barre, et les étapes cochées une à une */
 .splash__progress { width: min(520px, 92vw); display: grid; gap: 8px; }
@@ -157,6 +160,207 @@
   50% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(255, 214, 120, 0); }
 }
 
+/* ═══ 5. L'orage ═══
+   Qui reste 12 s sur l'écran (le script d'index.html pose is-orage) voit passer un orage bref, puis le calme revient,
+   et ainsi de suite (un cycle : --sp-orage, 60 s ; choix de l'auteur, 17 oct. : 7 s d'orage, puis le retour au calme) :
+     0 – 4 s  le présage : des nuages sombres glissent sur la lune, le ciel s'assombrit, des lueurs au loin ;
+     4 – 11,7 s l'orage. La pluie tombe, le sous-titre change de voix ; les maîtres deviennent prêts et armés
+              (guerriers.svg), en fondu, pas hostiles, et le restent jusqu'à l'éclaircie. Trois coups, à 5,4 s, 7,6 s (le
+              grand, au centre) et 9,9 s, chacun en trois temps (la nuit s'épaissit pendant que le ciel s'allume dans les
+              nuages, le coup en deux battements, sa rémanence). Dans la foudre seulement, l'île se montre assiégée
+              (tempete.svg : les égarés, le kraken) ; Brume devient démon de feu par à-coups (demon.svg : deux sursauts
+              à demi transparents, puis elle se tient), dans son aura qui se diffuse, et l'onde de feu part d'elle ;
+     11,7 – 14,4 s l'éclaircie : la pluie cesse, les nuages s'en vont, les maîtres reviennent au calme ;
+     puis le calme, jusqu'au cycle suivant.
+   Rien ne clignote plus de trois fois par seconde ; les flashs restent doux (un voile, jamais un blanc plein) ; rien du
+   tout pour qui demande moins de mouvement. Toutes les animations ont la même durée : elles restent en phase. */
+.splash__tempete, .splash__nuages, .splash__lueur, .splash__eclairs svg, .splash__guerriers, .splash__demon, .splash__aura, .splash__souffle, .splash__pluie, .splash__voile, .splash__flash, .splash__sous--orage { opacity: 0; pointer-events: none; }
+.splash__tempete, .splash__nuages, .splash__lueur, .splash__eclairs, .splash__pluie, .splash__voile, .splash__flash { position: absolute; inset: 0; }
+.splash__guerriers { position: absolute; inset: 0; }
+/* Brume en démon : son image, posée sur la sienne, flotte avec elle ; son aura et l'onde de feu, centrées sur elle (l'onde
+   en mode écran : sa lumière s'ajoute à ce qu'elle couvre) */
+.splash__demon { position: absolute; inset: 0; z-index: 3; }
+.splash__aura, .splash__souffle { position: absolute; z-index: 3; left: 12%; top: 15.2%; width: 76%; aspect-ratio: 1; will-change: transform, opacity; }
+.splash__souffle { mix-blend-mode: screen; }
+.splash__aura img, .splash__souffle img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.splash__aura-contre { opacity: .6; }
+/* le banc de nuages, en deux moitiés qui arrivent chacune de son bord et se rejoignent sur la lune */
+.splash__nuages { bottom: auto; height: 38%; overflow: hidden; }
+.splash__nuage { position: absolute; top: -18%; left: -8%; width: 62%; height: 100%; will-change: transform; transform: translateX(-80%); }
+.splash__nuage--droite { left: auto; right: -8%; transform: scaleX(-1) translateX(-80%); }
+/* les lueurs au loin, sur l'horizon, avant l'orage */
+.splash__lueur { background: radial-gradient(ellipse 26% 12% at 18% 46%, rgba(190, 215, 255, .55), transparent 70%), radial-gradient(ellipse 22% 10% at 84% 44%, rgba(190, 215, 255, .45), transparent 70%); }
+/* les éclairs : à gauche, à droite, et le grand, au centre, qui tombe sur l'île */
+.splash__eclairs svg { position: absolute; top: 0; height: 58%; width: min(24vw, 190px); }
+.splash__eclair--a { left: 9%; }
+.splash__eclair--b { right: 6%; height: 52%; }
+.splash__eclair--c { left: 50%; width: min(22vw, 170px); height: 46%; margin-left: max(-11vw, -85px); }
+/* la pluie : des traits fins, en deux couches qui tombent à deux vitesses, devant tout (sauf l'interface) */
+.splash__pluie { z-index: 2; overflow: hidden; }
+.splash__pluie::before, .splash__pluie::after { content: ''; position: absolute; left: 0; right: 0; top: -160px; bottom: 0; will-change: transform;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='160'%3E%3Cg stroke='%23d6e6ff' stroke-width='1.3' stroke-linecap='round' opacity='.55'%3E%3Cpath d='M12 4 l-4 22'/%3E%3Cpath d='M46 40 l-4 22'/%3E%3Cpath d='M78 14 l-4 22'/%3E%3Cpath d='M28 84 l-4 22'/%3E%3Cpath d='M64 110 l-4 22'/%3E%3Cpath d='M86 70 l-4 22'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 90px 160px; }
+.splash__pluie::after { background-size: 140px 250px; opacity: .55; }
+/* le voile d'orage : la nuit s'épaissit, sauf autour de Brume, qui garde sa lumière */
+.splash__voile { z-index: 2; background: radial-gradient(ellipse 30% 20% at 50% 72%, rgba(4, 8, 22, 0), rgba(4, 8, 22, .5) 70%), linear-gradient(rgba(3, 6, 18, .62), rgba(3, 6, 18, .28) 60%, rgba(3, 6, 18, .4)); }
+/* le flash : une lumière froide qui tombe du ciel */
+.splash__flash { z-index: 2; background: radial-gradient(ellipse 90% 70% at 50% 12%, rgba(236, 244, 255, .95), rgba(170, 200, 255, .5) 45%, rgba(120, 160, 255, 0) 85%); }
+
+.splash.is-orage .splash__voile { animation: splash-orage-voile var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__nuage { animation: splash-orage-nuage var(--sp-orage) ease-in-out infinite; }
+.splash.is-orage .splash__nuage--droite { animation-name: splash-orage-nuage-d; }
+.splash.is-orage .splash__nuages { animation: splash-orage-nuages var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__lueur { animation: splash-orage-lueur var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__pluie { animation: splash-orage-pluie var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__pluie::before { animation: splash-pluie-tombe .55s linear infinite; }
+.splash.is-orage .splash__pluie::after { animation: splash-pluie-tombe-loin .9s linear infinite; }
+.splash.is-orage .splash__flash { animation: splash-orage-flash var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__tempete { animation: splash-orage-ile var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__guerriers { animation: splash-orage-guerriers var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__demon { animation: splash-orage-demon var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__aura { animation: splash-orage-aura var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__aura img { animation: splash-aura-tourne 26s linear infinite; }
+.splash.is-orage .splash__aura .splash__aura-contre { animation: splash-aura-contre 34s linear infinite; }
+.splash.is-orage .splash__souffle { animation: splash-orage-souffle var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__eclair--a { animation: splash-orage-eclair-a var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__eclair--b { animation: splash-orage-eclair-b var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__eclair--c { animation: splash-orage-eclair-c var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__sous { animation: splash-orage-calme var(--sp-orage) linear infinite; }
+.splash.is-orage .splash__sous--orage { animation-name: splash-orage-sous; }
+.splash__sous { grid-area: 1 / 1; }
+
+/* Les keyframes de l'orage qui suivent (splash-orage-…) sont écrits par design/atelier/splash_orage_temps.js (lancé par
+   preview_splash.js) : les régler là, pas ici. (1 % du cycle : 0,6 s) */
+@keyframes splash-orage-voile {
+  0% { opacity: 0; } 6.67% { opacity: .5; }
+  8.17% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 8.93% { opacity: 0.93; }
+  9.08% { opacity: 0.22; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 11.5% { opacity: 0.8; }
+  11.83% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 12.6% { opacity: 0.93; }
+  12.75% { opacity: 0.12; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  14.5% { opacity: 0.2; animation-timing-function: ease-in-out; } 15.42% { opacity: 0.8; }
+  15.67% { opacity: 0.8; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 16.43% { opacity: 0.93; }
+  16.58% { opacity: 0.22; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 19% { opacity: 0.8; }
+  19.5% { opacity: 0.8; animation-timing-function: ease-in-out; } 22.83% { opacity: 0.25; } 24%, 100% { opacity: 0; }
+}
+@keyframes splash-orage-nuages {
+  0% { opacity: 0; } 1.5% { opacity: 1; } 21% { opacity: 1; } 24%, 100% { opacity: 0; }
+}
+@keyframes splash-orage-nuage {
+  0% { transform: translateX(-80%); } 6.67% { transform: translateX(-16%); } 19.5% { transform: translateX(-16%); }
+  24%, 100% { transform: translateX(-80%); }
+}
+@keyframes splash-orage-nuage-d {
+  0% { transform: scaleX(-1) translateX(-80%); } 6.67% { transform: scaleX(-1) translateX(-16%); }
+  19.5% { transform: scaleX(-1) translateX(-16%); } 24%, 100% { transform: scaleX(-1) translateX(-80%); }
+}
+@keyframes splash-orage-lueur {
+  0% { opacity: 0; } 2.33% { opacity: 0; } 2.53% { opacity: 0.55; } 3.33% { opacity: 0; } 4.33% { opacity: 0; }
+  4.53% { opacity: 0.7; } 5.33% { opacity: 0; } 5.67% { opacity: 0; } 5.87% { opacity: 0.45; } 6.67% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes splash-orage-pluie {
+  0%, 6.67% { opacity: 0; } 8.67% { opacity: 0.9; } 19.5% { opacity: 0.9; } 22.5%, 100% { opacity: 0; }
+}
+@keyframes splash-pluie-tombe { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-28px, 160px, 0); } }
+@keyframes splash-pluie-tombe-loin { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-22px, 160px, 0); } }
+/* les flashs : la pré-lueur (le ciel s'allume doucement), le coup en deux battements (deux au plus par seconde), une
+   lente rémanence */
+@keyframes splash-orage-flash {
+  0% { opacity: 0; } 8.25% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  8.87% { opacity: 0.1; } 9% { opacity: 0.08; } 9.08% { opacity: 0.45; } 9.25% { opacity: 0.16; }
+  9.42% { opacity: 0.36; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 11.67% { opacity: 0; }
+  11.92% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 12.53% { opacity: 0.1; }
+  12.67% { opacity: 0.08; } 12.75% { opacity: 0.7; } 12.92% { opacity: 0.24; }
+  13.08% { opacity: 0.56; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 15.33% { opacity: 0; }
+  15.75% { opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .7, .4); } 16.37% { opacity: 0.1; }
+  16.5% { opacity: 0.08; } 16.58% { opacity: 0.5; } 16.75% { opacity: 0.17; }
+  16.92% { opacity: 0.4; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 19.17% { opacity: 0; }
+  100% { opacity: 0; }
+}
+/* l'île assiégée : elle paraît avec le coup, tient le temps qu'il éclaire, et s'efface dans sa rémanence ; au grand
+   coup, plus longtemps */
+@keyframes splash-orage-ile {
+  0% { opacity: 0; } 9.05% { opacity: 0; } 9.1% { opacity: 1; }
+  9.67% { opacity: 1; animation-timing-function: ease-in-out; } 11.83% { opacity: 0; } 12.72% { opacity: 0; }
+  12.77% { opacity: 1; } 14.33% { opacity: 1; animation-timing-function: ease-in-out; } 15.83% { opacity: 0; }
+  16.55% { opacity: 0; } 16.6% { opacity: 1; } 17.17% { opacity: 1; animation-timing-function: ease-in-out; }
+  19.33% { opacity: 0; } 100% { opacity: 0; }
+}
+/* les maîtres, prêts et armés : ils le deviennent quand la pluie arrive, et le restent jusqu'à l'accalmie */
+@keyframes splash-orage-guerriers {
+  0%, 6.67% { opacity: 0; animation-timing-function: ease-in-out; } 8.5% { opacity: 1; }
+  19.5% { opacity: 1; animation-timing-function: ease-in-out; } 22.67%, 100% { opacity: 0; }
+}
+/* Brume en démon (demon.svg), à chaque coup, par à-coups : deux sursauts à demi transparents avec ses deux battements,
+   puis elle se tient (jamais tout à fait opaque : Brume transparaît), et s'efface ; son aura naît au second sursaut,
+   petite et vive, s'élargit, se diffuse, s'efface avec elle ; l'onde de feu (souffle.svg) part d'elle avec le coup (deux
+   au grand) et se dissipe en s'élargissant */
+@keyframes splash-orage-demon {
+  0% { opacity: 0; } 9% { opacity: 0; } 9.08% { opacity: 0.45; } 9.2% { opacity: 0.2; } 9.42% { opacity: 0.7; }
+  9.57% { opacity: 0.45; } 9.75% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  10.5% { opacity: 0.88; animation-timing-function: ease-in-out; } 11.67% { opacity: 0; } 12.67% { opacity: 0; }
+  12.75% { opacity: 0.45; } 12.87% { opacity: 0.2; } 13.08% { opacity: 0.7; } 13.23% { opacity: 0.45; }
+  13.42% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  14.67% { opacity: 0.88; animation-timing-function: ease-in-out; } 15.83% { opacity: 0; } 16.5% { opacity: 0; }
+  16.58% { opacity: 0.45; } 16.7% { opacity: 0.2; } 16.92% { opacity: 0.7; } 17.07% { opacity: 0.45; }
+  17.25% { opacity: 0.88; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  18% { opacity: 0.88; animation-timing-function: ease-in-out; } 19.17% { opacity: 0; } 100% { opacity: 0; }
+}
+@keyframes splash-orage-aura {
+  0% { opacity: 0; transform: scale(.5); }
+  9.33% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  9.75% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  10.5% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  11.83% { opacity: 0; transform: scale(1.14); }
+  13% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  13.42% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  14.67% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  16% { opacity: 0; transform: scale(1.14); }
+  16.83% { opacity: 0; transform: scale(0.5); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  17.25% { opacity: 0.9; transform: scale(0.8); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  18% { opacity: 0.65; transform: scale(0.98); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
+  19.33% { opacity: 0; transform: scale(1.14); } 100% { opacity: 0; transform: scale(.5); }
+}
+@keyframes splash-orage-souffle {
+  0% { opacity: 0; transform: scale(.25); }
+  9.05% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  9.13% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  10.55% { opacity: 0; transform: scale(1.5); }
+  12.72% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  12.8% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  13.55% { opacity: 0; transform: scale(1.5); }
+  13.6% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  13.68% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  15.27% { opacity: 0; transform: scale(1.5); }
+  16.55% { opacity: 0; transform: scale(0.25); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  16.63% { opacity: 0.9; transform: scale(0.38); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  18.05% { opacity: 0; transform: scale(1.5); } 100% { opacity: 0; transform: scale(.25); }
+}
+/* le feu de l'aura tourbillonne (deux couches en sens contraire) et respire */
+@keyframes splash-aura-tourne { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.06); } 100% { transform: rotate(360deg) scale(1); } }
+@keyframes splash-aura-contre { 0% { transform: scaleX(-1) rotate(0deg) scale(1.08); } 50% { transform: scaleX(-1) rotate(180deg) scale(1); } 100% { transform: scaleX(-1) rotate(360deg) scale(1.08); } }
+@keyframes splash-orage-eclair-a {
+  0% { opacity: 0; } 16.5% { opacity: 0; } 16.55% { opacity: 1; } 16.75% { opacity: 0.3; } 16.92% { opacity: 0.95; }
+  17.67% { opacity: 0; } 100% { opacity: 0; }
+}
+@keyframes splash-orage-eclair-b {
+  0% { opacity: 0; } 9% { opacity: 0; } 9.05% { opacity: 1; } 9.25% { opacity: 0.3; } 9.42% { opacity: 0.95; }
+  10.17% { opacity: 0; } 100% { opacity: 0; }
+}
+@keyframes splash-orage-eclair-c {
+  0% { opacity: 0; } 12.67% { opacity: 0; } 12.72% { opacity: 1; } 12.92% { opacity: 0.3; } 13.08% { opacity: 0.95; }
+  14.17% { opacity: 0; } 100% { opacity: 0; }
+}
+/* le sous-titre change de voix pendant l'orage */
+@keyframes splash-orage-calme {
+  0%, 6.67% { opacity: 1; } 8.33% { opacity: 0; } 19.5% { opacity: 0; } 22%, 100% { opacity: 1; }
+}
+@keyframes splash-orage-sous {
+  0%, 6.67% { opacity: 0; } 8.33% { opacity: 1; } 19.5% { opacity: 1; } 22%, 100% { opacity: 0; }
+}
+
+/* écran large (ordinateur, tablette en paysage) : l'affiche plus petite, posée en bas, laisse voir l'île au-dessus de Brume */
+@media (min-aspect-ratio: 5/4) and (min-height: 561px) { .splash { --sp-affiche-l: min(900px, 60vh); } }
+@supports (height: 1dvh) { @media (min-aspect-ratio: 5/4) and (min-height: 561px) { .splash { --sp-affiche-l: min(900px, 60dvh); } } }
 /* écran bas (téléphone en paysage) : sans le sous-titre, l'affiche garde la place */
 @media (max-height: 560px) { .splash { --sp-affiche-l: min(118vw, 72vh); } .splash__subtitle { display: none; } .splash__bottom { gap: 6px; } }
 /* écran étroit : les étapes passent sur deux lignes plutôt que d'être coupées */
@@ -165,6 +369,6 @@
 @media (prefers-reduced-motion: reduce) {
   .splash__fond, .splash__affiche, .splash__brume, .splash__halo, .splash__orbite i, .splash__orbite i::after, .splash__top, .splash__bar span::after,
   .splash__enter, .splash__enter::after, .splash.is-ready .splash__enter { animation: none; }
-  .splash__onde, .splash__etincelles { display: none; }
+  .splash__onde, .splash__etincelles, .splash__tempete, .splash__nuages, .splash__lueur, .splash__eclairs, .splash__guerriers, .splash__demon, .splash__aura, .splash__souffle, .splash__pluie, .splash__voile, .splash__flash { display: none; }
   .splash, .splash__fond, .splash__affiche, .splash__card, .splash__bar span { transition: none; }
 }

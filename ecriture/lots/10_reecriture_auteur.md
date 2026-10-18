@@ -25,7 +25,7 @@ Les moments de l'histoire, les quêtes et l'ordre des étapes ne changent pas (`
 ### Le naufrage
 
 **Scène « Le naufrage de l’Hirondelle »** (`naufrage`) :
-- > *L’Hirondelle, troisième nuit de croisière.*
+- > *L’Hirondelle, troisième jour de croisière.*
 - **Le capitaine** : Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée.
 - **Le capitaine** : Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme.
 - **Le capitaine** : Nous rencontrons des difficultés à manœ… — krrr — Aaah ! Mais que sont ces choses ?! — krrrr… shhh…

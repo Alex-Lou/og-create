@@ -41,8 +41,9 @@ export function zoneThick({ zone, brume, prologue, touchesOwned }) {
   return !(ready && touchesOwned);
 }
 
-// Les quêtes où Brume est seule avec le joueur (serveur : quests.js) : la plage seule se voit
-export const BRUME_QUESTS = ['pages', 'ramasser', 'feu'];
+// Les quêtes où Brume est seule avec le joueur (serveur : quests.js), toute la première soirée jusqu'au sommeil : le
+// carré du feu seul se voit
+export const BRUME_QUESTS = ['pages', 'ramasser', 'feu', 'nuit'];
 const RADIUS = { hirondelle: 3, camp: 4, site: 3 };
 // La bande libre entre deux zones ouvertes (là où passent les chemins qui les relient, choix de l'auteur, 11 oct.) :
 // une case à BAND cases au plus de deux d'entre elles se découvre (les zones sont proches : deux cases suffisent)
@@ -52,11 +53,12 @@ const BAND = 2;
 const COVE_WEST = 89;
 const gapTo = (x, y, [rx, ry, w, h]) => Math.max(rx - x, 0, x - (rx + w - 1), ry - y, y - (ry + h - 1));
 // Au tout premier tutoriel (Brume seule, avant que Lorena n'arrive), seule cette plage se voit : un carré parfait de
-// 9 × 9 cases autour du feu, de l'épave et des trouvailles (choix de l'auteur, 12 oct.), tout le reste reste sous la
+// 9 × 9 cases autour du feu et des trouvailles (choix de l'auteur, 12 oct.), tout le reste reste sous la
 // brume, même le sable de l'anse
 export const SHORE = [94, 90, 9, 9];
-// (et l'anse de la grande Hirondelle, à l'ouest, avec sa proue dans les rochers : elle se voit dès la plage, choix de
-// l'auteur, 15 oct.)
+// (et l'anse de la grande Hirondelle, à l'ouest, avec sa proue dans les rochers : elle se voit avec la plage, choix de
+// l'auteur, 15 oct., mais plus la première soirée, où seul le carré du feu se voit, sans l'épave : choix de l'auteur,
+// 18 oct.)
 export const COVE_WRECK = [84, 95, 10, 6];
 export const inShore = (x, y) => inRect(x, y, SHORE) || inRect(x, y, COVE_WRECK);
 
@@ -117,9 +119,9 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], ground
     for (let x = 0; x < n; x++) {
       const zone = zones[zoneOf(x, y)];
       if (!zone || zone.id !== 'coeur' || !zone.owned) continue;
-      // Brume seule : seul le carré de la plage du débarquement se voit, le reste attend Lorena
+      // Brume seule : seul le carré du feu se voit, le reste attend Lorena
       if (alone) {
-        if (!inShore(x, y)) veiled.add(y * n + x);
+        if (!inRect(x, y, SHORE)) veiled.add(y * n + x);
         continue;
       }
       if (carved.some(rect => inRect(x, y, rect))) {

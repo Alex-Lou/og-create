@@ -8,8 +8,9 @@ import { guide } from '@/game/guide';
 import { loadPrologue, savePrologue, prologueStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire, sceneDelayOf } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
-import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
-import { DEFAULT_LOOK, playerFace } from '@/game/sceneArt';
+import { LINES as PROLOGUE_LINES, SCENES as PROLOGUE_SCENES } from '@/texts/tutorial/scenes';
+import { DEFAULT_LOOK, sceneOf, playerFace } from '@/game/sceneArt';
+import { preparePlans } from '@/components/Prologue/SceneArt/raster';
 import { setPlayer, player } from '@/game/accord';
 import { TAB_OPENED, TAB_CALLS, PLAN_WRITTEN } from '@/texts/tutorial/tabs';
 import { COACH, TAB_HELP, LINE_HELP, TIP_HELP } from '@/texts/tutorial/coach';
@@ -222,6 +223,9 @@ export default {
         // une création, que son inscription se lise (sceneDelayOf)
         clearTimeout(this.prologueTimer);
         this.toBook();
+        // (sa première image, si elle est en plans, se lit d'avance : elle s'ouvre toute peinte)
+        const first = (PROLOGUE_SCENES[step.scene] || [])[0];
+        if (first && first.scene) preparePlans(sceneOf(first.scene));
         const show = () => {
           if (document.querySelector('.book-unlock')) this.prologueTimer = setTimeout(show, 700);
           else this.prologueScene = step.scene;

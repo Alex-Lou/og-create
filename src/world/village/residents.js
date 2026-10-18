@@ -184,6 +184,9 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
       for (let i = 1; i <= 5; i++) seq.push(moments[Math.floor(hash(r.k * 5 + i, salt(9)) * moments.length)](i));
       seq.push([spotOf(r, r.work, salt(8)), roll(8, 50, 90), 'work']);
     }
+    // Une place qu'aucun chemin ne rejoint depuis la sienne (une marche du relief, une case enclavée) : il reste à sa
+    // place plutôt que d'y sauter ; les places gardées se rejoignent alors toutes, le retour au début de la tournée compris
+    seq = seq.map(([to, pause, act]) => [routeOf(r.work, to) ? to : r.work, pause, act]);
     const speed = speedOf(r);
     const legs = [];
     let at = seq[seq.length - 1][0];
@@ -218,8 +221,10 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
     return intro;
   };
   // Une place tenue (son lit, son abri, son rituel, le repas, une visite) : un arrêt sans fin, sa pose et où il regarde
+  // (une place qu'aucun chemin ne rejoint depuis la sienne : il la tient à sa place, plutôt que d'y sauter)
   const holds = new Map();
-  const holdOf = (r, key, at, act, view = null) => {
+  const holdOf = (r, key, spot, act, view = null) => {
+    const at = routeOf(r.work, spot) ? spot : r.work;
     const id = `${r.id}:${key}:${at.x},${at.y}`;
     if (!holds.has(id)) holds.set(id, { legs: [{ path: [at], walk: 0, pause: 1, act, view, start: 0 }], total: 1, speed: speedOf(r), lane: 0, rest: { x: Math.cos(r.k * 2.4) * 0.26, y: Math.sin(r.k * 2.4) * 0.26 }, offset: 0 });
     return holds.get(id);
