@@ -1,6 +1,6 @@
 // L'horloge du tutoriel (world/tutoClock.js) : son moment par étape, accéléré, jamais au-delà de sa fin
 import { describe, it, expect } from 'vitest';
-import { tutorialDate, MOMENTS, TUTO_SUN } from '@/world/tutoClock';
+import { tutorialDate, tutorialDay, MOMENTS, TUTO_SUN } from '@/world/tutoClock';
 import { PROLOGUE } from '@/game/prologue';
 import { fixSun, skyAt, sunTimes } from '@/world/sky';
 
@@ -47,5 +47,10 @@ describe('l’horloge du tutoriel', () => {
       fixSun(null);
     }
     expect(sunTimes(summer).set).toBeGreaterThan(20);
+  });
+  it('le jour de chaque étape (le compteur de jours) : un par personnage, un de plus à chaque matin', () => {
+    expect(['pages', 'nuit', 'caisse', 'veille', 'soupe', 'nuit-cannelle', 'deco', 'nuit-rivet', 'eveil-ondin', 'chemin'].map(tutorialDay)).toEqual([1, 1, 2, 2, 3, 3, 4, 4, 5, 5]);
+    expect(tutorialDay('acte-1')).toBe(null);
+    expect(tutorialDay(null)).toBe(null);
   });
 });
