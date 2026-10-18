@@ -1435,6 +1435,346 @@ var require_arbres_saisons = __commonJS({
   }
 });
 
+// atelier/jungle.js
+var require_jungle = __commonJS({
+  "atelier/jungle.js"(exports, module) {
+    var { r2 } = require_troupe2();
+    var OUT = "#123432";
+    var W = 0.85;
+    var E = /* @__PURE__ */ __name((cx, cy, rx, ry, fill, w = W) => `<ellipse cx="${r2(cx)}" cy="${r2(cy)}" rx="${r2(rx)}" ry="${r2(ry)}" fill="${fill}" ${w ? `stroke="${OUT}" stroke-width="${r2(w)}"` : 'stroke="none"'}/>`, "E");
+    var pts = /* @__PURE__ */ __name((a) => a.map(([x, y]) => `${r2(x)},${r2(y)}`).join(" L"), "pts");
+    var qPt = /* @__PURE__ */ __name((a, c, b, t) => [0, 1].map((j) => (1 - t) * (1 - t) * a[j] + 2 * (1 - t) * t * c[j] + t * t * b[j]), "qPt");
+    var qTan = /* @__PURE__ */ __name((a, c, b, t) => [0, 1].map((j) => 2 * (1 - t) * (c[j] - a[j]) + 2 * t * (b[j] - c[j])), "qTan");
+    var ombre = /* @__PURE__ */ __name((rx, ry = rx * 0.4, dx = 2) => E(dx, 1, rx * 0.8, ry * 0.8, "rgba(6,40,36,0.16)", 0), "ombre");
+    var LUEURS = null;
+    var luit = /* @__PURE__ */ __name((d, c, w = 1) => {
+      if (LUEURS) LUEURS.push(`<path d="${d}" fill="none" stroke="${c}" stroke-width="${r2(w * 4)}" stroke-opacity="0.18" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#FFFFFF" stroke-width="${r2(w * 0.35)}" stroke-opacity="0.8" stroke-linecap="round"/>`);
+    }, "luit");
+    var point = /* @__PURE__ */ __name((x, y, r, c) => {
+      if (LUEURS) LUEURS.push(`<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r * 3)}" fill="${c}" opacity="0.2"/><circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="${c}"/><circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r * 0.4)}" fill="#FFFFFF"/>`);
+    }, "point");
+    function lueurDe(dessin) {
+      LUEURS = [];
+      dessin();
+      const s = LUEURS.join("");
+      LUEURS = null;
+      return s;
+    }
+    __name(lueurDe, "lueurDe");
+    var NEON = { emeraude: "#5CF2E6", sarcelle: "#5CF2E6", profond: "#3EC8E8", acide: "#D4FF7A", violet: "#C88AFF", magenta: "#FF6AD0", corail: "#FFA040", rose: "#FF8AD0" };
+    var neonDe = /* @__PURE__ */ __name((c) => NEON[Object.keys(T).find((k) => T[k] === c)] || "#5CF2E6", "neonDe");
+    var T = {
+      emeraude: { light: "#B8FFB0", mid: "#22D47A", dark: "#0E7A5A" },
+      sarcelle: { light: "#9CFFF0", mid: "#12BFB4", dark: "#076A78" },
+      acide: { light: "#F0FF9A", mid: "#A6EE2E", dark: "#3E9E3A" },
+      profond: { light: "#7FE8B8", mid: "#139A72", dark: "#08504A" },
+      violet: { light: "#EAC8FF", mid: "#9A4AF0", dark: "#4A1C9A" },
+      magenta: { light: "#FFC4EC", mid: "#F2389E", dark: "#9A1468" },
+      corail: { light: "#FFD4C0", mid: "#FF5A48", dark: "#C02A3A" },
+      rose: { light: "#FFF0FA", mid: "#FF90D2", dark: "#D84090" }
+    };
+    var BOIS = { left: "#9C6A43", right: "#6E4528", light: "#C08A58", bark: "#4E2E1A" };
+    function feuille(id, b, p, w, c, { fleche: fleche2 = 0.28, dechire = 0, nervures = 7, maigre = 0.75 } = {}) {
+      const L2 = Math.hypot(p[0] - b[0], p[1] - b[1]) || 1, m = [(b[0] + p[0]) / 2, (b[1] + p[1]) / 2];
+      let nx = -(p[1] - b[1]) / L2, ny = (p[0] - b[0]) / L2;
+      if (ny > 0) {
+        nx = -nx;
+        ny = -ny;
+      }
+      const ctl = [m[0] + nx * fleche2 * L2, m[1] + ny * fleche2 * L2], N = 18, axe = [], haut = [], bas = [];
+      for (let i = 0; i <= N; i++) {
+        const t = i / N, q = qPt(b, ctl, p, t), d2 = qTan(b, ctl, p, t), l = Math.hypot(d2[0], d2[1]) || 1;
+        let ux = -d2[1] / l, uy = d2[0] / l;
+        if (uy > 0) {
+          ux = -ux;
+          uy = -uy;
+        }
+        const ww = w * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.04)), maigre) + 0.3;
+        const cran = dechire && i > 2 && i < N - 1 && i % 3 === 1 ? 1 - dechire : 1;
+        axe.push(q);
+        haut.push([q[0] + ux * ww * cran, q[1] + uy * ww * cran]);
+        bas.push([q[0] - ux * ww * (i % 3 === 2 && dechire ? 1 - dechire : 1), q[1] - uy * ww * (i % 3 === 2 && dechire ? 1 - dechire : 1)]);
+      }
+      const d = `M${pts(haut.concat(bas.slice().reverse()))} Z`;
+      let s = `<path d="${d}" fill="${c.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`;
+      s += `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="M${pts(axe.concat(bas.slice().reverse()))} Z" fill="${c.dark}"/>`;
+      for (let k = 1; k <= nervures; k++) {
+        const i = Math.round(k / (nervures + 1) * N), q = axe[i], h = haut[Math.min(N, i + 1)], o = bas[Math.min(N, i + 1)];
+        s += `<path d="M${r2(q[0])},${r2(q[1])} L${r2(h[0])},${r2(h[1])} M${r2(q[0])},${r2(q[1])} L${r2(o[0])},${r2(o[1])}" stroke="${c.light}" stroke-width="0.5" opacity="0.55" fill="none"/>`;
+      }
+      s += `<path d="M${r2(b[0])},${r2(b[1])} Q${r2(ctl[0])},${r2(ctl[1])} ${r2(p[0])},${r2(p[1])}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
+      luit(`M${r2(b[0])},${r2(b[1])} Q${r2(ctl[0])},${r2(ctl[1])} ${r2(p[0])},${r2(p[1])}`, neonDe(c), 0.9);
+      for (let k = 2; k <= nervures; k += 2) {
+        const i = Math.round(k / (nervures + 1) * N), q = axe[i], h = haut[Math.min(N, i + 1)];
+        luit(`M${r2(q[0])},${r2(q[1])} L${r2(h[0])},${r2(h[1])}`, neonDe(c), 0.45);
+      }
+      return s;
+    }
+    __name(feuille, "feuille");
+    function coeur(id, x, y, s, a, c, { percee = false, c2 = null } = {}) {
+      const P = [];
+      for (let i = 0; i <= 40; i++) {
+        const t = i / 40 * Math.PI * 2;
+        P.push([16 * Math.sin(t) ** 3, -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))]);
+      }
+      const ca = Math.cos(a), sa = Math.sin(a), k = s / 17;
+      const tr = /* @__PURE__ */ __name(([u, v]) => [x + (u * ca - v * sa) * k, y + (u * sa + v * ca) * k], "tr");
+      const d = `M${pts(P.map(tr))} Z`;
+      let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">`;
+      if (c2) o += `<path d="M${pts(P.map(([u, v]) => tr([u * 0.62, v * 0.62 + 2])))} Z" fill="${c2.mid}"/>`;
+      o += `<path d="M${pts([[0, -9], [0, 16], [18, 16], [18, -9]].map(tr))} Z" fill="${c2 ? c2.dark : c.dark}" opacity="0.55"/>`;
+      o += [[-11, 4], [-12, -4], [-7, 11], [11, 4], [12, -4], [7, 11]].map(([u, v]) => {
+        const [a1, b1] = tr([0, -4]), [a2, b2] = tr([u, v]);
+        return `<path d="M${r2(a1)},${r2(b1)} L${r2(a2)},${r2(b2)}" stroke="${(c2 || c).light}" stroke-width="0.55" opacity="0.7"/>`;
+      }).join("");
+      if (percee) o += [[-10, 1, -14, -2], [-9, 7, -12, 6], [10, 1, 14, -2], [9, 7, 12, 6], [-6, -5, -9, -9], [6, -5, 9, -9]].map(([u1, v1, u2, v2]) => {
+        const [a1, b1] = tr([u1, v1]), [a2, b2] = tr([u2, v2]);
+        return `<path d="M${r2(a1)},${r2(b1)} L${r2(a2)},${r2(b2)}" stroke="${OUT}" stroke-width="${r2(1.6 * k * 2)}" stroke-linecap="round"/>`;
+      }).join("");
+      const [n1, m1] = tr([0, -5]), [n2, m2] = tr([0, 14]);
+      luit(`M${r2(n1)},${r2(m1)} L${r2(n2)},${r2(m2)}`, c2 ? neonDe(c2) : neonDe(c), 0.8);
+      for (const [u, v] of [[-11, 4], [11, 4], [-7, 11], [7, 11]]) {
+        const [a1, b1] = tr([0, -4]), [a2, b2] = tr([u, v]);
+        luit(`M${r2(a1)},${r2(b1)} L${r2(a2)},${r2(b2)}`, c2 ? neonDe(c2) : neonDe(c), 0.4);
+      }
+      return o + `<path d="M${r2(n1)},${r2(m1)} L${r2(n2)},${r2(m2)}" stroke="${(c2 || c).light}" stroke-width="0.9"/></g>`;
+    }
+    __name(coeur, "coeur");
+    var versDehors = /* @__PURE__ */ __name((x, y, cx, cy) => Math.atan2(y - cy, x - cx) - Math.PI / 2, "versDehors");
+    var tige = /* @__PURE__ */ __name((a, b, c = "#4E8A3A", w = 1.6) => `<path d="M${r2(a[0])},${r2(a[1])} Q${r2((a[0] + b[0]) / 2 + 4)},${r2((a[1] + b[1]) / 2)} ${r2(b[0])},${r2(b[1])}" stroke="${OUT}" stroke-width="${r2(w + 2 * W)}" fill="none" stroke-linecap="round"/><path d="M${r2(a[0])},${r2(a[1])} Q${r2((a[0] + b[0]) / 2 + 4)},${r2((a[1] + b[1]) / 2)} ${r2(b[0])},${r2(b[1])}" stroke="${c}" stroke-width="${r2(w)}" fill="none" stroke-linecap="round"/>`, "tige");
+    var BANANES = [[-140, 44, 0], [-40, 46, 0], [-100, 40, 0], [-78, 42, 0], [-162, 42, 1], [-18, 44, 1], [-120, 36, 1], [-58, 38, 1]];
+    function bananier({ teinte = "acide", petit = false, regime = true } = {}) {
+      const k = petit ? 0.74 : 1, c = T[teinte], h = 52 * k, id = `ban${teinte[0]}${petit ? "p" : "g"}${regime ? "r" : ""}`;
+      const tronc = `M${r2(-4 * k)},1 Q${r2(-5 * k)},${r2(-h * 0.5)} ${r2(-2.4 * k)},${r2(-h)} L${r2(2.4 * k)},${r2(-h)} Q${r2(5 * k)},${r2(-h * 0.5)} ${r2(4.4 * k)},1 Z`;
+      let s = ombre(20 * k) + `<path d="${tronc}" fill="#8AB85A" stroke="${OUT}" stroke-width="${W}"/>` + [0.25, 0.5, 0.72].map((t) => `<path d="M${r2(-4.6 * k)},${r2(-h * t)} q${r2(4.6 * k)},${r2(2 * k)} ${r2(9.2 * k)},0" stroke="#5E8A3A" stroke-width="0.8" fill="none"/>`).join("");
+      const top = [0, -h];
+      const une = /* @__PURE__ */ __name(([a, l, devant], i) => {
+        const r = a * Math.PI / 180, L2 = l * k;
+        return feuille(`${id}f${i}`, top, [top[0] + Math.cos(r) * L2, top[1] + Math.sin(r) * L2 * 0.55 + L2 * 0.12], 7.5 * k, devant ? c : T.emeraude, { fleche: 0.22, dechire: i % 3 === 0 ? 0.55 : 0, nervures: 8, maigre: 0.55 });
+      }, "une");
+      s += BANANES.filter(([, , d]) => !d).map(une).join("");
+      if (regime) s += [0, 1, 2, 3].map((j) => E(5 * k + j % 2 * 3 * k, -h + 10 * k + j * 3.4 * k, 2.6 * k, 1.5 * k, "#C8E060", 0.9)).join("") + E(6.5 * k, -h + 25 * k, 2.6 * k, 4 * k, "#8A2E78", W) + E(6 * k, -h + 24 * k, 1, 1.6 * k, "#C860A8", 0);
+      s += BANANES.filter(([, , d]) => d).map((b, i) => une(b, i + 4)).join("");
+      return s;
+    }
+    __name(bananier, "bananier");
+    var MONSTERA = [[-14, -22, 13, -0.5, 0], [13, -24, 13, 0.45, 0], [0, -34, 14, 0.05, 0], [-20, -10, 11, -1.1, 1], [19, -11, 11, 1.1, 1], [-3, -16, 12, -0.15, 1]];
+    function monstera({ teinte = "emeraude", petit = false } = {}) {
+      const k = petit ? 0.75 : 1, c = T[teinte], id = `mon${teinte[0]}${petit ? "p" : "g"}`;
+      let s = ombre(22 * k);
+      const une = /* @__PURE__ */ __name(([x, y, t], i) => tige([0, 0], [x * k * 0.7, y * k * 0.7], "#3E7A34", 1.4) + coeur(`${id}${i}`, x * k, y * k, t * k, versDehors(x, y, 0, 6), i % 2 ? c : T.profond, { percee: true }), "une");
+      s += MONSTERA.filter((m) => !m[4]).map(une).join("") + MONSTERA.filter((m) => m[4]).map((m, i) => une(m, i + 3)).join("");
+      return s;
+    }
+    __name(monstera, "monstera");
+    function fronde(id, o, a, l, c, k) {
+      const r = a * Math.PI / 180, b = [o[0] + Math.cos(r) * l * k, o[1] + Math.sin(r) * l * k + l * k * 0.45], ctl = [o[0] + Math.cos(r) * l * k * 0.55, o[1] + Math.sin(r) * l * k * 0.55 - l * k * 0.18];
+      let s = `<path d="M${r2(o[0])},${r2(o[1])} Q${r2(ctl[0])},${r2(ctl[1])} ${r2(b[0])},${r2(b[1])}" stroke="${OUT}" stroke-width="${r2(1.4 + 2 * W)}" fill="none" stroke-linecap="round"/>`;
+      for (let i = 1; i <= 11; i++) {
+        const t = i / 12, q = qPt(o, ctl, b, t), d = qTan(o, ctl, b, t), L2 = Math.hypot(d[0], d[1]) || 1, ux = -d[1] / L2, uy = d[0] / L2, f = (1 - t * 0.7) * 7 * k;
+        for (const sg of [1, -1]) s += `<path d="M${r2(q[0])},${r2(q[1])} q${r2(sg * ux * f * 0.5 + d[0] / L2 * 2)},${r2(sg * uy * f * 0.5 + d[1] / L2 * 2)} ${r2(sg * ux * f + d[0] / L2 * 2.5)},${r2(sg * uy * f + d[1] / L2 * 2.5 + 1.5)}" stroke="${OUT}" stroke-width="${r2(2.6 * k + 1.4)}" stroke-linecap="round" fill="none"/>`;
+      }
+      for (let i = 1; i <= 11; i++) {
+        const t = i / 12, q = qPt(o, ctl, b, t), d = qTan(o, ctl, b, t), L2 = Math.hypot(d[0], d[1]) || 1, ux = -d[1] / L2, uy = d[0] / L2, f = (1 - t * 0.7) * 7 * k;
+        for (const sg of [1, -1]) s += `<path d="M${r2(q[0])},${r2(q[1])} q${r2(sg * ux * f * 0.5 + d[0] / L2 * 2)},${r2(sg * uy * f * 0.5 + d[1] / L2 * 2)} ${r2(sg * ux * f + d[0] / L2 * 2.5)},${r2(sg * uy * f + d[1] / L2 * 2.5 + 1.5)}" stroke="${sg > 0 ? c.mid : c.dark}" stroke-width="${r2(2.6 * k)}" stroke-linecap="round" fill="none"/>`;
+      }
+      luit(`M${r2(o[0])},${r2(o[1])} Q${r2(ctl[0])},${r2(ctl[1])} ${r2(b[0])},${r2(b[1])}`, neonDe(c), 0.8);
+      return s + `<path d="M${r2(o[0])},${r2(o[1])} Q${r2(ctl[0])},${r2(ctl[1])} ${r2(b[0])},${r2(b[1])}" stroke="${c.light}" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
+    }
+    __name(fronde, "fronde");
+    var FRONDES = [[-160, 38, 0], [-20, 38, 0], [-120, 32, 0], [-60, 32, 0], [-90, 26, 0], [-175, 34, 1], [-5, 34, 1], [-140, 30, 1], [-40, 30, 1]];
+    function fougere({ teinte = "emeraude", petit = false } = {}) {
+      const k = petit ? 0.75 : 1, c = T[teinte], h = 50 * k, id = `fou${teinte[0]}${petit ? "p" : "g"}`;
+      const tronc = `M${r2(-4.5 * k)},1 Q${r2(-3 * k)},${r2(-h * 0.5)} ${r2(-3.4 * k)},${r2(-h)} L${r2(3.4 * k)},${r2(-h)} Q${r2(3 * k)},${r2(-h * 0.5)} ${r2(4.8 * k)},1 Z`;
+      let s = ombre(20 * k) + `<path d="${tronc}" fill="${BOIS.left}" stroke="${OUT}" stroke-width="${W}"/>` + Array.from({ length: 9 }, (_, i) => `<path d="M${r2(-3.5 * k)},${r2(-h * (i + 0.6) / 9.5)} q${r2(3.5 * k)},${r2(2.4 * k)} ${r2(7 * k)},0" stroke="${BOIS.bark}" stroke-width="0.9" fill="none"/>`).join("");
+      const o = [0, -h];
+      s += FRONDES.filter((f) => !f[2]).map(([a, l], i) => fronde(`${id}${i}`, o, a, l, T.profond, k)).join("") + FRONDES.filter((f) => f[2]).map(([a, l], i) => fronde(`${id}d${i}`, o, a, l, c, k)).join("");
+      return s + E(0, -h, 3.4 * k, 2.4 * k, c.dark, W) + `<path d="M${r2(-1.4 * k)},${r2(-h - 1)} q1.4,-3 0,-5 M${r2(1.6 * k)},${r2(-h - 1)} q-1.2,-3 0.4,-5" stroke="${c.light}" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
+    }
+    __name(fougere, "fougere");
+    function pince(x, y, s, c1, c2, sens) {
+      point(x + sens * 4 * s, y - 0.6 * s, 0.9 * s, c1 === "#E8323A" ? "#FF5A6A" : "#FFA040");
+      return `<path d="M${r2(x)},${r2(y)} l${r2(sens * 7 * s)},${r2(-2 * s)} l${r2(-sens * 2 * s)},${r2(4 * s)} Z" fill="${c1}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/><path d="M${r2(x + sens * 4.6 * s)},${r2(y - 1.4 * s)} l${r2(sens * 2.4 * s)},${r2(-0.6 * s)}" stroke="${c2}" stroke-width="1.4" stroke-linecap="round"/>`;
+    }
+    __name(pince, "pince");
+    function heliconia({ fleur = "rouge", petit = false } = {}) {
+      const k = petit ? 0.75 : 1, id = `hel${fleur[0]}${petit ? "p" : "g"}`, [c1, c2] = fleur === "rouge" ? ["#E8323A", "#FFD84A"] : ["#FF8A30", "#FFF06A"];
+      let s = ombre(18 * k);
+      const F = [[-12, -50, 0], [14, -54, 0], [-24, -34, 1], [24, -36, 1], [3, -58, 1]];
+      s += F.filter((f) => !f[2]).map(([x, y], i) => tige([0, 0], [x * k * 0.4, y * k * 0.45], "#3E7A34", 1.3) + feuille(`${id}a${i}`, [x * k * 0.4, y * k * 0.45], [x * k, y * k], 6.5 * k, T.profond, { fleche: 0.1, nervures: 6, maigre: 0.6 })).join("");
+      for (const [hx, hh, sg] of [[-4, 46, 1], [6, 38, -1]]) {
+        s += tige([0, 0], [hx * k, -hh * k], "#5E8A3A", 1.2);
+        for (let j = 0; j < 5; j++) s += pince(hx * k, (-hh + 7 + j * 6.5) * k, 1.6 * k * (1 - j * 0.08), c1, c2, j % 2 ? sg : -sg);
+      }
+      s += F.filter((f) => f[2]).map(([x, y], i) => tige([0, 0], [x * k * 0.4, y * k * 0.45], "#3E7A34", 1.3) + feuille(`${id}b${i}`, [x * k * 0.4, y * k * 0.45], [x * k, y * k], 6.5 * k, T.emeraude, { fleche: 0.12, nervures: 6, maigre: 0.6 })).join("");
+      return s;
+    }
+    __name(heliconia, "heliconia");
+    function croton({ teinte = "magenta", petit = false } = {}) {
+      const k = petit ? 0.75 : 1, c = T[teinte], id = `cro${teinte[0]}${petit ? "p" : "g"}`;
+      let s = ombre(16 * k);
+      const A = [-160, -130, -100, -75, -50, -20, -145, -115, -88, -62, -35];
+      A.forEach((a, i) => {
+        const r = a * Math.PI / 180, L2 = (i < 6 ? 24 : 20) * k, b = [Math.cos(r) * 3 * k, -4 * k + Math.sin(r) * 3 * k];
+        s += feuille(`${id}${i}`, b, [b[0] + Math.cos(r) * L2, b[1] + Math.sin(r) * L2 + 4 * k], 3.6 * k, i < 6 ? T.violet : c, { fleche: 0.18, nervures: 5, maigre: 0.7 });
+      });
+      return s;
+    }
+    __name(croton, "croton");
+    function caladium({ teinte = "rose" } = {}) {
+      const id = `cal${teinte[0]}`;
+      let s = ombre(14);
+      [[-9, -10, 8], [9, -11, 8], [0, -15, 9], [-5, -6, 7], [6, -5, 7]].forEach(([x, y, t], i) => {
+        s += tige([0, 0], [x * 0.6, y * 0.6], "#C0507E", 1.1) + coeur(`${id}${i}`, x, y, t, versDehors(x, y, 0, 4), T.emeraude, { c2: T[teinte] });
+      });
+      return s;
+    }
+    __name(caladium, "caladium");
+    var rond = /* @__PURE__ */ __name((x, y, r, fill) => `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="${fill}"/>`, "rond");
+    function houppier(id, lobes, c) {
+      const contour = lobes.map(([x, y, r]) => rond(x, y, r + W, OUT)).join("");
+      const zone = `<clipPath id="${id}">${lobes.map(([x, y, r]) => rond(x, y, r, "#000")).join("")}</clipPath>`;
+      return contour + `<defs>${zone}</defs><g clip-path="url(#${id})">${lobes.map(([x, y, r]) => rond(x, y, r, c.dark)).join("")}${lobes.map(([x, y, r]) => rond(x - r * 0.18, y - r * 0.22, r * 0.86, c.mid)).join("")}${lobes.map(([x, y, r]) => rond(x - r * 0.35, y - r * 0.42, r * 0.38, c.light)).join("")}</g>`;
+    }
+    __name(houppier, "houppier");
+    function fromager({ teinte = "sarcelle", lianes = true } = {}) {
+      const c = T[teinte], id = `fro${teinte[0]}${lianes ? "l" : ""}`;
+      let s = ombre(30, 12);
+      const tronc = "M-18,2 Q-10,-2 -7,-8 Q-6,-30 -5,-52 L5,-52 Q6,-30 7,-8 Q10,-2 19,2 Q12,4 8,1 Q4,4 0,2 Q-4,4 -8,1 Q-12,4 -18,2 Z";
+      s += `<path d="${tronc}" fill="${BOIS.left}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}t"><path d="${tronc}"/></clipPath></defs><g clip-path="url(#${id}t)"><path d="M1,4 Q3,-30 2,-56 L24,-56 L24,4 Z" fill="${BOIS.right}"/><path d="M-3,-10 Q-2,-25 -3,-40 M3,-14 Q4,-28 3,-44" stroke="${BOIS.bark}" stroke-width="0.8" fill="none"/></g>`;
+      s += houppier(`${id}f`, [[-26, -66, 15], [26, -66, 15], [0, -82, 17], [-14, -86, 13], [14, -88, 13]], T.profond);
+      s += houppier(`${id}d`, [[-30, -56, 13], [30, -55, 13], [-12, -62, 15], [13, -62, 15], [0, -72, 14]], c);
+      [[-24, -70], [20, -74], [-6, -84], [8, -60], [-30, -52], [28, -50], [0, -70]].forEach(([x, y], i) => point(x, y, 1.1, i % 3 ? "#5CF2E6" : "#FF6AD0"));
+      if (lianes) {
+        for (const [x, y, l] of [[-34, -50, 30], [-18, -50, 24], [24, -48, 34], [36, -50, 22]]) {
+          s += `<path d="M${x},${y} q2,${l * 0.5} -1,${l}" stroke="${OUT}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M${x},${y} q2,${l * 0.5} -1,${l}" stroke="#5E9A3A" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+          for (let j = 1; j < 4; j++) s += E(x + (j % 2 ? 2 : -1.4), y + l * j / 4, 2.2, 1.3, j % 2 ? T.acide.mid : T.emeraude.mid, 0.8);
+          s += E(x - 0.6, y + l, 2.4, 2.4, T.rose.mid, W) + E(x - 0.6, y + l, 0.9, 0.9, "#FFE070", 0);
+          luit(`M${x},${y} q2,${l * 0.5} -1,${l}`, "#D4FF7A", 0.6);
+          point(x - 0.6, y + l, 1.4, "#FF6AD0");
+        }
+      }
+      return s;
+    }
+    __name(fromager, "fromager");
+    function bromelia({ teinte = "sarcelle", fleur = "magenta", petit = false } = {}) {
+      const k = petit ? 0.72 : 1, c = T[teinte], f = T[fleur], id = `bro${teinte[0]}${fleur[0]}${petit ? "p" : "g"}`;
+      let s = ombre(17 * k);
+      const A = [-172, -8, -152, -28, -132, -48, -114, -66, -96, -82];
+      A.forEach((a, i) => {
+        const r = a * Math.PI / 180, L2 = (i < 4 ? 21 : i < 8 ? 18 : 15) * k;
+        s += feuille(`${id}${i}`, [0, -2 * k], [Math.cos(r) * L2, -2 * k + Math.sin(r) * L2 * 1.05 + 2 * k], 4.2 * k, i % 2 ? c : T.profond, { fleche: 0.3, nervures: 4, maigre: 0.45 });
+      });
+      [[-150, 9], [-30, 9], [-118, 11], [-62, 11], [-90, 12], [-135, 7], [-45, 7]].forEach(([a, l], i) => {
+        const r = a * Math.PI / 180, b = [0, -9 * k], q = [b[0] + Math.cos(r) * l * k * 1.1, b[1] + Math.sin(r) * l * k * 1.1], n = [-Math.sin(r) * 2.2 * k, Math.cos(r) * 2.2 * k];
+        s += `<path d="M${r2(b[0] + n[0])},${r2(b[1] + n[1])} L${r2(q[0])},${r2(q[1])} L${r2(b[0] - n[0])},${r2(b[1] - n[1])} Z" fill="${i % 2 ? f.light : f.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`;
+        luit(`M${r2(b[0])},${r2(b[1])} L${r2(q[0])},${r2(q[1])}`, neonDe(f), 0.55);
+        point(q[0], q[1], 0.7 * k, neonDe(f));
+      });
+      return s + E(0, -9 * k, 2.2 * k, 1.6 * k, f.light, W);
+    }
+    __name(bromelia, "bromelia");
+    function crosses({ teinte = "emeraude" } = {}) {
+      const c = T[teinte], id = `cro_s${teinte[0]}`;
+      let s = ombre(18);
+      s += [[-172, 28], [-8, 28], [-150, 24], [-30, 24], [-125, 20], [-55, 20]].map(([a, l], i) => fronde(`${id}${i}`, [0, -1], a, l, i < 2 ? T.profond : c, 0.7)).join("");
+      for (const [x, sg, h] of [[-3, -1, 6], [2, 1, 8]]) {
+        const top = -h, d = `M${x},-1 Q${x + sg * 0.5},${top * 0.6} ${x + sg * 1.2},${top} A2 2 0 1 1 ${x + sg * 3.6},${top - 2.2} A1 1 0 1 1 ${x + sg * 2.6},${top - 2.8}`;
+        s += `<path d="${d}" stroke="${OUT}" stroke-width="${r2(1.8 + 2 * W)}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${c.mid}" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${c.light}" stroke-width="0.6" fill="none" stroke-linecap="round"/>`;
+        luit(d, neonDe(c), 0.55);
+      }
+      return s;
+    }
+    __name(crosses, "crosses");
+    function orchidees({ fleur = "magenta" } = {}) {
+      const f = fleur === "blanches" ? { light: "#FFFFFF", mid: "#F4ECFF", dark: "#C8B4F0" } : T[fleur], labelle = fleur === "blanches" ? T.magenta.mid : T.rose.light, id = `orc${fleur[0]}`, z = 1.3;
+      let s = ombre(15);
+      s += [[-150, 16], [-30, 17], [-118, 14], [-62, 15]].map(([a, l], i) => {
+        const r = a * Math.PI / 180;
+        return feuille(`${id}${i}`, [0, -1], [Math.cos(r) * l * z, -1 + (Math.sin(r) * l * 0.7 + 4) * z], 2.4 * z, i % 2 ? T.emeraude : T.profond, { fleche: 0.3, nervures: 3, maigre: 0.55 });
+      }).join("");
+      s += tige([0, -2], [10 * z, -26 * z], "#5E8A3A", 1.2);
+      [[3, -20], [7, -25], [12, -27], [16, -24], [-2, -15]].forEach(([x0, y0], i) => {
+        const k = (i === 4 ? 0.8 : 1) * z, x = x0 * z, y = y0 * z;
+        s += [0, 72, 144, 216, 288].map((a) => {
+          const r = (a - 90) * Math.PI / 180;
+          return E(x + Math.cos(r) * 2.2 * k, y + Math.sin(r) * 2 * k, 1.9 * k, 1.9 * k, a % 144 ? f.mid : f.light, 0.7);
+        }).join("");
+        s += E(x, y + 0.6 * k, 1.3 * k, 1.5 * k, labelle, 0.7) + E(x, y, 0.5, 0.5, "#FFE070", 0);
+        point(x, y, 1.1 * k, fleur === "blanches" ? "#E8FFFA" : neonDe(f));
+      });
+      return s;
+    }
+    __name(orchidees, "orchidees");
+    function ravenala({ petit = false } = {}) {
+      const k = petit ? 0.74 : 1, h = 44 * k, id = `rav${petit ? "p" : "g"}`;
+      let s = ombre(14 * k);
+      const tronc = `M${r2(-3.4 * k)},1 Q${r2(-2.6 * k)},${r2(-h * 0.5)} ${r2(-2.2 * k)},${r2(-h)} L${r2(2.2 * k)},${r2(-h)} Q${r2(2.6 * k)},${r2(-h * 0.5)} ${r2(3.6 * k)},1 Z`;
+      s += `<path d="${tronc}" fill="#8A8676" stroke="${OUT}" stroke-width="${W}"/>` + Array.from({ length: 7 }, (_, i) => `<path d="M${r2(-3 * k)},${r2(-h * (i + 0.7) / 7.5)} q${r2(3 * k)},${r2(1.4 * k)} ${r2(6 * k)},0" stroke="#5E5A4C" stroke-width="0.7" fill="none"/>`).join("");
+      const o = [0, -h];
+      const F = [[-168, 1, 0], [-12, 1, 0], [-148, 1.05, 0], [-32, 1.05, 0], [-128, 1.1, 0], [-52, 1.1, 0], [-110, 1.12, 1], [-70, 1.12, 1], [-90, 1.15, 1]];
+      F.forEach(([a, l, devant], i) => {
+        const r = a * Math.PI / 180, p0 = [o[0] + Math.cos(r) * 13 * k * l, o[1] + Math.sin(r) * 13 * k * l], p1 = [o[0] + Math.cos(r) * 36 * k * l, o[1] + Math.sin(r) * 36 * k * l];
+        s += `<path d="M${r2(o[0])},${r2(o[1])} L${r2(p0[0])},${r2(p0[1])}" stroke="${OUT}" stroke-width="${r2(1.4 + 2 * W)}" stroke-linecap="round"/><path d="M${r2(o[0])},${r2(o[1])} L${r2(p0[0])},${r2(p0[1])}" stroke="#7FA86A" stroke-width="1.4" stroke-linecap="round"/>`;
+        s += feuille(`${id}${i}`, p0, p1, 4.6 * k, devant ? T.emeraude : T.profond, { fleche: 0.08, dechire: i % 2 ? 0.5 : 0, nervures: 8, maigre: 0.5 });
+      });
+      s += `<path d="M${r2(-3 * k)},${r2(-h + 3 * k)} Q0,${r2(-h - 6 * k)} ${r2(3 * k)},${r2(-h + 3 * k)} Z" fill="#6E9A56" stroke="${OUT}" stroke-width="${W}"/>`;
+      [[-2.4, -1], [0, -2.6], [2.4, -1], [-1.2, 1.2], [1.3, 1.1]].forEach(([dx, dy]) => {
+        s += E(dx * k, -h + 2 * k + dy * k, 1.3 * k, 1.3 * k, "#2E6BFF", 0.6) + E(dx * k - 0.4, -h + 1.6 * k + dy * k, 0.5, 0.5, "#9FD8FF", 0);
+        point(dx * k, -h + 2 * k + dy * k, 0.9 * k, "#5CA8FF");
+      });
+      return s;
+    }
+    __name(ravenala, "ravenala");
+    function fleche(id, x, y, s, a, c) {
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const tr = /* @__PURE__ */ __name(([u, v]) => [x + (u * ca - v * sa) * s, y + (u * sa + v * ca) * s], "tr");
+      const P = [[0, 1], [0.32, 0.62], [0.5, 0.2], [0.52, -0.2], [0.36, -0.46], [0.14, -0.3], [0, -0.16], [-0.14, -0.3], [-0.36, -0.46], [-0.52, -0.2], [-0.5, 0.2], [-0.32, 0.62]].map(([u, v]) => tr([u * 14, v * 14]));
+      const d = `M${pts(P)} Z`;
+      let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">`;
+      o += `<path d="M${pts([[0, -0.2], [0, 1.1], [0.7, 1.1], [0.7, -0.6]].map(([u, v]) => tr([u * 14, v * 14])))} Z" fill="${c.dark}" opacity="0.5"/>`;
+      const [n0, m0] = tr([0, -2.2]), [n1, m1] = tr([0, 13]);
+      o += `<path d="M${r2(n0)},${r2(m0)} L${r2(n1)},${r2(m1)}" stroke="${c.light}" stroke-width="1"/>`;
+      luit(`M${r2(n0)},${r2(m0)} L${r2(n1)},${r2(m1)}`, neonDe(c), 0.8);
+      const [gx, gy] = tr([0, 14.6]);
+      o += E(gx, gy + 0.6, 0.9, 1.1, "#DFFFF6", 0.4);
+      point(gx, gy + 0.6, 0.8, "#E8FFFA");
+      for (const [u, v] of [[-6, 2], [6, 2], [-5.4, 6.4], [5.4, 6.4], [-5.4, -3.6], [5.4, -3.6]]) {
+        const [a1, b1] = tr([0, v * 0.6]), [a2, b2] = tr([u, v + 2]);
+        o += `<path d="M${r2(a1)},${r2(b1)} L${r2(a2)},${r2(b2)}" stroke="${c.light}" stroke-width="0.6" opacity="0.75"/>`;
+        luit(`M${r2(a1)},${r2(b1)} L${r2(a2)},${r2(b2)}`, neonDe(c), 0.4);
+      }
+      return o + "</g>";
+    }
+    __name(fleche, "fleche");
+    function alocasia({ teinte = "profond", petit = false } = {}) {
+      const k = petit ? 0.74 : 1, c = T[teinte], id = `alo${teinte[0]}${petit ? "p" : "g"}`;
+      let s = ombre(16 * k);
+      const L2 = [[-15, -30, 1, 0], [14, -32, 1, 0], [0, -40, 1.05, 0], [-21, -18, 0.9, 1], [20, -19, 0.9, 1], [-3, -24, 0.95, 1]];
+      const une = /* @__PURE__ */ __name(([x, y, t], i) => tige([0, 0], [x * k, y * k], "#4E7A40", 1.4) + fleche(`${id}${i}`, x * k, y * k + 1, t * k * 1.05, versDehors(x, y, 0, 8) * 0.55, i % 2 ? c : T.emeraude), "une");
+      s += L2.filter((l) => !l[3]).map(une).join("") + L2.filter((l) => l[3]).map((l, i) => une(l, i + 3)).join("");
+      return s;
+    }
+    __name(alocasia, "alocasia");
+    var JUNGLE = [
+      ...["acide", "emeraude"].flatMap((t) => [false, true].map((p) => [`bananier${t === "emeraude" ? "_emeraude" : ""}${p ? "_petit" : ""}`, `Bananier (${p ? "petit" : "grand"}, ${t})`, "banana", () => bananier({ teinte: t, petit: p })])),
+      ...["emeraude", "sarcelle"].flatMap((t) => [false, true].map((p) => [`monstera${t === "sarcelle" ? "_sarcelle" : ""}${p ? "_petit" : ""}`, `Monstera (${p ? "petit" : "grand"}, ${t})`, "monstera", () => monstera({ teinte: t, petit: p })])),
+      ...["emeraude", "acide"].flatMap((t) => [false, true].map((p) => [`fougere${t === "acide" ? "_acide" : ""}${p ? "_petite" : ""}`, `Fougère arborescente (${p ? "petite" : "grande"}, ${t})`, "treefern", () => fougere({ teinte: t, petit: p })])),
+      ...["rouge", "orange"].flatMap((f) => [false, true].map((p) => [`heliconia${f === "orange" ? "_orange" : ""}${p ? "_petit" : ""}`, `Héliconia (${p ? "petit" : "grand"}, fleurs ${f}s)`, "heliconia", () => heliconia({ fleur: f, petit: p })])),
+      ...["magenta", "corail", "violet"].map((t) => [`croton${t === "magenta" ? "" : `_${t}`}`, `Croton (${t})`, "croton", () => croton({ teinte: t })]),
+      ...["rose", "magenta"].map((t) => [`caladium${t === "rose" ? "" : `_${t}`}`, `Caladium (${t})`, "caladium", () => caladium({ teinte: t })]),
+      ...[["sarcelle", "magenta", false, ""], ["violet", "corail", false, "_rouge"], ["acide", "magenta", true, "_petite"]].map(([t, f, p, n]) => [`bromelia${n}`, `Broméliacée (${t}, bractées ${f}${p ? ", petite" : ""})`, "bromelia", () => bromelia({ teinte: t, fleur: f, petit: p })]),
+      ...["emeraude", "acide", "sarcelle"].map((t) => [`crosses${t === "emeraude" ? "" : `_${t}`}`, `Crosses de fougère (${t})`, "fiddlehead", () => crosses({ teinte: t })]),
+      ...["magenta", "blanches", "violet"].map((f) => [`orchidees${f === "magenta" ? "" : `_${f === "violet" ? "violettes" : f}`}`, `Orchidées terrestres (${f})`, "orchid", () => orchidees({ fleur: f })]),
+      ...[false, true].map((p) => [`ravenala${p ? "_petit" : ""}`, `Arbre du voyageur (${p ? "petit" : "grand"})`, "ravenala", () => ravenala({ petit: p })]),
+      ...[["profond", false, ""], ["sarcelle", false, "_sarcelle"], ["profond", true, "_petit"]].map(([t, p, n]) => [`alocasia${n}`, `Alocasia (${t}${p ? ", petit" : ""})`, "alocasia", () => alocasia({ teinte: t, petit: p })]),
+      ...["sarcelle", "emeraude"].flatMap((t) => [true, false].map((l) => [`fromager${t === "emeraude" ? "_emeraude" : ""}${l ? "" : "_nu"}`, `Fromager (${t}${l ? ", lianes et orchidées" : ""})`, "kapok", () => fromager({ teinte: t, lianes: l })]))
+    ];
+    var JUNGLE_NUIT = JUNGLE.map(([fichier, libelle, decor, dessin]) => [`${fichier}_nuit`, `${libelle}, ses lueurs de nuit`, decor, () => lueurDe(dessin)]);
+    module.exports = { JUNGLE, JUNGLE_NUIT, lueurDe, bananier, monstera, fougere, heliconia, croton, caladium, fromager, bromelia, crosses, orchidees, ravenala, alocasia };
+  }
+});
+
 // atelier/herbes.js
 var require_herbes = __commonJS({
   "atelier/herbes.js"(exports, module) {
@@ -2148,6 +2488,7 @@ var require_plantes_liste = __commonJS({
   "atelier/plantes_liste.js"(exports, module) {
     var { arbre, ARBRES, arbreSaison, ARBRES_SAISONS, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require_arbres();
     var { ARBRES_DE_SAISON } = require_arbres_saisons();
+    var { JUNGLE, JUNGLE_NUIT } = require_jungle();
     var { touffe, TOUFFES, touffeSaison, TOUFFES_SAISONS } = require_herbes();
     var { rocher, ROCHERS, rocherSaison, ROCHERS_SAISONS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS } = require_rochers();
     var { coquillages, COQUILLAGES, boisFlotte, BOIS_FLOTTES } = require_plage();
@@ -2167,6 +2508,10 @@ var require_plantes_liste = __commonJS({
       ...BOULEAUX.map(([fichier, libelle, o]) => [fichier, libelle, "birch", () => bouleau(o)]),
       ...SAPINS.map(([fichier, libelle, o]) => [fichier, libelle, o.neige ? "snowpine" : "pine", () => sapin(o)]),
       ...PALMIERS.map(([fichier, libelle, o]) => [fichier, libelle, "palm", () => palmier(o)]),
+      // la jungle de la zone de départ (jungle.js) : bananier, monstera, fougère arborescente, héliconia, croton, caladium,
+      // fromager ; puis leurs lueurs de nuit
+      ...JUNGLE,
+      ...JUNGLE_NUIT,
       ...ARBRES_MORTS.map(([fichier, libelle, o]) => [fichier, libelle, "deadtree", () => arbreMort(o)]),
       // les autres plantes refaites (plantes.js) : le buisson et ses 8 variantes, la bruyère et ses 8, les fleurs et leurs 8,
       // le cactus et ses 8, la souche et ses 8, le rondin et ses 8, les champignons et leurs 8, les roseaux et leurs 8, les

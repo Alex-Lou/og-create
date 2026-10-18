@@ -179994,6 +179994,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/alocasia",
+   "rubrique": "plantes",
+   "titre": "Alocasia",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_nuit",
+   "rubrique": "plantes",
+   "titre": "Alocasia nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_petit",
+   "rubrique": "plantes",
+   "titre": "Alocasia petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Alocasia petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_sarcelle",
+   "rubrique": "plantes",
+   "titre": "Alocasia sarcelle",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_sarcelle.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/alocasia_sarcelle_nuit",
+   "rubrique": "plantes",
+   "titre": "Alocasia sarcelle nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/alocasia_sarcelle_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/arbre_hiver",
    "rubrique": "plantes",
    "titre": "Arbre d'hiver (grand, sous la neige, congère au pied)",
@@ -180187,6 +180289,142 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/arbre_printemps_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier",
+   "rubrique": "plantes",
+   "titre": "Bananier",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude_petit",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_emeraude_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier emeraude petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_emeraude_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_petit",
+   "rubrique": "plantes",
+   "titre": "Bananier petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bananier_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Bananier petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bananier_petit_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -180572,6 +180810,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/bromelia",
+   "rubrique": "plantes",
+   "titre": "Bromelia",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_nuit",
+   "rubrique": "plantes",
+   "titre": "Bromelia nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_petite",
+   "rubrique": "plantes",
+   "titre": "Bromelia petite",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_petite_nuit",
+   "rubrique": "plantes",
+   "titre": "Bromelia petite nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_petite_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_rouge",
+   "rubrique": "plantes",
+   "titre": "Bromelia rouge",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_rouge.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bromelia_rouge_nuit",
+   "rubrique": "plantes",
+   "titre": "Bromelia rouge nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bromelia_rouge_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/bruyere",
    "rubrique": "plantes",
    "titre": "Bruyère (grande, mauve)",
@@ -180901,6 +181241,74 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/cactus_sans_fleur.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium",
+   "rubrique": "plantes",
+   "titre": "Caladium",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium_magenta",
+   "rubrique": "plantes",
+   "titre": "Caladium magenta",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium_magenta.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium_magenta_nuit",
+   "rubrique": "plantes",
+   "titre": "Caladium magenta nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium_magenta_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/caladium_nuit",
+   "rubrique": "plantes",
+   "titre": "Caladium nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/caladium_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -181354,6 +181762,210 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/crosses",
+   "rubrique": "plantes",
+   "titre": "Crosses",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_acide",
+   "rubrique": "plantes",
+   "titre": "Crosses acide",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_acide.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_acide_nuit",
+   "rubrique": "plantes",
+   "titre": "Crosses acide nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_acide_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_nuit",
+   "rubrique": "plantes",
+   "titre": "Crosses nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_sarcelle",
+   "rubrique": "plantes",
+   "titre": "Crosses sarcelle",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_sarcelle.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/crosses_sarcelle_nuit",
+   "rubrique": "plantes",
+   "titre": "Crosses sarcelle nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/crosses_sarcelle_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton",
+   "rubrique": "plantes",
+   "titre": "Croton",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_corail",
+   "rubrique": "plantes",
+   "titre": "Croton corail",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_corail.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_corail_nuit",
+   "rubrique": "plantes",
+   "titre": "Croton corail nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_corail_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_nuit",
+   "rubrique": "plantes",
+   "titre": "Croton nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_violet",
+   "rubrique": "plantes",
+   "titre": "Croton violet",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_violet.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/croton_violet_nuit",
+   "rubrique": "plantes",
+   "titre": "Croton violet nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/croton_violet_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/erable",
    "rubrique": "plantes",
    "titre": "Érable rouge (grand, cramoisi)",
@@ -181592,6 +182204,278 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/fougere",
+   "rubrique": "plantes",
+   "titre": "Fougere",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide",
+   "rubrique": "plantes",
+   "titre": "Fougere acide",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere acide nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide_petite",
+   "rubrique": "plantes",
+   "titre": "Fougere acide petite",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_acide_petite_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere acide petite nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_acide_petite_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_petite",
+   "rubrique": "plantes",
+   "titre": "Fougere petite",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fougere_petite_nuit",
+   "rubrique": "plantes",
+   "titre": "Fougere petite nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fougere_petite_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager",
+   "rubrique": "plantes",
+   "titre": "Fromager",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude_nu",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude nu",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude_nu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude_nu_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude nu nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude_nu_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_emeraude_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager emeraude nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_emeraude_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_nu",
+   "rubrique": "plantes",
+   "titre": "Fromager nu",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_nu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_nu_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager nu nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_nu_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fromager_nuit",
+   "rubrique": "plantes",
+   "titre": "Fromager nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fromager_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/ginkgo",
    "rubrique": "plantes",
    "titre": "Ginkgo doré (grand, or)",
@@ -181683,6 +182567,142 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/ginkgo_petit_citron.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia",
+   "rubrique": "plantes",
+   "titre": "Heliconia",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange_petit",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_orange_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia orange petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_orange_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_petit",
+   "rubrique": "plantes",
+   "titre": "Heliconia petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/heliconia_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Heliconia petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/heliconia_petit_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -181887,6 +182907,142 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/magnolia_petit_blanc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera",
+   "rubrique": "plantes",
+   "titre": "Monstera",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_petit",
+   "rubrique": "plantes",
+   "titre": "Monstera petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_petit_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle_petit",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/monstera_sarcelle_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Monstera sarcelle petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/monstera_sarcelle_petit_nuit.svg"
    ],
    "cadre": [
     -50,
@@ -182170,6 +183326,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/orchidees",
+   "rubrique": "plantes",
+   "titre": "Orchidees",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_blanches",
+   "rubrique": "plantes",
+   "titre": "Orchidees blanches",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_blanches.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_blanches_nuit",
+   "rubrique": "plantes",
+   "titre": "Orchidees blanches nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_blanches_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_nuit",
+   "rubrique": "plantes",
+   "titre": "Orchidees nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_violettes",
+   "rubrique": "plantes",
+   "titre": "Orchidees violettes",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_violettes.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/orchidees_violettes_nuit",
+   "rubrique": "plantes",
+   "titre": "Orchidees violettes nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/orchidees_violettes_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/palmier",
    "rubrique": "plantes",
    "titre": "Palmier (grand, vert doux)",
@@ -182397,6 +183655,74 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/pin_parasol_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala",
+   "rubrique": "plantes",
+   "titre": "Ravenala",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala_nuit",
+   "rubrique": "plantes",
+   "titre": "Ravenala nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala_petit",
+   "rubrique": "plantes",
+   "titre": "Ravenala petit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ravenala_petit_nuit",
+   "rubrique": "plantes",
+   "titre": "Ravenala petit nuit",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ravenala_petit_nuit.svg"
    ],
    "cadre": [
     -50,
