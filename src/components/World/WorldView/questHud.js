@@ -60,7 +60,7 @@ export default {
       if (quest.kind === 'crafts' || quest.kind === 'craft') return { label: 'Ouvrir l’établi', run: () => this.openBench() };
       if (quest.kind === 'annex' || quest.kind === 'house') return sheetOf('foyer');
       if (quest.kind === 'visitor' || quest.kind === 'settle') {
-        return state.arrival ? { label: 'Accueillir l’arrivant', run: () => this.openArrival() } : look('Montrer le Ponton', state.sites.find(s => s.id === 'ponton'));
+        return state.arrival ? { label: 'Accueillir à la barque', run: () => this.openArrival() } : look('Montrer le Ponton', state.sites.find(s => s.id === 'ponton'));
       }
       if (quest.kind === 'expedition') {
         const zone = state.map.zones.find(z => z.known === false && z.explorable && z.anchor);
