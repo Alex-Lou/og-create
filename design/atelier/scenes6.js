@@ -589,9 +589,9 @@ const GP = require('./gravure_plage');
 const GR = require('./gravure_rencontre');
 const GL = require('./gravure_lorena');
 const GV = require('./gravure_vent');
-const NP = require('./neon_pont');
+const NN = require('./neon_naufrage');
 const GC = require('./gravure_cercle');
-for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', NP.pontNeon], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
+for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', NN.naufrage], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }

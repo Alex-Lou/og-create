@@ -845,4 +845,4 @@ function noir01() {
   return { plans, partition: { temps: [{ duree: D, camera: [[0, { z: 1.04 }], [D, { z: 1.1, y: 10 }]], pistes }] } };
 }
 
-module.exports = { pont01, vague01, racines01, noir01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, navire, REPERES, C, MARGE, G, D_ };
+module.exports = { pont01, vague01, racines01, noir01, valeur, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, navire, REPERES, C, MARGE, G, D_ };

@@ -47250,6 +47250,74 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-abime0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan abime0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-abime0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    150,
+    580,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-abime1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan abime1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-abime1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    150,
+    580,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-abime2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan abime2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-abime2_1.svg"
+   ],
+   "cadre": [
+    -80,
+    150,
+    580,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-abysse",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan abysse)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-abysse_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-anime",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan anime)",
@@ -47386,35 +47454,52 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-brume1",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-bulles0",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan brume1)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan bulles0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-brume1_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-bulles0_1.svg"
    ],
    "cadre": [
     -40,
-    -40,
+    80,
     480,
-    480
+    360
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-brume2",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-bulles1",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan brume2)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan bulles1)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-brume2_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-bulles1_1.svg"
    ],
    "cadre": [
     -40,
-    -40,
+    80,
     480,
-    480
+    360
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-bulles2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan bulles2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-bulles2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    80,
+    480,
+    360
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47454,6 +47539,57 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-ciel",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan ciel)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-ciel-nuit",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan ciel nuit)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-ciel-nuit_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-coeur",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cœur)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-coeur_1.svg"
+   ],
+   "cadre": [
+    138,
+    -22,
+    124,
+    124
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-cor",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cor)",
@@ -47483,40 +47619,6 @@
     114,
     40,
     34
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-cumulus0",
-   "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cumulus0)",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-cumulus0_1.svg"
-   ],
-   "cadre": [
-    -120,
-    8,
-    640,
-    66
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-cumulus1",
-   "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan cumulus1)",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-cumulus1_1.svg"
-   ],
-   "cadre": [
-    -120,
-    96,
-    640,
-    64
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47726,6 +47828,40 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-embruns0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan embruns0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-embruns0_1.svg"
+   ],
+   "cadre": [
+    -60,
+    230,
+    520,
+    220
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-embruns1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan embruns1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-embruns1_1.svg"
+   ],
+   "cadre": [
+    -60,
+    230,
+    520,
+    220
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-etincelles",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan étincelles)",
@@ -47738,6 +47874,23 @@
     60,
     90,
     90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-etoiles",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan etoiles)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-etoiles_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -47845,23 +47998,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-fond",
-   "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan fond)",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-fond_1.svg"
-   ],
-   "cadre": [
-    -40,
-    -40,
-    480,
-    480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-foudre",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan foudre)",
@@ -47870,10 +48006,27 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-foudre_1.svg"
    ],
    "cadre": [
-    60,
-    -24,
-    72,
-    244
+    36,
+    -36,
+    90,
+    260
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-front",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan front)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-front_1.svg"
+   ],
+   "cadre": [
+    -20,
+    86,
+    40,
+    210
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48057,10 +48210,10 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-houle_1.svg"
    ],
    "cadre": [
-    -120,
+    -140,
     320,
-    640,
-    140
+    680,
+    160
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48117,23 +48270,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-jour",
-   "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan jour)",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-jour_1.svg"
-   ],
-   "cadre": [
-    -40,
-    -40,
-    480,
-    480
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-lame",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan lame)",
@@ -48142,27 +48278,95 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-lame_1.svg"
    ],
    "cadre": [
-    -100,
-    -14,
-    600,
-    364
+    -140,
+    0,
+    680,
+    410
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-lueur",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-levre0",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan lueur)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan levre0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-lueur_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-levre0_1.svg"
    ],
    "cadre": [
-    -40,
-    -40,
-    480,
-    480
+    -140,
+    -70,
+    700,
+    280
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-levre1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan levre1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-levre1_1.svg"
+   ],
+   "cadre": [
+    -140,
+    -70,
+    700,
+    280
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-levre2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan levre2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-levre2_1.svg"
+   ],
+   "cadre": [
+    -140,
+    -70,
+    700,
+    280
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-levre3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan levre3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-levre3_1.svg"
+   ],
+   "cadre": [
+    -140,
+    -70,
+    700,
+    280
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-levre4",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan levre4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-levre4_1.svg"
+   ],
+   "cadre": [
+    -140,
+    -70,
+    700,
+    280
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48219,6 +48423,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-mer0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mer0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-mer0_1.svg"
+   ],
+   "cadre": [
+    -110,
+    176,
+    620,
+    294
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-mer1",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mer1)",
@@ -48227,10 +48448,10 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-mer1_1.svg"
    ],
    "cadre": [
-    -90,
-    178,
-    580,
-    270
+    -110,
+    188,
+    620,
+    282
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48244,10 +48465,10 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-mer2_1.svg"
    ],
    "cadre": [
-    -90,
-    196,
-    580,
-    270
+    -110,
+    205,
+    620,
+    265
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48261,10 +48482,10 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-mer3_1.svg"
    ],
    "cadre": [
-    -90,
-    218,
-    580,
-    270
+    -110,
+    229,
+    620,
+    241
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48278,10 +48499,27 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-mer4_1.svg"
    ],
    "cadre": [
-    -90,
-    250,
-    580,
-    270
+    -110,
+    262,
+    620,
+    208
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-mer5",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan mer5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-mer5_1.svg"
+   ],
+   "cadre": [
+    -110,
+    304,
+    620,
+    166
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48304,69 +48542,120 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage0",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-navire-fantome",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage0)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan navire fantome)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage0_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-navire-fantome_1.svg"
    ],
    "cadre": [
-    -120,
-    -4,
-    640,
-    72
+    36,
+    92,
+    344,
+    190
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage1",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-navire-trace",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage1)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan navire trace)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage1_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-navire-trace_1.svg"
    ],
    "cadre": [
-    -120,
-    32,
-    640,
-    68
+    36,
+    92,
+    344,
+    190
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage2",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-oeil0",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage2)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan oeil0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage2_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-oeil0_1.svg"
    ],
    "cadre": [
-    -120,
-    122,
-    640,
-    76
+    137.36,
+    -22.64,
+    125.28,
+    125.28
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-nuage3",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-oeil1",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan nuage3)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan oeil1)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-nuage3_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-oeil1_1.svg"
    ],
    "cadre": [
-    -120,
-    164,
-    640,
-    68
+    92,
+    -68,
+    216,
+    216
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-oeil2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan oeil2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-oeil2_1.svg"
+   ],
+   "cadre": [
+    31.519999999999982,
+    -128.48000000000002,
+    336.96000000000004,
+    336.96000000000004
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-oeil3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan oeil3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-oeil3_1.svg"
+   ],
+   "cadre": [
+    -44.08000000000001,
+    -204.08,
+    488.16,
+    488.16
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-oeil4",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan oeil4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-oeil4_1.svg"
+   ],
+   "cadre": [
+    -145.60000000000002,
+    -305.6,
+    691.2,
+    691.2
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48401,6 +48690,74 @@
     104,
     34,
     54
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-orage0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan orage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-orage0_1.svg"
+   ],
+   "cadre": [
+    -160,
+    -200,
+    720,
+    258
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-orage1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan orage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-orage1_1.svg"
+   ],
+   "cadre": [
+    -160,
+    -200,
+    720,
+    286
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-orage2",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan orage2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-orage2_1.svg"
+   ],
+   "cadre": [
+    -160,
+    -200,
+    720,
+    326
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-orage3",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan orage3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-orage3_1.svg"
+   ],
+   "cadre": [
+    -160,
+    -200,
+    720,
+    354
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -48729,6 +49086,74 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-racines-fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan racines fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-racines-fond_1.svg"
+   ],
+   "cadre": [
+    -20,
+    240,
+    460,
+    300
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-remous0",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan remous0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-remous0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-remous1",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan remous1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-remous1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-rideau",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan rideau)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-rideau_1.svg"
+   ],
+   "cadre": [
+    -100,
+    -480,
+    600,
+    960
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_plan-soleil",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan soleil)",
@@ -48737,123 +49162,89 @@
     "svg/scenes/tutoriel/01_pont/01_pont_plan-soleil_1.svg"
    ],
    "cadre": [
-    240,
-    26,
-    120,
-    120
+    -104,
+    -50,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale0",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-strate0",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale0)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan strate0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale0_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-strate0_1.svg"
    ],
    "cadre": [
-    26,
-    20,
-    60,
-    60
+    -140,
+    126,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale1",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-strate1",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale1)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan strate1)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale1_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-strate1_1.svg"
    ],
    "cadre": [
-    146,
-    -2,
-    60,
-    60
+    -140,
+    154,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale2",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-surface",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale2)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan surface)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale2_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-surface_1.svg"
    ],
    "cadre": [
-    98,
-    82,
-    60,
-    60
+    -120,
+    -260,
+    640,
+    760
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale3",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-trait-horizon",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale3)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan trait horizon)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale3_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-trait-horizon_1.svg"
    ],
    "cadre": [
-    342,
-    20,
-    60,
-    60
+    -140,
+    186,
+    680,
+    44
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale4",
+   "id": "scenes/tutoriel/01_pont/01_pont_plan-vignette",
    "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale4)",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan vignette)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale4_1.svg"
-   ],
-   "cadre": [
-    206,
-    146,
-    60,
-    60
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-spirale5",
-   "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan spirale5)",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-spirale5_1.svg"
-   ],
-   "cadre": [
-    -10,
-    120,
-    60,
-    60
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/01_pont/01_pont_plan-teinte",
-   "rubrique": "scenes",
-   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (01 pont plan teinte)",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_plan-teinte_1.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_plan-vignette_1.svg"
    ],
    "cadre": [
     -40,

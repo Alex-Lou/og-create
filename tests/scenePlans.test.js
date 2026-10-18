@@ -43,8 +43,8 @@ describe('le temps que chaque bulle joue', () => {
     expect(jour[k].scene).toBe('03_trouee');
     expect(rangBulle(jour, k)).toBe(3);
   });
-  it('les scènes du livre, du Vent et du cercle ont un temps pour chaque bulle de leur suite', () => {
-    for (const [suite, ids] of [['arrivee', ['03_livre']], ['souffle', ['03_vent']], ['jour', ['03_trouee', '03_ciel']], ['cercle', ['03_nuit', '05_cercle']], ['epave', ['05_promesse']]]) {
+  it('les scènes du naufrage, du livre, du Vent et du cercle ont un temps pour chaque bulle de leur suite', () => {
+    for (const [suite, ids] of [['naufrage', ['01_pont']], ['arrivee', ['03_livre']], ['souffle', ['03_vent']], ['jour', ['03_trouee', '03_ciel']], ['cercle', ['03_nuit', '05_cercle']], ['epave', ['05_promesse']]]) {
       for (const id of ids) expect(SCENES[suite].filter(l => l.scene === id).length).toBe(DATA.scenes[id].partition.temps.length);
     }
   });
