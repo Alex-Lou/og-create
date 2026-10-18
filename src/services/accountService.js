@@ -7,6 +7,8 @@ const data = response => response.data;
 export default {
   // { email, username, name, look, createdAt, provisional, pendingEmail }
   profile: () => http.get('/account').then(data),
+  // Le mode debug de ce compte (serveur : DEBUG_ACCOUNTS) : { debug }
+  debug: () => http.get('/account/debug').then(data),
   changePassword: (current, password) => http.post('/account/password', { current, password }).then(data),
   // → { message, pendingEmail } : l'adresse ne change qu'une fois le lien ouvert
   changeEmail: (password, email) => http.post('/account/email', { password, email }).then(data),

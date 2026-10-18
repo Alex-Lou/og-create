@@ -136,6 +136,7 @@
     </div>
     <div v-if="modeVeil" class="oc-mode-veil" aria-hidden="true" @animationend="modeVeil = false"></div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" :locked="lockedTabs" @select="handleModeSelect" />
+    <DebugReset v-if="debugMode" @restarted="islandRestarted" @show-alert="showAlert" />
     <!-- L'arrivée sur l'île : seulement si sa première vue n'est pas prête tout de suite -->
     <transition name="island-loader">
       <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />
@@ -284,6 +285,7 @@ import TimerBrief from '../../Trial/TimerBrief/TimerBrief.vue';
 import TrialInventory from '../../Trial/TrialInventory/TrialInventory.vue';
 import GModal from '../../ui/GModal/GModal.vue';
 import TabBar from '../TabBar/TabBar.vue';
+import DebugReset from '../DebugReset/DebugReset.vue';
 import BrumeGuide from '../../Guide/BrumeGuide/BrumeGuide.vue';
 import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
@@ -328,6 +330,7 @@ export default {
     GameAchievementsPopup,
     TimerModeButton,
     TimerQuestions,
+    DebugReset,
     TimerBrief,
     TrialInventory,
     GModal,
