@@ -493,19 +493,25 @@ describe('village : fondations de la vie', () => {
     expect(v.residents.find(r => r.role === 'foyer').zone.trade.length).toBeGreaterThan(0);
   });
   it('il flâne dans sa zone de vie : loin des portes, on le trouve toujours chez lui', () => {
-    const v = villageOf(base);
-    const doors = v.residents.map(r => r.work);
-    let checked = 0;
-    for (let i = 0; i < 1500; i++) {
-      for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
-        if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
-        const r = v.residents.find(o => o.id === p.id);
-        expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
-        checked++;
+    // (un jour de l'île fixé : certains jours, les habitants se retrouvent au Foyer le matin et l'on n'en voit aucun flâner)
+    vi.useFakeTimers({ now: new Date(2026, 9, 18, 12) });
+    try {
+      const v = villageOf(base);
+      const doors = v.residents.map(r => r.work);
+      let checked = 0;
+      for (let i = 0; i < 1500; i++) {
+        for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
+          if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
+          const r = v.residents.find(o => o.id === p.id);
+          expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
+          checked++;
+        }
       }
+      // (assez de flâneries vues pour que le test dise quelque chose)
+      expect(checked).toBeGreaterThan(100);
+    } finally {
+      vi.useRealTimers();
     }
-    // (assez de flâneries vues pour que le test dise quelque chose)
-    expect(checked).toBeGreaterThan(100);
   });
   it('la tournée du jour couvre la journée, de son lever au soir, sans boucle', () => {
     const v = villageOf(base);
