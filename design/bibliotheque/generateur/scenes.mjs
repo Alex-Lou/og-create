@@ -24136,6 +24136,7 @@ var require_neon_naufrage = __commonJS({
     }, "vignette");
     var T = [4200, 5200, 5200, 4600, 2600, 3e3, 3e3];
     var FIN = T.reduce((a, b) => a + b, 0);
+    var LENT = 1.6;
     var PONT = 19200;
     var NOYADE = 20100;
     var PROPS = ["x", "y", "s", "r", "o"];
@@ -24401,11 +24402,12 @@ var require_neon_naufrage = __commonJS({
         [24800, { z: 1.14, x: -12, y: 60, e: "ease-out" }],
         [FIN, { z: 1.22, x: -16, y: 90 }]
       ];
-      const temps = T.map((d) => ({ duree: d, camera: [], pistes: {} }));
-      parTemps(T, camera, ["x", "y", "z", "r"]).forEach((c, n) => {
+      const lent = /* @__PURE__ */ __name((cles) => cles.map(([t, c]) => [Math.round(t * LENT), c]), "lent"), TL = T.map((d) => Math.round(d * LENT));
+      const temps = TL.map((d) => ({ duree: d, camera: [], pistes: {} }));
+      parTemps(TL, lent(camera), ["x", "y", "z", "r"]).forEach((c, n) => {
         temps[n].camera = c;
       });
-      for (const [id2, cles] of Object.entries(P2)) parTemps(T, cles).forEach((c, n) => {
+      for (const [id2, cles] of Object.entries(P2)) parTemps(TL, lent(cles)).forEach((c, n) => {
         temps[n].pistes[id2] = c;
       });
       return { plans, partition: { temps } };

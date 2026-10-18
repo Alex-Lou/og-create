@@ -262,7 +262,7 @@ const vignette = p => { const A = atelier(`${p}G`); return A.out(plein(A.lin([[0
 
 // ——— la scène : 01_pont, du pont jusqu'au noir ———
 // les temps : la légende, les trois messages du capitaine, la lame, sous la surface, le noir
-const T = [4200, 5200, 5200, 4600, 2600, 3000, 3000], FIN = T.reduce((a, b) => a + b, 0);
+const T = [4200, 5200, 5200, 4600, 2600, 3000, 3000], FIN = T.reduce((a, b) => a + b, 0), LENT = 1.6;
 // (la fin du pont ; l'instant où l'eau nous recouvre : sous le rideau, la scène passe sous la surface)
 const PONT = 19200, NOYADE = 20100;
 const PROPS = ['x', 'y', 's', 'r', 'o'];
@@ -452,9 +452,12 @@ function naufrage() {
     [19850, { z: 1.42, x: 6, y: -96, e: 'linear' }], ...secoue(19900, { z: 1.42, x: 6, y: -96 }, 14, 3, 50), [NOYADE - 1, { z: 1.42, x: 6, y: -96, e: 'linear' }], [NOYADE, { z: 1.02, x: 0, y: 0, e: 'ease-out' }],
     [21800, { z: 1.06, x: -6, y: 20, e: 'linear' }], [24800, { z: 1.14, x: -12, y: 60, e: 'ease-out' }], [FIN, { z: 1.22, x: -16, y: 90 }]];
 
-  const temps = T.map(d => ({ duree: d, camera: [], pistes: {} }));
-  parTemps(T, camera, ['x', 'y', 'z', 'r']).forEach((c, n) => { temps[n].camera = c; });
-  for (const [id, cles] of Object.entries(P)) parTemps(T, cles).forEach((c, n) => { temps[n].pistes[id] = c; });
+  // (le rythme : tout le naufrage joue 1,6 fois plus lentement que sa partition écrite, choix de l'auteur, 18 oct. : « ça va
+  // presque deux fois trop vite » ; les bulles de scenes.js durent autant que ses temps)
+  const lent = cles => cles.map(([t, c]) => [Math.round(t * LENT), c]), TL = T.map(d => Math.round(d * LENT));
+  const temps = TL.map(d => ({ duree: d, camera: [], pistes: {} }));
+  parTemps(TL, lent(camera), ['x', 'y', 'z', 'r']).forEach((c, n) => { temps[n].camera = c; });
+  for (const [id, cles] of Object.entries(P)) parTemps(TL, lent(cles)).forEach((c, n) => { temps[n].pistes[id] = c; });
   return { plans, partition: { temps } };
 }
 
