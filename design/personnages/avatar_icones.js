@@ -3,6 +3,7 @@
 // un cadre de 32 × 32. Pas de dessin à part : une icône change avec l'objet.
 // icone(id, couleurs) : le SVG de l'icône ; couleurs : en hexadécimal, celles de l'objet porté (par défaut, celles du
 // catalogue).
+const { enPersonnage } = require('./couleurs');
 const { limb, arm, poing } = require('./troupe');
 const { avatar, ACCESSOIRES, couleursAccessoire } = require('./avatar');
 const { DESSINS, PORTE } = require('./avatar_accessoires');
@@ -49,7 +50,8 @@ function icone(id, couleurs) {
   const m = mannequin(id, cols), ctx = { view: 'front', walk: false, n: 0 };
   const corps = I.couches.map(nom => couche(m, id, nom, ctx, cols)).join('');
   const [x, y, s] = I.carre, k = 30 / s, n = v => Math.round(v * 1e4) / 1e4;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><g transform="translate(${n(1 - x * k)} ${n(1 - y * k)}) scale(${n(k)})">${corps}</g></svg>`;
+  // (un accessoire de personnage : l'encre des personnages, comme quand il est porté)
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><g transform="translate(${n(1 - x * k)} ${n(1 - y * k)}) scale(${n(k)})">${enPersonnage(corps)}</g></svg>`;
 }
 
 module.exports = { icone, ICONES };

@@ -170,7 +170,7 @@ function sylveCurled(c, n) {
   // la boule : la cape couvre tout le corps, festonnée, avec des rangées de feuilles
   const mound = 'M20,46 Q16.6,33.4 29,27.8 Q41,22.6 51.4,29.2 Q60,35 57.6,46 Q55.8,47.6 53.8,46.2 Q52.2,48 50.2,46.4 Q48.4,48 46.4,46.4 Q44.4,48 42.4,46.4 Q40.4,48 38.4,46.4 Q36.4,48 34.4,46.4 Q32.4,48 30.4,46.4 Q28.4,48 26.4,46.4 Q24.2,48 22.2,46.2 Q20.6,47.4 20,46 Z';
   const rows = [33, 38, 43].map(y => `<path d="M14,${y} Q16,${y + 2} 18,${y} Q20,${y + 2} 22,${y} Q24,${y + 2} 26,${y} Q28,${y + 2} 30,${y} Q32,${y + 2} 34,${y} Q36,${y + 2} 38,${y} Q40,${y + 2} 42,${y} Q44,${y + 2} 46,${y} Q48,${y + 2} 50,${y} Q52,${y + 2} 54,${y} Q56,${y + 2} 58,${y} Q60,${y + 2} 62,${y}" fill="none" stroke="${leaf[1]}" stroke-width="0.7"/>`).join('');
-  let s = `<ellipse cx="38.6" cy="46.2" rx="20.6" ry="2.2" fill="#3C2819" opacity="0.12"/>`;
+  let s = `<ellipse cx="38.6" cy="46.2" rx="20.6" ry="2.2" fill="#0A0418" opacity="0.12"/>`;
   s += P(mound, leaf[0]) + clip(`${id}m`, mound, `<rect x="41" y="20" width="24" height="30" fill="${leaf[1]}"/>${c.nauMound ? '' : rows}<ellipse cx="33" cy="30.8" rx="8" ry="2" fill="${leaf[2]}"/>`) + P(mound, 'none');
   if (c.nauMound) {
     // la bande de voile en ceinture, et trois feuilles flétries posées sur elle

@@ -1,7 +1,7 @@
 // Cannelle, la cuisinière-guérisseuse : grande et ronde, chignon gris piqué d'une cuillère, robe cannelle aux manches
 // retroussées, tablier crème taché, grande louche de cuivre en bandoulière, grosses joues rouges, petit nez.
 // Action : elle brandit sa louche, le poing sur la hanche (de face).
-const { P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#E9B98F', skinS: '#CF9C72', nose: '#B97A58',
@@ -80,7 +80,7 @@ const cannelle = {
       // cheveux tirés vers le chignon : mèches qui remontent de la nuque, reflet en haut à gauche
       s += P('M16.6,31.6 Q15.8,21.4 20.6,14.4', 'none', 0.6) + P('M24,26.4 Q23.4,21 24,15.4', 'none', 0.6) + P('M31.4,31.6 Q32.2,21.4 27.4,14.4', 'none', 0.6);
       // une frisette échappée du chignon, au creux de la nuque
-      const curl = d => `<path d="${d}" fill="none" stroke="#3C2819" stroke-width="1.7" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${C.hair}" stroke-width="0.7" stroke-linecap="round"/>`;
+      const curl = d => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="1.7" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${C.hair}" stroke-width="0.7" stroke-linecap="round"/>`;
       s += curl('M26.4,29.2 Q27.4,30.6 26.6,31.4 Q25.8,31.8 25.7,31');
       s += L([14.6, 17.6], [16.8, 13.6], C.hairH, 1.2);
       s += limb([26.6, 9.6], [31.2, 3.8], 1.1, C.spoon) + `<g transform="rotate(40 32 3)">${E(32, 3, 1.3, 1.75, C.spoon, 0.9)}${E(31.7, 2.7, 0.5, 0.8, '#F2F4F7', 0)}</g>`;
@@ -108,7 +108,7 @@ const cannelle = {
     const outer = se ? [[14.6, 1]] : [[16.2, -1], [31.8, 1]];
     for (const [x, d] of outer) s += L([x, 23.4], [x + (d < 0 ? -1 : 1) * 1.1, 24.1], C.nose, 0.5);
     const nx = se ? 20.8 : 24;
-    s += P(se ? `M${nx + 0.4},24.2 Q${nx - 1.4},25.6 ${nx + 0.6},26` : `M${nx - 0.9},25.5 Q${nx},26.3 ${nx + 0.9},25.5`, 'none', 0.8).replace('stroke="#3C2819"', `stroke="${C.nose}"`);
+    s += P(se ? `M${nx + 0.4},24.2 Q${nx - 1.4},25.6 ${nx + 0.6},26` : `M${nx - 0.9},25.5 Q${nx},26.3 ${nx + 0.9},25.5`, 'none', 0.8).replace(`stroke="${OUT}"`, `stroke="${C.nose}"`);
     s += expression({
       eyes: se ? [[17.2, 22.8, 1.4], [25.2, 22.8, 1.25]] : [[19.4, 22.8, 1.45], [28.6, 22.8, 1.45]], ry: 2.1,
       brow: C.brow, browY: -4.4, browW: 0.95,

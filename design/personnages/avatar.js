@@ -894,12 +894,12 @@ function chaussure(c, forme, x, y, dir, tilt) {
   if (forme === 'baskets') {
     const d = `M${r2(x - 3)},${r2(y)} L${r2(x + 3)},${r2(y)} L${r2(x + 3.3)},${r2(y + 3.6)} Q${r2(x - 0.4)},${r2(y + 5.4)} ${r2(x - 3.3 - toe)},${r2(y + 3.8)} Z`;
     const bord = `M${r2(x - 3.6 - toe)},${r2(y + 2)} Q${r2(x - 0.4)},${r2(y + 3.5)} ${r2(x + 3.6)},${r2(y + 1.8)}`;
-    s += clip(`${c.uid}bk${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${bord} L${r2(x + 3.6)},${r2(y + 6)} L${r2(x - 3.6 - toe)},${r2(y + 6)} Z" fill="#FFFDF6"/>`
+    s += clip(`${c.uid}bk${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${bord} L${r2(x + 3.6)},${r2(y + 6)} L${r2(x - 3.6 - toe)},${r2(y + 6)} Z" fill="#F4EEFA"/>`
       + `<path d="${bord}" fill="none" stroke="${OUT}" stroke-width=".55"/>`) + P(d, 'none')
 
-      + (dir <= 0 ? `<path d="M${r2(x - 1.4)},${r2(y + 0.8)} l2.4,.4 M${r2(x - 1.4)},${r2(y + 1.9)} l2.4,.4" stroke="#FFFDF6" stroke-width=".6"/>` : '');
+      + (dir <= 0 ? `<path d="M${r2(x - 1.4)},${r2(y + 0.8)} l2.4,.4 M${r2(x - 1.4)},${r2(y + 1.9)} l2.4,.4" stroke="#F4EEFA" stroke-width=".6"/>` : '');
   }
-  if (forme === 'sabots') s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 3.8)} L${r2(x + 3.4)},${r2(y + 5.5)} L${r2(x - 3.4 - toe)},${r2(y + 5.5)} Z" fill="#B08458" stroke="${OUT}" stroke-width=".8"/>`;
+  if (forme === 'sabots') s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 3.8)} L${r2(x + 3.4)},${r2(y + 5.5)} L${r2(x - 3.4 - toe)},${r2(y + 5.5)} Z" fill="#876055" stroke="${OUT}" stroke-width=".8"/>`;
   if (forme === 'bottines') s = tige(3.2) + s;
   if (forme === 'bottes') s = tige(7.4) + s;
   return pivot(s);
@@ -936,7 +936,7 @@ function body(c, ctx) {
   s += P(T, mar ? c.base : top);
   let inner = mar
     ? [35.2, 38, 40.8, 43.6, 46.4].map(y => `<rect x="8" y="${y}" width="32" height="1.3" fill="${c.stripe}"/>`).join('')
-      + ombre(30, 22, 'rgba(60,40,25,.13)')
+      + ombre(30, 22, 'rgba(10,4,24,.13)')
     : ombre(30, 22, topS) + `<path d="M8,${hem - 0.6} Q24,${hem + 2.4} 40,${hem - 0.6} L40,52 L8,52 Z" fill="${topS}"/>`
       + `<rect x="${r2(24 - k.sw + 0.1)}" y="34" width="1.3" height="10" rx="0.6" fill="${topH}"/>`;
   if (haut === 'pull' || haut === 'sweat') inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>`
@@ -972,14 +972,14 @@ function body(c, ctx) {
     if (haut === 'chemise' || haut === 'veste') s += P('M17.6,31.4 Q24,34.4 30.4,31.4 L30,33.6 Q24,36.2 18,33.6 Z', topS, 0.8);
     // la capuche du sweat, posée dans le dos (la même pour tous) ; sous un manteau, on ne la voit pas
     if (haut === 'sweat' && !c.o.accessoires.dessus) s += capucheRabattue(c.uid, view, reperes(c), top, topS);
-    if (robeE) s += P('M17.6,31.4 Q24,34 30.4,31.4 L30,33.2 Q24,35.8 18,33.2 Z', '#FFFDF6', 0.8);
+    if (robeE) s += P('M17.6,31.4 Q24,34 30.4,31.4 L30,33.2 Q24,35.8 18,33.2 Z', '#F4EEFA', 0.8);
   } else if (robeE) {
     // col Claudine : deux pans arrondis, blancs
-    s += P(`M${o - 0.3},32.6 Q${o - 4.4},30.8 ${o - 5.4},32.8 Q${o - 4.6},35.8 ${o - 0.5},34.4 Z`, '#FFFDF6', 0.8)
-      + P(`M${o + 0.3},32.6 Q${o + 4.4},30.8 ${o + 5.4},32.8 Q${o + 4.6},35.8 ${o + 0.5},34.4 Z`, '#FFFDF6', 0.8);
+    s += P(`M${o - 0.3},32.6 Q${o - 4.4},30.8 ${o - 5.4},32.8 Q${o - 4.6},35.8 ${o - 0.5},34.4 Z`, '#F4EEFA', 0.8)
+      + P(`M${o + 0.3},32.6 Q${o + 4.4},30.8 ${o + 5.4},32.8 Q${o + 4.6},35.8 ${o + 0.5},34.4 Z`, '#F4EEFA', 0.8);
   } else if (haut === 'chemise') {
-    s += P(`M${o - 4.6},31.2 L${o},34.8 L${o - 1.6},36.4 Z`, '#FFFDF6', 0.8) + P(`M${o + 4.6},31.2 L${o},34.8 L${o + 1.6},36.4 Z`, '#FFFDF6', 0.8);
-    s += L([o, 35], [o + (se ? -0.4 : 0), hem + 1], OUT, 0.6) + [38.4, 41.8, 45].filter(y => y < hem).map(y => E(o + 1, y, 0.55, 0.55, '#FFFDF6', 0.5)).join('');
+    s += P(`M${o - 4.6},31.2 L${o},34.8 L${o - 1.6},36.4 Z`, '#F4EEFA', 0.8) + P(`M${o + 4.6},31.2 L${o},34.8 L${o + 1.6},36.4 Z`, '#F4EEFA', 0.8);
+    s += L([o, 35], [o + (se ? -0.4 : 0), hem + 1], OUT, 0.6) + [38.4, 41.8, 45].filter(y => y < hem).map(y => E(o + 1, y, 0.55, 0.55, '#F4EEFA', 0.5)).join('');
   } else if (haut === 'pull') {
     s += P(`M${o - 4},31.4 Q${o},34.6 ${o + 4},31.4 L${o + 4},32.8 Q${o},36 ${o - 4},32.8 Z`, topS, 0.8);
   } else if (haut === 'veste') {
@@ -989,7 +989,7 @@ function body(c, ctx) {
   } else if (vrai === 'polo') {
     // le col du polo et sa patte boutonnée
     s += P(`M${o - 4.2},31.2 L${o},33.6 L${o - 1.8},35.4 Z`, tone(top, 0.92), 0.8) + P(`M${o + 4.2},31.2 L${o},33.6 L${o + 1.8},35.4 Z`, tone(top, 0.92), 0.8)
-      + L([o, 33.8], [o, 38.4], OUT, 0.55) + E(o + 0.9, 35.4, 0.5, 0.5, '#FFFDF6', 0.45) + E(o + 0.9, 37.4, 0.5, 0.5, '#FFFDF6', 0.45);
+      + L([o, 33.8], [o, 38.4], OUT, 0.55) + E(o + 0.9, 35.4, 0.5, 0.5, '#F4EEFA', 0.45) + E(o + 0.9, 37.4, 0.5, 0.5, '#F4EEFA', 0.45);
   } else if (vrai === 'debardeur') {
     // l'encolure profonde du débardeur, la peau dessous
     s += P(`M${o - 3.8},31.2 Q${o},37 ${o + 3.8},31.2 Z`, c.skin, 0.8);
@@ -1117,7 +1117,7 @@ function avatar(choixAvatar = {}, opts = {}) {
   const robe = o.bas === 'robeEntiere';
   const mar = !robe && o.haut === 'mariniere';
   const claires = clarte(top) > 0.8;
-  const base = mar ? (claires ? '#2E3E66' : '#F4EEDF') : top;
+  const base = mar ? (claires ? '#2D3767' : '#ECE4F4') : top;
   // l'élastique des cheveux : rouge, ou bleu sur des cheveux déjà rouges ou roses
   const [hh, hs] = hsl(hair);
   const acc = Object.fromEntries(Object.entries(o.accessoires).map(([place, a]) => [place, couleursAccessoire(a)]));
@@ -1131,10 +1131,10 @@ function avatar(choixAvatar = {}, opts = {}) {
     meche, mecheS: tone(meche, 0.74), tie: hs > 0.35 && (hh < 25 || hh > 320) ? '#3E5A8C' : '#C8463A',
     eye: couleur('yeux', o.yeux), cheek: o.joues === 'roses' ? '#F29E9A' : tone('#F29E9A', 1.18), freckle: tone(skin, 0.7),
     levres: o.levres === 'naturelles' ? null : couleur('levres', o.levres),
-    top, topS: tone(top, 0.82), topH: tone(top, 1.28), tee: '#F4EEDF', base, stripe: top,
+    top, topS: tone(top, 0.82), topH: tone(top, 1.28), tee: '#ECE4F4', base, stripe: top,
     bas, basS: tone(bas, 0.78), basH: tone(bas, 1.25),
     sleeve: robe ? bas : base, armW: k.arm,
-    cuff: robe ? '#FFFDF6' : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: '#FFFDF6', mariniere: top, colRoule: tone(top, 0.82), gilet: tone(top, 0.82), polo: tone(top, 0.92) }[o.haut] || null,
+    cuff: robe ? '#F4EEFA' : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: '#F4EEFA', mariniere: top, colRoule: tone(top, 0.82), gilet: tone(top, 0.82), polo: tone(top, 0.92) }[o.haut] || null,
     sleeves: robe || o.haut === 'tshirt' || o.haut === 'polo' || mar ? 'court' : undefined,
     top2: couleur('tissus', o.couleurHaut2), bas2: couleur('tissus', o.couleurBas2),
     leg: nues ? skin : bas, legS: nues ? tone(skin, 0.88) : tone(bas, 0.78), legW: nues ? k.legW - 0.9 : k.legW,
