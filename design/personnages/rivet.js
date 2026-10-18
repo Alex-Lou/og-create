@@ -2,8 +2,9 @@
 // chemise sarcelle, cheveux châtains en bataille et une mèche grise rebelle, un crayon derrière chaque oreille.
 // Action : il abaisse une loupe sur son œil (œil géant) et examine un rouage ; image 2 : le rouage tourne, « Si ! Si ! ».
 const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#DDA57C', skinS: '#C08A62',
   hair: '#6B4A32', hairS: '#4F3524', hairH: '#8C6646', grey: '#CFCAC2', greyS: '#A8A29A',
   shirt: '#3F8A86', shirtS: '#2E6B68', collar: '#EFE6D6',
@@ -11,7 +12,7 @@ const C = {
   brass: '#C9A24A', brassS: '#8E6E2C', glass: '#CFEAF0', strap: '#4A3426',
   steel: '#B8C0C8', steelS: '#8A949E', red: '#C8463A', wood: '#E2C28E',
   pencil: '#F2C94C', eraser: '#EE8F8F', cheek: '#EE9C8C', mouth: '#7A3B30', tongue: '#E07A72'
-};
+});
 
 // Crayon : du bout caché (a) à la gomme (b)
 const pencil = (a, b) => limb(a, b, 1.4, C.pencil) + E(b[0], b[1], 0.95, 0.95, C.eraser, 0.8);

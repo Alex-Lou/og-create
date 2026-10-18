@@ -6,6 +6,7 @@ const { frame, IMAGES } = require('./troupe');
 const A = require('../personnages/avatar.js');
 const G = require('./gestes.js');
 const { assis } = require('./assis.js');
+const { fondre } = require('../personnages/couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 const STD = [0, 0, 48, 64];
 const VUE = { front: 'face', se: 'avant', ne: 'dos' };
@@ -57,10 +58,10 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
 }
 
 // Les couvertures des maîtres (couchés), celle des naufragés (une voile)
-const COUVERTURES = {
+const COUVERTURES = fondre({
   aster: { fond: '#2F5684', motif: '#F2C04B' }, cannelle: { fond: '#B9503B', motif: '#F4EEDC' }, rivet: { fond: '#7A4E2C', motif: '#C4A06A' },
   ondin: { fond: '#3E78C8', motif: '#EAF2FA' }, sylve: { fond: '#4E7A36', motif: '#9DBE6A' }, galet: { fond: '#6E7466', motif: '#B6B39E' }, melisse: { fond: '#5A4A8A', motif: '#E3C27A' }
-};
+});
 const VOILE = { fond: '#D9CFB8', motif: '#B3A588' };
 
 // Expressions en marche (trois quarts avant), propres au caractère de chacun (bible § 8)

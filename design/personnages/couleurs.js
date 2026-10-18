@@ -67,4 +67,38 @@ const clarte = c => hsl(c)[2];
 // Un dessin de personnage, sorti du kit : son trait passe à l'encre des personnages (le kit l'écrit toujours ainsi)
 const enPersonnage = svg => svg.replaceAll(ENCRE_KIT, ENCRE);
 
-module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage };
+// ---- le fondu néon des habits (choix de l'auteur, 18 oct. : « pas entièrement, mais fondre et adapter davantage ») ----
+// Chaque couleur glisse vers sa voisine de la palette néon en gardant sa clarté : l'ombre et le reflet d'un habit gardent
+// leur écart, l'habit reste reconnaissable. Les teintes chaudes et ternes (le beige, le brun, le kaki sépia) s'en vont
+// davantage, vers le mauve et l'aubergine ; les gris prennent un rien de froid. Une fonction pure : la même couleur donne
+// toujours la même couleur, partout (les naufragés reconnaissent leurs habits à leur couleur : naufrages.js).
+// [teinte de départ (degrés, jusqu'à), teinte visée, force]
+const BANDES = [[15, 350, 0.35], [40, 6, 0.3], [62, 28, 0.3], [100, 165, 0.45], [160, 172, 0.4], [200, 186, 0.3], [240, 232, 0.3],
+  [275, 262, 0.3], [315, 300, 0.35], [345, 328, 0.35], [360, 350, 0.35]];
+const vers = (h, cible, k) => { const d = ((cible - h + 540) % 360) - 180; return (h + d * k + 360) % 360; };
+const fondu = memo(c => {
+  const [h, s, l] = hsl(c);
+  // les gris : un rien de froid
+  if (s < 0.12) return hex([255, Math.max(s, 0.1), l]);
+  // le beige, le brun, le kaki sépia : vers le mauve et l'aubergine, un peu moins saturés
+  if (h >= 15 && h < 62 && s < 0.55) return hex([vers(h, l > 0.7 ? 300 : 330, 0.5), s * 0.8, l]);
+  // l'olive et le vert jaune : vers la sarcelle mousse, un peu moins vifs
+  if (h >= 62 && h < 100) return hex([vers(h, 165, 0.4), s * 0.85, l]);
+  const [, cible, k] = BANDES.find(([fin]) => h < fin);
+  return hex([vers(h, cible, k), Math.min(1, s * 1.04), l]);
+});
+// Ce qui ne se fond pas : le corps (la peau, les cheveux, les yeux, la bouche…), les métaux, les lumières
+const GARDER = /^(skin|lid|under|nose|hair|grey|stubble|beard|white|brow|eye|iris|cheek|mouth|tongue|freckle|lip|hand|vein|scar|mole|teeth|rim|brass|steel|copper|silver|iron|gem|glass|gold|glow|firefly|star|moon)/i;
+const HEXA = /#[0-9A-Fa-f]{6}\b/g, UNE = /^#[0-9A-Fa-f]{6}$/;
+const fonduTexte = s => s.replace(HEXA, m => fondu(m.toUpperCase()));
+// Une palette, un réglage, un dessin (objets, tableaux, chaînes, fonctions qui rendent du SVG), fondus en profondeur ; les
+// clés du corps gardent leurs couleurs (et celles des clés « de couleur » d'une table de correspondance aussi)
+function fondre(x, garder = GARDER) {
+  if (typeof x === 'string') return fonduTexte(x);
+  if (typeof x === 'function') return (...a) => fondre(x(...a), garder);
+  if (Array.isArray(x)) return x.map(v => fondre(v, garder));
+  if (x && typeof x === 'object') return Object.fromEntries(Object.entries(x).map(([k, v]) => (garder.test(k) ? [k, v] : [UNE.test(k) ? fonduTexte(k) : k, fondre(v, garder)])));
+  return x;
+}
+
+module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage, fondu, fondre, GARDER };

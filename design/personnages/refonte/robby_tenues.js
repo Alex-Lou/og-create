@@ -9,16 +9,17 @@
 const { castaway, fade } = require('../../atelier/naufrage');
 const { SPECS } = require('../../atelier/naufrages');
 const { robby, C } = require('./robby_refonte');
+const { fondre, fondu } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les palettes du bonnet : wool, son ombre, son reflet (on le reconnaît à son bonnet)
-const PALETTES = {
+const PALETTES = fondre({
   rouille: { nom: 'Rouille', wool: C.wool, woolS: C.woolS, woolH: C.woolH },
   moutarde: { nom: 'Moutarde', wool: '#B88A2E', woolS: '#8C661E', woolH: '#DAB05A' },
   chauffe: { nom: 'Bleu de chauffe', wool: '#3E5F86', woolS: '#2B4565', woolH: '#6E8EB4' },
   lichen: { nom: 'Lichen', wool: '#7A8A4A', woolS: '#5A6834', woolH: '#A2B270' },
   ardoise: { nom: 'Ardoise', wool: '#5E646C', woolS: '#43484E', woolH: '#868C94' },
   bordeaux: { nom: 'Bordeaux', wool: '#8A3A3A', woolS: '#682828', woolH: '#B0605A' }
-};
+});
 
 // Les tenues : la forme (robby_refonte.js, corps), la palette par défaut, les manches (le carrier les retrousse)
 const TENUES = {
@@ -82,7 +83,7 @@ function habiller(tenueId = 'blouse', paletteId = null, etatId = 'ermite') {
   c.teintes = [salee.wool, K.beard, salee.smock, K.white];
   c.sansDon = true;
   const S = SPECS.Galet;
-  const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === '#6E6458' ? salee.smock : salee.smockS, ...r])]));
+  const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === fondu('#6E6458') ? salee.smock : salee.smockS, ...r])]));
   const spec = { ...S, fade: [], map: {}, k: 0.6, tatters, capeFn: ponchoMiroir(S.capeFn), head: undefined };
   const droite = castaway(c, spec);
   const gauche = castaway(c, { ...spec, tatters: retourner(spec.tatters), bareSide: S.bareSide === 'right' ? 'left' : 'right' });

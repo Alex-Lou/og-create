@@ -5,8 +5,9 @@
 // Repère 80 × 128, pieds en bas au centre (40, 125). Vues face, trois quarts avant et dos.
 const { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre, TRAITS } = require('./troupe');
 const { enPersonnage } = require('../personnages/couleurs');
+const { fondre } = require('../personnages/couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#EFE6CF', skinS: '#D6CBB0', vein: '#E8B84A',
   hair: '#D8DEE9', hairS: '#9FA9BE', hairH: '#F6F8FC', // la chevelure argentée (choix de l'auteur, 16 oct. ; verte à l'origine)
   antler: '#9C7350', antlerS: '#76543A', petal: '#F7C6D9', white: '#FFFFFF', heart: '#F2C94C',
@@ -14,7 +15,7 @@ const C = {
   fur: '#4E8F4C', furS: '#3D7440', mvein: '#F7D774', collar: '#EBC66E', collarS: '#C99A45', paleG: '#C8EE9A', paleGold: '#F7E3A1',
   wingO: '#F2B53B', wingB: '#FFF3C4', bird: '#5C9CE0', eye: '#4E6B18',
   cheek: '#F2B0A8', mouth: '#7A4A3A', tongue: '#E07A72', glow: '255,225,140'
-};
+});
 const AR = { armW: 3.8, sleeve: C.skin, cuff: null, skin: C.skin };
 
 // Le manteau vivant change avec les saisons (HISTOIRE.md § 8) : l'été, la grande feuille verte aux nervures d'or (le
@@ -23,7 +24,7 @@ const AR = { armW: 3.8, sleeve: C.skin, cuff: null, skin: C.skin };
 // fur, furS : le manteau et son ombre ; vein, glow : les nervures et leur lueur ; hem : l'ourlet ; collar : le col ;
 // plumes, plumesHaut : les plumes de l'ourlet ; feuilles, fleur, ailes : ce qui pousse et vole sur le manteau ;
 // orne : ce que la saison ajoute (découpé dans le manteau)
-const MANTEAUX = {
+const MANTEAUX = fondre({
   ete: { fur: C.fur, furS: C.furS, vein: C.mvein, glow: '255,220,120', hem: C.gold, collar: C.collar,
     plumes: [C.gold, C.paleG, C.paleGold], plumesHaut: [C.paleGold, C.gold, C.paleG], feuilles: [C.gold, C.paleG], fleur: C.white, ailes: [C.wingO, C.wingB] },
   printemps: { fur: '#7CBF5C', furS: '#5E9E48', vein: '#FCE3EC', glow: '255,205,225', hem: '#F29BB8', collar: '#F7C6D9',
@@ -32,7 +33,7 @@ const MANTEAUX = {
     plumes: ['#8A5A36', '#D9A55A', '#F2D3A0'], plumesHaut: ['#F2D3A0', '#8A5A36', '#D9A55A'], feuilles: ['#E8A23A', '#D2452E'], fleur: '#F2C94C', ailes: ['#E07A2E', '#F2D3A0'] },
   hiver: { fur: '#EEF2F6', furS: '#C9D6E3', vein: '#A9D8F0', glow: '170,220,255', hem: '#9CC7E0', collar: '#FFFFFF',
     plumes: ['#FFFFFF', '#DDE7F0', '#B9CCDC'], plumesHaut: ['#DDE7F0', '#FFFFFF', '#B9CCDC'], feuilles: ['#DDEFF8', '#B9DDF0'], fleur: C.white, ailes: ['#BFE3F7', '#FFFFFF'] }
-};
+});
 const SAISONS_A = Object.keys(MANTEAUX);
 // Ce que chaque saison ajoute sur le manteau : des fleurs de cerisier ; des glands et des feuilles d'érable ; des touffes
 // de fourrure et des flocons
