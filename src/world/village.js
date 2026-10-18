@@ -217,7 +217,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
       const hint = TOUCH_HINTS.talk;
-      if (r && r.guest) return { title: `${r.guest.name} · ${r.guest.role}`, text: VILLAGER_SHEETS.guest, hint };
+      if (r && r.guest) return { title: r.guest.role ? `${r.guest.name} · ${r.guest.role}` : r.guest.name, text: VILLAGER_SHEETS.guest, hint };
       if (r && r.asleep) return { title: r.look.label, text: r.plank ? VILLAGER_SHEETS.plank : VILLAGER_SHEETS.asleep, hint };
       if (r && r.camp) return { title: r.look.label, text: VILLAGER_SHEETS.camp(r.site), hint };
       if (r && r.waiting) return { title: r.look.label, text: VILLAGER_SHEETS.waiting(r.site), hint };

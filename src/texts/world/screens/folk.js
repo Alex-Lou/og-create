@@ -1,5 +1,5 @@
 // Les gens et les bêtes de l'île (components/World/Folk) : la fiche d'une bête de ferme (BeastSheet), d'un habitant
-// (VillagerSheet), d'un visiteur (VisitorSheet).
+// (VillagerSheet), d'un visiteur (VisitorSheet), l'accueil d'un arrivant (ArrivalWelcome).
 
 // La fiche d'une bête de ferme (BeastSheet) ; she : c'est une femelle
 export const BEAST_SHEET = {
@@ -26,4 +26,22 @@ export const VISITOR_SHEET = {
   done: 'Demande comblée : merci !',
   house: (name, work) => `Une maison est libre : ${name} pourrait s’installer et travailler à « ${work} ».`,
   noHouse: name => `Pour que ${name} reste, pose une Maison près du Foyer (onglet Annexes du Foyer).`
+};
+
+// L'accueil d'un arrivant (ArrivalWelcome) : sa phrase, selon le moment du récit qui l'amène (serveur :
+// services/visitors.js, MOMENTS) ; on compose son allure, on choisit son métier et son prénom
+export const ARRIVAL_WELCOME = {
+  moments: {
+    ponton: 'Une barque accoste au Ponton. Quelqu’un a vu nos lanternes.',
+    maison: 'Une autre barque. On parle de notre île, de l’autre côté de l’eau.',
+    peuple: 'Notre peuple a un nom, maintenant. Quelqu’un a traversé la mer pour le rejoindre.',
+    tour: 'La Tour se voit de loin. Quelqu’un est venu voir qui l’a bâtie.'
+  },
+  name: 'Son prénom',
+  work: 'Son métier',
+  role: (role, place) => `${role} · ${place}`,
+  noHouse: 'Il lui faut une maison : pose une Maison près du Foyer.',
+  later: 'Plus tard',
+  welcome: 'Accueillir',
+  wait: 'Une barque approche…'
 };

@@ -240,8 +240,8 @@
             :villagers="state.villagers || []"
             :needs="state.needs || null"
             :portraits="villagerPortraits()"
-            :visitor="state.visitor || null"
-            :visitor-art="state.visitor ? visitorPortrait(state.visitor) : ''"
+            :visitor="state.arrival || null"
+            :visitor-art="state.arrival ? visitorPortrait(state.arrival) : ''"
             :crafts="state.crafts || null"
             :games="state.games || []"
             :blight="blightOf(site)"
@@ -249,7 +249,7 @@
             @repair="repairSite(site)"
             @collect="collect"
             @villager="openVillager"
-            @visitor="openVisitor"
+            @visitor="openArrival"
             @fill-all="fillAllNeeds"
             @bench="openBench"
             @game="openGame"
@@ -464,6 +464,17 @@
       @settle="settleVisitor"
       @close="visitorOpen = false"
     />
+    <!-- Arrivant venu en barque au Ponton : son accueil (son allure, son métier, son prénom) -->
+    <ArrivalWelcome
+      v-if="arrivalOpen && state && state.arrival"
+      :arrival="state.arrival"
+      :roles="state.arrival.roles.map(r => ({ ...r, place: siteName(r.site) }))"
+      :houses="state.houses || undefined"
+      :busy="busy"
+      :error="arrivalError"
+      @welcome="welcomeArrival"
+      @close="arrivalOpen = false"
+    />
     <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
     <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @open-all="openAllChests" @close="chestsOpen = false" />
     <FindsSheet v-if="findsOpen && state" :finds="state.finds || []" :deposits="state.deposits || []" :zones="state.map.zones" :elapsed="clock - loadedAt" @close="findsOpen = false" />
@@ -636,6 +647,8 @@ const HenChase = onOpen(() => import('../Games/HenChase/HenChase.vue'));
 const CookingPot = onOpen(() => import('../Games/CookingPot/CookingPot.vue'));
 const CraftBench = onOpen(() => import('../Workshop/CraftBench/CraftBench.vue'));
 const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue'));
+// (l'accueil d'un arrivant : l'éditeur de l'avatar et son catalogue)
+const ArrivalWelcome = onOpen(() => import('../Folk/ArrivalWelcome/ArrivalWelcome.vue'));
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, créations d'île) ; le dessin, la caméra et la boucle
@@ -649,7 +662,7 @@ export default {
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
   mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, bestiary, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
-  components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, BestiaryBook, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
+  components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, ArrivalWelcome, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, BestiaryBook, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },

@@ -2,7 +2,6 @@
 // le joueur ailleurs sur l'île, pour qu'il ne soit jamais perdu. Rien n'est inventé ici : tout se lit dans la vue de l'île
 // (serveur) et dans les règles déjà connues du jeu (besoins, voyageurs, coffres, bâtiments).
 import { missingOf, affordable } from './needs';
-import { readyOf } from './visitors';
 import { inPrologue } from '@/game/prologue';
 import { TODO } from '@/texts/world/tracker';
 
@@ -50,13 +49,10 @@ export function todoOf({ state, stock = {}, chests = 0, landmarks = [], deposits
     const missing = missingOf(v).filter(n => !n.cost || affordable(n, stock));
     if (missing.length) out.push({ id: `besoin:${v.id}`, kind: 'villager', arg: v.id, text: missing.some(n => n.id === 'manger') ? TODO.hungry(v.name) : TODO.needs(v.name) });
   }
-  // Un voyageur : sa demande peut être comblée, ou il peut s'installer
-  const visitor = state.visitor;
-  if (visitor) {
-    const houses = state.houses || { total: 0, used: 0 };
-    if (readyOf(visitor, stock)) out.push({ id: 'voyageur', kind: 'visitor', text: TODO.visitorReady(visitor.name) });
-    else if (visitor.satisfied && houses.total > houses.used) out.push({ id: 'voyageur', kind: 'visitor', text: TODO.visitorSettles(visitor.name) });
-  }
+  // L'arrivant qui attend au Ponton : une maison est libre, on peut l'accueillir
+  const arrival = state.arrival;
+  const houses = state.houses || { total: 0, used: 0 };
+  if (arrival && houses.total > houses.used) out.push({ id: 'voyageur', kind: 'visitor', text: TODO.visitorSettles(arrival.name) });
   // Les bêtes : à nourrir, ou ce qu'elles ont donné
   const beasts = (state.beasts && state.beasts.list) || [];
   const hungry = beasts.filter(b => !b.fed);

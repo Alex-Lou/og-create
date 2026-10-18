@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { villageOf } from '@/world/village';
+import { loadKit } from '@/game/avatarKit';
 import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
@@ -7,6 +8,9 @@ import { CREATURE_TEXTS } from '@/texts/world/creatures';
 import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS } from '@/texts/village';
 import { marketDay } from '@/world/village/agenda';
 import { cycleStart, dayHourOf } from '@/world/gameClock';
+
+// (les habitants venus d'ailleurs se dessinent par le générateur de l'avatar, chargé à la demande : world/arrivantArt.js)
+beforeAll(() => loadKit());
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
 const N = 14;
@@ -222,14 +226,15 @@ describe('village : visiteur et visiteurs installés', () => {
   });
   // Le contrôle qualité (choix de l'auteur, 18 oct. : plus aucun dessin de l'ancien générateur à l'écran) : de jour, le soir
   // à la lanterne, sous la pluie, la nuit, chaque habitant et chaque visiteur est un dessin de la bibliothèque
-  it('chacun, maître ou visiteur, est un dessin de la bibliothèque, à toute heure et par tous les temps', () => {
+  it('chacun, maître ou visiteur, est un dessin de la bibliothèque ou du générateur de l’avatar, à toute heure et par tous les temps', () => {
     let seen = 0;
     const who = new Set();
     for (const hour of [6.5, 9, 12, 15, 18.5, 20.5, 21.8, 23, 2]) {
       for (const weather of ['clair', 'pluie']) {
         for (let t = 0; t < 300; t += 11) {
           for (const p of busy.at(t, at(hour, weather)).list.filter(c => c.kind === 'villager')) {
-            expect(p.sprite[0], `${p.id} ${hour} h`).toMatch(/^lib-/);
+            // (jamais l'ancien générateur)
+            expect(p.sprite[0], `${p.id} ${hour} h`).toMatch(p.id.startsWith('vil:v') || p.id.startsWith('vis:') ? /^arr-/ : /^lib-/);
             who.add(p.id);
             seen += 1;
           }

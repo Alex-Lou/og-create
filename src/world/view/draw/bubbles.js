@@ -75,15 +75,15 @@ export default {
     this.needBubbles = [];
     if (this.cam.s < 0.55) return;
     for (const h of this.landHits) {
-      // Le visiteur : une bulle dorée avec sa demande, tant qu'elle n'est pas comblée
+      // L'arrivant qui attend au Ponton : une bulle dorée, tant qu'on ne l'a pas accueilli
       const guest = h.kind === 'villager' ? this.guestOf(h.who) : null;
-      if (guest && !guest.satisfied) {
+      if (guest) {
         const k = 1 / Math.min(1, this.cam.s);
         const r = 11 * k;
         const y = h.y - h.head - r + Math.sin(t * 2.6 + h.x) * 1.5;
         this.popAt(ctx, `guest:${guest.id}`, h.x, y + r + 5 * k, now);
         this.bubbleAt(ctx, h.x, y, r, k, TINT.gold100, TINT.gold500);
-        glyph(ctx, guest.request.kind === 'livrer' ? GLYPH[guest.request.resource] : 'ui:spark', h.x, y + 0.5, 14 * k, repaint);
+        glyph(ctx, 'ui:spark', h.x, y + 0.5, 14 * k, repaint);
         ctx.restore();
         this.needBubbles.push({ id: guest.id, visitor: true, x: h.x, y, r });
         continue;

@@ -353,10 +353,10 @@ export default {
         for (let i = 0; i < perch.count; i++) out.gulls.push({ wx: c.x + (60 + i * 14) * k, wy: c.y + i * 4 - 20 * k, alt: 6 + 90 * k * k, flip: false, phase: i });
       }
     }
-    // Bateau du visiteur : il arrive du large (BOAT_SAIL secondes), puis se balance à quai
+    // La barque de l'arrivant : elle arrive du large (BOAT_SAIL secondes), puis se balance à quai
     const dock = this.visitorDock;
-    if (dock && this.state.visitor) {
-      const arrival = this.boatArrival && this.boatArrival.id === this.state.visitor.id ? this.boatArrival : null;
+    if (dock && this.state.arrival) {
+      const arrival = this.boatArrival && this.boatArrival.id === this.state.arrival.id ? this.boatArrival : null;
       const k = arrival ? Math.min(1, (t - arrival.at) / BOAT_SAIL) : 1;
       const ease = 1 - (1 - k) ** 3;
       const x = dock.x + dock.dx * BOAT_FAR * (1 - ease);

@@ -4,7 +4,7 @@ import { HOLD_MS } from '@/directives/longpress';
 import { vibrate } from '@/utils/fx';
 import { FILANTE_TOUCHE } from '@/world/lumiere';
 import { landmarkScale, landmarkTop } from '@/world/landmarkSprites';
-import { askLine } from '@/world/visitors';
+import { ARRIVAL_WELCOME } from '@/texts/world/screens/folk';
 import { depositWait, DEPOSIT_NAMES, waitText, lockOf, lockText } from '@/world/finds';
 import { askOf } from '@/world/needs';
 import { LABEL } from '@/game/resources';
@@ -33,6 +33,8 @@ const TAP_SLOP = 14;
 // Rayon minimal d'une cible au doigt, en pixels d'écran (une cible de 44 px de large, comme le veulent les guides
 // tactiles), quel que soit le zoom
 const MIN_TOUCH = 22;
+// La phrase de l'arrivant qui attend au Ponton : celle du moment du récit qui l'amène
+const arrivalLine = guest => ARRIVAL_WELCOME.moments[guest.moment] || ARRIVAL_WELCOME.moments.ponton;
 
 export default {
   /* ---------- Gestes : glisser, pincer, toucher ---------- */
@@ -85,7 +87,7 @@ export default {
     else if (hit && hit.nameSign) this.openNameSign(hit.nameSign);
     else if (hit && hit.animal && this.beastOf(hit.animal.who)) this.openBeast(hit.animal.who.beast);
     else if (hit && hit.animal && this.friendOf(hit.animal.who)) this.openVillager(this.friendOf(hit.animal.who).id);
-    else if (hit && hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) this.openVisitor();
+    else if (hit && hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) this.openArrival();
     else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit));
     gesture.held = true;
     vibrate(12);
@@ -464,13 +466,14 @@ export default {
     if (hit.asking) {
       const { asking } = hit;
       return {
-        key: `ask:${asking.visitor ? 'visitor' : asking.id}`, action: 'Sa fiche', info: this.tipOf(hit), ring: ring(asking.x, asking.y, asking.r + 3),
-        run: () => (asking.visitor ? this.openVisitor() : this.openVillager(asking.id))
+        key: `ask:${asking.visitor ? 'visitor' : asking.id}`, action: asking.visitor ? ARRIVAL_WELCOME.welcome : 'Sa fiche', info: this.tipOf(hit), ring: ring(asking.x, asking.y, asking.r + 3),
+        run: () => (asking.visitor ? this.openArrival() : this.openVillager(asking.id))
       };
     }
+    // L'arrivant qui attend au Ponton, ou sa barque : sa phrase, et l'accueillir
     if (hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) {
-      const guest = this.state.visitor;
-      return { key: 'visitor', action: 'Sa fiche', info: { title: `${guest.name} · ${guest.role}`, text: askLine(guest) }, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r), run: () => this.openVisitor() };
+      const guest = this.state.arrival;
+      return { key: 'visitor', action: ARRIVAL_WELCOME.welcome, info: { title: guest.name, text: arrivalLine(guest) }, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r), run: () => this.openArrival() };
     }
     // Un camarade ou une bête de la ferme : il parle (ou répond), et sa fiche s'ouvre au second toucher (ou au bouton)
     const friend = hit.animal && this.friendOf(hit.animal.who);
@@ -669,7 +672,7 @@ export default {
       const [title, text] = ANIMALS[hit.animal.kind] || legend || [UNKNOWN_BEAST, ''];
       return { title, text, hint: TAP_HINTS.animal };
     }
-    if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: TAP_HINTS.sheet };
+    if (hit.asking && hit.asking.visitor) return { title: this.state.arrival.name, text: arrivalLine(this.state.arrival), hint: TAP_HINTS.sheet };
     if (hit.asking && hit.asking.beast) {
       const beast = this.beastOf({ beast: hit.asking.beast });
       return { title: beast ? beast.name : UNKNOWN_BEAST, text: TAP_TEXTS.hungry, hint: TAP_HINTS.sheet };
