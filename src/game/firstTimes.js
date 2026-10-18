@@ -5,10 +5,11 @@ import DIALOGUES from '../../design/dialogues/chantiers.json';
 
 const MOMENTS = Object.fromEntries(DIALOGUES.moments.map(m => [m.id, m]));
 
-// Les bulles d'un moment : avant le geste, ou après (after) ; [{ id, who (bâtiment de qui parle, ou 'brume'), text }]
+// Les bulles d'un moment : avant le geste, ou après (after) ; [{ id, who (bâtiment de qui parle, ou 'brume'), text, mood
+// (son expression, ou undefined) }]
 export function momentLines(id, after = false) {
   const moment = MOMENTS[id];
-  return moment ? moment.bulles.filter(b => Boolean(b.apres) === after).map(b => ({ id: b.id, who: b.qui, text: b.texte })) : [];
+  return moment ? moment.bulles.filter(b => Boolean(b.apres) === after).map(b => ({ id: b.id, who: b.qui, text: b.texte, mood: b.humeur })) : [];
 }
 
 // Les moments dus dans la vue de l'île, dans l'ordre : [{ id, after }]. island : { state, met (habitants là), ready

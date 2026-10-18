@@ -144,4 +144,4 @@ function trempe(h) {
   return s;
 }
 
-module.exports = { carte, ZONES };
+module.exports = { carte, tampon, ZONES };

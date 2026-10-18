@@ -67,6 +67,12 @@ export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = tr
   return framesOf(dir, `${vue}_marche`).slice(1, 2);
 }
 
+// L'avatar du joueur quand il parle dans une bulle de l'île : de face, au repos, en naufragé ; l'exemple par défaut le
+// temps que son avatar composé se dessine
+export function playerFace(look) {
+  return avatarFrames(look)[0] || avatarFrames(DEFAULT_LOOK)[0];
+}
+
 // La place de l'avatar dans le carré : son cadre agrandi, posé sur ses pieds ; mirror : la transformation du miroir
 // (autour de ses pieds), ou null ; clip : la photo de la carte, ou null
 export function avatarBox(spot) {

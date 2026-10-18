@@ -38,9 +38,13 @@ describe('le temps que chaque bulle joue', () => {
   it('son rang dans sa scène, même quand une autre image s\'intercale', () => {
     const b = [{ scene: 'a' }, { scene: 'a' }, { scene: 'c' }, { scene: 'a' }, { scene: 'b' }];
     expect([0, 1, 2, 3, 4].map(k => rangBulle(b, k))).toEqual([0, 1, 0, 2, 0]);
+    // (« Quel jour ? », le ciel, puis la trouée reprend à sa quatrième réplique)
+    const jour = SCENES.jour, k = jour.findIndex(l => l.text && l.text.startsWith('Peu importe'));
+    expect(jour[k].scene).toBe('03_trouee');
+    expect(rangBulle(jour, k)).toBe(3);
   });
-  it('la scène du naufrage a un temps pour chaque bulle de sa suite', () => {
-    for (const [suite, ids] of [['naufrage', ['01_pont']]]) {
+  it('les scènes du naufrage, du livre, du Vent et du cercle ont un temps pour chaque bulle de leur suite', () => {
+    for (const [suite, ids] of [['naufrage', ['01_pont']], ['arrivee', ['03_livre']], ['souffle', ['03_vent']], ['jour', ['03_trouee', '03_ciel']], ['cercle', ['03_nuit', '05_cercle']], ['epave', ['05_promesse']]]) {
       for (const id of ids) expect(SCENES[suite].filter(l => l.scene === id).length).toBe(DATA.scenes[id].partition.temps.length);
     }
   });

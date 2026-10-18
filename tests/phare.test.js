@@ -31,9 +31,10 @@ describe('le vol du conseil', () => {
 describe('les scènes de l’arc', () => {
   const bubbles = id => SCENES[id].filter(frame => frame.text).length;
   // (la réplique de Lorena qui voit venir la pluie, validée le 16 oct., tient en deux bulles)
-  it('le conseil : le geste de la bûche, puis quatre et trois bulles ; la traversée, six bulles au plus', () => {
+  // (Nathan et le joueur s'y ajoutent : choix de l'auteur, 18 oct.)
+  it('le conseil : le geste de la bûche, puis six et cinq bulles ; la traversée, six bulles au plus', () => {
     expect(SCENES.conseil[0].gesture.label).toBe('Remettre une bûche dans le feu');
-    expect([bubbles('conseil'), bubbles('conseil-suite')]).toEqual([4, 3]);
+    expect([bubbles('conseil'), bubbles('conseil-suite')]).toEqual([6, 5]);
     expect(bubbles('traversee')).toBeLessThanOrEqual(6);
   });
   // (choix de l'auteur, 16 oct. : le ciel s'assombrit, Lorena annonce la pluie, elle tombe avec Agathe, s'installe avec

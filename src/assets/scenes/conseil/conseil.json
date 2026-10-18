@@ -9,6 +9,14 @@
     "echelle": 2.75,
     "vue": "dos",
     "pose": "assis-mains-tendues",
-    "naufrage": false
+    "naufrage": false,
+    "neon": true,
+    "lumiere": {
+      "ambiance": "#1A0A40",
+      "eclat": "#FF9A40",
+      "lisere": "#FFB070",
+      "force": 1.15,
+      "cote": -1
+    }
   }
 }

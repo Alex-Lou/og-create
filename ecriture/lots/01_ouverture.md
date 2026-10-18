@@ -1,5 +1,7 @@
 # Lot 01 — L'ouverture : le naufrage, Brume, le Grimoire, le premier feu
 
+> **Révision du 18 octobre 2026** : l'auteur a réécrit lui-même les répliques de ce lot ; le texte en jeu est celui de `lots/10_reecriture_auteur.md` (jour 1). Ce lot garde ses intentions, ses images et ses décisions ; ses tableaux de répliques sont une archive.
+
 > Ce lot réécrit la séquence de Brume, du naufrage à la première nuit, **sur l'ouverture écrite par l'auteur**. La structure, les intentions et l'humour sont les siens ; la langue est corrigée ; quelques endroits sont élevés. Chaque écart à son texte est signalé dans la colonne « Intention ».
 > - Décisions appliquées : `ton.md` § 0 (1, 2, 3, 4, 5, 6, 7, 7 bis, 8, 9, 10, 11, 12, 14).
 > - **Validé par l'auteur le 14 octobre**, avec les quatre recommandations du § 4 (décisions 19 à 22 de `ton.md`). Seul changement depuis : arrivee.2 reprend le mot de l'auteur avec les deux formes (décision 20).
@@ -65,7 +67,7 @@ Colonnes : l'identifiant (existant, ou **nouveau** en gras) ; qui parle ; où da
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| naufrage.0 | légende | `01_pont`, auto | L'Hirondelle, troisième nuit de croisière. | L'Hirondelle, troisième nuit de croisière. | Gardée. |
+| naufrage.0 | légende | `01_pont`, auto | L'Hirondelle, troisième nuit de croisière. | L'Hirondelle, troisième jour de croisière. | Changée (choix de l'auteur, 16 oct. : le naufrage a lieu en journée). |
 | naufrage.1 → **naufrage.1a** | Le capitaine | `01_pont`, auto | Mesdames et messieurs, le commandant vous prie de regagner… krrr… vos cabines… | Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée. | Le texte de l'auteur ; « qui vous parle » retiré (redondant). « Un élément inconnu » est gardé : le mystère des racines (décision 3). |
 | **naufrage.1b** | Le capitaine | `01_pont`, auto | — | Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme. | Le calme professionnel. « Il faudra vous organiser » devient une consigne de capitaine. |
 | **naufrage.1c** | Le capitaine | `01_pont`, auto | — | Nous rencontrons des difficultés à manœ… — krrr — Aaah ! — krrrr… shhh… | La voix se coupe sur le mot ; le cri est réel. Le « krrr » reste : c'est un bruit (décision 11). Un seul « Aaah », pas cinq : la peur, pas la caricature. |
