@@ -337,7 +337,7 @@ export const LINES = {
   // poulailler (la leçon des annexes) ; le soir à trois, la troisième nuit
   'faim-aster': { who: 'ponton', mood: 'surpris', text: 'Brume, dis-moi que je ne rêve pas…' },
   'faim-cannelle': { who: 'foyer', mood: 'malicieux', text: 'Ton ventre, je l’entends depuis les rochers. Assieds-toi. Un ventre vide ne bâtit rien.' },
-  'faim-bulle': 'Elle a raison. Et elle aussi a faim : regarde-la.',
+  'faim-bulle': 'Elle a raison. Et regarde au-dessus d’elle : elle meurt d’envie de cuisiner.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
   'soupe-aster': { who: 'ponton', mood: 'emu', text: 'Chaude, salée comme il faut… parfaite. Agathe, tu viens de me sauver la vie.' },

@@ -10,7 +10,7 @@
 // STOCK="wood = 200, stone = 30" FIN_AT=nuit-cannelle. (Au démarrage, la sonde referme d'elle-même les premières
 // bulles sans les noter : regarder DUMP=1 pour les voir.) La chasse aux poules est jouée comme un joueur (du grain près
 // d'une poule, puis celle qui picore). La marmite de Cannelle
-// (la soupe) l'est, comme un joueur : chaque ingrédient glissé, trois tours, la louche au bol ; ses images comptées
+// (la soupe) l'est, comme un joueur : le seau tenu au-dessus, chaque ingrédient glissé, trois tours, la louche tenue au-dessus du bol ; ses images comptées
 // (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4. VUS="cannelle,rivet" : des
 // scènes déjà vues en plus (un départ après elles). Ex. : DEPART=nuit-rivet VUS="cannelle,cannelle-parle,rivet" FIN_AT=souvenir-ondin
 const { chromium } = require('playwright');
@@ -176,15 +176,21 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       }
       const center = async sel => { const bb = await p.locator(sel).first().boundingBox(); return bb && [bb.x + bb.width / 2, bb.y + bb.height / 2]; };
       const slide = async (from, to) => { touches++; await p.mouse.move(...from); await p.mouse.down(); await p.mouse.move(...to, { steps: 12 }); await p.mouse.up(); };
+      // (les places de l'aire de jeu, en unités de sa largeur : game/cooking.js)
+      const ar = await p.locator('.cook__arena').boundingBox();
+      const at = (x, y) => [ar.x + (x * ar.width) / 100, ar.y + (y * ar.width) / 100];
+      // Tenir une pièce, la porter, la garder là ms, la lâcher
+      const carry = async (from, to, ms, name) => { touches++; await p.mouse.move(...from); await p.mouse.down(); await p.mouse.move(...to, { steps: 14 }); await p.waitForTimeout(ms / 2); if (name) await snap(name); await p.waitForTimeout(ms / 2); await p.mouse.up(); };
       if (ph === 'intro') { touches++; await p.locator('.cook .scene__btn').click(); }
-      else if (ph === 'mettre') await slide(await center('.cook__item:visible'), await center('.cook__pot'));
+      else if (ph === 'verser') await carry(at(20, 101), at(66, 26), 2400, 'marmite-verse');
+      else if (ph === 'jeter') await slide(await center('.cook__piece:visible'), at(58, 52));
       else if (ph === 'touiller') {
-        const bb = await p.locator('.cook__pot').boundingBox(); const cx = bb.x + bb.width / 2; const cy = bb.y + bb.height * 0.36; const r = bb.width * 0.28;
+        const [cx, cy] = at(58, 54); const r = (12 * ar.width) / 100;
         touches++; await p.mouse.move(cx + r, cy); await p.mouse.down();
-        for (let i = 1; i <= 80 && await p.locator('.cook[aria-label]').count(); i++) { const a = (i / 24) * 2 * Math.PI; await p.mouse.move(cx + Math.cos(a) * r, cy + Math.sin(a) * r); await p.waitForTimeout(30); if (i === 30) await snap('marmite-touille'); }
+        for (let i = 1; i <= 80 && await p.locator('.cook__arena[data-phase="touiller"]').count(); i++) { const a = (i / 24) * 2 * Math.PI; await p.mouse.move(cx + Math.cos(a) * r, cy + Math.sin(a) * r); await p.waitForTimeout(30); if (i === 30) await snap('marmite-touille'); }
         await p.mouse.up();
       }
-      else if (ph === 'servir') await slide(await center('.cook__ladle'), await center('.cook__bowl'));
+      else if (ph === 'servir') await carry(at(66, 48), at(82, 88), 1800, 'marmite-sert');
       else if (ph === 'fin') {
         await p.waitForTimeout(1800); await snap('marmite-servie');
         const dts = (await p.evaluate(() => window.__dts || [])).slice(5).sort((a, b) => a - b);

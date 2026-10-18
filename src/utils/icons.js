@@ -1,6 +1,8 @@
 // Icônes de l'interface, dessinées comme les éléments (64 × 64, aplats cernés) : elles remplacent les emojis du jeu
 // (ressources, écus, chapitre, plan, carte, cadenas…). On les désigne par « ui:<nom> » partout où un glyphe s'affiche
 // (ElementGlyph en HTML, glyph() du Livre sur un canvas).
+import POT from '/design/bibliotheque/svg/minijeux/cuisine/marmite.svg?raw';
+
 const svg = body => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">${body}</svg>`;
 
 export const ICONS = {
@@ -119,6 +121,9 @@ export const ICONS = {
 // mènent à la leur (ALIASES).
 const LIBRARY = Object.fromEntries(Object.entries(import.meta.glob('/design/bibliotheque/svg/interface/*_icone.svg', { query: '?url', import: 'default', eager: true }))
   .map(([path, url]) => [path.split('/').pop().replace(/_icone\.svg$/, ''), url]));
+// La marmite d’Agathe (sa bulle, à sa soupe du tutoriel : world/view/draw/bubbles.js) : celle des mini-jeux de la
+// bibliothèque, recadrée au carré des icônes
+LIBRARY.marmite = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(POT.replace('width="480" height="400" viewBox="0 0 120 100"', 'width="256" height="256" viewBox="0 -8 120 120"'))}`;
 const ALIASES = {
   stone: 'pierre', wood: 'bois', water: 'eau', food: 'nourriture', fish: 'poisson', coin: 'ecu', book: 'chapitre', map: 'carte',
   spark: 'etincelle', lock: 'verrou', unknown: 'inconnu', sprout: 'pousse', basket: 'ramasser', tools: 'outils', flower: 'fleur',

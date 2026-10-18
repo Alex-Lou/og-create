@@ -121,7 +121,8 @@ export default {
       const y = h.y - h.head - r + Math.sin(t * 2.6 + h.x) * 1.5;
       this.popAt(ctx, `need:${friend.id}:${first.id}`, x, y + r + 5 * k, now);
       this.bubbleAt(ctx, x, y, r, k, TINT.amber100, TINT.amber500);
-      glyph(ctx, NEED_GLYPH[first.id], x, y + 0.5, 14 * k, repaint);
+      // (la faim d’Agathe, à sa soupe du tutoriel, ouvre sa marmite : sa bulle la montre, WorldView cooking.js)
+      glyph(ctx, this.cooksNow(friend.id, first.id) ? 'ui:marmite' : NEED_GLYPH[first.id], x, y + 0.5, 14 * k, repaint);
       ctx.restore();
       this.needBubbles.push({ id: friend.id, need: first.id, x, y, r });
     }

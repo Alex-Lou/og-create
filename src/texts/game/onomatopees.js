@@ -62,7 +62,11 @@ export const COOK_WORDS = {
   stir: ['Flic-flac !', 'Blop blop !'],
   ready: 'Blop !',
   serve: 'Glou !',
-  end: 'Fumant !'
+  end: 'Fumant !',
+  // (l'eau juste au trait ; l'eau ou la soupe qui déborde ; la louche pleine lâchée hors du bol)
+  line: 'Pile au trait !',
+  over: 'Ça déborde !',
+  spill: 'Oups !'
 };
 
 // L'assemblage à l'établi (game/craftFx.js) : une pièce posée, une pièce qui ne tient pas, le gabarit rempli, la

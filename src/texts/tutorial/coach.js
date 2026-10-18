@@ -82,7 +82,7 @@ export const COACH = {
   },
   soupe: {
     coquillage: 'Les coquillages sont sur le rivage : touche-en un.',
-    bulle: 'Agathe a faim : sa bulle, au-dessus d’elle, lui donne à manger.'
+    bulle: 'Agathe a hâte de recevoir tes ingrédients pour cuisiner avec toi : touche sa bulle.'
   },
   'cage-vue': {
     aster: 'Va voir Lorena : sa longue-vue a repéré quelque chose sur l’eau.'

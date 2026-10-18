@@ -12,7 +12,11 @@ export const READY_WORD = COOK_WORDS.ready;
 // La louche versée dans le bol, puis la fin
 export const SERVE_WORD = COOK_WORDS.serve;
 export const END_WORD = COOK_WORDS.end;
-// Le bouillon, cran par cran (les teintes de --cook-soup, CookingPot.css) : ses gouttes et ses bulles
+// L'eau juste au trait ; ce qui déborde ; la louche pleine lâchée hors du bol
+export const LINE_WORD = COOK_WORDS.line;
+export const OVER_WORD = COOK_WORDS.over;
+export const SPILL_WORD = COOK_WORDS.spill;
+// Le bouillon, cran par cran (l'eau de mer, puis un cran par ingrédient et par tour de louche : CookingPot, cookScene.js)
 export const SOUP = ['#9CC3CF', '#9CC3CF', '#A9C29A', '#C7BB8A', '#D6B474', '#E2AC5C', '#E8A44C'];
 export const STARS = ['#FFF3C4', '#F2B33D', '#FFFFFF'];
 // Les couleurs des mots : ce qui tombe (bleu d'eau de mer), le bouillon (ambre), trop vite (crème), la fin (rose de

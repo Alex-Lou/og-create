@@ -1,49 +1,43 @@
-/* La marmite d’Agathe (son habit : SceneCard) : son coin de cuisine, la planche, le bol et la louche ; ce qu'on
-   glisse suit le doigt par transformations (composées par le GPU), le reste en CSS. La marmite et ses pièces se
-   dessinent dans CookingPotArt et CookingArt. Chaque élément se place par left/top et `translate` : `transform` reste
-   libre pour le glisser */
+/* La marmite d’Agathe (son habit : SceneCard, celui de la Récolte et de la chasse) : son coin cuisine au soir, au feu.
+   Tout ce qui bouge se dessine sur la scène (cookScene.js) ; ici, le ciel et le sol, Agathe, les prises du doigt
+   (des boutons transparents posés sur chaque pièce), le nom des ingrédients, la main et les étoiles de la fin */
 
-/* Jetons locaux : le sable et la lueur du coin de cuisine, le bois de la planche ; le bouillon, cran par cran
-   (data-level : un par ingrédient, puis par tour de louche), que lisent la marmite, la louche, le bol et les gouttes */
+/* Jetons locaux : le ciel du soir, le sable que chauffe le feu, l'or des étoiles */
 .cook {
-  --cook-sand-1: #e9d9a6;
-  --cook-sand-2: #f1e2b6;
-  --cook-sand-3: #ead6a0;
-  --cook-grass: rgba(150, 175, 95, .35);
-  --cook-glow: rgba(255, 180, 90, .32);
-  --cook-plank-hi: #c9925a;
-  --cook-plank-lo: #a8713f;
-  --cook-plank-edge: #7a4e28;
-  --cook-soup: transparent;
+  --cook-sky-1: #2c2238;
+  --cook-sky-2: #4a2f3a;
+  --cook-ground-1: #5a3b28;
+  --cook-ground-2: #3a2619;
+  --cook-fire: rgba(255, 140, 60, .30);
+  --cook-gold: #f2c25a;
 }
-.cook__arena[data-level="1"] { --cook-soup: #9cc3cf; }
-.cook__arena[data-level="2"] { --cook-soup: #a9c29a; }
-.cook__arena[data-level="3"] { --cook-soup: #c7bb8a; }
-.cook__arena[data-level="4"] { --cook-soup: #d6b474; }
-.cook__arena[data-level="5"] { --cook-soup: #e2ac5c; }
-.cook__arena[data-level="6"] { --cook-soup: #e8a44c; }
 
-/* Le coin de cuisine : le sable, l'herbe au fond, la lueur du feu au milieu */
+/* Le coin cuisine : le ciel qui tombe, quelques étoiles, le sable rougi par le feu (la lueur vive : cookScene.js) */
 .cook__arena {
   position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-board);
   background:
-    radial-gradient(ellipse 42% 26% at 56% 70%, var(--cook-glow), transparent 72%),
-    radial-gradient(ellipse 80% 22% at 30% 0%, var(--cook-grass), transparent 70%),
-    radial-gradient(circle at 12% 74%, rgba(255, 255, 255, .25) 0 1.2%, transparent 1.6%),
-    radial-gradient(circle at 88% 58%, rgba(var(--shade-rgb), .14) 0 1.4%, transparent 1.8%),
-    linear-gradient(180deg, var(--cook-sand-1) 0%, var(--cook-sand-2) 40%, var(--cook-sand-3) 100%);
-  box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .18), inset 0 -18px 30px rgba(var(--shade-rgb), .12);
+    radial-gradient(ellipse 46% 30% at 58% 66%, var(--cook-fire), transparent 72%),
+    radial-gradient(circle at 18% 12%, rgba(255, 244, 214, .8) 0 .35%, transparent .6%),
+    radial-gradient(circle at 76% 8%, rgba(255, 244, 214, .7) 0 .3%, transparent .55%),
+    radial-gradient(circle at 90% 22%, rgba(255, 244, 214, .5) 0 .25%, transparent .5%),
+    radial-gradient(circle at 40% 18%, rgba(255, 244, 214, .45) 0 .25%, transparent .5%),
+    radial-gradient(ellipse 90% 30% at 50% 70%, var(--cook-ground-1), transparent 75%),
+    linear-gradient(180deg, var(--cook-sky-1) 0%, var(--cook-sky-2) 45%, var(--cook-ground-1) 62%, var(--cook-ground-2) 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .35), inset 0 -24px 40px rgba(0, 0, 0, .25);
   touch-action: none; user-select: none; -webkit-user-select: none;
 }
-.cook__arena button {
-  position: absolute; padding: 0; border: 0; background: none; cursor: pointer; touch-action: none;
-  -webkit-tap-highlight-color: transparent; font: inherit; color: inherit;
+
+/* La lueur du feu, qui vacille (le compositeur la fait varier : la scène n'a pas à la repeindre) */
+.cook__arena::before {
+  content: ''; position: absolute; left: 12%; right: 12%; top: 34%; height: 60%; pointer-events: none;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 150, 60, .42), rgba(255, 110, 40, .14) 50%, transparent 72%);
+  animation: cook-glow 1.7s ease-in-out infinite alternate;
 }
-.cook__arena button:focus-visible { outline: 3px solid var(--gold-500); outline-offset: 2px; border-radius: 12px; }
+@keyframes cook-glow { 0% { opacity: .78; } 35% { opacity: 1; } 60% { opacity: .86; } 100% { opacity: .96; } }
 
 /* Agathe : les images de sa pose du moment superposées (2 ou 4, is-n2 / is-n4), jouées l'une après l'autre (250 ms
    chacune) ; au repos, la première. Elle touille quand on touille */
-.cook__cannelle { position: absolute; left: 15%; top: 50%; width: 29%; aspect-ratio: 48 / 64; translate: -50% -100%; pointer-events: none; }
+.cook__cannelle { position: absolute; left: 17%; top: 67%; width: 26%; aspect-ratio: 48 / 64; translate: -50% -100%; pointer-events: none; }
 .cook__cannelle img { position: absolute; inset: 0; width: 100%; height: 100%; visibility: hidden; }
 .cook__cannelle img:first-child { visibility: visible; }
 .cook__cannelle.is-playing img { animation: cook-f2 .5s steps(1) infinite; animation-delay: calc(var(--i) * .25s); }
@@ -51,72 +45,81 @@
 @keyframes cook-f2 { 0% { visibility: visible; } 50%, 100% { visibility: hidden; } }
 @keyframes cook-f4 { 0% { visibility: visible; } 25%, 100% { visibility: hidden; } }
 
-/* La marmite sur son feu (son dessin : CookingPotArt) ; on y touille */
-.cook__pot { left: 56%; top: 52%; width: 58%; aspect-ratio: 120 / 100; translate: -50% -50%; }
-.cook__arena[data-phase="touiller"] .cook__pot { cursor: grab; }
-.cook__pot.is-stirring { cursor: grabbing; }
+/* Le feu sous la marmite (derrière elle : ses flammes lèchent la fonte) : ses trois images de la bibliothèque, l'une
+   après l'autre (110 ms chacune) */
+.cook__fire { position: absolute; left: 37%; top: 45.6%; width: 42%; aspect-ratio: 36 / 27; pointer-events: none; }
+.cook__fire img { position: absolute; inset: 0; width: 100%; height: 100%; visibility: hidden; animation: cook-f3 .33s steps(1) infinite; animation-delay: calc(var(--i) * .11s); }
+@keyframes cook-f3 { 0% { visibility: visible; } 33.34%, 100% { visibility: hidden; } }
 
-/* La vapeur qui monte, quand la soupe chauffe (et au-dessus du bol servi) */
-.cook__steam { position: absolute; left: 56%; top: 30%; width: 0; height: 0; pointer-events: none; }
-.cook__steam i {
-  position: absolute; left: calc((var(--k) - 2) * 16px - 5px); top: 0; width: 10px; height: 26px; border-radius: 50%;
-  border-left: 3px solid rgba(255, 255, 255, .8); animation: cook-steam 2.2s ease-in infinite; animation-delay: calc(var(--k) * -.7s);
+/* La scène : tout ce qui se dessine, par-dessus Agathe, sous les prises du doigt */
+.cook__fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* La soupe chaude : des bulles qui naissent et crèvent à sa surface, la vapeur qui monte de la marmite */
+.cook__bubbles { position: absolute; left: 46%; top: 42.4%; width: 24%; height: 3.6%; pointer-events: none; }
+.cook__bubbles i {
+  position: absolute; left: calc(var(--k) * 21% - 12%); top: calc(50% + (var(--k) - 2.5) * 6%); width: 12%; aspect-ratio: 2 / 1;
+  border: 1.5px solid rgba(255, 255, 255, .75); border-radius: 50%; opacity: 0;
+  animation: cook-bubble 1.6s ease-out infinite; animation-delay: calc(var(--k) * -.37s);
 }
-.cook__steam.is-small { left: 50%; top: 4%; }
-.cook__steam.is-small i { left: calc((var(--k) - 2) * 10px - 4px); height: 18px; }
+@keyframes cook-bubble { 0% { transform: scale(.2); opacity: 0; } 40% { opacity: .8; } 100% { transform: scale(1); opacity: 0; } }
+.cook__steam { position: absolute; left: 58%; top: 38%; width: 0; height: 0; pointer-events: none; }
+.cook__steam i {
+  position: absolute; left: calc((var(--k) - 2) * 26px - 5px); top: 0; width: 10px; height: 30px; border-radius: 50%;
+  border-left: 3px solid rgba(255, 255, 255, .7); opacity: 0; animation: cook-steam 2.6s ease-in infinite; animation-delay: calc(var(--k) * -.9s);
+}
 @keyframes cook-steam {
   0% { transform: translateY(0) scaleY(.6); opacity: 0; }
-  30% { opacity: .9; }
-  100% { transform: translateY(-34px) scaleY(1.1) skewX(-12deg); opacity: 0; }
+  30% { opacity: .75; }
+  100% { transform: translateY(-40px) scaleY(1.1) skewX(-12deg); opacity: 0; }
 }
 
-/* La planche et ses ingrédients (leurs dessins : CookingArt) */
-.cook__plank {
-  position: absolute; left: 6%; right: 6%; top: 82%; height: 13%; border-radius: 14px; pointer-events: none;
-  background: linear-gradient(180deg, var(--cook-plank-hi), var(--cook-plank-lo));
-  box-shadow: inset 0 0 0 1.5px var(--ink-900), inset 0 3px 0 rgba(255, 255, 255, .25), 0 4px 0 var(--cook-plank-edge);
+/* Les prises du doigt : transparentes, sur chaque pièce ; le clavier les voit */
+.cook__hit {
+  position: absolute; padding: 0; border: 0; background: none; cursor: pointer; touch-action: none;
+  -webkit-tap-highlight-color: transparent; font: inherit; color: inherit;
 }
-.cook__item {
-  width: 22%; translate: -50% -78%; display: grid; justify-items: center; gap: 2px;
-  transition: transform .28s var(--oc-ease-out); will-change: transform;
+.cook__hit:focus-visible { outline: 3px solid var(--cook-gold); outline-offset: 2px; border-radius: 12px; }
+.cook__pot { left: 31%; top: 30.4%; width: 54%; height: 36%; cursor: default; }
+.cook__arena[data-phase="touiller"] .cook__pot { cursor: grab; }
+.cook__pot.is-stirring { cursor: grabbing; }
+.cook__piece { display: flex; align-items: flex-end; justify-content: center; cursor: grab; }
+.cook__piece:active, .cook__ladle:active { cursor: grabbing; }
+.cook__ladle { cursor: grab; }
+/* Le nom d'une pièce, au bord de la planche */
+.cook__name {
+  margin-bottom: -6px; padding: 1px 8px; border-radius: var(--r-pill); background: rgba(var(--island-paper-rgb), .92);
+  color: var(--ink-900); font-size: 11px; font-weight: 900; white-space: nowrap; pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
 }
-.cook__item.is-dragging { transition: none; z-index: 5; }
-.cook__item-art { display: block; width: 76%; aspect-ratio: 1; filter: drop-shadow(0 3px 3px rgba(var(--shade-rgb), .25)); }
-.cook__item.is-dragging .cook__item-art { transform: scale(1.15); }
-.cook__item-name {
-  padding: 1px 7px; border-radius: var(--r-pill); background: rgba(var(--island-paper-rgb), .85); color: var(--ink-900);
-  font-size: 11px; font-weight: 900; white-space: nowrap; pointer-events: none;
-}
-
-/* Le bol, au service ; la louche, dans la marmite, qui se glisse jusqu'à lui (leurs dessins : CookingArt) */
-.cook__bowl { position: absolute; width: 30%; aspect-ratio: 80 / 50; translate: -50% -50%; pointer-events: none; animation: cook-pop .35s var(--oc-ease-out) backwards; }
-@keyframes cook-pop { from { transform: scale(.4); opacity: 0; } }
-.cook__ladle {
-  left: 70%; top: 36%; width: 16%; aspect-ratio: 60 / 100; translate: -50% -60%; rotate: 18deg;
-  filter: drop-shadow(0 4px 4px rgba(var(--shade-rgb), .25));
-  transition: transform .3s var(--oc-ease-out), left .45s var(--oc-ease-out), top .45s var(--oc-ease-out), rotate .45s var(--oc-ease-out);
-  will-change: transform; animation: cook-pop .35s var(--oc-ease-out) backwards;
-}
-.cook__ladle.is-dragging { transition: none; z-index: 5; }
-.cook__ladle.is-poured { left: 86%; top: 72%; rotate: 52deg; cursor: default; }
-
-/* Ce qui gicle, monte et se dit : la scène commune (game/stage), par-dessus tout, sans toucher au doigt */
-.cook__fx { position: absolute; inset: 0; z-index: 200; width: 100%; height: 100%; pointer-events: none; }
 
 /* La main : le geste du moment */
 .cook__hint {
   position: absolute; display: grid; justify-items: center; gap: 6px; translate: -50% -50%; pointer-events: none;
-  font-weight: 900; font-size: 13px; color: var(--ink-900); text-shadow: 0 1px 0 rgba(255, 255, 255, .7);
+  font-weight: 900; font-size: 13px; color: #fff4dc; text-shadow: 0 1px 3px rgba(0, 0, 0, .7);
 }
-.cook__hint.is-mettre { left: 50%; top: 70%; }
-.cook__hint.is-touiller { left: 56%; top: 46%; }
-.cook__hint.is-servir { left: 76%; top: 60%; }
-.cook__ring { width: 46px; height: 46px; border-radius: 50%; border: 3px solid var(--gold-500); animation: cook-ring 1.1s ease-out infinite; }
+.cook__ring { width: 46px; height: 46px; border-radius: 50%; border: 3px solid var(--cook-gold); box-shadow: 0 0 12px rgba(242, 194, 90, .6); animation: cook-ring 1.1s ease-out infinite; }
 .cook__hint.is-touiller .cook__ring { animation: cook-turn 1.4s linear infinite; border-style: dashed; }
 @keyframes cook-ring { from { transform: scale(.5); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
 @keyframes cook-turn { to { transform: rotate(360deg); } }
 
+/* Les étoiles de la fin, en haut du ciel : gagnées, elles s'allument l'une après l'autre */
+.cook__stars {
+  position: absolute; left: 4%; right: 4%; top: 4%; margin: 0; padding: 0; list-style: none;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; pointer-events: none;
+}
+.cook__stars li {
+  display: grid; justify-items: center; gap: 2px; padding: 6px 4px; border-radius: 12px; text-align: center;
+  background: rgba(20, 12, 24, .45); color: rgba(255, 244, 220, .55); font-size: 11px; font-weight: 800; line-height: 1.2;
+  animation: cook-star .45s var(--oc-ease-out) backwards; animation-delay: calc(.35s + var(--i) * .2s);
+}
+.cook__star { font-size: 22px; line-height: 1; color: rgba(255, 244, 220, .25); }
+.cook__stars li.is-won { color: #fff4dc; }
+.cook__stars li.is-won .cook__star { color: var(--cook-gold); text-shadow: 0 0 10px rgba(242, 194, 90, .85); }
+@keyframes cook-star { from { transform: scale(.4); opacity: 0; } }
+
 @media (prefers-reduced-motion: reduce) {
-  .cook__ring, .cook__steam i, .cook__cannelle.is-playing img { animation: none; }
-  .cook__bowl, .cook__ladle { animation-duration: .01s; }
+  .cook__ring, .cook__cannelle.is-playing img, .cook__arena::before, .cook__bubbles i, .cook__steam i { animation: none; }
+  .cook__fire img { animation: none; }
+  .cook__fire img:first-child { visibility: visible; }
+  .cook__stars li { animation-duration: .01s; animation-delay: 0s; }
 }
