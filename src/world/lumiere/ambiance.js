@@ -6,6 +6,7 @@ import { tuilesOf, TUILE } from '../tuiles';
 import { selonQualite } from '../perf';
 import { entre, frac } from '../maths';
 import { rond } from '../textures';
+import { soleilOf } from './soleil';
 
 // Un faisceau : fondu en travers (bords doux) et en longueur (fort au départ, éteint au bout), dessiné une fois par
 // teinte, puis posé tourné et étiré
@@ -45,11 +46,16 @@ export function raysOf(phase) {
 // zoom ; doux, en lumière qui s'ajoute. Dans la transformation du monde ; view : le rectangle du monde à l'écran ;
 // s : le zoom
 const RAYON = 720;
+// (leur direction à l'écran, venue du côté du soleil (soleil.js) : le matin, de la droite vers le bas à gauche ; le
+// soir, de la gauche vers le bas à droite ; leur teinte, pâle le matin, chaude le soir)
+export function raysFrom(phase) {
+  const matin = soleilOf(phase.sun).cote > 0;
+  return { ang: matin ? Math.PI - 0.98 : 0.98, tone: matin ? '255,238,196' : '255,204,146' };
+}
 export function drawRays(ctx, view, t, phase, s = 1) {
   const k = raysOf(phase);
   if (k < 0.03) return;
-  const left = phase.sun.progress < 0.5;
-  drawFaisceaux(ctx, view, t, { ang: left ? 0.98 : Math.PI - 0.98, tone: left ? '255,238,196' : '255,204,146', force: k, s });
+  drawFaisceaux(ctx, view, t, { ...raysFrom(phase), force: k, s });
 }
 // Ce qui flotte dans l'air de près s'efface quand on s'éloigne (1 de près, 0 en vue large) : de loin, un faisceau n'est
 // plus qu'un trait de 1 à 3 px, et des centaines de traits parallèles font une averse. s : le zoom
