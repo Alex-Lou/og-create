@@ -818,7 +818,7 @@ var require_brume = __commonJS({
     }
     __name(brumeEyes, "brumeEyes");
     var svgB = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${40 * scale}" height="${48 * scale}" viewBox="0 0 40 48">${body}</svg>`, "svgB");
-    module.exports = { STAGES, brumeFrame, brumeEyes, svgB };
+    module.exports = { STAGES, brumeFrame, brumeEyes, svgB, flamePath };
   }
 });
 

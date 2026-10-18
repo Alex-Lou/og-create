@@ -1034,7 +1034,7 @@ var require_carte_embarquement = __commonJS({
       return s;
     }
     __name(trempe, "trempe");
-    module.exports = { carte, ZONES };
+    module.exports = { carte, tampon, ZONES };
   }
 });
 
