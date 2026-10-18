@@ -8,7 +8,8 @@ import notificationService from '@/services/notificationService';
 import { creatureOfHit, creatureOf } from '@/world/creatures';
 import { rareSigns } from '@/world/rareSigns';
 import { guide } from '@/game/guide';
-import { BESTIARY } from '@/texts/world/creatures';
+import { recordSighting } from '@/world/sightings';
+import { BESTIARY, CATEGORY_TITLES } from '@/texts/world/creatures';
 
 export default {
   data() {
@@ -34,18 +35,25 @@ export default {
       this.logOpen = false;
       this.bestiaryOpen = true;
     },
-    // Un toucher sur une créature (gestures.js : hit.animal) : la première fois, elle entre au Bestiaire. Une rencontre
-    // qui échoue (hors ligne) se retente au toucher suivant, sans rien dire
+    // Un toucher sur une créature (gestures.js : hit.animal) : une rencontre de plus sur cet appareil (world/sightings.js) ;
+    // la première fois, elle entre au Bestiaire, et une catégorie complète rapporte ses écus. Une rencontre qui échoue
+    // (hors ligne) se retente au toucher suivant, sans rien dire
     meetCreature(animal) {
       const id = creatureOfHit(animal);
-      if (!id || !this.state || this.meeting.has(id) || (this.state.animals || []).some(a => a.id === id)) return;
+      if (!id || !this.state) return;
+      recordSighting(id);
+      if (this.meeting.has(id) || (this.state.animals || []).some(a => a.id === id)) return;
       this.meeting.add(id);
       playService.meetAnimal(id)
-        .then(({ animal: met, at }) => {
+        .then(({ animal: met, at, rewards = [], coins }) => {
           const known = (this.state && this.state.animals) || [];
-          if (!this.state || known.some(a => a.id === met)) return;
-          this.state.animals = [...known, { id: met, at }];
-          notificationService.show({ message: BESTIARY.met(creatureOf(met).name), type: 'success' });
+          if (this.state && !known.some(a => a.id === met)) {
+            this.state.animals = [...known, { id: met, at }];
+            notificationService.show({ message: BESTIARY.met(creatureOf(met).name), type: 'success' });
+          }
+          // (une catégorie complète : sa récompense, versée par le serveur)
+          for (const r of rewards) notificationService.show({ message: BESTIARY.reward(CATEGORY_TITLES[r.category], r.coins), type: 'success' });
+          if (coins !== undefined) this.$emit('coins-updated', coins);
         })
         .catch(() => {})
         .finally(() => this.meeting.delete(id));

@@ -177,6 +177,6 @@ export function beastPortraitUrl(species, variant) {
   const subject = subjectOf(species, variant);
   const art = subject && BEASTS[subject];
   const alone = subject && !art && SINGLE[subject];
-  const load = (art || (alone && alone.view)) && FILES[portraitFile(subject, art, alone)];
+  const load = (art || alone) && FILES[portraitFile(subject, art, alone)];
   return load ? portraitOf(subject, load) : null;
 }

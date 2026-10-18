@@ -201,10 +201,11 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     // Une poule d’Agathe : son prénom
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
     if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? TOUCH_HINTS.reactShe : TOUCH_HINTS.reactHe };
-    // Une créature du Bestiaire : son nom et sa phrase (texts/world/creatures.js)
+    // Une créature du Bestiaire : son nom et sa phrase (texts/world/creatures.js) ; une bête de la ferme ne sursaute pas,
+    // elle réagit
     const creature = creatureOf(creatureOfHit({ who }));
-    if (creature) return { title: creature.name, text: creature.text, hint: TOUCH_HINTS.startle };
-    const [title, text] = BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];
+    if (creature && creature.category !== 'ferme') return { title: creature.name, text: creature.text, hint: TOUCH_HINTS.startle };
+    const [title, text] = creature ? [creature.name, creature.text] : BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];
     return { title, text, hint: isWild(who.species) ? TOUCH_HINTS.startle : TOUCH_HINTS.reactShe };
   }
   return { residents, farm, at, say, describe, home, foyer };

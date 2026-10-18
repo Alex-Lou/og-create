@@ -8,32 +8,43 @@ import { subjectOf } from '@/world/beastArt';
 import EGARES from '../design/bibliotheque/svg/egares/egares.json';
 import { bestiaryPages, PER_PAGE } from '@/book/bestiaryPainter';
 
-// (serveur : services/animals.js, ANIMALS ; un animal hors de cette liste y est refusé)
-const SERVER = [
-  'lapin', 'ecureuil', 'mesange', 'renard', 'herisson', 'cerf', 'hibou',
-  'papillon', 'papillon-lune', 'luciole', 'abeille',
-  'grenouille', 'tortue', 'heron', 'koi', 'loutre',
-  'crabe', 'mouette', 'sardines', 'dauphin', 'baleine', 'geant', 'kraken',
-  'macareux', 'poney', 'bouquetin', 'renard-polaire', 'chameau', 'fennec', 'toucan', 'cameleon', 'corbeau', 'salamandre',
-  'fantome', 'zombie', 'noye', 'racine', 'esprit',
-  'lapin-de-brume', 'bouquetin-de-brume', 'poney-de-brume', 'grenouille-de-brume', 'fennec-de-brume', 'cameleon-de-brume', 'salamandre-de-brume'
-];
+// (serveur : services/animals.js, CATEGORIES ; un animal hors de cette liste y est refusé)
+const SERVER_CATEGORIES = {
+  bois: ['lapin', 'ecureuil', 'mesange', 'renard', 'herisson', 'cerf', 'hibou'],
+  fleurs: ['papillon', 'papillon-lune', 'luciole', 'abeille'],
+  eau: ['grenouille', 'tortue', 'heron', 'koi', 'loutre'],
+  mer: ['crabe', 'mouette', 'sardines', 'dauphin', 'baleine', 'geant', 'kraken'],
+  lointain: ['macareux', 'poney', 'bouquetin', 'renard-polaire', 'chameau', 'fennec', 'toucan', 'cameleon', 'corbeau', 'salamandre'],
+  ferme: ['poule', 'coq', 'poussin', 'vache', 'mouton', 'cochon', 'chevre', 'chat', 'chien', 'bosco', 'bouillon', 'tic-tac', 'bulle', 'mousse', 'basalte', 'lunette'],
+  brume: [
+    'fantome', 'zombie', 'noye', 'racine', 'esprit',
+    'lapin-de-brume', 'bouquetin-de-brume', 'poney-de-brume', 'grenouille-de-brume', 'fennec-de-brume', 'cameleon-de-brume', 'salamandre-de-brume'
+  ],
+  legendes: ['cerf-blanc', 'phenix']
+};
+const SERVER = Object.values(SERVER_CATEGORIES).flat();
 
 describe('le Bestiaire', () => {
-  it('45 créatures, numérotées dans l’ordre du livre, la même liste que le serveur ; chacune a son nom, sa phrase et son dessin', () => {
+  it('63 créatures, numérotées dans l’ordre du livre, les mêmes catégories que le serveur ; chacune a son nom, sa phrase et son dessin', () => {
     expect(CREATURES.map(c => c.id)).toEqual(SERVER);
+    expect(CATEGORIES).toEqual(Object.keys(SERVER_CATEGORIES));
+    for (const [category, ids] of Object.entries(SERVER_CATEGORIES)) expect(CREATURES.filter(c => c.category === category).map(c => c.id)).toEqual(ids);
     expect(CREATURES.map(c => c.no)).toEqual(SERVER.map((_, k) => k + 1));
     // (les ids passent la règle du serveur : routes/play/world.js)
     expect(SERVER.every(id => /^[a-z-]{1,20}$/.test(id))).toBe(true);
     for (const c of CREATURES) {
       expect(CATEGORIES).toContain(c.category);
       expect(c.name && c.text, c.id).toBeTruthy();
-      // (une bête de la bibliothèque ; un égaré, le sien ; le Géant et le Kraken, leur silhouette sous la mer)
+      // (une bête de la bibliothèque ; un égaré, le sien ; le Géant, le Kraken, le cerf blanc et le Phénix, le leur :
+      // creatureArt.js)
       if (c.species === 'stray') expect(EGARES.egares[c.variant], c.id).toBeTruthy();
       else if (c.species !== 'legend') expect(subjectOf(c.species, c.variant), c.id).toBeTruthy();
       expect(['commun', 'peu commun', 'rare', 'légendaire']).toContain(c.rarity);
     }
-    expect(CREATURES.filter(c => c.rarity === 'légendaire').map(c => c.id)).toEqual(['geant', 'kraken']);
+    expect(CREATURES.filter(c => c.rarity === 'légendaire').map(c => c.id)).toEqual(['geant', 'kraken', 'cerf-blanc', 'phenix']);
+    // (les familiers ont le nom et la phrase de l'île : world/bestiary.js, FAMILIARS)
+    expect(creatureOf('mousse')).toMatchObject({ name: 'Mousse', building: 'bosquet', element: 'Renard' });
+    expect(creatureOf('bulle')).toMatchObject({ species: 'bowl', variant: 'bulle' });
     // (chaque égaré de la bibliothèque a sa page)
     expect(CREATURES.filter(c => c.category === 'brume').map(c => c.id)).toEqual(Object.keys(EGARES.egares));
     // (chaque bête qui vit sur l'île a sa page)
@@ -51,8 +62,11 @@ describe('le Bestiaire', () => {
     // (un égaré repoussé : son dessin, celui du climat d'où sort une bête de brume)
     expect(creatureOfHit({ kind: 'stray', stray: { id: 'n1' }, art: 'fennec-de-brume' })).toBe('fennec-de-brume');
     expect(creatureOfHit({ kind: 'stray', stray: { id: 'n1' }, art: 'licorne' })).toBeNull();
-    // (un habitant, une poule d’Agathe, le chat : rien)
-    expect([{ who: { id: 'vil:ponton' } }, { who: { id: 'farm:hen:0' } }, { who: { id: 'best:cat' } }, null].map(creatureOfHit)).toEqual([null, null, null, null]);
+    // (la ferme, ses poules du Foyer, le chat, un familier, le cerf blanc, le Phénix)
+    expect([{ who: { id: 'farm:hen:0' } }, { kind: 'chicken' }, { who: { id: 'farm:goat:2' } }, { who: { id: 'best:cat' } }, { who: { id: 'fam:bosquet' } }, { who: { id: 'anya:cerf' } }, { kind: 'phenix' }].map(creatureOfHit))
+      .toEqual(['poule', 'poule', 'chevre', 'chat', 'mousse', 'cerf-blanc', 'phenix']);
+    // (un habitant, l'amie de Tic-Tac, Anya : rien)
+    expect([{ who: { id: 'vil:ponton' } }, { who: { id: 'fam:atelier:amie' } }, { who: { id: 'anya:dame' } }, null].map(creatureOfHit)).toEqual([null, null, null, null]);
   });
 
   it('le « où et quand » se tire de sa règle ; une terre inconnue ne se nomme pas ; ce qui la fera venir', () => {
@@ -64,6 +78,9 @@ describe('le Bestiaire', () => {
     expect(whereWhen(creatureOf('noye'), zones)).toBe('Hors de la mer · la nuit');
     expect(whereWhen(creatureOf('fennec-de-brume'), zones)).toBe('Au bord de la brume, dans les Dunes · la nuit');
     expect(whereWhen(creatureOf('geant'), zones)).toBe('Au large · à toute heure');
+    expect(whereWhen(creatureOf('basalte'), zones)).toBe('Auprès de son maître · à toute heure');
+    // (le Phénix ne dit pas ce qui le fait venir)
+    expect(arrivalOf(creatureOf('phenix'), { elements: [] })).toBeNull();
     expect(arrivalOf(creatureOf('hibou'), { elements: [] })).toMatch(/Hibou/);
     expect(arrivalOf(creatureOf('hibou'), { elements: ['Hibou'] })).toBeNull();
     expect(arrivalOf(creatureOf('renard'), { acts: ['T', 'I'] })).toMatch(/II/);
