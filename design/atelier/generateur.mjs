@@ -13,7 +13,7 @@ import mouvements from '../personnages/refonte/mouvements.js';
 
 // Les choix du joueur (catalogue, nuanciers, objets, prix) et le personnage qu'ils donnent ; sa tenue naufragée
 export const {
-  avatar, verifier, auHasard, graine, libelle, couleur, couleursAccessoire, naufrageChoix,
+  avatar, verifier, auHasard, assorti, graine, libelle, couleur, couleursAccessoire, naufrageChoix,
   CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, EMPLACEMENTS, ACCESSOIRES, TEINTURES_GAINS, PRIX, DEFAUT
 } = choix;
 export const { avatarNaufrage } = naufrage;
