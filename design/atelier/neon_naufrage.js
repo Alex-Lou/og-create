@@ -5,14 +5,16 @@
 // cernées d'un liseré de lumière ; des tracés lumineux qui dessinent les formes puis se transforment.
 //   0. le crépuscule : un trait de lumière trace l'horizon ; le ciel s'allume (indigo, pourpre, magenta, corail) ; le
 //      soleil de papier, ses anneaux ; la mer en six couches, des crêtes pâles du large aux vagues noires du premier
-//      plan ; L'Hirondelle arrive en simple tracé et se remplit de papier ;
-//   1-3. l'annonce du capitaine (le pavillon du gramophone, bref) ; l'orage : les nuages roulent, un œil de tempête
+//      plan ; L'Hirondelle arrive, entière ; des spirales de lumière tournent dans le ciel ;
+//   1-3. l'annonce du capitaine (le pavillon du gramophone, bref) ; l'orage : les nuages roulent (des éclairs de chaleur
+//      dedans, leurs volutes qui tournent), la pluie sur trois profondeurs et ses éclaboussures, l'écume qui naît et
+//      s'efface sur les crêtes ; un œil de tempête
 //      s'ouvre dans le ciel et tourne (les anneaux du tunnel) ; les racines frappent ; le mur d'eau se lève au loin ;
 //   4. la lame : un mur de filets d'eau sur toute la largeur, sa lèvre qui s'enroule, ses griffes d'écume ; elle
 //      s'abat : l'eau passe sur nous, tout bouillonne ;
 //   5. sous la surface : la lumière d'en haut, ses rayons ; les bulles ; le navire qui coule ; les racines lumineuses
 //      qui montent de l'abîme ;
-//   6. le noir : le navire redevient un tracé, qui s'éteint ; un dernier battement de lumière, puis rien.
+//   6. le noir : la nuit des profondeurs couvre le navire, puis tout.
 // Les pièces du récit (le navire, ses passagers, le canot, les coups, le gramophone) et leurs mouvements sont ceux de
 // 01_pont (theatre_pont.js), passés dans la palette néon ; le décor est neuf.
 const { hash, f } = require('./ouverture');
@@ -206,17 +208,45 @@ function racineNeon(p, id, p0, c1, c2, p3, w0, w1, couleurs, seed) {
   return A.out(s);
 }
 
+// ——— ce qui bouge un peu partout (choix de l'auteur, 18 oct. : plus de spirales, de petits effets qui animent le
+// ciel, la pluie, l'écume) ———
+// une spirale de lumière, centrée en (x, y)
+const boucle = (x, y, r, sens, tours = 1.8) => chemin(courbe(t => { const a = sens * t * tours * Math.PI * 2, rr = r * (1 - 0.85 * t); return [x + rr * Math.cos(a), y + rr * Math.sin(a)]; }, Math.round(tours * 24)));
+// les spirales du ciel : [x, y, rayon, sens, couleur]
+const SPIRALES = [[40, 40, 14, 1, MAGENTA], [332, 34, 13, 1, ACIDE], [372, 120, 10, -1, CYAN], [236, 112, 9, 1, '#FFB8D8']];
+const spiraleCiel = (p, i) => { const [x, y, r, sens, c] = SPIRALES[i], A = atelier(`${p}s${i}`); return A.out(`<circle cx="${x}" cy="${y}" r="${f(r * 1.6)}" fill="${A.rad([[0, c, 0.22], [1, c, 0]], x, y, r * 1.6)}"/>` + lumineux(boucle(x, y, r, sens), c, 0.9, 0.14) + `<circle cx="${x}" cy="${y}" r="1.4" fill="#FFFFFF"/>`); };
+// des scintillements dans le ciel : de petites étoiles à quatre branches
+const scintilles = (p, i) => { const A = atelier(`${p}c${i}`); return A.out(Array.from({ length: 14 }, (_, k) => { const x = hash(k, 160 + i) * 440 - 20, y = hash(k, 161 + i) * 180, l = 2 + 4 * hash(k, 162 + i), c = [ACIDE, '#FFFFFF', '#FFB8E8', CYAN][k % 4]; return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(l * 1.8)}" fill="${A.rad([[0, c, 0.35], [1, c, 0]], x, y, l * 1.8)}"/>` + lumineux(`M${f(x - l)},${f(y)} L${f(x + l)},${f(y)} M${f(x)},${f(y - l)} L${f(x)},${f(y + l)}`, c, 0.5, 0.1); }).join('')); };
+// un éclair de chaleur dans les nuages : une lueur qui palpite
+const LUEURS = [[80, 60, 110, MAGENTA], [310, 90, 120, CYAN]];
+const lueurNuage = (p, i) => { const [x, y, r, c] = LUEURS[i], A = atelier(`${p}l${i}`); return A.out(`<circle cx="${x}" cy="${y}" r="${r}" fill="${A.rad([[0, '#FFFFFF', 0.5], [0.25, c, 0.45], [1, c, 0]], x, y, r)}"/>`); };
+// une volute au bord d'un banc de nuages (elle tourne sur elle-même)
+const voluteNuage = (i, y, a, lum) => [[70, 300, 160, 360][i], y + a * 0.55, 8 + i * 1.5, i % 2 ? 1 : -1, lum];
+const voluteOrage = (p, i, y, a, lum) => { const [x, yy, r, sens] = voluteNuage(i, y, a, lum), A = atelier(`${p}v${i}`); return A.out(`<circle cx="${x}" cy="${yy}" r="${f(r * 1.2)}" fill="${A.rad([[0, '#2A0A60', 0.9], [1, '#2A0A60', 0]], x, yy, r * 1.2)}"/>` + lumineux(boucle(x, yy, r, sens, 2), lum, 0.8, 0.12)); };
+// les crêtes d'une couche de mer (les mêmes que celles de vague()) : la pointe de chaque houle
+function cretes(i) {
+  const [y, h, l] = MERS[i], out = [];
+  for (let x = G - 140 - l; x < D_ + 140 + l; x += l) { const w = l * (0.8 + 0.4 * hash(Math.round(x), i)), hh = h * (0.7 + 0.6 * hash(Math.round(x), i + 3)); out.push([x + w * 0.6, y - hh * 0.93 + 0.04 * hh, w]); }
+  return out.filter(([x]) => x > G - 20 && x < D_ + 20);
+}
+// l'écume qui naît sur les crêtes : un trait d'écume qui coiffe la pointe, ses gouttes, une crête sur deux (pair : 0,
+// impair : 1)
+const ecume = (p, i, n) => { const A = atelier(`${p}e${i}${n}`); return A.out(cretes(i).filter((_, k) => k % 2 === n).map(([x, y, w], k) => { const l = w * 0.3; return lumineux(`M${f(x - l * 0.45)},${f(y + 1)} q${f(l * 0.45)},${f(-3 - i * 0.5)} ${f(l)},${f(2 + i * 0.6)}`, k % 3 ? '#E8FFFA' : CYAN, 0.45 + i * 0.13, 0.12) + [0, 1, 2].map(j => `<circle cx="${f(x - l * 0.3 + j * l * 0.35)}" cy="${f(y - 3 - i - 4 * hash(k, j + i))}" r="${f(0.6 + 0.3 * i * hash(j, k))}" fill="#E8FFFA"/>`).join(''); }).join('')); };
+// les éclaboussures de la pluie sur la mer : de petites couronnes, sur une bande de profondeur
+const GOUTTES = [[222, 262, 0.7], [270, 336, 1], [330, 410, 1.5]];
+const gouttes = (p, j, n) => { const [y0, y1, k] = GOUTTES[j], A = atelier(`${p}g${j}${n}`); return A.out(Array.from({ length: 16 }, (_, q) => { const x = G + hash(q, 180 + j * 2 + n) * (D_ - G), y = y0 + hash(q, 181 + j * 2 + n) * (y1 - y0), r = 3 * k; return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 0.35)}" fill="none" stroke="#B8FFF4" stroke-width="${f(0.6 * k)}" opacity="0.85"/>` + lumineux(`M${f(x - r * 0.6)},${f(y - 1)} l${f(-r * 0.3)},${f(-r)} M${f(x)},${f(y - 1)} l0,${f(-r * 1.3)} M${f(x + r * 0.6)},${f(y - 1)} l${f(r * 0.3)},${f(-r)}`, '#E8FFFA', 0.35 * k, 0.1); }).join('')); };
+// une étoile filante, au crépuscule : sa traîne, sa tête blanche
+const FILANTES = [[300, 40], [150, 76]];
+const filante = (p, i) => { const [x, y] = FILANTES[i], A = atelier(`${p}f${i}`); return A.out(`<path d="M${x},${y} L${x + 60},${y - 22} L${x + 60},${y - 18} Z" fill="${A.lin([[0, '#FFFFFF', 0.9], [1, '#FFB8E8', 0]], x, y, x + 60, y - 20)}"/>` + `<circle cx="${x}" cy="${y}" r="5" fill="${A.rad([[0, '#FFFFFF', 0.9], [1, ACIDE, 0]], x, y, 5)}"/><circle cx="${x}" cy="${y}" r="1.4" fill="#FFFFFF"/>`); };
+// une rafale de vent, dans l'orage : de longs traits pâles qui filent
+const rafale = (p, i) => { const A = atelier(`${p}w${i}`); return A.out(Array.from({ length: 6 }, (_, k) => { const x = hash(k, 200 + i) * 200, y = 40 + hash(k, 201 + i) * 330, l = 110 + 110 * hash(k, 202 + i); return lumineux(`M${f(x)},${f(y)} q${f(l / 2)},${f(-4 - 6 * hash(k, 203))} ${f(l)},${f(2)}`, k % 3 ? '#B8FFF4' : '#E0C8FF', 0.4 + 0.4 * hash(k, 204 + i), 0.06); }).join('')); };
+// le plancton des profondeurs : des points de lumière qui dérivent
+const plancton = (p, i) => { const A = atelier(`${p}k${i}`); return A.out(Array.from({ length: 26 }, (_, k) => { const x = hash(k, 210 + i) * 440 - 20, y = 60 + hash(k, 211 + i) * 380, r = 0.8 + 1.6 * hash(k, 212 + i) ** 2, c = [CYAN, ACIDE, '#FF8AD0', '#E8FFFA'][k % 4]; return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 4)}" fill="${A.rad([[0, c, 0.35], [1, c, 0]], x, y, r * 4)}"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${c}"/>`; }).join('')); };
+// la pluie du lointain : des traits fins et pâles, derrière le navire
+const pluieLoin = p => { const A = atelier(`${p}r`); return A.out(Array.from({ length: 60 }, (_, i) => { const x = G + hash(i, 86) * (D_ - G + 60), y = G - 200 + hash(i, 87) * 800, l = 10 + 10 * hash(i, 88); return `<path d="M${f(x)},${f(y)} l${f(-l * 0.28)},${f(l)}" stroke="#C8B8FF" stroke-width="0.6" stroke-linecap="round" opacity="${f(0.25 + 0.3 * hash(i, 89))}"/>`; }).join('')); };
+
 // ——— le navire et le gramophone, dans la palette néon (vive : pas assombrie) ———
 const enCouleurs = svg => svg.replace(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g, c => neon(c));
-// le navire en traits de lumière : ses cernes deviennent des tracés, le reste s'efface
-function navireTrace(p) {
-  const cernes = [];
-  TP.navire(p).replace(/<path d="([^"]+)" fill="none" stroke="#0D0905" stroke-width="[\d.]+" stroke-linejoin="round"\/>/g, (m, d) => cernes.push(d));
-  return cernes.map(d => lumineux(d, CYAN, 0.9, 0.12)).join('');
-}
-// la lumière qui remplit le navire : un trait vertical, ses étincelles
-const front = p => { const A = atelier(`${p}X`); return A.out(lumineux('M0,96 Q-4,180 -6,282', ACIDE, 1.2, 0.22) + Array.from({ length: 14 }, (_, i) => `<circle cx="${f((hash(i, 72) - 0.5) * 12)}" cy="${f(110 + hash(i, 71) * 160)}" r="${f(0.8 + 1.8 * hash(i, 73))}" fill="${i % 2 ? ACIDE : '#FFFFFF'}"/>`).join('')); };
-
 // ce qui vit : la pluie cyan, en trois rideaux qui glissent en boucle
 function pluieVive() {
   return [[1, 0.8, 0.55], [0.7, 1.15, 0.4], [0.45, 1.7, 0.28]].map(([k, dur, o], j) => {
@@ -245,8 +275,6 @@ function rejoint(temps) {
 }
 // une piste effacée à l'instant t (elle garde sa place)
 const cache = (cles, t) => [...cles.filter(([u]) => u < t - 1), [t - 1, { ...TP.valeur(cles, t - 1, PROPS), e: 'linear' }], [t, { ...TP.valeur(cles, t, PROPS), o: 0 }]];
-// une piste de mouvement, avec l'opacité d'une autre (le navire et ses doubles)
-const avecOpacite = (cles, ocles) => [...new Set([...cles, ...ocles].map(([t]) => t))].sort((u, v) => u - v).map(t => [t, { ...TP.valeur(cles, t, ['x', 'y', 's', 'r']), o: TP.valeur(ocles, t, ['o']).o ?? 1 }]);
 // les racines du pont : [id, base, c1, c2, pointe, largeur à la base, au bout] (les mêmes que celles de 01_pont)
 const RA = { base: ['racineA', [430, 430], [400, 360], [372, 330], [352, 300], 46, 26], bout: ['racineA-bout', [352, 300], [340, 280], [336, 262], [324, 248], 26, 2] };
 const RB = { base: ['racineB', [-30, 400], [10, 300], [40, 220], [92, 150], 54, 30], bout: ['racineB-bout', [92, 150], [124, 110], [160, 112], [164, 150], 30, 2] };
@@ -276,23 +304,34 @@ function naufrage() {
   const ORAGES = [[0, 26, 20, '#5A1A9A', MAGENTA], [1, 58, 16, '#3A1478', CYAN], [2, 96, 18, '#2A0A60', '#C870F0'], [3, 128, 14, '#1A0848', MAGENTA]];
   const STRATES = [[0, 150, '#FFB8D8'], [1, 178, '#FF8A70']];
   const POSES = [0, 0.3, 0.55, 0.8, 1];
+  // (une couche de mer, et l'écume qui naît sur ses crêtes, attachée à elle)
   const merPlan = i => { const [y, h] = MERS[i]; return { id: `mer${i}`, profondeur: [0.24, 0.3, 0.4, 0.7, 0.85, 1][i], cadre: [-110, y - h - 30, 620, 470 - (y - h - 30)], pivot: [200, y + 40], dessin: () => enNeon(() => vague(p, i)) }; };
+  const ecumePlans = i => { const [y, h] = MERS[i]; return [0, 1].map(n => ({ id: `ecume${i}-${n}`, dans: `mer${i}`, cadre: [-60, y - h - 2 * i - 18, 520, h + 2 * i + 26], dessin: () => ecume(p, i, n) })); };
+  const gouttesPlans = j => [0, 1].map(n => ({ id: `gouttes${j}-${n}`, profondeur: [0.45, 0.78, 1.05][j], cadre: [G, GOUTTES[j][0] - 14, D_ - G, GOUTTES[j][1] - GOUTTES[j][0] + 20], dessin: () => gouttes(p, j, n) }));
   const plans = [
     { id: 'ciel', profondeur: 0.02, ...m, flou: 0.25, dessin: () => ciel(p) },
     { id: 'ciel-nuit', profondeur: 0.02, ...m, flou: 0.25, dessin: () => cielNuit(p) },
     { id: 'etoiles', profondeur: 0.03, ...m, dessin: () => etoilesCiel(p) },
     { id: 'soleil', profondeur: 0.05, cadre: [SOLEIL[0] - 200, SOLEIL[1] - 200, 400, 400], pivot: SOLEIL, dessin: () => soleil(p) },
     ...STRATES.map(([i, y, lum]) => ({ id: `strate${i}`, profondeur: 0.08 + i * 0.03, cadre: [G - 100, y - 24, D_ - G + 200, 34], dessin: () => strate(p, i, y, lum) })),
-    ...ORAGES.map(([i, y, a, c, lum]) => ({ id: `orage${i}`, profondeur: 0.12 + i * 0.04, cadre: [G - 120, G - 160, D_ - G + 240, y + a - G + 172], dessin: () => enNeon(() => orage(p, i, y, a, c, lum)) })),
+    // (une volute au bord des bancs 1 et 3 seulement)
+    ...ORAGES.flatMap(([i, y, a, c, lum]) => { const [vx, vy, vr] = voluteNuage(i, y, a, lum); return [
+      { id: `orage${i}`, profondeur: 0.12 + i * 0.04, cadre: [G - 120, G - 160, D_ - G + 240, y + a - G + 172], dessin: () => enNeon(() => orage(p, i, y, a, c, lum)) },
+      ...(i % 2 ? [{ id: `volute${i}`, dans: `orage${i}`, cadre: [vx - vr * 1.4, vy - vr * 1.4, vr * 2.8, vr * 2.8], pivot: [vx, vy], dessin: () => voluteOrage(p, i, y, a, lum) }] : [])]; }),
     ...[4, 3, 2, 1, 0].map(i => { const R = R_OEIL[i + 1] * 1.08; return { id: `oeil${i}`, profondeur: 0.06 + (4 - i) * 0.015, flou: 0.6, cadre: [OEIL[0] - R, OEIL[1] - R, 2 * R, 2 * R], pivot: OEIL, dessin: () => anneauOeil(p, i) }; }),
+    ...LUEURS.map((_, i) => ({ id: `lueur-nuage${i}`, profondeur: 0.13, flou: 0.4, cadre: [LUEURS[i][0] - LUEURS[i][2], LUEURS[i][1] - LUEURS[i][2], 2 * LUEURS[i][2], 2 * LUEURS[i][2]], dessin: () => lueurNuage(p, i) })),
     { id: 'coeur', profondeur: 0.06, cadre: [OEIL[0] - 62, OEIL[1] - 62, 124, 124], pivot: OEIL, dessin: () => coeurOeil(p) },
+    ...SPIRALES.map(([x, y, r], i) => ({ id: `spirale${i}`, profondeur: 0.07 + i * 0.012, cadre: [x - r * 2, y - r * 2, r * 4, r * 4], pivot: [x, y], dessin: () => spiraleCiel(p, i) })),
+    ...[0, 1].map(i => ({ id: `scintilles${i}`, profondeur: 0.04, cadre: [-40, -20, 480, 220], dessin: () => scintilles(p, i) })),
+    ...FILANTES.map(([x, y], i) => ({ id: `filante${i}`, profondeur: 0.03, cadre: [x - 8, y - 30, 76, 40], dessin: () => filante(p, i) })),
     { id: 'foudre', profondeur: 0.14, cadre: [36, -36, 90, 260], pivot: FOUDRE[0], dessin: () => foudre(p) },
     { id: 'brume-loin', profondeur: 0.2, ...m, flou: 0.2, dessin: () => brumeLoin(p) },
+    { id: 'pluie-loin', profondeur: 0.3, cadre: [G, G - 200, D_ - G + 60, 800], dessin: () => pluieLoin(p) },
     { id: 'trait-horizon', profondeur: 0.22, cadre: [G - 100, HORIZON - 20, D_ - G + 200, 44], pivot: [200, HORIZON + 2], dessin: () => traitHorizon(p) },
-    merPlan(0), merPlan(1),
+    merPlan(0), merPlan(1), ...ecumePlans(1),
     { id: 'lame', profondeur: 0.34, cadre: [G - 100, 0, D_ - G + 200, 410], pivot: [200, 380], dessin: () => lame(p) },
     ...POSES.map((k, i) => ({ id: `levre${i}`, dans: 'lame', cadre: [G - 100, -70, D_ - G + 220, 280], dessin: () => levre(p, k) })),
-    merPlan(2),
+    merPlan(2), ...ecumePlans(2), ...gouttesPlans(0),
     // (sous la surface : l'abîme couvre tout ce qui est derrière lui ; devant lui, le navire et les racines)
     { id: 'abysse', profondeur: 0.04, ...m, flou: 0.2, dessin: () => abysse(p) },
     { id: 'surface', profondeur: 0.1, flou: 0.6, cadre: [G - 80, -260, D_ - G + 160, 760], pivot: [200, -60], dessin: () => surface(p) },
@@ -300,23 +339,23 @@ function naufrage() {
     ...ABIME.slice(0, 1).map(([id, a, b, c, d, w0, w1, cs, prof]) => ({ id, profondeur: prof, cadre: [-80, 150, 580, 380], pivot: a, dessin: () => enNeon(() => racineNeon(p, id, a, b, c, d, w0, w1, cs, 1800)) })),
     ...racinePlans(RB, 0.55, false, ['#24042C', '#6A1660', MAGENTA]),
     ...garde(DU_NAVIRE),
-    { id: 'navire-trace', profondeur: 0.6, cadre: [36, 92, 344, 190], pivot: [205, 250], dessin: () => navireTrace(`${p}nt`) },
-    { id: 'front', profondeur: 0.6, cadre: [-20, 86, 40, 210], pivot: [0, 190], dessin: () => front(p) },
     ...racinePlans(RC, 0.62, true, ['#1A0A3E', '#5A1A8A', CYAN]),
-    merPlan(3), merPlan(4),
+    merPlan(3), ...ecumePlans(3), merPlan(4), ...ecumePlans(4), ...gouttesPlans(1),
     ...racinePlans(RA, 0.85, true, ['#14042C', '#4A1474', ACIDE]),
-    merPlan(5),
+    merPlan(5), ...ecumePlans(5), ...gouttesPlans(2),
     ...ABIME.slice(1).map(([id, a, b, c, d, w0, w1, cs, prof], j) => ({ id, profondeur: prof, cadre: [-80, 150, 580, 380], pivot: a, dessin: () => enNeon(() => racineNeon(p, id, a, b, c, d, w0, w1, cs, 1801 + j)) })),
     { id: 'anime', profondeur: 0.8, dessin: () => pluieVive() },
     { id: 'houle', profondeur: 1.3, cadre: [G - 100, 320, D_ - G + 200, 160], pivot: [200, 380], dessin: () => enNeon(() => houle(p)) },
     ...[0, 1].map(i => ({ id: `embruns${i}`, profondeur: 1.5, cadre: [G - 20, 230, D_ - G + 40, 220], dessin: () => embruns(p, i) })),
     { id: 'pluie-devant', profondeur: 1.6, cadre: [G, G - 200, D_ - G + 60, 800], dessin: () => pluie(p) },
+    ...[0, 1].map(i => ({ id: `rafale${i}`, profondeur: 0.9, cadre: [-20, 20, 460, 370], dessin: () => rafale(p, i) })),
+    { id: 'plancton0', profondeur: 0.5, cadre: [-40, 40, 480, 420], dessin: () => plancton(p, 0) },
     ...[0, 1, 2].map(i => ({ id: `bulles${i}`, profondeur: 0.9 + i * 0.3, cadre: [G, 80, D_ - G, 360], dessin: () => bulles(p, i) })),
     ...garde(DU_COR),
     { id: 'rideau', profondeur: 0, flou: 0.7, cadre: [G - 60, -480, D_ - G + 120, 960], dessin: () => rideau(p) },
     ...[0, 1].map(i => ({ id: `remous${i}`, profondeur: 0, cadre: [G, G, D_ - G, D_ - G], pivot: [200, 200], dessin: () => remous(p, i) })),
     { id: 'assombri', profondeur: 0, ...m, flou: 0.1, dessin: () => plein(NOIR) },
-    { id: 'navire-fantome', profondeur: 0.6, cadre: [36, 92, 344, 190], pivot: [205, 250], dessin: () => navireTrace(`${p}nf`) },
+    { id: 'plancton1', profondeur: 1, cadre: [-40, 40, 480, 420], dessin: () => plancton(p, 1) },
     { id: 'vignette', profondeur: 0, ...m, flou: 0.5, dessin: () => vignette(p) },
     { id: 'eclair', profondeur: 0, ...m, flou: 0.1, dessin: () => plein('#FFE8FF') }
   ];
@@ -351,14 +390,36 @@ function naufrage() {
   P.anime = jusquA([[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]]);
   P.vignette = [[0, { o: 1 }]];
 
-  // ——— le navire : un tracé de lumière qui arrive, puis se remplit de papier ———
-  const NAV_O = [[0, { o: 0 }], [2700, { o: 0, e: 'ease-in' }], [3500, { o: 1 }], [25000, { o: 1, e: 'ease-in' }], [26400, { o: 0 }]];
+  // ——— ce qui bouge un peu partout ———
+  // (une rotation continue de t0 à t1, à une vitesse qui suit l'orage (degrés par seconde), avec un battement : la
+  // spirale enfle et se dégonfle, dérive un peu)
+  const vitesse = t => 50 + 150 * Math.min(1, Math.max(0, (t - 4200) / 10000));
+  const tourne = (t0, t1, sens, k = 1, derive = 6) => { const out = []; let r = 0; for (let t = t0, n = 0; t < t1; n++) { out.push([t, { s: n % 2 ? 1.14 : 1, r: Math.round(r), x: (n % 2 ? 1 : -1) * derive * force(t), o: 1, e: 'linear' }]); const dt = Math.min(1100, t1 - t); r += sens * k * vitesse(t) * dt / 1000; t += dt; } out.push([t1, { s: 1, r: Math.round(r), x: 0, o: 1 }]); return out; };
+  // (les effets changent avec le moment : au crépuscule, des scintillements, deux étoiles filantes, quelques spirales
+  // lentes ; dans l'orage, les spirales sont aspirées par l'œil de la tempête, les rafales, les éclairs de chaleur, la
+  // pluie et ses éclaboussures ; sous l'eau, le plancton, dont quelques points restent dans le noir)
+  SPIRALES.forEach(([x, y, , sens], i) => {
+    const t0 = 700 + i * 300, t1 = 9600 + i * 450, k = tourne(t0 + 900, t1, sens, 1, 6 + i), [, fin] = k[k.length - 1];
+    P[`spirale${i}`] = [[0, { s: 0, r: -200 * sens, x: 0, y: 0, o: 1 }], [t0, { s: 0, r: -200 * sens, x: 0, y: 0, o: 1, e: 'cubic-bezier(.2,.9,.3,1.3)' }], ...k.slice(0, -1), [t1, { ...fin, y: 0, e: 'cubic-bezier(.6,0,.9,.6)' }], [t1 + 2200, { s: 0.15, r: fin.r + sens * 700, x: OEIL[0] - x, y: OEIL[1] - y, o: 0 }]];
+  });
+  ORAGES.forEach(([i]) => { if (i % 2) P[`volute${i}`] = tourne(0, PONT + 900, 1, 1.6, 0); });
+  [0, 1].forEach(i => { P[`scintilles${i}`] = [[0, { o: 0 }], [1400 + i * 500, { o: 0 }], ...balance(1400 + i * 500, 6000, 1500 + i * 500, k => ({ o: k % 2 ? 0.15 : 1 })), [7800, { o: 0 }]]; });
+  FILANTES.forEach((_, i) => { const t = [1900, 3400][i]; P[`filante${i}`] = [[0, { o: 0, x: 0, y: 0 }], [t - 1, { o: 0, x: 0, y: 0, e: 'linear' }], [t, { o: 1, x: 0, y: 0, e: 'cubic-bezier(.3,0,.7,1)' }], [t + 700, { o: 0, x: -170, y: 62 }]]; });
+  [0, 1].forEach(i => { const k = [[0, { o: 0, x: -520 }]]; for (let t = 8300 + i * 900, n = 0; t < PONT; n++, t += 1500 + Math.round(hash(n, 220 + i) * 1700)) k.push([t - 1, { o: 0, x: -520, e: 'linear' }], [t, { o: 0.9, x: -520, e: 'cubic-bezier(.4,0,.6,1)' }], [t + 540, { o: 0.9, x: 520, e: 'linear' }], [t + 541, { o: 0, x: 520 }]); P[`rafale${i}`] = k; });
+  [0, 1].forEach(j => { const t0 = NOYADE + 400 + j * 600, k = [[0, { o: 0, y: 40 }], [t0, { o: 0, y: 40, e: 'ease-out' }]]; for (let t = t0 + 1600, n = 0; t < FIN; n++, t += 900) k.push([t, { o: j && t > 26400 ? Math.max(0, 1 - (t - 26400) / 1100) : n % 2 ? 0.55 : 1, y: -Math.round((t - t0) * 0.012), e: 'ease-in-out' }]); P[`plancton${j}`] = k; });
+  // (les éclairs de chaleur : ils palpitent dans les nuages dès que l'orage est là)
+  LUEURS.forEach((_, i) => { const k = [[0, { o: 0 }]]; for (let t = 6800 + i * 450, n = 0; t < PONT; n++, t += 700 + Math.round(hash(n, 190 + i) * 1100)) k.push([t - 1, { o: 0, e: 'linear' }], [t + 60, { o: 0.85, e: 'linear' }], [t + 140, { o: 0.25, e: 'linear' }], [t + 220, { o: 0.65, e: 'ease-out' }], [t + 620, { o: 0 }]); P[`lueur-nuage${i}`] = jusquA(k); });
+  // (l'écume : sur chaque couche, une crête sur deux à la fois, elle naît, monte un peu et s'efface)
+  [1, 2, 3, 4, 5].forEach(i => [0, 1].forEach(n => { const per = 1300 + i * 160, k = [[0, { o: 0, y: 2 }]]; for (let t = 1600 + n * per / 2 + i * 90; t < NOYADE - per; t += per) k.push([t, { o: 0, y: 2, e: 'ease-out' }], [t + per * 0.3, { o: 1, y: 0, e: 'linear' }], [t + per * 0.7, { o: 0.9, y: -3, e: 'ease-in' }], [t + per - 1, { o: 0, y: -5 }]); P[`ecume${i}-${n}`] = k; }));
+  // (les éclaboussures : la pluie frappe la mer, une couronne puis l'autre)
+  [0, 1, 2].forEach(j => [0, 1].forEach(n => { const per = 520 + j * 90, k = [[0, { o: 0 }]]; for (let t = 6800 + n * per / 2; t < NOYADE - per; t += per) k.push([t, { o: 0, e: 'ease-out' }], [t + 70, { o: 1, e: 'ease-in' }], [t + per * 0.8, { o: 0 }]); P[`gouttes${j}-${n}`] = k; }));
+  P['pluie-loin'] = jusquA([[0, { o: 0, x: 0, y: 0 }], ...bouffees(5800, PONT + 700, 1300, { x: 0, y: -260, o: 0.8 }, { x: -50, y: 140, o: 0.8 }).slice(1)]);
+
+  // ——— le navire : il arrive tel quel, entier (choix de l'auteur, 18 oct. : pas de contours seuls ; il est visible
+  // ou il ne l'est pas) ; la nuit des profondeurs finit par le couvrir
   // (la lame le soulève et le couche ; sous le rideau, il passe sous la surface ; il coule, de plus en plus loin)
   const nav = [...P0.navire, [19800, { x: -10, y: -36, r: -16, s: 1, e: 'linear' }], [NOYADE - 1, { x: -10, y: -36, r: -16, s: 1, e: 'linear' }], [NOYADE, { x: 10, y: 30, r: 26, s: 0.82, e: 'ease-out' }], [21800, { x: 18, y: 56, r: 31, s: 0.79, e: 'linear' }], [24800, { x: 30, y: 110, r: 38, s: 0.71, e: 'ease-in' }], [FIN, { x: 36, y: 150, r: 42, s: 0.66 }]];
-  P.navire = avecOpacite(nav, NAV_O);
-  P['navire-trace'] = avecOpacite(nav, [[0, { o: 1 }], [3300, { o: 1, e: 'ease-in' }], [3900, { o: 0 }]]);
-  P['navire-fantome'] = avecOpacite(nav, [[0, { o: 0 }], [24700, { o: 0, e: 'ease-out' }], [25700, { o: 0.95 }], [26100, { o: 0.55 }], [26450, { o: 0.9, e: 'ease-in' }], [27500, { o: 0 }]]);
-  P.front = [[0, { x: 40, o: 0 }], [2699, { x: 40, o: 0, e: 'linear' }], [2700, { x: 40, o: 1, e: 'ease-in-out' }], [3500, { x: 380, o: 1, e: 'linear' }], [3700, { x: 380, o: 0 }]];
+  P.navire = nav;
   // (ce qui fume, ondule ou gicle autour du navire s'arrête sous l'eau)
   for (const id of DU_NAVIRE) if (/^(fumee|embrun|onde)/.test(id) && P[id]) P[id] = jusquA(P[id]);
   // (les racines du pont lâchent prise sous le rideau : celles de l'abîme prennent le relais)
@@ -397,4 +458,4 @@ function naufrage() {
   return { plans, partition: { temps } };
 }
 
-module.exports = { naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau, remous, abysse, surface, bulles, racineNeon, enCouleurs, navireTrace, front, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
+module.exports = { naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau, remous, abysse, surface, bulles, racineNeon, enCouleurs, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };

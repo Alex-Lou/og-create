@@ -24038,17 +24038,83 @@ var require_neon_naufrage = __commonJS({
       return A.out(s);
     }
     __name(racineNeon, "racineNeon");
-    var enCouleurs = /* @__PURE__ */ __name((svg) => svg.replace(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g, (c) => neon(c)), "enCouleurs");
-    function navireTrace(p) {
-      const cernes = [];
-      TP.navire(p).replace(/<path d="([^"]+)" fill="none" stroke="#0D0905" stroke-width="[\d.]+" stroke-linejoin="round"\/>/g, (m, d) => cernes.push(d));
-      return cernes.map((d) => lumineux(d, CYAN, 0.9, 0.12)).join("");
+    var boucle = /* @__PURE__ */ __name((x, y, r, sens, tours = 1.8) => chemin(courbe((t) => {
+      const a = sens * t * tours * Math.PI * 2, rr = r * (1 - 0.85 * t);
+      return [x + rr * Math.cos(a), y + rr * Math.sin(a)];
+    }, Math.round(tours * 24))), "boucle");
+    var SPIRALES = [[40, 40, 14, 1, MAGENTA], [332, 34, 13, 1, ACIDE], [372, 120, 10, -1, CYAN], [236, 112, 9, 1, "#FFB8D8"]];
+    var spiraleCiel = /* @__PURE__ */ __name((p, i) => {
+      const [x, y, r, sens, c] = SPIRALES[i], A = atelier(`${p}s${i}`);
+      return A.out(`<circle cx="${x}" cy="${y}" r="${f(r * 1.6)}" fill="${A.rad([[0, c, 0.22], [1, c, 0]], x, y, r * 1.6)}"/>` + lumineux(boucle(x, y, r, sens), c, 0.9, 0.14) + `<circle cx="${x}" cy="${y}" r="1.4" fill="#FFFFFF"/>`);
+    }, "spiraleCiel");
+    var scintilles = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}c${i}`);
+      return A.out(Array.from({ length: 14 }, (_, k) => {
+        const x = hash(k, 160 + i) * 440 - 20, y = hash(k, 161 + i) * 180, l = 2 + 4 * hash(k, 162 + i), c = [ACIDE, "#FFFFFF", "#FFB8E8", CYAN][k % 4];
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(l * 1.8)}" fill="${A.rad([[0, c, 0.35], [1, c, 0]], x, y, l * 1.8)}"/>` + lumineux(`M${f(x - l)},${f(y)} L${f(x + l)},${f(y)} M${f(x)},${f(y - l)} L${f(x)},${f(y + l)}`, c, 0.5, 0.1);
+      }).join(""));
+    }, "scintilles");
+    var LUEURS = [[80, 60, 110, MAGENTA], [310, 90, 120, CYAN]];
+    var lueurNuage = /* @__PURE__ */ __name((p, i) => {
+      const [x, y, r, c] = LUEURS[i], A = atelier(`${p}l${i}`);
+      return A.out(`<circle cx="${x}" cy="${y}" r="${r}" fill="${A.rad([[0, "#FFFFFF", 0.5], [0.25, c, 0.45], [1, c, 0]], x, y, r)}"/>`);
+    }, "lueurNuage");
+    var voluteNuage = /* @__PURE__ */ __name((i, y, a, lum) => [[70, 300, 160, 360][i], y + a * 0.55, 8 + i * 1.5, i % 2 ? 1 : -1, lum], "voluteNuage");
+    var voluteOrage = /* @__PURE__ */ __name((p, i, y, a, lum) => {
+      const [x, yy, r, sens] = voluteNuage(i, y, a, lum), A = atelier(`${p}v${i}`);
+      return A.out(`<circle cx="${x}" cy="${yy}" r="${f(r * 1.2)}" fill="${A.rad([[0, "#2A0A60", 0.9], [1, "#2A0A60", 0]], x, yy, r * 1.2)}"/>` + lumineux(boucle(x, yy, r, sens, 2), lum, 0.8, 0.12));
+    }, "voluteOrage");
+    function cretes(i) {
+      const [y, h, l] = MERS[i], out = [];
+      for (let x = G - 140 - l; x < D_ + 140 + l; x += l) {
+        const w = l * (0.8 + 0.4 * hash(Math.round(x), i)), hh = h * (0.7 + 0.6 * hash(Math.round(x), i + 3));
+        out.push([x + w * 0.6, y - hh * 0.93 + 0.04 * hh, w]);
+      }
+      return out.filter(([x]) => x > G - 20 && x < D_ + 20);
     }
-    __name(navireTrace, "navireTrace");
-    var front = /* @__PURE__ */ __name((p) => {
-      const A = atelier(`${p}X`);
-      return A.out(lumineux("M0,96 Q-4,180 -6,282", ACIDE, 1.2, 0.22) + Array.from({ length: 14 }, (_, i) => `<circle cx="${f((hash(i, 72) - 0.5) * 12)}" cy="${f(110 + hash(i, 71) * 160)}" r="${f(0.8 + 1.8 * hash(i, 73))}" fill="${i % 2 ? ACIDE : "#FFFFFF"}"/>`).join(""));
-    }, "front");
+    __name(cretes, "cretes");
+    var ecume2 = /* @__PURE__ */ __name((p, i, n) => {
+      const A = atelier(`${p}e${i}${n}`);
+      return A.out(cretes(i).filter((_, k) => k % 2 === n).map(([x, y, w], k) => {
+        const l = w * 0.3;
+        return lumineux(`M${f(x - l * 0.45)},${f(y + 1)} q${f(l * 0.45)},${f(-3 - i * 0.5)} ${f(l)},${f(2 + i * 0.6)}`, k % 3 ? "#E8FFFA" : CYAN, 0.45 + i * 0.13, 0.12) + [0, 1, 2].map((j) => `<circle cx="${f(x - l * 0.3 + j * l * 0.35)}" cy="${f(y - 3 - i - 4 * hash(k, j + i))}" r="${f(0.6 + 0.3 * i * hash(j, k))}" fill="#E8FFFA"/>`).join("");
+      }).join(""));
+    }, "ecume");
+    var GOUTTES = [[222, 262, 0.7], [270, 336, 1], [330, 410, 1.5]];
+    var gouttes = /* @__PURE__ */ __name((p, j, n) => {
+      const [y0, y1, k] = GOUTTES[j], A = atelier(`${p}g${j}${n}`);
+      return A.out(Array.from({ length: 16 }, (_, q) => {
+        const x = G + hash(q, 180 + j * 2 + n) * (D_ - G), y = y0 + hash(q, 181 + j * 2 + n) * (y1 - y0), r = 3 * k;
+        return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 0.35)}" fill="none" stroke="#B8FFF4" stroke-width="${f(0.6 * k)}" opacity="0.85"/>` + lumineux(`M${f(x - r * 0.6)},${f(y - 1)} l${f(-r * 0.3)},${f(-r)} M${f(x)},${f(y - 1)} l0,${f(-r * 1.3)} M${f(x + r * 0.6)},${f(y - 1)} l${f(r * 0.3)},${f(-r)}`, "#E8FFFA", 0.35 * k, 0.1);
+      }).join(""));
+    }, "gouttes");
+    var FILANTES = [[300, 40], [150, 76]];
+    var filante = /* @__PURE__ */ __name((p, i) => {
+      const [x, y] = FILANTES[i], A = atelier(`${p}f${i}`);
+      return A.out(`<path d="M${x},${y} L${x + 60},${y - 22} L${x + 60},${y - 18} Z" fill="${A.lin([[0, "#FFFFFF", 0.9], [1, "#FFB8E8", 0]], x, y, x + 60, y - 20)}"/><circle cx="${x}" cy="${y}" r="5" fill="${A.rad([[0, "#FFFFFF", 0.9], [1, ACIDE, 0]], x, y, 5)}"/><circle cx="${x}" cy="${y}" r="1.4" fill="#FFFFFF"/>`);
+    }, "filante");
+    var rafale = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}w${i}`);
+      return A.out(Array.from({ length: 6 }, (_, k) => {
+        const x = hash(k, 200 + i) * 200, y = 40 + hash(k, 201 + i) * 330, l = 110 + 110 * hash(k, 202 + i);
+        return lumineux(`M${f(x)},${f(y)} q${f(l / 2)},${f(-4 - 6 * hash(k, 203))} ${f(l)},${f(2)}`, k % 3 ? "#B8FFF4" : "#E0C8FF", 0.4 + 0.4 * hash(k, 204 + i), 0.06);
+      }).join(""));
+    }, "rafale");
+    var plancton = /* @__PURE__ */ __name((p, i) => {
+      const A = atelier(`${p}k${i}`);
+      return A.out(Array.from({ length: 26 }, (_, k) => {
+        const x = hash(k, 210 + i) * 440 - 20, y = 60 + hash(k, 211 + i) * 380, r = 0.8 + 1.6 * hash(k, 212 + i) ** 2, c = [CYAN, ACIDE, "#FF8AD0", "#E8FFFA"][k % 4];
+        return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 4)}" fill="${A.rad([[0, c, 0.35], [1, c, 0]], x, y, r * 4)}"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${c}"/>`;
+      }).join(""));
+    }, "plancton");
+    var pluieLoin = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}r`);
+      return A.out(Array.from({ length: 60 }, (_, i) => {
+        const x = G + hash(i, 86) * (D_ - G + 60), y = G - 200 + hash(i, 87) * 800, l = 10 + 10 * hash(i, 88);
+        return `<path d="M${f(x)},${f(y)} l${f(-l * 0.28)},${f(l)}" stroke="#C8B8FF" stroke-width="0.6" stroke-linecap="round" opacity="${f(0.25 + 0.3 * hash(i, 89))}"/>`;
+      }).join(""));
+    }, "pluieLoin");
+    var enCouleurs = /* @__PURE__ */ __name((svg) => svg.replace(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g, (c) => neon(c)), "enCouleurs");
     function pluieVive() {
       return [[1, 0.8, 0.55], [0.7, 1.15, 0.4], [0.45, 1.7, 0.28]].map(([k, dur, o], j) => {
         let traits = "";
@@ -24084,7 +24150,6 @@ var require_neon_naufrage = __commonJS({
     }
     __name(rejoint, "rejoint");
     var cache = /* @__PURE__ */ __name((cles, t) => [...cles.filter(([u]) => u < t - 1), [t - 1, { ...TP.valeur(cles, t - 1, PROPS), e: "linear" }], [t, { ...TP.valeur(cles, t, PROPS), o: 0 }]], "cache");
-    var avecOpacite = /* @__PURE__ */ __name((cles, ocles) => [...new Set([...cles, ...ocles].map(([t]) => t))].sort((u, v) => u - v).map((t) => [t, { ...TP.valeur(cles, t, ["x", "y", "s", "r"]), o: TP.valeur(ocles, t, ["o"]).o ?? 1 }]), "avecOpacite");
     var RA = { base: ["racineA", [430, 430], [400, 360], [372, 330], [352, 300], 46, 26], bout: ["racineA-bout", [352, 300], [340, 280], [336, 262], [324, 248], 26, 2] };
     var RB = { base: ["racineB", [-30, 400], [10, 300], [40, 220], [92, 150], 54, 30], bout: ["racineB-bout", [92, 150], [124, 110], [160, 112], [164, 150], 30, 2] };
     var RC = { base: ["racineC", [-40, 330], [30, 290], [80, 300], [140, 262], 40, 22], bout: ["racineC-bout", [140, 262], [190, 236], [240, 250], [290, 236], 22, 2] };
@@ -24119,26 +24184,46 @@ var require_neon_naufrage = __commonJS({
         const [y, h] = MERS[i];
         return { id: `mer${i}`, profondeur: [0.24, 0.3, 0.4, 0.7, 0.85, 1][i], cadre: [-110, y - h - 30, 620, 470 - (y - h - 30)], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => enNeon(() => vague(p, i)), "dessin") };
       }, "merPlan");
+      const ecumePlans = /* @__PURE__ */ __name((i) => {
+        const [y, h] = MERS[i];
+        return [0, 1].map((n) => ({ id: `ecume${i}-${n}`, dans: `mer${i}`, cadre: [-60, y - h - 2 * i - 18, 520, h + 2 * i + 26], dessin: /* @__PURE__ */ __name(() => ecume2(p, i, n), "dessin") }));
+      }, "ecumePlans");
+      const gouttesPlans = /* @__PURE__ */ __name((j) => [0, 1].map((n) => ({ id: `gouttes${j}-${n}`, profondeur: [0.45, 0.78, 1.05][j], cadre: [G, GOUTTES[j][0] - 14, D_ - G, GOUTTES[j][1] - GOUTTES[j][0] + 20], dessin: /* @__PURE__ */ __name(() => gouttes(p, j, n), "dessin") })), "gouttesPlans");
       const plans = [
         { id: "ciel", profondeur: 0.02, ...m, flou: 0.25, dessin: /* @__PURE__ */ __name(() => ciel(p), "dessin") },
         { id: "ciel-nuit", profondeur: 0.02, ...m, flou: 0.25, dessin: /* @__PURE__ */ __name(() => cielNuit(p), "dessin") },
         { id: "etoiles", profondeur: 0.03, ...m, dessin: /* @__PURE__ */ __name(() => etoilesCiel(p), "dessin") },
         { id: "soleil", profondeur: 0.05, cadre: [SOLEIL[0] - 200, SOLEIL[1] - 200, 400, 400], pivot: SOLEIL, dessin: /* @__PURE__ */ __name(() => soleil(p), "dessin") },
         ...STRATES.map(([i, y, lum]) => ({ id: `strate${i}`, profondeur: 0.08 + i * 0.03, cadre: [G - 100, y - 24, D_ - G + 200, 34], dessin: /* @__PURE__ */ __name(() => strate(p, i, y, lum), "dessin") })),
-        ...ORAGES.map(([i, y, a, c, lum]) => ({ id: `orage${i}`, profondeur: 0.12 + i * 0.04, cadre: [G - 120, G - 160, D_ - G + 240, y + a - G + 172], dessin: /* @__PURE__ */ __name(() => enNeon(() => orage(p, i, y, a, c, lum)), "dessin") })),
+        // (une volute au bord des bancs 1 et 3 seulement)
+        ...ORAGES.flatMap(([i, y, a, c, lum]) => {
+          const [vx, vy, vr] = voluteNuage(i, y, a, lum);
+          return [
+            { id: `orage${i}`, profondeur: 0.12 + i * 0.04, cadre: [G - 120, G - 160, D_ - G + 240, y + a - G + 172], dessin: /* @__PURE__ */ __name(() => enNeon(() => orage(p, i, y, a, c, lum)), "dessin") },
+            ...i % 2 ? [{ id: `volute${i}`, dans: `orage${i}`, cadre: [vx - vr * 1.4, vy - vr * 1.4, vr * 2.8, vr * 2.8], pivot: [vx, vy], dessin: /* @__PURE__ */ __name(() => voluteOrage(p, i, y, a, lum), "dessin") }] : []
+          ];
+        }),
         ...[4, 3, 2, 1, 0].map((i) => {
           const R = R_OEIL[i + 1] * 1.08;
           return { id: `oeil${i}`, profondeur: 0.06 + (4 - i) * 0.015, flou: 0.6, cadre: [OEIL[0] - R, OEIL[1] - R, 2 * R, 2 * R], pivot: OEIL, dessin: /* @__PURE__ */ __name(() => anneauOeil(p, i), "dessin") };
         }),
+        ...LUEURS.map((_, i) => ({ id: `lueur-nuage${i}`, profondeur: 0.13, flou: 0.4, cadre: [LUEURS[i][0] - LUEURS[i][2], LUEURS[i][1] - LUEURS[i][2], 2 * LUEURS[i][2], 2 * LUEURS[i][2]], dessin: /* @__PURE__ */ __name(() => lueurNuage(p, i), "dessin") })),
         { id: "coeur", profondeur: 0.06, cadre: [OEIL[0] - 62, OEIL[1] - 62, 124, 124], pivot: OEIL, dessin: /* @__PURE__ */ __name(() => coeurOeil(p), "dessin") },
+        ...SPIRALES.map(([x, y, r], i) => ({ id: `spirale${i}`, profondeur: 0.07 + i * 0.012, cadre: [x - r * 2, y - r * 2, r * 4, r * 4], pivot: [x, y], dessin: /* @__PURE__ */ __name(() => spiraleCiel(p, i), "dessin") })),
+        ...[0, 1].map((i) => ({ id: `scintilles${i}`, profondeur: 0.04, cadre: [-40, -20, 480, 220], dessin: /* @__PURE__ */ __name(() => scintilles(p, i), "dessin") })),
+        ...FILANTES.map(([x, y], i) => ({ id: `filante${i}`, profondeur: 0.03, cadre: [x - 8, y - 30, 76, 40], dessin: /* @__PURE__ */ __name(() => filante(p, i), "dessin") })),
         { id: "foudre", profondeur: 0.14, cadre: [36, -36, 90, 260], pivot: FOUDRE[0], dessin: /* @__PURE__ */ __name(() => foudre(p), "dessin") },
         { id: "brume-loin", profondeur: 0.2, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => brumeLoin(p), "dessin") },
+        { id: "pluie-loin", profondeur: 0.3, cadre: [G, G - 200, D_ - G + 60, 800], dessin: /* @__PURE__ */ __name(() => pluieLoin(p), "dessin") },
         { id: "trait-horizon", profondeur: 0.22, cadre: [G - 100, HORIZON - 20, D_ - G + 200, 44], pivot: [200, HORIZON + 2], dessin: /* @__PURE__ */ __name(() => traitHorizon(p), "dessin") },
         merPlan(0),
         merPlan(1),
+        ...ecumePlans(1),
         { id: "lame", profondeur: 0.34, cadre: [G - 100, 0, D_ - G + 200, 410], pivot: [200, 380], dessin: /* @__PURE__ */ __name(() => lame(p), "dessin") },
         ...POSES.map((k, i) => ({ id: `levre${i}`, dans: "lame", cadre: [G - 100, -70, D_ - G + 220, 280], dessin: /* @__PURE__ */ __name(() => levre(p, k), "dessin") })),
         merPlan(2),
+        ...ecumePlans(2),
+        ...gouttesPlans(0),
         // (sous la surface : l'abîme couvre tout ce qui est derrière lui ; devant lui, le navire et les racines)
         { id: "abysse", profondeur: 0.04, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => abysse(p), "dessin") },
         { id: "surface", profondeur: 0.1, flou: 0.6, cadre: [G - 80, -260, D_ - G + 160, 760], pivot: [200, -60], dessin: /* @__PURE__ */ __name(() => surface(p), "dessin") },
@@ -24146,24 +24231,29 @@ var require_neon_naufrage = __commonJS({
         ...ABIME.slice(0, 1).map(([id2, a, b, c, d, w0, w1, cs, prof]) => ({ id: id2, profondeur: prof, cadre: [-80, 150, 580, 380], pivot: a, dessin: /* @__PURE__ */ __name(() => enNeon(() => racineNeon(p, id2, a, b, c, d, w0, w1, cs, 1800)), "dessin") })),
         ...racinePlans(RB, 0.55, false, ["#24042C", "#6A1660", MAGENTA]),
         ...garde(DU_NAVIRE),
-        { id: "navire-trace", profondeur: 0.6, cadre: [36, 92, 344, 190], pivot: [205, 250], dessin: /* @__PURE__ */ __name(() => navireTrace(`${p}nt`), "dessin") },
-        { id: "front", profondeur: 0.6, cadre: [-20, 86, 40, 210], pivot: [0, 190], dessin: /* @__PURE__ */ __name(() => front(p), "dessin") },
         ...racinePlans(RC, 0.62, true, ["#1A0A3E", "#5A1A8A", CYAN]),
         merPlan(3),
+        ...ecumePlans(3),
         merPlan(4),
+        ...ecumePlans(4),
+        ...gouttesPlans(1),
         ...racinePlans(RA, 0.85, true, ["#14042C", "#4A1474", ACIDE]),
         merPlan(5),
+        ...ecumePlans(5),
+        ...gouttesPlans(2),
         ...ABIME.slice(1).map(([id2, a, b, c, d, w0, w1, cs, prof], j) => ({ id: id2, profondeur: prof, cadre: [-80, 150, 580, 380], pivot: a, dessin: /* @__PURE__ */ __name(() => enNeon(() => racineNeon(p, id2, a, b, c, d, w0, w1, cs, 1801 + j)), "dessin") })),
         { id: "anime", profondeur: 0.8, dessin: /* @__PURE__ */ __name(() => pluieVive(), "dessin") },
         { id: "houle", profondeur: 1.3, cadre: [G - 100, 320, D_ - G + 200, 160], pivot: [200, 380], dessin: /* @__PURE__ */ __name(() => enNeon(() => houle(p)), "dessin") },
         ...[0, 1].map((i) => ({ id: `embruns${i}`, profondeur: 1.5, cadre: [G - 20, 230, D_ - G + 40, 220], dessin: /* @__PURE__ */ __name(() => embruns(p, i), "dessin") })),
         { id: "pluie-devant", profondeur: 1.6, cadre: [G, G - 200, D_ - G + 60, 800], dessin: /* @__PURE__ */ __name(() => pluie(p), "dessin") },
+        ...[0, 1].map((i) => ({ id: `rafale${i}`, profondeur: 0.9, cadre: [-20, 20, 460, 370], dessin: /* @__PURE__ */ __name(() => rafale(p, i), "dessin") })),
+        { id: "plancton0", profondeur: 0.5, cadre: [-40, 40, 480, 420], dessin: /* @__PURE__ */ __name(() => plancton(p, 0), "dessin") },
         ...[0, 1, 2].map((i) => ({ id: `bulles${i}`, profondeur: 0.9 + i * 0.3, cadre: [G, 80, D_ - G, 360], dessin: /* @__PURE__ */ __name(() => bulles(p, i), "dessin") })),
         ...garde(DU_COR),
         { id: "rideau", profondeur: 0, flou: 0.7, cadre: [G - 60, -480, D_ - G + 120, 960], dessin: /* @__PURE__ */ __name(() => rideau2(p), "dessin") },
         ...[0, 1].map((i) => ({ id: `remous${i}`, profondeur: 0, cadre: [G, G, D_ - G, D_ - G], pivot: [200, 200], dessin: /* @__PURE__ */ __name(() => remous(p, i), "dessin") })),
         { id: "assombri", profondeur: 0, ...m, flou: 0.1, dessin: /* @__PURE__ */ __name(() => plein(NOIR), "dessin") },
-        { id: "navire-fantome", profondeur: 0.6, cadre: [36, 92, 344, 190], pivot: [205, 250], dessin: /* @__PURE__ */ __name(() => navireTrace(`${p}nf`), "dessin") },
+        { id: "plancton1", profondeur: 1, cadre: [-40, 40, 480, 420], dessin: /* @__PURE__ */ __name(() => plancton(p, 1), "dessin") },
         { id: "vignette", profondeur: 0, ...m, flou: 0.5, dessin: /* @__PURE__ */ __name(() => vignette(p), "dessin") },
         { id: "eclair", profondeur: 0, ...m, flou: 0.1, dessin: /* @__PURE__ */ __name(() => plein("#FFE8FF"), "dessin") }
       ];
@@ -24205,12 +24295,61 @@ var require_neon_naufrage = __commonJS({
       P2["pluie-devant"] = jusquA([[0, { o: 0, x: 0, y: 0 }], ...bouffees(6e3, PONT + 700, 900, { x: 0, y: -260, o: 0.9 }, { x: -70, y: 140, o: 0.9 }).slice(1)]);
       P2.anime = jusquA([[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]]);
       P2.vignette = [[0, { o: 1 }]];
-      const NAV_O = [[0, { o: 0 }], [2700, { o: 0, e: "ease-in" }], [3500, { o: 1 }], [25e3, { o: 1, e: "ease-in" }], [26400, { o: 0 }]];
+      const vitesse = /* @__PURE__ */ __name((t) => 50 + 150 * Math.min(1, Math.max(0, (t - 4200) / 1e4)), "vitesse");
+      const tourne = /* @__PURE__ */ __name((t0, t1, sens, k = 1, derive = 6) => {
+        const out = [];
+        let r = 0;
+        for (let t = t0, n = 0; t < t1; n++) {
+          out.push([t, { s: n % 2 ? 1.14 : 1, r: Math.round(r), x: (n % 2 ? 1 : -1) * derive * force(t), o: 1, e: "linear" }]);
+          const dt = Math.min(1100, t1 - t);
+          r += sens * k * vitesse(t) * dt / 1e3;
+          t += dt;
+        }
+        out.push([t1, { s: 1, r: Math.round(r), x: 0, o: 1 }]);
+        return out;
+      }, "tourne");
+      SPIRALES.forEach(([x, y, , sens], i) => {
+        const t0 = 700 + i * 300, t1 = 9600 + i * 450, k = tourne(t0 + 900, t1, sens, 1, 6 + i), [, fin] = k[k.length - 1];
+        P2[`spirale${i}`] = [[0, { s: 0, r: -200 * sens, x: 0, y: 0, o: 1 }], [t0, { s: 0, r: -200 * sens, x: 0, y: 0, o: 1, e: "cubic-bezier(.2,.9,.3,1.3)" }], ...k.slice(0, -1), [t1, { ...fin, y: 0, e: "cubic-bezier(.6,0,.9,.6)" }], [t1 + 2200, { s: 0.15, r: fin.r + sens * 700, x: OEIL[0] - x, y: OEIL[1] - y, o: 0 }]];
+      });
+      ORAGES.forEach(([i]) => {
+        if (i % 2) P2[`volute${i}`] = tourne(0, PONT + 900, 1, 1.6, 0);
+      });
+      [0, 1].forEach((i) => {
+        P2[`scintilles${i}`] = [[0, { o: 0 }], [1400 + i * 500, { o: 0 }], ...balance(1400 + i * 500, 6e3, 1500 + i * 500, (k) => ({ o: k % 2 ? 0.15 : 1 })), [7800, { o: 0 }]];
+      });
+      FILANTES.forEach((_, i) => {
+        const t = [1900, 3400][i];
+        P2[`filante${i}`] = [[0, { o: 0, x: 0, y: 0 }], [t - 1, { o: 0, x: 0, y: 0, e: "linear" }], [t, { o: 1, x: 0, y: 0, e: "cubic-bezier(.3,0,.7,1)" }], [t + 700, { o: 0, x: -170, y: 62 }]];
+      });
+      [0, 1].forEach((i) => {
+        const k = [[0, { o: 0, x: -520 }]];
+        for (let t = 8300 + i * 900, n = 0; t < PONT; n++, t += 1500 + Math.round(hash(n, 220 + i) * 1700)) k.push([t - 1, { o: 0, x: -520, e: "linear" }], [t, { o: 0.9, x: -520, e: "cubic-bezier(.4,0,.6,1)" }], [t + 540, { o: 0.9, x: 520, e: "linear" }], [t + 541, { o: 0, x: 520 }]);
+        P2[`rafale${i}`] = k;
+      });
+      [0, 1].forEach((j) => {
+        const t0 = NOYADE + 400 + j * 600, k = [[0, { o: 0, y: 40 }], [t0, { o: 0, y: 40, e: "ease-out" }]];
+        for (let t = t0 + 1600, n = 0; t < FIN; n++, t += 900) k.push([t, { o: j && t > 26400 ? Math.max(0, 1 - (t - 26400) / 1100) : n % 2 ? 0.55 : 1, y: -Math.round((t - t0) * 0.012), e: "ease-in-out" }]);
+        P2[`plancton${j}`] = k;
+      });
+      LUEURS.forEach((_, i) => {
+        const k = [[0, { o: 0 }]];
+        for (let t = 6800 + i * 450, n = 0; t < PONT; n++, t += 700 + Math.round(hash(n, 190 + i) * 1100)) k.push([t - 1, { o: 0, e: "linear" }], [t + 60, { o: 0.85, e: "linear" }], [t + 140, { o: 0.25, e: "linear" }], [t + 220, { o: 0.65, e: "ease-out" }], [t + 620, { o: 0 }]);
+        P2[`lueur-nuage${i}`] = jusquA(k);
+      });
+      [1, 2, 3, 4, 5].forEach((i) => [0, 1].forEach((n) => {
+        const per = 1300 + i * 160, k = [[0, { o: 0, y: 2 }]];
+        for (let t = 1600 + n * per / 2 + i * 90; t < NOYADE - per; t += per) k.push([t, { o: 0, y: 2, e: "ease-out" }], [t + per * 0.3, { o: 1, y: 0, e: "linear" }], [t + per * 0.7, { o: 0.9, y: -3, e: "ease-in" }], [t + per - 1, { o: 0, y: -5 }]);
+        P2[`ecume${i}-${n}`] = k;
+      }));
+      [0, 1, 2].forEach((j) => [0, 1].forEach((n) => {
+        const per = 520 + j * 90, k = [[0, { o: 0 }]];
+        for (let t = 6800 + n * per / 2; t < NOYADE - per; t += per) k.push([t, { o: 0, e: "ease-out" }], [t + 70, { o: 1, e: "ease-in" }], [t + per * 0.8, { o: 0 }]);
+        P2[`gouttes${j}-${n}`] = k;
+      }));
+      P2["pluie-loin"] = jusquA([[0, { o: 0, x: 0, y: 0 }], ...bouffees(5800, PONT + 700, 1300, { x: 0, y: -260, o: 0.8 }, { x: -50, y: 140, o: 0.8 }).slice(1)]);
       const nav = [...P0.navire, [19800, { x: -10, y: -36, r: -16, s: 1, e: "linear" }], [NOYADE - 1, { x: -10, y: -36, r: -16, s: 1, e: "linear" }], [NOYADE, { x: 10, y: 30, r: 26, s: 0.82, e: "ease-out" }], [21800, { x: 18, y: 56, r: 31, s: 0.79, e: "linear" }], [24800, { x: 30, y: 110, r: 38, s: 0.71, e: "ease-in" }], [FIN, { x: 36, y: 150, r: 42, s: 0.66 }]];
-      P2.navire = avecOpacite(nav, NAV_O);
-      P2["navire-trace"] = avecOpacite(nav, [[0, { o: 1 }], [3300, { o: 1, e: "ease-in" }], [3900, { o: 0 }]]);
-      P2["navire-fantome"] = avecOpacite(nav, [[0, { o: 0 }], [24700, { o: 0, e: "ease-out" }], [25700, { o: 0.95 }], [26100, { o: 0.55 }], [26450, { o: 0.9, e: "ease-in" }], [27500, { o: 0 }]]);
-      P2.front = [[0, { x: 40, o: 0 }], [2699, { x: 40, o: 0, e: "linear" }], [2700, { x: 40, o: 1, e: "ease-in-out" }], [3500, { x: 380, o: 1, e: "linear" }], [3700, { x: 380, o: 0 }]];
+      P2.navire = nav;
       for (const id2 of DU_NAVIRE) if (/^(fumee|embrun|onde)/.test(id2) && P2[id2]) P2[id2] = jusquA(P2[id2]);
       for (const R of [RA, RB, RC]) P2[R.base[0]] = jusquA(P0[R.base[0]]);
       for (const R of [RA, RB, RC]) P2[R.bout[0]] = P0[R.bout[0]];
@@ -24272,7 +24411,7 @@ var require_neon_naufrage = __commonJS({
       return { plans, partition: { temps } };
     }
     __name(naufrage, "naufrage");
-    module.exports = { naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau: rideau2, remous, abysse, surface, bulles, racineNeon, enCouleurs, navireTrace, front, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET: VIOLET2, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
+    module.exports = { naufrage, T, FIN, PONT, NOYADE, ciel, cielNuit, etoilesCiel, soleil, strate, orage, anneauOeil, coeurOeil, foudre, brumeLoin, vague, houle, pluie, embruns, lame, levre, rideau: rideau2, remous, abysse, surface, bulles, racineNeon, enCouleurs, lumineux, enNeon, NOIR, ENCRE, CYAN, ACIDE, MAGENTA, CORAIL, ORANGE, VIOLET: VIOLET2, HORIZON, SOLEIL, OEIL, N_OEIL, R_OEIL, MERS, FOUDRE, plein, chemin, melange };
   }
 });
 
