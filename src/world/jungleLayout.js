@@ -6,6 +6,8 @@
 // la mousse. Les verts dominent ; les couleurs vives sont rares et groupées, une famille par massif (héliconias,
 // crotons, caladiums ou broméliacées), des orchidées au bord des clairières. Fixe pour une île donnée.
 
+import { ZONES } from './zones';
+
 // Bruit de valeur lissé (0 à 1), continu d'une case à l'autre
 const rnd = (x, y, k) => { const v = Math.sin(x * 12.9898 + y * 78.233 + k * 37.719) * 43758.5453; return v - Math.floor(v); };
 const smooth = t => t * t * (3 - 2 * t);
@@ -17,13 +19,29 @@ function vnoise(x, y, k) {
 const clamp01 = v => Math.max(0, Math.min(1, v));
 const ramp = (a, b, v) => smooth(clamp01((v - a) / (b - a)));
 
-// L'épaisseur de la jungle en une case (0 : clairière, 1 : cœur d'un massif) ; far : sa distance (en cases) à ce qui
-// se tient debout (camp, lieux), Infinity s'il n'y a rien
-export function thicknessAt(x, y, far) {
+// Le noyau (choix de l'auteur, 18 oct. : « juste garde le noyau central et densifie autour » ; un petit carré au
+// bord de la plage, le joueur découvre la suite lui-même) : les deux premières zones de l'île à la plage, celle du Feu
+// et celle de Lorena contre l'épave (world/zones.js, mêmes cases) ; tout autour, la jungle serrée, sous la brume tant
+// qu'elle n'est pas découverte
+const CORE_ZONES = ['plage', 'aster'];
+export const CLEARINGS = ZONES.filter(z => CORE_ZONES.includes(z.id)).map(z => z.rect);
+// (la distance d'une case au noyau, en cases : 0 dedans)
+const outsideOf = (x, y, [rx, ry, w, h]) => Math.max(rx - x, x - (rx + w - 1), ry - y, y - (ry + h - 1), 0);
+const outside = (x, y) => Math.min(...CLEARINGS.map(r => outsideOf(x, y, r)));
+// La jungle couvre le cœur, et déborde autour du noyau sur BAND cases, quel que soit le quartier : le noyau est fermé
+// de tous côtés ; plus loin, l'île garde sa flore
+const BAND = 7;
+export const inJungle = (x, y, coeur) => coeur || outside(x, y) <= BAND;
+
+// L'épaisseur de la jungle en une case (0 : clairière, 1 : cœur d'un massif)
+export function thicknessAt(x, y) {
+  const d = outside(x, y);
+  // (dans le noyau : la mousse ; au bord, une lisière basse qui adoucit le passage)
+  if (d === 0) return outside(x - 1, y) + outside(x + 1, y) + outside(x, y - 1) + outside(x, y + 1) > 0 ? 0.3 : 0;
   const field = 0.62 * vnoise(x * 0.16 + 3, y * 0.16 + 11, 401) + 0.38 * vnoise(x * 0.42 + 7, y * 0.42 + 1, 402);
-  // (la clairière du camp : juste autour de lui, la jungle reprend dès deux cases ; plus loin, elle se referme en mur)
-  const open = ramp(0.8, 2.4, far), wall = 0.3 * ramp(3, 8, far);
-  return clamp01((field - 0.3) / 0.38 * open + wall * open);
+  // (dès le bord du noyau, serrée, des massifs plus hauts que d'autres, jamais de trouée ; elle s'éclaircit au bout de
+  // la bande, où l'île reprend sa flore)
+  return clamp01((0.5 + 0.2 * ramp(0.5, 2.5, d) + (field - 0.45) * 0.7) * (1 - 0.6 * ramp(BAND - 2, BAND + 2, d)));
 }
 
 // Les étages : [épaisseur à partir de laquelle il pousse, ce qui y pousse]
@@ -36,8 +54,8 @@ const TALL = ['banana', 'treefern'];
 // bas ne pousse seul au milieu de la mousse (choix de l'auteur, 18 oct. : « les croissants, quand ils sont tous seuls,
 // c'est pas génial ») : les crosses de fougère ne viennent qu'au pied des autres, dans les massifs ; en lisière, une
 // plante basse ne pousse que collée à un massif ; les orchidées vont par touffes
-export function jungleAt(x, y, far) {
-  const t = thicknessAt(x, y, far);
+export function jungleAt(x, y) {
+  const t = thicknessAt(x, y);
   const r = rnd(x, y, 410), r2 = rnd(y, x, 411), r3 = rnd(x + 5, y, 412);
   const family = ACCENTS[Math.floor(vnoise(x * 0.11 + 40, y * 0.11 + 9, 403) * ACCENTS.length * 0.999)];
   // (des bosquets de bananiers et des bosquets de fougères, pas mélangés)
@@ -53,7 +71,7 @@ export function jungleAt(x, y, far) {
   }
   if (t >= MID) return [{ kind: r < 0.3 ? tall : mid, dx: 0, dy: -0.05 }, ...(r2 < 0.55 ? [{ kind: under, dx: 0.26, dy: 0.24 }] : [])];
   // (la lisière : collée à un massif, sa famille d'accent ou un monstera)
-  const rim = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => thicknessAt(x + a, y + b, far) >= MID);
+  const rim = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => thicknessAt(x + a, y + b) >= MID);
   if (t >= EDGE) return rim && r < 0.75 ? [{ kind: r2 < 0.45 ? family : 'monstera', dx: (r2 - 0.5) * 0.3, dy: (r3 - 0.5) * 0.3 }] : [];
   // (la clairière : de la mousse ; au bord, de rares touffes d'orchidées)
   return t > EDGE * 0.6 && r < 0.1 ? [{ kind: 'orchid', dx: -0.18, dy: -0.06 }, { kind: 'orchid', dx: 0.16, dy: 0.12 }, ...(r2 < 0.5 ? [{ kind: 'orchid', dx: -0.02, dy: 0.3 }] : [])] : [];
