@@ -42,6 +42,16 @@
    Encre ; le livre, l'étagère et l'Athanor seulement */
 .oc-app--bare .hud, .oc-app--bare .tabbar, .oc-app--bare .book-view__head, .oc-app--bare .book-view__ariane,
 .oc-app--bare .book-view__shelf-head, .oc-app--bare .book-view__filters, .oc-app--bare .book-view__spot { display: none; }
+/* (la barre d'onglets cachée ne garde pas sa place : l'Athanor se pose tout en bas, sans bande vide dessous ; le livre
+   prend la hauteur rendue, ni en-tête ni barre à loger ; retour de l'auteur, 18 oct. : la page était trop basse) */
+.oc-app--bare { --oc-tabbar-h: env(safe-area-inset-bottom, 0px); }
+@media (max-width: 859px) {
+  /* (le livre et son étagère au milieu de la hauteur libre, entre l'en-tête de la page et l'Athanor) */
+  .oc-app.oc-app--bare .book-view { display: flex; flex-direction: column; min-height: calc(100dvh - var(--oc-overlay, var(--oc-dock-height)) - var(--oc-tabbar-h) - 24px); }
+  .oc-app.oc-app--bare .book-view__stage { margin-top: auto; }
+  .oc-app.oc-app--bare .book-view__shelf { margin-bottom: auto; }
+  .oc-app.oc-app--bare .book-view__stage.is-single { --book-w: max(min(240px, calc(100cqw - 60px)), min(calc(100cqw - 60px), calc((100dvh - 320px) * .75), 460px)); }
+}
 
 /* Un onglet qui change : un rideau de la couleur du vélin, posé sur la vue (sous la barre d'onglets et Brume),
    s'efface en un demi-souffle ; la vue dessous ne change pas d'ordre de couches. Sans mouvement : rien */
