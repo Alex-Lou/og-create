@@ -30,7 +30,7 @@ const outsideOf = (x, y, [rx, ry, w, h]) => Math.max(rx - x, x - (rx + w - 1), r
 const outside = (x, y) => Math.min(...CLEARINGS.map(r => outsideOf(x, y, r)));
 // La jungle couvre le cœur, et déborde autour du noyau sur BAND cases, quel que soit le quartier : le noyau est fermé
 // de tous côtés ; plus loin, l'île garde sa flore
-const BAND = 10;
+const BAND = 14;
 export const inJungle = (x, y, coeur) => coeur || outside(x, y) <= BAND;
 
 // L'épaisseur de la jungle en une case (0 : clairière, 1 : cœur d'un massif)
@@ -66,10 +66,11 @@ export function jungleAt(x, y) {
     return [
       { kind: t > 0.9 && r < 0.22 ? 'kapok' : tall, dx: -0.12, dy: -0.14 },
       { kind: mid, dx: 0.24, dy: 0.16 },
-      ...(r3 < 0.6 ? [{ kind: under, dx: -0.22, dy: 0.3 }] : [])
+      { kind: under, dx: -0.22, dy: 0.3 },
+      ...(r2 < 0.5 ? [{ kind: tall, dx: 0.3, dy: -0.22 }] : [])
     ];
   }
-  if (t >= MID) return [{ kind: r < 0.3 ? tall : mid, dx: 0, dy: -0.05 }, ...(r2 < 0.55 ? [{ kind: under, dx: 0.26, dy: 0.24 }] : [])];
+  if (t >= MID) return [{ kind: r < 0.4 ? tall : mid, dx: -0.06, dy: -0.1 }, { kind: under, dx: 0.26, dy: 0.24 }, ...(r2 < 0.5 ? [{ kind: mid, dx: -0.26, dy: 0.2 }] : [])];
   // (la lisière : collée à un massif, sa famille d'accent ou un monstera)
   const rim = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => thicknessAt(x + a, y + b) >= MID);
   if (t >= EDGE) return rim && r < 0.75 ? [{ kind: r2 < 0.45 ? family : 'monstera', dx: (r2 - 0.5) * 0.3, dy: (r3 - 0.5) * 0.3 }] : [];
