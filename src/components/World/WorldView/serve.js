@@ -247,7 +247,7 @@ export default {
         n: state.size, M: this.M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
         settlers: (state.villagers || []).filter(v => v.seed !== undefined),
-        climates: state.map.zones.map(z => z.climate || null),
+        zoneIds: state.map.zones.map(z => z.id),
         // (les lieux, les gisements et le camp : on les contourne)
         avoid: [...landmarksShown(state), ...depositsShown(state), ...camp],
         camp,

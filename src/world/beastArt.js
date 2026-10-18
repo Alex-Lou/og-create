@@ -43,7 +43,7 @@ const SUBJECTS = {
   fox: 'renard', rabbit: 'lapin', hedgehog: 'herisson', squirrel: 'ecureuil', otter: 'loutre', heron: 'heron',
   snowFox: 'renard-polaire', ibex: 'bouquetin', puffin: 'macareux', pony: 'poney', frog: 'grenouille', tortoise: 'tortue',
   fennec: 'fennec', camel: 'chameau', chameleon: 'cameleon', toucan: 'toucan', salamander: 'salamandre', crow: 'corbeau',
-  kit: 'mousse', bird: 'mesange', gull: 'mouette', flyingGull: 'mouette-vol',
+  kit: 'mousse', bird: 'mesange', gull: 'mouette', flyingGull: 'mouette-vol', crab: 'crabe',
   cat: { '': 'chat', noir: 'chat-noir', gris: 'chat-gris', blanc: 'chat-blanc' },
   dog: { '': 'chien', brun: 'chien-brun', noir: 'chien-noir', roux: 'chien-roux' },
   butterfly: { '': 'papillon-jaune', jaune: 'papillon-jaune', bleu: 'papillon-bleu', lune: 'papillon-lune' },
@@ -81,7 +81,9 @@ const SINGLE = {
   'poisson-sardine': single('mer', 'profil', 'nage', FISH),
   'poisson-dorade': single('mer', 'profil', 'nage', FISH),
   'poisson-volant': single('mer', 'profil', 'nage', FISH),
-  'mouette-vol': single('mer', 'profil', 'vol', [-17.5, -35, 35, 37.5])
+  'mouette-vol': single('mer', 'profil', 'vol', [-17.5, -35, 35, 37.5]),
+  // (le crabe marche de côté, de profil : mer/crabe/crabe.json)
+  crabe: single('mer', 'profil', 'marche', [-14, -22, 28, 24.5])
 };
 // Le nom de la bête dans la bibliothèque, ou null (une liste : le premier qu'elle a dessiné)
 export function subjectOf(species, variant = '') {

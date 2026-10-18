@@ -61,29 +61,37 @@ describe('le Bestiaire vivant', () => {
     // De nuit aussi, le bocal reste près de Léo
     expect(ids(island, 2)).toContain('fam:puits');
   });
-  it('les bêtes écrites s’ajoutent : arbres, air, eau douce ; lucioles et hibou la nuit', () => {
-    const island = islandOf(ALL);
-    const noon = ids(island, 13);
-    for (const id of ['best:bird:0', 'best:butterfly:0', 'best:butterfly:1', 'best:bee:0', 'best:frog', 'best:tortoise']) expect(noon, id).toContain(id);
-    expect(noon.some(id => id.startsWith('best:firefly'))).toBe(false);
-    const night = ids(island, 23.5);
-    expect(night).toContain('best:owl');
-    expect(night.filter(id => id.startsWith('best:firefly'))).toHaveLength(5);
-    // Chaque luciole luit la nuit (une lumière à sa place, plus forte quand elle s'allume)
-    const { list, lights } = island.at(30, at(23.5));
-    const flies = list.filter(c => c.id.startsWith('best:firefly'));
-    expect(flies.map(f => lights.filter(l => l.r === 9 && l.x === f.x && l.y === f.y && l.dy === -f.z).length)).toEqual([1, 1, 1, 1, 1]);
+  it('les bêtes écrites s’ajoutent, chacune dans ses zones et à ses heures (wildLife.js) ; les abeilles au Potager', () => {
+    vi.useFakeTimers({ now: new Date(2026, 9, 18, 12) });
+    const zoned = (written, zoneIds) => villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props, written, coop, zoneIds });
+    const hours = Array.from({ length: 80 }, (_, i) => 6 + i * 0.3);
+    const seen = island => new Set(hours.flatMap(h => ids(island, h)));
+    // Au cœur : la mésange dans ses arbres, rien sans Oiseau écrit
+    expect([...seen(zoned(ALL, ['coeur']))].some(id => id.startsWith('wild:mesange:coeur'))).toBe(true);
+    expect([...seen(zoned([], ['coeur']))].some(id => id.startsWith('wild:mesange'))).toBe(false);
+    expect(ids(zoned(ALL, ['coeur']), 13)).toContain('best:bee:0');
+    // À la Lisière, les lucioles, la nuit seulement ; chacune luit (une lumière à sa place)
+    const lisiere = zoned(ALL, ['lisiere']);
+    expect(Array.from({ length: 30 }, (_, i) => 9 + i * 0.3).some(h => ids(lisiere, h).some(id => id.startsWith('wild:lucioles')))).toBe(false);
+    const nights = Array.from({ length: 40 }, (_, i) => 22 + i * 0.15);
+    const lit = nights.map(h => lisiere.at(30, at(h))).find(({ list }) => list.some(c => c.species === 'firefly'));
+    expect(lit).toBeDefined();
+    const flies = lit.list.filter(c => c.species === 'firefly');
+    expect(flies.every(f => lit.lights.some(l => l.r === 9 && l.x === f.x && l.y === f.y && l.dy === -f.z))).toBe(true);
     expect(flies.every(f => f.glow === 1 || f.glow === 0.55)).toBe(true);
     // Elles sont toutes sur des cases de l'île (ni hors carte, ni NaN) et se dessinent
-    for (const h of [6, 13, 19, 23.5]) {
-      for (const c of island.at(40, at(h)).list.filter(c => c.kind === 'beast')) {
-        expect(Number.isFinite(c.x) && Number.isFinite(c.y) && Number.isFinite(c.z), c.id).toBe(true);
-        // (le dessin de la bibliothèque se lit à la demande : load)
-        const { svg, load } = c.sprite[1]();
-        expect(Boolean(svg || load), c.id).toBe(true);
-        if (svg) expect(svg, c.id).not.toMatch(/NaN|undefined/);
+    for (const island of [zoned(ALL, ['coeur']), lisiere]) {
+      for (const h of [6, 9, 13, 19, 22.5, 23.5]) {
+        for (const c of island.at(40, at(h)).list.filter(c => c.kind === 'beast')) {
+          expect(Number.isFinite(c.x) && Number.isFinite(c.y) && Number.isFinite(c.z), c.id).toBe(true);
+          // (le dessin de la bibliothèque se lit à la demande : load)
+          const { svg, load } = c.sprite[1]();
+          expect(Boolean(svg || load), c.id).toBe(true);
+          if (svg) expect(svg, c.id).not.toMatch(/NaN|undefined/);
+        }
       }
     }
+    vi.useRealTimers();
   });
   it('la ferme suit le palier du Potager ; l’élément écrit ajoute seulement une variante', () => {
     const farm = islandOf(ALL).farm.map(a => `${a.species}:${a.variant}`);
