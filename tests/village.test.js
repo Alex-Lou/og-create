@@ -12,6 +12,10 @@ import { cycleStart, dayHourOf } from '@/world/gameClock';
 // (les habitants venus d'ailleurs se dessinent par le générateur de l'avatar, chargé à la demande : world/arrivantArt.js)
 beforeAll(() => loadKit());
 
+// (un jour de l'île où l'on marche et flâne : les tests de la vie qui le supposent le figent, l'heure réelle de la machine
+// changerait leur journée)
+const UN_JOUR = new Date('2026-10-19T09:00:00Z');
+
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
 const N = 14;
 const ground = Array.from({ length: N }, (_, y) => Array.from({ length: N }, (_, x) => {
@@ -45,31 +49,36 @@ describe('village : habitants', () => {
   });
   // (la nuit, chacun dort couché chez lui : choix de l'auteur, 16 oct. ; agenda.js)
   it('ils marchent par des cases praticables voisines, le jour ; dorment chez eux la nuit ; rentrent avec une lanterne le soir', () => {
-    const noon = at(13);
-    for (let t = 0; t < 600; t += 7) {
-      const people = village.at(t, noon).list.filter(c => c.kind === 'villager');
-      expect(people).toHaveLength(3);
-      for (const p of people) {
-        expect(M.ground(Math.round(p.x), Math.round(p.y))).toMatch(/[gp]/);
-        // Dessin du jeu (svg tout de suite) ou de la bibliothèque (un maître : cadre tout de suite, dessin à la lecture)
-        const drawn = p.sprite[1]();
-        expect(drawn.box.w).toBeGreaterThan(0);
-        if (drawn.svg) expect(drawn.svg).not.toMatch(/NaN|undefined/);
+    vi.useFakeTimers({ toFake: ['Date'], now: UN_JOUR });
+    try {
+      const noon = at(13);
+      for (let t = 0; t < 600; t += 7) {
+        const people = village.at(t, noon).list.filter(c => c.kind === 'villager');
+        expect(people).toHaveLength(3);
+        for (const p of people) {
+          expect(M.ground(Math.round(p.x), Math.round(p.y))).toMatch(/[gp]/);
+          // Dessin du jeu (svg tout de suite) ou de la bibliothèque (un maître : cadre tout de suite, dessin à la lecture)
+          const drawn = p.sprite[1]();
+          expect(drawn.box.w).toBeGreaterThan(0);
+          if (drawn.svg) expect(drawn.svg).not.toMatch(/NaN|undefined/);
+        }
       }
+      // Ils bougent : deux instants, deux places
+      const a = village.at(10, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
+      const b = village.at(200, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
+      expect(a).not.toBe(b);
+      // (le temps de rentrer chez soi : ils y marchent, puis s'y couchent)
+      village.at(5, at(2));
+      const night = village.at(400, at(2)).list.filter(c => c.kind === 'villager');
+      expect(night).toHaveLength(3);
+      expect(night.every(p => p.pose === 'sleep')).toBe(true);
+      const evening = at(22);
+      const life = village.at(5, evening);
+      expect(life.list.filter(c => c.kind === 'villager').length).toBeGreaterThan(0);
+      expect(life.lights.length).toBe(life.list.filter(c => c.kind === 'villager' && c.pose !== 'sleep').length);
+    } finally {
+      vi.useRealTimers();
     }
-    // Ils bougent : deux instants, deux places
-    const a = village.at(10, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
-    const b = village.at(200, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
-    expect(a).not.toBe(b);
-    // (le temps de rentrer chez soi : ils y marchent, puis s'y couchent)
-    village.at(5, at(2));
-    const night = village.at(400, at(2)).list.filter(c => c.kind === 'villager');
-    expect(night).toHaveLength(3);
-    expect(night.every(p => p.pose === 'sleep')).toBe(true);
-    const evening = at(22);
-    const life = village.at(5, evening);
-    expect(life.list.filter(c => c.kind === 'villager').length).toBeGreaterThan(0);
-    expect(life.lights.length).toBe(life.list.filter(c => c.kind === 'villager' && c.pose !== 'sleep').length);
   });
   // (choix de l'auteur, 16 oct. : celui qui s'abrite reste visible, à sa porte, sans parapluie)
   it('sous la pluie, un sur deux s’abrite à sa porte, les autres ont un parapluie', () => {
@@ -454,19 +463,24 @@ describe('village : fondations de la vie', () => {
     expect(v.residents.find(r => r.role === 'foyer').zone.trade.length).toBeGreaterThan(0);
   });
   it('il flâne dans sa zone de vie : loin des portes, on le trouve toujours chez lui', () => {
-    const v = villageOf(base);
-    const doors = v.residents.map(r => r.work);
-    let checked = 0;
-    for (let i = 0; i < 1500; i++) {
-      for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
-        if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
-        const r = v.residents.find(o => o.id === p.id);
-        expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
-        checked++;
+    vi.useFakeTimers({ toFake: ['Date'], now: UN_JOUR });
+    try {
+      const v = villageOf(base);
+      const doors = v.residents.map(r => r.work);
+      let checked = 0;
+      for (let i = 0; i < 1500; i++) {
+        for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
+          if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
+          const r = v.residents.find(o => o.id === p.id);
+          expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
+          checked++;
+        }
       }
+      // (assez de flâneries vues pour que le test dise quelque chose)
+      expect(checked).toBeGreaterThan(100);
+    } finally {
+      vi.useRealTimers();
     }
-    // (assez de flâneries vues pour que le test dise quelque chose)
-    expect(checked).toBeGreaterThan(100);
   });
   it('la tournée du jour couvre la journée, de son lever au soir, sans boucle', () => {
     const v = villageOf(base);
