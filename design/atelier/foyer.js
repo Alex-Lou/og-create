@@ -394,6 +394,11 @@ function allee(id, x0, y0, x1, y1, l) {
 // Des fleurs du jeu au pied d'un mur, de a à b : des touffes vertes et leurs petites fleurs
 const fleurs = (a, b, g, n = 6, cols = ['#FF7AA8', '#FFD04A', '#FFFFFF', '#B898F0']) => Array.from({ length: n }, (_, i) => { const q = plus(a, [b[0] - a[0], b[1] - a[1]], (i + 0.5) / n + (g() - 0.5) * 0.06); return `<ellipse cx="${f(q[0])}" cy="${f(q[1])}" rx="3.4" ry="1.8" fill="#4E9A5A"/><ellipse cx="${f(q[0] - 0.8)}" cy="${f(q[1] - 0.8)}" rx="2" ry="1" fill="#81BA5E"/>` + [[-1.6, -1.4], [1.2, -1.8], [0, -0.6]].map(([dx, dy], k) => `<circle cx="${f(q[0] + dx)}" cy="${f(q[1] + dy)}" r=".9" fill="${cols[(i + k) % cols.length]}"/>`).join(''); }).join('');
 
+// L'abri à bois du palier V (contre le mur de droite) et ses poteaux, dessinés à un hasard fixe : le calque du bois
+// repeint celui de devant par-dessus les bûches
+const ABRI5 = [0.32, -0.75, 0.7, -0.15];
+const poteauAbri5 = v => { const a = iso(ABRI5[2], v, 0), b = iso(ABRI5[2], v, 24); return buche(a[0], a[1], b[0], b[1], 1.4, rnd(59), { c: '#8A5A36' }); };
+
 // ═══ palier V : la maison de rondins ═══
 // Des rondins sur un soubassement de pierres moussues, un toit de chaume épais, sombre et moussu, sa cheminée de pierre
 // qui fume (le feu est entré dans la maison) ; au pignon la porte et l'hirondelle de proue, les fenêtres à volets et
@@ -439,8 +444,8 @@ function palier5() {
   s += boite(`${p}ch`, [cu - 0.12, cv - 0.12, cu + 0.12, cv + 0.12], zr - 6, zr + 18, { gauche: pierre, droite: pierre }) + boite(`${p}chc`, [cu - 0.15, cv - 0.15, cu + 0.15, cv + 0.15], zr + 18, zr + 21, { gauche: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#C3BBA9"/>`, droite: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#9B927F"/>`, dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6E6656"/><ellipse cx="${f(W / 2)}" cy="${f(H / 2)}" rx="${f(W * 0.3)}" ry="${f(H * 0.3)}" fill="#2A221E"/>` });
   // ——— l'abri à bois en appentis contre le mur de droite, vide (les réserves de bois ne se montrent que si la maison en
   // a : choix de l'auteur, 18 oct.) ———
-  const A = [M[2], -0.75, M[2] + 0.38, -0.15];
-  for (const v of [A[1], A[3]]) { const a = iso(A[2], v, 0), b = iso(A[2], v, 24); s += buche(a[0], a[1], b[0], b[1], 1.4, g, { c: '#8A5A36' }); }
+  const A = ABRI5;
+  s += poteauAbri5(A[1]) + poteauAbri5(A[3]);
   s += plaque(`${p}ap`, iso(M[2] - 0.02, A[1] - 0.06, 30), B.AXE_V, B.unite([iso(A[2] + 0.06, 0, 23)[0] - iso(M[2] - 0.02, 0, 30)[0], iso(A[2] + 0.06, 0, 23)[1] - iso(M[2] - 0.02, 0, 30)[1]]), (A[3] - A[1] + 0.12) * PAS, Math.hypot(...[iso(A[2] + 0.06, 0, 23)[0] - iso(M[2] - 0.02, 0, 30)[0], iso(A[2] + 0.06, 0, 23)[1] - iso(M[2] - 0.02, 0, 30)[1]]),
     B.tPlanches((A[3] - A[1] + 0.12) * PAS, 24, g, { c: '#9A6A3A', larg: 3 }));
   // ——— devant : l'allée de dalles, le banc, la lanterne sur son poteau (pas de potager : les vrais champs viendront du
@@ -753,15 +758,16 @@ function tasBois(u, v, n, rangs, g, { r = 3.4, l = 0.3, axe = 'v', droit = false
   }
   return s;
 }
-// La place du tas à chaque palier (au calme, rien devant lui) : [u, v, n, rangs] à moitié et plein, ses options
+// La place du tas à chaque palier (au calme, rien devant lui) : [u, v, n, rangs] à moitié et plein, ses options ; devant :
+// ce que le calque repeint par-dessus les bûches
 const BOIS = [
   { moitie: [1.12, 0.42, 3, 2], plein: [1.06, 0.42, 4, 3] },
   { moitie: [0.66, -0.45, 3, 2], plein: [0.6, -0.45, 4, 3] },
   // (III : contre le mur de droite, les bouts vers nous à droite)
   { moitie: [0.5, -0.5, 3, 2], plein: [0.5, -0.56, 4, 3], options: { axe: 'u', l: 0.26 } },
   { moitie: [0.84, 0.4, 3, 2], plein: [0.78, 0.4, 4, 3] },
-  // (V : rangé dans l'abri à bois, les bouts vers l'ouverture)
-  { moitie: [0.64, -0.64, 3, 2], plein: [0.64, -0.64, 3, 4], options: { axe: 'u', droit: true, abrite: true, l: 0.3, r: 3.1 } },
+  // (V : rangé dans l'abri à bois, les bouts vers l'ouverture, sous le toit ; son poteau de devant repeint par-dessus)
+  { moitie: [0.64, -0.64, 3, 2], plein: [0.64, -0.64, 3, 3], options: { axe: 'u', droit: true, abrite: true, l: 0.3, r: 3.1 }, devant: () => poteauAbri5(ABRI5[3]) },
   // (VI : rangé droit contre la façade, à gauche de la porte, sous la fenêtre ; VII : contre le mur de droite, derrière,
   // la porte a ses sacs de sable)
   { moitie: [-1.17, 0.58, 3, 2], plein: [-1.17, 0.58, 3, 3], options: { droit: true, l: 0.26, r: 3.2 } },
@@ -772,7 +778,7 @@ const BOIS_ETATS = ['moitie', 'plein'];
 function bois(lv, etat, { hiver = false } = {}) {
   const [u, v, n, rangs] = BOIS[lv - 1][etat];
   B.setHiver(hiver); B.BORD.doux = true;
-  try { return svgDe(PALIERS[lv - 1].cadre, tasBois(u, v, n, rangs, rnd(lv * 7 + n), BOIS[lv - 1].options)); } finally { B.setHiver(false); B.BORD.doux = false; }
+  try { return svgDe(PALIERS[lv - 1].cadre, tasBois(u, v, n, rangs, rnd(lv * 7 + n), BOIS[lv - 1].options) + (BOIS[lv - 1].devant ? BOIS[lv - 1].devant() : '')); } finally { B.setHiver(false); B.BORD.doux = false; }
 }
 
 // Les images d'un palier (le SVG complet, comme la bibliothèque : le cadre, l'échelle × 1,25 autour)

@@ -900,6 +900,11 @@ var require_foyer = __commonJS({
       const q = plus(a, [b[0] - a[0], b[1] - a[1]], (i + 0.5) / n + (g() - 0.5) * 0.06);
       return `<ellipse cx="${f(q[0])}" cy="${f(q[1])}" rx="3.4" ry="1.8" fill="#4E9A5A"/><ellipse cx="${f(q[0] - 0.8)}" cy="${f(q[1] - 0.8)}" rx="2" ry="1" fill="#81BA5E"/>` + [[-1.6, -1.4], [1.2, -1.8], [0, -0.6]].map(([dx, dy], k) => `<circle cx="${f(q[0] + dx)}" cy="${f(q[1] + dy)}" r=".9" fill="${cols[(i + k) % cols.length]}"/>`).join("");
     }).join(""), "fleurs");
+    var ABRI5 = [0.32, -0.75, 0.7, -0.15];
+    var poteauAbri5 = /* @__PURE__ */ __name((v) => {
+      const a = iso(ABRI5[2], v, 0), b = iso(ABRI5[2], v, 24);
+      return buche2(a[0], a[1], b[0], b[1], 1.4, rnd(59), { c: "#8A5A36" });
+    }, "poteauAbri5");
     function palier5() {
       const g = rnd(53), p = "f5";
       const M = [-1.2, -1.1, 0.32, 0.2], hS = 8, hM = 42;
@@ -935,11 +940,8 @@ var require_foyer = __commonJS({
       const pierre = /* @__PURE__ */ __name((W, H) => tPierres(W, H, g, { haut: 3.6, long: 6, mousse: 0.25 }), "pierre");
       const cu = (M[0] + M[2]) / 2, cv = -0.62, zr = hM + 38;
       s += boite(`${p}ch`, [cu - 0.12, cv - 0.12, cu + 0.12, cv + 0.12], zr - 6, zr + 18, { gauche: pierre, droite: pierre }) + boite(`${p}chc`, [cu - 0.15, cv - 0.15, cu + 0.15, cv + 0.15], zr + 18, zr + 21, { gauche: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#C3BBA9"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#9B927F"/>`, "droite"), dessus: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6E6656"/><ellipse cx="${f(W / 2)}" cy="${f(H / 2)}" rx="${f(W * 0.3)}" ry="${f(H * 0.3)}" fill="#2A221E"/>`, "dessus") });
-      const A = [M[2], -0.75, M[2] + 0.38, -0.15];
-      for (const v of [A[1], A[3]]) {
-        const a = iso(A[2], v, 0), b = iso(A[2], v, 24);
-        s += buche2(a[0], a[1], b[0], b[1], 1.4, g, { c: "#8A5A36" });
-      }
+      const A = ABRI5;
+      s += poteauAbri5(A[1]) + poteauAbri5(A[3]);
       s += plaque(
         `${p}ap`,
         iso(M[2] - 0.02, A[1] - 0.06, 30),
@@ -1253,8 +1255,8 @@ var require_foyer = __commonJS({
       // (III : contre le mur de droite, les bouts vers nous à droite)
       { moitie: [0.5, -0.5, 3, 2], plein: [0.5, -0.56, 4, 3], options: { axe: "u", l: 0.26 } },
       { moitie: [0.84, 0.4, 3, 2], plein: [0.78, 0.4, 4, 3] },
-      // (V : rangé dans l'abri à bois, les bouts vers l'ouverture)
-      { moitie: [0.64, -0.64, 3, 2], plein: [0.64, -0.64, 3, 4], options: { axe: "u", droit: true, abrite: true, l: 0.3, r: 3.1 } },
+      // (V : rangé dans l'abri à bois, les bouts vers l'ouverture, sous le toit ; son poteau de devant repeint par-dessus)
+      { moitie: [0.64, -0.64, 3, 2], plein: [0.64, -0.64, 3, 3], options: { axe: "u", droit: true, abrite: true, l: 0.3, r: 3.1 }, devant: /* @__PURE__ */ __name(() => poteauAbri5(ABRI5[3]), "devant") },
       // (VI : rangé droit contre la façade, à gauche de la porte, sous la fenêtre ; VII : contre le mur de droite, derrière,
       // la porte a ses sacs de sable)
       { moitie: [-1.17, 0.58, 3, 2], plein: [-1.17, 0.58, 3, 3], options: { droit: true, l: 0.26, r: 3.2 } },
@@ -1266,7 +1268,7 @@ var require_foyer = __commonJS({
       B.setHiver(hiver);
       B.BORD.doux = true;
       try {
-        return svgDe(PALIERS[lv - 1].cadre, tasBois(u, v, n, rangs, rnd(lv * 7 + n), BOIS2[lv - 1].options));
+        return svgDe(PALIERS[lv - 1].cadre, tasBois(u, v, n, rangs, rnd(lv * 7 + n), BOIS2[lv - 1].options) + (BOIS2[lv - 1].devant ? BOIS2[lv - 1].devant() : ""));
       } finally {
         B.setHiver(false);
         B.BORD.doux = false;
