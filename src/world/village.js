@@ -38,6 +38,7 @@ import { residentsOf, plannerOf, drawResidents } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
 import { habitatsOf, wildPainter, drawWild, drawKoi, isWild } from './village/wild';
 import { homesOf, wildLifeOf } from './village/wildLife';
+import { creatureOf, creatureOfHit } from './creatures';
 import { drawAnya, anyaSign, storyInfo } from './village/anya';
 import { hash } from './village/beast';
 import { dayHourOf } from './gameClock';
@@ -200,6 +201,9 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     // Une poule d’Agathe : son prénom
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
     if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? TOUCH_HINTS.reactShe : TOUCH_HINTS.reactHe };
+    // Une créature du Bestiaire : son nom et sa phrase (texts/world/creatures.js)
+    const creature = creatureOf(creatureOfHit({ who }));
+    if (creature) return { title: creature.name, text: creature.text, hint: TOUCH_HINTS.startle };
     const [title, text] = BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];
     return { title, text, hint: isWild(who.species) ? TOUCH_HINTS.startle : TOUCH_HINTS.reactShe };
   }

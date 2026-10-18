@@ -1104,6 +1104,10 @@ export function paintEndpaper(ctx, w, h, side, front, stage = null) {
   return { hotspots: [], label: front ? T.endpaperFront(BOOK_TITLE) : T.endpaperBack };
 }
 
+// La main du Livre, pour les autres livres de l'île (le Bestiaire : bestiaryPainter.js) : son papier, son cadre, ses
+// filets et son folio, ses polices et ses encres
+export { paperBase, frame, rule, folio, rr, alpha, setFont, fitText, wrap, seeded, FELL, CAPS, INK, TEXT_INK, NOTE, FAINT, IVORY, VELLUM };
+
 // model : { type: 'toc' | 'chapter' | 'found' | 'reach' | 'far', … } ; assets : { emojiOf, onReady, inkPrice, stars, familiesOf }
 // side : 'right' (page seule, ou de droite) ou 'left' (double page : la reliure à droite, le contenu décalé vers
 // l'extérieur, zones comprises)

@@ -10,6 +10,7 @@
   --z-wreck: 40;      /* le naufrage (rendu dans la page) */
   --z-hand: 45;       /* la main du tutoriel */
   --z-sheet: 70;      /* les fiches de l'île (rendues dans la page) */
+  --z-book: 75;       /* un livre ouvert sur l'île, en plein écran (le Bestiaire) */
   --z-unlock: 80;     /* l'ouverture d'un chapitre du Grimoire */
   --z-prologue: 90;
   --z-modal: 1000;

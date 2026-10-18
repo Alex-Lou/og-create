@@ -378,7 +378,9 @@ export default {
       this.breatheAnya(px, py);
       return;
     } else if (hit.animal) {
-      // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages sursautent
+      // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages sursautent (et la première fois, une créature
+      // entre au Bestiaire : WorldView, bestiary.js)
+      this.meetCreature(hit.animal);
       const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who, true);
       if (said) this.showTip(px, py, said);
       if (this.reduced()) {
