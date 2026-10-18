@@ -5303,6 +5303,18 @@ var require_betes = __commonJS({
       return s;
     }
     __name(bowl, "bowl");
+    function soup(n) {
+      const up2 = n ? 0.6 : 0;
+      const steam = /* @__PURE__ */ __name((x, k) => stroke(`M${r23(x)},${r23(-5.3 - up2)} q${r23(-0.9 * k)},-1 0,-1.9 q${r23(0.9 * k)},-0.9 0,-1.8`, 0.5, "#FFFFFF").replace("/>", ' opacity="0.75"/>'), "steam");
+      let s = E(0, -0.35, 2.2, 0.5, "#3E6482", 0.5);
+      s += P2("M-5.2,-4 Q-4.9,-0.7 0,-0.6 Q4.9,-0.7 5.2,-4 Z", "#4F7FA0", 0.6);
+      s += stroke("M-4.8,-2.9 Q0,-1.7 4.8,-2.9", 0.45, "#EADDBC") + stroke("M-4.3,-3.4 Q-4.1,-2 -3.1,-1.4", 0.4, "#FFFFFF").replace("/>", ' opacity="0.55"/>');
+      s += E(0, -4, 5.2, 1.25, "#F2E6CC", 0.55) + E(0, -3.92, 4.5, 0.9, "#E58A3C", 0) + E(-1.3, -4.15, 1.5, 0.3, "#F6B266", 0);
+      s += E(1.1, -3.75, 0.55, 0.22, "#6E9A4A", 0) + E(0.2, -3.55, 0.36, 0.17, "#7FAE52", 0);
+      s += L([2, -3.95], [4.7, -7.5], OUT4, 1) + L([2, -3.95], [4.7, -7.5], "#B98552", 0.55) + E(1.75, -3.8, 0.8, 0.34, "#B98552", 0.4);
+      return s + steam(-1.6, n ? -1 : 1) + steam(0.7, n ? 1 : -1);
+    }
+    __name(soup, "soup");
     function jelly(n) {
       const k = n ? 1 : 0.9;
       let s = glowDot2(0, -8, 7.6, "210,180,255", 0.45);
@@ -5311,7 +5323,7 @@ var require_betes = __commonJS({
       return s;
     }
     __name(jelly, "jelly");
-    Object.assign(module.exports, { butterfly: butterfly3, firefly, bee: bee3, beeFriend, owl, koi, fish, dolphin, whaleBack, whaleFluke, bowl, jelly });
+    Object.assign(module.exports, { butterfly: butterfly3, firefly, bee: bee3, beeFriend, owl, koi, fish, dolphin, whaleBack, whaleFluke, bowl, soup, jelly });
   }
 });
 

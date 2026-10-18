@@ -812,7 +812,9 @@ export default {
   // par-dessus, comme de près où tout se dessine dans l'ordre du relief ; seulement dans sa boîte, pour ne pas doubler
   // ailleurs ce qui est transparent (l'ombre au pied d'un arbre). Sous la brume, le décor à demi effacé reste tel quel
   standInFront(ctx, critter) {
-    const [key, make] = this.critterSprite(critter);
+    const art = this.critterSprite(critter);
+    if (!art) return;
+    const [key, make] = art;
     const box = imageOf(key, make).box;
     const c = this.ground(critter.x, critter.y);
     const top = c.y - critter.z + box.y;

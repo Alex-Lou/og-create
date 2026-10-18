@@ -61,7 +61,9 @@ describe('les bêtes de la bibliothèque', () => {
 
   it('ce que la bibliothèque n’a pas garde son dessin par code', () => {
     expect(beastSprite('deer', 'blanc')).toBe(null);
-    for (const species of ['soup', 'anya']) expect(beastSprite(species, '')).toBe(null);
+    expect(beastSprite('anya', '')).toBe(null);
+    // le bol de soupe de la Dame : ses deux images (la vapeur monte)
+    expect([1, 2].map(n => beastSprite('soup', '', { n }).key)).toEqual(['lib-bol-soupe_1', 'lib-bol-soupe_2']);
     expect(beastSprite('koi', '#123456')).toBe(null);
     expect(beastSprite('hen', '').key).toBe('lib-poule-blanche_profil_marche_1');
   });

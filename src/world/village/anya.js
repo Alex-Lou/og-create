@@ -63,7 +63,7 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
   const visit = anya && anya.visit && anyaHere(h, phase.rise, phase.set, anya.visit.slot) ? anya.visit : null;
   let here = null;
   if (visit) {
-    // (elle erre autour de son point de visite ; ses dessins de la bibliothèque, sinon ceux du code, immobiles)
+    // (elle erre autour de son point de visite ; ses dessins de la bibliothèque)
     const center = { x: visit.x + 0.5, y: visit.y + 0.5 };
     const seed = visit.x * 31 + visit.y;
     const path = anyaPath(t, center, seed);
@@ -73,18 +73,14 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
     const touched = tapped('anya:dame', MURMURE_S);
     const look = anyaPose(t, { clock: anyaVisitClock(h, phase.rise, phase.set, visit.slot), path, touch: touched === null ? null : touched * MURMURE_S, seed });
     const art = anyaArt(look.pose, look.view, look.n, { season: SEASON, phrase: look.phrase || 0 });
-    out.push(art
-      ? { id: 'anya:dame', kind: 'beast', species: 'anya', x: path.x, y: path.y, z, flip: look.flip, sprite: [art.key, art.make] }
-      : beast('anya:dame', 'anya', '', center.x, center.y, z, false, Math.floor(t * 0.5) % 2));
+    if (art) out.push({ id: 'anya:dame', kind: 'beast', species: 'anya', x: path.x, y: path.y, z, flip: look.flip, sprite: [art.key, art.make] });
     // son cerf, derrière elle, à côté : il marche quand elle flotte, sinon il se tient debout, tourné vers elle
     const trail = anyaPath(t - TRAIL, center, seed);
     const cx = trail.x + CERF_SIDE[0];
     const cy = trail.y + CERF_SIDE[1];
     const way = trail.moving ? facing(trail.dx, trail.dy) : { view: 'avant', flip: (path.x - cx) - (path.y - cy) < 0 };
     const deer = trail.moving ? cerfArt('marche', way.view, frameOf(CP.marche, t)) : cerfArt('debout', way.view, frameOf(CP.debout, t));
-    out.push(deer
-      ? { id: 'anya:cerf', kind: 'beast', species: 'deer', x: cx, y: cy, z: 0, flip: way.flip, sprite: [deer.key, deer.make] }
-      : beast('anya:cerf', 'deer', 'blanc', center.x + 0.8, center.y + 0.4, 0, true, Math.floor(t / 5) % 2));
+    if (deer) out.push({ id: 'anya:cerf', kind: 'beast', species: 'deer', x: cx, y: cy, z: 0, flip: way.flip, sprite: [deer.key, deer.make] });
     for (let k = 0; k < 6; k++) {
       const a = t * 0.3 + k * 1.05;
       out.push(beast(`anya:luciole:${k}`, 'firefly', '', path.x + Math.cos(a) * 0.9, path.y + Math.sin(a) * 0.6, 18 + k * 4 + Math.sin(t + k) * 3, false, Math.floor(t * 1.4 + k) % 2));

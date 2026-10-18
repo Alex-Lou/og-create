@@ -1,23 +1,11 @@
 // Portraits de la troupe hors de l'île (scènes du tutoriel, bulles du guide) : les dessins de la bibliothèque
-// (masterPortraits.js), en naufragé ou en maître ; à défaut, le générateur de l'île (world/villagers.js) avec des couleurs
-// fixes (sur l'île, peau et cheveux suivent le tirage du village).
-import { villagerSprite, ROLES } from './villagers';
+// (masterPortraits.js), en naufragé ou en maître.
 import { masterPortrait } from './masterPortraits';
 
-const LOOKS = {
-  ponton: { skin: '#F2C9A0', hair: '#B94E3A' },
-  foyer: { skin: '#E9B98F', hair: '#7A4E2C' },
-  atelier: { skin: '#F6D3B3' },
-  puits: { skin: '#C98B5E', hair: '#3A2A1E' }
-};
-
-// Image d'un membre de la troupe : l'adresse de son dessin de la bibliothèque (castaway : en naufragé), ou une data URL
-// SVG du générateur ; options : celles de villagerSprite (pose, view, frame)
-export function faceHref(id, { castaway = false, ...options } = {}) {
-  const art = masterPortrait(id, castaway, { view: options.view, pose: options.pose });
-  if (art) return art;
-  const { svg } = villagerSprite({ skin: '#F2C9A0', hair: '#3A2A1E', ...LOOKS[id], ...ROLES[id] }, { pose: 'idle', view: 'front', ...options });
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+// Image d'un membre de la troupe : l'adresse de son dessin de la bibliothèque (castaway : en naufragé ; view, pose : celles
+// de masterPortrait) ; sans cette vue, son portrait de face ; null pour qui n'est pas de la troupe
+export function faceHref(id, { castaway = false, view, pose } = {}) {
+  return masterPortrait(id, castaway, { view, pose }) || masterPortrait(id, castaway);
 }
 
 // Le portrait d'un maître dans une bulle (design/bibliotheque/svg/portraits, portraits.json) : le buste de face, en 22

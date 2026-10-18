@@ -8,17 +8,15 @@
 // même sans les pieds qui descendent sous l'ancre (bas à +2,5).
 // Les autres n'ont qu'une vue (SINGLE) : l'abeille, la luciole, Tic-Tac et son amie volent de profil ; le hibou et les
 // papillons, de face (jamais retournés) ; les koï, le dauphin, la baleine et les poissons nagent de profil ; le bocal de
-// Bulle n'a que ses images.
+// Bulle et le bol de soupe de la Dame n'ont que leurs images.
 // La mouette en vol bat des ailes en quatre images (120 ms chacune) et plane parfois (flyingGull).
-// Ce que la bibliothèque n'a pas (le cerf blanc d'Anya, le papillon rose du Foyer, le bol de soupe) garde son dessin
-// par code (animals.js, nature.js, seaSprites.js).
 import { betes as BEASTS } from '../../design/bibliotheque/svg/animaux/orientees.json';
 import { librarySprite, portraitOf, textsOf } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est sur l'île)
 const FILES = textsOf({
   ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,assis_1,assis_2,dodo_1,dodo_2,vol_1,vol_2,vol_3,vol_4,plane,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?url', import: 'default', eager: true }),
-  ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/bocal-*/*.svg', { query: '?url', import: 'default', eager: true })
+  ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/{bocal,bol}-*/*.svg', { query: '?url', import: 'default', eager: true })
 });
 const ROOT = '/design/bibliotheque/svg/animaux/';
 const SCALE = 1.25;
@@ -47,7 +45,7 @@ const SUBJECTS = {
   dog: { '': 'chien', brun: 'chien-brun', noir: 'chien-noir', roux: 'chien-roux' },
   butterfly: { '': 'papillon-jaune', jaune: 'papillon-jaune', bleu: 'papillon-bleu', lune: 'papillon-lune' },
   firefly: 'luciole', bee: { '': 'abeille', amie: 'amie-tictac' }, owl: 'hibou', tictac: 'tictac',
-  bowl: { '': 'bocal-vide', bulle: 'bocal-bulle' },
+  bowl: { '': 'bocal-vide', bulle: 'bocal-bulle' }, soup: 'bol-soupe',
   koi: { '#F08A3A': 'koi-orange', '#FFFFFF': 'koi-blanc', '#F2C04B': 'koi-or' },
   dolphin: 'dauphin', whaleBack: 'baleine-dos', whaleFluke: 'baleine-queue',
   fish: { sardine: 'poisson-sardine', dorade: 'poisson-dorade', volant: 'poisson-volant' }
@@ -71,6 +69,7 @@ const SINGLE = {
   'amie-tictac': single('familiers', 'profil', 'vol', FLIER),
   'bocal-bulle': single('familiers', null, null, FLIER),
   'bocal-vide': single('familiers', null, null, FLIER),
+  'bol-soupe': single('familiers', null, null, FLIER),
   'koi-orange': single('eau', 'profil', 'nage', KOI),
   'koi-blanc': single('eau', 'profil', 'nage', KOI),
   'koi-or': single('eau', 'profil', 'nage', KOI),
