@@ -1,6 +1,7 @@
 // La bibliothèque de dessins (design/bibliotheque) dans le cadre du jeu. Chaque SVG y est calé sur le cadre du jeu
 // × 1,25, autour de la même ancre (README de la bibliothèque) : il se pose tel quel, ramené à la taille du cadre du
 // jeu. Le jeu ne fait que lire la bibliothèque : un dessin refait là-bas arrive au prochain build.
+import { reactive } from 'vue';
 
 // Le SVG ramené au cadre du jeu : seule sa taille d'affichage change (son viewBox reste celui de la bibliothèque)
 export function fitTo(svg, box) {
@@ -51,6 +52,21 @@ export function frameAt(art, t) {
 
 // Image vide, pour une vignette en cours de lecture
 export const BLANK = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>')}`;
+
+// Le portrait d'un dessin de la bibliothèque (une fiche, le Bestiaire), recadré sur ce qu'il peint (le cadre de la
+// bibliothèque garde de la place autour du sujet), en adresse d'image : lu et mesuré une fois, à la première demande
+// (key : le sujet ; load : sa lecture, un SVG), BLANK pendant ce temps, null si la lecture échoue. Réactif : ce qui le
+// montre est repeint à son arrivée
+const portraits = reactive({});
+export function portraitOf(key, load) {
+  if (!(key in portraits)) {
+    portraits[key] = BLANK;
+    load()
+      .then(svg => paintedBox(svg).then(box => cropTo(svg, box)))
+      .then(svg => { portraits[key] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }, () => { portraits[key] = null; });
+  }
+  return portraits[key];
+}
 
 // Le même SVG cadré sur box (unités du dessin) : il ne montre plus que cette partie
 export function cropTo(svg, box) {

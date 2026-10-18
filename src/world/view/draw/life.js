@@ -14,7 +14,7 @@ import { beastSprite, lookOf } from '@/world/beastArt';
 import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
 import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
-import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons, KRAKEN_FOR, KRAKEN_FORCE, krakenNuit, krakenRoute, krakenAt, apercuAt } from '@/world/faune';
+import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons, KRAKEN_FOR, KRAKEN_FORCE, krakenNuit, krakenRoute, krakenAt, apercuAt, toucherGeant, toucherKraken } from '@/world/faune';
 import { cycleAt, cycleStart, gameDate } from '@/world/gameClock';
 import { nearestOpen as eauLibre } from '@/world/sea';
 import { KRAKEN_LINES } from '@/texts/world/kraken';
@@ -169,11 +169,13 @@ export default {
           continue;
         }
         const zone = this.state.map.zones[this.M.zone(c.path[0].x, c.path[0].y)];
-        const layer = strayLayer(strayKind(c.kind, zone && zone.climate), s.view, s.pose, s.n);
+        const art = strayKind(c.kind, zone && zone.climate);
+        const layer = strayLayer(art, s.view, s.pose, s.n);
         if (!layer) continue;
         out.push({ id: `stray:${c.id}`, kind: 'stray', x: s.x, y: s.y, z: 0, flip: s.flip, frame: 0, sprite: [layer.key, layer.make] });
         const g = this.ground(s.x, s.y);
-        if (s.pose === 'marche' && !c.demo) hits.push({ key: `stray:${c.id}`, kind: 'stray', stray: c, x: g.x, y: g.y - 10, r: 16 });
+        // (art : son dessin, sa page au Bestiaire)
+        if (s.pose === 'marche' && !c.demo) hits.push({ key: `stray:${c.id}`, kind: 'stray', stray: c, art, x: g.x, y: g.y - 10, r: 16 });
       }
     }
     this.villageLights = glows.length ? [...life.lights, ...glows] : life.lights;
@@ -392,6 +394,16 @@ export default {
     if (this.krakenOn) return null;
     const go = this.passageOf('geant', t, GEANT_EVERY, GEANT_FOR, 6, this.cellAt(view.x + view.w / 2, view.y + view.h / 2));
     return go && geantAt(go.spot, go.dir, go.τ);
+  },
+  // Le Géant et le Kraken se touchent, tant qu'on les voit bien (ils entrent au Bestiaire : faune, toucherGeant,
+  // toucherKraken) ; à ajouter à ce que la mer donne à toucher (seaHits)
+  legendHits(geant, kraken) {
+    const hits = [];
+    const g = geant && toucherGeant(geant);
+    if (g) hits.push({ key: this.passages.geant.key, kind: 'geant', ...g });
+    const k = kraken && toucherKraken(kraken);
+    if (k) hits.push({ key: this.passages.kraken.key, kind: 'kraken', ...k });
+    return hits;
   },
   // Le Kraken (world/faune/kraken.js) : son passage, rare (la nuit, une nuit sur deux environ, presque toujours les
   // nuits d'orage, sur l'horloge du jeu : le même pour tous), quelque part au large : on le croise par hasard, en

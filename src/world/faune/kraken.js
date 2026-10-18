@@ -166,6 +166,20 @@ function ombre(t, ton) {
   return calque;
 }
 
+// Où on le touche (il entre au Bestiaire), tant qu'on le voit bien : sa tête (dans le monde), ou null
+export function toucherKraken(kr) {
+  if (kr.vis < 0.3) return null;
+  const c = worldOf(kr.x, kr.y, SEA_Z);
+  return { x: c.x, y: c.y, r: 120 };
+}
+// Son portrait (le Bestiaire) : son ombre vue de dessus, huit bras qui rayonnent, d'un violet de grand fond, en adresse
+// d'image (tirée une fois)
+let portrait = null;
+export function portraitKraken() {
+  if (!portrait) portrait = ombre(0, '#3B2A4A').toDataURL();
+  return portrait;
+}
+
 // Sous la mer (dans le monde, avec la mer : la terre le cache) : son ombre, l'eau qui s'assombrit, les bulles, l'œil à
 // fleur d'eau, l'écume qui tourne au-dessus de lui et les remous au pied des bras. night : la nuit (0 à 1)
 export function drawKraken(ctx, kr, t, night) {

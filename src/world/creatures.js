@@ -1,15 +1,17 @@
-// Le Bestiaire des animaux rencontrés (choix de l'auteur, 18 oct.) : les 31 créatures qu'on peut croiser sur l'île et
-// dans sa mer, dans l'ordre du livre (numéro, catégorie), avec leur dessin et leur rareté. Leur « où et quand » se tire
-// des règles qui les font vivre (village/wildLife.js : WILD_LIFE ; sea.js : SEA_RULES), ou d'un lieu qui n'est pas
-// une zone (le Potager, les plages, la mer) : une seule source décide. Le premier toucher d'une créature sur l'île
-// l'inscrit au Bestiaire (serveur : services/animals.js, la même liste).
+// Le Bestiaire des animaux rencontrés (choix de l'auteur, 18 oct.) : les 45 créatures qu'on peut croiser sur l'île et
+// dans sa mer, dans l'ordre du livre (numéro, catégorie), avec leur dessin et leur rareté : les bêtes, le Géant des
+// profondeurs et le Kraken (légendaires), les égarés des nuits. Leur « où et quand » se tire des règles qui les font
+// vivre (village/wildLife.js : WILD_LIFE ; sea.js : SEA_RULES), ou d'un lieu qui n'est pas une zone (le Potager, les
+// plages, la mer, le bord de la brume) : une seule source décide. Le premier toucher d'une créature sur l'île l'inscrit
+// au Bestiaire ; un égaré, quand on le repousse (serveur : services/animals.js, la même liste).
 import { WILD_LIFE } from './village/wildLife';
 import { SEA_RULES } from './sea';
 import { CREATURE_TEXTS, CATEGORY_TITLES, WHEN } from '@/texts/world/creatures';
 
 export const CATEGORIES = Object.keys(CATEGORY_TITLES);
-// Le dessin de chaque créature (sorte et variante : beastArt.js), sa catégorie ; celles qui ne vivent pas par
-// WILD_LIFE disent leur rareté et leur règle
+// Le dessin de chaque créature (sorte et variante : beastArt.js ; un égaré, stray et son dessin : nightArt.js ; le Géant
+// et le Kraken, legend : faune/portraits.js), sa catégorie ; celles qui ne vivent pas par WILD_LIFE disent leur rareté et
+// leur règle (les égarés, d'où ils sortent : serveur, services/nights.js ; la bête de brume, du climat de sa terre)
 const LIST = [
   ['lapin', 'bois', 'rabbit'], ['ecureuil', 'bois', 'squirrel'], ['mesange', 'bois', 'bird'], ['renard', 'bois', 'fox'],
   ['herisson', 'bois', 'hedgehog'], ['cerf', 'bois', 'deer'], ['hibou', 'bois', 'owl'],
@@ -23,10 +25,21 @@ const LIST = [
   ['sardines', 'mer', 'fish', 'sardine', { rarity: 'commun', place: 'mer', hours: ['toujours'] }],
   ['dauphin', 'mer', 'dolphin', '', { rarity: 'peu commun', ...seaRule('dolphins') }],
   ['baleine', 'mer', 'whaleBack', '', { rarity: 'peu commun', ...seaRule('whale') }],
+  ['geant', 'mer', 'legend', '', { rarity: 'légendaire', place: 'large', hours: ['toujours'] }],
+  ['kraken', 'mer', 'legend', '', { rarity: 'légendaire', place: 'large', hours: ['nuit'] }],
   ['macareux', 'lointain', 'puffin'], ['poney', 'lointain', 'pony'], ['bouquetin', 'lointain', 'ibex'], ['renard-polaire', 'lointain', 'snowFox'],
   ['chameau', 'lointain', 'camel'], ['fennec', 'lointain', 'fennec'], ['toucan', 'lointain', 'toucan'], ['cameleon', 'lointain', 'chameleon'],
-  ['corbeau', 'lointain', 'crow'], ['salamandre', 'lointain', 'salamander']
+  ['corbeau', 'lointain', 'crow'], ['salamandre', 'lointain', 'salamander'],
+  stray('fantome', 'commun', 'voile'), stray('zombie', 'peu commun', 'voile'), stray('noye', 'peu commun', 'rivage'),
+  stray('racine', 'peu commun', 'lisiere'), stray('esprit', 'rare', 'voile'),
+  stray('lapin-de-brume', 'peu commun', 'tempere'), stray('bouquetin-de-brume', 'rare', 'cimes'), stray('poney-de-brume', 'rare', 'landes'),
+  stray('grenouille-de-brume', 'rare', 'marais'), stray('fennec-de-brume', 'rare', 'dunes'), stray('cameleon-de-brume', 'rare', 'jungle'),
+  stray('salamandre-de-brume', 'rare', 'volcan')
 ];
+// Un égaré des nuits : son dessin (nightArt.js), sa rareté, d'où il sort
+function stray(id, rarity, place) {
+  return [id, 'brume', 'stray', id, { rarity, place, hours: ['nuit'] }];
+}
 function seaRule(name) {
   const rule = SEA_RULES[name];
   return { zones: [rule.zone], hours: [rule.night ? 'nuit' : 'jour'], weather: rule.weather };
@@ -48,13 +61,15 @@ const BY_ID = new Map(CREATURES.map(c => [c.id, c]));
 export const creatureOf = id => BY_ID.get(id) || null;
 
 // La créature qu'un toucher sur l'île vise (gestures.js : hit.animal), ou null : une bête qui vit (« wild:<entrée>:… »),
-// une carpe, une abeille, une loutre d'Anya ; en mer, les dauphins, la baleine, un banc, des mouettes posées
+// une carpe, une abeille, une loutre d'Anya ; en mer, les dauphins, la baleine, un banc, des mouettes posées, le Géant,
+// le Kraken ; la nuit, un égaré (son dessin : art)
 const WILD_ANIMAL = new Map(WILD_LIFE.map(b => [b.id, b.animal || b.id]));
 const BY_PREFIX = { koi: 'koi', 'best:bee': 'abeille', 'anya:otter': 'loutre' };
-const BY_KIND = { pod: 'dauphin', whale: 'baleine', school: 'sardines', perch: 'mouette' };
+const BY_KIND = { pod: 'dauphin', whale: 'baleine', school: 'sardines', perch: 'mouette', geant: 'geant', kraken: 'kraken' };
 export function creatureOfHit(animal) {
   if (!animal) return null;
   if (BY_KIND[animal.kind]) return BY_KIND[animal.kind];
+  if (animal.kind === 'stray') return BY_ID.has(animal.art) ? animal.art : null;
   const id = animal.who && animal.who.id;
   if (!id) return null;
   if (id.startsWith('wild:')) return WILD_ANIMAL.get(id.split(':')[1]) || null;
