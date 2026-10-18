@@ -9,41 +9,20 @@
 // - Tout est cosmétique : aucun choix ne donne d'avantage de jeu.
 // - Raretés : celles des coffres du jeu (src/world/chest.js) : commun, rare, epique, legendaire.
 
-// ---- couleurs ----
-function hsl(hex) {
-  const n = parseInt(hex.slice(1), 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
-  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
-  let h = 0, s = 0;
-  if (d) {
-    s = d / (1 - Math.abs(2 * l - 1));
-    h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
-    h *= 60; if (h < 0) h += 360;
-  }
-  return [h, s, l];
-}
-function hex([h, s, l]) {
-  const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2;
-  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
-  return '#' + [r, g, b].map(v => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, '0')).join('').toUpperCase();
-}
-// mélange de deux couleurs (k = part de la seconde)
-const mix = (a, b, k) => { const p = c => [0, 2, 4].map(i => parseInt(c.slice(1 + i, 3 + i), 16)); const A = p(a), B = p(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, '0')).join('').toUpperCase(); };
-// plus sombre (k < 1) ou plus clair (k > 1), en gardant la teinte
-const tone = (c, k) => { const [h, s, l] = hsl(c); return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]); };
-// couleur délavée par la mer (même formule que design/atelier/naufrage.js)
-const delave = (c, k = 1) => { const [h, s, l] = hsl(c); return hex([h, s * (1 - 0.45 * k), l + (0.74 - l) * 0.26 * k]); };
-const clarte = c => hsl(c)[2];
+// ---- couleurs ---- (les calculs : couleurs.js, communs à tout ce qui dessine les personnages)
+const { hsl, hex, mix, ton: tone, delave, clarte } = require('./couleurs');
 
 // ---- les nuanciers : [clé, couleur, nom affiché] ----
 const nuancier = list => Object.fromEntries(list.map(([k, c]) => [k, c]));
 const noms = list => Object.fromEntries(list.map(([k, , n]) => [k, n]));
 
-// Peau : du plus clair au plus foncé, sous-tons rosés, dorés et cuivrés (les six du jeu en font partie)
+// Peau : du plus clair au plus foncé, sous-tons rosés, dorés et cuivrés (les six du jeu en font partie) ; un rien plus
+// saturée pour le papier néon (choix de l'auteur, 18 oct. : la même teinte ; ses ombres froides : couleurs.js)
 const PEAU = [
-  ['nacre', '#FCE8D8', 'Nacre'], ['porcelaine', '#F6D3B3', 'Porcelaine'], ['rosee', '#F3C9B4', 'Rosée'], ['peche', '#F2C9A0', 'Pêche'],
-  ['doree', '#EDC294', 'Dorée'], ['miel', '#E9B98F', 'Miel'], ['sable', '#DCAA7A', 'Sable'], ['ocre', '#D09A68', 'Ocre'],
-  ['cannelle', '#C98B5E', 'Cannelle'], ['bronze', '#B47A4C', 'Bronze'], ['cuivre', '#A26A42', 'Cuivre'], ['cacao', '#8D5A3B', 'Cacao'],
-  ['acajou', '#7C4C33', 'Acajou'], ['ebene', '#6B4430', 'Ébène'], ['ombre', '#5C3A28', 'Terre d\'ombre'], ['nuit', '#4A2E20', 'Nuit']
+  ['nacre', '#FDE8D7', 'Nacre'], ['porcelaine', '#F9D3B0', 'Porcelaine'], ['rosee', '#F6C8B1', 'Rosée'], ['peche', '#F5C99D', 'Pêche'],
+  ['doree', '#F1C290', 'Dorée'], ['miel', '#EDB98B', 'Miel'], ['sable', '#E0AA76', 'Sable'], ['ocre', '#D49A64', 'Ocre'],
+  ['cannelle', '#CD8A5A', 'Cannelle'], ['bronze', '#B87A48', 'Bronze'], ['cuivre', '#A6693E', 'Cuivre'], ['cacao', '#905938', 'Cacao'],
+  ['acajou', '#7F4B30', 'Acajou'], ['ebene', '#6D432E', 'Ébène'], ['ombre', '#5E3926', 'Terre d\'ombre'], ['nuit', '#4C2D1E', 'Nuit']
 ];
 // Cheveux : les naturels (dont les huit du jeu), puis les fantaisie
 const CHEVEUX = [
@@ -61,27 +40,31 @@ const YEUX = [
   ['eau', '#4F9A92', 'Vert d\'eau'], ['azur', '#4E8FD0', 'Azur'], ['bleu', '#3A5C8C', 'Bleus'], ['grisbleu', '#6A7F96', 'Gris-bleu'],
   ['gris', '#4E5560', 'Gris'], ['violet', '#6E4E9E', 'Violets'], ['rose', '#C26A8E', 'Roses'], ['noir', '#1E1A18', 'Noirs']
 ];
-// Tissus : un seul nuancier pour le haut, le bas, les chaussures et les accessoires
+// Tissus : un seul nuancier pour le haut, le bas, les chaussures et les accessoires. Le papier néon (choix de l'auteur,
+// 18 oct.) : chacun garde son nom et son identité, fondu en partie vers sa voisine de la palette néon (le rouge et le
+// framboise vers le magenta, la forêt et l'olive vers la sarcelle, le jean vers l'indigo…) ; le beige et le brun s'en
+// vont davantage (la crème vers un blanc lilas, le sable vers le mauve poudré, le cuir vers l'aubergine)
 const TISSUS = [
-  ['blanc', '#F8F4EA', 'Blanc'], ['creme', '#F1E6CC', 'Crème'], ['sable', '#C9B080', 'Sable'], ['caramel', '#B07A48', 'Caramel'],
-  ['cuir', '#5E3A22', 'Cuir'], ['charbon', '#4A4E5C', 'Charbon'], ['noir', '#2E2A2A', 'Noir'],
-  ['rosepale', '#F4C2CC', 'Rose pâle'], ['rose', '#E8879C', 'Rose'], ['framboise', '#C8466E', 'Framboise'], ['corail', '#E8705A', 'Corail'],
-  ['rouge', '#C8463A', 'Rouge'], ['bordeaux', '#6E2E3A', 'Bordeaux'],
-  ['abricot', '#F2A65A', 'Abricot'], ['soleil', '#F2C04B', 'Soleil'],
-  ['menthe', '#7EC4A0', 'Menthe'], ['olive', '#6E7A44', 'Olive'], ['foret', '#4E7A4A', 'Forêt'],
-  ['ciel', '#6FA3D9', 'Ciel'], ['lagon', '#3FA7A8', 'Lagon'], ['jean', '#3E5A8C', 'Jean'], ['marine', '#2E3E66', 'Marine'],
-  ['lavande', '#A48CD6', 'Lavande'], ['prune', '#7A3E5E', 'Prune']
+  ['blanc', '#F0E9F3', 'Blanc'], ['creme', '#E7D9E2', 'Crème'], ['sable', '#BCA3AB', 'Sable'], ['caramel', '#B46C64', 'Caramel'],
+  ['cuir', '#52303E', 'Cuir'], ['charbon', '#44445E', 'Charbon'], ['noir', '#242030', 'Noir'],
+  ['rosepale', '#F8C3D4', 'Rose pâle'], ['rose', '#EB82A3', 'Rose'], ['framboise', '#CE4278', 'Framboise'], ['corail', '#EF6E5A', 'Corail'],
+  ['rouge', '#CC4245', 'Rouge'], ['bordeaux', '#6C2A45', 'Bordeaux'],
+  ['abricot', '#F7A260', 'Abricot'], ['soleil', '#F6C059', 'Soleil'],
+  ['menthe', '#76CEB0', 'Menthe'], ['olive', '#607A55', 'Olive'], ['foret', '#407A5B', 'Forêt'],
+  ['ciel', '#6EA9DE', 'Ciel'], ['lagon', '#3AACAD', 'Lagon'], ['jean', '#425A92', 'Jean'], ['marine', '#2D3767', 'Marine'],
+  ['lavande', '#A387DB', 'Lavande'], ['prune', '#7A3964', 'Prune']
 ];
 // Métaux : montures de lunettes, bijoux, diadème
 const METAUX = [['or', '#E2B34A', 'Or'], ['argent', '#C9CED6', 'Argent'], ['orrose', '#E6A88E', 'Or rose'], ['cuivre', '#C77A4A', 'Cuivre'], ['sombre', '#4A3A30', 'Écaille sombre']];
 // Lèvres teintées (« naturelles » : sans teinte)
 const LEVRES = [['naturelles', null, 'Naturelles'], ['rose', '#E07A8A', 'Rosées'], ['corail', '#E8705A', 'Corail'], ['framboise', '#C8466E', 'Framboise'], ['nude', '#C98B7A', 'Nude'], ['prune', '#8E3E5E', 'Prune'], ['rouge', '#C8303A', 'Rouges']];
-// Teintures rares : elles se gagnent (boutique, coffres) et s'ajoutent aux tissus et aux cheveux
+// Teintures rares : elles se gagnent (boutique, coffres) et s'ajoutent aux tissus et aux cheveux (fondues comme les
+// tissus)
 const TEINTURES = [
-  ['nacre', '#F3E6EE', 'Nacre', 'rare', 'boutique'], ['opale', '#BFE3E0', 'Opale', 'rare', 'coffre'], ['or', '#E2B34A', 'Or', 'epique', 'coffre'],
-  ['argent', '#C9CED6', 'Argent', 'rare', 'boutique'], ['rubis', '#B0203A', 'Rubis', 'epique', 'coffre'], ['saphir', '#2A4FA8', 'Saphir', 'epique', 'boutique'],
-  ['emeraude', '#1E7A4E', 'Émeraude', 'epique', 'coffre'], ['amethyste', '#7A3EA8', 'Améthyste', 'rare', 'coffre'], ['onyx', '#1E1A1C', 'Onyx', 'rare', 'boutique'],
-  ['aurore', '#F7B7A3', 'Aurore', 'legendaire', 'coffre']
+  ['nacre', '#F2E4F2', 'Nacre', 'rare', 'boutique'], ['opale', '#BDE7E4', 'Opale', 'rare', 'coffre'], ['or', '#E6B450', 'Or', 'epique', 'coffre'],
+  ['argent', '#C7CBDC', 'Argent', 'rare', 'boutique'], ['rubis', '#B51F44', 'Rubis', 'epique', 'coffre'], ['saphir', '#2E4EAE', 'Saphir', 'epique', 'boutique'],
+  ['emeraude', '#1C8060', 'Émeraude', 'epique', 'coffre'], ['amethyste', '#7E3EB0', 'Améthyste', 'rare', 'coffre'], ['onyx', '#181424', 'Onyx', 'rare', 'boutique'],
+  ['aurore', '#FAB5B0', 'Aurore', 'legendaire', 'coffre']
 ];
 
 const NUANCIERS = {

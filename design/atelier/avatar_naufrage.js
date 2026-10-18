@@ -69,7 +69,7 @@ function avatarNaufrage(choix = {}, opts = {}) {
     sleeveCut: haut === 'tshirt' || bas === 'robeEntiere' ? 6.4 : haut === 'mariniere' ? 4.4 : 5,
     holes,
     rips: { front: [[19.6, 43.2 + dy, 2.4]], se: [[18.8, 43.4 + dy, 2.2]], ne: [[28.4, 43 + dy, 2.2]] },
-    head: ({ view }) => shift(algue(view, c) + (view === 'se' ? smudge(27.4, 27.6, '#A8885E') : view === 'front' ? smudge(30.4, 27.6, '#A8885E') : ''))
+    head: ({ view }) => shift(algue(view, c) + (view === 'se' ? smudge(27.4, 27.6, '#C4A2B8') : view === 'front' ? smudge(30.4, 27.6, '#C4A2B8') : ''))
   });
   // le short délavé, effiloché au bas, par-dessus la jambe nue (castaway ne connaît que le pied)
   if (bas === 'short') {

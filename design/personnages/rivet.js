@@ -1,7 +1,7 @@
 // Rivet, l'horloger-artificier : lunettes à quatre loupes relevées sur le crâne, tablier de cuir aux mille poches,
 // chemise sarcelle, cheveux châtains en bataille et une mèche grise rebelle, un crayon derrière chaque oreille.
 // Action : il abaisse une loupe sur son œil (œil géant) et examine un rouage ; image 2 : le rouage tourne, « Si ! Si ! ».
-const { P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#DDA57C', skinS: '#C08A62',
@@ -28,7 +28,7 @@ function gear(x, y, r, rot) {
     const rr = i % 2 ? r * 0.76 : r;
     pts.push(`${r2(x + rr * Math.cos(a))},${r2(y + rr * Math.sin(a))}`);
   }
-  return P(`M${pts.join(' L')} Z`, C.steel, 0.8) + E(x, y, r * 0.42, r * 0.42, C.steelS, 0.7) + E(x, y, r * 0.16, r * 0.16, '#3C2819', 0);
+  return P(`M${pts.join(' L')} Z`, C.steel, 0.8) + E(x, y, r * 0.42, r * 0.42, C.steelS, 0.7) + E(x, y, r * 0.16, r * 0.16, OUT, 0);
 }
 // Tournevis : manche rouge en a, pointe en b
 const screwdriver = (a, b) => limb([a[0] + (b[0] - a[0]) * 0.35, a[1] + (b[1] - a[1]) * 0.35], b, 0.6, C.steel)
@@ -60,13 +60,13 @@ const rivet = {
     const ap = APRON(k);
     s += L([19 + k, 35.4], [18.2 + k * 0.5, 32.4], C.leatherS, 1.2) + L([29 + k, 35.4], [29.8 + k * 0.5, 32.4], C.leatherS, 1.2);
     s += limb([21 + k, 44], [20.4 + k, 40.2], 0.7, C.steel) + limb([20.4 + k, 40.8], [20.1 + k, 39.4], 1.5, C.red); // tournevis dans la poche
-    s += `<rect x="${25.6 + k}" y="39.2" width="1.6" height="6" rx="0.3" fill="${C.wood}" stroke="#3C2819" stroke-width="0.6"/>`; // règle
+    s += `<rect x="${25.6 + k}" y="39.2" width="1.6" height="6" rx="0.3" fill="${C.wood}" stroke="${OUT}" stroke-width="0.6"/>`; // règle
     s += P(ap, C.leather) + clip(`${c.uid}a`, ap, `<rect x="${27.6 + k}" y="34" width="8" height="22" fill="${C.leatherS}"/>`
       + `<rect x="${18.4 + k}" y="35.8" width="1" height="15" rx="0.5" fill="${C.leatherH}"/>`) + P(ap, 'none');
-    s += `<rect x="${19.2 + k}" y="43.2" width="9.6" height="5.6" rx="0.8" fill="${C.leatherS}" stroke="#3C2819" stroke-width="0.8"/>`
+    s += `<rect x="${19.2 + k}" y="43.2" width="9.6" height="5.6" rx="0.8" fill="${C.leatherS}" stroke="${OUT}" stroke-width="0.8"/>`
       + `<path d="M${20 + k},44.2 L${28 + k},44.2" stroke="${C.leatherH}" stroke-width="0.5" stroke-dasharray="0.8 0.6"/>`
-      + L([24 + k, 43.4], [24 + k, 48.6], '#3C2819', 0.5);
-    s += `<rect x="${21.6 + k}" y="36.4" width="4.6" height="3.4" rx="0.5" fill="${C.leatherS}" stroke="#3C2819" stroke-width="0.7"/>`
+      + L([24 + k, 43.4], [24 + k, 48.6], OUT, 0.5);
+    s += `<rect x="${21.6 + k}" y="36.4" width="4.6" height="3.4" rx="0.5" fill="${C.leatherS}" stroke="${OUT}" stroke-width="0.7"/>`
       + limb([22.6 + k, 37.6], [23.4 + k, 34.6], 0.8, C.pencil);
     for (const [x, y] of [[19.4, 35.9], [28.6, 35.9], [17.6, 40.4], [30.4, 40.4]]) s += E(x + k, y, 0.45, 0.45, C.brass, 0.4);
     s += L([17.4 + k, 40.6], [30.6 + k, 40.6], C.leatherS, 0.8);
@@ -93,7 +93,7 @@ const rivet = {
       s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="4" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="18.4" rx="13.8" ry="12.8" fill="${C.hair}"/>`) + P(back, 'none');
       s += P('M17.6,15 Q16.8,21 18.4,28.6', 'none', 0.6) + P('M24.6,15 Q25.4,21 24.2,28.4', 'none', 0.6) + P('M31,16.4 Q32,22 30.6,29.2', 'none', 0.6) + L([16.6, 10.2], [21.6, 8.6], C.hairH, 1.2);
       // sangle des lunettes autour du crâne, boucle de laiton
-      s += P('M11.2,12.2 Q24,15.8 36.8,12.2 L37,14 Q24,17.6 11,14 Z', C.strap, 0.8) + `<rect x="22.6" y="14.6" width="2.8" height="2" rx="0.4" fill="${C.brass}" stroke="#3C2819" stroke-width="0.6"/>`;
+      s += P('M11.2,12.2 Q24,15.8 36.8,12.2 L37,14 Q24,17.6 11,14 Z', C.strap, 0.8) + `<rect x="22.6" y="14.6" width="2.8" height="2" rx="0.4" fill="${C.brass}" stroke="${OUT}" stroke-width="0.6"/>`;
       s += c.coiffe ? c.coiffe(c, ctx, 'cheveux') + c.coiffe(c, ctx, 'tete') : pencil([15.4, 20.6], [9.2, 19.2]);
       return s;
     }
@@ -156,7 +156,7 @@ const rivet = {
       + glint(`M${r2(x - 1.8)},${r2(y - 0.6)} Q${r2(x - 1.6)},${r2(y - 1.8)} ${r2(x - 0.4)},${r2(y - 2.1)}`, 0.6)
       + E(x, y, 2.9, 2.9, 'none', 0.8);
     const g = gear(36.2, 25, 2.8, n ? 22.5 : 0)
-      + (n ? L([39.8, 21], [41.2, 19.6], '#3C2819', 0.6) + L([40.6, 24.2], [42.4, 23.8], '#3C2819', 0.6) + L([37.8, 20.6], [38.2, 18.8], '#3C2819', 0.6) : '');
+      + (n ? L([39.8, 21], [41.2, 19.6], OUT, 0.6) + L([40.6, 24.2], [42.4, 23.8], OUT, 0.6) + L([37.8, 20.6], [38.2, 18.8], OUT, 0.6) : '');
     const right = arm(this, [32, 34], [35.8, 28.6], [37.6, 36.4]);
     const left = arm(this, [16, 34], [14.4, 45]) + screwdriver([14.4, 44.2], [12.8, 50.2]);
     if (view === 'ne') return { expr: n ? 'rire' : 'neutre', left, right: '', over: g + right };

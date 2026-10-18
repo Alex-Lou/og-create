@@ -5,7 +5,8 @@
 // salut (4 : la main va et vient), action (2).
 // Chaque personnage ne décrit que ses couleurs et ses pièces ; le gabarit (trait, yeux, marche, ombres) est commun.
 
-const OUT = '#3C2819';
+// le trait du kit (couleurs.js) ; une image de personnage sort à l'encre des personnages (frame : enPersonnage)
+const { ENCRE_KIT: OUT, hsl, ton, enPersonnage } = require('./couleurs');
 const W = 1.1; // trait des pièces ; détails intérieurs plus fins
 const r2 = n => Math.round(n * 100) / 100;
 const st = (w = W) => `stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
@@ -27,9 +28,6 @@ const lerp = (a, b, k) => (Array.isArray(a) ? a.map((v, i) => r2(v + (b[i] - v) 
 // propre boîte : chaque pièce a son volume. Les traits (stroke : les bras) prennent un dégradé en coordonnées utilisateur
 // (la boîte d'un trait droit est plate, un dégradé en boîte n'y paraît pas). lumiere(c, id) rend les définitions et
 // la table couleur -> url ; peindre(s, table) remplace les aplats dans le dessin rendu.
-const hsl = hex => { const n = parseInt(hex.slice(1), 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255; const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn; let h = 0, sat = 0; if (d) { sat = d / (1 - Math.abs(2 * l - 1)); h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; if (h < 0) h += 360; } return [h, sat, l]; };
-const hex = ([h, s, l]) => { const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2; const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x]; return '#' + [r, g, b].map(v => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, '0')).join('').toUpperCase(); };
-const ton = (c, k) => { const [h, s, l] = hsl(c); return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]); };
 const PRINCIPALES = ['skin', 'hair', 'top', 'bas', 'leg', 'sleeve', 'shoe', 'coat', 'base', 'hand', 'buzz'];
 function lumiere(c, id, k = 1) { // k : l'échelle du cadre (1 pour 48 × 64)
   const couleurs = new Set();
@@ -409,7 +407,7 @@ function frame(c, view, pose, n, expr) {
   haut += act && act.over ? act.over : '';
   s += legs.join('') + (breath ? `<g transform="translate(0 ${breath})">${haut}</g>` : haut);
   const { defs, table } = lumiere(c, id);
-  return defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`;
+  return enPersonnage(defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`);
 }
 
 const svg = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`;
