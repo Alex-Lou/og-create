@@ -8,8 +8,9 @@ const STAIRS = 'pkb';
 // Ce que coûte un pas vers une case (le plus court chemin) : une porte ou un chemin 3, l'herbe 6 (le chemin coûte
 // moitié moins), le pavé 2 (on le préfère encore : choix de l'auteur, 16 oct.)
 const stepCost = (M, x, y, door) => (door ? 3 : pavedAt(M, x, y) ? 2 : STAIRS.includes(M.ground(x, y)) ? 3 : 6);
-const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest', 'banana', 'treefern', 'kapok', 'ravenala']);
-// (le sous-bois de la jungle du départ ne bloque pas : on le traverse, choix de l'auteur, 18 oct. : un fourré dense)
+const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest']);
+// (la jungle du départ ne bloque pas la marche, grands arbres compris : elle est si dense qu'elle couperait les chemins
+// des habitants et des bêtes ; on la traverse, comme un fourré)
 
 // Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni objet du camp
 // des naufragés (camp : ses cases ; l'épave, les caisses… : on n'y marche pas, on ne s'y cache pas), ni arbre ou

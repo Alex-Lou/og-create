@@ -8,6 +8,7 @@
 import { pathFile, pathImage, CLEAR_GRASS } from './pathArt';
 import { mixHex } from './iso';
 import { drawRiverBridge } from './pontRiviere';
+import { thicknessAt } from './jungleLayout';
 
 export const TW = 64;
 export const TH = TW / 2;
@@ -21,6 +22,10 @@ const PAD_PX = 2;
 const MAX_TILES = 24;
 const MAX_RES = 2;
 const OVERVIEW_RES = 0.25;
+// De près, seule la jungle du départ est cuite dans le sol (NEAR_BAKE : ses plantes, si nombreuses, se dessinaient une à
+// une à chaque image ; elles ne plient plus au vent de près ; draw(…, bake), standOf(ctx, x, y, bake))
+export const NEAR_BAKE = 'jungle';
+const tagOf = bake => (bake === NEAR_BAKE ? 'j' : bake ? 'b' : '');
 // Sauf de près (l'île en décide à chaque image : draw(…, bake)), le décor fixe (arbres, rochers…) est peint dans les
 // carrés du sol, une fois, dans l'ordre du relief : l'île n'a plus à le redessiner à chaque image. Un carré est fait
 // avec ou sans décor (clé distincte) ; la vue d'ensemble l'a toujours
@@ -155,7 +160,7 @@ const HEIGHT_LIGHT = '#F2F6C8', FOOT_SHADE = '#24474A';
 // Le sol de la jungle du départ (choix de l'auteur, 18 oct. : l'herbe s'adapte à la jungle ; M.jungle) : une mousse
 // émeraude et sarcelle, plus sombre et plus saturée, par grandes nappes, trouée de taches de soleil vert acide ; elle
 // prend le dessus sur l'herbe à mesure qu'on entre dans la jungle (la part de jungle des cases autour)
-const JUNGLE_DEEP = '#16855A', JUNGLE_TEAL = '#0E7270', JUNGLE_SUN = '#9EE04A', JUNGLE_FLOOR = 0.66;
+const JUNGLE_DEEP = '#16855A', JUNGLE_TEAL = '#0E7270', JUNGLE_SUN = '#9EE04A', JUNGLE_SHADE = '#08463C', JUNGLE_FLOOR = 0.66;
 function jungleFloor(px, py) {
   const n = vnoise(px * 0.2 + 5, py * 0.2 + 9, 301), sun = vnoise(px * 0.12 + 13, py * 0.12 + 2, 302);
   const base = mixHex(JUNGLE_DEEP, JUNGLE_TEAL, n);
@@ -249,7 +254,8 @@ function groundField(M) {
         const rgb = rgbOf(col), hk = 'gmf'.includes(key) ? hueAt(nx, ny) : null;
         if (hk !== null) for (let c = 0; c < 3; c++) rgb[c] = rgb[c] * (1 - ZONE_MIX) + hues[hk + c] * ZONE_MIX;
         const jw = 'gm'.includes(key) ? jungleAt(nx, ny) : 0;
-        if (jw > 0) { const floor = rgbOf(jungleFloor(cx - 0.5, cy - 0.5)); for (let c = 0; c < 3; c++) rgb[c] = rgb[c] * (1 - JUNGLE_FLOOR * jw) + floor[c] * JUNGLE_FLOOR * jw; }
+        // (sous les massifs, leur ombre commune : la mousse s'assombrit où la jungle s'épaissit, jungleLayout.js)
+        if (jw > 0) { const floor = rgbOf(mixHex(jungleFloor(cx - 0.5, cy - 0.5), JUNGLE_SHADE, 0.45 * thicknessAt(nx, ny))); for (let c = 0; c < 3; c++) rgb[c] = rgb[c] * (1 - JUNGLE_FLOOR * jw) + floor[c] * JUNGLE_FLOOR * jw; }
         tint.set(rgb, k);
       }
       return k;
@@ -1132,7 +1138,7 @@ export class TerrainCache {
         if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
         if ((d * TH) / 2 - aboveOf(M, x, y) - above >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
         drawCell(ctx, M, x, y, veil(x, y));
-        if (stand && !this.standOf(ctx, x, y)) ready = false;
+        if (stand && !this.standOf(ctx, x, y, stand)) ready = false;
         count++;
       }
       yield;
@@ -1183,8 +1189,8 @@ export class TerrainCache {
   // préparer
   draw(ctx, view, scale, budget = 8, bake = false) {
     const res = resOf(scale);
-    bake = bake && Boolean(this.standOf);
-    const tag = `${res}${bake ? 'b' : ''}`;
+    bake = this.standOf ? bake : false;
+    const tag = `${res}${tagOf(bake)}`;
     const b = this.bounds;
     if (res <= OVERVIEW_RES) {
       ctx.drawImage(this.overviewOf().canvas, b.x, b.y, b.w, b.h);
@@ -1243,13 +1249,13 @@ export class TerrainCache {
     if (this.job) return this.advance(until);
     const res = resOf(scale);
     if (res <= OVERVIEW_RES) return false;
-    bake = bake && Boolean(this.standOf);
+    bake = this.standOf ? bake : false;
     const size = TILE_PX / res, b = this.bounds;
     const x0 = Math.floor(Math.max(view.x, b.x) / size), x1 = Math.floor(Math.min(view.x + view.w, b.x + b.w) / size);
     const y0 = Math.floor(Math.max(view.y, b.y) / size), y1 = Math.floor(Math.min(view.y + view.h, b.y + b.h) / size);
     for (let ty = y0; ty <= y1; ty++) {
       for (let tx = x0; tx <= x1; tx++) {
-        const key = `${res}${bake ? 'b' : ''}:${tx},${ty}`;
+        const key = `${res}${tagOf(bake)}:${tx},${ty}`;
         this.kept.set(key, { tx, ty, res, bake });
         if (this.tiles.has(key)) continue;
         this.job = { key, steps: this.rendering(tx, ty, res, bake), version: this.version };
@@ -1303,7 +1309,7 @@ export class TerrainCache {
     const size = TILE_PX / res, b = this.bounds;
     for (let ty = y0; ty <= y1; ty++) {
       for (let tx = x0; tx <= x1; tx++) {
-        const key = `${res}${bake ? 'b' : ''}:${tx},${ty}`;
+        const key = `${res}${tagOf(bake)}:${tx},${ty}`;
         if (this.tiles.has(key) || (tx + 1) * size < b.x || tx * size > b.x + b.w || (ty + 1) * size < b.y || ty * size > b.y + b.h) continue;
         this.tiles.set(key, this.render(tx, ty, res, bake));
         return;

@@ -12,6 +12,7 @@ import { COLONY_ZONE } from '@/world/islets';
 import { spread } from '@/world/sea';
 import { hash } from '@/world/scene';
 import { plantLook, JUNGLE_ZONE } from '@/world/plants';
+import { inJungle, jungleAt, glowAt } from '@/world/jungleLayout';
 import { TALL, sightOf, replantOf } from '@/world/sight';
 import { TW, ALL_NATURE } from '@/world/view/constants';
 import { inPrologue } from '@/game/prologue';
@@ -19,6 +20,8 @@ import { hiddenOf } from '@/game/stages';
 import { neighborsOf, zoneThick, veiledCellsOf } from '@/world/reveal';
 import { campClear } from '@/world/campArt';
 
+// Une lueur de jungle trop faible pour se voir n'est pas dessinée (chaque lueur se peint à chaque image, la nuit)
+const GLOW_MIN = 0.2;
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
@@ -30,18 +33,6 @@ const GRASS_MIX = [['tuft', 0.08], ['flowers', 0.12], ['bush', 0.135], ['tuft', 
 // Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
 const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
 const FOREST_HIGH = ['pine', 'pine', 'tree'];
-// La jungle de la zone de départ (choix de l'auteur, 18 oct. : « c'est censé être une jungle », dense autour des
-// naufragés ; le joueur doit voir que c'est dense, qu'il faudra défricher ; les arbres de l'île restent pour les vraies
-// zones boisées) : dans l'herbe, neuf cases sur dix portent une plante, un grand arbre sur trois parmi le sous-bois, et
-// une case sur deux une seconde plante basse ; un bosquet y devient un fourré, un grand et deux petits par case. Les
-// touffes et les fleurs y cèdent la place aux plantes basses (broméliacées, crosses de fougère, orchidées). Une
-// clairière autour du camp et des lieux : un peu de sous-bois ras seulement
-const JUNGLE_MIX = [['kapok', 0.06], ['banana', 0.19], ['treefern', 0.32], ['monstera', 0.44], ['heliconia', 0.53], ['croton', 0.61], ['caladium', 0.68], ['bromelia', 0.76], ['fiddlehead', 0.83], ['orchid', 0.9]];
-const JUNGLE_UNDER = 0.5;
-const JUNGLE_TALL = ['kapok', 'banana', 'banana', 'treefern', 'treefern'];
-const JUNGLE_LOW = ['monstera', 'heliconia', 'croton', 'caladium', 'bromelia', 'fiddlehead', 'orchid', 'fiddlehead'];
-const JUNGLE_CLEARING = [['fiddlehead', 0.12], ['caladium', 0.2]];
-
 export default {
   methods: {
     // Cases autour de ce qui se tient debout (bâtiments, camp, créations, annexes, lieux remarquables, gisements), jusqu'à deux cases
@@ -95,31 +86,30 @@ export default {
         const c = this.world(x + dx, y + dy);
         // Son dessin : celui de la bibliothèque (sa variante tirée de sa place), sinon le dessin par code
         const look = plantLook(kind, x + dx, y + dy) || { key: `nature-${kind}`, make: ALL_NATURE[kind] };
-        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y), key: look.key, make: look.make, glow: look.glow || null });
+        // (une sorte sans dessin, ni dans la bibliothèque ni par code : elle ne pousse pas, plutôt que de casser le rendu)
+        if (typeof look.make !== 'function') return;
+        // (la lueur de nuit d'une plante de la jungle : son dessin et sa force, jungleLayout.js, glowAt)
+        const glow = look.glow ? { ...look.glow, k: glowAt(kind, x + dx, y + dy) } : null;
+        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y), key: look.key, make: look.make, glow: glow && glow.k > GLOW_MIN ? glow : null });
       };
       const wet = (x, y) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => M.ground(x + a, y + b) === 'w');
       // Sable des Dunes : des cactus plutôt que des coquillages
       const dunes = (x, y) => (state.map.zones[M.zone(x, y)] || {}).climate === 'dunes';
-      const jungle = (x, y) => (state.map.zones[M.zone(x, y)] || {}).id === JUNGLE_ZONE;
-      // (la clairière : une case autour du camp et des lieux)
-      const clearing = new Set();
-      [...state.sites, ...(state.camp || [])].forEach(site => {
-        for (let dy = -1; dy <= site.h; dy++) for (let dx = -1; dx <= site.w; dx++) clearing.add((site.y + dy) * n + site.x + dx);
-      });
-      const low = (x, y, k) => JUNGLE_LOW[Math.floor(hash(y + k, x) * JUNGLE_LOW.length)];
+      // La jungle du départ (world/jungleLayout.js : massifs, noyau dégagé au bord de la plage) : sur l'herbe, et sur le
+      // sable qui n'est pas au bord de la mer
+      const seaside = (x, y) => [-1, 0, 1].some(b => [-1, 0, 1].some(a => M.ground(x + a, y + b) === '~'));
+      const jungle = (x, y, g) => inJungle(x, y, (state.map.zones[M.zone(x, y)] || {}).id === JUNGLE_ZONE) && ('gmt'.includes(g) || (g === 's' && !seaside(x, y)));
       for (let y = 0; y < n; y++) {
         for (let x = 0; x < n; x++) {
           if (taken.has(y * n + x)) continue;
           const g = M.ground(x, y);
           const roll = hash(x, y);
-          if (g === 'f') {
+          if (jungle(x, y, g)) {
+            for (const p of jungleAt(x, y)) add(p.kind, x, y, p.dx, p.dy);
+          } else if (g === 'f') {
             const kinds = M.height(x, y) >= 2 ? FOREST_HIGH : FOREST_LOW;
             add(kinds[Math.floor(roll * kinds.length)], x, y, -0.2, -0.16);
             add(kinds[Math.floor(hash(y, x) * kinds.length)], x, y, 0.18, 0.22);
-          } else if (g === 't' && jungle(x, y)) {
-            add(JUNGLE_TALL[Math.floor(roll * JUNGLE_TALL.length)], x, y, -0.2, -0.16);
-            add(low(x, y, 0), x, y, 0.18, 0.22);
-            add(low(x, y, 3), x, y, 0.24, -0.12);
           } else if (g === 't') add(roll < 0.55 ? 'tree' : roll < 0.8 ? 'apple' : 'birch', x, y);
           else if (g === 'r') add(ROCK_MIX.find(([, upTo]) => roll < upTo)[0], x, y);
           else if (g === 'd') add('tuft', x, y);
@@ -134,10 +124,8 @@ export default {
           else if (g === 's' && dunes(x, y)) { if (roll < 0.12) add(roll < 0.09 ? 'cactus' : 'rocks', x, y); }
           else if ((g === 'g' || g === 'm') && wet(x, y) && roll < 0.45) add(roll < 0.3 ? 'reeds' : 'lily', x, y);
           else if (g === 's' || g === 'g' || g === 'm') {
-            const thick = g !== 's' && jungle(x, y), open = thick && clearing.has(y * n + x);
-            const kind = ((g === 's' ? BEACH_MIX : open ? JUNGLE_CLEARING : thick ? JUNGLE_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
+            const kind = ((g === 's' ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
             if (kind) add(kind, x, y);
-            if (thick && !open && hash(y, x) < JUNGLE_UNDER) add(low(x, y, 7), x, y, 0.22, 0.18);
           }
         }
       }
@@ -145,6 +133,8 @@ export default {
       // sable, le sapin à la forêt), une case sans autre arbre, hors de toute vue ; sinon ils ne poussent pas
       for (const tree of chased) {
         const ground = M.ground(tree.x, tree.y);
+        // (dans la jungle, un grand arbre chassé ne repousse pas ailleurs : il atterrirait dans le noyau dégagé)
+        if (jungle(tree.x, tree.y, ground)) continue;
         const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && M.ground(x, y) === ground && !taken.has(y * n + x) && !sight.has(y * n + x) && !tallAt.has(y * n + x);
         const spot = replantOf(tree.x, tree.y, free);
         if (spot) add(tree.kind, spot.x, spot.y);

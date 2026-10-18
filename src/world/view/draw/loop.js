@@ -16,7 +16,7 @@ import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from 
 import { flyingGull } from '@/world/beastArt';
 import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges, drawRefletsMer, drawEmbruns, drawMoutons, agitationOf } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
-import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX, pavedAt } from '@/world/terrain';
+import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX, pavedAt, NEAR_BAKE } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
 import { mixToward, climateAt, drawClimate, drawClimatMonde, climatsPresents } from '@/world/climates';
 import { gridWanted, qualiteSuivante, setQualiteFx } from '@/world/perf';
@@ -33,8 +33,6 @@ const LOADING_FRAME_MS = 250;
 // Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
 // taille), ni petits détails du décor ; la très grande île reste fluide
 const FAR_SCALE = 0.45;
-// Les plantes qui ont leurs effets animés, de jour et de nuit (lumiere/jungle.js)
-const EFFETS = new Set(['ravenala', 'alocasia']);
 const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest', 'caladium', 'fiddlehead', 'orchid']);
 
 // Pendant une pose : ce qui se tient devant une case dorée (jusqu'à tant de rangs plus près, et tant de colonnes de côté)
@@ -306,7 +304,7 @@ export default {
     spriteGroup('decor');
     // (pendant que la caméra du conseil glisse vers le phare ou en revient, le sol se peint au plus à PAN_SCALE : ses
     // carrés, préparés pendant qu'on lit le conseil, suivent sans à-coups ; WorldView, phare.js)
-    const missing = this.terrain.draw(ctx, view, this.flightPan ? Math.min(s * dpr, PAN_SCALE) : s * dpr, 8, baked);
+    const missing = this.terrain.draw(ctx, view, this.flightPan ? Math.min(s * dpr, PAN_SCALE) : s * dpr, 8, baked || NEAR_BAKE);
     if (gridWanted()) this.drawGrid(ctx, view);
     drawLive(ctx, this.M, this.live, view, t);
     // L'eau douce vivante : poissons, lumière au fond, courant, cascades, bonds (le courant se calcule une fois par île)
@@ -466,7 +464,7 @@ export default {
         .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, reserve: site })),
       ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
         .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, nameSign: site })),
-      ...(baked ? this.liveProps : this.props).filter(prop => seenAt(prop.wx, prop.wy) && !(far && SMALL_PROPS.has(prop.kind))).map(prop => ({ depth: prop.depth, prop })),
+      ...(baked ? this.liveProps : this.nearProps || this.props).filter(prop => seenAt(prop.wx, prop.wy) && !(far && SMALL_PROPS.has(prop.kind))).map(prop => ({ depth: prop.depth, prop })),
       ...[...crowd, ...life.standing].filter(critter => seen(critter.x, critter.y))
         .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
       ...this.ferryItems(t),
@@ -571,7 +569,7 @@ export default {
     // mouvement réduit)
     if (!this.reduced()) drawJungleJour(ctx, this.M, view, t, phase, this.lightGate(now));
     // (et les effets de l'arbre du voyageur et de l'alocasia : le reflet sur l'éventail, la rosée)
-    const effets = this.reduced() ? [] : this.props.filter(prop => EFFETS.has(prop.kind) && seenAt(prop.wx, prop.wy));
+    const effets = this.reduced() || !this.jungleFx ? [] : this.jungleFx.filter(prop => seenAt(prop.wx, prop.wy));
     if (effets.length) drawEffetsJour(ctx, effets, t, phase, prop => this.plantAlpha(prop));
     // En automne et au printemps, à chaque rafale qui passe sur la terre à soi (là où poussent les arbres ; pas sous la
     // brume d'un quartier), une poignée de feuilles ou de pétales tournoie et file avec le vent (lumiere/saisons.js ; pas
@@ -689,7 +687,7 @@ export default {
     // lumiere/jungle.js, pas en mouvement réduit)
     if (!this.reduced()) drawJungleNuit(ctx, this.M, view, t, phase, this.lightGate(now), s);
     if (effets.length) drawEffetsNuit(ctx, effets, t, phase, prop => this.plantAlpha(prop));
-    if (phase.night >= 0.02) this.drawLueursJungle(ctx, this.props.filter(prop => prop.glow && seenAt(prop.wx, prop.wy)), t, phase.night, near, repaint);
+    if (phase.night >= 0.02) this.drawLueursJungle(ctx, (this.jungleGlows || []).filter(prop => seenAt(prop.wx, prop.wy)), t, phase.night, near, repaint);
     ctx.restore();
     if (geant) {
       drawLueursGeant(ctx, geant, t, phase.night);

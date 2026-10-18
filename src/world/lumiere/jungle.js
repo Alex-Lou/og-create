@@ -9,6 +9,7 @@ import { worldOf } from '../terrain';
 import { entre } from '../maths';
 import { rond } from '../textures';
 import { herbMask, casesVues } from './vent';
+import { qualiteFx } from '../perf';
 
 // Le jour, la nuit : la part de chacun (0 à 1), la pluie éteint presque tout
 const jourDe = phase => (1 - entre(0.2, 0.55, phase.night)) * (1 - 0.8 * entre(0.05, 0.4, phase.weather.rain));
@@ -38,17 +39,19 @@ const tache = tone => rond(`mousse:${tone}`, 64, [[0, `rgba(${tone},.5)`], [0.5,
 export function drawJungleNuit(ctx, M, view, t, phase, shown, s = 1) {
   const k = nuitDe(phase);
   if (k < 0.02) return;
+  // (moins de lucioles, de spores et de mousse qui luit sur un appareil qui peine : la qualité des particules, perf.js)
+  const q = qualiteFx();
   const cases = casesJungle(M, view, shown);
   for (const { x, y, c } of cases) {
     // la mousse : une tache sur trois cases, qui respire lentement
-    if (hash(x, y * 1.3) < 0.3) {
+    if (hash(x, y * 1.3) < 0.3 * q) {
       const tone = NEON[Math.floor(hash(y, x * 2.1) * 2)];
       ctx.globalAlpha = k * (0.8 + 0.2 * Math.sin(t * 0.6 + hash(x, y) * 6));
       const ox = (hash(x + 3, y) - 0.5) * 20, oy = (hash(x, y + 3) - 0.5) * 8;
       ctx.drawImage(tache(tone), c.x + ox - 40, c.y + oy - 17, 80, 34);
     }
     // les lucioles : une case sur trois, qui tourne autour de son buisson et clignote
-    if (hash(x * 1.7, y) < 0.34) {
+    if (hash(x * 1.7, y) < 0.34 * q) {
       const ph = hash(x, y + 9) * 6.28, f = 0.35 + hash(x + 9, y) * 0.4;
       const fx = c.x + Math.sin(t * f + ph) * 16 + Math.sin(t * f * 2.3 + ph) * 5;
       const fy = c.y - 14 - Math.sin(t * f * 1.4 + ph * 2) * 10;
@@ -60,7 +63,7 @@ export function drawJungleNuit(ctx, M, view, t, phase, shown, s = 1) {
       }
     }
     // les spores : elles montent doucement et s'éteignent
-    if (hash(x, y * 2.9) < 0.12) {
+    if (hash(x, y * 2.9) < 0.12 * q) {
       const life = 6 + hash(y, x) * 4, age = (t / life + hash(x, y + 1)) % 1;
       ctx.globalAlpha = k * 0.7 * entre(0, 0.15, age) * (1 - entre(0.6, 1, age));
       ctx.drawImage(lueur(NEON[1]), c.x + (hash(x + 1, y) - 0.5) * 24 + Math.sin(age * 9) * 3 - 3, c.y - 6 - age * 46 - 3, 6, 6);
@@ -117,23 +120,24 @@ function libellule(ctx, x, y, a, vib) {
 export function drawJungleJour(ctx, M, view, t, phase, shown) {
   const k = jourDe(phase);
   if (k < 0.02) return;
+  const q = qualiteFx();
   const cases = casesJungle(M, view, shown);
   for (const { x, y, c } of cases) {
     // le pollen doré qui flotte dans les rais de soleil
-    if (hash(x * 2.3, y) < 0.18) {
+    if (hash(x * 2.3, y) < 0.18 * q) {
       const life = 7 + hash(x, y + 4) * 5, age = (t / life + hash(y + 4, x)) % 1;
       ctx.globalAlpha = k * 0.8 * Math.sin(age * Math.PI);
       ctx.drawImage(pollen(), c.x + (hash(x + 2, y) - 0.5) * 26 + Math.sin(t * 0.8 + x) * 6 - 4, c.y - 10 - age * 22 - 4, 8, 8);
     }
     // un papillon morpho par vingtaine de cases, qui vole en huit autour de sa case
-    if (hash(x, y * 4.1) < 0.05) {
+    if (hash(x, y * 4.1) < 0.05 * q) {
       const ph = hash(x + 7, y) * 6.28, f = 0.45 + hash(x, y + 7) * 0.25;
       const vx = Math.cos(t * f + ph), bx = c.x + Math.sin(t * f + ph) * 22, by = c.y - 22 + Math.sin(t * f * 2 + ph) * 8 + Math.sin(t * 7 + ph) * 1.5;
       ctx.globalAlpha = k;
       morpho(ctx, bx, by, Math.abs(Math.sin(t * 11 + ph)), vx >= 0 ? 1 : -1);
     }
     // une libellule par trentaine de cases : elle file, s'arrête, repart
-    if (hash(x * 3.3, y + 2) < 0.035) {
+    if (hash(x * 3.3, y + 2) < 0.035 * q) {
       const ph = hash(y + 2, x) * 6.28, seg = Math.floor(t / 2.2 + ph), u = (t / 2.2 + ph) % 1;
       const a0 = hash(seg, x + y) * 6.28, a1 = hash(seg + 1, x + y) * 6.28;
       const p = (a, r) => [c.x + Math.cos(a) * r, c.y - 18 + Math.sin(a) * r * 0.5];

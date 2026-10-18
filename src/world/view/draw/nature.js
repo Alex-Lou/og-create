@@ -4,6 +4,7 @@
 import { drawSprite } from '@/world/spriteCache';
 import { leavesOf, leafTones, drawLeaves, LEAFY, drawTapis, aTapis } from '@/world/lumiere';
 import { SEASON } from '@/world/plants';
+import { NEAR_BAKE } from '@/world/terrain';
 
 // Ce qui prend le liseré doré de l'heure dorée (les arbres et les buissons ; les petites plantes, non)
 const RIMMED = new Set(['tree', 'palm', 'bush', 'birch', 'apple', 'autumn', 'snowpine', 'banana', 'treefern', 'kapok', 'monstera', 'ravenala', 'alocasia']);
@@ -16,8 +17,11 @@ const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, bi
 export default {
   // Décor fixe d'une case, cuit dans le sol sauf de près (sans le vent ; à demi effacé sous la brume, comme le sol) :
   // vrai si tous ses dessins étaient prêts
-  standAt(ctx, x, y) {
-    const props = this.propsAt && this.propsAt.get(y * this.state.size + x);
+  // (bake === NEAR_BAKE : de près, seules les plantes de la jungle qui ne sont pas autour de ce qui se tient debout)
+  standAt(ctx, x, y, bake) {
+    const all = this.propsAt && this.propsAt.get(y * this.state.size + x);
+    const props = all && bake === NEAR_BAKE ? all.filter(prop => prop.still) : all;
+    if (props && !props.length) return true;
     if (!props) return true;
     const zone = this.zoneAt(x, y);
     ctx.globalAlpha = this.hiddenCell(x, y) ? 0.1 : zone && !zone.owned ? 1 - this.mistFade(0.5, zone) : 1;
@@ -58,8 +62,8 @@ export default {
     for (const prop of props) {
       const a = this.plantAlpha(prop);
       if (a < 0.02) continue;
-      ctx.globalAlpha = night * a;
-      this.swayed(ctx, prop.glow.key, prop.glow.make, prop.wx, prop.wy, near ? (SWAY[prop.kind] || 0) * this.windOf(t, prop.x, prop.y) : 0, repaint);
+      ctx.globalAlpha = night * a * prop.glow.k;
+      this.swayed(ctx, prop.glow.key, prop.glow.make, prop.wx, prop.wy, near && !prop.still ? (SWAY[prop.kind] || 0) * this.windOf(t, prop.x, prop.y) : 0, repaint);
     }
     ctx.globalAlpha = 1;
   }

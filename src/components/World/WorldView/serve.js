@@ -11,7 +11,8 @@ import { bubbleFace, builtOf } from '@/world/faces';
 import { islandOf, liveOf, TerrainCache, FEATHER, pavedAt } from '@/world/terrain';
 import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
-import { JUNGLE_ZONE } from '@/world/plants';
+import { JUNGLE_ZONE, JUNGLE_FX, JUNGLE_KINDS } from '@/world/plants';
+import { inJungle } from '@/world/jungleLayout';
 import { riverLampsOf } from '@/world/pontRiviere';
 import { seaOf } from '@/world/sea';
 import { memory } from '@/world/view/memory';
@@ -170,7 +171,7 @@ export default {
         M.isPaved = (x, y) => paved.has(y * state.size + x);
         // (la jungle du départ : son sol, son air ; terrain.js, lumiere/jungle.js)
         const jungleZone = state.map.zones.findIndex(z => z.id === JUNGLE_ZONE);
-        M.jungle = (x, y) => jungleZone >= 0 && M.zone(x, y) === jungleZone;
+        M.jungle = (x, y) => inJungle(x, y, jungleZone >= 0 && M.zone(x, y) === jungleZone);
         if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
         else if (this.M) {
           // Le sol a changé (un chemin tracé, un quartier dévoilé) : les carrés des cases changées et de leurs voisines
@@ -224,10 +225,16 @@ export default {
       }
       this.annexVariants = variantsOf(state.annexes || []);
       this.props = this.natureOf(state);
+      // (la jungle du départ : ce qui luit la nuit, ce qui a ses effets animés ; rangés une fois, pas à chaque image)
+      this.jungleGlows = this.props.filter(prop => prop.glow);
+      this.jungleFx = this.props.filter(prop => JUNGLE_FX.has(prop.kind));
       // Décor par case, cuit dans le sol sauf de près ; celui qui entoure ce qui se tient debout reste dessiné à part
       // (liveProps), pour passer devant dans l'ordre du relief. Si le décor cuit a changé, ses carrés seront refaits
       const live = this.liveCellsOf(state);
       this.liveProps = this.props.filter(prop => live.has(prop.y * state.size + prop.x));
+      // (de près, la jungle loin de ce qui se tient debout est cuite dans le sol, elle aussi : still ; terrain.js, NEAR_BAKE)
+      for (const prop of this.props) prop.still = JUNGLE_KINDS.has(prop.kind) && !live.has(prop.y * state.size + prop.x);
+      this.nearProps = this.props.filter(prop => !prop.still);
       this.propsAt = new Map();
       for (const prop of this.props) {
         const key = prop.y * state.size + prop.x;
