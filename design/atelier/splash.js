@@ -122,7 +122,8 @@ function fond(autour = {}) {
     + `<g transform="translate(${f(ax - 40 * ka)} ${f(LY - 34 * ka)}) scale(${ka})">${anyaVeille()}</g>`
     + poussieres(ax, 290, 270, 170, 11) + brumeDevant(CX, 404);
   // l'île des naufragés, dessinée pour cet écran (splash_ile.js), devant elle ; la lumière de ses mains y tombe
-  s += (autour.avantIle || '') + `<g transform="translate(${CX} 470) scale(.78)">${ileVivante()}</g>` + (autour.apresIle || '');
+  // (autour.ile : une autre île à sa place, celle de l'orage, splash_survie.js)
+  s += (autour.avantIle || '') + `<g transform="translate(${CX} 470) scale(.78)">${(autour.ile || ileVivante)()}</g>` + (autour.apresIle || '');
   s += `<ellipse cx="${ax}" cy="412" rx="170" ry="44" fill="url(#spMainsIle)"/>` + poussieres(ax, 380, 90, 26, 5, 9);
   // la brume devant l'île, puis le voile du haut (le logo s'y lit) et du bas (l'avant-plan s'y pose)
   s += `<g transform="scale(4 1)">${nappeDouce('spB2', 640, 0.24, 20, 12, 1, '214,232,244', 5)}${nappeDouce('spB3', 780, 0.18, 26, 10, 1.3, '200,220,238', 7)}</g>`;

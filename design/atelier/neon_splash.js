@@ -4,7 +4,7 @@
 // blanc cyan, des nuages violets ; Anya, l'île, les maîtres et Brume ravivés sans changer de teinte (leurs visages et
 // leurs habits restent les leurs, leurs ombres deviennent froides) ; l'orage aux éclairs vert acide, le démon en feu néon.
 const { fond, affiche, brume, demon, fixe } = require('./splash');
-const { fondSurvie, afficheSurvie } = require('./splash_survie');
+const { fondSurvie, afficheSurvie, ileSurvie } = require('./splash_survie');
 const { nuages, eclairs, aura, souffle } = require('./splash_orage');
 const { anyaVeille } = require('./splash_anya');
 const { ileVivante } = require('./splash_ile');
@@ -31,8 +31,9 @@ const NUIT_RGB = { '255,236,180': '255,120,200', '210,226,242': '160,120,230', '
 const passe = (svg, carte, rgb) => svg.replace(/#[0-9A-Fa-f]{6}\b/g, c => carte[c.toUpperCase()] || c).replace(/\d{1,3},\d{1,3},\d{1,3}/g, c => rgb[c] || c);
 
 // Le fond : Anya et l'île ravivées, mises à l'abri pendant que le reste passe dans la nuit néon
-function enNuit(svg) {
-  const garde = [anyaVeille(), ileVivante()];
+function enNuit(svg, ile = ileVivante) {
+  // (et leurs versions figées : le fond de l'orage est figé avant de passer dans la nuit)
+  const garde = [...new Set([anyaVeille(), ile()].flatMap(g => [g, fixe(g)]))];
   let s = svg;
   garde.forEach((g, i) => { s = s.split(g).join(`<!--garde${i}-->`); });
   s = passe(s, NUIT, NUIT_RGB);
@@ -41,7 +42,7 @@ function enNuit(svg) {
 }
 const fondNeon = () => fixe(enNuit(fond()));
 // (l'orage : le même fond et ses tentacules, déjà figé)
-const tempeteNeon = () => enNuit(fondSurvie());
+const tempeteNeon = () => enNuit(fondSurvie(), ileSurvie);
 // L'affiche et les guerriers : la colonne de lumière du Grimoire et son sol lumineux passent du jaune au cyan et au
 // magenta, les rayons derrière Brume au cyan pâle, le voile de la nuit sur les maîtres à l'indigo ; puis tout est ravivé
 // (les maîtres gardent leurs couleurs)
