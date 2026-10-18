@@ -1842,6 +1842,87 @@ var require_avatar_choix = __commonJS({
       return verifier(o);
     }
     __name(auHasard, "auHasard");
+    var TENUES = [
+      [["blanc", "creme"], ["marine", "jean"], ["blanc", "cuir"], ["rouge", "soleil"], "argent"],
+      [["lavande", "rosepale"], ["charbon", "marine"], ["blanc", "noir"], ["menthe", "creme"], "argent"],
+      [["lagon", "menthe"], ["creme", "sable"], ["cuir", "caramel"], ["corail", "abricot"], "or"],
+      [["foret", "olive"], ["sable", "cuir"], ["cuir", "noir"], ["soleil", "creme"], "or"],
+      [["prune", "bordeaux"], ["charbon", "noir"], ["noir", "cuir"], ["rosepale", "creme"], "argent"],
+      [["corail", "abricot"], ["jean", "marine"], ["blanc", "creme"], ["ciel", "creme"], "or"],
+      [["ciel", "blanc"], ["marine", "sable"], ["blanc", "cuir"], ["soleil", "rouge"], "argent"],
+      [["charbon", "noir"], ["jean", "charbon"], ["blanc", "noir"], ["framboise", "lagon"], "argent"],
+      [["rose", "rosepale"], ["creme", "jean"], ["blanc", "rosepale"], ["lavande", "menthe"], "orrose"],
+      [["soleil", "abricot"], ["olive", "marine"], ["cuir", "caramel"], ["creme", "foret"], "or"],
+      [["caramel", "sable"], ["creme", "marine"], ["cuir", "noir"], ["lagon", "creme"], "cuivre"],
+      [["rouge", "framboise"], ["noir", "charbon"], ["noir", "blanc"], ["creme", "soleil"], "or"]
+    ];
+    var SOBRES = ["bonnet", "paille", "casquette", "bandana", "beret", "lunettesRondes", "lunettesCarrees", "foulard", "echarpe", "coquillage", "puces", "anneaux", "sacDos", "besace"];
+    var NATURELS_YEUX = ["brun", "chocolat", "noisette", "ambre", "olive", "vert", "eau", "azur", "bleu", "grisbleu", "gris"];
+    var ROUX = ["auburn", "roux", "cuivre", "venitien"];
+    function assorti(n, { gratuit = true } = {}) {
+      const r = graine(n);
+      const un = /* @__PURE__ */ __name((list) => list[Math.floor(r() * list.length) % list.length], "un");
+      const cles = /* @__PURE__ */ __name((obj) => Object.keys(obj), "cles");
+      const genre = r() < 0.5 ? "homme" : "femme";
+      const de = /* @__PURE__ */ __name((cle) => cles(FORMES[cle]).filter((v) => pourGenre(cle, v, genre)), "de");
+      const age = un(["jeune", "adulte", "adulte", "adulte", "mur", "mur", "age"]);
+      const naturels = CHEVEUX.slice(0, 13).map(([k]) => k).filter((k) => k !== "gris" && k !== "blanc");
+      const fantaisie = ["poudre", "lilas", "ciel", "menthe", "corail"];
+      const cheveux = age === "age" ? r() < 0.85 ? un(["gris", "blanc", "blanc"]) : un(naturels) : age === "mur" ? r() < 0.3 ? "gris" : un(naturels) : r() < 0.06 ? un(fantaisie) : un(naturels);
+      const [hauts, bass, pieds, accents, metal] = un(TENUES);
+      const couleurHaut = un(hauts), accent = un(accents);
+      const motif = r();
+      const motifHaut = motif < 0.8 ? "uni" : motif < 0.9 ? "raye" : "degrade";
+      const couleurHaut2 = motifHaut === "degrade" ? hauts.find((c) => c !== couleurHaut) || accent : accent;
+      const couleurBas = un(bass);
+      const barbu = genre === "homme" && age !== "jeune";
+      const o = {
+        genre,
+        age,
+        taille: un(cles(FORMES.taille)),
+        silhouette: un(cles(FORMES.silhouette)),
+        peau: un(cles(NUANCIERS.peau)),
+        visage: un(de("visage")),
+        yeux: r() < 0.95 ? un(NATURELS_YEUX) : un(["violet", "emeraude"]),
+        formeYeux: un(cles(FORMES.formeYeux)),
+        cils: genre === "homme" ? "sans" : un(de("cils")),
+        sourcils: genre === "homme" ? un(["epais", "fins", "doux"]) : un(["fins", "doux"]),
+        barbe: barbu && r() < 0.3 ? un(["malRase", "courte", "collier", "pleine"]) : "sans",
+        moustache: barbu && r() < 0.15 ? un(["fine", "epaisse", "gauloise"]) : "sans",
+        bouche: un(["douce", "douce", "sourire", "malice"]),
+        expression: "neutre",
+        levres: genre === "femme" && r() < 0.25 ? un(["rose", "corail", "nude", "framboise"]) : "naturelles",
+        menton: genre === "homme" ? un(["doux", "fin", "court", "fort"]) : "doux",
+        cicatrice: r() < 0.05 ? un(["sourcil", "joue"]) : "sans",
+        rousseur: r() < (ROUX.includes(cheveux) ? 0.5 : 0.12) ? un(["legere", "oui", "nez"]) : "non",
+        joues: un(de("joues")),
+        grain: r() < 0.08 ? "joue" : "non",
+        coupe: un(de("coupe").concat(["locks"])),
+        cheveux,
+        meches: "sans",
+        couleurMeches: cheveux,
+        haut: un(cles(FORMES.haut)),
+        couleurHaut,
+        motifHaut,
+        couleurHaut2,
+        bas: un(de("bas")),
+        couleurBas,
+        motifBas: "uni",
+        couleurBas2: couleurBas,
+        chaussures: un(pieds),
+        formeChaussures: un(de("formeChaussures")),
+        accessoires: {}
+      };
+      const permis = SOBRES.map((id2) => [id2, ACCESSOIRES[id2]]).filter(([id2, a]) => (!gratuit || a.source === "gratuit") && pourGenre("accessoires", id2, genre));
+      const nb = r() < 0.4 ? 0 : r() < 0.85 ? 1 : 2;
+      for (let i = 0; i < nb; i++) {
+        const [id2, a] = un(permis);
+        if (o.accessoires[a.emplacement]) continue;
+        o.accessoires[a.emplacement] = { id: id2, couleurs: a.zones.map((z, k) => z === "metal" ? metal : k ? "creme" : accent) };
+      }
+      return verifier(o);
+    }
+    __name(assorti, "assorti");
     module.exports = {
       NUANCIERS,
       NOMS_NUANCIERS,
@@ -1858,6 +1939,8 @@ var require_avatar_choix = __commonJS({
       couleursAccessoire,
       naufrageChoix,
       auHasard,
+      assorti,
+      TENUES,
       graine,
       GENRES,
       DEFAUT_GENRE,
