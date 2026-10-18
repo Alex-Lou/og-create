@@ -11,6 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const { fond, affiche, fixe } = require('./splash');
+const { ileVivante } = require('./splash_ile');
 const { frame, OUT } = require('./troupe');
 const TR = require('./troupe_refonte');
 const { vernis } = require('./vernis');
@@ -192,9 +193,12 @@ function tentacule(id, x, y, cote, long, large, enroule = 1) {
 }
 // Derrière l'île : les égarés et deux grands tentacules ; devant elle : un tentacule près de l'épave, un autre au pied
 // du Ponton
+// (l'île elle-même, après dix ans d'apocalypse : splash_ile.js, ileVivante({ survie }))
+const ileSurvie = () => ileVivante({ survie: true });
 const fondSurvie = () => fixe(fond({
+  ile: ileSurvie,
   avantIle: tentacule('svk1', 586, 470, 1, 230, 30) + tentacule('svk2', 1016, 472, -1, 250, 32) + egares(),
   apresIle: tentacule('svk3', 600, 592, 1, 92, 14, 1.2) + tentacule('svk4', 1004, 586, -1, 78, 12, 1.3)
 }));
 
-module.exports = { fondSurvie, afficheSurvie, dessinSurvivant, TROUPE_SURVIE, ARMES, MARQUES, EQUIPEMENT };
+module.exports = { fondSurvie, ileSurvie, afficheSurvie, dessinSurvivant, TROUPE_SURVIE, ARMES, MARQUES, EQUIPEMENT };

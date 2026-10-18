@@ -5,6 +5,7 @@
 // y = -60 (le fond) à y = 130 (la plage devant). Contours teintés, lumière froide d'en haut, chaude des fenêtres et du feu.
 const { degrade, rayonne, forme, trait, balance } = require('./splash_anya').outils;
 const { vernis } = require('./vernis');
+const { DESSINS } = require('./splash_batiments');
 const { f, rnd, vaVient, palpite } = require('./scenes7').outils;
 
 const fs = require('fs');
@@ -16,24 +17,27 @@ const BIB = path.join(__dirname, '..', 'bibliotheque', 'svg');
 // préfixés (deux dessins ne partagent jamais un identifiant) ; verni (vernis.js : contour, volume, reflets de lune ;
 // o : ses lumières, ses étincelles…), la lune derrière Anya, au centre
 const lire = rel => fs.readFileSync(path.join(BIB, rel), 'utf8');
-// (sansSol : sans sa grande ombre au sol, l'ovale transparent de son emprise ; sans : d'autres formes à retirer)
 function poser(rel, prefixe, x, y, k, o = {}) {
-  let src = lire(rel);
-  if (o.sansSol) src = src.replace(/<ellipse [^>]*fill="rgba\(40,55,20,[^"]*"\/>/, '');
-  if (o.sans) src = src.replace(o.sans, '');
+  const src = lire(rel);
   const box = src.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
   const corps = src.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
     .replace(/id="([^"]+)"/g, `id="${prefixe}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${prefixe}$1)`).replace(/href="#([^"]+)"/g, `href="#${prefixe}$1"`);
-  return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${vernis(corps, `${prefixe}v`, box, { cote: x < 0 ? 1 : -1, trapu: 0.04, ...o })}</g>`;
+  const verni = vernis(corps, `${prefixe}v`, box, { cote: x < 0 ? 1 : -1, trapu: 0.04, ...o });
+  return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${verni}</g>`;
 }
-// Une construction à son dernier palier (batiments.json : son dessin, ses lumières de nuit), posée et vernie ; ses
-// lumières allumées (la case (u, v), la hauteur z : à l'écran, comme le jeu, iso.js, à l'échelle de la bibliothèque)
-const BATIMENTS = JSON.parse(lire('batiments/batiments.json')).paliers;
-function batiment(nom, prefixe, x, y, k, eclats, sans) {
-  const cle = Object.keys(BATIMENTS).filter(c => c.startsWith(`${nom}_palier`)).sort().pop();
-  const P = BATIMENTS[cle];
-  const lumieres = (P.lumieres || []).map(l => [40 * (l.u - l.v), 20 * (l.u + l.v) - l.z, l.rayon * 0.8, 20 * (l.u + l.v)]);
-  return poser(`batiments/${P.fichiers[0]}`, prefixe, x, y, k, { sol: P.cadre[2] * 0.16, lumieres, eclats, sansSol: true, sans });
+// Les dessins qui reviennent (une même plante à dix places) : définis une fois (<symbol>), réutilisés (<use>) ; une plante
+// est vernie d'un seul côté (une seule définition). L'image reste légère
+// (choix de l'auteur, 18 oct. : l'écran de démarrage est la première image chargée)
+function bibliotheque() {
+  const defs = new Map();
+  const garde = (cle, dessin) => { if (!defs.has(cle)) defs.set(cle, { id: `ilS${defs.size}`, dessin }); return defs.get(cle); };
+  return {
+    poser: (rel, x, y, k) => {
+      const d = garde(rel, id => poser(rel, `${id}p`, 0, 0, 1, { cote: 1 }));
+      return `<use href="#${d.id}" transform="translate(${f(x)} ${f(y)}) scale(${f(k)})"/>`;
+    },
+    defs: () => `<defs>${[...defs.values()].map(({ id, dessin }) => `<symbol id="${id}" overflow="visible">${dessin(id)}</symbol>`).join('')}</defs>`
+  };
 }
 const ovale = (cx, cy, rx, ry, fill, stroke = 'none', w = 0, extra = '') => `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${stroke !== 'none' ? ` stroke="${stroke}" stroke-width="${w}"` : ''}${extra}/>`;
 const ombre = (x, y, rx) => ovale(x, y, rx, rx * 0.28, 'url(#ilOmbre)');
@@ -63,12 +67,12 @@ function buisson(x, y, k, couleur, begin) {
     + [0, 1, 2, 3, 4].map(() => `<circle cx="${f(-12 + g() * 24)}" cy="${f(-16 + g() * 12)}" r="1.8" fill="${couleur}" stroke="#7A4A5A" stroke-width=".5">${palpite('opacity', '0.7;1;0.7', 2.6, begin + g() * 2)}</circle>`).join('') + '</g>';
 }
 // Des touffes d'herbe semées sur l'île (dans l'ovale de l'herbe), de trois verts
-function herbes(n, seed) {
+function herbes(n, seed, couleurs = ['#156A50', '#2A9A68', '#0A5446']) {
   const g = rnd(seed);
   let s = '';
   for (let i = 0; i < n; i++) {
     const a = g() * Math.PI * 2, r = Math.sqrt(g()), x = Math.cos(a) * r * 250, y = 16 + Math.sin(a) * r * 64;
-    const c = ['#4E9A58', '#7CC46A', '#3B7A4C'][i % 3];
+    const c = couleurs[i % 3];
     s += trait(`M${f(x - 3)},${f(y)} L${f(x - 4)},${f(y - 5)} M${f(x)},${f(y)} L${f(x)},${f(y - 7)} M${f(x + 3)},${f(y)} L${f(x + 4.5)},${f(y - 5)}`, c, 1.3);
   }
   return s;
@@ -169,6 +173,26 @@ function feu(x, y) {
     + [0, 1, 2, 3].map(i => `<circle cx="${(i - 1.5) * 3}" cy="-14" r="1.2" fill="#FFD27A" opacity="0"><animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 5 : -5} -24;${i % 2 ? -2 : 3} -46" dur="${f(1.8 + i * 0.3)}s" begin="${f(-i * 0.5)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;0" dur="${f(1.8 + i * 0.3)}s" begin="${f(-i * 0.5)}s" repeatCount="indefinite"/></circle>`).join('')
     + '</g>';
 }
+// ═══ l'île après dix ans d'apocalypse (choix de l'auteur, 18 oct. : l'orage montre la même île, devenue un champ de
+// bataille : barricades, revenants, attaques) ═══
+// Un pieu de la palissade : un rondin taillé en pointe, sa ligature ; (x, y) son pied, h sa hauteur
+const pieu = (x, y, h, n) => forme(`M${f(x - 2.6)},${f(y)} L${f(x - 2.4)},${f(y - h + 5)} L${f(x)},${f(y - h)} L${f(x + 2.4)},${f(y - h + 5)} L${f(x + 2.6)},${f(y)} Z`, n % 3 ? 'url(#ilPieu)' : 'url(#ilPieuSombre)', '#140A10', 1)
+  + trait(`M${f(x - 2.6)},${f(y - h * 0.42)} L${f(x + 2.6)},${f(y - h * 0.46)}`, '#6A5A4A', 1.1);
+// Des flammes qui dansent (un pieu, un toit qui brûle) : trois langues, leur lueur, de la fumée
+function flammes(x, y, k, b) {
+  const flamme = (h, w, c, d, o) => `<path d="M0,0 Q${-w},${-h * 0.4} 0,${-h} Q${w},${-h * 0.4} 0,0 Z" fill="${c}">`
+    + `<animateTransform attributeName="transform" type="scale" values="1 1;0.85 1.2;1.05 0.9;1 1" keyTimes="0;0.33;0.66;1" calcMode="spline" keySplines="${SPL};${SPL};${SPL}" dur="${d}s" begin="${f(-o - b)}s" repeatCount="indefinite"/></path>`;
+  return ovale(x, y - 6 * k, 26 * k, 18 * k, 'url(#ilLueurFeu)').replace('/>', `>${palpite('opacity', '0.6;1;0.6', 1.2, b)}</ellipse>`)
+    + `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${flamme(18, 7, '#FF5A2E', 0.8, 0)}${flamme(13, 5, '#FFA040', 0.65, 0.2)}${flamme(7, 2.6, '#FFF0B0', 0.5, 0.1)}</g>`
+    + fumee(x, y - 18 * k, 4.4);
+}
+// Une flèche enflammée, tirée du village vers un revenant : sa traînée de feu, sa pointe, une braise au bout
+const fleche = (x0, y0, x1, y1, b) => {
+  const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - 40, d = `M${f(x0)},${f(y0)} Q${f(cx)},${f(cy)} ${f(x1)},${f(y1)}`;
+  return `<path d="${d}" fill="none" stroke="#FF6A2E" stroke-width="5" stroke-linecap="round" opacity=".22"/><path d="${d}" fill="none" stroke="#FFA040" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="26 220" opacity=".95"><animate attributeName="stroke-dashoffset" values="246;0" dur="1.6s" begin="${f(-b)}s" repeatCount="indefinite"/></path>`
+    + `<path d="${d}" fill="none" stroke="#FFF0B0" stroke-width="0.9" stroke-linecap="round" stroke-dasharray="10 236"><animate attributeName="stroke-dashoffset" values="246;0" dur="1.6s" begin="${f(-b)}s" repeatCount="indefinite"/></path>`
+    + `<circle cx="${f(x1)}" cy="${f(y1)}" r="4" fill="#FFD27A">${palpite('opacity', '0.2;1;0.2', 1.6, b)}</circle>`;
+};
 // Le poulailler : une petite cabane sur pattes, sa rampe, son toit de planches
 function poulailler(x, y, k) {
   return ombre(x, y, 26 * k) + `<g transform="translate(${f(x)} ${f(y)}) scale(${k})">`
@@ -229,10 +253,15 @@ function barque(x, y, k) {
 
 // Les dégradés de l'île
 const defs = () => '<defs>'
-  + rayonne('ilHerbe', -40, -30, 300, [[0, '#C4EC96'], [0.45, '#7DBE64'], [0.85, '#4A8C56'], [1, '#2F6A48']])
-  + degrade('ilFalaise', 0, 20, 0, 130, [[0, '#A8927E'], [0.4, '#76625E'], [1, '#3A3248']])
-  + degrade('ilSable', 0, 40, 0, 154, [[0, '#F8E2AE'], [1, '#C89E68']])
-  + degrade('ilChemin', 0, -10, 0, 120, [[0, '#E2C893'], [1, '#C8A46E']])
+  // (la mousse de la jungle, émeraude et sarcelle, le sable mauve sous la lune, la falaise violette : choix de l'auteur,
+  // 18 oct. : l'île était trop claire pour le papier néon)
+  + rayonne('ilHerbe', -40, -30, 300, [[0, '#26905E'], [0.45, '#156A50'], [0.85, '#0A4840'], [1, '#063430']])
+  + rayonne('ilHerbeMorte', -40, -30, 300, [[0, '#4A4658'], [0.45, '#302C42'], [0.85, '#1E1A2E'], [1, '#141020']])
+  + degrade('ilPieu', -3, 0, 3, 0, [[0, '#8A6A50'], [1, '#4A3426']])
+  + degrade('ilPieuSombre', -3, 0, 3, 0, [[0, '#5A4A40'], [1, '#2E2420']])
+  + degrade('ilFalaise', 0, 20, 0, 130, [[0, '#6A4A8A'], [0.4, '#3E2A62'], [1, '#1A1034']])
+  + degrade('ilSable', 0, 40, 0, 154, [[0, '#C8A2B8'], [1, '#7A4A7E']])
+  + degrade('ilChemin', 0, -10, 0, 120, [[0, '#B89A9A'], [1, '#8A6A7A']])
   + rayonne('ilOmbre', 0.5, 0.5, 0.5, [[0, '#14243A', 0.45], [1, '#14243A', 0]]).replace('gradientUnits="userSpaceOnUse" ', '')
   + rayonne('ilFeuillage', -8, -56, 36, [[0, '#A8DC7A'], [0.6, '#5FA25A'], [1, '#2F6A46']])
   + rayonne('ilFeuillage2', -8, -56, 36, [[0, '#C8E08A'], [0.6, '#86AE52'], [1, '#4A6E3A']])
@@ -257,46 +286,119 @@ const defs = () => '<defs>'
   + rayonne('ilFumee', 0.5, 0.5, 0.5, [[0, '#DCE4EE', 0.8], [1, '#DCE4EE', 0]]).replace('gradientUnits="userSpaceOnUse" ', '')
   + '</defs>';
 
-function ileVivante() {
+// (survie : la même île après dix ans d'apocalypse, l'écran de l'orage, splash_survie.js)
+function ileVivante({ survie = false } = {}) {
   let s = defs();
   // l'écume qui respire autour, la plage, la falaise et ses strates, sa mousse ; l'herbe et sa lumière
   s += ovale(0, 132, 320, 40, '#E8F6FF', 'none', 0, ' opacity=".35"').replace('/>', `>${palpite('rx', '312;328;312', 4.6)}</ellipse>`);
-  s += forme('M-300,44 Q-312,140 0,154 Q312,140 300,44 Z', 'url(#ilSable)', '#B88A58', 2.4);
-  s += forme('M-274,22 Q-282,74 -232,94 Q-120,124 0,124 Q120,124 232,94 Q282,74 274,22 Z', 'url(#ilFalaise)', '#3A2E3A', 2.6);
-  s += trait('M-262,52 Q-140,84 0,86 Q140,84 262,52 M-240,74 Q-120,104 0,106 Q120,104 240,74', '#4A3E4E', 1.4, ' opacity=".55"');
-  s += trait('M-180,76 L-172,98 M-60,92 L-56,112 M70,92 L66,112 M190,74 L182,96', '#2E2636', 1.4, ' opacity=".5"');
-  s += ovale(0, 16, 274, 76, 'url(#ilHerbe)', '#2F5E3E', 2.6);
-  s += [-230, -170, -96, -20, 60, 140, 210].map((x, i) => forme(`M${x - 10},${f(16 + 76 * Math.sqrt(1 - (x / 274) ** 2) - 3)} q4,${10 + (i % 3) * 5} 10,${8 + (i % 2) * 6} q4,${-6 - (i % 3) * 4} 8,-12 Z`, '#4A8C56', '#2F5E3E', 1.2)).join('');
-  s += trait('M-240,-14 Q-120,-56 0,-58 Q120,-56 240,-14', '#E4F8B8', 3, ' opacity=".45"');
-  s += herbes(150, 5);
+  s += forme('M-300,44 Q-312,140 0,154 Q312,140 300,44 Z', 'url(#ilSable)', '#4A2A5A', 2.4);
+  s += forme('M-274,22 Q-282,74 -232,94 Q-120,124 0,124 Q120,124 232,94 Q282,74 274,22 Z', 'url(#ilFalaise)', '#120A24', 2.6);
+  s += trait('M-262,52 Q-140,84 0,86 Q140,84 262,52 M-240,74 Q-120,104 0,106 Q120,104 240,74', '#2A1A48', 1.4, ' opacity=".55"');
+  s += trait('M-180,76 L-172,98 M-60,92 L-56,112 M70,92 L66,112 M190,74 L182,96', '#140A2A', 1.4, ' opacity=".5"');
+  s += ovale(0, 16, 274, 76, survie ? 'url(#ilHerbeMorte)' : 'url(#ilHerbe)', survie ? '#0E0A1A' : '#06302C', 2.6);
+  s += [-230, -170, -96, -20, 60, 140, 210].map((x, i) => forme(`M${x - 10},${f(16 + 76 * Math.sqrt(1 - (x / 274) ** 2) - 3)} q4,${10 + (i % 3) * 5} 10,${8 + (i % 2) * 6} q4,${-6 - (i % 3) * 4} 8,-12 Z`, survie ? '#2A2640' : '#0E5A4A', survie ? '#0E0A1A' : '#06302C', 1.2)).join('');
+  // (le liseré de lune sur le bord du fond : cyan, le néon de la nuit ; après l'apocalypse, la lueur des incendies)
+  s += trait('M-240,-14 Q-120,-56 0,-58 Q120,-56 240,-14', survie ? '#FF6A4A' : '#5CF2E6', 2.4, ' opacity=".5"');
+  s += herbes(150, 5, survie ? ['#3A3650', '#4A4660', '#2A2640'] : undefined);
   // le chemin de la plage au feu, et vers les cabanes
-  s += forme('M-10,92 Q-22,70 -6,54 Q8,42 -2,30 L10,30 Q18,44 6,56 Q-6,72 8,92 Z', 'url(#ilChemin)', '#B08A5A', 1.4);
-  s += trait('M2,30 Q-40,12 -96,4 M4,30 Q60,14 112,4', '#D8BC88', 7, ' opacity=".8"');
+  s += forme('M-10,92 Q-22,70 -6,54 Q8,42 -2,30 L10,30 Q18,44 6,56 Q-6,72 8,92 Z', 'url(#ilChemin)', '#5A3A5A', 1.4);
+  s += trait('M2,30 Q-40,12 -96,4 M4,30 Q60,14 112,4', '#9A7A8A', 7, ' opacity=".8"');
   // tout ce qui est posé sur l'île : les sept constructions du jeu à leur dernier palier (choix de l'auteur, 16 oct. :
   // l'aperçu de ce qu'on atteint), les hautes au fond, sur les côtés (le centre reste dégagé sous les mains d'Anya, la
   // Fontaine au milieu) ; devant, le Potager ; le Ponton s'avance sur la mer, au bord de la plage ; les vergers, les cultures, les bêtes. Tout à la
   // même échelle (K : celle du jeu entre eux), du fond vers l'avant (triés sur y) ; les bêtes respirent d'un rien
-  const K = 0.55, B = 'animaux/ferme/';
-  // (le Ponton s'avance sur la mer : sans le bassin d'eau claire où le jeu le pose, ses ovales autour de son ancrage)
-  const BASSIN = /<ellipse cx="-2\.4" [^>]*\/>/g;
-  const CONSTRUCTIONS = [['atelier', -212, -12, 8], ['carriere', -110, -36, 4], ['puits', 0, -44, 12], ['bosquet', 108, -36, 8],
-    ['foyer', 206, -12, 5], ['potager', -128, 52, 10], ['ponton', 246, 126, 4, BASSIN]];
-  const POSES = [
-    ['decor/verger/pommier/verger_pommier_mur_1.svg', -256, 26, K], ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', 258, 30, K],
-    ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', -46, -50, K * 0.9], ['decor/verger/pommier/verger_pommier_mur_1.svg', 50, -52, K * 0.9],
-    ['decor/cultures/ble/culture_ble_croissance_3.svg', 52, 44, K], ['decor/cultures/choux/culture_choux_croissance_3.svg', 96, 58, K],
-    ['decor/cultures/carottes/culture_carottes_croissance_3.svg', 66, 76, K],
-    [`${B}poule-rousse/poule-rousse_avant_repos.svg`, -46, 62, K * 1.6, 1], [`${B}poule-blanche/poule-blanche_avant_repos.svg`, -30, 72, K * 1.6, 1],
-    [`${B}mouton/mouton_avant_repos.svg`, 18, 70, K * 1.6, 1], [`${B}chevre/chevre_avant_repos.svg`, 130, 82, K * 1.6, 1], [`${B}vache/vache_avant_repos.svg`, -60, 86, K * 1.6, 1],
-    [`${B}chat/chat_avant_assis_1.svg`, -4, 88, K * 1.6, 1],
+  const K = 0.55;
+  const CONSTRUCTIONS = [['atelier', -212, -12], ['carriere', -110, -36], ['puits', 0, -44], ['bosquet', 108, -36],
+    ['foyer', 206, -12], ['potager', -128, 52], ['ponton', 246, 126]].filter(([nom]) => !(survie && nom === 'potager'));
+  // La flore et la faune du jeu, composées en masses et non semées (choix de l'auteur, 18 oct. : « des items random mal
+  // harmonisés ») : au fond, une lisière de jungle continue qui cadre le village, comme le cocon du jeu ; sur les côtés,
+  // ses massifs qui descendent, leurs fleurs en lisière ; devant, une palmeraie de part et d'autre du chemin, les roseaux
+  // près de l'épave. Chaque bête à sa place : le toucan et le hibou dans la lisière, le cerf et le renard à l'orée, les
+  // lapins près des cultures, le héron dans les roseaux, le crabe et la tortue sur le sable
+  // (un peu plus grandes que le jeu entre elles : elles doivent se lire de loin, sur l'écran de démarrage)
+  const P = 'plantes/', A = 'animaux/', FA = K * 1.6 * 1.4, KP = K * 1.35, B = bibliotheque();
+  const g = rnd(23);
+  // le bord de l'herbe à l'angle a (degrés : 0 à droite, 270 au fond), rentré de r
+  const bord = (a, r = 0) => { const t = (a * Math.PI) / 180; return [(274 - r) * Math.cos(t), 16 + (76 - r * 0.28) * Math.sin(t)]; };
+  // (après l'apocalypse, la jungle est morte : arbres morts, souches, rondins, et les champignons qui luisent)
+  const GRANDS = survie ? ['arbre_mort', 'arbre_mort_brun', 'arbre_mort_champignons', 'arbre_mort_petit_brun'] : ['ravenala', 'bananier_emeraude', 'fougere', 'bananier'];
+  const MOYENS = survie ? ['souche_grise', 'rondin_gris_champignons'] : ['monstera', 'alocasia'];
+  const FLEURS = survie ? ['champignons', 'souche_petite_champignons', 'champignons_bruns', 'rondin_petit_champignons'] : ['heliconia', 'croton', 'bromelia', 'orchidees'];
+  const JUNGLE = [];
+  // (la lisière du fond : un grand tous les 10°, un moyen devant lui, de 196° à 344°)
+  for (let a = 196, i = 0; a <= 344; a += 10, i++) {
+    const [x, y] = bord(a, 6), [xm, ym] = bord(a + 5, 26);
+    JUNGLE.push([`${P}${GRANDS[i % GRANDS.length]}.svg`, x, y - 4, KP * (0.95 + g() * 0.2)]);
+    if (i % 2 === 0) JUNGLE.push([`${P}${MOYENS[(i / 2) % MOYENS.length]}.svg`, xm, ym, KP * 0.9]);
+  }
+  // (les massifs des côtés : de 150° à 192° à gauche, de -12° à 30° à droite ; les fleurs en lisière, plus à l'intérieur)
+  for (const [a0, a1] of [[150, 192], [-12, 30]]) {
+    for (let a = a0, i = 0; a <= a1; a += 7, i++) {
+      const [x, y] = bord(a, 10), [xf, yf] = bord(a, 40);
+      JUNGLE.push([`${P}${i % 2 ? MOYENS[i % MOYENS.length] : GRANDS[(i + 2) % GRANDS.length]}.svg`, x, y, KP * (0.85 + g() * 0.2)]);
+      JUNGLE.push([`${P}${FLEURS[(i + (a0 > 0 ? 0 : 3)) % FLEURS.length]}.svg`, xf, yf, KP * 0.95]);
+    }
+  }
+  const POSES = survie ? [
+    ...JUNGLE,
+    // (le potager n'est plus qu'une ruine ; sur la plage, des souches, du bois mort, la brume qui ronge)
+    ['decor/ruines/ruine_maison_1.svg', -128, 56, K * 0.6], ['decor/ruines/colonne_brisee_1.svg', 96, 58, K * 0.8],
+    [`${P}rondin_gris.svg`, -64, 122, KP], [`${P}souche_grise.svg`, 70, 124, KP], [`${P}arbre_mort_petit.svg`, 104, 138, KP * 0.9],
     ['decor/camp/epave/hirondelle_petite_1.svg', -206, 124, K]
+  ] : [
+    ...JUNGLE,
+    // (une culture et ses champignons au pied de la lisière, devant)
+    ['decor/cultures/ble/culture_ble_croissance_3.svg', 52, 44, K], ['decor/cultures/choux/culture_choux_croissance_3.svg', 96, 58, K],
+    // (la palmeraie devant, de part et d'autre du chemin ; les roseaux près de l'épave ; l'épave)
+    [`${P}palmier_cocos.svg`, -64, 120, KP], [`${P}palmier_petit_cocos.svg`, -100, 136, KP * 0.9], [`${P}palmier_petit_cocos.svg`, -36, 140, KP * 0.85],
+    [`${P}palmier_cocos.svg`, 70, 122, KP], [`${P}palmier_petit_cocos.svg`, 104, 138, KP * 0.9], [`${P}palmier_petit_cocos.svg`, 40, 142, KP * 0.85],
+    [`${P}roseaux_rive.svg`, -262, 96, KP], [`${P}roseaux_petits_rive.svg`, -240, 112, KP],
+    ['decor/camp/epave/hirondelle_petite_1.svg', -206, 124, K],
+    // (les bêtes, chacune à sa place)
+    [`${A}climat/toucan/toucan_avant_joie.svg`, -152, -30, FA, 1], [`${A}bois/cerf/cerf_avant_joie.svg`, 186, 34, FA, 1], [`${A}bois/renard/renard_avant_joie.svg`, -196, 50, FA, 1],
+    [`${A}bois/lapin/lapin_avant_joie.svg`, 30, 60, FA, 1], [`${A}bois/lapin/lapin_avant_repos.svg`, 120, 70, FA * 0.9, 1], [`${A}bois/herisson/herisson_avant_joie.svg`, -88, 74, FA, 1],
+    [`${A}climat/cameleon/cameleon_avant_joie.svg`, 150, 40, FA * 0.9, 1], [`${A}climat/grenouille/grenouille_avant_joie.svg`, -226, 84, FA, 1],
+    [`${A}eau/heron/heron_avant_joie.svg`, -278, 112, FA, 1], [`${A}mer/crabe/crabe_profil_joie.svg`, -150, 146, FA, 1], [`${A}climat/tortue/tortue_avant_joie.svg`, 150, 144, FA, 1],
+    [`${A}ferme/poule-rousse/poule-rousse_avant_repos.svg`, -46, 62, FA, 1], [`${A}ferme/mouton/mouton_avant_repos.svg`, 18, 76, FA, 1], [`${A}ferme/chat/chat_avant_assis_1.svg`, -4, 92, FA, 1]
   ];
-  const items = [...CONSTRUCTIONS.map(([nom, x, y, e, sans], i) => ({ y, i, dessin: () => batiment(nom, `ib${i}`, x, y, K, e, sans) })),
-    ...POSES.map(([rel, x, y, k, vit], i) => ({ y, i: i + 10, vit, dessin: () => poser(rel, `il${i}`, x, y, k) }))];
+  // ce qui vole et ce qui nage : les papillons et le hibou au-dessus de l'île, les mouettes plus haut, les dauphins et
+  // la baleine dans la mer, devant
+  const AIRS = survie ? [[`${A}climat/corbeau/corbeau_avant_joie.svg`, -196, -112, FA], [`${A}climat/corbeau/corbeau_avant_joie.svg`, 150, -122, FA * 0.9],
+    [`${A}climat/corbeau/corbeau_avant_joie.svg`, 46, -136, FA * 0.8], ['egares/fantome/fantome_avant_brume_1.svg', -148, -70, K * 1.6], ['egares/fantome/fantome_avant_brume_2.svg', 186, -64, K * 1.4]] : [[`${A}bestiaire/papillon-bleu/papillon-bleu_face_vol_1.svg`, 76, -96, FA], [`${A}bestiaire/papillon-lune/papillon-lune_face_vol_1.svg`, -100, -88, FA],
+    [`${A}bestiaire/hibou/hibou_face_joie.svg`, -74, -86, FA], [`${A}mer/mouette-vol/mouette-vol_profil_plane.svg`, 232, -116, FA], [`${A}mer/mouette-vol/mouette-vol_profil_plane.svg`, -262, -104, FA * 0.8],
+    [`${A}mer/dauphin/dauphin_profil_nage_2.svg`, 312, 168, FA], [`${A}mer/dauphin/dauphin_profil_nage_1.svg`, 366, 182, FA * 0.8], [`${A}mer/baleine-dos/baleine-dos_profil_nage_1.svg`, -360, 168, FA]];
+  // L'assaut (après l'apocalypse) : une palissade de pieux en U, des côtés jusque devant, sa porte sur le chemin de la
+  // plage, gardée par deux braseros ; des torches le long des pieux, trois pieux en feu ; les revenants qui montent de la
+  // plage et sortent des bords (zombies, noyé de l'Hirondelle, racine errante, esprit sylvestre, bêtes de brume) ; la
+  // brume qui ronge le sable ; les flèches enflammées tirées du village
+  const ASSAUT = [];
+  if (survie) {
+    const E = 'egares/', KE = K * 1.6;
+    for (let a = -24, n = 0; a <= 204; a += 3.4, n++) {
+      if (a > 80 && a < 100) continue;
+      const [x, y] = bord(a, 30), h = 15 + (n % 3) * 2;
+      ASSAUT.push({ y, dessin: () => pieu(x, y, h, n) + ([7, 20, 31, 44, 52].includes(n) ? flammes(x, y - h + 2, 1.1, n * 0.13) : '') });
+      if (n % 9 === 4) ASSAUT.push({ y: y + 0.5, dessin: () => poser('decor/defenses/torche_allumee_1.svg', `it${n}`, x, y - 2, KP * 0.7) });
+    }
+    for (const [x, y] of [[-24, 80], [24, 80]]) ASSAUT.push({ y, dessin: () => poser('decor/creations/brasero_2.svg', `ibr${x}`, x, y, KP * 0.8) });
+    for (const [rel, x, y, k] of [['decor/embrume/embrume_2x2_1.svg', -250, 118, K * 0.45], ['decor/embrume/embrume_2x2_2.svg', 238, 60, K * 0.4], ['decor/embrume/embrume_nuage_1.svg', 150, 142, K * 1.4]]) ASSAUT.push({ y: y - 30, dessin: () => poser(rel, `iem${x}`, x, y, k) });
+    for (const [qui, x, y, k] of [['zombie/zombie_avant_marche_1', -120, 134, KE], ['zombie/zombie_avant_brume_2', 44, 142, KE], ['noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_1', -244, 134, KE],
+      ['racine-errante/racine-errante_avant_brume_1', 284, 62, KE], ['esprit-sylvestre/esprit-sylvestre_avant_brume_1', -290, 60, KE], ['lapin-de-brume/lapin-de-brume_avant_brume_1', 156, 136, KE],
+      ['poney-de-brume/poney-de-brume_avant_brume_1', -40, 150, KE * 0.9]]) ASSAUT.push({ y, vit: 1, dessin: () => poser(`${E}${qui}.svg`, `ie${x}`, x, y, k) });
+  }
+  // (les constructions dessinées pour le splash, splash_batiments.js : la lune au centre de l'île les éclaire de son
+  // côté ; après l'apocalypse, chacune porte ses dégâts, ses toits brûlent, ses lumières sont presque toutes éteintes)
+  const items = [...ASSAUT.map((a, i) => ({ ...a, i: i + 200 })), ...CONSTRUCTIONS.map(([nom, x, y], i) => ({ y, i, dessin: () => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(K)})">${DESSINS[nom](`ib${i}`, x < 0 ? 1 : -1, survie)}</g>` })),
+    ...POSES.map(([rel, x, y, k, vit], i) => ({ y, i: i + 10, vit, dessin: () => (rel.startsWith(P) ? B.poser(rel, x, y, k) : poser(rel, `il${i}`, x, y, k)) }))];
   s += items.sort((a, b) => a.y - b.y || a.i - b.i).map(({ dessin, vit, i }) => {
     const d = dessin();
     return vit ? `<g>${vaVient('translate', '0 0', '0 -1.2', 2.4 + (i % 3) * 0.4, i * 0.3)}${d}</g>` : d;
   }).join('');
+  // (les flèches enflammées : du village vers les revenants)
+  if (survie) s += [[-60, 30, -120, 96], [80, 20, 44, 104], [0, 12, -244, 98], [140, 0, 284, 26], [-150, 10, -290, 24], [30, 4, 156, 112], [-20, 20, -40, 116], [180, 10, 284, 30]].map(([x0, y0, x1, y1], i) => fleche(x0, y0, x1, y1, i * 0.37)).join('');
+  // (les définitions des dessins réutilisés, avant tout le reste)
+  s = B.defs() + s;
+  s += AIRS.map(([rel, x, y, k], i) => `<g>${vaVient('translate', '0 0', `0 ${i % 2 ? -3 : -2}`, 2.2 + (i % 3) * 0.5, i * 0.4)}${poser(rel, `ia${i}`, x, y, k)}</g>`).join('');
   return s;
 }
 
