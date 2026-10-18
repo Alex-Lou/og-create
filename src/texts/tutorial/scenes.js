@@ -163,11 +163,28 @@ export const SCENES = {
   ],
   // Nathan sous une voile échouée : l'homme qui répare tout n'ose plus rien construire de grand
   rivet: [
-    { scene: '09_rivet', who: 'Nathan', text: 'Une soupe. Je sens une soupe. Sur une île déserte.' },
-    { scene: '09_rivet', who: 'Nathan', text: 'Soit j’ai pris un coup sur la tête, soit… Non. J’ai pris un coup sur la tête.' },
-    { scene: '09_rivet', who: 'Nathan', text: 'Nathan. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là.' },
-    { scene: '09_rivet', who: 'Nathan', text: 'Une porte de cabine sur deux caisses, près du feu. Ce n’est pas un atelier. C’est un début.' },
-    { scene: '09_rivet', who: 'Nathan', text: 'Commençons petit : une lanterne. Le petit, je sais encore faire.' }
+    { scene: '09_rivet', who: 'Nathan', mood: 'etourdi', text: 'Une soupe. Je dois halluciner… Ça y est, je vais mourir sur une île déserte.' },
+    { scene: '09_rivet', who: 'Nathan', mood: 'etourdi', text: 'Soit j’ai pris un coup sur la tête, soit… Non. J’ai pris un coup sur la tête.' },
+    { scene: '09_rivet', who: 'joueur', text: 'Ça dépend. Tu vois aussi une petite flamme qui flotte et qui parle ?' },
+    { scene: '09_rivet', who: 'Nathan', mood: 'surpris', text: '… Oui. Bon. Alors c’est un gros coup.' },
+    { scene: '09_rivet', who: 'Brume', text: 'Je ne suis pas une hallucination ! Et encore moins un coup sur la tête !' },
+    { scene: '09_rivet', who: 'Nathan', mood: 'pensif', text: 'Une flamme sans mèche, sans huile, sans rien… Ça défie toutes les lois que je connais.' },
+    { scene: '09_rivet', who: 'Brume', text: 'Je ne défie personne, moi. Je suis polie.' },
+    { scene: '09_rivet', who: 'Agathe', mood: 'malicieux', text: 'Laisse-la tranquille et viens manger, toi. Tu es tout gris.' },
+    // (sa réplique, en deux bulles : elle ne tient pas dans une seule)
+    { scene: '09_rivet', who: 'Nathan', mood: 'gene', text: 'C’est la brume. Trois nuits dessous, sous une voile échouée. Elle m’en a fait voir de toutes les couleurs.' },
+    { scene: '09_rivet', who: 'Nathan', mood: 'gene', text: 'J’ai cru que j’allais y passer à plus d’une reprise !' },
+    { scene: '09_rivet', who: 'Lorena', mood: 'malicieux', text: 'Et il a un nom, le rescapé ?' },
+    { scene: '09_rivet', who: 'Nathan', mood: 'gene', text: 'Veuillez m’excuser ! Nathan. Horloger. Je répare ce qui se répare. … Et attends… ton feu tousse : le vent entre par là, et par là.' },
+    { scene: '09_rivet', who: 'Lorena', mood: 'malicieux', text: 'Deux minutes qu’il est là, et il critique déjà le camp.' },
+    { scene: '09_rivet', who: 'Nathan', text: 'Une porte de cabine sur deux caisses, près du feu. Ce n’est pas un atelier. Mais c’est un début.' },
+    { scene: '09_rivet', who: 'joueur', text: 'Et tu pourrais nous construire quoi, avec ça ?' },
+    // (l'homme qui répare tout n'ose plus rien construire de grand)
+    { scene: '09_rivet', who: 'Nathan', mood: 'gene', text: 'Commençons petit : une lanterne. Le petit, je sais encore faire.' },
+    { scene: '09_rivet', who: 'Brume', text: 'Et le grand ?' },
+    { scene: '09_rivet', who: 'Nathan', mood: 'triste', text: '… Une autre fois.' },
+    { scene: '09_rivet', who: 'Agathe', mood: 'fache', text: 'Hé ! Tu viens à peine d’arriver, et tu n’as encore rien mangé !' },
+    { scene: '09_rivet', who: 'Nathan', mood: 'gene', text: 'Oh oui ! J’arrive, un instant !' }
   ],
   // Léo réveillé à La Source, Agathe qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
   ondin: [
@@ -342,13 +359,20 @@ export const LINES = {
   'soir-trois': 'Trois de plus qu’il y a trois jours… et une chaise vide. Dormez, je veille sur vous.',
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Elle te dira quand c’est la bonne.' },
   // Ses trois torches, une par côté d'où venaient les égarés (choix de l'auteur, 13 oct. ; textes validés)
-  'torches-idee': { who: 'atelier', mood: 'determine', text: 'Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n’est pas du génie, c’est de l’arithmétique.' },
+  'torches-idee': { who: 'atelier', mood: 'determine', text: 'Cette nuit, depuis la brume, je les ai vus venir de trois côtés. Trois torches, une par côté. Pas du génie : de l’arithmétique.' },
   'torches-tiennent': { who: 'atelier', mood: 'fier', text: 'Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient.' },
+  ingenieur: { who: 'ponton', mood: 'rire', text: 'Il doute même de ce qu’il voit. Un vrai ingénieur.' },
   // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct. ; textes validés) ; puis LINES.souci, Agathe
   'quatre-feu': { who: 'atelier', mood: 'rire', text: 'Quatre autour d’un feu. Il nous faudra une plus grande marmite. Ou un plus petit Nathan.' },
-  'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
-  or: { who: 'atelier', mood: 'pensif', text: 'Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu’elle leur fait. On verra cette nuit.' },
-  souci: { who: 'foyer', mood: 'triste', text: 'Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
+  'marmite-agathe': { who: 'foyer', mood: 'malicieux', text: 'La marmite, je m’en charge. Toi, mange.' },
+  'soir-quatre': 'Encore un nouveau visage… Quatre. Quatre personnes, après une éternité de solitude. Dormez, mes nouveaux amis : je veille sur vous.',
+  or: { who: 'atelier', mood: 'pensif', text: 'Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu’elle leur fait. On le saura cette nuit.' },
+  // (la lanterne posée)
+  'lanterne-brille': { who: 'atelier', mood: 'fier', text: 'Elle brille. Pas très fort… mais elle brille.' },
+  'lanterne-brume': 'Elle me ressemble un peu.',
+  souci: { who: 'foyer', mood: 'triste', text: 'Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Sait-il nager, au moins ? S’est-il seulement réveillé ?!' },
+  courants: { who: 'ponton', mood: 'pensif', text: 'Les courants d’ici ramènent tout sur nos plages. Tout, Agathe. Nous finirons bien par le retrouver.' },
+  'courants-suite': { who: 'ponton', mood: 'determine', text: 'S’il est comme toi, il a dû s’en sortir, pour sûr !' },
   // Le matin de Léo (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue de Lorena voit une planche sur la vague ;
   // touchée, elle s'échoue un peu plus loin que le Ponton (look : la caméra la suit, WorldView coach.js)
   'planche-vue': { who: 'ponton', mood: 'surpris', text: 'Ohé ! Là, sur la vague… une planche. Et quelqu’un dessus.' },

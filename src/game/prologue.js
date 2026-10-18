@@ -570,13 +570,13 @@ export function islandStep({ state, quest }) {
   // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
-    return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
+    return { phase: 'lines', lines: quest.done ? ['lanterne-brille', 'lanterne-brume', ...lines] : ['puzzle', 'or'] };
   }
   // Ses trois torches (choix de l'auteur, 13 oct.)
-  if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
+  if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent', 'ingenieur'] : ['torches-idee'] };
   // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Nathan autour du feu, Agathe inquiète pour son
   // Léo, la veille du jour où on le trouve ; la quatrième nuit
-  if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
+  if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'marmite-agathe', 'souci', 'courants', 'courants-suite'], line: 'soir-quatre' };
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
   // d'elle (vu : « planche ») ; la planche s'échoue, Léo endormi dessus : on le réveille
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };

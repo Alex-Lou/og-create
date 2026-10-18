@@ -150,12 +150,13 @@ describe('le tutoriel', () => {
     // (Nathan sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
+    expect(island({ id: 'deco', done: true }, all)).toEqual({ phase: 'lines', lines: ['lanterne-brille', 'lanterne-brume'] });
     // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
     expect(island({ id: 'torches-rivet', done: false }, all)).toEqual({ phase: 'lines', lines: ['torches-idee'] });
-    expect(island({ id: 'torches-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['torches-tiennent'] });
+    expect(island({ id: 'torches-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['torches-tiennent', 'ingenieur'] });
     for (const line of ['torches-idee', 'torches-tiennent']) expect(LINES[line], line).toBeTruthy();
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
-    expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' });
+    expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'marmite-agathe', 'souci', 'courants', 'courants-suite'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
     // Le matin de Léo (choix de l'auteur, 14 oct.) : Lorena voit une planche sur la vague ; vue, on le réveille
     expect(island({ id: 'eveil-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' });
