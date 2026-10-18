@@ -128,7 +128,8 @@ describe('le tutoriel', () => {
     expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'soupe-aster', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
     // La longue-vue de Lorena voit la cage (sa réplique y mène la caméra) ; ouverte, les poules s'échappent
     expect(island({ id: 'cage', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' });
-    expect(island({ id: 'cage', done: false }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['mes-filles', 'fine-bouche'] });
+    expect(island({ id: 'cage', done: false }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['mes-filles', 'fine-bouche', 'miracles', 'miracles-suite'] });
+    expect(LINES.miracles).toMatchObject({ who: 'joueur' });
     expect(LINES['mes-filles']).toMatchObject({ look: 'cage' });
     expect(island({ id: 'cage', done: true }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['doucement'] });
     // Les attraper une à une, puis les nourrir (la Récolte rappelée s'il manque des vivres) ; leur poulailler ; le soir

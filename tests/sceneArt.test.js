@@ -1,7 +1,7 @@
 // Les scènes du tutoriel dessinées par la bibliothèque (game/sceneArt.js) : chaque scène a ses images, et l'avatar du
 // joueur trouve un dessin pour chacune de ses places, quel que soit l'exemple choisi sur la carte d'embarquement
 import { describe, it, expect } from 'vitest';
-import { sceneOf, avatarFrames, avatarBox, LOOKS, DEFAULT_LOOK } from '@/game/sceneArt';
+import { sceneOf, avatarFrames, avatarBox, playerFace, LOOKS, DEFAULT_LOOK } from '@/game/sceneArt';
 import { SCENES } from '@/texts/tutorial/scenes';
 
 const used = [...new Set(Object.values(SCENES).flat().map(frame => frame.scene).filter(Boolean))];
@@ -11,6 +11,10 @@ describe('les scènes de la bibliothèque', () => {
     expect(LOOKS).toHaveLength(12);
     expect(DEFAULT_LOOK).toBe('avatar-01');
     for (const look of LOOKS) expect(avatarFrames(look, { naufrage: true })[0], look).toMatch(/-naufrage_face_repos_1\.svg/);
+  });
+  it('le joueur parle sur l’île avec son avatar de naufragé, de face ; l’exemple par défaut tant que le sien n’est pas dessiné', () => {
+    expect(playerFace('avatar-03')).toMatch(/avatar-03-naufrage_face_repos_1\.svg/);
+    expect(playerFace({ genre: 'femme' })).toMatch(/avatar-01-naufrage_face_repos_1\.svg/);
   });
   it('chaque scène du tutoriel a toutes ses images, fond, ce qui bouge (s’il est à part) et devant', () => {
     for (const id of [...used, '00_carte']) {

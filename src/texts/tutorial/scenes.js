@@ -241,7 +241,8 @@ export const SCENES = {
 // Le Grimoire, quand on lit ce qui est écrit sur sa page (un petit livre de cuir et sa gemme, pour la bulle)
 
 // Répliques pendant le jeu (la file du guide : chacune n'est dite qu'une fois). who : le bâtiment de qui parle (son
-// portrait, avec son expression : mood, faces.bubbleFace) ; ou name et face : un autre que la troupe ; sans rien, Brume
+// portrait, avec son expression : mood, faces.bubbleFace), ou 'joueur' (sous son nom, son avatar) ; ou name et face : un
+// autre que la troupe ; sans rien, Brume
 export const LINES = {
   vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
   nom: 'Ce livre est à toi, maintenant. Mets ton nom sur la première page.',
@@ -314,6 +315,9 @@ export const LINES = {
   'caquets-eau': { who: 'ponton', mood: 'surpris', text: 'Chut ! Des caquets… dans l’eau ? Prends ma longue-vue, vite.' },
   'mes-filles': { who: 'foyer', mood: 'emu', text: 'Mes filles ! Caramel, Flocon, Réglisse… Elles ont tenu bon !', look: 'cage' },
   'fine-bouche': { who: 'ponton', mood: 'malicieux', text: 'Des poules en cage, au milieu des requins… Faut croire qu’ils ont fait la fine bouche.' },
+  // (le joueur parle sur l'île : choix de l'auteur, 18 oct.)
+  miracles: { who: 'joueur', text: 'Entre toi qui les as tous esquivés, Agathe qui est arrivée je ne sais comment, et les poules qui ont une chance divine…' },
+  'miracles-suite': { who: 'joueur', text: '… les miracles ont l’air courants, par ici.' },
   doucement: { who: 'foyer', mood: 'surpris', text: 'Doucement ! Elles ont vu la mer de trop près, elles aussi.' },
   'tout-le-monde': { who: 'foyer', mood: 'adore', text: 'Caramel, Flocon, Réglisse… Tout le monde est là.' },
   'deux-vivres': { who: 'foyer', mood: 'triste', text: 'Elles ont faim. Une nuit en mer dans une cage, ça creuse.' },

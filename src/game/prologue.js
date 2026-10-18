@@ -553,7 +553,7 @@ export function islandStep({ state, quest }) {
   // ouverte, les poules s'échappent
   if (quest.id === 'cage') {
     if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
-    return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles', 'fine-bouche'] };
+    return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles', 'fine-bouche', 'miracles', 'miracles-suite'] };
   }
   // On les attrape (la chasse aux poules, une scène à part : vu « poule:<id> » ; game/stages.js, HENS), puis on les
   // nourrit (la scène finit sur « Les voilà toutes ! » : l'île passe à leur faim, choix de l'auteur, 13 oct.)
