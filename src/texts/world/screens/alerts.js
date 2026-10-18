@@ -21,8 +21,6 @@ export const FAILED = {
   landmark: 'Ce lieu n’a pas pu être découvert.',
   deposit: 'Ce gisement n’a pas pu être ramassé.',
   // (folk.js)
-  visitor: 'Le visiteur n’a pas pu être comblé.',
-  settle: 'Le visiteur n’a pas pu s’installer.',
   arrival: 'L’accueil n’a pas pu se faire.',
   anya: 'Anya n’a pas pu souffler.',
   brume: 'Brume n’a pas pu répondre.',
@@ -72,7 +70,6 @@ export const TOASTS = {
   // (explore.js)
   expedition: trip => `L’expédition est partie ! Retour dans ${trip} h.`,
   // (folk.js : un visiteur comblé, installé ; un cœur qui rapporte des écus ; une bête nourrie ; « Tout combler »)
-  visitorThanks: name => `${name} te remercie !`,
   settled: name => `${name} s’installe sur ton île : bienvenue !`,
   friendCoins: name => `${name} t’offre ces écus pour votre amitié !`,
   beastBubble: 'Sa bulle, ramassée d’abord',

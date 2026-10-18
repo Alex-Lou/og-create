@@ -8,7 +8,6 @@ export const TODO = {
   repair: name => `Répare ${name}`,
   hungry: name => `${name} a faim`,
   needs: name => `${name} a besoin de toi`,
-  visitorReady: name => `${name} attend sa demande`,
   visitorSettles: name => `${name} peut s’installer`,
   beastsHungry: ['bête a faim', 'bêtes ont faim'],
   gifts: 'Tes bêtes ont quelque chose pour toi',

@@ -32,7 +32,6 @@ export function dueIn(state, now = Date.now()) {
   if (state.charges) add(state.charges.nextIn);
   if (state.expedition) add(state.expedition.endsIn);
   (state.games || []).forEach(g => g.open !== false && add(g.nextIn));
-  if (state.visitor) add(state.visitor.leavesIn);
   (state.deposits || []).forEach(d => add(d.readyIn));
   (state.sites || []).forEach(s => add(s.fullIn));
   const kinds = (state.needs && state.needs.kinds) || {};
