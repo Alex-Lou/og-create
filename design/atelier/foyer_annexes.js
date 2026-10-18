@@ -180,4 +180,95 @@ function chantier(phase) {
   return s + [[-58, 4], [54, 10], [-10, 34], [30, 30]].map(([x, y]) => touffe(x, y, g, 0.8)).join('');
 }
 
-module.exports = { cuisine, lit, chat, chien, sablier, hibou, grimoire, chantier };
+// ═══ v2 (choix de l'auteur, 18 oct. : « trop vite fait, pas de design, de profondeur, des bords qui font sticker collé ;
+// pense personnalisation naufragé et nos couleurs ») : fabriqué par les naufragés avec ce que l'île et l'épave donnent,
+// chacun personnalisé (coquillages pressés dans l'argile, peinture sarcelle et corail, tressage), les couleurs du jeu
+// (émeraude, sarcelle, vert acide, magenta, corail), sans contour d'encre, posé dans l'herbe par son ombre portée floue
+const SARCELLE = '#3E9A96', EMERAUDE = '#16855A', CORAIL = '#FF8A5A', ARGILE = '#E08A62';
+// Un volume rond (pot, jarre, tonneau couché) modelé : un dégradé de la lumière (en haut à gauche) à l'ombre
+const modele = (id, x, y, rx, c) => `<defs>${rad(id, x - rx * 0.4, y - rx * 0.5, rx * 1.6, [[0, mix(c, '#FFF4E0', 0.45)], [0.45, c], [1, mix(c, '#1A2A2A', 0.45)]])}</defs>`;
+// Un coquillage pressé dans l'argile
+const coquilleArgile = (x, y, r, a, c) => `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(a)})"><path d="M${f(-r)},0 Q0,${f(-r * 1.5)} ${f(r)},0 Q0,${f(r * 0.4)} ${f(-r)},0 Z" fill="${c}"/>` + [-0.5, 0, 0.5].map(k => `<path d="M0,${f(r * 0.2)} L${f(k * r)},${f(-r * 0.9)}" stroke="${mix(c, '#5A3A2A', 0.5)}" stroke-width=".35"/>`).join('') + '</g>';
+// Une jarre de conserves qui luit (fruits confits vert acide ou magenta)
+const conserve = (id, x, y, c) => lueur(id, x, y - 4, 9, c, 0.45) + `<path d="M${P2(x - 2.6, y)} L${P2(x - 2.8, y - 6)} Q${P2(x, y - 7.6)} ${P2(x + 2.8, y - 6)} L${P2(x + 2.6, y)} Z" fill="#E8F8F0" fill-opacity=".5"/>`
+  + `<path d="M${P2(x - 2.4, y - 0.4)} L${P2(x - 2.5, y - 4.4)} Q${P2(x, y - 5.4)} ${P2(x + 2.5, y - 4.4)} L${P2(x + 2.4, y - 0.4)} Z" fill="${c}"/>`
+  + [[-1, -2], [1, -3], [0, -1.4]].map(([dx, dy]) => `<circle cx="${f(x + dx)}" cy="${f(y + dy)}" r=".8" fill="${mix(c, '#FFFFFF', 0.5)}"/>`).join('')
+  + `<rect x="${f(x - 2.4)}" y="${f(y - 7.4)}" width="4.8" height="1.6" rx=".5" fill="#C89A5A"/><path d="M${P2(x - 1.8, y - 1)} L${P2(x - 1.9, y - 5)}" stroke="#FFFFFF" stroke-width=".6" opacity=".7"/>`;
+
+// ——— la cuisine d'Agathe, v2 ———
+// Un four en dôme d'argile, des coquillages pressés en spirale dans sa voûte, sa bouche cintrée de galets, son tuyau de
+// poêle de l'épave et son chapeau de fer-blanc ; le plan de travail fait d'un panneau d'écoutille posé sur deux
+// tonneaux, le bois rangé entre eux ; dessus, les bols de noix de coco, le poisson sur sa planche, les jarres de
+// conserves qui luisent, le pain ; l'auvent de palmes tressées sur ses deux bambous, et ce qui y pend : la tresse
+// d'ail, la louche-coquillage, le carillon de coquillages ; le pot de fleurs peint en sarcelle
+function cuisine2(n = 0) {
+  B.BORD.doux = true;
+  try {
+    const g = rnd(301);
+    // (l'ombre portée de tout le coin cuisine, floue)
+    let s = B.ombrePortee('cu2o', [iso(-0.45, -0.45, 0), iso(0.85, -0.45, 0), iso(0.85, 0.4, 0), iso(-0.45, 0.4, 0)].map(([x, y]) => [x, y]), 34, 0.3);
+    // (le sol de dalles de grève)
+    s += [[-0.3, 0.2], [0.1, 0.3], [0.45, 0.22], [-0.1, -0.15], [0.3, -0.2], [0.65, 0.05]].map(([u, v]) => { const [x, y] = iso(u, v, 0); return ovale(x, y, 9 + g() * 3, 4 + g() * 1.4, mix('#C8C0B0', '#EDE8DC', g()), 0.5); }).join('');
+    // ——— le four : socle de galets, dôme d'argile, coquillages, bouche, tuyau ———
+    s += boite('cu2s', [-0.4, -0.38, 0.18, 0.18], 0, 8, { gauche: (W, H) => tPierres(W, H, g, { haut: 2.8, long: 4.4, mousse: 0.4, fonce: '#8A8272', clair: '#EDE8DC' }), droite: (W, H) => tPierres(W, H, g, { haut: 2.8, long: 4.4, mousse: 0.4, fonce: '#8A8272', clair: '#EDE8DC' }), dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#D8CCB4"/>`, arete: null });
+    const [ox, oy] = iso(-0.11, -0.1, 8);
+    s += modele('cu2d', ox, oy - 12, 17, ARGILE)
+      + plan(`M${P2(ox - 16, oy)} Q${P2(ox - 17, oy - 24)} ${P2(ox, oy - 26)} Q${P2(ox + 17, oy - 24)} ${P2(ox + 16, oy)} Q${P2(ox, oy + 7)} ${P2(ox - 16, oy)} Z`, 'url(#cu2d)', 0.9)
+      // (la spirale de coquillages pressés, personnalisée)
+      + Array.from({ length: 11 }, (_, i) => { const a = i * 0.9, r = 3 + i * 1.1; return coquilleArgile(ox + 3 + Math.cos(a) * r, oy - 14 + Math.sin(a) * r * 0.7, 1.3 + i * 0.06, a * 57, [ '#FFF4E8', '#FFC8B8', '#FFE0A8'][i % 3]); }).join('')
+      // (une bande peinte sarcelle à la main, au bas du dôme)
+      + `<path d="M${P2(ox - 15.6, oy - 3)} Q${P2(ox, oy + 3)} ${P2(ox + 15.6, oy - 3)}" stroke="${SARCELLE}" stroke-width="2" fill="none" stroke-linecap="round"/>` + Array.from({ length: 7 }, (_, i) => `<circle cx="${f(ox - 12 + i * 4)}" cy="${f(oy - 0.8 + Math.sin(i / 6 * Math.PI) * 2.4)}" r=".7" fill="${CORAIL}"/>`).join('');
+    // (la bouche cintrée de galets, le feu dedans)
+    s += lueur('cu2f', ox - 5, oy - 4, 14, '#FF8A3A', 0.6)
+      + Array.from({ length: 7 }, (_, i) => { const a = Math.PI * (1 - i / 6); return ovale(ox - 5 + Math.cos(a) * 7, oy - 2 - Math.sin(a) * 8, 2, 1.6, mix('#C8C0B0', '#F4F0E8', i % 2 * 0.6), 0.4); }).join('')
+      + `<path d="M${P2(ox - 10.6, oy)} L${P2(ox - 10.6, oy - 4)} Q${P2(ox - 5, oy - 12)} ${P2(ox + 0.6, oy - 4)} L${P2(ox + 0.6, oy + 1.4)} Z" fill="#2A140A"/>`
+      + `<path d="M${P2(ox - 9, oy + 0.6)} Q${P2(ox - 5, oy - 6)} ${P2(ox - 1, oy + 1.2)} Z" fill="#FF8A3A"/><path d="M${P2(ox - 7, oy + 1)} Q${P2(ox - 5, oy - 2.6)} ${P2(ox - 3, oy + 1.2)} Z" fill="#FFE8B0"/>`;
+    // (le tuyau de poêle de cuivre, ses bagues, son chapeau de fer-blanc, la fumée animée)
+    const [tx, ty] = [ox + 7, oy - 22];
+    s += modele('cu2t', tx, ty - 8, 4, '#C8784A') + plan(`M${P2(tx - 2.4, ty + 2)} L${P2(tx - 2.4, ty - 16)} L${P2(tx + 2.4, ty - 16)} L${P2(tx + 2.4, ty + 2)} Z`, 'url(#cu2t)', 0.7)
+      + [-4, -11].map(dy => `<rect x="${f(tx - 2.8)}" y="${f(ty + dy)}" width="5.6" height="1.3" rx=".5" fill="#8A4A2A"/>`).join('')
+      + plan(`M${P2(tx - 5, ty - 16)} L${P2(tx, ty - 20)} L${P2(tx + 5, ty - 16)} Z`, '#B8C0C8', 0.6) + `<path d="M${P2(tx - 3.6, ty - 16.3)} L${P2(tx, ty - 19)}" stroke="#FFFFFF" stroke-width=".6"/>`;
+    s += [0, 1, 2].map(i => { const t = ((n / 8) + i / 3) % 1; return `<circle cx="${f(tx + Math.sin(t * 6) * 2 + t * 5)}" cy="${f(ty - 22 - t * 22)}" r="${f(2 + t * 4)}" fill="#EEF0F4" opacity="${f(0.75 * (1 - t))}"/>`; }).join('');
+    // ——— le plan de travail : le panneau d'écoutille sur deux tonneaux, le bois rangé entre eux ———
+    const T = [0.32, -0.22, 0.82, 0.2];
+    for (const [u, v] of [[0.4, 0.12], [0.74, -0.14]]) { const [x, y] = iso(u, v, 0); s += tonneau(x, y, 4.6, 12, g, { c: u < 0.5 ? '#A86A3A' : '#8A5A3A' }) + `<rect x="${f(x - 4.8)}" y="${f(y - 8)}" width="9.6" height="1.6" fill="${u < 0.5 ? SARCELLE : CORAIL}" opacity=".9"/>`; }
+    const [bx, by] = iso(0.6, 0.05, 0);
+    for (let r = 0; r < 2; r++) for (let i = 0; i < 3; i++) s += ovale(bx - 4 + i * 3.6 + r * 1.8, by - 2 - r * 3.4 - i * 0.8, 1.8, 1.7, '#E0A96C', 0.4);
+    s += boite('cu2p', T, 12, 14, { gauche: (W, H) => tPlanches(W, H, g, { horiz: true, larg: H, c: '#6A6A72' }), droite: (W, H) => tPlanches(W, H, g, { horiz: true, larg: H, c: '#6A6A72' }), dessus: (W, H) => tPlanches(W, H, g, { larg: 4, c: '#C8945A' }) + `<rect width="${f(W)}" height="${f(H)}" fill="none" stroke="#5A5A62" stroke-width="1.6"/>` + `<circle cx="2" cy="2" r=".6" fill="#3A3A42"/><circle cx="${f(W - 2)}" cy="2" r=".6" fill="#3A3A42"/>`, arete: null });
+    // (dessus : la planche et son poisson, les bols de coco, les jarres qui luisent, le pain)
+    const at = (u, v) => iso(u, v, 14);
+    const [px, py] = at(0.48, 0.02);
+    s += plan(`M${P2(px - 6, py)} L${P2(px + 2, py - 4)} L${P2(px + 7, py - 1.6)} L${P2(px - 1, py + 2.4)} Z`, '#E0B070', 0.5)
+      + `<g transform="translate(${f(px)} ${f(py - 1)}) rotate(-26)">${plan('M-4,0 Q-1,-2.4 3,-1 L5,-2.4 L4.6,0 L5,2.2 L3,.9 Q-1,2.2 -4,0 Z', '#9AC8D8', 0.4)}<circle cx="-2.6" cy="-.4" r=".5" fill="#1A2A2A"/></g>`;
+    for (const [u, v, c] of [[0.7, -0.08, '#8A5A2A'], [0.76, 0.06, '#7A4A22']]) { const [x, y] = at(u, v); s += ovale(x, y, 3.4, 1.6, c, 0.4) + ovale(x, y - 0.4, 2.6, 1, '#F4ECDC', 0); }
+    s += conserve('cu2j1', ...at(0.62, -0.16), ACIDE) + conserve('cu2j2', ...at(0.7, -0.2), MAGENTA);
+    const [pa, pb] = at(0.56, 0.14); s += plan(`M${P2(pa - 4, pb)} Q${P2(pa - 4, pb - 4)} ${P2(pa, pb - 4)} Q${P2(pa + 4, pb - 4)} ${P2(pa + 4, pb)} Z`, '#D8964A', 0.5) + trait(`M${P2(pa - 2, pb - 2.4)} l1.2,-1 M${P2(pa + 0.4, pb - 2.6)} l1.2,-1`, '#F4D49A', 0.6);
+    // ——— l'auvent de palmes tressées sur ses quatre bambous (plus haut derrière), ce qui y pend ———
+    const zA = 34, zR = 40, P4 = [[T[0] + 0.06, T[3] + 0.05, zA], [T[2] + 0.04, T[3] + 0.05, zA], [T[2] + 0.04, T[1] - 0.04, zR], [T[0] + 0.06, T[1] - 0.04, zR]];
+    for (const [u, v, z] of P4.slice(2)) { const q = iso(u, v, 0); s += B.bambou(q[0], q[1], q[0], q[1] - z, 1.2); }
+    const top = P4.map(([u, v, z]) => iso(u, v, z + 1));
+    const o = 0.08, A0 = iso(P4[3][0] - o, P4[3][1] - o, zR + 2), A1 = iso(P4[2][0] + o, P4[2][1] - o, zR + 2), F0 = iso(P4[0][0] - o, P4[0][1] + o, zA - 1);
+    const Wa = B.norme([A1[0] - A0[0], A1[1] - A0[1]]), Ha = B.norme([F0[0] - A0[0], F0[1] - A0[1]]);
+    s += B.plaque('cu2a', A0, B.unite([A1[0] - A0[0], A1[1] - A0[1]]), B.unite([F0[0] - A0[0], F0[1] - A0[1]]), Wa, Ha, B.tPalmes(Wa, Ha, g, true, { haut: 4.4 }) + `<rect width="${f(Wa)}" height="${f(Ha)}" fill="#FFF1C8" opacity=".08"/>`);
+    const F1 = plus(F0, [A1[0] - A0[0], A1[1] - A0[1]]);
+    s += trait(`M${P2(...top[0])} L${P2(...top[1])}`, '#8A6A3A', 1.4);
+    for (let x = 0.02; x < 1; x += 0.03) { const q = plus(F0, [F1[0] - F0[0], F1[1] - F0[1]], x); s += `<path d="M${P2(q[0] - 1, q[1])} q-.3,2.2 .6,${f(2.4 + g() * 2)} q.9,-1.3 1.2,${f(-2.6 - g())} Z" fill="${g() < 0.35 ? '#C8A050' : '#4E8A48'}"/>`; }
+    for (const [u, v, z] of P4.slice(0, 2)) { const q = iso(u, v, 0); s += B.bambou(q[0], q[1], q[0], q[1] - z, 1.2); }
+    const c0 = top[0], c1 = top[1];
+    s += [c0, c1].map(q => trait(`M${P2(q[0] - 2, q[1] + 1)} l4,2 M${P2(q[0] - 2, q[1] + 3)} l4,2`, '#E0C08A', 0.8)).join('');
+    const suspend = (t, l) => { const q = plus(c0, [c1[0] - c0[0], c1[1] - c0[1]], t); return [q, trait(`M${P2(...q)} l0,${l}`, '#6A5A3A', 0.5)]; };
+    { const [q, fil] = suspend(0.18, 4); s += fil + Array.from({ length: 4 }, (_, i) => `<circle cx="${f(q[0] + (i % 2 ? 1 : -1))}" cy="${f(q[1] + 5 + i * 2.2)}" r="1.5" fill="#F4ECDC"/>`).join(''); }
+    { const [q, fil] = suspend(0.5, 5); s += fil + trait(`M${P2(q[0], q[1] + 5)} l0,5`, '#C8A060', 0.9) + plan(`M${P2(q[0] - 2.4, q[1] + 10)} Q${P2(q[0], q[1] + 14)} ${P2(q[0] + 2.4, q[1] + 10)} Z`, '#FFC8B8', 0.4); }
+    // (le carillon de coquillages, personnalisé : chaque coquillage peint)
+    { const [q, fil] = suspend(0.84, 3); s += fil + trait(`M${P2(q[0] - 4, q[1] + 3)} L${P2(q[0] + 4, q[1] + 3)}`, '#C8A060', 0.9) + [-3, -1, 1, 3].map((dx, i) => trait(`M${P2(q[0] + dx, q[1] + 3)} l0,${4 + i % 2 * 2}`, '#E0D4B8', 0.4) + coquilleArgile(q[0] + dx, q[1] + 8 + i % 2 * 2, 1.4, 180, [SARCELLE, CORAIL, MAGENTA, ACIDE][i])).join(''); }
+    // ——— le pot de fleurs peint (une boîte de conserve de l'épave), devant ———
+    const [fx, fy] = iso(0.9, 0.34, 0);
+    s += modele('cu2pot', fx, fy - 3, 3.6, SARCELLE) + plan(`M${P2(fx - 3.4, fy)} L${P2(fx - 3.6, fy - 6)} L${P2(fx + 3.6, fy - 6)} L${P2(fx + 3.4, fy)} Z`, 'url(#cu2pot)', 0.5)
+      + `<rect x="${f(fx - 3.6)}" y="${f(fy - 4)}" width="7.2" height="1.2" fill="${CORAIL}"/>` + [[-2, -9, MAGENTA], [1, -11, '#FF7AC8'], [2.6, -8, ACIDE]].map(([dx, dy, c]) => trait(`M${P2(fx, fy - 6)} L${P2(fx + dx, fy + dy)}`, EMERAUDE, 0.7) + `<circle cx="${f(fx + dx)}" cy="${f(fy + dy)}" r="1.5" fill="${c}"/><circle cx="${f(fx + dx)}" cy="${f(fy + dy)}" r=".5" fill="#FFF4C8"/>`).join('');
+    // (l'herbe qui mange les bords)
+    s += [[-26, 6], [-14, 12], [20, 16], [34, 10], [-30, -8]].map(([x, y]) => touffe(x, y, g, 0.7)).join('');
+    return s;
+  } finally { B.BORD.doux = false; }
+}
+
+module.exports = { cuisine, lit, chat, chien, sablier, hibou, grimoire, chantier, cuisine2 };

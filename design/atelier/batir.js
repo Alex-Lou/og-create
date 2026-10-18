@@ -30,9 +30,21 @@ const ligne = pts => 'M' + pts.map(([x, y]) => P2(x, y)).join(' L');
 const stops = s => s.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join('');
 const lin = (id, x1, y1, x2, y2, s) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}">${stops(s)}</linearGradient>`;
 const rad = (id, cx, cy, r, s) => `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}">${stops(s)}</radialGradient>`;
-const plan = (d, fill, w = TRAIT, extra = '') => `<path d="${d}" fill="${fill}" stroke="${ENCRE}" stroke-width="${f(w)}" stroke-linejoin="round"${extra}/>`;
+// (le bord d'une forme : pas un trait d'encre uniforme qui la découpe comme un autocollant, mais sa propre couleur
+// assombrie, plus fine ; choix de l'auteur, 18 oct. : « des bords qui donnent l'impression du sticker collé »)
+const BORD = { doux: false };
+const bordDe = fill => (BORD.doux && /^#[0-9A-Fa-f]{6}$/.test(fill) ? mix(fill, '#24150C', 0.55) : ENCRE);
+const plan = (d, fill, w = TRAIT, extra = '') => `<path d="${d}" fill="${fill}" stroke="${bordDe(fill)}" stroke-width="${f(BORD.doux ? w * 0.75 : w)}" stroke-linejoin="round"${extra}/>`;
 const trait = (d, c, w, extra = '') => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`;
-const ovale = (cx, cy, rx, ry, fill, w = TRAIT, extra = '') => `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? ` stroke="${ENCRE}" stroke-width="${f(w)}"` : ''}${extra}/>`;
+const ovale = (cx, cy, rx, ry, fill, w = TRAIT, extra = '') => `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? ` stroke="${bordDe(fill)}" stroke-width="${f(BORD.doux ? w * 0.75 : w)}"` : ''}${extra}/>`;
+// L'ombre portée douce d'un objet : sa forme au sol (pts), étirée vers le bas à droite (le soleil est en haut à
+// gauche), floue ; elle l'ancre dans l'herbe au lieu de le poser dessus
+const ombrePortee = (id, pts, h, a = 0.34) => {
+  const k = h * 0.45, ext = [...pts, ...pts.map(([x, y]) => [x + k * 0.9, y + k * 0.35])];
+  const cx = ext.reduce((t, p) => t + p[0], 0) / ext.length, cy = ext.reduce((t, p) => t + p[1], 0) / ext.length;
+  const hull = ext.slice().sort((p, q) => Math.atan2(p[1] - cy, p[0] - cx) - Math.atan2(q[1] - cy, q[0] - cx));
+  return `<defs><filter id="${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${f(1.6 + h * 0.04)}"/></filter></defs><path d="${'M' + hull.map(([x, y]) => `${f(x)},${f(y)}`).join(' L') + ' Z'}" fill="${OMBRE_F}" opacity="${a}" filter="url(#${id})"/>`;
+};
 const lueur = (id, x, y, r, c, a = 0.5) => `<defs>${rad(id, x, y, r, [[0, c, a], [0.45, c, a * 0.35], [1, c, 0]])}</defs><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="url(#${id})"/>`;
 // le néon : un halo, le trait vif, son cœur blanc
 const neon = (d, c, w = 1) => trait(d, c, w * 4, ' stroke-opacity=".16"') + trait(d, c, w) + trait(d, '#FFFFFF', w * 0.35, ' stroke-opacity=".8"');
@@ -58,7 +70,8 @@ const plaque = (id, O, U, V, W, H, contenu, clip) => `<g transform="matrix(${f(U
 const voileFace = (W, H, soleil, { pied = 0.35, haut = 0.3 } = {}) => {
   const id = `vf${Math.round(W * 7 + H * 13)}${soleil ? 's' : 'o'}`;
   return `<defs><linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A0E08" stop-opacity="${haut}"/><stop offset=".22" stop-color="#1A0E08" stop-opacity="0"/><stop offset=".7" stop-color="#1A0E08" stop-opacity="0"/><stop offset="1" stop-color="#1A0E08" stop-opacity="${pied}"/></linearGradient></defs>`
-    + `<rect width="${f(W)}" height="${f(H)}" fill="${soleil ? SOLEIL : OMBRE_F}" opacity="${soleil ? 0.05 : 0.32}"/><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}a)"/>`;
+    + `<rect width="${f(W)}" height="${f(H)}" fill="${soleil ? SOLEIL : OMBRE_F}" opacity="${soleil ? 0.05 : 0.32}"/><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}a)"/>`
+    + (BORD.doux ? `<defs><linearGradient id="${id}r" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#81BA5E" stop-opacity="0"/><stop offset="1" stop-color="#81BA5E" stop-opacity=".22"/></linearGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}r)"/>` : '');
 };
 
 // Une boîte posée de (u0, v0) à (u1, v1), de z0 à z1 : sa face gauche (v = v1, au soleil), sa face droite (u = u1, à
@@ -70,8 +83,8 @@ function boite(id, [u0, v0, u1, v1], z0, z1, { gauche, droite, dessus, voile = {
   if (droite) s += plaque(`${id}d`, iso(u1, v1, z1), [AXE_U[0], -AXE_U[1]], [0, 1], D, h, droite(D, h) + voileFace(D, h, false, voile));
   if (dessus) s += plaque(`${id}t`, iso(u0, v0, z1), AXE_U, AXE_V, G, D, dessus(G, D) + (ETAT.hiver ? `<rect x="1" y="1" width="${f(G - 2)}" height="${f(D - 2)}" rx="2" fill="${NEIGE}"/>` : ''));
   const c = [iso(u0, v1, z0), iso(u1, v1, z0), iso(u1, v0, z0), iso(u1, v0, z1), iso(u0, v0, z1), iso(u0, v1, z1)];
-  s += `<path d="${poly(c)}" fill="none" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
-    + trait(ligne([iso(u1, v1, z0), iso(u1, v1, z1)]), ENCRE, 0.7, ' stroke-opacity=".8"')
+  s += `<path d="${poly(c)}" fill="none" stroke="${ENCRE}" stroke-width="${BORD.doux ? 0.6 : TRAIT}" stroke-linejoin="round"${BORD.doux ? ' stroke-opacity=".45"' : ''}/>`
+    + trait(ligne([iso(u1, v1, z0), iso(u1, v1, z1)]), ENCRE, BORD.doux ? 0.4 : 0.7, ` stroke-opacity="${BORD.doux ? 0.35 : 0.8}"`)
     // (l'arête au soleil : le coin de devant accroche la lumière)
     + (arete ? trait(ligne([iso(u1, v1, z0 + 1), iso(u1, v1, z1 - 1)]), arete, 0.7, ' stroke-opacity=".7" transform="translate(-.7 0)"') : '')
     + (dessus ? trait(ligne([iso(u0, v1, z1), iso(u1, v1, z1), iso(u1, v0, z1)]), ENCRE, 0.6, ' stroke-opacity=".7"') : '');
@@ -427,7 +440,7 @@ function bambou(x0, y0, x1, y1, r) {
 }
 
 module.exports = {
-  f, rnd, setHiver, hiver, NEIGE, NEIGE_O, ENCRE, TRAIT, SOLEIL, OMBRE_F, HERBE, SABLE, CYAN, MAGENTA, ACIDE, CHAUD, VIOLET,
+  f, rnd, setHiver, hiver, NEIGE, NEIGE_O, BORD, ombrePortee, ENCRE, TRAIT, SOLEIL, OMBRE_F, HERBE, SABLE, CYAN, MAGENTA, ACIDE, CHAUD, VIOLET,
   P2, poly, ligne, lin, rad, plan, trait, ovale, lueur, neon, mix, plus, moins, norme, unite,
   iso, PAS, AXE_U, AXE_V, plaque, voileFace, boite, toit, surPan,
   tPierres, tBriques, tPlanches, tRondins, tTuiles, tChaume, tColombage, tTole, tBordages, tPalmes, tTresse, tArgile, bambou,
