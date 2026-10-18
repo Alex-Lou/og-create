@@ -4,7 +4,7 @@
        revoir les scènes depuis le Sceau n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="tap" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
     <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
-      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" />
+      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" :beat="beat" />
       <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
     </transition>
     <transition name="ps-caption" appear>
@@ -39,6 +39,9 @@ import { player, accord } from '@/game/accord';
 import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
 import { TOUCH_TO_GO_ON } from '@/texts/ui/common';
+import { sceneOf } from '@/game/sceneArt';
+import { rangBulle } from '@/game/scenePlans';
+import { preparePlans, prepareActeur } from '../SceneArt/raster';
 
 export default {
   name: 'PrologueScene',
@@ -67,6 +70,10 @@ export default {
     },
     frame() {
       return this.list[this.k] || {};
+    },
+    // Le rang de la bulle dans sa scène (game/scenePlans.js) : une scène en plans y joue son temps
+    beat() {
+      return this.list[this.k] ? rangBulle(this.list, this.k) : 0;
     },
     // Qui parle (game/speakers.js) : sa couleur, son motif ; une pensée garde son habit. Le joueur (who : 'joueur')
     // parle sous son nom (game/accord.js), sans couleur
@@ -103,7 +110,7 @@ export default {
     }
   },
   watch: {
-    frame: { immediate: true, handler() { this.arm(); } },
+    frame: { immediate: true, handler() { this.arm(); this.prepareNext(); } },
     scene() {
       this.k = 0;
     }
@@ -117,6 +124,14 @@ export default {
     clearTimeout(this.skipTimer);
   },
   methods: {
+    // La prochaine scène en plans, lue d'avance pendant que celle-ci joue : elle s'ouvrira toute peinte, sans trou noir
+    prepareNext() {
+      const next = this.list.slice(this.k + 1).find(f => f.scene && f.scene !== this.frame.scene);
+      if (!next) return;
+      preparePlans(sceneOf(next.scene));
+      // (et ce que l'avatar y joue d'abord)
+      if (!next.alone) prepareActeur(sceneOf(next.scene), this.look);
+    },
     // Une image qui avance seule (la tempête) ; avec le mouvement réduit, elle attend un toucher
     arm() {
       clearTimeout(this.timer);

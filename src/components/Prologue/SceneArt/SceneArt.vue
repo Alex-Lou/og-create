@@ -11,11 +11,19 @@
        (léger, livré à part par la bibliothèque) se joue tel quel. Par-dessus, le temps qu'il fait (meteo) : le ciel qui
        s'assombrit, la pluie.
        Une seule racine : la scène l'anime en fondu -->
-  <div class="sa" :style="fillStyle" aria-hidden="true">
+  <div :class="['sa', { 'sa--plans': data && data.plans }]" :style="fillStyle" aria-hidden="true">
     <template v-if="data">
       <div class="sa__stage">
-        <div ref="square" :class="['sa__square', { 'sa__square--tall': squareStyle }]" :style="squareStyle">
-          <div :class="['sa__art', { 'sa__art--breathing': data.still }]">
+        <div ref="square" :class="['sa__square', { 'sa__square--tall': squareStyle, 'sa__square--plans': data.plans }]" :style="squareStyle">
+          <ScenePlans v-if="data.plans" :plans="data.plans" :partition="data.partition" :beat="beat" :width="cssWidth" @edges="onEdges" @temps="onTemps">
+            <template #avatar>
+              <canvas ref="over" class="sa__paint" />
+            </template>
+            <template #anime>
+              <img v-for="(href, k) in data.live" :key="`l${k}`" class="sa__paint" :src="href" alt="" />
+            </template>
+          </ScenePlans>
+          <div v-else :class="['sa__art', { 'sa__art--breathing': data.still }]">
             <canvas ref="under" class="sa__paint" />
             <img v-for="(href, k) in data.live" :key="`l${k}`" class="sa__paint" :src="href" alt="" :style="{ visibility: k === frame % data.live.length ? 'visible' : 'hidden' }" />
             <canvas ref="over" class="sa__paint" />
@@ -35,8 +43,11 @@
 
 <script>
 import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
+import { acteurImages, mouvementsKit } from '@/game/avatarKit';
+import { clipA, imageA, prochain } from '@/game/acteur';
 import { reducedMotion } from '@/utils/fx';
-import { layerRaster, edgeColors, MAX_DPR, ART } from './raster';
+import { layerRaster, rasterOf, acteurPx, prepareActeur, edgeColors, MAX_DPR, ART } from './raster';
+import ScenePlans from './ScenePlans';
 // La pluie (meteo.pluie, de 0 à 1) : ses gouttes au plus, leur pente, la vitesse à laquelle elle forcit ou faiblit (par
 // seconde) ; la finesse de son image au plus
 const DROPS = 150;
@@ -51,6 +62,7 @@ const hash = (n, k) => {
 
 export default {
   name: 'SceneArt',
+  components: { ScenePlans },
   props: {
     // La scène de la bibliothèque (scenes.json : 01_greve, 02_rocher…)
     scene: { type: String, required: true },
@@ -65,17 +77,36 @@ export default {
     // Le nom écrit sur la ligne « Nom » de la carte d'embarquement
     name: { type: String, default: '' },
     // Le temps qu'il fait sur la scène ({ nuages, pluie }, de 0 à 1 : le conseil, texts/tutorial/scenes.js), ou null
-    meteo: { type: Object, default: null }
+    meteo: { type: Object, default: null },
+    // Le rang de la bulle dans la scène (0 à son ouverture) : une scène en plans y joue le temps de sa partition
+    beat: { type: Number, default: 0 }
   },
   data() {
-    return { NAME_LINE, frame: 0, px: 0, fill: null };
+    return { NAME_LINE, frame: 0, px: 0, cssWidth: 0, fill: null, acteurT: 0 };
   },
   computed: {
     data() {
       return sceneOf(this.scene);
     },
+    // Le jeu de l'avatar dans une scène en plans (game/acteur.js) : la piste « acteur » du temps de la bulle (une bulle
+    // au-delà de la partition garde le dernier), ou null
+    jeu() {
+      const temps = this.data && this.data.plans && this.data.avatar && !this.alone && this.data.partition ? this.data.partition.temps : null;
+      const dernier = temps && temps[Math.min(this.beat, temps.length - 1)];
+      return dernier && dernier.acteur ? dernier.acteur : null;
+    },
+    // L'image que l'avatar joue en ce moment (null tant que le kit se charge : il garde alors son image de la scène)
+    joue() {
+      const anims = this.jeu && mouvementsKit();
+      if (!anims) return null;
+      const { debut, clip } = clipA(this.jeu, this.acteurT);
+      const images = this.imagesDe(clip);
+      return images.length ? images[imageA(clip.anim, this.acteurT - debut, anims)] : null;
+    },
     body() {
       if (!this.data || !this.data.avatar || this.alone) return null;
+      // (il joue la scène : ses images viennent de sa piste, à la place de la scène ; sa direction fait son miroir)
+      if (this.joue) return { ...avatarBox(this.data.avatar), frames: [this.joue], axis: null, acteur: true };
       const spot = { ...this.data.avatar, ...this.pose };
       return { ...avatarBox(spot), frames: avatarFrames(this.look, spot), axis: spot.miroir ? spot.x : null };
     },
@@ -114,21 +145,27 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.timer);
+    clearTimeout(this.acteurTimer);
     if (this.observer) this.observer.disconnect();
     cancelAnimationFrame(this.rainRaf);
     this.token = (this.token || 0) + 1;
   },
   methods: {
     // La taille du carré à l'écran : son image s'y accorde (et se repeint) quand elle change
+    // (une scène en plans n'a au plus que le canvas de l'avatar : ScenePlans peint ses plans)
     measure() {
       const { square, under, over } = this.$refs;
-      if (!square || !under || !over) return;
+      if (!square || (!this.data.plans && (!under || !over))) return;
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-      const px = Math.round(square.getBoundingClientRect().width * dpr);
+      const css = square.getBoundingClientRect().width;
+      const px = Math.round(css * dpr);
       if (!px || px === this.px) return;
       this.px = px;
-      under.width = over.width = px;
-      under.height = over.height = Math.round((px * this.data.h) / ART);
+      this.cssWidth = css;
+      for (const canvas of [under, over].filter(Boolean)) {
+        canvas.width = px;
+        canvas.height = Math.round((px * this.data.h) / ART);
+      }
       // (toutes les images de la scène se lisent tout de suite : la boucle ne les attend pas)
       for (let f = 0; f < Math.max(1, this.data.frames); f++) {
         const { under: below, over: above } = this.layersOf(f);
@@ -141,11 +178,12 @@ export default {
     layersOf(f) {
       const pick = list => (list.length ? [{ href: list[f % list.length], x: 0, y: 0, w: ART, h: this.data.h }] : []);
       const body = this.body;
-      const avatar = body && body.frames.length ? [{ href: body.frames[f % body.frames.length], x: body.x, y: body.y, w: body.w, h: body.h, axis: body.axis, clip: body.clip }] : [];
+      const avatar = body && body.frames.length ? [{ href: body.frames[f % body.frames.length], x: body.x, y: body.y, w: body.w, h: body.h, axis: body.axis, clip: body.clip, acteur: body.acteur }] : [];
       return { under: pick(this.data.back), over: [...avatar, ...pick(this.data.front)] };
     },
     rasterOf(layer) {
-      return layerRaster(layer, this.px, this.data.h);
+      // (ce que joue l'avatar se lit à la taille de l'écran : lu d'avance, il est là dès que la scène s'ouvre)
+      return layer.acteur ? rasterOf(layer.href, ...acteurPx(layer)) : layerRaster(layer, this.px, this.data.h);
     },
     // L'image du moment, peinte quand ses calques sont lus (une image plus récente demandée entre-temps passe devant) ;
     // la première fois, la couleur des bords de son fond
@@ -154,10 +192,41 @@ export default {
       const token = (this.token = (this.token || 0) + 1);
       const { under, over } = this.layersOf(this.frame);
       const [below, above] = await Promise.all([under, over].map(list => Promise.all(list.map(layer => this.rasterOf(layer)))));
-      if (token !== this.token || !this.$refs.under || !this.$refs.over) return;
-      this.paintInto(this.$refs.under, under, below);
-      this.paintInto(this.$refs.over, over, above);
+      if (token !== this.token || (!this.data.plans && (!this.$refs.under || !this.$refs.over))) return;
+      if (this.$refs.under) this.paintInto(this.$refs.under, under, below);
+      if (this.$refs.over) this.paintInto(this.$refs.over, over, above);
       if (!this.fill && below[0]) this.fill = edgeColors(below[0]);
+    },
+    // Les images d'un clip de la piste « acteur », gravées à la lumière de la scène
+    imagesDe(clip) {
+      return acteurImages(this.look, clip, { naufrage: this.data.avatar.naufrage !== false, lumiere: this.data.partition.lumiere || {} });
+    },
+    // Un temps de la partition commence (ScenePlans) : l'avatar joue sa piste depuis son début, au rythme de ses images
+    // (toutes lues d'avance) ; avec le mouvement réduit, il reste sur le début de son dernier clip
+    onTemps() {
+      clearTimeout(this.acteurTimer);
+      const acteur = this.jeu;
+      if (!acteur) return;
+      // (toutes ses images de la scène, celles de ce temps d'abord)
+      const box = avatarBox(this.data.avatar);
+      for (const [, clip] of acteur) this.imagesDe(clip).forEach(href => this.rasterOf({ href, ...box, acteur: true }));
+      if (!this.alone) prepareActeur(this.data, this.look);
+      if (reducedMotion()) {
+        this.acteurT = acteur[acteur.length - 1][0];
+        return;
+      }
+      const t0 = performance.now();
+      const tick = () => {
+        this.acteurT = performance.now() - t0;
+        const anims = mouvementsKit();
+        this.acteurTimer = setTimeout(tick, anims ? prochain(acteur, this.acteurT, anims) : 100);
+      };
+      this.acteurT = 0;
+      tick();
+    },
+    // La couleur des bords d'une scène en plans : celle de son premier plan (son ciel)
+    onEdges(colors) {
+      if (!this.fill && colors) this.fill = colors;
     },
     paintInto(canvas, layers, images) {
       const k = this.px / ART;
