@@ -10,6 +10,7 @@
 // peut pas s'ouvrir (noProvisional), l'ancien chemin reste : le Vent, puis la page de garde crée le compte.
 import { COACH } from '@/texts/tutorial/coach';
 import { HENS } from '@/game/stages';
+import { lineOf } from '@/world/strays';
 import * as storage from '@/utils/storage';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 
@@ -106,7 +107,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour de Lorena (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'portes', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'portes', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -117,8 +118,9 @@ export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLO
 // quest : l'identifiant de la quête active
 export function islandTaught({ tutorial, quest }) {
   if (!tutorial || !inPrologue(quest)) return null;
-  // (le tracé des chemins s'apprend avec Lorena, entre son camp et le nôtre)
-  return { harvest: !upTo(quest, 'nuit'), road: !upTo(quest, 'premier-ponton') };
+  // (le tracé des chemins s'apprend avec Lorena, entre son camp et le nôtre ; « Tout ramasser », avec Agathe, le jour de
+  // Nathan, quand on va au Ponton pour sa Canne à pêche : choix de l'auteur, 18 oct.)
+  return { harvest: !upTo(quest, 'nuit'), road: !upTo(quest, 'premier-ponton'), collect: !upTo(quest, 'torches-rivet') };
 }
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
 // La première nuit se passe seul avec Brume ; Lorena arrive au matin et ouvre son propre tutoriel par la Récolte ; les
@@ -176,7 +178,7 @@ const BUILD = '[data-coach="site-build"]:not(:disabled)';
 // Déplacer une création posée
 const MOVE = COACH.move;
 const FUSE = { target: '.athanor__fuse:not(:disabled)', text: COACH.fuse, free: true };
-// Une création assemblée à l'établi de Nathan, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
+// Une création assemblée à l'établi de Nathan, puis posée, geste par geste (ses torches) : le toucher sur
 // Nathan ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
 // quart de tour, sa case, puis « Assembler » ; CraftPuzzle, guided), « Poser » (dans le casse-tête, ou à l'établi s'il a
 // été refermé), une case dorée (WorldView, workshop.js : craftSpots), « Poser ici ». text : ses consignes
@@ -248,11 +250,16 @@ const LESSONS = {
     { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
   // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Nathan, avec les bâtiments :
-  // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
+  // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.) ; ses torches plantées, puis
+  // en pivoter une (choix de l'auteur, 18 oct. : « Ranger », Nathan le dit seulement)
   deplacer: [
-    { target: 'île:creation:cloture', text: MOVE },
+    { target: 'île:creation:torche', text: MOVE },
     { target: '[data-coach="craft-move"]', text: MOVE },
     { target: 'île:pose', text: MOVE }
+  ],
+  pivoter: [
+    { target: 'île:creation:torche', text: COACH.pivoter },
+    { target: '[data-coach="craft-turn"]:not(:disabled)', text: COACH.pivoter }
   ],
   feu: [
     { target: 'île:site:foyer', text: COACH.feu.site },
@@ -276,7 +283,7 @@ const LESSONS = {
   attraper: [{ target: 'île:poule', text: COACH.attraper.poule }],
   poules: [{ target: 'île:faim', text: COACH.poules.hungry }],
   // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert) qu'on assemble d'abord
-  // (son casse-tête, la main sur chaque pièce comme pour la lanterne de Nathan : choix de l'auteur, 15 oct.), une case
+  // (son casse-tête, la main sur chaque pièce comme pour les torches de Nathan : choix de l'auteur, 15 oct.), une case
   // dorée près du coin d’Agathe, « Poser ici »
   poulailler: [
     { target: 'île:site:foyer', text: COACH.poulailler.site },
@@ -305,15 +312,27 @@ const LESSONS = {
     { target: '[data-coach="line-go"][data-full="bois"]:not(:disabled)', text: COACH['enclos-cannelle'].room }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour de Nathan (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
-  // lanterne, geste par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler », « Poser », une
-  // case dorée au bord du chemin près du feu (WorldView, workshop.js : craftSpots), « Poser ici »
+  // Le jour de Nathan (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis il
+  // s'installe dans son coin (18 oct.) : son coin touché, « Bâtir son abri », comme celui d’Agathe
   'rivet-brume': [{ target: 'île:habitant:atelier', text: COACH['rivet-brume'].rivet }],
-  deco: assembleSteps('lanterne', COACH.deco),
-  // Ses trois torches (choix de l'auteur, 13 oct.) : la même leçon, trois fois (la consigne dite une fois, puis la main
-  // et le compteur « 1 / 3 » ; COUNTED) ; une case dorée par côté d'où venaient les égarés (workshop.js : torchSpotsOf)
+  deco: [
+    { target: 'île:coin:rivet', text: COACH.deco.coin },
+    { target: '.world__tip-btn[data-pick="coin:rivet"]', text: COACH.deco.build }
+  ],
+  // Ses trois torches (choix de l'auteur, 13 oct. ; à l'ancienne, en attendant l'électricité, 18 oct.), d'un coup, geste
+  // par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler » (« Ce qu'il faut · 3 »), son
+  // casse-tête guidé, « Poser », une case dorée par côté d'où venaient les égarés (workshop.js : torchSpotsOf), « Poser
+  // ici » ; puis le compteur « 1 / 3 » (COUNTED)
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
-  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Nathan finit ; dormir, c'est toucher Brume
+  // Son premier outil (choix de l'auteur, 18 oct.) : le Ponton, sa fiche, « Boutique », le prix de la Canne à pêche
+  'outil-rivet': [
+    { target: 'île:site:ponton', text: COACH['outil-rivet'].site },
+    { target: tipOf('site:ponton'), text: COACH['outil-rivet'].sheet },
+    { target: '[data-coach="tab-shop"]', text: COACH['outil-rivet'].tab },
+    { target: '[data-coach="buy-canne"]:not(:disabled)', text: COACH['outil-rivet'].buy }
+  ],
+  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Nathan finit ; dormir, c'est toucher Brume (sa nuit des
+  // lumières se joue d'abord : LUMIERES)
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
   // s'échoue, Léo endormi dessus ; on le réveille
@@ -352,6 +371,8 @@ const SHORT = {
   'abri-cannelle': { target: '.world__play', text: COACH.short['abri-cannelle'] },
   'enclos-cannelle': { target: '.world__play', text: COACH.short['enclos-cannelle'] }
 };
+// Le coin dont chaque quête bâtit l'abri (serveur : world/shelters.js)
+const SHELTER_OF = { 'abri-cannelle': 'cannelle', deco: 'rivet' };
 // Le chantier de chaque quête qui en bâtit un
 const SITE_OF = { feu: 'foyer', 'puits-ondin': 'puits', 'premier-ponton': 'ponton' };
 // La quête active demande de payer (le feu, la soupe, une poule, le Puits) et le stock n'y suffit pas encore (ce qui
@@ -366,14 +387,14 @@ export function questShort(quest, state, stock) {
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
   }
-  // (la lanterne de Nathan, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
-  if (quest.id === 'deco' || quest.id === 'torches-rivet') {
-    const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === (quest.id === 'deco' ? 'lanterne' : 'torche'));
+  // (les torches de Nathan : tant que la suivante n'est ni assemblée ni posée)
+  if (quest.id === 'torches-rivet') {
+    const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'torche');
     return Boolean(made && !made.reserve && lacks(made.cost));
   }
-  // (l'abri d’Agathe ; son enclos, tant qu'il n'y a pas de quoi payer un piquet)
-  if (quest.id === 'abri-cannelle') {
-    const shelter = state.shelters && state.shelters.cannelle;
+  // (l'abri d’Agathe, celui de Nathan ; son enclos à elle, tant qu'il n'y a pas de quoi payer un piquet)
+  if (SHELTER_OF[quest.id]) {
+    const shelter = state.shelters && state.shelters[SHELTER_OF[quest.id]];
     return Boolean(shelter && !shelter.built && lacks(shelter.cost));
   }
   if (quest.id === 'enclos-cannelle') {
@@ -408,6 +429,43 @@ export const EGARES = [
   { x: 99, y: 86, at: 0, kind: 'fantome' }, { x: 92, y: 93, at: 1.2, side: 'x', kind: 'zombie' }, { x: 101, y: 85, at: 2.2, kind: 'fantome' },
   { x: 106, y: 94, at: 3.2, side: 'x', kind: 'esprit' }, { x: 98, y: 85, at: 4.1, kind: 'fantome' }
 ];
+// La nuit des lumières (LUMIERES) : un Sans-Nom de chaque côté où Nathan a planté ses torches (le nord, l'ouest, l'est ;
+// celui du nord, un téméraire : bold), puis le Dormeur, à l'ouest
+const LUMIERES_FROM = [
+  { x: 99, y: 84, at: 0, kind: 'fantome', bold: true }, { x: 90, y: 93, at: 1, side: 'x', kind: 'fantome' },
+  { x: 108, y: 93, at: 2, side: 'x', kind: 'fantome' }, { x: 91, y: 94, at: 3.2, side: 'x', kind: 'zombie' }
+];
+// Ce qu'une lumière fait aux égarés, la règle du serveur (services/nights.js : fateOf), sans le passage en biais : le
+// Sans-Nom voit une lumière à SIGHT cases et part droit vers elle ; une clôture sur son chemin l'arrête d'abord (le
+// Dormeur s'y endort) ; sinon la première lumière à portée (REACH, sinon LIGHT_REACH) l'arrête à son bord ('repousse'),
+// pas le Dormeur ; un téméraire (bold) y fait encore un pas et s'y brûle ('brule'). foyer : le Feu de la vue ;
+// placed : les créations posées ({ craft, x, y, locked }). [{ kind, at, path, step, end }]
+const LIGHT_REACH = 3;
+const REACH = { torche: 2 };
+const SIGHT = 5;
+const LIGHTS = new Set(['lanterne', 'brasero', 'torche']);
+const bars = p => p.craft === 'cloture' || p.craft === 'muret' || (p.craft === 'porte' && p.locked);
+export function lumieresOf(foyer, placed) {
+  const far = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+  const lights = placed.filter(p => LIGHTS.has(p.craft)).map(p => ({ x: p.x, y: p.y, reach: REACH[p.craft] || LIGHT_REACH }));
+  const fences = new Set(placed.filter(bars).map(p => `${p.x}:${p.y}`));
+  return LUMIERES_FROM.map(from => {
+    const straight = lineOf(from, from.side === 'x' ? { x: foyer.x, y: from.y } : { x: from.x, y: foyer.y });
+    let path = straight;
+    if (from.kind === 'fantome') {
+      const step = straight.findIndex(cell => lights.some(l => far(l, cell) <= SIGHT));
+      if (step >= 0) {
+        const seen = lights.filter(l => far(l, straight[step]) <= SIGHT).sort((a, b) => far(a, straight[step]) - far(b, straight[step]))[0];
+        path = [...straight.slice(0, step), ...lineOf(straight[step], seen)];
+      }
+    }
+    const barred = path.findIndex(cell => fences.has(`${cell.x}:${cell.y}`));
+    const lit = from.kind === 'zombie' ? -1 : path.findIndex(cell => lights.some(l => far(l, cell) <= l.reach));
+    const end = barred >= 0 ? (from.kind === 'zombie' ? 'dort' : 'barre') : lit < 0 ? 'arrive' : from.bold ? 'brule' : 'repousse';
+    const step = barred >= 0 ? barred - 1 : lit < 0 ? path.length - 1 : from.bold ? Math.min(lit + 1, path.length - 1) : lit;
+    return { kind: from.kind, at: from.at, path, step, end };
+  });
+}
 // L'enclos du camp (choix de l'auteur, 13 oct. ; à deux cases, 15 oct. : une rangée libre dedans, pour ce qu'on défend) :
 // les cases de clôture permises (spots) à ENCLOS_GAP cases de la grande emprise du Feu (3 × 3 : elle ne bouge pas quand
 // il grandit), dans l'ordre d'un tour, en partant de la brèche ; foyer : le Feu de la vue (son emprise du moment). Les
@@ -463,6 +521,9 @@ function ringOf(r, spots, d = 1) {
 // Le Dormeur endormi contre l'enclos a sa réplique, et Lorena parle après la démonstration (choix de l'auteur, 15 oct. :
 // ecriture/lots/03_egares.md ; six bulles au plus, comme une scène)
 export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'dormeur-pique', 'cloture-voyez', 'aster-dormir'];
+// La nuit des lumières (choix de l'auteur, 18 oct.) : la quatrième nuit, touchée pour dormir, Brume montre à Nathan ce
+// qu'une lumière fait aux égarés (sa promesse : « On le saura cette nuit ») ; les égarés de LUMIERES_EGARES (demos.js)
+export const LUMIERES = ['lumieres-regarde', 'lumieres-bord', 'lumieres-brule', 'lumieres-nathan', 'lumieres-dormeur', 'lumieres-nourrir'];
 // Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
 // fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
 const COUNTED = new Set(['ramasser', 'clotures', 'portes', 'enclos-cannelle', 'torches-rivet']);
@@ -567,13 +628,23 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint', 'entends'] };
   if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
-  // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
+  // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.) ; puis
+  // il s'installe dans son coin, Lorena et Agathe curieuses : son abri (18 oct.)
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
-    return { phase: 'lines', lines: quest.done ? ['lanterne-brille', 'lanterne-brume', ...lines] : ['puzzle', 'or'] };
+    return { phase: 'lines', lines: quest.done ? ['abri-rivet-fait', ...lines] : ['coin-rivet', 'curieux-aster', 'curieux-agathe'] };
   }
-  // Ses trois torches (choix de l'auteur, 13 oct.)
-  if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent', 'ingenieur'] : ['torches-idee'] };
+  // Ses trois torches (choix de l'auteur, 13 oct.) : le lampadaire attendra l'électricité, des torches à l'ancienne ; le
+  // casse-tête, et sa promesse pour la nuit (18 oct.)
+  if (quest.id === 'torches-rivet') {
+    if (!quest.done) return { phase: 'lines', lines: ['lampadaire-reve', 'lampadaire-brume', 'lampadaire-ancienne', 'torches-idee', 'puzzle', 'or'] };
+    // (plantées, avant la récompense : en déplacer une, puis la pivoter ; choix de l'auteur, 18 oct.)
+    if (!seen.has('deplace')) return { phase: 'lines', lines: ['torches-tiennent', 'ingenieur', 'deplace-idee'], lesson: 'deplacer', hold: true };
+    if (!seen.has('pivote')) return { phase: 'lines', lines: ['pivote-idee'], lesson: 'pivoter', hold: true };
+    return { phase: 'lines', lines: ['torches-tiennent', 'ingenieur', 'ranger-astuce', ...lines] };
+  }
+  // Son premier outil (choix de l'auteur, 18 oct.) : la Canne à pêche du Ponton ; Lorena, ravie
+  if (quest.id === 'outil-rivet') return { phase: 'lines', lines: quest.done ? ['outil-fait'] : ['outil-idee'] };
   // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Nathan autour du feu, Agathe inquiète pour son
   // Léo, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'marmite-agathe', 'souci', 'courants', 'courants-suite'], line: 'soir-quatre' };

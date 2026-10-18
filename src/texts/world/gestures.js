@@ -15,6 +15,8 @@ export const ANIMALS = {
   phenix: ['Brume en Phénix', 'Ta flamme, notre vie.']
 };
 // La cage aux poules, échouée (le premier toucher)
+// Le coin d'un maître dont on bâtit l'abri (world/shelters.js, serveur)
+export const CORNER_TITLES = { cannelle: 'Le coin d’Agathe', rivet: 'Le coin de Nathan' };
 export const CAGE_TEXT = 'Échouée au bout de la plage : les poules d’Agathe ont tenu bon !';
 // La cage vide, le poulailler posé (choix de l'auteur, 15 oct. ; texte validé) : la démonter rend son bois
 export const CAGE_EMPTY_TEXT = 'Vide : les poules ont leur poulailler. Démontée, elle rend son bois.';

@@ -110,21 +110,29 @@ export const COACH = {
   'rivet-brume': {
     rivet: 'Quelqu’un sort de la brume : va voir.'
   },
+  // (puis son coin, son abri : choix de l'auteur, 18 oct., textes validés ; les gestes du casse-tête, ceux de ses
+  // torches et du poulailler d’Agathe)
   deco: {
+    coin: 'Le coin de Nathan : touche-le.',
+    build: 'Vingt bois, dix pierres : bâtis son abri.',
     rivet: 'Va voir Nathan : son établi t’attend.',
-    assemble: 'Assemble la Lanterne : six bois, six pierres.',
     take: 'Prends cette pièce.',
     turn: 'Touche-la encore : elle tourne.',
     drop: 'Pose-la là, dans le gabarit.',
-    done: 'Tout est en place : touche « Assembler ».',
-    place: 'Ta lanterne est prête : touche « Poser ».',
-    cells: 'Pose-la au bord du chemin, près du feu, sur une case dorée.'
+    done: 'Tout est en place : touche « Assembler ».'
   },
-  // Les trois torches de Nathan (choix de l'auteur, 13 oct. ; textes validés)
+  // Les trois torches de Nathan (choix de l'auteur, 13 oct. ; textes validés), d'un coup (18 oct.)
   'torches-rivet': {
-    assemble: 'Assemble une torche : deux bois.',
-    place: 'Ta torche est prête : touche « Poser ».',
+    assemble: 'Choisis « Ce qu’il faut · 3 », puis « Assembler » : trois torches d’un coup, six bois.',
+    place: 'Tes torches sont prêtes : touche « Poser ».',
     cells: 'Plante-la sur la case dorée, du côté d’où venaient les égarés.'
+  },
+  // Son premier outil, à la boutique du Ponton (choix de l'auteur, 18 oct. ; textes validés)
+  'outil-rivet': {
+    site: 'Touche le Ponton de Lorena.',
+    sheet: 'Ouvre sa fiche.',
+    tab: 'Onglet « Boutique ».',
+    buy: 'La Canne à pêche : touche son prix.'
   },
   'planche-vue': {
     aster: 'Va voir Lorena : elle a vu quelque chose sur la vague.'
@@ -146,7 +154,7 @@ export const COACH = {
     soupe: 'Pas assez de vivres pour sa soupe : lance une Récolte, l’île en donne.',
     poules: 'Deux vivres pour nourrir une poule : lance une Récolte, ou ramasse des coquillages sur le rivage.',
     'puits-ondin': 'Il manque de quoi bâtir le Puits : lance une Récolte, l’île en donne.',
-    deco: 'Il manque de quoi assembler la Lanterne : lance une Récolte, l’île en donne.',
+    deco: 'Il manque de quoi bâtir l’abri de Nathan : lance une Récolte, l’île en donne.',
     'torches-rivet': 'Il manque du bois pour les torches : lance une Récolte, l’île en donne.',
     'premier-ponton': 'Il manque du bois pour le Ponton : touche Lorena, une autre Récolte en donnera.',
     'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
@@ -168,7 +176,9 @@ export const COACH = {
     sheet: 'Referme cette fiche : Brume t’attend avec ta récompense.',
     harvest: 'Retourne sur l’île : Brume t’attend avec ta récompense.'
   },
-  move: 'Appui long sur une clôture : « Déplacer », puis une autre case.',
+  // (les torches de Nathan plantées : en déplacer une, puis la pivoter ; choix de l'auteur, 18 oct., textes validés)
+  move: 'Appui long sur une torche : « Déplacer », puis une autre case dorée.',
+  pivoter: 'Appui long sur ta torche : « Pivoter ».',
   'souvenir-ondin': {
     ariane: 'Le ruban mène à la page qui manque : la Pluie.',
     why: 'pendant que tu aides Léo',

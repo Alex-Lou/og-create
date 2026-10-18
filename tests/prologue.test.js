@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, sceneDelayOf, VEILLEE, torchSpotsOf } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, sceneDelayOf, VEILLEE, torchSpotsOf, islandLesson, LUMIERES, lumieresOf } from '@/game/prologue';
 import { SCENES, LINES } from '@/texts/tutorial/scenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -149,12 +149,25 @@ describe('le tutoriel', () => {
     expect(island({ id: 'nuit-cannelle', done: false }, all)).toEqual({ phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' });
     // (Nathan sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
-    expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
-    expect(island({ id: 'deco', done: true }, all)).toEqual({ phase: 'lines', lines: ['lanterne-brille', 'lanterne-brume'] });
-    // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
-    expect(island({ id: 'torches-rivet', done: false }, all)).toEqual({ phase: 'lines', lines: ['torches-idee'] });
-    expect(island({ id: 'torches-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['torches-tiennent', 'ingenieur'] });
-    for (const line of ['torches-idee', 'torches-tiennent']) expect(LINES[line], line).toBeTruthy();
+    // (puis il s'installe dans son coin, Lorena et Agathe curieuses : son abri ; choix de l'auteur, 18 oct.)
+    expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['coin-rivet', 'curieux-aster', 'curieux-agathe'] });
+    expect(island({ id: 'deco', done: true }, all)).toEqual({ phase: 'lines', lines: ['abri-rivet-fait'] });
+    expect(islandLesson({ id: 'deco', done: false }).steps.map(st => st.target)).toEqual(['île:coin:rivet', '.world__tip-btn[data-pick="coin:rivet"]']);
+    // Ses trois torches (choix de l'auteur, 13 oct.) : le lampadaire attendra l'électricité (18 oct.) ; plantées, avant la
+    // récompense, en déplacer une, puis la pivoter (la récompense attend)
+    expect(island({ id: 'torches-rivet', done: false }, all)).toEqual({ phase: 'lines', lines: ['lampadaire-reve', 'lampadaire-brume', 'lampadaire-ancienne', 'torches-idee', 'puzzle', 'or'] });
+    expect(island({ id: 'torches-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['torches-tiennent', 'ingenieur', 'deplace-idee'], lesson: 'deplacer', hold: true });
+    expect(island({ id: 'torches-rivet', done: true }, [...all, 'deplace'])).toEqual({ phase: 'lines', lines: ['pivote-idee'], lesson: 'pivoter', hold: true });
+    expect(island({ id: 'torches-rivet', done: true }, [...all, 'deplace', 'pivote'])).toEqual({ phase: 'lines', lines: ['torches-tiennent', 'ingenieur', 'ranger-astuce'] });
+    for (const line of ['coin-rivet', 'abri-rivet-fait', 'lampadaire-reve', 'lampadaire-brume', 'torches-idee', 'torches-tiennent', 'deplace-idee', 'pivote-idee', 'ranger-astuce']) expect(LINES[line], line).toBeTruthy();
+    expect(islandLesson({ id: 'deplacer', done: false }).steps.map(st => st.target)).toEqual(['île:creation:torche', '[data-coach="craft-move"]', 'île:pose']);
+    // Son premier outil, la Canne à pêche du Ponton (choix de l'auteur, 18 oct.)
+    expect(island({ id: 'outil-rivet', done: false }, all)).toEqual({ phase: 'lines', lines: ['outil-idee'] });
+    expect(island({ id: 'outil-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['outil-fait'] });
+    expect(islandLesson({ id: 'outil-rivet', done: false }).steps.at(-1).target).toBe('[data-coach="buy-canne"]:not(:disabled)');
+    // La nuit des lumières : ses répliques, la première joue la démonstration
+    expect(LUMIERES.every(line => Boolean(LINES[line]))).toBe(true);
+    expect(LINES[LUMIERES[0]].demo).toBe('lumieres');
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
     expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'marmite-agathe', 'souci', 'courants', 'courants-suite'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
@@ -211,13 +224,16 @@ describe('le tutoriel', () => {
     expect(islandTaught({ tutorial: false, quest: 'feu' })).toBeNull();
     expect(islandTaught({ tutorial: true, quest: 'lisiere' })).toBeNull();
     // Brume seule, puis la nuit : ni la Récolte ni le tracé
-    expect(islandTaught({ tutorial: true, quest: 'pages' })).toEqual({ harvest: false, road: false });
-    expect(islandTaught({ tutorial: true, quest: 'nuit' })).toEqual({ harvest: false, road: false });
+    expect(islandTaught({ tutorial: true, quest: 'pages' })).toEqual({ harvest: false, road: false, collect: false });
+    expect(islandTaught({ tutorial: true, quest: 'nuit' })).toEqual({ harvest: false, road: false, collect: false });
     // La Récolte avec Lorena, et ensuite ; le tracé avec le chemin entre son camp et le nôtre, et ensuite
-    expect(islandTaught({ tutorial: true, quest: 'recolte' })).toEqual({ harvest: true, road: false });
-    expect(islandTaught({ tutorial: true, quest: 'premier-ponton' })).toEqual({ harvest: true, road: false });
-    expect(islandTaught({ tutorial: true, quest: 'chemin-aster' })).toEqual({ harvest: true, road: true });
-    expect(islandTaught({ tutorial: true, quest: 'chemin' })).toEqual({ harvest: true, road: true });
+    expect(islandTaught({ tutorial: true, quest: 'recolte' })).toEqual({ harvest: true, road: false, collect: false });
+    expect(islandTaught({ tutorial: true, quest: 'premier-ponton' })).toEqual({ harvest: true, road: false, collect: false });
+    expect(islandTaught({ tutorial: true, quest: 'chemin-aster' })).toEqual({ harvest: true, road: true, collect: false });
+    // « Tout ramasser », avec Agathe, le jour de Nathan, au Ponton (choix de l'auteur, 18 oct.)
+    expect(islandTaught({ tutorial: true, quest: 'torches-rivet' })).toEqual({ harvest: true, road: true, collect: false });
+    expect(islandTaught({ tutorial: true, quest: 'outil-rivet' })).toEqual({ harvest: true, road: true, collect: true });
+    expect(islandTaught({ tutorial: true, quest: 'chemin' })).toEqual({ harvest: true, road: true, collect: true });
     expect([upTo('recolte', 'recolte'), upTo('soupe', 'recolte'), upTo('lisiere', 'recolte')]).toEqual([true, false, false]);
   });
   it('chaque réplique tient en une bulle et ne cite ni un ancien prénom ni le Livre', () => {
@@ -244,5 +260,18 @@ describe('les torches de Nathan (choix de l’auteur, 13 oct.)', () => {
     const busy = spots.filter(sp => !(sp.x === 95 && sp.y === 93));
     expect(torchSpotsOf(foyer, busy, [{ x: 99, y: 89 }, { x: 103, y: 93 }])).toHaveLength(1);
     expect(torchSpotsOf(foyer, spots, [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }])).toEqual([]);
+  });
+  it('la nuit des lumières : un Sans-Nom voit la torche, va vers elle et s’arrête à son bord ; le téméraire s’y brûle ; le Dormeur s’endort contre l’enclos', () => {
+    const foyer = { x: 98, y: 92, w: 3, h: 3 };
+    const torches = [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }].map(c => ({ craft: 'torche', ...c }));
+    const wall = [90, 91, 92, 93, 94, 95, 96].map(y => ({ craft: 'cloture', x: 96, y }));
+    const fates = lumieresOf(foyer, [...torches, ...wall]);
+    expect(fates.map(f => [f.kind, f.end])).toEqual([['fantome', 'brule'], ['fantome', 'repousse'], ['fantome', 'repousse'], ['zombie', 'dort']]);
+    // (à deux cases de sa torche, sa portée ; le téméraire, un pas plus loin)
+    expect(fates.slice(0, 3).map(f => f.path[f.step])).toEqual([{ x: 99, y: 88 }, { x: 93, y: 93 }, { x: 105, y: 93 }]);
+    // (le Dormeur s'arrête juste avant le piquet)
+    expect(fates[3].path[fates[3].step]).toEqual({ x: 95, y: 94 });
+    // Sans torche ni clôture : tout droit sur le feu
+    expect(lumieresOf(foyer, []).map(f => f.end)).toEqual(['arrive', 'arrive', 'arrive', 'arrive']);
   });
 });

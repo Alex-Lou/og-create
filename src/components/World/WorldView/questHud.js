@@ -8,6 +8,9 @@ import { depositsReady } from '@/world/finds';
 import { questPointOf } from '@/world/questPoint';
 import { coach } from '@/game/coach';
 
+// Les leçons qui passent avant la récompense de l'étape faite (game/prologue.js : islandStep, hold)
+const HELD_LESSONS = new Set(['quest-deplacer', 'quest-pivoter']);
+
 export default {
   data() {
     return {
@@ -22,9 +25,13 @@ export default {
     taught() {
       return islandTaught({ tutorial: Boolean(this.trackerMain && this.trackerMain.tutorial), quest: this.quest && this.quest.id });
     },
-    // Le suivi des quêtes (Hud/QuestTracker, world/tracker.js) : la quête principale et ce qui attend ailleurs
+    // Le suivi des quêtes (Hud/QuestTracker, world/tracker.js) : la quête principale et ce qui attend ailleurs. (La
+    // lanterne de Nathan posée, sa récompense attend qu'on l'ait déplacée, puis pivotée : pas de « Prendre » pendant ces
+    // leçons ; choix de l'auteur, 18 oct.)
     trackerMain() {
-      return this.state ? mainOf(this.state.brume) : null;
+      const main = this.state ? mainOf(this.state.brume) : null;
+      const lesson = coach.state.lesson;
+      return main && main.done && lesson && HELD_LESSONS.has(lesson.id) ? { ...main, done: false } : main;
     },
     // (pendant le tutoriel, rien d'autre que son étape : le joueur apprend une chose à la fois)
     trackerAll() {

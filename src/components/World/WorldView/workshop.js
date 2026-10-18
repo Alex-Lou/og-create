@@ -76,9 +76,9 @@ export default {
     placingCraft() {
       return this.craftPlacing && this.state ? this.state.crafts.catalog.find(c => c.id === this.craftPlacing.craft) || null : null;
     },
-    // La lanterne de Nathan, puis ses torches, au tutoriel : la main guide leur assemblage (CraftPuzzle, guided)
+    // Les torches de Nathan, au tutoriel : la main guide leur assemblage (CraftPuzzle, guided)
     craftGuided() {
-      return Boolean(coach.state.lesson && ['quest-deco', 'quest-torches-rivet'].includes(coach.state.lesson.id));
+      return Boolean(coach.state.lesson && coach.state.lesson.id === 'quest-torches-rivet');
     },
     craftSpots() {
       const from = this.craftPlacing && this.craftPlacing.from;
@@ -97,12 +97,6 @@ export default {
         const fire = this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
         const sides = fire ? torchSpotsOf(fire, this.placingCraft.spots, this.crafted.filter(p => p.craft === 'torche')) : [];
         if (sides.length) return sides;
-      }
-      // (la lanterne de Nathan : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
-      const foyer = lesson && lesson.id === 'quest-deco' && this.state.sites.find(s => s.id === 'foyer');
-      if (foyer) {
-        const near = this.placingCraft.spots.filter(sp => Math.max(Math.abs(sp.x - (foyer.x + 0.5)), Math.abs(sp.y - (foyer.y + 0.5))) <= 4);
-        if (near.length) return near;
       }
       return this.placingCraft.spots;
     },
@@ -276,7 +270,8 @@ export default {
       this.craftTrace = null;
       this.draw(performance.now());
     },
-    // L'abri d'un coin du camp (celui d’Agathe : world/shelters.js, serveur) : bâti, payé ; il surgit en éclats
+    // L'abri d'un coin du camp (celui d’Agathe, celui de Nathan : world/shelters.js, serveur) : bâti, payé ; il surgit
+    // en éclats
     async buildShelter(who) {
       if (this.busy) return;
       this.busy = true;
@@ -543,6 +538,8 @@ export default {
         const { coins, world } = await playService.craftTurn(x, y, !this.placedAt({ x, y }).flip);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
+        // (le tutoriel apprend à pivoter : App, islandStory.js)
+        this.$emit('turned', this.craftMenu && this.craftMenu.craft);
         vibrate(8);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, FAILED.craftTurn), 'error');

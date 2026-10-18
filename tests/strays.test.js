@@ -19,13 +19,16 @@ describe('un égaré dans la nuit', () => {
     const down = strayAt(c, AT + 2.5 * MS_PER_CELL);
     expect([down.x, down.y, down.view, down.flip]).toEqual([12, 11.5, 'avant', true]);
   });
-  it('arrivé, il se fond dans son bâtiment ; changé en luciole, il luit jusqu’au matin', () => {
+  it('arrivé, il se fond dans son bâtiment ; arrêté par une lumière ou brûlé, il boude et se dissipe (plus de lucioles)', () => {
     const arrived = AT + 3 * MS_PER_CELL;
     expect(strayAt(stray('arrive', 3), arrived + 100).pose).toBe('brume');
     expect(strayAt(stray('arrive', 3), arrived + 5000)).toBeNull();
     const lit = AT + MS_PER_CELL;
-    expect(strayAt(stray('luciole', 1), lit + 250)).toMatchObject({ pose: 'luciole', n: 2, x: 11, y: 10 });
-    expect(strayAt(stray('luciole', 1), lit + 3 * 3600 * 1000)).toMatchObject({ glow: true, x: 11, y: 10 });
+    for (const end of ['repousse', 'brule']) {
+      expect(strayAt(stray(end, 1), lit + 600)).toMatchObject({ pose: 'bouderie', x: 11, y: 10 });
+      expect(strayAt(stray(end, 1), lit + 2100)).toMatchObject({ pose: 'brume', n: 1 });
+      expect(strayAt(stray(end, 1), lit + 5000)).toBeNull();
+    }
   });
   it('barré, renvoyé ou repoussé : il boude, puis retourne dans la brume', () => {
     const stop = AT + 2 * MS_PER_CELL;
@@ -99,24 +102,25 @@ describe('les dessins des nuits', () => {
 describe('le bilan de Brume au matin', () => {
   const name = id => ({ carriere: 'Carrière' })[id] || id;
   it('ce qui s’est passé, et le bâtiment embrumé ; rien à dire d’une nuit sans égaré', () => {
-    expect(recapOf({ counts: { luciole: 2, barre: 1, camarade: 0, touche: 1, arrive: 1 }, panne: 'carriere' }, name)).toEqual([
+    expect(recapOf({ counts: { repousse: 1, brule: 1, barre: 1, camarade: 0, touche: 1, arrive: 1 }, panne: 'carriere' }, name)).toEqual([
       'Cette nuit, 5 égarés sont sortis de la brume.',
-      '2 se sont changés en lucioles, près de tes lumières.',
+      'L’un s’est arrêté au bord de tes lumières, puis il est rentré dans la brume.',
+      'L’un a osé entrer dans tes lumières : la flamme l’a dissipé.',
       'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.',
       'Tu en as renvoyé un toi-même.',
       'Un égaré s’est posé sur la Carrière. Il a oublié son travail : il faudra le réparer.'
     ]);
-    expect(recapOf({ counts: { luciole: 1, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name).at(-1)).toBe('Rien n’a été embrumé. Le camp a tenu.');
+    expect(recapOf({ counts: { repousse: 1, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name).at(-1)).toBe('Rien n’a été embrumé. Le camp a tenu.');
     // (le coq chante, une fois par nuit)
-    expect(recapOf({ counts: { luciole: 0, barre: 0, coq: 1, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([
+    expect(recapOf({ counts: { barre: 0, coq: 1, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([
       'Cette nuit, un égaré est sorti de la brume.',
       'Coquelicot a chanté : un égaré a filé dans la brume.',
       'Rien n’a été embrumé. Le camp a tenu.'
     ]);
-    expect(recapOf({ counts: { luciole: 0, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([]);
-    // Qui était là : une ligne par espèce, après le total (lot 03, § 7.2) ; un Sans-Nom seulement s'il s'est changé en
-    // luciole, une Racine seulement passée sous une clôture
-    const all = { counts: { luciole: 2, barre: 0, camarade: 0, touche: 0, arrive: 4, revenu: 1 }, kinds: { fantome: 1, noye: 1, racine: 1, esprit: 1, bete: 1 }, lit: { fantome: 1, bete: 1 }, under: 1, panne: null };
+    expect(recapOf({ counts: { barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([]);
+    // Qui était là : une ligne par espèce, après le total (lot 03, § 7.2) ; un Sans-Nom seulement si une lumière l'a
+    // brûlé (choix de l'auteur, 18 oct.), une Racine seulement passée sous une clôture
+    const all = { counts: { brule: 2, barre: 0, camarade: 0, touche: 0, arrive: 4, revenu: 1 }, kinds: { fantome: 1, noye: 1, racine: 1, esprit: 1, bete: 1 }, burnt: { fantome: 1, bete: 1 }, under: 1, panne: null };
     expect(recapOf(all, name).slice(0, 6)).toEqual([
       'Cette nuit, 6 égarés sont sortis de la brume.',
       'Avant de s’éteindre, l’un a murmuré quelque chose. La moitié d’un nom, je crois.',
@@ -125,16 +129,16 @@ describe('le bilan de Brume au matin', () => {
       'L’un est revenu, après que tu l’as renvoyé. Il voulait quelque chose, je crois. Seule la lumière l’a apaisé.',
       'Une bête est sortie de la brume, cette nuit. Une bête que plus personne n’a écrite.'
     ]);
-    expect(recapOf({ ...all, counts: { ...all.counts, revenu: 0 }, kinds: { fantome: 1 }, lit: {}, under: 0 }, name)[1]).toBe('2 se sont changés en lucioles, près de tes lumières.');
+    expect(recapOf({ ...all, counts: { ...all.counts, revenu: 0 }, kinds: { fantome: 1 }, burnt: {}, under: 0 }, name)[1]).toBe('2 ont osé entrer dans tes lumières : la flamme les a dissipés.');
     // Le Dormeur endormi contre la clôture a sa ligne, à part de ceux qu'elle a barrés ; l'Esprit revenu, une sortie de plus
-    expect(recapOf({ counts: { luciole: 1, barre: 1, dort: 2, coq: 0, camarade: 0, touche: 0, arrive: 0, revenu: 1 }, panne: null }, name).slice(0, 5)).toEqual([
+    expect(recapOf({ counts: { repousse: 1, barre: 1, dort: 2, coq: 0, camarade: 0, touche: 0, arrive: 0, revenu: 1 }, panne: null }, name).slice(0, 5)).toEqual([
       'Cette nuit, 4 égarés sont sortis de la brume.',
       'L’un est revenu, après que tu l’as renvoyé. Il voulait quelque chose, je crois. Seule la lumière l’a apaisé.',
-      'L’un s’est changé en luciole, près de tes lumières.',
+      'L’un s’est arrêté au bord de tes lumières, puis il est rentré dans la brume.',
       'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.',
       '2 Dormeurs se sont endormis contre tes clôtures. Ils sont repartis à l’aube.'
     ]);
-    expect(recapOf({ counts: { luciole: 0, barre: 0, dort: 1, coq: 0, camarade: 2, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([
+    expect(recapOf({ counts: { barre: 0, dort: 1, coq: 0, camarade: 2, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([
       'Cette nuit, 3 égarés sont sortis de la brume.',
       'Le Dormeur s’est endormi contre tes clôtures. Il est reparti à l’aube, sans se réveiller tout à fait.',
       'Tes camarades en ont renvoyé 2.',

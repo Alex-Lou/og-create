@@ -55,6 +55,7 @@
             @login="showSeuil = true"
             @act="islandAct"
             @moved="onCraftMoved"
+            @turned="onCraftTurned"
             @caught="onHenCaught"
             @chase-closed="runIsland"
             @go="openFromWorld"

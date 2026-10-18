@@ -19,6 +19,7 @@
           :stock="state ? state.stock : null"
           :busy="busy"
           :locked="Boolean(taught)"
+          :collect-locked="Boolean(taught && !taught.collect)"
           @warp="toggleWarp"
           @collect="collect"
         />
@@ -165,7 +166,7 @@
         <div v-if="craftMenu && !craftPlacing" class="world__menu" :style="menuStyle" role="dialog" :aria-label="craftName(craftMenu.craft)">
           <span class="world__menu-name">{{ craftName(craftMenu.craft) }}</span>
           <button type="button" class="world__menu-btn" data-coach="craft-move" @click="moveFromMenu">Déplacer</button>
-          <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="turnFromMenu">Pivoter</button>
+          <button type="button" class="world__menu-btn world__menu-btn--quiet" data-coach="craft-turn" :disabled="busy" @click="turnFromMenu">Pivoter</button>
           <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="storeFromMenu">Ranger</button>
           <!-- (une porte : son verrou) -->
           <template v-if="craftMenu.craft === 'porte'">
@@ -679,7 +680,7 @@ export default {
     // Une scène plein écran la couvre (App : prologueScene) : l'île, cachée, ne se redessine pas (draw/loop.js)
     covered: { type: Boolean, default: false }
   },
-  emits: ['act', 'caught', 'chase-closed', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['act', 'caught', 'chase-closed', 'moved', 'turned', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       GUEST,

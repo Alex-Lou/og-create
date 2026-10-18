@@ -11,7 +11,7 @@ beforeEach(() => {
 
 const island = () => ({
   ...nights.methods,
-  state: { sites: [], nights: { started: true, last: { id: 4242, counts: { luciole: 2, barre: 0, dort: 0, coq: 0, camarade: 1, touche: 0, arrive: 0, revenu: 0 }, kinds: { fantome: 3 }, lit: { fantome: 2 }, under: 0, panne: null } } },
+  state: { sites: [], nights: { started: true, last: { id: 4242, counts: { brule: 2, barre: 0, dort: 0, coq: 0, camarade: 1, touche: 0, arrive: 0, revenu: 0 }, kinds: { fantome: 3 }, burnt: { fantome: 2 }, under: 0, panne: null } } },
   nightSheet: null, wreck: null, reveal: null, haul: null, nightsWait: false, actsDone: ['T'], thickMist: () => false, coopOf: () => null
 });
 

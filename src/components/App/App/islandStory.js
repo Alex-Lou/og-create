@@ -3,7 +3,7 @@
 // récompenses qui arrivent seules. Mixin d'App.vue (story.js : le tutoriel).
 
 import { guide } from '@/game/guide';
-import { islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE } from '@/game/prologue';
+import { islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE, LUMIERES } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { stageOf } from '@/game/stages';
 import { LINES as PROLOGUE_LINES, SCENES } from '@/texts/tutorial/scenes';
@@ -36,13 +36,13 @@ const ACTS = {
   'quest-clotures': 'habitant:ponton',
   // (son enclos : Agathe touchée ouvre l'établi, « Tracer »)
   'quest-enclos-cannelle': 'habitant:foyer',
-  // (Nathan sort de la brume : sa scène ; puis il ouvre son établi sur la lanterne)
+  // (Nathan sort de la brume : sa scène ; puis il ouvre son établi sur ses trois torches : choix de l'auteur, 13 oct.)
   'quest-rivet-brume': 'habitant:atelier',
-  'quest-deco': 'habitant:atelier',
-  // (puis ses trois torches : choix de l'auteur, 13 oct.)
   'quest-torches-rivet': 'habitant:atelier',
   // (la nuit de la veillée : toucher Brume pour dormir lance d'abord sa scène ; WorldView, draw/brume.js : sleep)
   'quest-veille': 'brume',
+  // (la quatrième nuit aussi : la nuit des lumières, choix de l'auteur, 18 oct.)
+  'quest-nuit-rivet': 'brume',
   // (le matin de Léo : Lorena a vu une planche sur la vague)
   'quest-planche-vue': 'habitant:ponton'
 };
@@ -53,7 +53,9 @@ const ON_ISLAND = new Set(['ondin']);
 
 // Les leçons où toucher le personnage ouvre l'établi (les clôtures de Lorena, la lanterne et les torches de Nathan,
 // l'enclos d’Agathe)
-const BENCH_LESSONS = new Set(['quest-clotures', 'quest-deco', 'quest-torches-rivet', 'quest-enclos-cannelle']);
+// Les nuits qui jouent leur scène avant qu'on dorme (veillee) : la veillée, la nuit des lumières ; seen : vue
+const NIGHT_SCENES = { 'quest-veille': { seen: 'veillee', lines: VEILLEE }, 'quest-nuit-rivet': { seen: 'lumieres', lines: LUMIERES } };
+const BENCH_LESSONS = new Set(['quest-clotures', 'quest-torches-rivet', 'quest-enclos-cannelle']);
 
 // La croix d'une fenêtre ouverte (GModal) : la main y va quand une scène attend qu'on la ferme
 const CLOSE_WINDOW = '.g-modal__close';
@@ -282,21 +284,22 @@ export default {
       else if (lesson.id === 'quest-recolte' || lesson.id === 'short-premier-ponton') world.startHarvest();
       else if (BENCH_LESSONS.has(lesson.id)) world.openBench();
       else if (lesson.id === 'quest-rivet-brume') this.prologueScene = 'rivet';
-      else if (lesson.id === 'quest-veille') this.veillee();
+      else if (NIGHT_SCENES[lesson.id]) this.veillee(NIGHT_SCENES[lesson.id]);
     },
     // La nuit de la veillée (choix de l'auteur, 12 oct.) : Brume touchée pour dormir, sa scène se joue sur l'île — le
     // feu baisse, « cachons-nous », les égarés butent sur la clôture, le feu repart (game/prologue.js : VEILLEE ; WorldView,
     // draw/veillee.js) —, puis on dort (watch : guideWaiting). Vue une fois (« veillee ») : on dort tout de suite
-    veillee() {
+    // La quatrième nuit, de même, la nuit des lumières (LUMIERES ; vue : « lumieres »). { seen, lines } : NIGHT_SCENES
+    veillee({ seen, lines }) {
       const world = this.$refs.world;
-      if (this.prologue.seen.includes('veillee')) {
+      if (this.prologue.seen.includes(seen)) {
         world.sleep(true);
         return;
       }
-      this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'veillee'])] });
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, seen])] });
       coach.show(null);
       this.veilleeOn = true;
-      VEILLEE.forEach(line => this.sayPrologue(line));
+      lines.forEach(line => this.sayPrologue(line));
     },
     // Une scène en bulles sur l'île (ON_ISLAND) : ses répliques, chacune avec le visage de qui parle ; vue quand elles
     // sont lues (sceneSaid), ou tout de suite si elles l'ont déjà été
@@ -331,11 +334,17 @@ export default {
     onHenCaught(id) {
       this.savePrologue({ seen: [...new Set([...this.prologue.seen, `poule:${id}`])] });
     },
-    // Une création déplacée (WorldView : moved) : la leçon du déplacement est faite
+    // Une création déplacée, puis pivotée (WorldView : moved, turned) : la leçon du déplacement est faite, puis celle du
+    // pivot (le jour de Nathan, sa lanterne : choix de l'auteur, 18 oct.)
     onCraftMoved() {
       const lesson = coach.state.lesson;
       if (!lesson || lesson.id !== 'quest-deplacer') return;
       this.see('deplace');
+    },
+    onCraftTurned() {
+      const lesson = coach.state.lesson;
+      if (!lesson || lesson.id !== 'quest-pivoter') return;
+      this.see('pivote');
     }
   }
 };

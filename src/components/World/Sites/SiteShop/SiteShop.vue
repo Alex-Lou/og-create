@@ -37,6 +37,7 @@
             v-if="!item.owned"
             v-longpress="() => $emit('describe', item)"
             type="button"
+            :data-coach="`buy-${item.id}`"
             :class="['world__card-btn', { 'is-off': !canBuy(site, item) }]"
             :disabled="busy"
             :aria-label="buyLabel(site, item)"

@@ -2,9 +2,10 @@
 // ils sortent, leur chemin, leur sort) ; ici, seulement où est chacun à un instant et ce qu'il fait. Un égaré sort de
 // la brume à son heure (at) et marche d'une case toutes les 20 secondes (pace : son pas, chacun sa manière) ; à sa case
 // d'arrêt (step) :
-// - une lumière le change en luciole, qui luit sur place jusqu'au matin ;
-// - une clôture le barre, le coq le chasse, un camarade le renvoie, un toucher le repousse : il boude, puis retourne
-//   dans la brume ; le Dormeur, lui, s'endort contre la clôture ('dort') jusqu'au matin (au tutoriel, jusqu'à wakeAt) ;
+// - une lumière l'arrête à son bord, une clôture le barre, le coq le chasse, un camarade le renvoie, un toucher le
+//   repousse : il boude, puis retourne dans la brume ; un téméraire entre dans la lumière et s'y brûle, puis se dissipe
+//   (choix de l'auteur, 18 oct. : plus de lucioles ; son embrasement attend son dessin, il boude et se dissipe en
+//   attendant) ; le Dormeur, lui, s'endort contre la clôture ('dort') jusqu'au matin (au tutoriel, jusqu'à wakeAt) ;
 // - arrivé à son bâtiment, il s'y fond (le bâtiment est embrumé au matin).
 // Le Noyé sort de la mer et l'Esprit revient (back) en sortant de la brume (sa pose brume, à l'envers) ; la Racine
 // passe sous les clôtures (sa pose terre).
@@ -12,10 +13,9 @@
 import { NIGHT_RECAP } from '@/texts/world/nights';
 
 export const MS_PER_CELL = 20 * 1000;
-// Bouderie (deux images à 500 ms, deux fois), puis retour dans la brume (trois images à 220 ms), luciole (quatre à 200)
+// Bouderie (deux images à 500 ms, deux fois), puis retour dans la brume (trois images à 220 ms)
 const SULK_MS = 2000;
 const MIST_MS = 660;
-const GLOW_MS = 800;
 // Le Dormeur endormi respire (deux images)
 const DOZE_MS = 700;
 
@@ -36,7 +36,7 @@ function onceAt(since, pose, frames, ms) {
   return n <= frames ? { pose, n } : null;
 }
 
-// L'état d'un égaré à l'instant now (ms) : { x, y, view, flip, pose, n, glow? } (glow : la luciole qui luit), ou null
+// L'état d'un égaré à l'instant now (ms) : { x, y, view, flip, pose, n }, ou null
 // (pas encore sorti, ou reparti). c : l'égaré vu du serveur ({ id, kind, path, at, pace, step, end, back? }) ;
 // repelledAt : l'instant où le joueur l'a repoussé sur cet appareil (sa bouderie s'y joue), sinon null ; under(x, y) :
 // une clôture sur cette case (la Racine passe dessous), ou null
@@ -66,7 +66,6 @@ export function strayAt(c, now, repelledAt = null, under = null) {
     return { ...base, pose: 'marche', n: (Math.floor(out / 240) % 2) + 1 };
   }
   const since = now - stopAt;
-  if (!touched && c.end === 'luciole') return since < GLOW_MS ? { ...front, ...onceAt(since, 'luciole', 4, 200) } : { ...front, pose: null, glow: true };
   if (!touched && c.end === 'arrive') {
     const mist = onceAt(since, 'brume', 3, 220);
     return mist ? { ...front, ...mist } : null;
@@ -114,23 +113,24 @@ export function lineOf(a, b) {
 // La nuit est-elle là (les égarés dehors) : nights vu du serveur ({ night: { start, end } }) à l'instant now
 export const nightNow = (nights, now) => Boolean(nights && nights.started && nights.night && now >= nights.night.start && now < nights.night.end);
 
-// Ce que Brume dit au matin d'une nuit finie (last : { counts, kinds, lit, under, panne } : serveur, world/nights.js,
+// Ce que Brume dit au matin d'une nuit finie (last : { counts, kinds, burnt, under, panne } : serveur, world/nights.js,
 // lastOf) ; siteName : le nom d'un bâtiment. [lignes]
 // (le Dormeur endormi contre une clôture a sa ligne, à part de ceux qu'elle a barrés ; l'Esprit revenu compte une sortie
 // de plus ; choix de l'auteur, 15 oct. : ecriture/lots/03_egares.md)
 export function recapOf(last, siteName) {
-  const { luciole, barre, dort = 0, coq = 0, camarade, touche, arrive } = last.counts;
-  const total = luciole + barre + dort + coq + camarade + touche + arrive;
+  const { repousse = 0, brule = 0, barre, dort = 0, coq = 0, camarade, touche, arrive } = last.counts;
+  const total = repousse + brule + barre + dort + coq + camarade + touche + arrive;
   if (!total) return [];
   const lines = [NIGHT_RECAP.out(total)];
   // (qui était là : une ligne par espèce, après le total ; lot 03, § 7.2)
-  const { kinds = {}, lit = {}, under = 0 } = last;
-  if (lit.fantome) lines.push(NIGHT_RECAP.sansNom);
+  const { kinds = {}, burnt = {}, under = 0 } = last;
+  if (burnt.fantome) lines.push(NIGHT_RECAP.sansNom);
   if (kinds.noye) lines.push(NIGHT_RECAP.noye);
   if (under) lines.push(NIGHT_RECAP.racine);
   if (last.counts.revenu) lines.push(NIGHT_RECAP.esprit);
   if (kinds.bete) lines.push(NIGHT_RECAP.bete);
-  if (luciole) lines.push(NIGHT_RECAP.luciole(luciole));
+  if (repousse) lines.push(NIGHT_RECAP.repousse(repousse));
+  if (brule) lines.push(NIGHT_RECAP.brule(brule));
   if (barre) lines.push(NIGHT_RECAP.barre(barre));
   if (dort) lines.push(NIGHT_RECAP.dort(dort));
   // (le coq, une fois par nuit : choix de l'auteur, 14 oct., texte validé)

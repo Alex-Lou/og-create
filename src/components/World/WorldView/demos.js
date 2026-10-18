@@ -4,7 +4,7 @@
 
 import { guide } from '@/game/guide';
 import { lineOf } from '@/world/strays';
-import { EGARES } from '@/game/prologue';
+import { EGARES, lumieresOf } from '@/game/prologue';
 
 // L'égaré que Brume montre au tutoriel : son allure (ms par case), son nom (« demo » : un fantôme, qu'on ne touche pas)
 const DEMO_CELL_MS = 650;
@@ -49,6 +49,7 @@ export default {
       if (!shown) return;
       if (name === 'eteint') this.veillee = { from: performance.now() / 1000, end: 0 };
       else if (name === 'egare') this.strayDemo();
+      else if (name === 'lumieres') this.lightDemo();
       else if (name === 'rallume' && this.veillee) {
         this.veillee = { ...this.veillee, end: performance.now() / 1000 };
         // (le feu repart : le Dormeur endormi contre l'enclos se réveille, boude et rentre)
@@ -73,8 +74,8 @@ export default {
     },
     // La nuit de la veillée, Brume montre la clôture (choix de l'auteur, 11 et 12 oct.) : les égarés sortent de la brume
     // au nord et sur les côtés, l'un après l'autre, et vont tout droit sur le feu de camp ; la première clôture sur leur trait les
-    // barre (ils boudent, puis retournent dans la brume ; le Dormeur s'y endort), sinon le feu les change en lucioles au
-    // bout (le Dormeur, que la lumière ne change pas, s'y fond) (game/prologue.js : BARRAGE, EGARES)
+    // barre (ils boudent, puis retournent dans la brume ; le Dormeur s'y endort), sinon le feu les arrête au bout (le
+    // Dormeur, que la lumière n'arrête pas, s'y fond) (game/prologue.js : BARRAGE, EGARES)
     strayDemo() {
       const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
       if (!foyer) return;
@@ -85,9 +86,21 @@ export default {
         const fence = path.findIndex(c => this.crafted.some(p => bars(p) && p.x === c.x && p.y === c.y));
         const barred = fence > 0;
         const sleeper = from.kind === 'zombie';
-        const end = barred ? (sleeper ? 'dort' : 'barre') : (sleeper ? 'arrive' : 'luciole');
+        const end = barred ? (sleeper ? 'dort' : 'barre') : (sleeper ? 'arrive' : 'repousse');
         return { id: `${DEMO_ID}-${i}`, kind: from.kind, demo: true, path, at: now + 400 + from.at * 1000, step: barred ? fence - 1 : path.length - 1, end, cellMs: DEMO_CELL_MS };
       });
+      this.drawSoon();
+    },
+    // La nuit des lumières (choix de l'auteur, 18 oct.) : un Sans-Nom de chaque côté voit la torche de Nathan, va vers
+    // elle et s'arrête à son bord, sauf le téméraire, qui y entre et s'y brûle ; le Dormeur, les yeux fermés, s'endort
+    // contre l'enclos (game/prologue.js : lumieresOf)
+    lightDemo() {
+      const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
+      if (!foyer) return;
+      const now = Date.now();
+      this.tutoStrays = lumieresOf(foyer, this.crafted).map((c, i) => ({
+        id: `${DEMO_ID}-${i}`, kind: c.kind, demo: true, path: c.path, at: now + 400 + c.at * 1000, step: c.step, end: c.end, cellMs: DEMO_CELL_MS
+      }));
       this.drawSoon();
     }
   }

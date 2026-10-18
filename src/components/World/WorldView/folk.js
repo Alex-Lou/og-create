@@ -269,8 +269,10 @@ export default {
       const due = momentsDue({
         state, met, ready: site => this.canBuild(site), deposits: this.readyDeposits, said: id => guide.state.seen.has(id)
       });
-      // (pendant le tutoriel, seul le premier chantier, celui du Puits, en fait partie)
-      due.filter(({ id }) => id === 'premier-chantier' || !this.thickMist(state)).forEach(({ id, after }) => this.sayMoment(id, after));
+      // (pendant le tutoriel, seuls le premier chantier, celui du Puits, et le ramassage, le jour de Nathan, en font
+      // partie : choix de l'auteur, 18 oct. ; game/prologue.js, islandTaught)
+      const taught = id => id === 'premier-chantier' || (id === 'premiere-production' && this.taught && this.taught.collect);
+      due.filter(({ id }) => taught(id) || !this.thickMist(state)).forEach(({ id, after }) => this.sayMoment(id, after));
     },
     sayMoment(id, after = false) {
       const built = builtOf(this.state && this.state.villagers);

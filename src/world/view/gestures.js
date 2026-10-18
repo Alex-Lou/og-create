@@ -20,7 +20,7 @@ import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
 import { creatureOf, creatureOfHit } from '@/world/creatures';
 import { emptyCageOf } from '@/world/village/farm';
-import { ANIMALS, CAGE_TEXT, CAGE_EMPTY_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
+import { ANIMALS, CAGE_TEXT, CAGE_EMPTY_TEXT, CORNER_TITLES, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
 import { FIRE } from '@/texts/world/phare';
 import { FLOATING_ZONE } from '@/world/islets';
 
@@ -514,13 +514,13 @@ export default {
       const site = hit.nameSign;
       return { key: `name-sign:${site.id}`, action: 'La changer', info: this.tipOf(hit), ring: ring(hit.at.x, hit.at.y, hit.at.r), bounce: `name-sign:${site.id}`, run: () => this.openNameSign(site) };
     }
-    // Le coin d’Agathe, son abri à bâtir (world/shelters.js, serveur : sa quête venue)
+    // Le coin d’Agathe, puis celui de Nathan : son abri à bâtir (world/shelters.js, serveur : sa quête venue)
     const shelter = hit.campItem && this.state.shelters && this.state.shelters[hit.campItem.id];
     if (shelter && shelter.open && !shelter.built) {
       const item = hit.campItem;
       const c = this.ground(item.x + (item.w - 1) / 2, item.y + (item.h - 1) / 2);
       return {
-        key: `coin:${item.id}`, action: 'Bâtir son abri', info: { title: 'Le coin d’Agathe', text: costText(shelter.cost) },
+        key: `coin:${item.id}`, action: 'Bâtir son abri', info: { title: CORNER_TITLES[item.id], text: costText(shelter.cost) },
         ring: ring(c.x, c.y, TW * 0.7), run: () => this.buildShelter(item.id)
       };
     }

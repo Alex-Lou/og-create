@@ -9,8 +9,8 @@
       <button
         v-if="harvestable.length"
         type="button"
-        :class="['world__coins', 'is-ready', { 'is-locked': locked }]"
-        :disabled="busy || locked"
+        :class="['world__coins', 'is-ready', { 'is-locked': collectLocked }]"
+        :disabled="busy || collectLocked"
         :aria-label="COLLECT_ALL(harvestable)"
         @click="$emit('collect', $event)"
       >
@@ -56,8 +56,10 @@ export default {
     // Réserves de l'île (null : l'île n'est pas encore chargée)
     stock: { type: Object, default: null },
     busy: { type: Boolean, default: false },
-    // Pendant le tutoriel : l'horloge (accélérer la journée) et « Tout ramasser » ne sont pas enseignés, grisés
-    locked: { type: Boolean, default: false }
+    // Pendant le tutoriel : l'horloge (accélérer la journée) n'est pas enseignée, grisée ; « Tout ramasser » non plus,
+    // jusqu'à ce qu'Agathe le montre, le jour de Nathan (game/prologue.js : islandTaught)
+    locked: { type: Boolean, default: false },
+    collectLocked: { type: Boolean, default: false }
   },
   emits: ['warp', 'collect'],
   data() {

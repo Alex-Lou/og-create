@@ -1,5 +1,5 @@
 // Les nuits des égarés (world/strays.js, recapOf) : ce que Brume dit au matin d'une nuit finie, une ligne par sort
-// (sortis de la brume, changés en lucioles, barrés par une clôture, endormis contre elle, chassés par le coq, renvoyés
+// (sortis de la brume, arrêtés au bord des lumières, brûlés par elles, barrés par une clôture, endormis contre elle, chassés par le coq, renvoyés
 // par un camarade, renvoyés d'un toucher), puis le camp, embrumé (siteName : le nom du bâtiment) ou non. Le singulier et
 // le pluriel s'écrivent en entier (choix de l'auteur, 15 oct. : ecriture/lots/03_egares.md)
 
@@ -12,15 +12,17 @@ const theSite = name => (/^[aeiouyéèêâîôû]/i.test(name) ? `l’${name}` :
 
 export const NIGHT_RECAP = {
   out: total => (total > 1 ? `Cette nuit, ${total} égarés sont sortis de la brume.` : 'Cette nuit, un égaré est sorti de la brume.'),
-  // Qui était là (lot 03, § 7.2 ; une ligne par espèce, une fois par nuit au plus, après le total) : un Sans-Nom changé en
-  // luciole, un Noyé, une Racine passée sous une clôture (sans la pousse, qui n'est pas encore dessinée), l'Esprit
+  // Qui était là (lot 03, § 7.2 ; une ligne par espèce, une fois par nuit au plus, après le total) : un Sans-Nom brûlé par
+  // une lumière (choix de l'auteur, 18 oct.), un Noyé, une Racine passée sous une clôture (sans la pousse, qui n'est pas encore dessinée), l'Esprit
   // revenu, une bête de brume
   sansNom: 'Avant de s’éteindre, l’un a murmuré quelque chose. La moitié d’un nom, je crois.',
   noye: 'L’un est sorti de la mer, pas de la brume. J’ai entendu une cloche, très loin.',
   racine: 'L’une est passée sous tes clôtures, comme une racine sous un mur.',
   esprit: 'L’un est revenu, après que tu l’as renvoyé. Il voulait quelque chose, je crois. Seule la lumière l’a apaisé.',
   bete: 'Une bête est sortie de la brume, cette nuit. Une bête que plus personne n’a écrite.',
-  luciole: luciole => (luciole > 1 ? `${luciole} se sont changés en lucioles, près de tes lumières.` : 'L’un s’est changé en luciole, près de tes lumières.'),
+  // (la lumière : la plupart s'arrêtent à son bord ; les téméraires s'y brûlent ; choix de l'auteur, 18 oct., textes validés)
+  repousse: repousse => (repousse > 1 ? `${repousse} se sont arrêtés au bord de tes lumières, puis sont rentrés dans la brume.` : 'L’un s’est arrêté au bord de tes lumières, puis il est rentré dans la brume.'),
+  brule: brule => (brule > 1 ? `${brule} ont osé entrer dans tes lumières : la flamme les a dissipés.` : 'L’un a osé entrer dans tes lumières : la flamme l’a dissipé.'),
   barre: barre => (barre > 1 ? `${barre} se sont arrêtés au bord de tes clôtures, puis sont rentrés dans la brume.` : 'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.'),
   // (le Dormeur, endormi contre une clôture jusqu'au matin)
   dort: dort => (dort > 1 ? `${dort} Dormeurs se sont endormis contre tes clôtures. Ils sont repartis à l’aube.` : 'Le Dormeur s’est endormi contre tes clôtures. Il est reparti à l’aube, sans se réveiller tout à fait.'),

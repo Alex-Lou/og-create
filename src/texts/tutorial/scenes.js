@@ -382,9 +382,31 @@ export const LINES = {
   'marmite-agathe': { who: 'foyer', mood: 'malicieux', text: 'La marmite, je m’en charge. Toi, mange.' },
   'soir-quatre': 'Encore un nouveau visage… Quatre. Quatre personnes, après une éternité de solitude. Dormez, mes nouveaux amis : je veille sur vous.',
   or: { who: 'atelier', mood: 'pensif', text: 'Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu’elle leur fait. On le saura cette nuit.' },
-  // (la lanterne posée)
-  'lanterne-brille': { who: 'atelier', mood: 'fier', text: 'Elle brille. Pas très fort… mais elle brille.' },
-  'lanterne-brume': 'Elle me ressemble un peu.',
+  // (son coin, son abri ; Lorena et Agathe curieuses : choix de l'auteur, 18 oct., textes validés)
+  'coin-rivet': { who: 'atelier', mood: 'determine', text: 'D’abord, un coin à moi. Un établi sans toit, c’est une flaque avec des outils.' },
+  'curieux-aster': { who: 'ponton', mood: 'rire', text: 'Il trace déjà des plans dans le sable. Allons voir ce qu’il fabrique.' },
+  'curieux-agathe': { who: 'foyer', mood: 'malicieux', text: 'Un homme qui mesure tout deux fois… Je veux voir ça.' },
+  'abri-rivet-fait': { who: 'atelier', mood: 'fier', text: 'Un toit, un établi, une vue sur le feu. Je pourrais presque rester.' },
+  // (le lampadaire attendra l'électricité : des torches à l'ancienne ; choix de l'auteur, 18 oct., textes validés)
+  'lampadaire-reve': { who: 'atelier', mood: 'pensif', text: 'Ici, il faudrait un lampadaire. Avec de l’électricité.' },
+  'lampadaire-brume': 'L’électricité… Ce savoir dort sûrement quelque part dans le Grimoire. Il viendra plus tard.',
+  'lampadaire-ancienne': { who: 'atelier', mood: 'determine', text: 'Alors à l’ancienne, en attendant : des torches.' },
+  // (ses torches plantées : en déplacer une, la pivoter ; ranger, Nathan le dit : choix de l'auteur, 18 oct., textes validés)
+  'deplace-idee': { who: 'atelier', mood: 'pensif', text: 'Hmm. Un pas de côté, et elle éclairerait mieux le chemin. Essaie, tu verras.' },
+  'pivote-idee': { who: 'atelier', mood: 'determine', text: 'Elle se tourne aussi. Comme les pièces du casse-tête.' },
+  'ranger-astuce': { who: 'atelier', mood: 'rire', text: 'Et si un jour elle te gêne, range-la : elle t’attend à l’établi, sans rien te coûter.' },
+  // Son premier outil, la Canne à pêche du Ponton (choix de l'auteur, 18 oct. ; textes validés)
+  'outil-idee': { who: 'atelier', mood: 'determine', text: 'Le Ponton pêche à mains nues ? Inacceptable. Sa boutique a une canne : quatre-vingts écus, et il produira un cinquième de plus.' },
+  'outil-fait': { who: 'ponton', mood: 'rire', text: 'Une vraie canne ! Je pêchais avec une ficelle et beaucoup d’espoir.' },
+  // La nuit des lumières (choix de l'auteur, 18 oct. ; textes validés) : Brume touchée pour dormir, les égarés vont vers
+  // les torches et s'arrêtent à leur bord, le téméraire s'y brûle (lumieres : demos.js, lightDemo) ; le Dormeur s'endort
+  // contre l'enclos ; les flammes, il faudra les nourrir
+  'lumieres-regarde': { text: 'Regarde, Nathan. Ta réponse arrive.', look: 'site:foyer', demo: 'lumieres' },
+  'lumieres-bord': { text: 'La plupart s’arrêtent au bord de la lumière, et rebroussent chemin.', look: 'site:foyer' },
+  'lumieres-brule': { text: 'Celui-là a osé. La flamme l’a mordu : il s’est dissipé.', look: 'site:foyer' },
+  'lumieres-nathan': { who: 'atelier', mood: 'fier', text: 'Ils ont peur du feu ! Je l’avais dit. Enfin… je ne l’avais pas dit. Mais je l’avais pensé.' },
+  'lumieres-dormeur': { text: 'Celui aux yeux fermés ne voit rien. Lui, seule la clôture l’arrête.', look: 'site:foyer' },
+  'lumieres-nourrir': 'Tant qu’elles brûlent. Une flamme qu’on ne nourrit pas s’éteint… et eux reviennent.',
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Sait-il nager, au moins ? S’est-il seulement réveillé ?!' },
   courants: { who: 'ponton', mood: 'pensif', text: 'Les courants d’ici ramènent tout sur nos plages. Tout, Agathe. Nous finirons bien par le retrouver.' },
   'courants-suite': { who: 'ponton', mood: 'determine', text: 'S’il est comme toi, il a dû s’en sortir, pour sûr !' },
