@@ -3,7 +3,6 @@ import { P, box, disc, cylinder, shadow, foliage, sprite } from './iso';
 import { WOOD, WOOD_DARK, STONE, LEAVES, PROP_BOX, pebble } from './palette';
 
 const line = (a, b, color, width = 1.2) => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
-const CRITTER_BOX = { x: -16, y: -28, w: 32, h: 32 };
 
 // Arbre générique : tronc (couleur, hauteur), houppier de trois boules, fruits éventuels
 function tree(trunk, colors, fruits = null, h = 16) {
@@ -101,37 +100,6 @@ function bench() {
     + box(-0.28, -0.05, -0.22, 0.05, 0, 6, WOOD_DARK) + box(0.22, -0.05, 0.28, 0.05, 0, 6, WOOD_DARK)
     + box(-0.32, -0.08, 0.32, 0.08, 6, 8, WOOD) + box(-0.32, -0.1, 0.32, -0.07, 8, 15, WOOD), PROP_BOX);
 }
-/* ---------- Animaux (2 images chacun) ---------- */
-function chicken(f) {
-  const peck = f === 1;
-  const hx = peck ? 6 : 4;
-  const hy = peck ? -7 : -14;
-  return sprite(`<ellipse cx="0" cy="0" rx="6" ry="1.8" fill="rgba(40,55,20,.22)"/>`
-    + line([-1, -3], [-1.5, 0], '#E8A13A', 1) + line([2, -3], [2.5, 0], '#E8A13A', 1)
-    + `<path d="M-8,-9 Q-9,-15 -5,-14 Q-1,-14 4,-11 Q7,-6 2,-3 Q-6,-2 -8,-9 Z" fill="#FFFDF8" stroke="rgba(60,40,25,.3)" stroke-width="0.6"/>`
-    + `<path d="M-4,-9 Q-1,-11 2,-8" stroke="#E6DCC8" stroke-width="1.2" fill="none"/>`
-    + `<circle cx="${hx}" cy="${hy}" r="3.2" fill="#FFFDF8"/><path d="M${hx - 1},${hy - 3} q1,-3 3,0 q1,-2 2,1" fill="#E2574C"/>`
-    + `<path d="M${hx + 3},${hy} l3,1 l-3,1 Z" fill="#E8A13A"/><circle cx="${hx + 1}" cy="${hy - 0.5}" r="0.7" fill="#2A2420"/>`, CRITTER_BOX);
-}
-function butterfly(f, color = '#F2A8D2') {
-  const w = f === 0 ? 1 : 0.35;
-  return sprite(`<ellipse cx="${-4 * w}" cy="-14" rx="${4 * w}" ry="3.4" fill="${color}"/><ellipse cx="${4 * w}" cy="-14" rx="${4 * w}" ry="3.4" fill="${color}"/>`
-    + `<ellipse cx="${-3 * w}" cy="-10.5" rx="${2.6 * w}" ry="2.2" fill="${color}" opacity=".85"/><ellipse cx="${3 * w}" cy="-10.5" rx="${2.6 * w}" ry="2.2" fill="${color}" opacity=".85"/>`
-    + `<rect x="-0.7" y="-16" width="1.4" height="8" rx="0.7" fill="#3D3A36"/>`, CRITTER_BOX);
-}
-function bee(f) {
-  const wy = f === 0 ? -17 : -15;
-  return sprite(`<ellipse cx="-2" cy="${wy}" rx="2.6" ry="1.8" fill="rgba(220,240,255,.85)"/><ellipse cx="2" cy="${wy}" rx="2.6" ry="1.8" fill="rgba(220,240,255,.85)"/>`
-    + `<ellipse cx="0" cy="-12" rx="4" ry="2.8" fill="#FFD45E"/><rect x="-1.5" y="-14.6" width="1.2" height="5.2" fill="#3D3A36"/><rect x="1" y="-14.6" width="1.2" height="5.2" fill="#3D3A36"/>`, CRITTER_BOX);
-}
-function frog(f) {
-  const hop = f === 1 ? -5 : 0;
-  return sprite(`<ellipse cx="0" cy="0" rx="6" ry="1.8" fill="rgba(40,55,20,.22)"/>`
-    + `<ellipse cx="0" cy="${-5 + hop}" rx="6.5" ry="4.6" fill="#7EC45B"/><ellipse cx="0" cy="${-4 + hop}" rx="4" ry="2.4" fill="#C7E98F"/>`
-    + `<circle cx="-3" cy="${-9 + hop}" r="2.2" fill="#7EC45B"/><circle cx="3" cy="${-9 + hop}" r="2.2" fill="#7EC45B"/>`
-    + `<circle cx="-3" cy="${-9.4 + hop}" r="1" fill="#2A2420"/><circle cx="3" cy="${-9.4 + hop}" r="1" fill="#2A2420"/>`
-    + `<path d="M-2,${-5 + hop} q2,1.5 4,0" stroke="#3E7A32" stroke-width="0.8" fill="none"/>`, CRITTER_BOX);
-}
 // Panneau d'un quartier à acheter : poteau, planche, cadenas (le prix est écrit par l'île)
 function zoneSign() {
   const [x, y] = P(0, 0, 0);
@@ -184,10 +152,4 @@ export const SIGN = zoneSign;
 export const NATURE2 = {
   birch, apple: appleTree, autumn: autumnTree, stump, log, mushrooms, reeds, lily: lilyPond, shells, driftwood, mossy: mossyRocks, lantern: lanternPost, bench,
   snowpine: snowPine, cactus, deadtree: deadTree, heather
-};
-export const CRITTERS = {
-  chicken: [0, 1].map(f => () => chicken(f)),
-  butterfly: [0, 1].map(f => () => butterfly(f)),
-  bee: [0, 1].map(f => () => bee(f)),
-  frog: [0, 1].map(f => () => frog(f))
 };
