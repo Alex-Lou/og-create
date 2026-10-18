@@ -12,6 +12,8 @@
    qui reste passe au-dessus de lui, dans la couleur de son ciel) */
 .sa__stage { position: absolute; left: 0; right: 0; top: var(--sa-top); bottom: var(--sa-low); display: flex; align-items: flex-end; justify-content: center; container-type: size; }
 .sa__square { position: relative; width: min(100cqw, 100cqh); height: min(100cqw, 100cqh); }
+/* Une scène en plans (game/scenePlans.js) : la caméra s'y déplace, les plans débordent ; le carré les coupe à ses bords */
+.sa__square--plans { overflow: hidden; }
 /* Une scène en hauteur (la veillée du conseil) : son carré du bas toujours entier, aussi grand qu'un carré ; son ciel
    au-dessus, autant que la place le permet (tout entier sur un téléphone en hauteur, rogné par le haut ailleurs) */
 .sa__square--tall { height: min(100cqh, calc(min(100cqw, 100cqh) / var(--sa-ratio))); overflow: hidden; }

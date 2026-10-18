@@ -19,14 +19,15 @@ export const SCENES = {
   // l'annonce du capitaine coupée net, la vague, les racines sous l'eau, le noir ; le réveil vu par ses yeux, la plage,
   // les débris, la carte d'embarquement aperçue sur le sable
   naufrage: [
-    { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième nuit de croisière.', auto: 4200 },
-    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée.', auto: 5200 },
-    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme.', auto: 5200 },
-    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Nous rencontrons des difficultés à manœ… — krrr — Aaah ! — krrrr… shhh…', auto: 3600 },
-    { scene: '01_vague', auto: 2600 },
-    // (sous la surface, les racines : rien ne s'explique)
-    { scene: '01_racines', auto: 3000 },
-    { scene: '01_noir', auto: 3000 },
+    { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième jour de croisière.', auto: 6720 },
+    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée.', auto: 8320 },
+    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme.', auto: 8320 },
+    { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Nous rencontrons des difficultés à manœ… — krrr — Aaah ! Mais que sont ces choses ?! — krrrr… shhh…', auto: 7360 },
+    // (la lame, puis sous la surface, les racines : rien ne s'explique ; le noir. La même scène que le pont, d'une
+    // traite : choix de l'auteur, 18 oct.)
+    { scene: '01_pont', alone: true, auto: 4160 },
+    { scene: '01_pont', alone: true, auto: 4800 },
+    { scene: '01_pont', alone: true, auto: 4800 },
     { scene: '01_paupieres', alone: true, thought: true, text: 'Du sable plein la bouche… Oh non. Où suis-je ?', hint: 'Toucher pour ouvrir les yeux' },
     { scene: '01_greve', alone: true, thought: true, text: 'Des valises, des morceaux de coque… Oh mon… Qu’est-ce que je vais pouvoir faire ?' },
     { scene: '01_carte', alone: true, thought: true, text: 'Ah, il y a quelque chose, là-bas.' },

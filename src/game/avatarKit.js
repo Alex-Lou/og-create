@@ -4,8 +4,9 @@
 // lu seulement par l'éditeur (chargé à la demande) : ce module-ci part au démarrage (les scènes), sans ses 260 Ko.
 // Un avatar est soit l'un des douze exemples de la bibliothèque (« avatar-03 », game/sceneArt.js), soit ses choix.
 import { reactive } from 'vue';
+import { gravee } from './acteur';
 
-const state = reactive({ kit: null, failed: false });
+const state = reactive({ kit: null, failed: false, exemples: null });
 let loading = null;
 
 // Un avatar composé (ses choix), et non l'un des exemples
@@ -58,28 +59,79 @@ function characterOf(kit, choices, naufrage) {
 }
 
 // Les images de l'avatar composé pour une scène (mêmes vues et poses que les exemples, game/sceneArt.js) : des URL
-// data:, dans l'ordre ; [] tant que le générateur se charge, ou si un choix est inconnu
-export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage = true } = {}) {
+// data:, dans l'ordre ; [] tant que le générateur se charge, ou si un choix est inconnu. En néon (une scène en papier
+// néon) : chaque image passe par le rendu néon de game/acteur.js (ses couleurs ravivées, le cerne indigo, le liseré)
+export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage = true, neon = false, lumiere = {} } = {}) {
   const kit = kitNow();
   if (!kit) return [];
-  return memo(`${JSON.stringify(choices)}|${vue}|${pose}|${naufrage}`, () => {
+  return memo(`${JSON.stringify(choices)}|${vue}|${pose}|${naufrage}|${neon}|${JSON.stringify(lumiere)}`, () => {
     const c = characterOf(kit, choices, naufrage);
     if (!c) return [];
+    const svg = neon ? body => gravee(body, 'n', { ...NEON_STATIQUE, ...lumiere }) : body => kit.svg(body);
     if (vue === 'face' || pose === 'salut') {
       const [kitPose, n, geste] = FACE[pose] || FACE.repos;
       const who = geste ? { ...c, geste } : c;
-      return Array.from({ length: n }, (_, i) => toUrl(kit.svg(kit.frame(who, 'front', kitPose, i))));
+      return Array.from({ length: n }, (_, i) => toUrl(svg(kit.frame(who, 'front', kitPose, i))));
     }
     // assis les mains tendues vers le feu (la veillée), ou debout les mains tendues : de trois quarts avant, 2 images
     if (vue === 'avant' && (pose === 'assis-mains-tendues' || pose === 'mains-tendues')) {
       const body = n => (pose === 'mains-tendues' ? kit.frame(kit.avecMainsTendues(c), 'se', 'action', n) : kit.assis(c, 'se', n, null, kit.tendre));
-      return [0, 1].map(n => toUrl(kit.svg(mirrored(body(n)))));
+      return [0, 1].map(n => toUrl(svg(mirrored(body(n)))));
     }
     // de dos, assis les mains tendues vers le feu qui est devant lui (le conseil), 2 images
-    if (vue === 'dos' && pose === 'assis-mains-tendues') return [0, 1].map(n => toUrl(kit.svg(kit.assis(c, 'ne', n, null, kit.tendre))));
+    if (vue === 'dos' && pose === 'assis-mains-tendues') return [0, 1].map(n => toUrl(svg(kit.assis(c, 'ne', n, null, kit.tendre))));
     const view = vue === 'avant' ? 'se' : 'ne';
     const body = kit.frame(c, view, 'marche', 1);
-    return [toUrl(kit.svg(view === 'se' ? mirrored(body) : body))];
+    return [toUrl(svg(view === 'se' ? mirrored(body) : body))];
+  });
+}
+
+// (la lumière d'une scène fixe en néon, si elle n'en donne pas (avatar.lumiere) : la nuit violette, la lumière à gauche)
+const NEON_STATIQUE = { neon: true, cote: 1 };
+
+// Les choix des exemples de la bibliothèque (avatar.json, avec le catalogue de l'éditeur : chargé à la demande), pour
+// qu'un joueur qui a choisi un exemple joue lui aussi les scènes (réactif, comme le kit)
+let exemplesLoading = null;
+function exemplesNow() {
+  if (!state.exemples && !exemplesLoading) {
+    exemplesLoading = import('./avatarCatalog')
+      .then(m => (state.exemples = m.CATALOG.exemples))
+      .catch(() => (state.exemples = {}));
+  }
+  return state.exemples;
+}
+// Les choix d'un avatar : les siens (composé), ou ceux de l'exemple choisi ; null tant que les exemples se chargent
+export function choixDe(look) {
+  if (isCustom(look)) return look;
+  const ex = exemplesNow();
+  if (!ex) return null;
+  const exemple = ex[look] || Object.values(ex)[0];
+  return exemple ? exemple.choix : null;
+}
+// Les animations du kit (MOUVEMENTS : leurs images, leur durée), ou null tant qu'il se charge
+export const mouvementsKit = () => (kitNow() || {}).MOUVEMENTS || null;
+// Les images d'un clip de la piste « acteur » (game/acteur.js) : l'avatar (ses choix, ou l'un des exemples) qui joue
+// cette animation dans cette direction, gravé à la lumière de la scène ; des URL data:, dans l'ordre ; [] tant que le
+// kit ou les exemples se chargent, ou si l'animation n'existe pas
+export function acteurImages(look, { anim, dir, expr }, { naufrage = true, lumiere = {} } = {}) {
+  const kit = kitNow();
+  if (!kit || !kit.MOUVEMENTS[anim]) return [];
+  let choices = look;
+  if (!isCustom(look)) {
+    const ex = exemplesNow();
+    if (!ex) return [];
+    const exemple = ex[look] || Object.values(ex)[0];
+    if (!exemple) return [];
+    choices = exemple.choix;
+  }
+  return memo(`${JSON.stringify(choices)}|acteur|${anim}|${dir}|${expr}|${naufrage}|${JSON.stringify(lumiere)}`, () => {
+    const c = characterOf(kit, choices, naufrage);
+    if (!c) return [];
+    try {
+      return Array.from({ length: kit.MOUVEMENTS[anim].images }, (_, n) => toUrl(gravee(kit.mouvement(c, anim, dir, n, expr), `a${n}`, lumiere)));
+    } catch (error) {
+      return [];
+    }
   });
 }
 
