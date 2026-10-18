@@ -32,3 +32,14 @@ describe('la tournée d’un habitant', () => {
     }
   });
 });
+
+describe('une place tenue', () => {
+  it('son lit qu’aucun chemin ne rejoint : il dort à sa place, sans y sauter', () => {
+    const work = { x: 3, y: 3 };
+    const { placeOf } = plannerOf({ grid, stops: [work], home: work, calm: true, routeOf });
+    const r = { id: 'vil:lit', k: 0, work, bedAt: { x: 5, y: 3 } };
+    const p = placeOf(r, { mode: 'nuit' }, 10, 0, () => null);
+    expect(p.pose).toBe('sleep');
+    expect(Math.round(p.x)).toBeLessThan(4);
+  });
+});
