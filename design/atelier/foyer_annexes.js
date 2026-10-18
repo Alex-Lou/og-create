@@ -198,7 +198,7 @@ const conserve = (id, x, y, c) => lueur(id, x, y - 4, 9, c, 0.45) + `<path d="M$
 // ——— la cuisine d'Agathe, v2 ———
 // Un four en dôme d'argile, des coquillages pressés en spirale dans sa voûte, sa bouche cintrée de galets, son tuyau de
 // poêle de l'épave et son chapeau de fer-blanc ; le plan de travail fait d'un panneau d'écoutille posé sur deux
-// tonneaux, le bois rangé entre eux ; dessus, les bols de noix de coco, le poisson sur sa planche, les jarres de
+// tonneaux ; dessus, les bols de noix de coco, le poisson sur sa planche, les jarres de
 // conserves qui luisent, le pain ; l'auvent de palmes tressées sur ses deux bambous, et ce qui y pend : la tresse
 // d'ail, la louche-coquillage, le carillon de coquillages ; le pot de fleurs peint en sarcelle
 function cuisine2(n = 0) {
@@ -229,11 +229,9 @@ function cuisine2(n = 0) {
       + [-4, -11].map(dy => `<rect x="${f(tx - 2.8)}" y="${f(ty + dy)}" width="5.6" height="1.3" rx=".5" fill="#8A4A2A"/>`).join('')
       + plan(`M${P2(tx - 5, ty - 16)} L${P2(tx, ty - 20)} L${P2(tx + 5, ty - 16)} Z`, '#B8C0C8', 0.6) + `<path d="M${P2(tx - 3.6, ty - 16.3)} L${P2(tx, ty - 19)}" stroke="#FFFFFF" stroke-width=".6"/>`;
     s += [0, 1, 2].map(i => { const t = ((n / 8) + i / 3) % 1; return `<circle cx="${f(tx + Math.sin(t * 6) * 2 + t * 5)}" cy="${f(ty - 22 - t * 22)}" r="${f(2 + t * 4)}" fill="#EEF0F4" opacity="${f(0.75 * (1 - t))}"/>`; }).join('');
-    // ——— le plan de travail : le panneau d'écoutille sur deux tonneaux, le bois rangé entre eux ———
+    // ——— le plan de travail : le panneau d'écoutille sur deux tonneaux ———
     const T = [0.32, -0.22, 0.82, 0.2];
     for (const [u, v] of [[0.4, 0.12], [0.74, -0.14]]) { const [x, y] = iso(u, v, 0); s += tonneau(x, y, 4.6, 12, g, { c: u < 0.5 ? '#A86A3A' : '#8A5A3A' }) + `<rect x="${f(x - 4.8)}" y="${f(y - 8)}" width="9.6" height="1.6" fill="${u < 0.5 ? SARCELLE : CORAIL}" opacity=".9"/>`; }
-    const [bx, by] = iso(0.6, 0.05, 0);
-    for (let r = 0; r < 2; r++) for (let i = 0; i < 3; i++) s += ovale(bx - 4 + i * 3.6 + r * 1.8, by - 2 - r * 3.4 - i * 0.8, 1.8, 1.7, '#E0A96C', 0.4);
     s += boite('cu2p', T, 12, 14, { gauche: (W, H) => tPlanches(W, H, g, { horiz: true, larg: H, c: '#6A6A72' }), droite: (W, H) => tPlanches(W, H, g, { horiz: true, larg: H, c: '#6A6A72' }), dessus: (W, H) => tPlanches(W, H, g, { larg: 4, c: '#C8945A' }) + `<rect width="${f(W)}" height="${f(H)}" fill="none" stroke="#5A5A62" stroke-width="1.6"/>` + `<circle cx="2" cy="2" r=".6" fill="#3A3A42"/><circle cx="${f(W - 2)}" cy="2" r=".6" fill="#3A3A42"/>`, arete: null });
     // (dessus : la planche et son poisson, les bols de coco, les jarres qui luisent, le pain)
     const at = (u, v) => iso(u, v, 14);

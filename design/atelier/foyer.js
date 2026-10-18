@@ -158,8 +158,7 @@ const mouette = (x, y, s = 1) => `<g transform="translate(${f(x)} ${f(y)}) scale
 function palier1(n = 0) {
   const g = rnd(11), p = 'f1';
   let s = sol(p, 64, 32, g) + ombreSol(`${p}o`, 2, 8, 40, 18, 0.22) + pas(-62, 30, -20, 14, 7);
-  // (au fond : le bois flotté ramassé pour le feu ; le banc de bois flotté, sa couverture, le bol)
-  s += buche(...iso(0.3, -0.98, 2.4), ...iso(0.88, -0.98, 2.4), 2.4, g, { flotte: true }) + buche(...iso(0.36, -0.86, 2.2), ...iso(0.9, -0.86, 2.2), 2.2, g, { flotte: true });
+  // (au fond : le banc de bois flotté, sa couverture, le bol)
   s += contact(-16, -22, 30, 0.25) + buche(-44, -12, 12, -36, 5.6, g, { flotte: true });
   // (la couverture pliée, drapée sur le tronc : ses plis, ses carreaux, sa frange)
   s += plan(`M${P2(-27, -32)} Q${P2(-18, -37)} ${P2(-9, -39)} Q${P2(-6, -33)} ${P2(-7, -25)} Q${P2(-16, -21)} ${P2(-25, -17)} Q${P2(-29, -24)} ${P2(-27, -32)} Z`, toile('#D8664A'), 0.7)
@@ -167,7 +166,7 @@ function palier1(n = 0) {
     + `<path d="M${P2(-27, -32)} Q${P2(-18, -37)} ${P2(-9, -39)} Q${P2(-12, -31)} ${P2(-11, -24)} Q${P2(-19, -22)} ${P2(-25, -17)} Q${P2(-27, -25)} ${P2(-27, -32)} Z" fill="${B.OMBRE_F}" opacity=".18"/>`
     + Array.from({ length: 6 }, (_, i) => trait(`M${P2(-25 + i * 3.4, -17 - i * 1.4)} l.3,2.2`, '#F4E4C8', 0.7)).join('');
   s += plan(`M${P2(0, -38)} Q${P2(0, -32)} ${P2(5, -32)} Q${P2(10, -32)} ${P2(10, -38)} Z`, '#8A5A36', 0.7) + ovale(5, -38, 5, 1.8, '#F4ECDC', 0.6);
-  // (à droite : la caisse de l'épave, le bocal de lucioles dessus, le bois flotté ramassé)
+  // (à droite : la caisse de l'épave, le bocal de lucioles dessus)
   s += contact(...iso(0.72, -0.3, 0), 16, 0.3) + caisse(`${p}c`, 0.72, -0.3, 0.4, 12, g) + bocal(`${p}b`, ...iso(0.68, -0.32, 12));
 
   // (la voile roulée qui sert de couche, devant à gauche : dessinée avant le feu, elle prend la couleur du skin)
@@ -249,7 +248,7 @@ function palier2(n = 0) {
 // Des bordages de l'épave cloués à l'horizontale, leurs peintures délavées et écaillées, sur un soubassement de galets ;
 // un toit de palmes épais, sa corde de faîte, sa frange ; le hublot récupéré en guise de fenêtre, la porte de planches et
 // sa poignée de corde, la lanterne sur sa potence ; dehors, le feu gardé dans son cercle, sa grille et sa bouilloire ; le
-// tonneau d'eau de pluie et sa gouttière de bambou fendu, le bois rangé
+// tonneau d'eau de pluie et sa gouttière de bambou fendu
 function palier3(n = 0) {
   let g = rnd(37);
   const p = 'f3';
@@ -278,13 +277,12 @@ function palier3(n = 0) {
   // (la lanterne sur sa potence, à côté de la porte)
   const lp = iso(u0 + (u1 - u0) * (xp - 0.06), v1, 25);
   s += trait(`M${P2(lp[0] + 1, lp[1])} l-5,2.5 M${P2(lp[0] + 1, lp[1] + 4)} l-4,-1.5`, '#3A3038', 1.1) + lanterne(`${p}la`, lp[0] - 4, lp[1] + 2.5, 2);
-  // (le tonneau d'eau de pluie au coin, la gouttière de bambou fendu qui y descend ; le bois rangé contre le mur)
+  // (le tonneau d'eau de pluie au coin, la gouttière de bambou fendu qui y descend ; pas de bois rangé : les réserves de
+  // bois ne se montrent que si la maison en a, choix de l'auteur, 18 oct.)
   const bc = iso(u1 + 0.18, v1 + 0.04, 0);
   const g0 = surPan(t, 0.6, 1.02), g1 = surPan(t, 0.98, 1.02), gb = [bc[0], bc[1] - 13];
   s += trait(ligne([g0, g1, gb]), '#6A5A2A', 2.4) + trait(ligne([g0, g1, gb]), '#C8B060', 1.5) + trait(ligne([plus(g0, [0, -0.5]), plus(g1, [0, -0.5]), plus(gb, [0.5, 0])]), '#F0E0A0', 0.5);
   s += contact(bc[0], bc[1], 8) + tonneau(bc[0], bc[1], 5.2, 12, g) + `<ellipse cx="${f(bc[0])}" cy="${f(bc[1] - 12)}" rx="4" ry="1.9" fill="#5FB0DD"/><ellipse cx="${f(bc[0] - 1)}" cy="${f(bc[1] - 12.4)}" rx="1.6" ry=".6" fill="#FFFFFF" opacity=".7"/>`;
-  const tb = iso(u1 + 0.02, v0 + 0.18, 0);
-  for (let r = 0; r < 3; r++) for (let i = 0; i < 3 - r; i++) { const x = tb[0] + 3 + i * 5 + r * 2.5, y = tb[1] - 2.4 - r * 4.4 - i * 2.5; s += ovale(x, y, 2.5, 2.3, '#E0A96C', 0.6) + `<circle cx="${f(x)}" cy="${f(y)}" r=".9" fill="none" stroke="#B87A48" stroke-width=".4"/>`; }
   // ——— dehors : le feu gardé dans son cercle, sa grille de fer et sa bouilloire ———
   const [fx, fy] = iso(-0.12, 0.74, 0);
   s += flaque(`${p}fl`, fx, fy, 38) + cercle(fx, fy, 14, 10, g, false) + cendres(fx, fy, 9, g);
@@ -386,16 +384,6 @@ function vigie(id, u, v, h, g, { flamme = '#D8664A' } = {}) {
     + `<circle cx="${f(b[0])}" cy="${f(b[1])}" r="1.6" fill="#C8963A" stroke="${ENCRE}" stroke-width=".5"/>`;
   return s;
 }
-// Un carré de potager surélevé en (u, v) : son cadre de planches, sa terre, ses rangs de légumes
-function potager(id, [u0, v0, u1, v1], g) {
-  let s = boite(id, [u0, v0, u1, v1], 0, 4, { gauche: (W, H) => B.tPlanches(W, H, g, { horiz: true, larg: 2 }), droite: (W, H) => B.tPlanches(W, H, g, { horiz: true, larg: 2 }), dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#7A5A3A"/>` + [0.25, 0.5, 0.75].map(t => `<rect y="${f(H * t - 0.6)}" width="${f(W)}" height="1.2" fill="#5A3E26"/>`).join(''), arete: null });
-  for (let i = 0; i < 3; i++) for (let k = 0; k < 4; k++) {
-    const q = iso(u0 + (u1 - u0) * (0.15 + k * 0.23), v0 + (v1 - v0) * (0.2 + i * 0.3), 4);
-    s += i === 1 ? `<circle cx="${f(q[0])}" cy="${f(q[1] - 2)}" r="2.6" fill="#4E9A5A" stroke="#2E5A3A" stroke-width=".5"/><circle cx="${f(q[0] + 0.5)}" cy="${f(q[1] - 2.6)}" r="1.4" fill="#A1D46C"/>`
-      : [-1.2, 0, 1.2].map(dx => trait(`M${P2(q[0], q[1])} Q${P2(q[0] + dx, q[1] - 2.6)} ${P2(q[0] + dx * 1.7, q[1] - 5)}`, '#5AAA4A', 0.9)).join('') + `<circle cx="${f(q[0])}" cy="${f(q[1] - 0.6)}" r="1" fill="#FF8A3A"/>`;
-  }
-  return s;
-}
 
 // Une allée de terre battue de (x0, y0) à (x1, y1), large de l : ses bords qui se perdent dans l'herbe, ses traces
 function allee(id, x0, y0, x1, y1, l) {
@@ -409,7 +397,7 @@ const fleurs = (a, b, g, n = 6, cols = ['#FF7AA8', '#FFD04A', '#FFFFFF', '#B898F
 // ═══ palier V : la maison de rondins ═══
 // Des rondins sur un soubassement de pierres moussues, un toit de chaume épais, sombre et moussu, sa cheminée de pierre
 // qui fume (le feu est entré dans la maison) ; au pignon la porte et l'hirondelle de proue, les fenêtres à volets et
-// leurs jardinières ; l'abri à bois en appentis ; le mât de l'épave planté en vigie ; le potager, le banc, l'allée de
+// leurs jardinières ; l'abri à bois en appentis ; le mât de l'épave planté en vigie ; le banc, l'allée de
 // dalles, les lanternes
 function palier5() {
   const g = rnd(53), p = 'f5';
@@ -449,13 +437,14 @@ function palier5() {
   const pierre = (W, H) => tPierres(W, H, g, { haut: 3.6, long: 6, mousse: 0.25 });
   const cu = (M[0] + M[2]) / 2, cv = -0.62, zr = hM + 38;
   s += boite(`${p}ch`, [cu - 0.12, cv - 0.12, cu + 0.12, cv + 0.12], zr - 6, zr + 18, { gauche: pierre, droite: pierre }) + boite(`${p}chc`, [cu - 0.15, cv - 0.15, cu + 0.15, cv + 0.15], zr + 18, zr + 21, { gauche: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#C3BBA9"/>`, droite: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#9B927F"/>`, dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6E6656"/><ellipse cx="${f(W / 2)}" cy="${f(H / 2)}" rx="${f(W * 0.3)}" ry="${f(H * 0.3)}" fill="#2A221E"/>` });
-  // ——— l'abri à bois en appentis contre le mur de droite ———
+  // ——— l'abri à bois en appentis contre le mur de droite, vide (les réserves de bois ne se montrent que si la maison en
+  // a : choix de l'auteur, 18 oct.) ———
   const A = [M[2], -0.75, M[2] + 0.38, -0.15];
-  for (let r = 0; r < 4; r++) for (let i = 0; i < 5; i++) { const q = iso(A[2] - 0.02, A[1] + 0.06 + i * 0.12, 3 + r * 5); s += ovale(q[0], q[1], 2.6, 2.5, mix('#E0A96C', '#C8894E', (i + r) % 2 * 0.5), 0.6) + `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="1" fill="none" stroke="#B87A48" stroke-width=".4"/>`; }
   for (const v of [A[1], A[3]]) { const a = iso(A[2], v, 0), b = iso(A[2], v, 24); s += buche(a[0], a[1], b[0], b[1], 1.4, g, { c: '#8A5A36' }); }
   s += plaque(`${p}ap`, iso(M[2] - 0.02, A[1] - 0.06, 30), B.AXE_V, B.unite([iso(A[2] + 0.06, 0, 23)[0] - iso(M[2] - 0.02, 0, 30)[0], iso(A[2] + 0.06, 0, 23)[1] - iso(M[2] - 0.02, 0, 30)[1]]), (A[3] - A[1] + 0.12) * PAS, Math.hypot(...[iso(A[2] + 0.06, 0, 23)[0] - iso(M[2] - 0.02, 0, 30)[0], iso(A[2] + 0.06, 0, 23)[1] - iso(M[2] - 0.02, 0, 30)[1]]),
     B.tPlanches((A[3] - A[1] + 0.12) * PAS, 24, g, { c: '#9A6A3A', larg: 3 }));
-  // ——— devant : l'allée de dalles, le banc, la lanterne sur son poteau, le potager ———
+  // ——— devant : l'allée de dalles, le banc, la lanterne sur son poteau (pas de potager : les vrais champs viendront du
+  // jeu, choix de l'auteur, 18 oct.) ———
   const pd = iso(M[0] + (M[2] - M[0]) * (xp + 0.07), M[3], 0);
   s += fleurs(iso(M[0], M[3] + 0.04, 0), iso(M[0] + (M[2] - M[0]) * (xp - 0.02), M[3] + 0.04, 0), g, 4) + fleurs(iso(M[0] + (M[2] - M[0]) * (xp + 0.2), M[3] + 0.04, 0), iso(M[2], M[3] + 0.04, 0), g, 4);
   s += [[0, 6], [-4, 13], [2, 20], [-3, 28]].map(([dx, dy], i) => ovale(pd[0] + dx - 4 - i * 3, pd[1] + dy, 6, 2.6, i % 2 ? '#C3BBA9' : '#D8D2C2', 0.6)).join('');
@@ -464,7 +453,6 @@ function palier5() {
     + [[M[0] + 0.08, M[3] + 0.22], [M[0] + 0.42, M[3] + 0.22]].map(([u, v]) => { const a = iso(u, v, 0), b = iso(u, v, 6); return trait(`M${P2(...a)} L${P2(...b)}`, '#6A4428', 2); }).join('');
   const lt = iso(M[0] + (M[2] - M[0]) * (xp + 0.32), M[3] + 0.5, 0);
   s += contact(lt[0], lt[1], 4) + trait(`M${P2(...lt)} L${P2(lt[0], lt[1] - 30)} l5,0`, '#3A3038', 1.6) + lanterne(`${p}la`, lt[0] + 5, lt[1] - 30, 2);
-  s += potager(`${p}po`, [0.62, 0.35, 1.25, 0.9], g);
   s += pied([[-110, 6], [-90, 30], [100, 10], [104, -16], [20, 60], [-40, 58], [-112, -20], [70, 56]], g);
   return s;
 }
@@ -509,9 +497,8 @@ function palier5b() {
     const pierre = (W, H) => tPierres(W, H, g, { haut: 4.6, long: 7, mousse: 0.35 });
     const cu = (M[0] + M[2]) / 2, cv = -0.62, zr = hM + 40;
     s += boite(`${p}ch`, [cu - 0.14, cv - 0.14, cu + 0.14, cv + 0.14], zr - 6, zr + 18, { gauche: pierre, droite: pierre }) + boite(`${p}chc`, [cu - 0.17, cv - 0.17, cu + 0.17, cv + 0.17], zr + 18, zr + 22, { gauche: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#D8D2C2"/>`, droite: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#9B927F"/>`, dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6E6656"/><ellipse cx="${f(W / 2)}" cy="${f(H / 2)}" rx="${f(W * 0.3)}" ry="${f(H * 0.3)}" fill="#2A221E"/>` });
-    // ——— l'abri à bois ———
+    // ——— l'abri à bois, vide (les réserves ne se montrent que si la maison en a) ———
     const A = [M[2], -0.78, M[2] + 0.4, -0.12];
-    for (let r = 0; r < 4; r++) for (let i = 0; i < 5; i++) { const q = iso(A[2] - 0.02, A[1] + 0.07 + i * 0.13, 3.4 + r * 6); s += `<ellipse cx="${f(q[0])}" cy="${f(q[1])}" rx="3.2" ry="3.1" fill="${mix('#F0B878', '#C8844A', (i + r) % 2 * 0.5)}" stroke="#8A5A2A" stroke-width=".6"/><circle cx="${f(q[0])}" cy="${f(q[1])}" r="1.3" fill="none" stroke="#B87A48" stroke-width=".4"/>`; }
     for (const v of [A[1], A[3]]) { const a = iso(A[2], v, 0), b2 = iso(A[2], v, 27); s += buche(a[0], a[1], b2[0], b2[1], 1.6, g, { c: '#8A5A36' }); }
     s += plaque(`${p}ap`, iso(M[2] - 0.02, A[1] - 0.06, 33), B.AXE_V, B.unite([iso(A[2] + 0.08, 0, 25)[0] - iso(M[2] - 0.02, 0, 33)[0], iso(A[2] + 0.08, 0, 25)[1] - iso(M[2] - 0.02, 0, 33)[1]]), (A[3] - A[1] + 0.12) * PAS, Math.hypot(iso(A[2] + 0.08, 0, 25)[0] - iso(M[2] - 0.02, 0, 33)[0], iso(A[2] + 0.08, 0, 25)[1] - iso(M[2] - 0.02, 0, 33)[1]),
       B.tChaumeDodu((A[3] - A[1] + 0.12) * PAS, 26, g, false, { haut: 6, mousse: 0.3 }));
@@ -519,10 +506,10 @@ function palier5b() {
     s += B.buisson(`${p}b1`, ...iso(M[0] - 0.08, M[3] + 0.12, 0), 11, g, { fleurs: ['#FF4FAE', '#FF4FAE', '#FFD04A'] })
       + B.buisson(`${p}b2`, ...iso(M[2] + 0.1, M[3] + 0.12, 0), 9, g, { feuille: '#3E9A6A', fleurs: ['#FF8A5A', '#FFFFFF'] });
     s += fleurs(iso(M[0] + 0.25, M[3] + 0.05, 0), iso(M[0] + (M[2] - M[0]) * (xp - 0.02), M[3] + 0.05, 0), g, 3, ['#FF4FAE', '#FFD04A', '#C8FF6A']);
-    // ——— le banc, la lanterne, le potager ———
+    // ——— la lanterne ———
     const lt = iso(M[0] + (M[2] - M[0]) * (xp + 0.34), M[3] + 0.5, 0);
     s += contact(lt[0], lt[1], 4) + trait(`M${P2(...lt)} L${P2(lt[0], lt[1] - 30)} l5,0`, '#3A3038', 1.6) + lanterne(`${p}la`, lt[0] + 5, lt[1] - 30, 2);
-    s += potager(`${p}po`, [0.62, 0.35, 1.25, 0.9], g) + B.buisson(`${p}b4`, ...iso(1.32, 0.95, 0), 7, g, { feuille: '#3E9A6A' });
+    s += B.buisson(`${p}b4`, ...iso(1.32, 0.95, 0), 7, g, { feuille: '#3E9A6A' });
     s += pied([[-112, 6], [-92, 30], [104, 10], [108, -16], [20, 62], [-40, 60], [70, 58]], g);
     // (la fumée en nuages ronds)
     const fm = iso(cu, cv, zr + 24);
@@ -615,7 +602,7 @@ function bougainvillee(x, y, h, g, sens = 1) {
 // Des murs d'argile chaulés sur un soubassement de pierre, leurs linteaux de bois ; un toit de tuiles canal en
 // terre cuite, sa cheminée de briques ; la porte cintrée sous son auvent de tuiles, l'hirondelle de proue au-dessus ;
 // les volets sarcelle et leurs jardinières, la bougainvillée qui grimpe ; la tonnelle et sa table ; le phare qui a
-// poussé autour du mât, sa flamme de lune ; la guirlande de lampions de la maison au phare ; le potager
+// poussé autour du mât, sa flamme de lune ; la guirlande de lampions de la maison au phare
 function palier6(n = 0, fort = false) {
   let g = rnd(67);
   const p = fort ? 'f7' : 'f6', N = 8;
@@ -676,7 +663,6 @@ function palier6(n = 0, fort = false) {
     for (let i = 0; i < 46; i++) { const a = g(), b = g(), q = plus(plus(c3, [c0[0] - c3[0], c0[1] - c3[1]], a), [c2[0] - c3[0], c2[1] - c3[1]], b); s += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="${f(2 + g() * 1.6)}" fill="${g() < 0.5 ? '#4E9A5A' : '#81BA5E'}" stroke="#2E5A3A" stroke-width=".4"/>`; if (g() < 0.2) s += `<circle cx="${f(q[0] + 1)}" cy="${f(q[1] + 2.4)}" r="1.4" fill="#8A4AB8" stroke="${ENCRE}" stroke-width=".3"/>`; }
     // (la guirlande de lampions, de la maison au phare)
     s += guirlande(`${p}gl`, iso(M[2], M[3], hM - 2), iso(PH[0] - 0.12, PH[1] + 0.12, 34)) + guirlande(`${p}gm`, iso(M[2], M[1] + 0.3, hM - 2), c2);
-    s += potager(`${p}po`, [-1.3, 0.55, -0.6, 1.05], g);
   } else {
     // ——— après l'apocalypse : la palissade de pieux (des avirons taillés parmi eux), sa porte, le barbelé ; les sacs de
     // sable à la porte ; le récupérateur d'eau de pluie (la bâche et ses tonneaux) ; le brasero ; les lanternes de garde
@@ -700,7 +686,6 @@ function palier6(n = 0, fort = false) {
     brasero = flammes(`${p}fe${n}`, bx, by - 10, 0.7, n % 8, 8);
     // (les lanternes de garde magenta sur les pieux d'angle : elles repoussent la brume)
     for (const [u, v] of [[-1.38, 1.42], [1.42, 1.42], [1.42, -0.98]]) { const q = iso(u, v, 26); s += B.lueur(`${p}g${u}${v}`, q[0], q[1] + 4, 12, MAGENTA, 0.6) + `<rect x="${f(q[0] - 2)}" y="${f(q[1])}" width="4" height="6" fill="${MAGENTA}" stroke="${ENCRE}" stroke-width=".5"/><rect x="${f(q[0] - 2.6)}" y="${f(q[1] - 1.4)}" width="5.2" height="1.6" fill="#3A3A42"/>`; }
-    s += potager(`${p}po`, [-1.3, 0.55, -0.7, 1.0], g);
   }
   s += pied([[-112, 8], [-92, 32], [104, 12], [108, -18], [24, 62], [-42, 60], [-114, -22], [74, 58]], g);
   // (ce qui bouge, à la fin : les flammes du brasero, le faisceau du phare)
