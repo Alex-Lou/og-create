@@ -590,11 +590,14 @@ const GL = require('./gravure_lorena');
 const GV = require('./gravure_vent');
 const NN = require('./neon_naufrage');
 const NR = require('./neon_reveil');
+const NJ = require('./neon_jeu');
 const GC = require('./gravure_cercle');
 for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }
+// (le reste des cinématiques, en papier néon : neon_jeu.js)
+for (const [id, scene] of NJ.cinematiques) SCENES[id] = { ...SCENES[id], ...scene() };
 
 // L'arc du Phare (ecriture/arc_phare.md ; choix de l'auteur, 15 oct.) : acte III, des Hauteurs, avec l'Étoile, la porte du
 // phare vue de près, fermée par une serrure en forme de pierre ; une cinématique de papier découpé (porte_phare.js), sans
@@ -621,6 +624,18 @@ for (const [id, sc] of Object.entries(SCENES)) {
   const part = n => parts.get(n) || parts.set(n, separer(fond(n), FIGEES[id])).get(n);
   sc.fond = n => part(n).fond;
   sc.anime = n => part(n).anime;
+}
+
+// Tout le jeu en papier néon (choix de l'auteur, 18 oct.) : les scènes fixes ravivées (neon_reveil.js : ravivee), l'étalonnage
+// néon sous l'avatar, l'avatar rendu en néon (game/acteur.js : gravee)
+// (leurs personnages y sont dessinés avec le décor : leurs couleurs gardent leur teinte, ravivées, comme celles de l'avatar)
+const NEON_FIXES = ['05_feu', '06_silhouette', '07_cannelle', '07_souvenir', '09_rivet', '11_ondin', '11_reveil', '12_veillee', '12_habits', '30_phare_porte'];
+for (const id of NEON_FIXES) {
+  const sc = SCENES[id], { fond, anime, devant } = sc, n0 = `nf${id.replace(/\W/g, '')}`;
+  sc.fond = n => NR.ravivee(fond(n)) + NN.vignette(`${n0}${n}`);
+  if (anime) sc.anime = n => NR.ravivee(anime(n));
+  if (devant) sc.devant = n => NR.ravivee(devant(n));
+  if (sc.avatar) sc.avatar = { ...sc.avatar, neon: true };
 }
 
 module.exports = { SCENES, W, CADRE_PHOTO };

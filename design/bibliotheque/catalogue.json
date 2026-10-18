@@ -50964,10 +50964,10 @@
     "svg/scenes/tutoriel/02_approche/02_approche_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -50981,10 +50981,10 @@
     "svg/scenes/tutoriel/02_approche/02_approche_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51049,10 +51049,10 @@
     "svg/scenes/tutoriel/02_approche/02_approche_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51406,10 +51406,10 @@
     "svg/scenes/tutoriel/02_lueur/02_lueur_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51423,10 +51423,10 @@
     "svg/scenes/tutoriel/02_lueur/02_lueur_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51491,10 +51491,10 @@
     "svg/scenes/tutoriel/02_lueur/02_lueur_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51831,10 +51831,10 @@
     "svg/scenes/tutoriel/02_plage/02_plage_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51848,10 +51848,10 @@
     "svg/scenes/tutoriel/02_plage/02_plage_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -51933,10 +51933,10 @@
     "svg/scenes/tutoriel/02_plage/02_plage_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -52290,10 +52290,10 @@
     "svg/scenes/tutoriel/02_rocher/02_rocher_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -52307,10 +52307,10 @@
     "svg/scenes/tutoriel/02_rocher/02_rocher_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -52392,10 +52392,10 @@
     "svg/scenes/tutoriel/02_rocher/02_rocher_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -52834,10 +52834,10 @@
     "svg/scenes/tutoriel/03_ciel/03_ciel_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -52851,10 +52851,10 @@
     "svg/scenes/tutoriel/03_ciel/03_ciel_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -52902,10 +52902,10 @@
     "svg/scenes/tutoriel/03_ciel/03_ciel_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -53276,10 +53276,10 @@
     "svg/scenes/tutoriel/03_livre/03_livre_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -53293,10 +53293,10 @@
     "svg/scenes/tutoriel/03_livre/03_livre_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -53395,10 +53395,10 @@
     "svg/scenes/tutoriel/03_livre/03_livre_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -53990,10 +53990,10 @@
     "svg/scenes/tutoriel/03_nuit/03_nuit_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -54007,10 +54007,10 @@
     "svg/scenes/tutoriel/03_nuit/03_nuit_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -54075,10 +54075,10 @@
     "svg/scenes/tutoriel/03_nuit/03_nuit_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -54517,10 +54517,10 @@
     "svg/scenes/tutoriel/03_trouee/03_trouee_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -54534,10 +54534,10 @@
     "svg/scenes/tutoriel/03_trouee/03_trouee_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -54602,10 +54602,10 @@
     "svg/scenes/tutoriel/03_trouee/03_trouee_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -55095,10 +55095,10 @@
     "svg/scenes/tutoriel/03_vent/03_vent_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -55112,10 +55112,10 @@
     "svg/scenes/tutoriel/03_vent/03_vent_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -55231,10 +55231,10 @@
     "svg/scenes/tutoriel/03_vent/03_vent_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -55843,10 +55843,10 @@
     "svg/scenes/tutoriel/05_cercle/05_cercle_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -55860,10 +55860,10 @@
     "svg/scenes/tutoriel/05_cercle/05_cercle_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -55945,10 +55945,10 @@
     "svg/scenes/tutoriel/05_cercle/05_cercle_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -56540,10 +56540,10 @@
     "svg/scenes/tutoriel/05_promesse/05_promesse_plan-nuage0_1.svg"
    ],
    "cadre": [
-    -80,
-    24,
-    600,
-    60
+    -140,
+    36,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -56557,10 +56557,10 @@
     "svg/scenes/tutoriel/05_promesse/05_promesse_plan-nuage1_1.svg"
    ],
    "cadre": [
-    -80,
-    100,
-    600,
-    56
+    -140,
+    110,
+    680,
+    34
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -56659,10 +56659,10 @@
     "svg/scenes/tutoriel/05_promesse/05_promesse_plan-soleil_1.svg"
    ],
    "cadre": [
-    180,
-    130,
-    112,
-    64
+    36,
+    -14,
+    400,
+    400
    ],
    "parcours": "tuto-1",
    "statut": "ok"

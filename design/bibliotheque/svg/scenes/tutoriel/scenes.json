@@ -44894,10 +44894,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -44905,10 +44905,10 @@
      "fichier": "02_plage/02_plage_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -44916,10 +44916,10 @@
      "fichier": "02_plage/02_plage_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -45093,9 +45093,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#2A140A",
-     "force": 0.24,
-     "cote": 1
+     "cote": 1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -46759,10 +46760,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -46770,10 +46771,10 @@
      "fichier": "02_lueur/02_lueur_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -46781,10 +46782,10 @@
      "fichier": "02_lueur/02_lueur_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -46960,9 +46961,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#1C2242",
-     "force": 0.26,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -47943,10 +47945,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -47954,10 +47956,10 @@
      "fichier": "02_approche/02_approche_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -47965,10 +47967,10 @@
      "fichier": "02_approche/02_approche_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -48149,9 +48151,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#1C2242",
-     "force": 0.26,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -48699,10 +48702,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -48710,10 +48713,10 @@
      "fichier": "02_rocher/02_rocher_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -48721,10 +48724,10 @@
      "fichier": "02_rocher/02_rocher_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -48911,9 +48914,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#1C2242",
-     "force": 0.26,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -51751,10 +51755,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -51762,10 +51766,10 @@
      "fichier": "03_livre/03_livre_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -51773,10 +51777,10 @@
      "fichier": "03_livre/03_livre_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -52051,9 +52055,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#1C2242",
-     "force": 0.26,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -53749,10 +53754,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -53760,10 +53765,10 @@
      "fichier": "03_vent/03_vent_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -53771,10 +53776,10 @@
      "fichier": "03_vent/03_vent_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -54019,9 +54024,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#1C2242",
-     "force": 0.26,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -56465,10 +56471,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -56476,10 +56482,10 @@
      "fichier": "03_trouee/03_trouee_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -56487,10 +56493,10 @@
      "fichier": "03_trouee/03_trouee_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -56641,9 +56647,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#1C2242",
-     "force": 0.26,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -57866,10 +57873,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -57877,10 +57884,10 @@
      "fichier": "03_ciel/03_ciel_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -57888,10 +57895,10 @@
      "fichier": "03_ciel/03_ciel_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -58012,9 +58019,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#1C2242",
-     "force": 0.26,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -58323,10 +58331,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -58334,10 +58342,10 @@
      "fichier": "03_nuit/03_nuit_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -58345,10 +58353,10 @@
      "fichier": "03_nuit/03_nuit_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -58523,9 +58531,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#141C3A",
-     "force": 0.32,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -59578,10 +59587,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -59589,10 +59598,10 @@
      "fichier": "05_cercle/05_cercle_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -59600,10 +59609,10 @@
      "fichier": "05_cercle/05_cercle_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -59891,9 +59900,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#141C3A",
-     "force": 0.32,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -62304,10 +62314,10 @@
       186
      ],
      "cadre": [
-      180,
-      130,
-      112,
-      64
+      36,
+      -14,
+      400,
+      400
      ]
     },
     {
@@ -62315,10 +62325,10 @@
      "fichier": "05_promesse/05_promesse_plan-nuage0_1.svg",
      "profondeur": 0.14,
      "cadre": [
-      -80,
-      24,
-      600,
-      60
+      -140,
+      36,
+      680,
+      34
      ]
     },
     {
@@ -62326,10 +62336,10 @@
      "fichier": "05_promesse/05_promesse_plan-nuage1_1.svg",
      "profondeur": 0.18,
      "cadre": [
-      -80,
-      100,
-      600,
-      56
+      -140,
+      110,
+      680,
+      34
      ]
     },
     {
@@ -62544,9 +62554,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#141C3A",
-     "force": 0.32,
-     "cote": -1
+     "cote": -1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -63961,7 +63972,8 @@
     "echelle": 3.3,
     "vue": "avant",
     "pose": "repos",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -64001,7 +64013,8 @@
     "echelle": 3,
     "vue": "dos",
     "pose": "repos",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -64041,7 +64054,8 @@
     "echelle": 3,
     "vue": "avant",
     "pose": "salut",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -64072,7 +64086,8 @@
     "echelle": 3,
     "vue": "avant",
     "pose": "repos",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -64103,7 +64118,8 @@
     "echelle": 3,
     "vue": "avant",
     "pose": "repos",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -64626,9 +64642,10 @@
    ],
    "partition": {
     "lumiere": {
-     "teinte": "#3A4458",
-     "force": 0.16,
-     "cote": 1
+     "cote": 1,
+     "teinte": "#3A0A5A",
+     "force": 0.14,
+     "neon": true
     },
     "temps": [
      {
@@ -67552,7 +67569,8 @@
     "echelle": 3,
     "vue": "avant",
     "pose": "repos",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -67581,7 +67599,8 @@
     "echelle": 3,
     "vue": "avant",
     "pose": "repos",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -67641,7 +67660,8 @@
     "echelle": 2.6,
     "vue": "avant",
     "pose": "assis-mains-tendues",
-    "naufrage": false
+    "naufrage": false,
+    "neon": true
    },
    "calques": {
     "fond": {
@@ -67681,7 +67701,8 @@
     "echelle": 3,
     "vue": "avant",
     "pose": "mains-tendues",
-    "naufrage": true
+    "naufrage": true,
+    "neon": true
    },
    "calques": {
     "fond": {

@@ -9,6 +9,7 @@ const { courbe } = require('./papier');
 const { atelier, gravure } = require('./gravure');
 const GP = require('./gravure_plage');
 const N = require('./neon_naufrage');
+const { neon } = require('./neon_pont');
 const { G, D_ } = require('./theatre_pont');
 const { HORIZON, RIVAGE, SOLEIL } = GP;
 const { lumineux, enNeon, enCouleurs, plein, chemin, ENCRE, CYAN, ACIDE, MAGENTA } = N;
@@ -20,10 +21,10 @@ const soleil = p => N.soleil(p, SOLEIL);
 const NUAGES = [[0, 60, '#FFB8D8'], [1, 134, '#FF8A70']];
 // la mer : quatre rangées, du large (pâles, roses de couchant) au bord (sarcelles, crêtes cyan) ; le chemin de lumière
 const RANGEES = [[HORIZON + 4, 3, 30, ['#4A7AB8', '#2A4A7A', '#14284A'], '#FFB8D8'], [HORIZON + 16, 4, 40, ['#2A7A9A', '#14405A', '#0A2238'], '#FFD0E0'], [HORIZON + 32, 6, 52, ['#1A6A7A', '#0A3A4A', '#06202A'], '#B8FFF0'], [HORIZON + 50, 8, 66, ['#0E5A6A', '#082E3A', '#04161E'], CYAN]];
-function mer(p) {
+function mer(p, lumiere = true) {
   let s = RANGEES.map((r, i) => N.vague(`${p}r`, 10 + i, r)).join('');
   const A = atelier(`${p}O`);
-  for (let i = 0; i < 16; i++) { const t = i / 16, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 30 * t + 8 * hash(i, 3), x = SOLEIL[0] + (hash(i, 5) - 0.5) * (14 + 60 * t); s += lumineux(`M${f(x - w / 2)},${f(y)} L${f(x + w / 2)},${f(y - 0.6)}`, i % 3 ? '#FFB060' : MAGENTA, 0.8 + t * 1.2, 0.12); }
+  if (lumiere) for (let i = 0; i < 16; i++) { const t = i / 16, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 30 * t + 8 * hash(i, 3), x = SOLEIL[0] + (hash(i, 5) - 0.5) * (14 + 60 * t); s += lumineux(`M${f(x - w / 2)},${f(y)} L${f(x + w / 2)},${f(y - 0.6)}`, i % 3 ? '#FFB060' : MAGENTA, 0.8 + t * 1.2, 0.12); }
   return A.out(s);
 }
 // la plage : le sable mouillé violet, qui boit le couchant ; la dentelle d'écume de lumière ; le sable sec indigo,
@@ -62,7 +63,7 @@ const regard = p => { const A = atelier(`${p}R`); return A.out(plein(A.rad([[0, 
 
 // les dessins néon des pièces du décor, par identifiant (les autres pièces : leur dessin passé dans la palette vive)
 const DECOR = {
-  ciel: p => ciel(p), soleil: p => soleil(p), mer: p => enNeon(() => mer(p)), plage: p => enNeon(() => plage(p)),
+  ciel: p => ciel(p), soleil: p => soleil(p), mer: p => enNeon(() => mer(p)), 'mer-soir': p => enNeon(() => mer(`${p}s`, false)), plage: p => enNeon(() => plage(p)),
   nuage0: p => N.strate(p, 0, NUAGES[0][1], NUAGES[0][2]), nuage1: p => N.strate(p, 1, NUAGES[1][1], NUAGES[1][2]),
   flou: p => ciel(p) + enNeon(() => mer(p) + plage(p)), premier: p => premier(p), regard: p => regard(p), teinte: p => N.vignette(p)
 };
@@ -75,16 +76,37 @@ function memesObjets(plans) {
   if (!a('tache')) apres('epave', O.tache);
   if (!a('premier')) plans.splice(plans.findIndex(q => q.id === 'sable-pres' || q.id === 'regard'), 0, O.premier);
 }
-// une scène gravée, passée au néon : ses pièces, sa caméra, ses temps ; le décor redessiné, le reste recoloré
-function enNeonScene(scene, p, propres = {}, plage = false) {
+// une couleur, dans un dessin, passée dans la palette vive (pas les références url(#…) ni href="#…")
+const recolore = svg => svg.replace(/(?<!url\()(?<!href=")#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g, c => neon(c));
+// une couleur ravivée sans changer de teinte (celle de l'avatar, game/acteur.js : neonCouleur) : pour les personnages et les
+// scènes de jour, dont les peaux et les habits ne doivent pas changer de couleur ; plus saturée, les sombres vers l'indigo
+const hexHsl = hex => { const n = hex.length === 4 ? [1, 2, 3].map(i => parseInt(hex[i] + hex[i], 16) / 255) : [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255), [r, g, b] = n, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn; if (!d) return [0, 0, l]; const sa = d / (1 - Math.abs(2 * l - 1)), h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return [(h * 60 + 360) % 360, sa, l]; };
+const hslHex = (h, sa, l) => { const c = (1 - Math.abs(2 * l - 1)) * sa, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2, [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x]; return '#' + [r, g, b].map(v => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, '0')).join('').toUpperCase(); };
+function ravive(hex) {
+  const [h, sa, l] = hexHsl(hex);
+  if (l < 0.16) return hslHex(258, 0.55, Math.max(0.06, l));
+  if (sa < 0.06) return hslHex(255, 0.18, l);
+  return hslHex(h, Math.min(1, sa + 0.25, sa * 1.4 + 0.08), l);
+}
+const ravivee = svg => svg.replace(/(?<!url\()(?<!href=")#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g, c => ravive(c));
+// la lumière de l'avatar dans une scène néon (game/acteur.js : gravee, son rendu néon) : un voile violet léger
+const LUMIERE_NEON = { teinte: '#3A0A5A', force: 0.14 };
+const PERSONNAGES = new Set(['lorena']);
+// une scène gravée, passée au néon : ses pièces, sa caméra, ses temps ; le décor du couchant redessiné (decor : faux pour
+// une scène qui a son propre ciel), le reste recoloré ; l'avatar rendu en néon
+function enNeonScene(scene, p, propres = {}, plage = false, decor = true) {
   const sc = scene();
   if (plage) memesObjets(sc.plans);
+  if (sc.partition.lumiere || sc.plans.some(q => q.id === 'avatar')) sc.partition.lumiere = { cote: 1, ...sc.partition.lumiere, ...LUMIERE_NEON, neon: true };
   for (const pl of sc.plans) {
-    const d = pl.dessin, a = propres[pl.id] || DECOR[pl.id];
-    if (pl.id === 'anime') continue;
+    const d = pl.dessin, a = propres[pl.id] || (decor || pl.id === 'teinte' ? DECOR[pl.id] : null);
+    if (pl.id === 'anime') { if (d && !propres.anime) pl.dessin = () => recolore(d()); continue; }
     if (!d) continue;
-    pl.dessin = a ? () => a(p) : () => enNeon(() => enCouleurs(d()));
+    // (les personnages gardent leurs couleurs, ravivées : Lorena et ses images)
+    const perso = PERSONNAGES.has(pl.id) || PERSONNAGES.has(pl.imageDe);
+    pl.dessin = a ? () => a(p) : perso ? () => enNeon(() => ravivee(d())) : () => enNeon(() => recolore(d()));
     // (les cadres du décor néon : ses nuages, des strates plus larges ; son soleil, ses anneaux et ses rayons)
+    if (!decor) continue;
     if (/^nuage\d$/.test(pl.id)) pl.cadre = [G - 100, NUAGES[+pl.id.slice(-1)][1] - 24, D_ - G + 200, 34];
     if (pl.id === 'soleil') pl.cadre = [SOLEIL[0] - 200, SOLEIL[1] - 200, 400, 400];
   }
@@ -127,4 +149,4 @@ const greve01 = () => enNeonScene(GP.greve01, 'ng', { anime: () => vivant() }, t
 const carte01 = () => enNeonScene(GP.carte01, 'nc', { anime: () => vivant() + vivantTache(), 'sable-pres': p => enNeon(() => sablePres(p)), ecume: p => enNeon(() => ecumeBord(p)) }, true);
 const tampon00 = () => enNeonScene(GP.tampon00, 'nt', { anime: () => vent(), 'sable-pres': p => enNeon(() => sablePres(p, true)) });
 
-module.exports = { paupieres01, greve01, carte01, tampon00 };
+module.exports = { paupieres01, greve01, carte01, tampon00, enNeonScene, recolore, ravivee };

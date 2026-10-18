@@ -9,6 +9,7 @@
     "echelle": 2.75,
     "vue": "dos",
     "pose": "assis-mains-tendues",
-    "naufrage": false
+    "naufrage": false,
+    "neon": true
   }
 }
