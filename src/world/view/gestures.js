@@ -33,6 +33,9 @@ const TAP_SLOP = 14;
 // Rayon minimal d'une cible au doigt, en pixels d'écran (une cible de 44 px de large, comme le veulent les guides
 // tactiles), quel que soit le zoom
 const MIN_TOUCH = 22;
+// Au tutoriel, le cercle doré de l'étape (Guide/CoachLayer : la cible, au moins MIN_TOUCH px de rayon, plus sa marge
+// PAD) se touche tout entier
+const RING_PAD = 8;
 // La phrase de l'arrivant qui attend au Ponton : celle du moment du récit qui l'amène
 const arrivalLine = guest => ARRIVAL_WELCOME.moments[guest.moment] || ARRIVAL_WELCOME.moments.ponton;
 
@@ -177,20 +180,26 @@ export default {
     const p = this.point(event);
     this.zoomAt(p.x, p.y, event.deltaY < 0 ? 1.12 : 0.89);
   },
-  // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, création, annexe, puis case ; still :
-  // sans ce qui vit (bêtes, habitants, mouettes), pour toucher ce qu'ils cachent
-  hitAt(px, py, still = false) {
+  // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, création, annexe, puis case ; ok : ne
+  // retenir que ce qu'il accepte (au tutoriel, la cible de l'étape, même derrière une clôture, une trouvaille ou un
+  // passant : tap)
+  hitAt(px, py, ok = () => true) {
     const w = this.toWorld(px, py);
-    if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
+    const first = hit => (ok(hit) ? hit : null);
+    if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r && first({ brume: true })) return { brume: true };
     // Brume en Phénix, en vol : elle lâche une gerbe de braises (l'appui long : sa bulle)
-    if (this.phenixHit && Math.hypot(w.x - this.phenixHit.x, w.y - this.phenixHit.y) < this.phenixHit.r) return { animal: { kind: 'phenix', key: 'phenix', ...this.phenixHit } };
+    if (this.phenixHit && Math.hypot(w.x - this.phenixHit.x, w.y - this.phenixHit.y) < this.phenixHit.r) {
+      const phenix = first({ animal: { kind: 'phenix', key: 'phenix', ...this.phenixHit } });
+      if (phenix) return phenix;
+    }
     // L'indicateur « ! » d'une étape du tutoriel (draw/marks.js) : le toucher, c'est toucher ce qu'il marque
-    const mark = (this.markHits || []).find(m => Math.hypot(w.x - m.x, w.y - m.y) < m.r);
+    const mark = (this.markHits || []).find(m => Math.hypot(w.x - m.x, w.y - m.y) < m.r && ok({ mark: m.name }));
     if (mark) return { mark: mark.name };
-    const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 2);
     // La bulle pleine d'une bête de ferme se ramasse d'un toucher ; les autres (faim, besoins) ouvrent une fiche
-    if (asking) return asking.ready ? { beastBubble: asking } : { asking };
-    const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
+    const askOf = b => (b.ready ? { beastBubble: b } : { asking: b });
+    const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 2 && ok(askOf(b)));
+    if (asking) return askOf(asking);
+    const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8 && ok({ bubble: b }));
     if (bubble) return { bubble };
     // Puis, par rangs : ce qui vit (habitants, bêtes, égarés, la bouteille) dès qu'on touche son dessin ; puis les
     // petites choses posées (enseignes, articles, panneaux des quartiers) ; puis les créations, annexes et le décor
@@ -201,7 +210,7 @@ export default {
     const near = MIN_TOUCH / this.cam.s;
     let best = null;
     const offer = (hit, d, rank, depth = 0) => {
-      if (!(d < 1)) return;
+      if (!(d < 1) || !ok(hit)) return;
       const better = !best || rank < best.rank || (rank === best.rank && (d < best.d - 1e-6 || (d < best.d + 1e-6 && depth > best.depth)));
       if (better) best = { hit, d, rank, depth };
     };
@@ -210,7 +219,7 @@ export default {
       if (dist < h.r) offer(hit, dist / h.r, rank);
       else if (dist < near) offer(hit, dist / near, 2);
     };
-    if (!still) for (const h of [...this.seaHits, ...this.landHits]) round(h.bottle ? { bottle: true } : { animal: h }, h, 0);
+    for (const h of [...this.seaHits, ...this.landHits]) round(h.bottle ? { bottle: true } : { animal: h }, h, 0);
     for (const h of this.nameSignHits) round({ nameSign: h.site, at: h }, h, 1, 0.9);
     for (const h of this.itemHits) round({ item: h.item, site: h.site, at: h }, h, 1);
     for (const sg of this.signs) round({ zone: sg.zone, at: sg }, sg, 1, 1.2);
@@ -252,8 +261,8 @@ export default {
     const tile = this.tileAt(px, py);
     if (!tile || !this.landAt(tile.x, tile.y)) return null;
     const site = this.shownSites().find(s => this.covers(s, tile.x, tile.y));
-    if (site) return { site };
-    return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
+    if (site) return first({ site });
+    return first(this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile });
   },
   tap(px, py) {
     // Une bulle de texte est là (Brume, un personnage, une consigne) : rien de l'île ne se touche tant qu'elle n'est pas
@@ -289,13 +298,13 @@ export default {
     }
     let hit = this.hitAt(px, py);
     // Au tutoriel, seul ce que montre l'étape se touche (et Brume) : rien en avance, rien en retard (choix de l'auteur,
-    // 13 oct.) ; la mer et les cases vides ne font que des ronds. Une mouette ou un passant devant la cible : on touche ce
-    // qu'il cache
+    // 13 oct.) ; la mer et les cases vides ne font que des ronds. Quelque chose devant la cible (une clôture, une
+    // trouvaille, une mouette, un passant) : on touche la cible qu'il cache (retour de l'auteur, 18 oct. : plus d'un
+    // toucher sur deux se perdait sur le coin d’Agathe)
     if (hit && !this.tapAllowed(hit)) {
-      const under = this.hitAt(px, py, true);
-      if (!under || !this.tapAllowed(under)) return;
-      hit = under;
-    }
+      hit = this.hitAt(px, py, h => this.tapAllowed(h)) || this.ringHit(px, py);
+      if (!hit) return;
+    } else if (!hit) hit = this.ringHit(px, py);
     this.craftMenu = null;
     // Une créature touchée (une bête, un familier, un égaré qu'on repousse…) : la première fois, elle entre au Bestiaire
     // (WorldView, bestiary.js)
@@ -401,6 +410,22 @@ export default {
       this.showTip(px, py, this.tipOf(hit));
     }
     this.drawSoon();
+  },
+  // Au tutoriel, un doigt dans le cercle doré d'une étape, mais à côté du dessin de sa cible : la cible, touchée en son
+  // cœur (WorldView coach.js : coachWorld, coachRect), ou null
+  ringHit(px, py) {
+    const lesson = coach.state.lesson;
+    if (!lesson || !this.thickMist()) return null;
+    const w = this.toWorld(px, py);
+    for (const step of lesson.steps) {
+      if (!step.target.startsWith('île:')) continue;
+      const at = this.coachWorld(step.target.slice(4));
+      if (!at || Math.hypot(w.x - at.x, w.y - at.y) > (Math.max(MIN_TOUCH, at.r * this.cam.s) + RING_PAD) / this.cam.s) continue;
+      const c = this.toScreen(at.x, at.y);
+      const hit = this.hitAt(c.x, c.y, h => this.tapAllowed(h));
+      if (hit) return hit;
+    }
+    return null;
   },
   // Ce toucher vise-t-il une cible de l'étape du tutoriel (game/coach.js : les « île:… » de la leçon) ? Toujours hors du
   // tutoriel ; Brume, toujours
