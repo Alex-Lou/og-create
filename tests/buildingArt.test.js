@@ -4,7 +4,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { piecesOf, splitFrames, buildingArt, chantierArt, buildingThumb } from '@/world/buildingArt';
+import { piecesOf, splitFrames, buildingArt, chantierArt, buildingThumb, woodArt, woodState, WOOD_FULL } from '@/world/buildingArt';
 import { lookAt } from '@/world/looks';
 import { BLANK } from '@/world/library';
 import { tintSvg } from '../design/bibliotheque/svg/batiments/teintes/teinter.mjs';
@@ -188,5 +188,24 @@ describe('les bâtiments de la bibliothèque', () => {
     expect(await buildingArt('potager', 3, 'papillons').base.make().load()).toBe(tintSvg(plain, 'papillons'));
     // Le jeu teinte la roue du Puits VI : la teinte de la pièce rare aussi
     expect(buildingArt('puits', 6, 'nenuphars').anim.frame(0).key).toBe('lib-puits-6-nenuphars-a0');
+  });
+
+  it('les réserves de bois du Foyer : rien sans bois, à moitié, pleines ; un calque par palier, au cadre du palier, l\'été et l\'hiver', async () => {
+    expect([undefined, 0, -3, 1, WOOD_FULL - 1, WOOD_FULL, 999].map(woodState)).toEqual(['vide', 'vide', 'vide', 'moitie', 'moitie', 'plein', 'plein']);
+    for (let level = 1; level <= 7; level++) {
+      const art = DATA.bois[`foyer_palier${level}`];
+      expect(art.cadre, `palier ${level}`).toEqual(DATA.paliers[`foyer_palier${level}`].cadre);
+      for (const etats of [art.etats, art.hiver]) for (const state of ['moitie', 'plein']) {
+        const file = etats[state].fichiers[0];
+        expect(read(file).match(/viewBox="([^"]+)"/)[1], file).toBe(art.cadre.join(' '));
+      }
+      expect(woodArt('foyer', level, 'vide'), `palier ${level}`).toBe(null);
+      expect(woodArt('foyer', level, 'plein').key).toBe(`lib-bois-foyer-${level}-plein`);
+      expect(woodArt('foyer', level, 'moitie', true).key).toBe(`lib-bois-foyer-${level}-moitie-hiver`);
+    }
+    // (les autres bâtiments n'en ont pas)
+    expect(woodArt('bosquet', 3, 'plein')).toBe(null);
+    const layer = await woodArt('foyer', 5, 'plein').make().load();
+    expect(layer.svg).toContain('viewBox');
   });
 });

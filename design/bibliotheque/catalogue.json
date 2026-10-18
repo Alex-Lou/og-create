@@ -156864,6 +156864,510 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/bois/foyer/foyer_palier1_bois_moitie",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier I, réserves de bois à moitié",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier1_bois_moitie.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier1_bois_moitie_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier I, réserves de bois à moitié, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier1_bois_moitie_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier1_bois_plein",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier I, réserves de bois pleines",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier1_bois_plein.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier1_bois_plein_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier I, réserves de bois pleines, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier1_bois_plein_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier2_bois_moitie",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier II, réserves de bois à moitié",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier2_bois_moitie.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier2_bois_moitie_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier II, réserves de bois à moitié, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier2_bois_moitie_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier2_bois_plein",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier II, réserves de bois pleines",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier2_bois_plein.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier2_bois_plein_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier II, réserves de bois pleines, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier2_bois_plein_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier3_bois_moitie",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier III, réserves de bois à moitié",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier3_bois_moitie.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier3_bois_moitie_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier III, réserves de bois à moitié, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier3_bois_moitie_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier3_bois_plein",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier III, réserves de bois pleines",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier3_bois_plein.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier3_bois_plein_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier III, réserves de bois pleines, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier3_bois_plein_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier4_bois_moitie",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier IV, réserves de bois à moitié",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier4_bois_moitie.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier4_bois_moitie_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier IV, réserves de bois à moitié, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier4_bois_moitie_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier4_bois_plein",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier IV, réserves de bois pleines",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier4_bois_plein.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier4_bois_plein_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier IV, réserves de bois pleines, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier4_bois_plein_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier5_bois_moitie",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier V, réserves de bois à moitié",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier5_bois_moitie.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier5_bois_moitie_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier V, réserves de bois à moitié, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier5_bois_moitie_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier5_bois_plein",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier V, réserves de bois pleines",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier5_bois_plein.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier5_bois_plein_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier V, réserves de bois pleines, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier5_bois_plein_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier6_bois_moitie",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VI, réserves de bois à moitié",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier6_bois_moitie.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier6_bois_moitie_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VI, réserves de bois à moitié, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier6_bois_moitie_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier6_bois_plein",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VI, réserves de bois pleines",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier6_bois_plein.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier6_bois_plein_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VI, réserves de bois pleines, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier6_bois_plein_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier7_bois_moitie",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VII, réserves de bois à moitié",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier7_bois_moitie.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier7_bois_moitie_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VII, réserves de bois à moitié, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier7_bois_moitie_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier7_bois_plein",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VII, réserves de bois pleines",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier7_bois_plein.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/bois/foyer/foyer_palier7_bois_plein_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VII, réserves de bois pleines, l'hiver",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/bois/foyer/foyer_palier7_bois_plein_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/objets/atelier/alambic/alambic",
    "rubrique": "batiments",
    "titre": "Alambic",

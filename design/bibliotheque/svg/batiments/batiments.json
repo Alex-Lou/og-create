@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0), centre de l'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Paliers d'hiver (paliers_hiver) : les mêmes images, les toits sous la neige, même ancre ; ete = le palier d'été qu'il remplace. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d'un objet), le cadre est élargi juste ce qu'il faut, l'ancre ne bouge pas : prendre le cadre noté ici.",
+ "_lisez_moi": "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0), centre de l'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Paliers d'hiver (paliers_hiver) : les mêmes images, les toits sous la neige, même ancre ; ete = le palier d'été qu'il remplace. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d'un objet), le cadre est élargi juste ce qu'il faut, l'ancre ne bouge pas : prendre le cadre noté ici. Bois (bois) : les réserves de bois d'un palier, un calque au cadre du palier, posé sur lui (même ancre) quand le joueur a du bois : à moitié ou pleines, l'été et l'hiver (sans bois : rien).",
  "paliers": {
   "foyer_palier1": {
    "nom": "Foyer — palier I",
@@ -8406,5 +8406,273 @@
    "lierre"
   ],
   "outil": "teintes/teinter.mjs : tintSvg(svg, idDeTeinte)"
+ },
+ "bois": {
+  "foyer_palier1": {
+   "nom": "Foyer — palier I, réserves de bois",
+   "batiment": "foyer",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "etats": {
+    "moitie": {
+     "nom": "Foyer — palier I, réserves de bois à moitié",
+     "fichiers": [
+      "bois/foyer/foyer_palier1_bois_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier I, réserves de bois pleines",
+     "fichiers": [
+      "bois/foyer/foyer_palier1_bois_plein.svg"
+     ]
+    }
+   },
+   "hiver": {
+    "moitie": {
+     "nom": "Foyer — palier I, réserves de bois à moitié, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier1_bois_moitie_hiver.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier I, réserves de bois pleines, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier1_bois_plein_hiver.svg"
+     ]
+    }
+   }
+  },
+  "foyer_palier2": {
+   "nom": "Foyer — palier II, réserves de bois",
+   "batiment": "foyer",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "etats": {
+    "moitie": {
+     "nom": "Foyer — palier II, réserves de bois à moitié",
+     "fichiers": [
+      "bois/foyer/foyer_palier2_bois_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier II, réserves de bois pleines",
+     "fichiers": [
+      "bois/foyer/foyer_palier2_bois_plein.svg"
+     ]
+    }
+   },
+   "hiver": {
+    "moitie": {
+     "nom": "Foyer — palier II, réserves de bois à moitié, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier2_bois_moitie_hiver.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier II, réserves de bois pleines, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier2_bois_plein_hiver.svg"
+     ]
+    }
+   }
+  },
+  "foyer_palier3": {
+   "nom": "Foyer — palier III, réserves de bois",
+   "batiment": "foyer",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "etats": {
+    "moitie": {
+     "nom": "Foyer — palier III, réserves de bois à moitié",
+     "fichiers": [
+      "bois/foyer/foyer_palier3_bois_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier III, réserves de bois pleines",
+     "fichiers": [
+      "bois/foyer/foyer_palier3_bois_plein.svg"
+     ]
+    }
+   },
+   "hiver": {
+    "moitie": {
+     "nom": "Foyer — palier III, réserves de bois à moitié, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier3_bois_moitie_hiver.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier III, réserves de bois pleines, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier3_bois_plein_hiver.svg"
+     ]
+    }
+   }
+  },
+  "foyer_palier4": {
+   "nom": "Foyer — palier IV, réserves de bois",
+   "batiment": "foyer",
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "etats": {
+    "moitie": {
+     "nom": "Foyer — palier IV, réserves de bois à moitié",
+     "fichiers": [
+      "bois/foyer/foyer_palier4_bois_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier IV, réserves de bois pleines",
+     "fichiers": [
+      "bois/foyer/foyer_palier4_bois_plein.svg"
+     ]
+    }
+   },
+   "hiver": {
+    "moitie": {
+     "nom": "Foyer — palier IV, réserves de bois à moitié, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier4_bois_moitie_hiver.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier IV, réserves de bois pleines, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier4_bois_plein_hiver.svg"
+     ]
+    }
+   }
+  },
+  "foyer_palier5": {
+   "nom": "Foyer — palier V, réserves de bois",
+   "batiment": "foyer",
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "etats": {
+    "moitie": {
+     "nom": "Foyer — palier V, réserves de bois à moitié",
+     "fichiers": [
+      "bois/foyer/foyer_palier5_bois_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier V, réserves de bois pleines",
+     "fichiers": [
+      "bois/foyer/foyer_palier5_bois_plein.svg"
+     ]
+    }
+   },
+   "hiver": {
+    "moitie": {
+     "nom": "Foyer — palier V, réserves de bois à moitié, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier5_bois_moitie_hiver.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier V, réserves de bois pleines, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier5_bois_plein_hiver.svg"
+     ]
+    }
+   }
+  },
+  "foyer_palier6": {
+   "nom": "Foyer — palier VI, réserves de bois",
+   "batiment": "foyer",
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "etats": {
+    "moitie": {
+     "nom": "Foyer — palier VI, réserves de bois à moitié",
+     "fichiers": [
+      "bois/foyer/foyer_palier6_bois_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier VI, réserves de bois pleines",
+     "fichiers": [
+      "bois/foyer/foyer_palier6_bois_plein.svg"
+     ]
+    }
+   },
+   "hiver": {
+    "moitie": {
+     "nom": "Foyer — palier VI, réserves de bois à moitié, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier6_bois_moitie_hiver.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier VI, réserves de bois pleines, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier6_bois_plein_hiver.svg"
+     ]
+    }
+   }
+  },
+  "foyer_palier7": {
+   "nom": "Foyer — palier VII, réserves de bois",
+   "batiment": "foyer",
+   "cadre": [
+    -140,
+    -250,
+    340,
+    330
+   ],
+   "etats": {
+    "moitie": {
+     "nom": "Foyer — palier VII, réserves de bois à moitié",
+     "fichiers": [
+      "bois/foyer/foyer_palier7_bois_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier VII, réserves de bois pleines",
+     "fichiers": [
+      "bois/foyer/foyer_palier7_bois_plein.svg"
+     ]
+    }
+   },
+   "hiver": {
+    "moitie": {
+     "nom": "Foyer — palier VII, réserves de bois à moitié, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier7_bois_moitie_hiver.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Foyer — palier VII, réserves de bois pleines, l'hiver",
+     "fichiers": [
+      "bois/foyer/foyer_palier7_bois_plein_hiver.svg"
+     ]
+    }
+   }
+  }
  }
 }

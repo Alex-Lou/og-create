@@ -8,7 +8,7 @@ import { rimImage } from '@/world/lumiere';
 import { LISERE_LUNE } from '@/world/lumiere/nuitDuConseil';
 import { glyph } from '@/book/painter';
 import { lookAt } from '@/world/looks';
-import { buildingArt, chantierArt } from '@/world/buildingArt';
+import { buildingArt, chantierArt, woodArt, woodState } from '@/world/buildingArt';
 import { P } from '@/world/iso';
 import { itemLayers } from '@/world/shopSprites';
 import { objectLayers } from '@/world/objectArt';
@@ -163,6 +163,10 @@ export default {
       drawSprite(ctx, art.boat.key, art.boat.make, -bx, -by, repaint);
       ctx.restore();
     }
+    // Les réserves de bois (buildingArt.js : woodArt), posées sur le bâtiment quand le joueur a du bois en banque ; l'hiver
+    // sous la neige, comme le bâtiment (sans skin)
+    const wood = camp ? null : woodArt(site.id, site.level, woodState(this.state && this.state.stock && this.state.stock.wood), SEASON === 'hiver' && !skin);
+    if (wood) drawSprite(ctx, wood.key, wood.make, c.x, c.y, repaint, `site:${site.id}:bois`);
     this.drawItems(ctx, site, c, t, now, repaint, false);
     if (pose) ctx.restore();
   },

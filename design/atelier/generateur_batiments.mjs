@@ -20,8 +20,8 @@ const up = body => `<g transform="scale(${K})">${body}</g>`;
 const inner = s => s.svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
 const svgOf = (cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(cadre[2])}" height="${r2(cadre[3])}" viewBox="${cadre.join(' ')}">${body}</svg>`;
 export const SITES = ['foyer', 'carriere', 'bosquet', 'puits', 'potager', 'atelier', 'ponton'];
-// Ce qu'on peut demander : les entrées de l'index (paliers, paliers_hiver, chantier, skins, pieces_rares, teintes)
-export const BATIMENTS = { paliers: B.paliers, paliers_hiver: B.paliers_hiver, chantier: B.chantier, skins: B.skins, pieces_rares: B.pieces_rares, teintes: B.teintes };
+// Ce qu'on peut demander : les entrées de l'index (paliers, paliers_hiver, chantier, skins, pieces_rares, teintes, bois)
+export const BATIMENTS = { paliers: B.paliers, paliers_hiver: B.paliers_hiver, chantier: B.chantier, skins: B.skins, pieces_rares: B.pieces_rares, teintes: B.teintes, bois: B.bois };
 
 const site = s => { if (!SITES.includes(s)) throw new Error(`bâtiment inconnu : ${s} (${SITES.join(', ')})`); };
 const palierOk = lv => { if (!(lv >= 1 && lv <= 7)) throw new Error(`palier ${lv} : de 1 à 7`); };
@@ -77,6 +77,17 @@ export function pieceRare(id, lv) {
   return { svg: svgOf(cadre, up(inner(artMake(e.batiment, lv, id)()))), cadre, ms_par_image: null };
 }
 
+// Les réserves de bois d'un bâtiment à son palier (le calque posé sur lui quand le joueur a du bois) : à moitié ou
+// plein, l'été ou l'hiver ; seul le Foyer en a
+export function bois(s, lv, etat, hiver = false) {
+  site(s); palierOk(lv);
+  const e = (B.bois || {})[`${s}_palier${lv}`];
+  if (!e) throw new Error(`${s} : pas de réserves de bois (${Object.keys(B.bois || {}).join(', ')})`);
+  if (!FOYER.BOIS_ETATS.includes(etat)) throw new Error(`bois : ${etat} (${FOYER.BOIS_ETATS.join(' ou ')})`);
+  if (typeof hiver !== 'boolean') throw new Error(`hiver : ${hiver} (true ou false)`);
+  return { svg: FOYER.bois(lv, etat, { hiver }), cadre: e.cadre, ms_par_image: null };
+}
+
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)
 export function liste() {
   const out = [], f = rel => `batiments/${rel}`;
@@ -87,5 +98,6 @@ export function liste() {
   B.chantier.fichiers.forEach((x, k) => out.push({ fichier: f(x), fonction: 'chantier', args: [k + 1] }));
   for (const [id, e] of Object.entries(B.skins)) e.fichiers.forEach(x => out.push({ fichier: f(x), fonction: 'skin', args: [id, +x.match(/palier(\d)/)[1]] }));
   for (const [id, e] of Object.entries(B.pieces_rares)) e.fichiers.forEach((x, k) => out.push({ fichier: f(x), fonction: 'pieceRare', args: [id, k + 1] }));
+  for (const [key, e] of Object.entries(B.bois || {})) for (const [hiver, etats] of [[false, e.etats], [true, e.hiver]]) for (const [etat, x] of Object.entries(etats)) out.push({ fichier: f(x.fichiers[0]), fonction: 'bois', args: [key.split('_')[0], +key.match(/palier(\d)/)[1], etat, hiver] });
   return out;
 }

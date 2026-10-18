@@ -676,7 +676,7 @@ function palier6(n = 0, fort = false) {
     const ps = iso(M[0] + (M[2] - M[0]) * xp, M[3] + 0.28, 0);
     s += sacsIso(ps[0] - 18, ps[0] + 18, ps[1], 2, g);
     // (le récupérateur d'eau : la bâche tendue en entonnoir sur ses perches, les tonneaux)
-    const rc = iso(0.85, 0.45, 0);
+    const rc = iso(0.75, 0.7, 0);
     s += tonneau(rc[0] - 6, rc[1] + 2, 6, 14, g, { c: '#5A6A7A' }) + tonneau(rc[0] + 8, rc[1] - 2, 6, 14, g, { c: '#6A5A4A' })
       + [[-14, -4], [16, -8]].map(([dx, dy]) => trait(`M${P2(rc[0] + dx, rc[1] + dy + 4)} L${P2(rc[0] + dx, rc[1] + dy - 26)}`, '#6A4428', 1.6)).join('')
       + plan(`M${P2(rc[0] - 14, rc[1] - 30)} L${P2(rc[0] + 16, rc[1] - 34)} L${P2(rc[0] + 2, rc[1] - 18)} Z`, '#4A7A9A', 0.8) + trait(`M${P2(rc[0] + 2, rc[1] - 18)} L${P2(rc[0] - 6, rc[1] - 12)}`, '#4A7A9A', 1.6);
@@ -711,6 +711,70 @@ function sacsIso(x0, x1, y, n, g) {
 }
 const palier7 = n => palier6(n, true);
 
+// ——— les réserves de bois : un calque que le jeu pose sur le Foyer quand le joueur a du bois en banque (rien sans bois ;
+// à moitié, plein ; choix de l'auteur, 18 oct. : « le bois, seulement si la maison a ses réserves ») ———
+// Une bûche sciée, couchée le long de v (son bout tourné vers nous, au soleil) ou de u (vers la droite, à l'ombre) : le
+// centre de ce bout en c, son rayon r, sa longueur l (en cases) ; neige : la neige sur son dos
+function rondin(c, r, l, g, { axe = 'v', neige = false } = {}) {
+  const A = axe === 'v' ? AXE_U : B.AXE_V, off = axe === 'v' ? [40 * l, -20 * l] : [-40 * l, -20 * l];
+  const ell = (o, k = 1) => Array.from({ length: 24 }, (_, i) => { const a = (i / 24) * Math.PI * 2; return [o[0] + A[0] * r * k * Math.cos(a), o[1] + A[1] * r * k * Math.cos(a) - r * k * Math.sin(a)]; });
+  const E = ell(c), d = B.unite(off), n = [-d[1], d[0]], dot = p => (p[0] - c[0]) * n[0] + (p[1] - c[1]) * n[1];
+  const [hi, lo] = dot(E[6]) < dot(E[18]) ? [E.reduce((a, p) => (dot(p) < dot(a) ? p : a)), E.reduce((a, p) => (dot(p) > dot(a) ? p : a))] : [E.reduce((a, p) => (dot(p) > dot(a) ? p : a)), E.reduce((a, p) => (dot(p) < dot(a) ? p : a))];
+  const haut = hi[1] < lo[1] ? hi : lo, bas = haut === hi ? lo : hi;
+  const ecorce = mix('#7A4A2A', '#A8703E', g()), ombre = mix(ecorce, B.OMBRE_F, 0.45), bord = mix(ecorce, '#2A1A10', 0.5);
+  const soleil = axe === 'v', bois = soleil ? mix('#F0C488', '#F8DCA8', g() * 0.5) : mix('#C8925A', '#D8A468', g() * 0.5);
+  // (le dos : l'écorce, son ombre dessous, sa lumière dessus, ses gerçures)
+  let s = `<path d="${poly(ell(plus(c, off)))}" fill="${ombre}" stroke="${bord}" stroke-width=".7"/>`
+    + `<path d="${poly([haut, plus(haut, off), plus(bas, off), bas])}" fill="${ecorce}"/>`
+    + `<path d="${poly([plus(c, [(haut[0] - c[0]) * -0.2, (haut[1] - c[1]) * -0.2]), plus(plus(c, off), [(haut[0] - c[0]) * -0.2, (haut[1] - c[1]) * -0.2]), plus(bas, off), bas])}" fill="${ombre}" opacity=".7"/>`
+    + trait(ligne([plus(c, [(haut[0] - c[0]) * 0.7, (haut[1] - c[1]) * 0.7]), plus(plus(c, off), [(haut[0] - c[0]) * 0.7, (haut[1] - c[1]) * 0.7])]), '#E8B47A', 0.8, ' opacity=".55"')
+    + trait(ligne([haut, plus(haut, off)]), bord, 0.7) + trait(ligne([bas, plus(bas, off)]), bord, 0.7);
+  for (let i = 0; i < 2; i++) { const t = 0.25 + g() * 0.5, k = 0.1 + g() * 0.5, p = plus(plus(c, off, t), [(haut[0] - c[0]) * k, (haut[1] - c[1]) * k]); s += trait(`M${P2(...p)} l${f(off[0] * 0.15)},${f(off[1] * 0.15)}`, bord, 0.5, ' opacity=".6"'); }
+  if (neige) s += trait(ligne([plus(haut, [0, 0.4]), plus(plus(haut, off), [0, 0.4])]), B.NEIGE, r * 0.8) + trait(ligne([plus(haut, [0, 1.2]), plus(plus(haut, off), [0, 1.2])]), B.NEIGE_O, 0.5, ' opacity=".8"');
+  // (le bout scié : l'écorce en anneau, le bois clair, ses cernes, une fente)
+  const a = g() * Math.PI * 2, fe = [c[0] + A[0] * r * 0.75 * Math.cos(a), c[1] + A[1] * r * 0.75 * Math.cos(a) - r * 0.75 * Math.sin(a)];
+  s += `<path d="${poly(E)}" fill="${ecorce}" stroke="${bord}" stroke-width=".7"/><path d="${poly(ell(c, 0.8))}" fill="${bois}"/>`
+    + `<path d="${poly(ell(c, 0.52))}" fill="none" stroke="${mix(bois, '#8A5A30', 0.45)}" stroke-width=".45"/><path d="${poly(ell(c, 0.26))}" fill="none" stroke="${mix(bois, '#8A5A30', 0.45)}" stroke-width=".4"/>`
+    + trait(`M${P2(...c)} L${P2(...fe)}`, mix(bois, '#5A3418', 0.55), 0.5)
+    + `<path d="${poly(ell(plus(c, [-r * 0.15, -r * 0.2]), 0.42))}" fill="#FFF6DC" opacity="${soleil ? 0.35 : 0.15}"/>`;
+  if (neige) s += `<path d="M${P2(...haut)} Q${P2(c[0], c[1] - r * 1.25)} ${P2(c[0] + (c[0] - haut[0]) * 0.6, c[1] - r * 0.85)}" fill="none" stroke="${B.NEIGE}" stroke-width="${f(r * 0.5)}" stroke-linecap="round"/>`;
+  return s;
+}
+// Un tas de bûches en (u, v) (le bout de la première du rang du bas), n au rang du bas : en pyramide (chaque rang d'une
+// bûche de moins, posé dans les creux) ou droit (rangé : rangs pleins, les uns sur les autres) ; abrite : sous un toit,
+// sans neige
+function tasBois(u, v, n, rangs, g, { r = 3.4, l = 0.3, axe = 'v', droit = false, abrite = false } = {}) {
+  const pas = (2 * r * 0.97) / PAS, le = (k, j) => (axe === 'v' ? iso(u + j * pas, v + (g() - 0.5) * 0.03, k) : iso(u + (g() - 0.5) * 0.03, v + j * pas, k));
+  const m = (n - 1) * pas / 2, cc = axe === 'v' ? iso(u + m, v - l / 2, 0) : iso(u - l / 2, v + m, 0);
+  let s = contact(cc[0], cc[1] + 1, n * r * 1.15 + 4, 0.35);
+  for (let k = 0; k < rangs; k++) {
+    const nb = droit ? n : n - k, z = r + k * r * (droit ? 1.94 : 1.72);
+    for (let j = 0; j < nb; j++) s += rondin(le(z, j + (droit ? 0 : k * 0.5)), r * (0.92 + g() * 0.14), l * (0.88 + g() * 0.24), g, { axe, neige: B.hiver() && !abrite && k === rangs - 1 });
+  }
+  return s;
+}
+// La place du tas à chaque palier (au calme, rien devant lui) : [u, v, n, rangs] à moitié et plein, ses options
+const BOIS = [
+  { moitie: [1.12, 0.42, 3, 2], plein: [1.06, 0.42, 4, 3] },
+  { moitie: [0.66, -0.45, 3, 2], plein: [0.6, -0.45, 4, 3] },
+  // (III : contre le mur de droite, les bouts vers nous à droite)
+  { moitie: [0.5, -0.5, 3, 2], plein: [0.5, -0.56, 4, 3], options: { axe: 'u', l: 0.26 } },
+  { moitie: [0.84, 0.4, 3, 2], plein: [0.78, 0.4, 4, 3] },
+  // (V : rangé dans l'abri à bois, les bouts vers l'ouverture)
+  { moitie: [0.64, -0.64, 3, 2], plein: [0.64, -0.64, 3, 4], options: { axe: 'u', droit: true, abrite: true, l: 0.3, r: 3.1 } },
+  // (VI : rangé droit contre la façade, à gauche de la porte, sous la fenêtre ; VII : contre le mur de droite, derrière,
+  // la porte a ses sacs de sable)
+  { moitie: [-1.17, 0.58, 3, 2], plein: [-1.17, 0.58, 3, 3], options: { droit: true, l: 0.26, r: 3.2 } },
+  { moitie: [0.42, -0.86, 3, 2], plein: [0.42, -0.86, 3, 3], options: { axe: 'u', droit: true, l: 0.26, r: 3.2 } }
+];
+const BOIS_ETATS = ['moitie', 'plein'];
+// Le calque du bois d'un palier (le SVG complet, au cadre du palier : il se pose sur lui), à moitié ou plein ; l'hiver
+function bois(lv, etat, { hiver = false } = {}) {
+  const [u, v, n, rangs] = BOIS[lv - 1][etat];
+  B.setHiver(hiver); B.BORD.doux = true;
+  try { return svgDe(PALIERS[lv - 1].cadre, tasBois(u, v, n, rangs, rnd(lv * 7 + n), BOIS[lv - 1].options)); } finally { B.setHiver(false); B.BORD.doux = false; }
+}
+
 // Les images d'un palier (le SVG complet, comme la bibliothèque : le cadre, l'échelle × 1,25 autour)
 // (VI et VII : le cadre élargi à droite pour le faisceau du phare ; l'ancre ne bouge pas)
 const CADRE2 = [-95, -155, 190, 210], CADRE3 = [-140, -250, 280, 330], CADRE_PHARE = [-140, -250, 340, 330];
@@ -736,4 +800,4 @@ function image(lv, n = 0, { hiver = false, skin = '' } = {}) {
 
 // Les skins du Foyer que ce dessin sait faire
 const SKINS = Object.keys(TOITS);
-module.exports = { palier5b, PALIERS, SKINS, image, palier1, palier2, palier3, palier4, palier5, palier6, palier7 };
+module.exports = { palier5b, PALIERS, SKINS, image, bois, BOIS_ETATS, palier1, palier2, palier3, palier4, palier5, palier6, palier7 };

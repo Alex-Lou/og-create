@@ -1,5 +1,6 @@
 // Le Foyer redessiné dans la bibliothèque (choix de l'auteur, 18 oct. : la refonte des bâtiments, un à la fois, le Foyer
-// d'abord) : ses entrées de batiments.json (paliers, l'hiver, les cadres de ses skins et de ses pièces rares), puis ses
+// d'abord) : ses entrées de batiments.json (paliers, l'hiver, les cadres de ses skins et de ses pièces rares, ses
+// réserves de bois), puis ses
 // fichiers, écrits par le générateur du jeu (generateur_batiments.mjs, qui dessine le Foyer avec foyer.js) ; les
 // fichiers que le nouveau découpage en images rend inutiles sont retirés (accord de l'auteur, 18 oct.).
 // node design/atelier/preview_foyer.mjs
@@ -28,6 +29,12 @@ FOYER.PALIERS.forEach((P, i) => {
   B.paliers_hiver[`foyer_palier${lv}_hiver`] = { nom: `Foyer — palier ${ROMAN[i]}, l'hiver`, ete: `foyer_palier${lv}`, fichiers: noms(lv, true), cadre: P.cadre, emprise, ...anim, lumieres: P.lumieres, fumees: P.fumees };
 });
 for (const e of [...Object.values(B.skins), ...Object.values(B.pieces_rares)]) if (e.batiment === 'foyer') e.cadres = e.fichiers.map(x => FOYER.PALIERS[+x.match(/palier(\d)/)[1] - 1].cadre);
+// (les réserves de bois : un calque par palier, à moitié et plein, l'été et l'hiver)
+const ETATS = { moitie: 'à moitié', plein: 'pleines' };
+const boisDe = (lv, hiver) => Object.fromEntries(FOYER.BOIS_ETATS.map(etat => [etat, { nom: `Foyer — palier ${ROMAN[lv - 1]}, réserves de bois ${ETATS[etat]}${hiver ? ", l'hiver" : ''}`, fichiers: [`bois/foyer/foyer_palier${lv}_bois_${etat}${hiver ? '_hiver' : ''}.svg`] }]));
+B.bois = Object.fromEntries(FOYER.PALIERS.map((P, i) => [`foyer_palier${i + 1}`, { nom: `Foyer — palier ${ROMAN[i]}, réserves de bois`, batiment: 'foyer', cadre: P.cadre, etats: boisDe(i + 1, false), hiver: boisDe(i + 1, true) }]));
+const LISEZ = " Bois (bois) : les réserves de bois d'un palier, un calque au cadre du palier, posé sur lui (même ancre) quand le joueur a du bois : à moitié ou pleines, l'été et l'hiver (sans bois : rien).";
+if (!B._lisez_moi.includes(LISEZ)) B._lisez_moi += LISEZ;
 fs.writeFileSync(INDEX, JSON.stringify(B, null, 1) + '\n');
 
 // 2. les fichiers, par le générateur (lu après l'index : il y prend ses cadres)
@@ -37,6 +44,7 @@ let n = 0;
 for (const hiver of [false, true]) for (let lv = 1; lv <= 7; lv++) noms(lv, hiver).forEach((rel, k) => { ecrire(rel, G.palier('foyer', lv, k + 1, hiver).svg); n++; });
 for (const [id, e] of Object.entries(B.skins)) if (e.batiment === 'foyer') e.fichiers.forEach(rel => { ecrire(rel, G.skin(id, +rel.match(/palier(\d)/)[1]).svg); n++; });
 for (const [id, e] of Object.entries(B.pieces_rares)) if (e.batiment === 'foyer') e.fichiers.forEach((rel, k) => { ecrire(rel, G.pieceRare(id, k + 1).svg); n++; });
+for (const [key, e] of Object.entries(B.bois)) for (const [hiver, etats] of [[false, e.etats], [true, e.hiver]]) for (const [etat, x] of Object.entries(etats)) { ecrire(x.fichiers[0], G.bois('foyer', +key.match(/palier(\d)/)[1], etat, hiver).svg); n++; }
 
 // 3. les fichiers devenus inutiles
 const apres = new Set([...Object.entries(B.paliers), ...Object.entries(B.paliers_hiver)].filter(([k]) => k.startsWith('foyer_')).flatMap(([, e]) => e.fichiers));

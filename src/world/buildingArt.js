@@ -17,7 +17,7 @@ import { lookAt } from './looks';
 
 // Chargés à la demande ; la première image de chaque palier, le chantier, les skins et les aperçus des pièces rares
 // servent aussi de vignettes (adresse du fichier)
-const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/batiments/{paliers,paliers_hiver,chantier,skins}/**/*.svg', { query: '?url', import: 'default', eager: true }));
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/batiments/{paliers,paliers_hiver,chantier,skins,bois}/**/*.svg', { query: '?url', import: 'default', eager: true }));
 const URLS = import.meta.glob(['/design/bibliotheque/svg/batiments/paliers/*/*_palier[1-7]{,_1}.svg', '/design/bibliotheque/svg/batiments/{chantier,skins,pieces_rares}/**/*.svg'], { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/batiments/';
 // La bibliothèque est à l'échelle du jeu × 1,25
@@ -183,6 +183,25 @@ export function buildingArt(siteId, level, skin = '', hiver = false) {
   const id = `${key}-${skin}${neige ? '-hiver' : ''}`;
   if (!looks.has(id)) looks.set(id, artOf(siteId, level, skin, tint, file, neige));
   return looks.get(id);
+}
+
+// Les réserves de bois d'un palier (batiments.json : bois, le Foyer seul) : rien sans bois (choix de l'auteur, 18 oct. :
+// « le bois, seulement si la maison a ses réserves, sinon vide »), à moitié, pleines dès WOOD_FULL bûches en banque
+export const WOOD_FULL = 20;
+export const woodState = wood => (!(wood > 0) ? 'vide' : wood >= WOOD_FULL ? 'plein' : 'moitie');
+const woods = new Map();
+// Le calque des réserves de bois d'un palier dans un état (moitie, plein), pour l'île : { key, make }, posé sur le
+// bâtiment (même ancre, recadré sur ce qu'il peint) ; hiver : sous la neige ; null pour vide, ou si la bibliothèque n'en a pas
+export function woodArt(siteId, level, state, hiver = false) {
+  const art = DATA.bois && DATA.bois[`${siteId}_palier${level}`];
+  const file = art && (hiver ? art.hiver : art.etats)[state]?.fichiers[0];
+  if (!file || !FILES[ROOT + file]) return null;
+  const id = `${siteId}-${level}-${state}${hiver ? '-hiver' : ''}`;
+  if (!woods.has(id)) {
+    const k = scaleOf(siteId, level), frame = boxOf(art.cadre, k);
+    woods.set(id, { key: `lib-bois-${id}`, make: () => ({ box: frame, load: () => FILES[ROOT + file]().then(svg => cropped(svg, frame, null, k)) }) });
+  }
+  return woods.get(id);
 }
 
 // Le chantier dans sa phase (0, 1, 2), pour l'île : { key, make }, ou null si la bibliothèque ne l'a pas
