@@ -1,5 +1,7 @@
 # Lot 06 — La bible
 
+> **Révision du 18 octobre 2026** : les premières répliques de Lorena, Agathe, Nathan et Léo ont changé avec la réécriture de l'auteur (`lots/10_reecriture_auteur.md`) ; `HISTOIRE.md` (§ 8) est à jour, ce lot reste une archive.
+
 > Ce lot dit **ce qui change dans `HISTOIRE.md`**, passage par passage, pour qu'elle suive les décisions de l'auteur (`ton.md` § 0, décisions 1 à 24) et les lots 01 à 05 validés.
 > - Je ne touche pas à `HISTOIRE.md` : l'autre agent reporte ce lot une fois validé (« la bible change avant le code », bible § 19).
 > - **La forme** : la bible est de la prose. Le tableau du § 1 suit les colonnes demandées (identifiant, qui parle, où, texte actuel, texte proposé, intention), avec un extrait du texte actuel ; le texte proposé en entier est au § 2, sous le même identifiant.

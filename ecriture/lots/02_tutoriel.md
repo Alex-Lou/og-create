@@ -1,5 +1,7 @@
 # Lot 02 — Le reste du tutoriel : Lorena, Agathe, Nathan, Léo, le Campement
 
+> **Révision du 18 octobre 2026** : l'auteur a réécrit lui-même les répliques de ce lot (jours 2 à 5, le Campement) ; le texte en jeu est celui de `lots/10_reecriture_auteur.md`. Ce lot garde ses intentions et ses gestes ; ses tableaux de répliques sont une archive.
+
 > Ce lot reprend le tutoriel du premier matin jusqu'au Campement, dans l'ordre où le jeu le joue (`src/game/prologue.js`, `islandStep`).
 > - Décisions appliquées : `ton.md` § 0 (en particulier 1, 5, 10, 12, 14, 16, 17, 20, 21).
 > - **Hors de ce lot** : les répliques sur les égarés et la veillée de la deuxième nuit (`egares-nuit`, `egares-nord`, `cachons`, `egare-la`, `visiteurs`, `cloture-voyez`, `cuisines`). Elles viennent au lot 03, avec les égarés.

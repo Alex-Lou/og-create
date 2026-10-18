@@ -12,7 +12,7 @@ export const WRECK_TEXTS = {
 // Ce que dit le naufragé quand on réclame la quête qui lui rend un souvenir (et Maerys, son Bosquet planté : choix de
 // l'auteur, 14 oct. ; ce qu'il donne à la Récolte est dans l'aide, texts/tutorial/coach.js : MEMORY_HELP)
 export const MEMORY_LINES = {
-  'souvenir-ondin': 'Là… Elle tire. L’eau est là-dessous. Ma baguette se souvient.',
+  'souvenir-ondin': 'Ah… Quoique… Là… ! Elle tire. L’eau est là-dessous. Je le ressens à nouveau !',
   'souvenir-sylve': 'Arbre… Je me souviens. Ma forêt. Mes mains savent planter.',
   bosquet: 'Mon Bosquet garde le bois mort pour toi.',
   'souvenir-galet': 'Hm. (Brume : « Il dit qu’il se souvient de la pierre. Et qu’il a faim. ») Hm.',

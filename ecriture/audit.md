@@ -1,5 +1,7 @@
 # Brumelune — l'audit du texte
 
+> **Révision du 18 octobre 2026** : cet audit décrit le texte à sa date. Les répliques du tutoriel ont depuis été réécrites par l'auteur : le texte en jeu est celui de `lots/10_reecriture_auteur.md`.
+
 > Chaque réplique que lit le joueur aujourd'hui (décision 13 : le périmètre complet), avec un verdict et sa raison.
 > - **Garder** : on ne touche à rien.
 > - **Élever** : même idée, même place ; on resserre la langue ou on retire un défaut précis.

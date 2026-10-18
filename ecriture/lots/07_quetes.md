@@ -1,5 +1,7 @@
 # Lot 07 — Les quêtes (le serveur)
 
+> **Révision du 18 octobre 2026** : la réplique du soir de Brume citée ici (« Deux, ce soir, autour du feu. Dors : je veille. ») est devenue « Deux de plus qu'il y a deux jours… Je ne me sens enfin plus seule. Dormez, je veille sur vous. » (`lots/10_reecriture_auteur.md`). Les quêtes ne changent pas.
+
 > Les quêtes de Brume vivent dans le dépôt du serveur, `Alex-Lou/og-create-backend`, fichier `src/texts/quests.js` (rangé par l'autre agent, sans changer un mot). Chaque quête a un **titre** (`label` : le suivi des quêtes, la fiche de Brume) et **ce que Brume en dit** (`say`).
 > - J'ai lu ce dépôt en lecture seule (accord de l'auteur, 15 oct.) ; je n'y écris rien. L'autre agent intégrera ce lot dans le serveur.
 > - **La règle du lot** : le titre est de l'aide, il dit la tâche (« Écris la Vie ») ; ce que dit Brume est sa voix, sans mode d'emploi (le geste est déjà dit par le titre et par la ligne d'aide du coach).

@@ -91,6 +91,15 @@
 > - **Le pilier 6** devient un choix : on veut partir au début ; à la fin, personne ne part (§ 3).
 > - Rien ne change dans l'ordre des quêtes, les règles, l'économie ni les données.
 
+> **Réécriture de l'auteur (17 et 18 octobre 2026) : le tutoriel, du naufrage au conseil** (choix de l'auteur ; le texte complet est dans `ecriture/lots/10_reecriture_auteur.md`, les décisions dans `ecriture/ton.md`, 25 à 29).
+> - **Les répliques des cinq premiers jours** sont celles de l'auteur : Brume, Lorena, Agathe, Nathan, Léo, le Campement et le conseil. Le code fait foi (`src/texts/tutorial/scenes.js`).
+> - **Le joueur parle aussi sur l'île** : une réplique du joueur s'affiche sous son nom, avec son avatar de naufragé (§ 6.17).
+> - **Brume tient à ce qu'elle est** : on la prend pour un animal, un « il », une hallucination ; elle proteste. Léo la prend pour une fée : ça, ça lui plaît.
+> - **Le compte du soir** : chaque soir, Brume compte ceux qui sont arrivés depuis sa solitude, et dit « Dormez, je veille sur vous ».
+> - **Les scènes d'arrivée sont plus longues** (assouplit la règle des six bulles : `ton.md`, décision 28) ; toujours 140 caractères par bulle.
+> - **Au Puits**, Léo sent la source, Nathan propose de la relier au hameau ; au Campement, Lorena (non plus Brume) dit qu'il manque un toit, et Brume ne compte plus ses amis à voix haute.
+> - Rien ne change dans l'ordre des quêtes, les règles, l'économie ni les données.
+
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.
 2. **Un système magique tiré du jeu lui-même** :
@@ -733,7 +742,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 - **Partout** : sur l'île, dans les scènes, aux veillées (il s'assoit dans le cercle). Il remplace la règle D11 (« joueur jamais montré »).
 - **Sur l'île** : il vit seul comme les habitants (il se promène, se repose) et vient vers ce qu'on touche pour agir. Aucun nouveau geste.
 - **Sa tenue** : la version naufragée de la tenue choisie (délavée, déchirée, pieds nus) jusqu'au Campement, où Agathe recoud ses habits ; puis la tenue choisie. On peut changer son avatar plus tard, depuis le menu.
-- **Il parle, sobrement** (choix de l'auteur, 14 oct.) : des répliques courtes, avec son nom, quand il s'adresse à quelqu'un ; des pensées en italique quand il est seul. La peur est vraie, et l'humour aide à tenir debout (« C'est ma carte d'embarquement… Super… »). Les autres l'appellent par son nom, puis « Alchimiste » (veillée V).
+- **Il parle, sobrement** (choix de l'auteur, 14 oct.) : des répliques courtes, avec son nom, quand il s'adresse à quelqu'un ; des pensées en italique quand il est seul. Il répond, il ironise, il s'inquiète, dans les scènes comme sur l'île, où sa bulle montre son avatar de naufragé (choix de l'auteur, 18 oct.). La peur est vraie, et l'humour aide à tenir debout (« C'est ma carte d'embarquement… Super… »). Les autres l'appellent par son nom, puis « Alchimiste » (veillée V).
 - **Son genre** : le jeu connaît celui de l'avatar (femme ou homme). Une réplique qui l'accorde s'écrit avec les deux formes, masculin puis féminin : « arrivé|arrivée ».
 - **Les joueurs qui ont déjà une île** : l'écran d'avatar s'ouvre à leur prochaine visite, sans refaire le tutoriel, avec un mot d'accueil de Brume (proposé) : « Tout ce temps, je n'ai connu que tes mains. » / « Montre-moi ton visage ? »
 - **Technique** : l'avatar est gardé par le serveur avec le compte (donnée nouvelle) ; avant le compte, avec le carnet invité.
@@ -918,7 +927,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   3. un frère perdu dans une brume, il y a des années (idée gardée pour plus tard) ;
   4. la nuit du naufrage ;
   5. « Je reste. La mer peut attendre. »
-- **Première réplique** : « Ho, du feu ! Tu étais sur l'Hirondelle ? Alors donne-moi la main. La mer ne m'a pas lâchée de la nuit. »
+- **Première réplique** : « Ho, du feu ! Toi aussi, tu étais sur le navire ? Alors donne-moi la main. La mer ne m'a pas lâchée de la nuit. »
 - **L'arc du Phare** : c'est elle qui pose le but au conseil (« on trouve un moyen de quitter cette île ») et qui voit le phare pour ce qu'il est. À l'acte IV, sa première traversée vers l'îlot est manquée ; elle répond « Pas encore, c'est tout. » À l'acte VII, la nouvelle d'une autre lumière (« trois éclats, puis rien ») lui rend son frère, à demi.
 
 ---
@@ -943,7 +952,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   4. l'aveu du goût perdu ;
   5. « Une cuillère pour le corps, une pour l'âme… et une pour toi. »
 - **La silhouette** : c'est elle qu'on aperçoit la première nuit ; elle regarde le feu trois nuits depuis les rochers sans oser venir, à cause du feu follet (elle en a peur depuis toujours).
-- **Première réplique** : « Deux nuits que je regarde ton feu depuis les rochers. Je n'osais pas… à cause de lui. » Puis, devant Brume : « Un feu follet… Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. » / « … Celui-là a l'air plus perdu que nous. » (Brume : « Elle. »)
+- **Première réplique** : « Deux nuits que je regarde ton feu depuis les rochers. Je n'osais pas approcher… à cause de lui. » Puis, devant Brume : « Un feu follet ! Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. » / « … Ton feu follet a l'air plus perdu que nous, finalement. » (Brume : « Elle. Je suis une ELLE. … Mais merci de le comprendre. »)
 
 ---
 
@@ -964,7 +973,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   3. l'incendie ;
   4. pourquoi il est parti ;
   5. « Presque tout peut se réparer. Même moi. »
-- **Première réplique** : « Des poules. J'entends des poules. Sur une île déserte. »
+- **Première réplique** : « Une soupe. Je dois halluciner… Ça y est, je vais mourir sur une île déserte. »
 
 ---
 
@@ -985,7 +994,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   3. il a peur de l'eau profonde (le lien avec Lorena) ;
   4. ses parents ;
   5. « Je trouverai toujours ce que tu as perdu. »
-- **Première réplique** : « J'ai dormi combien de temps ? L'eau a un goût de nuage. »
+- **Première réplique** : « J'ai dormi combien de temps ? L'eau a un goût horrible, ici. » Puis, à Brume : « T'es une fée ? Moi, je suis Léo. »
 - **L'arc du Phare** : il voit le phare le premier, à la première veillée. À l'acte VII, ses parents arrivent sur le navire que la lumière a guidé, et restent ; sa baguette, qui tremblait vers l'ouest pour eux, tremble ensuite vers le nord.
 
 ---
@@ -1116,7 +1125,7 @@ Ce que le Voile a effacé, et qui erre la nuit : le Sans-Nom, le Dormeur, le Noy
 L'étoile tombée (§ 7.2). Elle ne parle pas, et personne ne la nomme. On ne la voit qu'une fois : des racines, au naufrage. Ensuite, seulement des signes, jamais expliqués. À l'acte VI, la dernière rune en dit le nécessaire ; le reste est laissé ouvert.
 
 #### Toi, le joueur (v6)
-Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul ou seule sur la plage de Brumelune, au couchant. Ton avatar, tu le choisis et le personnalises (§ 6.17). Tu parles peu : quelques répliques quand tu t'adresses à quelqu'un, des pensées en italique quand tu es seul ou seule. Les autres t'appellent par ton nom, puis « Alchimiste » à la veillée V.
+Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul ou seule sur la plage de Brumelune, au couchant. Ton avatar, tu le choisis et le personnalises (§ 6.17). Tu parles peu, mais tu réponds : quelques répliques quand tu t'adresses à quelqu'un, dans les scènes comme sur l'île, des pensées en italique quand tu es seul ou seule. Les autres t'appellent par ton nom, puis « Alchimiste » à la veillée V.
 
 ---
 

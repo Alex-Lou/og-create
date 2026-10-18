@@ -12,7 +12,7 @@ export const HEN_CHASE = {
   },
   // (les bruits de l'esquive, gardés : choix de l'auteur, 15 oct., décision 23)
   squawk: ['Cot !', 'Cot cot !'],
-  end: 'Les voilà toutes.',
+  end: 'Les voilà toutes. … Réglisse, je t’ai vue. Ne fais pas l’innocente.',
   go: 'Commencer',
   later: 'Plus tard',
   next: 'Continuer',
