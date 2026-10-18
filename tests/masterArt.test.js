@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { masterSprite, masterGesture, MASTERS } from '@/world/masterArt';
 import { masterPortrait } from '@/world/masterPortraits';
-import { ROLES } from '@/world/villagers';
+import { ROLES } from '@/world/roles';
 import DATA from '../design/bibliotheque/svg/personnages/quotidien.json';
 
 const ROOT = fileURLToPath(new URL('../design/bibliotheque/svg/personnages/', import.meta.url));

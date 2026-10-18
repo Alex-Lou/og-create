@@ -2,7 +2,7 @@
 // selon l'heure et le temps qu'il fait (sky.js). Rien n'est gardé par le serveur : tout se déduit de l'île (bâtiments
 // bâtis, quartiers à soi, décor) et du temps.
 // - Habitants : un par bâtiment bâti (son métier), plus la cuisinière du Foyer, dessinés sous trois angles
-//   (villagers.js) : ils regardent où ils vont. Chacun suit son agenda (village/agenda.js) : le jour il travaille et
+//   (masterArt.js, arrivantArt.js) : ils regardent où ils vont. Chacun suit son agenda (village/agenda.js) : le jour il travaille et
 //   fait sa tournée par les chemins, tient son rituel, mange au Foyer à midi, passe voir un camarade ; le soir il
 //   rentre au Foyer avec une lanterne ; la nuit il dort couché chez lui. Sous la pluie, un sur deux s'abrite à sa
 //   porte, les autres sortent avec un parapluie. Il marche d'une place à l'autre (rien ne saute). Chacun a son allure

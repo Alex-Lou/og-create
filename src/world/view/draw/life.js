@@ -21,7 +21,6 @@ import { guide } from '@/game/guide';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { BOTTLE } from '@/world/chest';
 import { ISLET_SPRITES } from '@/world/isletSprites';
-import { visitorBoat } from '@/world/visitors';
 import { strayAt, nightNow } from '@/world/strays';
 import { strayLayer, strayKind } from '@/world/nightArt';
 import { SEA_KINDS } from '../constants';
@@ -361,10 +360,9 @@ export default {
       const ease = 1 - (1 - k) ** 3;
       const x = dock.x + dock.dx * BOAT_FAR * (1 - ease);
       const y = dock.y + dock.dy * BOAT_FAR * (1 - ease);
-      const frame = Math.floor(t * 2) % 2;
-      // (dessin de la bibliothèque, son fanion à sa cadence, sinon celui du code)
+      // (dessin de la bibliothèque, son fanion à sa cadence)
       const lib = isletArtLayer('bateau_visiteur', isletFrameAt('bateau_visiteur', t));
-      out.standing.push({ kind: 'vboat', x, y, z: Math.sin(t * 1.4) * 1.2, flip: dock.flip, sprite: lib ? [lib.key, lib.make] : [`vboat-${frame}`, () => visitorBoat(frame)] });
+      if (lib) out.standing.push({ kind: 'vboat', x, y, z: Math.sin(t * 1.4) * 1.2, flip: dock.flip, sprite: [lib.key, lib.make] });
       if (k < 1) out.rings.push({ x: x - dock.dx * 0.4, y: y - dock.dy * 0.4, k: (t * 1.5) % 1 });
       const c = surface(x, y);
       hits.push({ key: 'vboat', kind: 'vboat', x: c.x, y: c.y - 18, r: 26 });

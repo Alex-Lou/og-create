@@ -7,7 +7,6 @@ import playService from '@/services/playService';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
 import { thanksOf, askOr, affordable } from '@/world/needs';
-import { THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
 import { vibrate } from '@/utils/fx';
@@ -46,8 +45,6 @@ export default {
       // Le Savoir de Brume, après le Phare : sa réplique et l'indice soufflé
       brumeSaid: '',
       brumeHint: null,
-      visitorOpen: false,
-      visitorSaid: '',
       // L'accueil de l'arrivant qui attend au Ponton (ArrivalWelcome) : ouvert, sa dernière erreur
       arrivalOpen: false,
       arrivalError: ''
@@ -137,10 +134,11 @@ export default {
       const dy = (best.y - cy) / len;
       return { x: best.x, y: best.y, dx, dy, flip: dx - dy > 0 };
     },
-    // Portrait d'un habitant venu d'ailleurs (ou du visiteur du moment) : le même que sur l'île, d'après ses choix ou sa
-    // graine (arrivantArt.js ; '' tant que le générateur de l'avatar se charge : il se refait quand il arrive)
+    // Portrait d'un habitant venu d'ailleurs (ou de l'arrivant qui attend) : le même que sur l'île, d'après ses choix ou
+    // sa graine (arrivantArt.js, sur l'objet de la vue du serveur : il n'est fait qu'une fois ; '' tant que le générateur
+    // de l'avatar se charge : il se refait quand il arrive)
     visitorPortrait(v) {
-      return arrivantPortrait({ seed: v.seed, look: v.look || null });
+      return arrivantPortrait(v);
     },
     // L'accueil de l'arrivant : composer son allure, choisir son métier et son prénom
     openArrival() {
@@ -168,54 +166,6 @@ export default {
       } finally {
         this.busy = false;
       }
-    },
-    openVisitor() {
-      if (!this.state || !this.state.visitor) return;
-      this.site = null;
-      this.villagerId = null;
-      this.visitorSaid = '';
-      this.visitorOpen = true;
-    },
-    // Combler la demande du visiteur : le serveur vérifie, prend les ressources et verse les écus
-    async satisfyVisitor() {
-      const guest = this.state && this.state.visitor;
-      if (this.busy || !guest) return;
-      this.busy = true;
-      try {
-        const { reward, coins, world } = await playService.visitorSatisfy(guest.id);
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        this.visitorSaid = VISITOR_THANKS;
-        vibrate([12, 40, 18]);
-        this.$emit('show-alert', TOASTS.visitorThanks(guest.name), 'gain', this.gainsOf({}, reward));
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.visitor), 'error');
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Un visiteur comblé reste dans une maison libre : il devient habitant
-    async settleVisitor() {
-      const guest = this.state && this.state.visitor;
-      if (this.busy || !guest) return;
-      this.busy = true;
-      try {
-        const { settled, coins, world } = await playService.visitorSettle(guest.id);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.visitorOpen = false;
-        vibrate([12, 40, 18]);
-        this.$emit('show-alert', TOASTS.settled(settled));
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.settle), 'error');
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Demande de Récoltes : on ferme sa fiche et on lance une partie
-    visitorHarvest() {
-      this.visitorOpen = false;
-      this.startHarvest();
     },
     // Habitant d'un bâtiment (vue du serveur), ou null
     friendAt(siteId) {
