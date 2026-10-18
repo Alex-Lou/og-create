@@ -10,7 +10,7 @@ import { IRIS } from '../lumiere/arcEnCiel';
 const clamp = v => Math.min(1, Math.max(0, v));
 const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
 
-export const GEANT_EVERY = 150; // secondes entre deux passages
+export const GEANT_EVERY = 420; // secondes entre deux passages (rare : choix de l'auteur, 18 oct.)
 export const GEANT_FOR = 48; // durée d'un passage
 const CHEMIN = 24; // cases parcourues
 const SOUFFLE = [0.5, 0.6]; // le geyser, en fraction du passage

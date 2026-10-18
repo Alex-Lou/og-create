@@ -83,9 +83,11 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   const residents = residentsOf({ grid, M, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary });
   const planner = plannerOf({ grid, stops, home, calm, routeOf });
   const farm = farmOf({ grid, M, built, coop, bestiary });
-  const habitats = habitatsOf({ n, M, owned, grid });
-  // Les bêtes sauvages qui vivent de leur coin et de leurs conditions (pendant le tutoriel, aucune : elles arrivent à sa fin)
-  const wildLife = calm ? null : wildLifeOf({ homes: homesOf({ n, M, owned, grid, props, avoid }), zoneIds, grid, n });
+  // Les coins des zones à soi (un seul parcours de l'île) ; les bêtes sauvages qui vivent de leur coin et de leurs
+  // conditions (pendant le tutoriel, aucune : elles arrivent à sa fin)
+  const homes = homesOf({ n, M, owned, grid, props, avoid });
+  const habitats = habitatsOf(homes);
+  const wildLife = calm ? null : wildLifeOf({ homes, zoneIds, grid, n });
 
   // Tout ce qui vit à l'instant t (secondes) sous ce ciel : [{ id, kind, species, x, y, z, flip, sprite: [clé, dessin] }]
   // et les lanternes [{ x, y }] ; scared : touchers récents (Map id → { at }) ; loose : les poules échappées du tutoriel

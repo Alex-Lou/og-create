@@ -113,10 +113,19 @@ describe('les eaux où vivent les animaux', () => {
 });
 
 describe('la mer grandit avec l’île', () => {
-  it('dauphins avec la Crique, baleine avec le Hameau, méduses avec l’Îlot aux Mouettes', () => {
-    expect(seaGuests(new Set(['coeur']))).toEqual({ dolphins: false, whale: false, jellies: false });
-    expect(seaGuests(new Set(['coeur', 'crique']))).toMatchObject({ dolphins: true, whale: false });
-    expect(seaGuests(new Set(['crique', 'hameau', 'phare']))).toEqual({ dolphins: true, whale: true, jellies: true });
+  it('dauphins avec la Crique, baleine avec le Hameau, méduses avec l’Îlot aux Mouettes ; chacun à son heure et sous son ciel', () => {
+    const sky = (night, kind) => ({ night, weather: { kind } });
+    const day = sky(0, 'clair');
+    expect(seaGuests(new Set(['coeur']), day)).toEqual({ dolphins: false, whale: false, jellies: false });
+    expect(seaGuests(new Set(['coeur', 'crique']), day)).toMatchObject({ dolphins: true, whale: false });
+    const all = new Set(['crique', 'hameau', 'phare']);
+    // Le jour, les dauphins et la baleine ; la nuit, les méduses
+    expect(seaGuests(all, day)).toEqual({ dolphins: true, whale: true, jellies: false });
+    expect(seaGuests(all, sky(1, 'clair'))).toEqual({ dolphins: false, whale: false, jellies: true });
+    // Sous la pluie, la baleine seule ; sous l'orage, personne
+    expect(seaGuests(all, sky(0, 'pluie'))).toEqual({ dolphins: false, whale: true, jellies: false });
+    expect(seaGuests(all, sky(0, 'orage'))).toEqual({ dolphins: false, whale: false, jellies: false });
+    expect(seaGuests(all, sky(1, 'orage')).jellies).toBe(false);
   });
   it('chaque animal a son dessin', () => {
     expect(FISH_SPECIES).toEqual(['sardine', 'dorade', 'volant']);

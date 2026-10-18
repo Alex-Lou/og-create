@@ -12,23 +12,11 @@ const ALOFT = new Set(['squirrel', 'bird', 'owl', 'butterfly', 'bee', 'firefly']
 const WILD = new Set([...WILD_LIFE_SPECIES, 'bee', 'otter']);
 export const isWild = species => WILD.has(species);
 
-// Où vivent les bêtes d'ici : lisières, eau douce et ses berges (les loutres d'Anya, les koï, les abeilles sans Potager)
-export function habitatsOf({ n, M, owned, grid }) {
-  const edge = [];
-  const water = [];
-  const banks = [];
-  for (let y = 0; y < n; y++) {
-    for (let x = 0; x < n; x++) {
-      if (!owned.has(M.zone(x, y))) continue;
-      const g = M.ground(x, y);
-      if (g === 'w') water.push({ x, y });
-      if (!grid.walk(x, y) || !'gm'.includes(g)) continue;
-      const near = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]].map(([dx, dy]) => M.ground(x + dx, y + dy));
-      if (near.some(v => v === 'f' || v === 't')) edge.push({ x, y });
-      if (near.some(v => v === 'w')) banks.push({ x, y });
-    }
-  }
-  return { edge, water, banks };
+// Où vivent les bêtes d'ici, tirées des coins des zones à soi (wildLife.js : homesOf) : lisières, eau douce et ses
+// berges (les loutres d'Anya, les koï, les abeilles sans Potager)
+export function habitatsOf(homes) {
+  const all = kind => [...homes.values()].flatMap(home => home[kind]);
+  return { edge: all('lisiere'), water: all('eau'), banks: all('berges') };
 }
 
 // Ce qui pose une bête sauvage à l'instant du dessin (f : t, h, day, islandDay, tapped, out) : { wild, along, put }
@@ -99,11 +87,12 @@ export function drawWild(f, { wild, along }, { habitats, bestiary, doors, home }
   }
 }
 
-  // Carpes koï : trois qui tournent dans l'eau douce (après le tutoriel)
+// Carpes koï : trois qui tournent dans l'eau douce des quartiers à soi (après le tutoriel), toujours dans le même étang
+// (tiré chaque jour, il changeait sous les yeux du joueur)
 export function drawKoi(f, water, calm) {
-  const { t, day, out } = f;
+  const { t, out } = f;
   if (water.length >= 3 && !calm) {
-    const pond = water[Math.floor(hash(day, 41) * water.length)];
+    const pond = water[Math.floor(hash(41, 41) * water.length)];
     ['#F08A3A', '#FFFFFF', '#F2C04B'].forEach((color, k) => {
       const a = t * (0.35 + k * 0.08) + k * 2.1;
       out.push(beast(`koi:${k}`, 'koi', color, pond.x + Math.cos(a) * 0.32, pond.y + Math.sin(a) * 0.26, -6, Math.sin(a) > 0, Math.floor(t * 3 + k) % 2));

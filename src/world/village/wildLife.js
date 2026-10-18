@@ -74,14 +74,15 @@ export const WILD_LIFE = [
 // Les sortes qui vivent ainsi (touchées, elles sursautent : village.js, isWild)
 export const WILD_LIFE_SPECIES = [...new Set(WILD_LIFE.map(b => b.species))];
 
-// Les coins de chaque zone à soi (indice du quartier → { lisiere, pres, berges, rivage, sable, libre, arbres }) :
+// Les coins de chaque zone à soi (indice du quartier → { lisiere, pres, berges, rivage, sable, libre, arbres, eau }) :
 // lisière, l'herbe au bord du bois ; prés, l'herbe ; berges, l'herbe au bord de l'eau douce ; rivage, au bord de l'eau
-// douce ou de la mer ; sable ; libre, une case libre d'un sol où l'on se pose ; arbres, les arbres du décor. avoid : les
+// douce ou de la mer ; sable ; libre, une case libre d'un sol où l'on se pose ; arbres, les arbres du décor ; eau, l'eau
+// douce. avoid : les
 // cases à laisser libres autour (gisements, lieux remarquables)
 export function homesOf({ n, M, owned, grid, props, avoid = [] }) {
   const homes = new Map();
   const of = z => {
-    if (!homes.has(z)) homes.set(z, { lisiere: [], pres: [], berges: [], rivage: [], sable: [], libre: [], arbres: [] });
+    if (!homes.has(z)) homes.set(z, { lisiere: [], pres: [], berges: [], rivage: [], sable: [], libre: [], arbres: [], eau: [] });
     return homes.get(z);
   };
   const taken = new Set(props.map(p => p.y * n + p.x));
@@ -93,6 +94,7 @@ export function homesOf({ n, M, owned, grid, props, avoid = [] }) {
       if (!owned.has(z)) continue;
       const g = M.ground(x, y);
       const cell = { x, y };
+      if (g === 'w') of(z).eau.push(cell);
       if (grid.free(x, y) && !taken.has(y * n + x) && FREE_GROUND.includes(g)) of(z).libre.push(cell);
       if (!grid.walk(x, y)) continue;
       const near = AROUND.map(([dx, dy]) => M.ground(x + dx, y + dy));
