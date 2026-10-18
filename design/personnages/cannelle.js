@@ -2,8 +2,9 @@
 // retroussées, tablier crème taché, grande louche de cuivre en bandoulière, grosses joues rouges, petit nez.
 // Action : elle brandit sa louche, le poing sur la hanche (de face).
 const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#E9B98F', skinS: '#CF9C72', nose: '#B97A58',
   hair: '#D9D4CC', hairS: '#ABA59C', hairH: '#F5F2EC', brow: '#8C857C',
   dress: '#A8553A', dressS: '#84402B', dressH: '#C46E4E',
@@ -11,7 +12,7 @@ const C = {
   copper: '#C27C45', copperS: '#8F5530', copperH: '#EAA46C',
   strap: '#6B4226', spoon: '#C9CED6', spoonS: '#9AA2AD',
   cheek: '#F08F86', mouth: '#7A3B30', tongue: '#E07A72'
-};
+});
 
 // Louche de cuivre : manche de a à b, cuilleron en b
 function ladle(a, b, tilt = 0) {

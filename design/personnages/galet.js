@@ -2,15 +2,16 @@
 // peau couleur granit, sourcils blancs broussailleux, maillet en main et ciseau à la ceinture. « Hm. »
 // Action : il frappe le ciseau posé sur un bloc de pierre ; image 2 : la rune s'allume, la pierre chante.
 const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#B9B3A8', skinS: '#9C968B', nose: '#A39C90',
   wool: '#B5562E', woolS: '#8E3F20', woolH: '#D07448',
   beard: '#A3B48A', beardS: '#7F9068', beardH: '#C4D1AC', white: '#EEEAE0', whiteS: '#C9C3B6',
   smock: '#6E6458', smockS: '#564E44', belt: '#4A3A2C', brass: '#C9A24A',
   wood: '#A8743F', woodS: '#7E5530', steel: '#B8C0C8', stone: '#A9A49A', stoneS: '#86817A', glow: '#8FE3E8',
   cheek: '#E3A396', mouth: '#5A3028', tongue: '#D9786E'
-};
+});
 const HY = 4.4; // tout petit : même tête, posée plus bas
 
 // Maillet : le manche part de la main h, la tête au bout (rot en degrés, 0 = tête vers le bas)

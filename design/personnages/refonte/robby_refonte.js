@@ -18,9 +18,10 @@ const { EXPR, ALIAS, X, eye, mouth, extras, wind, rides } = require('./visage');
 const { seam, suitOurlet } = require('./tissu');
 const { fabriquerBras, poserBras } = require('./lorena_bras');
 const { jambe } = require('./membres');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 const HY = 4.4; // tout petit : la même tête, posée plus bas
-const C = {
+const C = fondre({
   skin: '#B9B3A8', skinS: '#9C968B', lid: '#ABA59A', under: '#857F75', nose: '#A39C90', noseH: '#D2CDC4',
   eye: '#2A2622', iris: '#6F8A96', irisL: '#B5C9D0', eyeRx: 1.75, eyeRy: 2.25, brow: '#EEEAE0', mouth: '#5A3028',
   wool: '#B5562E', woolS: '#8E3F20', woolH: '#D07448', darn: '#C9B48A',
@@ -32,7 +33,7 @@ const C = {
   wood: '#A8743F', woodS: '#7E5530', steel: '#B8C0C8', steelS: '#8A949E', stone: '#A9A49A', stoneS: '#86817A', glow: '#8FE3E8',
   cheek: '#E3A396', rim: '#9FE3DA',
   dust: '#E4E0D6', moss: '#7E9A52', salt: '#FFF8E8', mud: '#6B5138', patch: '#8A7E66', cloth: '#E6D4AE', clothS: '#B8A27A'
-};
+});
 
 // Les marques sur lui, réglées par l'état (robby_tenues.js) : poussière de pierre, mousse, sel, boue (0 → 1) ; le bonnet
 // (troue : ses deux trous, reprise : l'un des trous reprisé) ; les pièces sur la blouse ; trempé (wet)

@@ -1,8 +1,9 @@
 <template>
   <!-- Une scène du tutoriel (texts/tutorial/scenes.js), plein écran : un toucher avance d'une image ; une image à geste
        ciblé (gesture) n'avance que par lui ; « Passer » termine seulement la scène, jamais la progression obligatoire (en
-       revoir les scènes depuis le Sceau n'a pas ce bouton) -->
-  <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="tap" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
+       revoir les scènes depuis le Sceau n'a pas ce bouton). Comme dans un dialogue de jeu (choix de l'auteur, 18 oct.) :
+       un toucher pendant que l'image ou la bulle paraît les mène au bout, la réplique entière ; le suivant avance -->
+  <div ref="root" :class="['ps', { 'ps--instant': instant }]" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="tap" @keydown.enter.prevent="press" @keydown.space.prevent="press">
     <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
       <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" :beat="beat" />
       <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
@@ -43,6 +44,12 @@ import { sceneOf } from '@/game/sceneArt';
 import { rangBulle } from '@/game/scenePlans';
 import { preparePlans, prepareActeur } from '../SceneArt/raster';
 
+// Le temps que l'image et la bulle mettent à paraître (ms ; PrologueScene.css) : la première image, puis d'une bulle à
+// l'autre, et une légende
+const APPEAR_MS = 1400;
+const STEP_MS = 500;
+const CAPTION_MS = 1150;
+
 export default {
   name: 'PrologueScene',
   components: { PrologueArt, SceneArt, BrumeWisp },
@@ -62,7 +69,8 @@ export default {
   },
   emits: ['done', 'skip'],
   data() {
-    return { TOUCH_TO_GO_ON, k: 0, skipShown: this.skipDelay <= 0 };
+    // settling : l'image ou la bulle paraît encore ; instant : un toucher l'a menée au bout (sans transition)
+    return { TOUCH_TO_GO_ON, k: 0, skipShown: this.skipDelay <= 0, settling: false, instant: false };
   },
   computed: {
     list() {
@@ -110,7 +118,7 @@ export default {
     }
   },
   watch: {
-    frame: { immediate: true, handler() { this.arm(); this.prepareNext(); } },
+    frame: { immediate: true, handler() { this.arm(); this.prepareNext(); this.settle(); } },
     scene() {
       this.k = 0;
     }
@@ -122,6 +130,7 @@ export default {
   beforeUnmount() {
     clearTimeout(this.timer);
     clearTimeout(this.skipTimer);
+    clearTimeout(this.settleTimer);
   },
   methods: {
     // La prochaine scène en plans, lue d'avance pendant que celle-ci joue : elle s'ouvrira toute peinte, sans trou noir
@@ -137,9 +146,30 @@ export default {
       clearTimeout(this.timer);
       if (this.frame.auto && !reducedMotion()) this.timer = setTimeout(() => this.advance(), this.frame.auto);
     },
-    // Un toucher sur l'image : il avance, sauf quand un geste ciblé l'attend
+    // Une nouvelle image : elle et sa bulle paraissent (rien avec le mouvement réduit)
+    settle() {
+      clearTimeout(this.settleTimer);
+      this.instant = false;
+      const ms = reducedMotion() ? 0 : Math.max(this.appeared ? STEP_MS : APPEAR_MS, this.frame.caption ? CAPTION_MS : 0);
+      this.appeared = true;
+      this.settling = ms > 0;
+      if (ms) this.settleTimer = setTimeout(() => { this.settling = false; }, ms);
+    },
+    // (un toucher pendant qu'elles paraissent : tout au bout, tout de suite)
+    finish() {
+      clearTimeout(this.settleTimer);
+      this.settling = false;
+      this.instant = true;
+    },
+    // Un toucher sur l'image : il mène au bout ce qui paraît ; sinon il avance, sauf quand un geste ciblé l'attend
     tap() {
-      if (!this.frame.gesture) this.advance();
+      if (this.settling) this.finish();
+      else if (!this.frame.gesture) this.advance();
+    },
+    // (Entrée, Espace : de même, et ils passent aussi un geste ciblé)
+    press() {
+      if (this.settling) this.finish();
+      else this.advance();
     },
     advance() {
       if (this.k < this.list.length - 1) this.k++;

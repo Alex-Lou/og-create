@@ -81,7 +81,44 @@ var require_couleurs = __commonJS({
     });
     var clarte = /* @__PURE__ */ __name((c) => hsl(c)[2], "clarte");
     var enPersonnage = /* @__PURE__ */ __name((svg) => svg.replaceAll(ENCRE_KIT, ENCRE), "enPersonnage");
-    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage };
+    var BANDES = [
+      [15, 350, 0.35],
+      [40, 6, 0.3],
+      [62, 28, 0.3],
+      [100, 165, 0.45],
+      [160, 172, 0.4],
+      [200, 186, 0.3],
+      [240, 232, 0.3],
+      [275, 262, 0.3],
+      [315, 300, 0.35],
+      [345, 328, 0.35],
+      [360, 350, 0.35]
+    ];
+    var vers = /* @__PURE__ */ __name((h, cible, k) => {
+      const d = (cible - h + 540) % 360 - 180;
+      return (h + d * k + 360) % 360;
+    }, "vers");
+    var fondu = memo((c) => {
+      const [h, s, l] = hsl(c);
+      if (s < 0.12) return hex([255, Math.max(s, 0.1), l]);
+      if (h >= 15 && h < 62 && s < 0.55) return hex([vers(h, l > 0.7 ? 300 : 330, 0.5), s * 0.8, l]);
+      if (h >= 62 && h < 100) return hex([vers(h, 165, 0.4), s * 0.85, l]);
+      const [, cible, k] = BANDES.find(([fin]) => h < fin);
+      return hex([vers(h, cible, k), Math.min(1, s * 1.04), l]);
+    });
+    var GARDER = /^(skin|lid|under|nose|hair|grey|stubble|beard|white|brow|eye|iris|cheek|mouth|tongue|freckle|lip|hand|vein|scar|mole|teeth|rim|brass|steel|copper|silver|iron|gem|glass|gold|glow|firefly|star|moon)/i;
+    var HEXA = /#[0-9A-Fa-f]{6}\b/g;
+    var UNE = /^#[0-9A-Fa-f]{6}$/;
+    var fonduTexte = /* @__PURE__ */ __name((s) => s.replace(HEXA, (m) => fondu(m.toUpperCase())), "fonduTexte");
+    function fondre(x, garder = GARDER) {
+      if (typeof x === "string") return fonduTexte(x);
+      if (typeof x === "function") return (...a) => fondre(x(...a), garder);
+      if (Array.isArray(x)) return x.map((v) => fondre(v, garder));
+      if (x && typeof x === "object") return Object.fromEntries(Object.entries(x).map(([k, v]) => garder.test(k) ? [k, v] : [UNE.test(k) ? fonduTexte(k) : k, fondre(v, garder)]));
+      return x;
+    }
+    __name(fondre, "fondre");
+    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage, fondu, fondre, GARDER };
   }
 });
 
@@ -827,7 +864,8 @@ var require_anya = __commonJS({
   "atelier/anya.js"(exports, module) {
     var { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre, TRAITS } = require_troupe2();
     var { enPersonnage } = require_couleurs();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#EFE6CF",
       skinS: "#D6CBB0",
       vein: "#E8B84A",
@@ -858,9 +896,9 @@ var require_anya = __commonJS({
       mouth: "#7A4A3A",
       tongue: "#E07A72",
       glow: "255,225,140"
-    };
+    });
     var AR = { armW: 3.8, sleeve: C.skin, cuff: null, skin: C.skin };
-    var MANTEAUX = {
+    var MANTEAUX = fondre({
       ete: {
         fur: C.fur,
         furS: C.furS,
@@ -913,7 +951,7 @@ var require_anya = __commonJS({
         fleur: C.white,
         ailes: ["#BFE3F7", "#FFFFFF"]
       }
-    };
+    });
     var SAISONS_A = Object.keys(MANTEAUX);
     var glandA = /* @__PURE__ */ __name((x, y, r) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${r})">${E(0, 1.1, 1.3, 1.6, "#B07A48", 0.5)}${P("M-1.6,0.2 Q0,-1.8 1.6,0.2 Z", "#7A5236", 0.5)}${L([0, -1.2], [0.3, -2.2], OUT, 0.5)}</g>`, "glandA");
     var flocon = /* @__PURE__ */ __name((x, y, r, col = "#FFFFFF") => [0, 60, 120].map((a) => {
@@ -1228,7 +1266,8 @@ var require_anya_refonte = __commonJS({
     var { P, E, L, clip, r2, OUT } = require_troupe();
     var { EXPR, ALIAS, X, eye, brow, mouth, extras } = require_visage();
     var { ik, ligneBras } = require_membres();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#EEF1F7",
       skinS: "#C9D2E4",
       skinH: "#FFFFFF",
@@ -1277,7 +1316,7 @@ var require_anya_refonte = __commonJS({
       ivyS: "#3E6A4E",
       bud: "#EADFF2",
       budS: "#B9A8CC"
-    };
+    });
     var SAISONS = {
       ete: { nom: "Été", cape: "#2E5C66", capeS: "#1E3E48", nerv: "#BFE6FF", hem: "#D7DEEA", plumes: ["#E8F0FF", "#BFD4E8", "#9FC4C8"], orne: "feuilles", feuille: "#5E9A86", fleur: "#FFFFFF", ailes: ["#CFE8FF", "#FFFFFF"] },
       printemps: { nom: "Printemps", cape: "#6E7EB8", capeS: "#4E5C92", nerv: "#FFFFFF", hem: "#F7D6E6", plumes: ["#FFFFFF", "#F7D6E6", "#CFE3C2"], orne: "fleurs", feuille: "#CFE3C2", fleur: "#F7D6E6", ailes: ["#F7D6E6", "#FFFFFF"] },
@@ -2117,7 +2156,8 @@ var require_vivants_refonte = __commonJS({
 var require_passeur = __commonJS({
   "atelier/passeur.js"(exports, module) {
     var { OUT, P, E, L, limb, clip, expression, arm, r2 } = require_troupe2();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#C9C4BC",
       skinS: "#A9A39A",
       shadow: "#3A3F4A",
@@ -2129,7 +2169,7 @@ var require_passeur = __commonJS({
       pole: "#5A4632",
       iron: "#3E4248",
       light: "#FFE08A"
-    };
+    });
     var HY = -0.6;
     var featherRows = /* @__PURE__ */ __name((x0, x1, ys) => ys.map((y, r) => {
       let d = `M${x0},${y}`;

@@ -2,17 +2,18 @@
 // ruban, taches de rousseur, longue-vue en laiton. Action : elle regarde dans sa longue-vue (trois quarts avant).
 const { OUT, P, E, L, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle range la queue de cheval
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
 
-const C = {
+const C = fondre({
   skin: '#F2C9A0', skinS: '#DDA982',
   hair: '#B94E3A', hairS: '#8E3328', hairH: '#DE7A57',
   coat: '#F2C04B', coatS: '#CC9A2F', coatH: '#FFE49A',
   scarf: '#C8463A', scarfS: '#9A2F28',
   brass: '#C9A24A', brassS: '#8E6E2C', brassH: '#F0D58A',
   cheek: '#F29E9A', freckle: '#C97B5A', mouth: '#7A3B30'
-};
+});
 
 // Longue-vue : à la hanche, ou tenue (rot = angle)
 function spyglass(x, y, rot, len = 9) {

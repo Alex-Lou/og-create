@@ -2,8 +2,9 @@
 // de lunes, longue tresse, sabots, mains terreuses, boîte à graines en fer serrée contre elle ; calme absolu.
 // Action : elle ouvre sa boîte à deux mains ; image 2 : des graines lumineuses s'en envolent comme de petites lunes.
 const { OUT, P, E, L, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#C68A62', skinS: '#A9704C', hand: '#8E6A4E',
   hair: '#2B2230', hairS: '#1C1620', hairH: '#4A3E52',
   straw: '#E3C27A', strawS: '#BF9A52', strawH: '#F2DCA0', band: '#7A4A6A',
@@ -12,7 +13,7 @@ const C = {
   dress: '#8FA27A', dressS: '#728560',
   iron: '#6E7480', ironS: '#545A65', ironH: '#9AA2AD', glow: '#F6E7A0',
   cheek: '#E39A8A', mouth: '#6A3028', tongue: '#D9786E'
-};
+});
 
 // Croissant de lune (broderie, éclat)
 const crescent = (x, y, r, fill = C.moon) => `<path d="M${r2(x)},${r2(y - r)} A${r} ${r} 0 1 0 ${r2(x)},${r2(y + r)} A${r2(r * 0.72)} ${r} 0 1 1 ${r2(x)},${r2(y - r)} Z" fill="${fill}"/>`;

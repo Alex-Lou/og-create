@@ -18,8 +18,9 @@ const { EXPR, ALIAS, X, eye, brow, mouth, extras, wind } = require('./visage');
 const { seam, suitOurlet } = require('./tissu');
 const { fabriquerBras, poserBras } = require('./lorena_bras');
 const { jambe, anneau, ligneBras, pointLigne, longueurLigne } = require('./membres');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#DDA57C', skinS: '#C08A62', lid: '#D2966E', under: '#A87A68', nose: '#B37452', stubble: '#6E5240',
   hair: '#6B4A32', hairS: '#4F3524', hairH: '#8C6646', grey: '#CFCAC2', greyS: '#A8A29A', greyH: '#F2EFEA',
   brow: '#3B271B', browW: 1.05, rim: '#9FE3DA',
@@ -32,7 +33,7 @@ const C = {
   garter: '#3A3330', glove: '#9A6A42', gloveS: '#74502F',
   cheek: '#EE9C8C', mouth: '#7A3B30', scar: '#E49A86', scarH: '#F6C7B6',
   grease: '#3E3632', soot: '#4A4440', salt: '#FFF8E8', dust: '#E8D6AE', mud: '#6B5138', patch: '#C9B48A', cloth: '#E6D4AE', clothS: '#B8A27A'
-};
+});
 
 // Les marques sur lui, réglées par l'état (nathan_tenues.js) : cambouis, suie, sel, sciure, boue (0 → 1) ; la loupe
 // fêlée (crack) ; la poche à outils (torn : décousue, mended : recousue, clean : nette) ; la pièce au genou (patch) ;

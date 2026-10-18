@@ -16,8 +16,9 @@
 const { P, E, L, clip, r2, OUT } = require('../troupe');
 const { EXPR, ALIAS, X, eye, brow, mouth, extras } = require('./visage');
 const { ik, ligneBras } = require('./membres');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#EEF1F7', skinS: '#C9D2E4', skinH: '#FFFFFF', lid: '#DCE2EE', under: '#B9C4DA', cheek: '#E9C6D6', nose: '#B4BED4',
   eye: '#26304A', iris: '#7E9CC0', irisD: '#3E5276', irisR: '#D8F0FF', irisO: '#4A5E80', irisL: '#E6F6FF', eyeRx: 2.3, eyeRy: 2.75, brow: '#AFC0DA', browW: 0.55, mouth: '#9C6A82',
   vein: '#BFE6FF', star: '#FFFFFF',
@@ -27,7 +28,7 @@ const C = {
   gem: '#4FC78A', gemS: '#2E8A5C', gemH: '#C8FFE0',
   veil: '#E8F0FF', glow: '200,225,255', mist: '#E6EEFA', firefly: '#F4FAFF',
   moss: '#7A8A62', mossS: '#5A6A48', ivy: '#5E8A6A', ivyS: '#3E6A4E', bud: '#EADFF2', budS: '#B9A8CC'
-};
+});
 
 // Les saisons du manteau vivant : sa couleur, son ombre, ses nervures (qui luisent), son ourlet ; ses plumes, ce qui pousse
 // dessus (orne : des feuilles, des fleurs, du givre), les ailes de ses papillons

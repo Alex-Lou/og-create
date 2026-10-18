@@ -95,6 +95,8 @@
 .ps-bubble-from { opacity: 0; transform: translate(-50%, 12px); }
 .ps-caption-enter-active { transition: opacity .7s ease .45s; }
 .ps-caption-enter-from { opacity: 0; }
+/* Un toucher pendant qu'elles paraissent (PrologueScene : instant) : l'image, la légende et la bulle tout au bout */
+.ps--instant > * { transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .ps-art-enter-active, .ps-art-leave-active, .ps-bubble-enter-active, .ps-bubble-leave-active,
   .ps-art-appear, .ps-bubble-appear, .ps-caption-enter-active { transition: none; }

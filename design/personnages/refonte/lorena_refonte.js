@@ -17,8 +17,9 @@ const { capucheRabattue, reperes } = require('../avatar_accessoires');
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
 const { fabriquerBras } = require('./lorena_bras');
 const { jambe } = require('./membres');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#F2C9A0', skinS: '#D9A47E', lid: '#EDBF97', under: '#C98D7A',
   hair: '#A8442F', hairS: '#7E2D22', hairH: '#E07F5A', rim: '#9FE3DA',
   coat: '#EBB943', coatS: '#C08B2C', coatH: '#FFE49A', salt: '#FFF8E8',
@@ -28,7 +29,7 @@ const C = {
   cheek: '#EE9C8E', freckle: '#B9714F', mouth: '#7A3B30',
   cloth: '#E6D4AE', clothS: '#B8A27A', rope: '#B48F5A', ropeS: '#7C5E36', patch: '#8D7A5A', patch2: '#5E7FA0',
   shirt: '#F1E9D6', shirtS: '#D3C6A8', stripe: '#2F4F7A', mud: '#6B5138'
-};
+});
 
 // Les expressions de Lorena. Pour les deux yeux (eye) et les deux sourcils (brow), puis, si besoin, pour l'œil ou le
 // sourcil de gauche (L, à gauche de l'écran) ou de droite (R) seulement :

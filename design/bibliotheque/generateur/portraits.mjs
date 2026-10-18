@@ -81,7 +81,44 @@ var require_couleurs = __commonJS({
     });
     var clarte = /* @__PURE__ */ __name((c) => hsl(c)[2], "clarte");
     var enPersonnage = /* @__PURE__ */ __name((svg) => svg.replaceAll(ENCRE_KIT, ENCRE), "enPersonnage");
-    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage };
+    var BANDES = [
+      [15, 350, 0.35],
+      [40, 6, 0.3],
+      [62, 28, 0.3],
+      [100, 165, 0.45],
+      [160, 172, 0.4],
+      [200, 186, 0.3],
+      [240, 232, 0.3],
+      [275, 262, 0.3],
+      [315, 300, 0.35],
+      [345, 328, 0.35],
+      [360, 350, 0.35]
+    ];
+    var vers = /* @__PURE__ */ __name((h, cible, k) => {
+      const d = (cible - h + 540) % 360 - 180;
+      return (h + d * k + 360) % 360;
+    }, "vers");
+    var fondu = memo((c) => {
+      const [h, s, l] = hsl(c);
+      if (s < 0.12) return hex([255, Math.max(s, 0.1), l]);
+      if (h >= 15 && h < 62 && s < 0.55) return hex([vers(h, l > 0.7 ? 300 : 330, 0.5), s * 0.8, l]);
+      if (h >= 62 && h < 100) return hex([vers(h, 165, 0.4), s * 0.85, l]);
+      const [, cible, k] = BANDES.find(([fin]) => h < fin);
+      return hex([vers(h, cible, k), Math.min(1, s * 1.04), l]);
+    });
+    var GARDER = /^(skin|lid|under|nose|hair|grey|stubble|beard|white|brow|eye|iris|cheek|mouth|tongue|freckle|lip|hand|vein|scar|mole|teeth|rim|brass|steel|copper|silver|iron|gem|glass|gold|glow|firefly|star|moon)/i;
+    var HEXA = /#[0-9A-Fa-f]{6}\b/g;
+    var UNE = /^#[0-9A-Fa-f]{6}$/;
+    var fonduTexte = /* @__PURE__ */ __name((s) => s.replace(HEXA, (m) => fondu(m.toUpperCase())), "fonduTexte");
+    function fondre(x, garder = GARDER) {
+      if (typeof x === "string") return fonduTexte(x);
+      if (typeof x === "function") return (...a) => fondre(x(...a), garder);
+      if (Array.isArray(x)) return x.map((v) => fondre(v, garder));
+      if (x && typeof x === "object") return Object.fromEntries(Object.entries(x).map(([k, v]) => garder.test(k) ? [k, v] : [UNE.test(k) ? fonduTexte(k) : k, fondre(v, garder)]));
+      return x;
+    }
+    __name(fondre, "fondre");
+    module.exports = { ENCRE, ENCRE_KIT, NUIT, PASTEL, memo, hsl, hex, mix, ton, delave, clarte, enPersonnage, fondu, fondre, GARDER };
   }
 });
 
@@ -2682,8 +2719,9 @@ var require_aster = __commonJS({
   "personnages/aster.js"(exports, module) {
     var { OUT, P: P2, E, L, clip, expression, arm, r2, lerp, TRAITS } = require_troupe();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
+    var { fondre } = require_couleurs();
     var relevee = /* @__PURE__ */ __name((c) => !!(c.coiffe && c.coiffe.capuche), "relevee");
-    var C = {
+    var C = fondre({
       skin: "#F2C9A0",
       skinS: "#DDA982",
       hair: "#B94E3A",
@@ -2700,7 +2738,7 @@ var require_aster = __commonJS({
       cheek: "#F29E9A",
       freckle: "#C97B5A",
       mouth: "#7A3B30"
-    };
+    });
     function spyglass(x, y, rot, len = 9) {
       return `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})"><rect x="-1.5" y="${-len / 2}" width="3" height="${len}" rx="0.8" fill="${C.brass}" stroke="${OUT}" stroke-width="0.9"/><rect x="-1.1" y="${-len / 2 + 0.6}" width="0.8" height="${len - 1.2}" rx="0.4" fill="${C.brassH}"/><rect x="-1.95" y="${-len / 2 - 0.4}" width="3.9" height="2.1" rx="0.6" fill="${C.brassS}" stroke="${OUT}" stroke-width="0.8"/><line x1="-1.5" y1="0.8" x2="1.5" y2="0.8" stroke="${C.brassS}" stroke-width="0.7"/></g>`;
     }
@@ -2835,7 +2873,8 @@ var require_aster = __commonJS({
 var require_cannelle = __commonJS({
   "personnages/cannelle.js"(exports, module) {
     var { OUT, P: P2, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require_troupe();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#E9B98F",
       skinS: "#CF9C72",
       nose: "#B97A58",
@@ -2858,7 +2897,7 @@ var require_cannelle = __commonJS({
       cheek: "#F08F86",
       mouth: "#7A3B30",
       tongue: "#E07A72"
-    };
+    });
     function ladle(a, b, tilt = 0) {
       return limb(a, b, 1.5, C.copper) + L([a[0] + (b[0] - a[0]) * 0.1, a[1] + (b[1] - a[1]) * 0.1], [a[0] + (b[0] - a[0]) * 0.8, a[1] + (b[1] - a[1]) * 0.8], C.copperH, 0.5) + `<g transform="rotate(${tilt} ${r2(b[0])} ${r2(b[1])})">${E(b[0], b[1], 3.3, 2.6, C.copper)}${E(b[0], b[1] - 0.5, 2.3, 1.4, C.copperS, 0)}${E(b[0] - 1.2, b[1] + 0.9, 0.8, 0.45, C.copperH, 0)}</g>`;
     }
@@ -2986,7 +3025,8 @@ var require_cannelle = __commonJS({
 var require_galet = __commonJS({
   "personnages/galet.js"(exports, module) {
     var { OUT, P: P2, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require_troupe();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#B9B3A8",
       skinS: "#9C968B",
       nose: "#A39C90",
@@ -3011,7 +3051,7 @@ var require_galet = __commonJS({
       cheek: "#E3A396",
       mouth: "#5A3028",
       tongue: "#D9786E"
-    };
+    });
     var HY = 4.4;
     function mallet(h, rot) {
       return `<g transform="rotate(${rot} ${r2(h[0])} ${r2(h[1])})">` + limb([h[0], h[1] - 1], [h[0], h[1] + 5.6], 1.2, C.wood) + `<rect x="${r2(h[0] - 2.4)}" y="${r2(h[1] + 5.2)}" width="4.8" height="2.8" rx="0.9" fill="${C.wood}" stroke="${OUT}" stroke-width="0.9"/><rect x="${r2(h[0] + 0.9)}" y="${r2(h[1] + 5.6)}" width="1.1" height="2" rx="0.4" fill="${C.woodS}"/></g>`;
@@ -3135,7 +3175,8 @@ var require_galet = __commonJS({
 var require_melisse = __commonJS({
   "personnages/melisse.js"(exports, module) {
     var { OUT, P: P2, E, L, clip, expression, arm, r2, lerp, TRAITS } = require_troupe();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#C68A62",
       skinS: "#A9704C",
       hand: "#8E6A4E",
@@ -3161,7 +3202,7 @@ var require_melisse = __commonJS({
       cheek: "#E39A8A",
       mouth: "#6A3028",
       tongue: "#D9786E"
-    };
+    });
     var crescent = /* @__PURE__ */ __name((x, y, r, fill = C.moon) => `<path d="M${r2(x)},${r2(y - r)} A${r} ${r} 0 1 0 ${r2(x)},${r2(y + r)} A${r2(r * 0.72)} ${r} 0 1 1 ${r2(x)},${r2(y - r)} Z" fill="${fill}"/>`, "crescent");
     var posy = /* @__PURE__ */ __name((x, y) => [[0, 0, C.lavender], [1.6, -0.6, C.pink], [3, 0.2, C.yellow], [1.2, 1, C.lavender]].map(([dx, dy, f]) => E(x + dx, y + dy, 0.85, 0.85, f, 0.5)).join(""), "posy");
     function box(x, y, open = false) {
@@ -3287,8 +3328,9 @@ var require_ondin = __commonJS({
   "personnages/ondin.js"(exports, module) {
     var { OUT, P: P2, E, L, limb, clip, expression, arm, bareFoot, r2, lerp, TRAITS } = require_troupe();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
+    var { fondre } = require_couleurs();
     var relevee = /* @__PURE__ */ __name((c) => !!(c.coiffe && c.coiffe.capuche), "relevee");
-    var C = {
+    var C = fondre({
       skin: "#F5CFA8",
       skinS: "#E0AE86",
       hair: "#E2B45A",
@@ -3311,7 +3353,7 @@ var require_ondin = __commonJS({
       cheek: "#F6A0A0",
       mouth: "#7A3B30",
       tongue: "#E07A72"
-    };
+    });
     var HY = 4.4;
     var cord = /* @__PURE__ */ __name((d, w, color) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${w + 1.4}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`, "cord");
     var drop = /* @__PURE__ */ __name((x, y, r) => P2(`M${r2(x)},${r2(y - r * 1.7)} Q${r2(x + r * 1.5)},${r2(y + r * 0.2)} ${r2(x)},${r2(y + r)} Q${r2(x - r * 1.5)},${r2(y + r * 0.2)} ${r2(x)},${r2(y - r * 1.7)} Z`, C.water, 0.6), "drop");
@@ -3457,7 +3499,8 @@ var require_ondin = __commonJS({
 var require_rivet = __commonJS({
   "personnages/rivet.js"(exports, module) {
     var { OUT, P: P2, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require_troupe();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#DDA57C",
       skinS: "#C08A62",
       hair: "#6B4A32",
@@ -3484,7 +3527,7 @@ var require_rivet = __commonJS({
       cheek: "#EE9C8C",
       mouth: "#7A3B30",
       tongue: "#E07A72"
-    };
+    });
     var pencil = /* @__PURE__ */ __name((a, b) => limb(a, b, 1.4, C.pencil) + E(b[0], b[1], 0.95, 0.95, C.eraser, 0.8), "pencil");
     var glint = /* @__PURE__ */ __name((d, w) => `<path d="${d}" fill="none" stroke="#FFFFFF" stroke-width="${w}" stroke-linecap="round"/>`, "glint");
     var lens = /* @__PURE__ */ __name((x, y, r) => E(x, y, r, r, C.brass, 0.9) + E(x, y, r * 0.68, r * 0.68, C.glass, 0.6) + glint(`M${r2(x - r * 0.42)},${r2(y - r * 0.1)} Q${r2(x - r * 0.36)},${r2(y - r * 0.4)} ${r2(x - r * 0.08)},${r2(y - r * 0.44)}`, 0.5), "lens");
@@ -3625,7 +3668,8 @@ var require_rivet = __commonJS({
 var require_sylve = __commonJS({
   "personnages/sylve.js"(exports, module) {
     var { OUT, P: P2, E, L, clip, expression, arm, bareFoot, r2, lerp, TRAITS, dechirure, filPendant } = require_troupe();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#E8B88E",
       skinS: "#CC9A70",
       hair: "#4A3328",
@@ -3646,7 +3690,7 @@ var require_sylve = __commonJS({
       cheek: "#EE9C8C",
       mouth: "#7A3B30",
       tongue: "#E07A72"
-    };
+    });
     var leaf = /* @__PURE__ */ __name((x, y, len, w, rot, fill = C.leaf) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">` + P2(`M0,0 Q${w},${r2(len / 2)} 0,${len} Q${-w},${r2(len / 2)} 0,0 Z`, fill, 0.7) + L([0, 0.6], [0, len - 0.8], C.leafS, 0.4) + "</g>", "leaf");
     var vine = /* @__PURE__ */ __name((d, w = 1) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${w + 1.4}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${C.vine}" stroke-width="${w}" stroke-linecap="round"/>`, "vine");
     var twig = /* @__PURE__ */ __name((a, b, f) => L(a, b, OUT, 1.6) + L(f[0], f[1], OUT, 1.3) + L(a, b, C.twig, 0.8) + L(f[0], f[1], C.twig, 0.6), "twig");
@@ -4017,7 +4061,8 @@ var require_lorena_refonte = __commonJS({
     var relevee = /* @__PURE__ */ __name((c) => !!(c.coiffe && c.coiffe.capuche), "relevee");
     var { fabriquerBras } = require_lorena_bras();
     var { jambe } = require_membres();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#F2C9A0",
       skinS: "#D9A47E",
       lid: "#EDBF97",
@@ -4052,7 +4097,7 @@ var require_lorena_refonte = __commonJS({
       shirtS: "#D3C6A8",
       stripe: "#2F4F7A",
       mud: "#6B5138"
-    };
+    });
     var BASE = { brow: [0.15, 0.05, -0.4], lid: 0.13, tilt: 0.05, low: 0, look: [0, 0.1], under: 0.6, mouth: "flat", extras: [] };
     var X = /* @__PURE__ */ __name((o) => ({ ...BASE, ...o }), "X");
     var EXPR = {
@@ -4436,14 +4481,15 @@ var require_lorena_tenues = __commonJS({
   "personnages/refonte/lorena_tenues.js"(exports, module) {
     var { castaway, weed, fade, CANVAS } = require_naufrage();
     var { lorena, C } = require_lorena_refonte();
-    var PALETTES = {
+    var { fondre } = require_couleurs();
+    var PALETTES = fondre({
       signal: { nom: "Jaune signal", coat: C.coat, coatS: C.coatS, coatH: C.coatH },
       rouille: { nom: "Rouille", coat: "#C9673A", coatS: "#9A4626", coatH: "#F2A57A" },
       algue: { nom: "Algue", coat: "#8C9A4A", coatS: "#66712F", coatH: "#C9D486" },
       quart: { nom: "Bleu de quart", coat: "#3E5F86", coatS: "#2B4565", coatH: "#7FA3C9" },
       nuit: { nom: "Laine de nuit", coat: "#2F4058", coatS: "#1F2C3E", coatH: "#5E7A9C" },
       toile: { nom: "Toile brute", coat: "#9C8656", coatS: "#73603A", coatH: "#CDB98A" }
-    };
+    });
     var TENUES = {
       cire: { nom: "Le ciré", tenue: "cire", palette: "signal" },
       ouvert: { nom: "Ciré ouvert, marinière", tenue: "ouvert", palette: "signal" },
@@ -5811,13 +5857,14 @@ var require_naufrages = __commonJS({
   "atelier/naufrages.js"(exports, module) {
     var { castaway, weed, smudge, cord, fade, CANVAS } = require_naufrage();
     var { OUT, P: P2, E, L, clip, limb, r2, dechirure, filPendant } = require_troupe2();
+    var { fondre } = require_couleurs();
     var hem = /* @__PURE__ */ __name((x0, x1, y0, yc) => (x) => {
       const t = (x - x0) / (x1 - x0);
       return r2(y0 + 2 * (yc - y0) * t * (1 - t));
     }, "hem");
     var lock = /* @__PURE__ */ __name((d, color) => cord(d, 1.2, color), "lock");
     var walkSway = /* @__PURE__ */ __name((k) => (ctx) => ctx.walk ? ctx.ph * k : 0, "walkSway");
-    var SPECS = {
+    var SPECS = fondre({
       // Aster : ciré délavé et déchiré, pantalon retroussé, pieds nus, une voile nouée, une algue dans les cheveux
       Aster: (() => {
         const y = hem(13, 35, 47.5, 51), coatS = "#CC9A2F";
@@ -6049,7 +6096,7 @@ var require_naufrages = __commonJS({
           }, "head")
         };
       })()
-    };
+    });
     var BASE = { Aster: require_aster2(), Cannelle: require_cannelle2(), Rivet: require_rivet2(), Ondin: require_ondin2(), Sylve: require_sylve2(), Galet: require_galet2(), Melisse: require_melisse2() };
     var CAST = Object.entries(BASE).map(([k, c]) => ({ base: c, nau: castaway(c, SPECS[k]) }));
     CAST.find((x) => x.base.name === "Sylve").nau.nauMound = { fill: fade("#A88655"), shade: fade("#86683E"), hi: fade("#C2A274"), leaf: "#8C9A4E" };
@@ -6250,7 +6297,8 @@ var require_agathe_refonte = __commonJS({
     var { seam, suitOurlet } = require_tissu();
     var { fabriquerBras } = require_lorena_bras();
     var { jambe } = require_membres();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#E9B98F",
       skinS: "#C99472",
       lid: "#E0AC84",
@@ -6298,7 +6346,7 @@ var require_agathe_refonte = __commonJS({
       mouth: "#7A3B30",
       cloth: "#E6D4AE",
       clothS: "#B8A27A"
-    };
+    });
     var MARKS = { soot: 1, salt: 1, flour: 0, dirt: 0, apron: "torn", wisps: true, herbs: true, wrist: false, wet: false };
     var marks = /* @__PURE__ */ __name((c) => ({ ...MARKS, ...c.marks || {} }), "marks");
     var pal = /* @__PURE__ */ __name((c) => {
@@ -6494,14 +6542,15 @@ var require_agathe_tenues = __commonJS({
     var { SPECS } = require_naufrages();
     var { agathe, C } = require_agathe_refonte();
     var { r2 } = require_troupe();
-    var PALETTES = {
+    var { fondre, fondu } = require_couleurs();
+    var PALETTES = fondre({
       cannelle: { nom: "Cannelle", dress: C.dress, dressS: C.dressS, dressH: C.dressH },
       prune: { nom: "Prune", dress: "#7E4A62", dressS: "#5E3348", dressH: "#A26F87" },
       olive: { nom: "Olive", dress: "#7D7A3E", dressS: "#5C5A2A", dressH: "#A6A262" },
       indigo: { nom: "Indigo", dress: "#3F5578", dressS: "#2C3D59", dressH: "#6F86AA" },
       ocre: { nom: "Ocre", dress: "#B8853A", dressS: "#8C6226", dressH: "#DCAA60" },
       brique: { nom: "Brique", dress: "#9C3E34", dressS: "#742A23", dressH: "#C2625A" }
-    };
+    });
     var TENUES = {
       robe: { nom: "La robe et son tablier", tenue: "robe", palette: "cannelle", sleeves: "roll" },
       cuisine: { nom: "Le grand tablier de cuisine", tenue: "cuisine", palette: "cannelle", sleeves: "roll" },
@@ -6555,7 +6604,7 @@ var require_agathe_tenues = __commonJS({
       c.sleeve = laine ? salee.wool : salee.dress;
       c.teintes = [K.hair, salee.dress, salee.apron, K.copper];
       const S = SPECS.Cannelle, dS = salee.dressS;
-      const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === "#84402B" ? dS : salee.apron, ...r])]));
+      const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === fondu("#84402B") ? dS : salee.apron, ...r])]));
       const spec = { ...S, sway: /* @__PURE__ */ __name((ctx) => ctx.walk ? r2(ctx.ph * 0.25) : 0, "sway"), fade: [], k: 0.6, tatters, holes: Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, w]) => [x, y, w, assombrir(dS, 0.8)])])), head: void 0 };
       const droite = castaway(c, spec);
       const gauche = castaway(c, { ...spec, tatters: retourner(spec.tatters, (it) => it[2] === salee.apron), holes: retourner(spec.holes, () => false), rips: retourner(spec.rips, () => true) });
@@ -6854,7 +6903,8 @@ var require_nathan_refonte = __commonJS({
     var { seam, suitOurlet } = require_tissu();
     var { fabriquerBras, poserBras } = require_lorena_bras();
     var { jambe, anneau, ligneBras, pointLigne, longueurLigne } = require_membres();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#DDA57C",
       skinS: "#C08A62",
       lid: "#D2966E",
@@ -6918,7 +6968,7 @@ var require_nathan_refonte = __commonJS({
       patch: "#C9B48A",
       cloth: "#E6D4AE",
       clothS: "#B8A27A"
-    };
+    });
     var MARKS = { grease: 1, soot: 0.5, salt: 1, dust: 0, dirt: 0.4, crack: true, pocket: "torn", patch: false, wrist: false, wet: false };
     var marks = /* @__PURE__ */ __name((c) => ({ ...MARKS, ...c.marks || {} }), "marks");
     var pal = /* @__PURE__ */ __name((c) => {
@@ -7235,14 +7285,15 @@ var require_nathan_tenues = __commonJS({
     var { castaway, fade } = require_naufrage();
     var { SPECS } = require_naufrages();
     var { nathan, C } = require_nathan_refonte();
-    var PALETTES = {
+    var { fondre, fondu } = require_couleurs();
+    var PALETTES = fondre({
       sarcelle: { nom: "Sarcelle", shirt: C.shirt, shirtS: C.shirtS, shirtH: C.shirtH },
       bordeaux: { nom: "Bordeaux", shirt: "#8A3A3A", shirtS: "#682828", shirtH: "#B0605A" },
       moutarde: { nom: "Moutarde", shirt: "#B38A2E", shirtS: "#87661E", shirtH: "#D8B25A" },
       indigo: { nom: "Indigo", shirt: "#3E5578", shirtS: "#2B3D59", shirtH: "#6E86AA" },
       ardoise: { nom: "Ardoise", shirt: "#5E6B78", shirtS: "#434E5A", shirtH: "#8794A2" },
       bouteille: { nom: "Vert bouteille", shirt: "#3E6E4A", shirtS: "#2B5134", shirtH: "#6A9A74" }
-    };
+    });
     var TENUES = {
       atelier: { nom: "L'atelier : chemise et tablier de cuir", tenue: "atelier", palette: "sarcelle" },
       gilet: { nom: "Le gilet d'horloger", tenue: "gilet", palette: "sarcelle" },
@@ -7299,7 +7350,7 @@ var require_nathan_tenues = __commonJS({
       c.legS = fade(nathan.legS, 0.6);
       c.teintes = [K.hair, salee.shirt, salee.leather, K.grey];
       const S = SPECS.Rivet;
-      const recol = /* @__PURE__ */ __name((col) => col === "#6B4328" ? salee.leatherS : col === "#3F8A86" ? salee.shirt : salee.shirtS, "recol");
+      const recol = /* @__PURE__ */ __name((col) => col === fondu("#6B4328") ? salee.leatherS : col === fondu("#3F8A86") ? salee.shirt : salee.shirtS, "recol");
       const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, recol(col), ...r])]));
       const holes = Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, w]) => [x, y, w, assombrir(salee.shirtS, 0.8)])]));
       const spec = { ...S, fade: [], map: {}, k: 0.6, tatters, holes, sleeves: "torn", bandage: "left", over: void 0, head: void 0 };
@@ -7670,8 +7721,9 @@ var require_leo_refonte = __commonJS({
     var { fabriquerBras } = require_lorena_bras();
     var { jambe } = require_membres();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
+    var { fondre } = require_couleurs();
     var HY = 4.4;
-    var C = {
+    var C = fondre({
       skin: "#F5CFA8",
       skinS: "#E0AE86",
       lid: "#F1C7A0",
@@ -7724,7 +7776,7 @@ var require_leo_refonte = __commonJS({
       weedS: "#3F7646",
       patch: "#8FB4DE",
       cloth: "#E6D4AE"
-    };
+    });
     var MARKS = { salt: 0.6, sand: 0.8, dirt: 0.2, weed: true, patch: false, wet: false, bulle: false, wrist: false, pompon: "entier" };
     var marks = /* @__PURE__ */ __name((c) => ({ ...MARKS, ...c.marks || {} }), "marks");
     var pal = /* @__PURE__ */ __name((c) => {
@@ -7950,14 +8002,15 @@ var require_leo_tenues = __commonJS({
     var { castaway, fade } = require_naufrage();
     var { SPECS } = require_naufrages();
     var { leo, C } = require_leo_refonte();
-    var PALETTES = {
+    var { fondre, fondu } = require_couleurs();
+    var PALETTES = fondre({
       bleu: { nom: "Bleu ciré", m: C.coat, mS: C.coatS, mH: C.coatH },
       jaune: { nom: "Jaune ciré", m: "#E8B83A", mS: "#C0902A", mH: "#F6D77A" },
       vert: { nom: "Vert d'eau", m: "#4FA58E", mS: "#3A806E", mH: "#86C9B6" },
       corail: { nom: "Corail", m: "#E0705A", mS: "#B85444", mH: "#F2A08C" },
       ciel: { nom: "Bleu ciel", m: C.pyj, mS: C.pyjS, mH: "#C8DDF2" },
       cannelle: { nom: "Cannelle", m: C.knit, mS: C.knitS, mH: C.knitH }
-    };
+    });
     var TENUES = {
       cire: { nom: "Le ciré trop grand", tenue: "cire", palette: "bleu", sleeves: "roll", cles: ["coat", "coatS", "coatH"] },
       pyjama: { nom: "Le pyjama rayé", tenue: "pyjama", palette: "ciel", sleeves: null, cles: ["pyj", "pyjS", null], jambes: true },
@@ -8017,7 +8070,7 @@ var require_leo_tenues = __commonJS({
       }
       c.teintes = [K.hair, salee[km], salee.cap, K.lining];
       const S = SPECS.Ondin;
-      const ton = /* @__PURE__ */ __name((col) => col === "#264E82" ? fade(K[kS], 0.5) : salee[kS], "ton");
+      const ton = /* @__PURE__ */ __name((col) => col === fondu("#264E82") ? fade(K[kS], 0.5) : salee[kS], "ton");
       const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, ton(col), ...r])]));
       const holes = Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, r, col]) => [x, y, r, ton(col)])]));
       const spec = { ...S, fade: [], map: {}, k: 0.6, tatters, holes, over: miroirDe(S.over), head: void 0, headFix: void 0 };
@@ -8322,7 +8375,8 @@ var require_maerys_refonte = __commonJS({
     var { jambe, poserBras, anneau, ligneBras, pointLigne, sousLigne, longueurLigne } = require_membres();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
     var { hole, rip, cord } = require_naufrage();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#E8B88E",
       skinS: "#CC9A70",
       skinH: "#F6D3B0",
@@ -8372,7 +8426,7 @@ var require_maerys_refonte = __commonJS({
       canvas: "#E6DCC3",
       canvasS: "#C9BB98",
       patch: "#B07E4C"
-    };
+    });
     var MARKS = { dirt: 0.5, moss: 0.6, twigs: 2, salt: 0, patch: false, cape: "entiere", wet: false, don: true };
     var marks = /* @__PURE__ */ __name((c) => ({ ...MARKS, ...c.marks || {} }), "marks");
     var pal = /* @__PURE__ */ __name((c) => {
@@ -8724,14 +8778,15 @@ var require_maerys_tenues = __commonJS({
   "personnages/refonte/maerys_tenues.js"(exports, module) {
     var { fade } = require_naufrage();
     var { maerys, C } = require_maerys_refonte();
-    var PALETTES = {
+    var { fondre } = require_couleurs();
+    var PALETTES = fondre({
       lin: { nom: "Lin", m: C.tunic, mS: C.tunicS, mH: C.tunicH },
       sauge: { nom: "Sauge", m: C.robe, mS: C.robeS, mH: C.robeH },
       mousse: { nom: "Mousse", m: C.moss, mS: C.mossS, mH: C.mossH },
       ecorce: { nom: "Écorce", m: "#8E5A3C", mS: "#6C412A", mH: "#B07A58" },
       bruyere: { nom: "Bruyère", m: "#8A6A8C", mS: "#6A4E6C", mH: "#AE90B0" },
       automne: { nom: "Automne", m: "#C0743E", mS: "#97562A", mH: "#DE9A62" }
-    };
+    });
     var TENUES = {
       cape: { nom: "La cape de feuilles", tenue: "cape", palette: "lin", cles: ["tunic", "tunicS", "tunicH"] },
       robe: { nom: "La robe d'Agathe", tenue: "robe", palette: "sauge", cles: ["robe", "robeS", "robeH"] },
@@ -9053,8 +9108,9 @@ var require_robby_refonte = __commonJS({
     var { seam, suitOurlet } = require_tissu();
     var { fabriquerBras, poserBras } = require_lorena_bras();
     var { jambe } = require_membres();
+    var { fondre } = require_couleurs();
     var HY = 4.4;
-    var C = {
+    var C = fondre({
       skin: "#B9B3A8",
       skinS: "#9C968B",
       lid: "#ABA59A",
@@ -9110,7 +9166,7 @@ var require_robby_refonte = __commonJS({
       patch: "#8A7E66",
       cloth: "#E6D4AE",
       clothS: "#B8A27A"
-    };
+    });
     var MARKS = { dust: 1, moss: 0.6, salt: 0.3, dirt: 0.4, bonnet: "troue", patch: true, wrist: false, wet: false };
     var marks = /* @__PURE__ */ __name((c) => ({ ...MARKS, ...c.marks || {} }), "marks");
     var pal = /* @__PURE__ */ __name((c) => {
@@ -9332,14 +9388,15 @@ var require_robby_tenues = __commonJS({
     var { castaway, fade } = require_naufrage();
     var { SPECS } = require_naufrages();
     var { robby, C } = require_robby_refonte();
-    var PALETTES = {
+    var { fondre, fondu } = require_couleurs();
+    var PALETTES = fondre({
       rouille: { nom: "Rouille", wool: C.wool, woolS: C.woolS, woolH: C.woolH },
       moutarde: { nom: "Moutarde", wool: "#B88A2E", woolS: "#8C661E", woolH: "#DAB05A" },
       chauffe: { nom: "Bleu de chauffe", wool: "#3E5F86", woolS: "#2B4565", woolH: "#6E8EB4" },
       lichen: { nom: "Lichen", wool: "#7A8A4A", woolS: "#5A6834", woolH: "#A2B270" },
       ardoise: { nom: "Ardoise", wool: "#5E646C", woolS: "#43484E", woolH: "#868C94" },
       bordeaux: { nom: "Bordeaux", wool: "#8A3A3A", woolS: "#682828", woolH: "#B0605A" }
-    };
+    });
     var TENUES = {
       blouse: { nom: "La blouse de tailleur", tenue: "blouse", palette: "rouille", sleeves: null },
       carrier: { nom: "Le tablier de carrier", tenue: "carrier", palette: "moutarde", sleeves: "roll" },
@@ -9397,7 +9454,7 @@ var require_robby_tenues = __commonJS({
       c.teintes = [salee.wool, K.beard, salee.smock, K.white];
       c.sansDon = true;
       const S = SPECS.Galet;
-      const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === "#6E6458" ? salee.smock : salee.smockS, ...r])]));
+      const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === fondu("#6E6458") ? salee.smock : salee.smockS, ...r])]));
       const spec = { ...S, fade: [], map: {}, k: 0.6, tatters, capeFn: ponchoMiroir(S.capeFn), head: void 0 };
       const droite = castaway(c, spec);
       const gauche = castaway(c, { ...spec, tatters: retourner(spec.tatters), bareSide: S.bareSide === "right" ? "left" : "right" });
@@ -9674,7 +9731,8 @@ var require_maggy_refonte = __commonJS({
     var { jambe } = require_membres();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
     var { hole, rip } = require_naufrage();
-    var C = {
+    var { fondre } = require_couleurs();
+    var C = fondre({
       skin: "#C68A62",
       skinS: "#A9704C",
       lid: "#B97E58",
@@ -9735,7 +9793,7 @@ var require_maggy_refonte = __commonJS({
       twig: "#8A6440",
       weed: "#5E9A62",
       patch: "#B07E4C"
-    };
+    });
     var MARKS = { dirt: 0.3, ronces: true, salt: 0, patch: false, wet: false, naufrage: false };
     var marks = /* @__PURE__ */ __name((c) => ({ ...MARKS, ...c.marks || {} }), "marks");
     var pal = /* @__PURE__ */ __name((c) => {
@@ -10016,14 +10074,15 @@ var require_maggy_tenues = __commonJS({
   "personnages/refonte/maggy_tenues.js"(exports, module) {
     var { fade } = require_naufrage();
     var { maggy, C } = require_maggy_refonte();
-    var PALETTES = {
+    var { fondre } = require_couleurs();
+    var PALETTES = fondre({
       sauge: { nom: "Sauge", m: C.dress, mS: C.dressS, mH: C.dressH },
       lavande: { nom: "Lavande", m: "#9A8AB8", mS: "#7A6A98", mH: "#BCAED6" },
       ocre: { nom: "Ocre", m: "#C49A4A", mS: "#9C7634", mH: "#DDBA74" },
       rose: { nom: "Rose thé", m: "#C98A86", mS: "#A66A66", mH: "#E2AEAA" },
       aubergine: { nom: "Aubergine", m: C.cape, mS: C.capeS, mH: C.capeH },
       mousse: { nom: "Mousse", m: "#6E8A5A", mS: "#546E44", mH: "#92AA7E" }
-    };
+    });
     var TENUES = {
       chale: { nom: "Le châle de nuit", tenue: "chale", palette: "sauge", sleeves: null, cles: ["dress", "dressS", "dressH"] },
       tablier: { nom: "Le tablier du Potager", tenue: "tablier", palette: "lavande", sleeves: "roll", cles: ["dress", "dressS", "dressH"] },

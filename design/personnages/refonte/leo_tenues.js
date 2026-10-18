@@ -10,16 +10,17 @@
 const { castaway, fade } = require('../../atelier/naufrage');
 const { SPECS } = require('../../atelier/naufrages');
 const { leo, C } = require('./leo_refonte');
+const { fondre, fondu } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les palettes du vêtement (on le reconnaît à son ciré) : la couleur, son ombre, son reflet
-const PALETTES = {
+const PALETTES = fondre({
   bleu: { nom: 'Bleu ciré', m: C.coat, mS: C.coatS, mH: C.coatH },
   jaune: { nom: 'Jaune ciré', m: '#E8B83A', mS: '#C0902A', mH: '#F6D77A' },
   vert: { nom: 'Vert d\'eau', m: '#4FA58E', mS: '#3A806E', mH: '#86C9B6' },
   corail: { nom: 'Corail', m: '#E0705A', mS: '#B85444', mH: '#F2A08C' },
   ciel: { nom: 'Bleu ciel', m: C.pyj, mS: C.pyjS, mH: '#C8DDF2' },
   cannelle: { nom: 'Cannelle', m: C.knit, mS: C.knitS, mH: C.knitH }
-};
+});
 
 // Les tenues : la forme (leo_refonte.js, corps), la palette par défaut, les manches (le ciré les retrousse : trop
 // longues pour lui) ; les jambes (nues sous le ciré et le pull, le pantalon du pyjama)
@@ -84,7 +85,7 @@ function habiller(tenueId = 'cire', paletteId = null, etatId = 'rescape') {
   if (T.jambes) { c.leg = salee.pyj; c.legS = salee.pyjS; }
   c.teintes = [K.hair, salee[km], salee.cap, K.lining];
   const S = SPECS.Ondin;
-  const ton = col => (col === '#264E82' ? fade(K[kS], 0.5) : salee[kS]);
+  const ton = col => (col === fondu('#264E82') ? fade(K[kS], 0.5) : salee[kS]);
   const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, ton(col), ...r])]));
   const holes = Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, r, col]) => [x, y, r, ton(col)])]));
   // (sa tête est à lui : le pompon arraché, l'algue dans les boucles sont dessinés par leo_refonte.js)
