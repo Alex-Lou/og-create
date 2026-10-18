@@ -5,6 +5,7 @@
 // y = -60 (le fond) à y = 130 (la plage devant). Contours teintés, lumière froide d'en haut, chaude des fenêtres et du feu.
 const { degrade, rayonne, forme, trait, balance } = require('./splash_anya').outils;
 const { vernis } = require('./vernis');
+const { DESSINS } = require('./splash_batiments');
 const { f, rnd, vaVient, palpite } = require('./scenes7').outils;
 
 const fs = require('fs');
@@ -456,16 +457,15 @@ function ileVivante({ survie = false } = {}) {
       ASSAUT.push({ y, dessin: () => pieu(x, y, h, n) + ([7, 20, 31, 44, 52].includes(n) ? flammes(x, y - h + 2, 1.1, n * 0.13) : '') });
       if (n % 9 === 4) ASSAUT.push({ y: y + 0.5, dessin: () => poser('decor/defenses/torche_allumee_1.svg', `it${n}`, x, y - 2, KP * 0.7) });
     }
-    // (deux toits qui brûlent : l'Atelier et le Bosquet ; leur fumée monte dans l'orage)
-    for (const [x, y, k] of [[-214, -58, 1.8], [-196, -50, 1.3], [104, -78, 1.6]]) ASSAUT.push({ y: y + 80, dessin: () => flammes(x, y, k, x * 0.01) });
     for (const [x, y] of [[-24, 80], [24, 80]]) ASSAUT.push({ y, dessin: () => poser('decor/creations/brasero_2.svg', `ibr${x}`, x, y, KP * 0.8) });
     for (const [rel, x, y, k] of [['decor/embrume/embrume_2x2_1.svg', -250, 118, K * 0.45], ['decor/embrume/embrume_2x2_2.svg', 238, 60, K * 0.4], ['decor/embrume/embrume_nuage_1.svg', 150, 142, K * 1.4]]) ASSAUT.push({ y: y - 30, dessin: () => poser(rel, `iem${x}`, x, y, k) });
     for (const [qui, x, y, k] of [['zombie/zombie_avant_marche_1', -120, 134, KE], ['zombie/zombie_avant_brume_2', 44, 142, KE], ['noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_1', -244, 134, KE],
       ['racine-errante/racine-errante_avant_brume_1', 284, 62, KE], ['esprit-sylvestre/esprit-sylvestre_avant_brume_1', -290, 60, KE], ['lapin-de-brume/lapin-de-brume_avant_brume_1', 156, 136, KE],
       ['poney-de-brume/poney-de-brume_avant_brume_1', -40, 150, KE * 0.9]]) ASSAUT.push({ y, vit: 1, dessin: () => poser(`${E}${qui}.svg`, `ie${x}`, x, y, k) });
   }
-  // (après l'apocalypse, chaque construction porte ses dégâts, un tirage par construction ; ses lumières sont moins nombreuses)
-  const items = [...ASSAUT.map((a, i) => ({ ...a, i: i + 200 })), ...CONSTRUCTIONS.map(([nom, x, y, e, sans], i) => ({ y, i, dessin: () => batiment(nom, `ib${i}`, x, y, K, survie ? Math.round(e / 3) : e, sans, survie ? i + 1 : undefined) })),
+  // (les constructions dessinées pour le splash, splash_batiments.js : la lune au centre de l'île les éclaire de son
+  // côté ; après l'apocalypse, chacune porte ses dégâts, ses toits brûlent, ses lumières sont presque toutes éteintes)
+  const items = [...ASSAUT.map((a, i) => ({ ...a, i: i + 200 })), ...CONSTRUCTIONS.map(([nom, x, y], i) => ({ y, i, dessin: () => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(K)})">${DESSINS[nom](`ib${i}`, x < 0 ? 1 : -1, survie)}</g>` })),
     ...POSES.map(([rel, x, y, k, vit], i) => ({ y, i: i + 10, vit, dessin: () => (rel.startsWith(P) ? B.poser(rel, x, y, k) : poser(rel, `il${i}`, x, y, k)) }))];
   s += items.sort((a, b) => a.y - b.y || a.i - b.i).map(({ dessin, vit, i }) => {
     const d = dessin();
