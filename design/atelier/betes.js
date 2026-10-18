@@ -1182,6 +1182,19 @@ function bowl(v, n) {
   s += `<path d="M-4.4,-8.6 Q-5.6,-6 -4.8,-3.6" fill="none" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" opacity="0.9"/>`;
   return s;
 }
+// Le bol de soupe qu'Agathe pose chaque soir « pour la Dame » au bord du Foyer (n : la vapeur monte, en deux images) : un
+// bol de grès bleu sur son petit pied, un liseré crème, la soupe de courge, deux brins de persil, la cuillère de bois
+function soup(n) {
+  const up = n ? 0.6 : 0;
+  const steam = (x, k) => stroke(`M${r2(x)},${r2(-5.3 - up)} q${r2(-0.9 * k)},-1 0,-1.9 q${r2(0.9 * k)},-0.9 0,-1.8`, 0.5, '#FFFFFF').replace('/>', ' opacity="0.75"/>');
+  let s = E(0, -0.35, 2.2, 0.5, '#3E6482', 0.5);
+  s += P('M-5.2,-4 Q-4.9,-0.7 0,-0.6 Q4.9,-0.7 5.2,-4 Z', '#4F7FA0', 0.6);
+  s += stroke('M-4.8,-2.9 Q0,-1.7 4.8,-2.9', 0.45, '#EADDBC') + stroke('M-4.3,-3.4 Q-4.1,-2 -3.1,-1.4', 0.4, '#FFFFFF').replace('/>', ' opacity="0.55"/>');
+  s += E(0, -4, 5.2, 1.25, '#F2E6CC', 0.55) + E(0, -3.92, 4.5, 0.9, '#E58A3C', 0) + E(-1.3, -4.15, 1.5, 0.3, '#F6B266', 0);
+  s += E(1.1, -3.75, 0.55, 0.22, '#6E9A4A', 0) + E(0.2, -3.55, 0.36, 0.17, '#7FAE52', 0);
+  s += L([2, -3.95], [4.7, -7.5], OUT, 1) + L([2, -3.95], [4.7, -7.5], '#B98552', 0.55) + E(1.75, -3.8, 0.8, 0.34, '#B98552', 0.4);
+  return s + steam(-1.6, n ? -1 : 1) + steam(0.7, n ? 1 : -1);
+}
 // Méduse qui luit (n : contractée / déployée)
 function jelly(n) {
   const k = n ? 1 : 0.9;
@@ -1191,4 +1204,4 @@ function jelly(n) {
   return s;
 }
 
-Object.assign(module.exports, { butterfly, firefly, bee, beeFriend, owl, koi, fish, dolphin, whaleBack, whaleFluke, bowl, jelly });
+Object.assign(module.exports, { butterfly, firefly, bee, beeFriend, owl, koi, fish, dolphin, whaleBack, whaleFluke, bowl, soup, jelly });

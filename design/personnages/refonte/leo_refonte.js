@@ -21,9 +21,10 @@ const { seam, suitOurlet } = require('./tissu');
 const { fabriquerBras } = require('./lorena_bras');
 const { jambe } = require('./membres');
 const { capucheRabattue, reperes } = require('../avatar_accessoires');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 const HY = 4.4; // la tête d'enfant : la même taille que les adultes, posée plus bas sur un corps plus court
-const C = {
+const C = fondre({
   skin: '#F5CFA8', skinS: '#E0AE86', lid: '#F1C7A0', under: '#D9A786', cheek: '#F29C94',
   eye: '#231B18', iris: '#3F7FB8', irisL: '#A6D4F2', eyeRx: 1.9, eyeRy: 2.55, brow: '#B8862E', browW: 0.75, mouth: '#7A3B30',
   hair: '#E2B45A', hairS: '#B98A3A', hairH: '#F6D58E', hairD: '#9C7230',
@@ -33,7 +34,7 @@ const C = {
   rope: '#D8C08A', ropeS: '#B49A62', wood: '#A8743F', woodS: '#7E5530', bark: '#8A5E34', leaf: '#7BB661', leafS: '#5A9446',
   glass: '#D6ECF2', cork: '#B07E4C', water: '#A9DCFF', fish: '#F08A3E', fishS: '#C8642A',
   salt: '#FFF8E8', sand: '#E8D3A2', sandS: '#C9B07A', mud: '#7A5E40', weed: '#5E9A62', weedS: '#3F7646', patch: '#8FB4DE', cloth: '#E6D4AE'
-};
+});
 
 // Les marques sur lui, réglées par l'état (leo_tenues.js) : sel, sable, boue (0 → 1) ; l'algue dans les boucles ; la pièce
 // au coude du ciré ; trempé (wet) ; Bulle dans le bocal (bulle)

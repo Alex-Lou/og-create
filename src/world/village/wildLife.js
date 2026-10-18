@@ -41,19 +41,19 @@ const FREE_GROUND = 'gmsdpnlxja';
 // Les bêtes : leurs zones (identifiants des quartiers), leur coin, leur rareté, leurs heures (aube, jour, crepuscule,
 // nuit, toujours), le temps qu'elles aiment (null : tous), la pleine lune, ce qui les fait venir sur l'île (un acte fini,
 // un élément écrit au Grimoire ; rien : la zone à soi suffit), leur façon d'aller ; count : combien par zone, s'il
-// n'est pas celui de leur rareté
+// n'est pas celui de leur rareté ; animal : sa page du Bestiaire (world/creatures.js), si ce n'est pas son identifiant
 const DAY_SKY = ['clair', 'voile'];
 export const WILD_LIFE = [
   { id: 'lapin', species: 'rabbit', zones: ['coeur', 'colline'], home: 'pres', rarity: 'commun', hours: ['jour'], weather: DAY_SKY, act: 'I', move: 'bonds' },
   { id: 'ecureuil', species: 'squirrel', zones: ['coeur', 'lisiere'], home: 'arbres', rarity: 'commun', hours: ['jour'], weather: [...DAY_SKY, 'brume'], act: 'T', move: 'perche' },
   { id: 'mesange', species: 'bird', zones: ['coeur', 'jardins'], home: 'arbres', rarity: 'commun', hours: ['jour'], weather: DAY_SKY, element: 'Oiseau', move: 'perche' },
-  { id: 'papillons', species: 'butterfly', variants: ['jaune', 'bleu'], zones: ['jardins', 'colline'], home: 'pres', rarity: 'commun', hours: ['jour'], weather: ['clair'], element: 'Papillon', move: 'vol' },
+  { id: 'papillons', animal: 'papillon', species: 'butterfly', variants: ['jaune', 'bleu'], zones: ['jardins', 'colline'], home: 'pres', rarity: 'commun', hours: ['jour'], weather: ['clair'], element: 'Papillon', move: 'vol' },
   { id: 'papillon-lune', species: 'butterfly', variants: ['lune'], zones: ['jardins'], home: 'pres', rarity: 'rare', hours: ['nuit'], weather: ['clair'], moon: true, element: 'Papillon', move: 'vol' },
   { id: 'renard', species: 'fox', zones: ['lisiere'], home: 'lisiere', rarity: 'peu commun', hours: ['crepuscule', 'nuit'], weather: [...DAY_SKY, 'brume'], act: 'II', move: 'trot' },
   { id: 'herisson', species: 'hedgehog', zones: ['jardins'], home: 'pres', rarity: 'peu commun', hours: ['nuit'], weather: [...DAY_SKY, 'pluie'], act: 'II', move: 'lent' },
   { id: 'heron', species: 'heron', zones: ['crique'], home: 'rivage', rarity: 'peu commun', hours: ['aube'], weather: ['clair', 'brume'], act: 'I', move: 'lent' },
   { id: 'crabe', species: 'crab', zones: ['coeur', 'crique'], home: 'sable', rarity: 'commun', hours: ['nuit'], weather: null, act: 'T', move: 'pas' },
-  { id: 'lucioles', species: 'firefly', zones: ['bayou', 'lisiere'], home: 'libre', rarity: 'commun', count: 5, hours: ['crepuscule', 'nuit'], weather: DAY_SKY, element: 'Luciole', move: 'vol' },
+  { id: 'lucioles', animal: 'luciole', species: 'firefly', zones: ['bayou', 'lisiere'], home: 'libre', rarity: 'commun', count: 5, hours: ['crepuscule', 'nuit'], weather: DAY_SKY, element: 'Luciole', move: 'vol' },
   { id: 'cerf', species: 'deer', zones: ['foret'], home: 'lisiere', rarity: 'rare', hours: ['aube', 'crepuscule'], weather: ['clair', 'brume'], act: 'T', move: 'pas' },
   { id: 'hibou', species: 'owl', zones: ['foret'], home: 'arbres', rarity: 'rare', hours: ['nuit'], weather: DAY_SKY, element: 'Hibou', move: 'perche' },
   { id: 'grenouille', species: 'frog', zones: ['coeur', 'jardins', 'lisiere', 'foret'], home: 'berges', rarity: 'commun', hours: ['toujours'], weather: null, element: 'Grenouille', move: 'bonds' },
@@ -61,8 +61,8 @@ export const WILD_LIFE = [
   // Les bêtes des climats : leur zone à soi suffit
   { id: 'macareux', species: 'puffin', zones: ['falaises'], home: 'libre', rarity: 'commun', hours: ['jour'], weather: [...DAY_SKY, 'brume'], move: 'pas' },
   { id: 'poney', species: 'pony', zones: ['menhirs'], home: 'libre', rarity: 'peu commun', hours: ['jour'], weather: [...DAY_SKY, 'brume'], move: 'broute' },
-  { id: 'grenouille-marais', species: 'frog', zones: ['roselieres', 'bayou'], home: 'libre', rarity: 'commun', hours: ['toujours'], weather: null, move: 'bonds' },
-  { id: 'tortue-marais', species: 'tortoise', zones: ['roselieres'], home: 'libre', rarity: 'peu commun', hours: ['jour'], weather: DAY_SKY, move: 'lent' },
+  { id: 'grenouille-marais', animal: 'grenouille', species: 'frog', zones: ['roselieres', 'bayou'], home: 'libre', rarity: 'commun', hours: ['toujours'], weather: null, move: 'bonds' },
+  { id: 'tortue-marais', animal: 'tortue', species: 'tortoise', zones: ['roselieres'], home: 'libre', rarity: 'peu commun', hours: ['jour'], weather: DAY_SKY, move: 'lent' },
   { id: 'bouquetin', species: 'ibex', zones: ['contreforts', 'neiges'], home: 'libre', rarity: 'peu commun', hours: ['jour'], weather: DAY_SKY, move: 'broute' },
   { id: 'renard-polaire', species: 'snowFox', zones: ['neiges'], home: 'libre', rarity: 'rare', hours: ['jour'], weather: ['brume', 'voile'], move: 'trot' },
   { id: 'chameau', species: 'camel', zones: ['oasis'], home: 'libre', rarity: 'peu commun', hours: ['jour'], weather: ['clair'], move: 'lent' },

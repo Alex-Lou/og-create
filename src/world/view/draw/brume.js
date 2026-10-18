@@ -207,7 +207,7 @@ export default {
   },
   // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
   checkWreck() {
-    let seen = [];
+    let seen;
     try { seen = JSON.parse(localStorage.getItem('oc_wrecks') || '[]'); } catch (e) { seen = []; }
     const wreck = wreckOf(this.quest, Array.isArray(seen) ? seen : []);
     if (!wreck || this.wreck || this.reveal || this.haul || this.holdWreck) return;

@@ -2,7 +2,7 @@
 // avec son cerf blanc et ses lucioles ; ses loutres au bord de l'eau douce ; le bol de soupe « pour la Dame » ; les
 // bêtes qui se tournent vers elle ; ce qu'ils disent quand on les touche.
 import { anyaHere, anyaVisitClock } from '@/game/anya';
-import { BEAST_NAMES } from '@/texts/village';
+import { creatureOf } from '../creatures';
 import { ANYA_TEXTS as T } from '@/texts/world/anya';
 import { SEASON } from '../plants';
 import { anyaArt, cerfArt, frameOf, durationOf, ANYA_POSES as AP, CERF_POSES as CP, PHRASES } from '../anyaArt';
@@ -63,7 +63,7 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
   const visit = anya && anya.visit && anyaHere(h, phase.rise, phase.set, anya.visit.slot) ? anya.visit : null;
   let here = null;
   if (visit) {
-    // (elle erre autour de son point de visite ; ses dessins de la bibliothèque, sinon ceux du code, immobiles)
+    // (elle erre autour de son point de visite ; ses dessins de la bibliothèque)
     const center = { x: visit.x + 0.5, y: visit.y + 0.5 };
     const seed = visit.x * 31 + visit.y;
     const path = anyaPath(t, center, seed);
@@ -73,18 +73,14 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
     const touched = tapped('anya:dame', MURMURE_S);
     const look = anyaPose(t, { clock: anyaVisitClock(h, phase.rise, phase.set, visit.slot), path, touch: touched === null ? null : touched * MURMURE_S, seed });
     const art = anyaArt(look.pose, look.view, look.n, { season: SEASON, phrase: look.phrase || 0 });
-    out.push(art
-      ? { id: 'anya:dame', kind: 'beast', species: 'anya', x: path.x, y: path.y, z, flip: look.flip, sprite: [art.key, art.make] }
-      : beast('anya:dame', 'anya', '', center.x, center.y, z, false, Math.floor(t * 0.5) % 2));
+    if (art) out.push({ id: 'anya:dame', kind: 'beast', species: 'anya', x: path.x, y: path.y, z, flip: look.flip, sprite: [art.key, art.make] });
     // son cerf, derrière elle, à côté : il marche quand elle flotte, sinon il se tient debout, tourné vers elle
     const trail = anyaPath(t - TRAIL, center, seed);
     const cx = trail.x + CERF_SIDE[0];
     const cy = trail.y + CERF_SIDE[1];
     const way = trail.moving ? facing(trail.dx, trail.dy) : { view: 'avant', flip: (path.x - cx) - (path.y - cy) < 0 };
     const deer = trail.moving ? cerfArt('marche', way.view, frameOf(CP.marche, t)) : cerfArt('debout', way.view, frameOf(CP.debout, t));
-    out.push(deer
-      ? { id: 'anya:cerf', kind: 'beast', species: 'deer', x: cx, y: cy, z: 0, flip: way.flip, sprite: [deer.key, deer.make] }
-      : beast('anya:cerf', 'deer', 'blanc', center.x + 0.8, center.y + 0.4, 0, true, Math.floor(t / 5) % 2));
+    if (deer) out.push({ id: 'anya:cerf', kind: 'beast', species: 'deer', x: cx, y: cy, z: 0, flip: way.flip, sprite: [deer.key, deer.make] });
     for (let k = 0; k < 6; k++) {
       const a = t * 0.3 + k * 1.05;
       out.push(beast(`anya:luciole:${k}`, 'firefly', '', path.x + Math.cos(a) * 0.9, path.y + Math.sin(a) * 0.6, 18 + k * 4 + Math.sin(t + k) * 3, false, Math.floor(t * 1.4 + k) % 2));
@@ -118,6 +114,6 @@ export function storyInfo(who, long) {
   if (who.id === 'anya:dame') return { title: 'Anya', text: long ? T.dame.sheet : T.dame.says, ...(long ? { hint: T.dame.hint } : {}) };
   if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? T.cerf.sheet : T.cerf.says, ...(long ? { hint: T.cerf.hint } : {}) };
   if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: T.bol.text, ...(long ? { hint: T.bol.hint } : {}) };
-  if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: T.otter.hint } : null;
+  if (who.id.startsWith('anya:otter')) return long ? { title: creatureOf('loutre').name, text: creatureOf('loutre').text, hint: T.otter.hint } : null;
   return long ? { title: 'Luciole', text: T.luciole.text, hint: T.luciole.hint } : null;
 }

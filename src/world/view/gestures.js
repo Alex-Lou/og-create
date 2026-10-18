@@ -18,6 +18,7 @@ import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
+import { creatureOf, creatureOfHit } from '@/world/creatures';
 import { emptyCageOf } from '@/world/village/farm';
 import { ANIMALS, CAGE_TEXT, CAGE_EMPTY_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
 import { FIRE } from '@/texts/world/phare';
@@ -294,6 +295,9 @@ export default {
       hit = under;
     }
     this.craftMenu = null;
+    // Une créature touchée (une bête, un familier, un égaré qu'on repousse…) : la première fois, elle entre au Bestiaire
+    // (WorldView, bestiary.js)
+    if (hit && hit.animal) this.meetCreature(hit.animal);
     // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Lorena qui mène à la Récolte, sa caisse…
     const acted = this.actOf(hit);
     if (acted === 'poule') {
@@ -659,7 +663,10 @@ export default {
     }
     if (hit.animal) {
       if (hit.animal.who && this.village) return this.named(this.village.describe(hit.animal.who), hit.animal.who);
-      const [title, text] = ANIMALS[hit.animal.kind] || [UNKNOWN_BEAST, ''];
+      // (une légendaire, le Géant ou le Kraken : ce qu'en dit le Bestiaire)
+      const creature = creatureOf(creatureOfHit(hit.animal));
+      const legend = creature && creature.rarity === 'légendaire' ? [creature.name, creature.text] : null;
+      const [title, text] = ANIMALS[hit.animal.kind] || legend || [UNKNOWN_BEAST, ''];
       return { title, text, hint: TAP_HINTS.animal };
     }
     if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: TAP_HINTS.sheet };

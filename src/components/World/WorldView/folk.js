@@ -4,7 +4,7 @@
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { villagerSprite, ROLES } from '@/world/villagers';
+import { villagerSprite } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
 import { thanksOf, askOr, affordable } from '@/world/needs';
@@ -207,10 +207,7 @@ export default {
       if (settler) return this.visitorPortrait(settler);
       const resident = this.village && this.village.residents.find(r => r.role === id);
       // Un maître : son portrait de la bibliothèque, en naufragé tant que son bâtiment n'est pas fondé
-      const art = masterPortrait(id, resident ? resident.castaway : false);
-      if (art) return art;
-      const look = resident ? resident.look : { skin: '#F6D3B3', hair: '#7A4E2C', ...ROLES[id] };
-      return spriteUrl(`portrait-${id}-${look.skin}-${look.hair}`, () => villagerSprite(look));
+      return masterPortrait(id, resident ? resident.castaway : false);
     },
     openBeast(id) {
       this.site = null;

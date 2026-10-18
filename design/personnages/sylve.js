@@ -2,15 +2,16 @@
 // de geai, pieds nus, deux traits verts peints sur chaque joue ; farouche.
 // Action : elle chante à une graine posée dans ses mains en coupe ; image 2 : une pousse jaillit.
 const { OUT, P, E, L, clip, expression, arm, bareFoot, r2, lerp, TRAITS, dechirure, filPendant } = require('./troupe');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#E8B88E', skinS: '#CC9A70',
   hair: '#4A3328', hairS: '#33231B', hairH: '#6E4E3C', brow: '#2E1F18',
   twig: '#8A6440', feather: '#3E7FC1', featherS: '#1F3F66',
   leaf: '#5E9E4A', leafS: '#467A37', leafH: '#86C06A',
   tunic: '#A88655', tunicS: '#86683E', vine: '#4E7A34', paint: '#3F8F4A', seed: '#8A6440',
   cheek: '#EE9C8C', mouth: '#7A3B30', tongue: '#E07A72'
-};
+});
 
 // Feuille en amande : base en (x, y), longueur len, demi-largeur w, rot en degrés (0 = pointe vers le bas)
 const leaf = (x, y, len, w, rot, fill = C.leaf) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">`

@@ -3,7 +3,7 @@ import { P, TW, TH, box, boulder, mixHex } from '@/world/iso';
 import { phaseAt } from '@/world/scene';
 import { sunTimes, weatherAt, clockText } from '@/world/sky';
 import { NATURE } from '@/world/sprites';
-import { NATURE2, CRITTERS } from '@/world/nature';
+import { NATURE2 } from '@/world/nature';
 import { SHOP_SPRITES, itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { LOOKS, lookAt } from '@/world/looks';
 import { buildingArt, buildingThumb } from '@/world/buildingArt';
@@ -50,7 +50,7 @@ describe('rochers à facettes', () => {
 
 describe('sprites', () => {
   it('chaque élément de nature donne un SVG cadré', () => {
-    const all = [...Object.values(NATURE), ...Object.values(NATURE2), ...Object.values(CRITTERS).flat()];
+    const all = [...Object.values(NATURE), ...Object.values(NATURE2)];
     for (const make of all) {
       const { svg, box: frame } = make();
       expect(svg.startsWith('<svg')).toBe(true);

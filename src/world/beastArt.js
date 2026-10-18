@@ -8,18 +8,15 @@
 // même sans les pieds qui descendent sous l'ancre (bas à +2,5).
 // Les autres n'ont qu'une vue (SINGLE) : l'abeille, la luciole, Tic-Tac et son amie volent de profil ; le hibou et les
 // papillons, de face (jamais retournés) ; les koï, le dauphin, la baleine et les poissons nagent de profil ; le bocal de
-// Bulle n'a que ses images.
+// Bulle et le bol de soupe de la Dame n'ont que leurs images.
 // La mouette en vol bat des ailes en quatre images (120 ms chacune) et plane parfois (flyingGull).
-// Ce que la bibliothèque n'a pas (le cerf blanc d'Anya, le papillon rose du Foyer, le bol de soupe) garde son dessin
-// par code (animals.js, nature.js, seaSprites.js).
 import { betes as BEASTS } from '../../design/bibliotheque/svg/animaux/orientees.json';
-import { reactive } from 'vue';
-import { librarySprite, paintedBox, cropTo, BLANK, textsOf } from './library';
+import { librarySprite, portraitOf, textsOf } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est sur l'île)
 const FILES = textsOf({
   ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,assis_1,assis_2,dodo_1,dodo_2,vol_1,vol_2,vol_3,vol_4,plane,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?url', import: 'default', eager: true }),
-  ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/bocal-*/*.svg', { query: '?url', import: 'default', eager: true })
+  ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/{bocal,bol}-*/*.svg', { query: '?url', import: 'default', eager: true })
 });
 const ROOT = '/design/bibliotheque/svg/animaux/';
 const SCALE = 1.25;
@@ -48,7 +45,7 @@ const SUBJECTS = {
   dog: { '': 'chien', brun: 'chien-brun', noir: 'chien-noir', roux: 'chien-roux' },
   butterfly: { '': 'papillon-jaune', jaune: 'papillon-jaune', bleu: 'papillon-bleu', lune: 'papillon-lune' },
   firefly: 'luciole', bee: { '': 'abeille', amie: 'amie-tictac' }, owl: 'hibou', tictac: 'tictac',
-  bowl: { '': 'bocal-vide', bulle: 'bocal-bulle' },
+  bowl: { '': 'bocal-vide', bulle: 'bocal-bulle' }, soup: 'bol-soupe',
   koi: { '#F08A3A': 'koi-orange', '#FFFFFF': 'koi-blanc', '#F2C04B': 'koi-or' },
   dolphin: 'dauphin', whaleBack: 'baleine-dos', whaleFluke: 'baleine-queue',
   fish: { sardine: 'poisson-sardine', dorade: 'poisson-dorade', volant: 'poisson-volant' }
@@ -72,6 +69,7 @@ const SINGLE = {
   'amie-tictac': single('familiers', 'profil', 'vol', FLIER),
   'bocal-bulle': single('familiers', null, null, FLIER),
   'bocal-vide': single('familiers', null, null, FLIER),
+  'bol-soupe': single('familiers', null, null, FLIER),
   'koi-orange': single('eau', 'profil', 'nage', KOI),
   'koi-blanc': single('eau', 'profil', 'nage', KOI),
   'koi-or': single('eau', 'profil', 'nage', KOI),
@@ -168,21 +166,16 @@ export function flyingGull(t, phase = 0) {
 // Image de marche (1 ou 2) à l'instant t (secondes), à la cadence de la bibliothèque ; k décale les bêtes entre elles
 export const stepAt = (t, k = 0) => (Math.floor((t * 1000) / STEP_MS + k) % 2) + 1;
 
-// Portrait d'une bête (sa fiche) : de trois quarts avant, debout, recadré sur ce qu'il peint (le cadre de la
-// bibliothèque garde de la place autour d'elle). Lu et mesuré une fois, à la première demande ; une image vide pendant
-// ce temps. null si la bibliothèque ne l'a pas ou si la lecture échoue : le portrait par code reste
-const started = new Set();
-const portraits = reactive({});
+// Portrait d'une bête (sa fiche, le Bestiaire) : de trois quarts avant, debout (une bête à une seule vue : sa première
+// image), recadré (library.js : portraitOf). null si la bibliothèque ne l'a pas ou si la lecture échoue : le portrait par
+// code reste
+const portraitFile = (subject, art, alone) => (art
+  ? `${ROOT}${art.groupe}/${subject}/${subject}_avant_marche_1.svg`
+  : singleNames(subject, alone, 'marche', 1).map(name => `${ROOT}${alone.groupe}/${subject}/${name}.svg`).find(path => FILES[path]));
 export function beastPortraitUrl(species, variant) {
   const subject = subjectOf(species, variant);
   const art = subject && BEASTS[subject];
-  const load = art && FILES[`${ROOT}${art.groupe}/${subject}/${subject}_avant_marche_1.svg`];
-  if (!load) return null;
-  if (!started.has(subject)) {
-    started.add(subject);
-    load()
-      .then(svg => paintedBox(svg).then(box => cropTo(svg, box)))
-      .then(svg => { portraits[subject] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }, () => { portraits[subject] = null; });
-  }
-  return subject in portraits ? portraits[subject] : BLANK;
+  const alone = subject && !art && SINGLE[subject];
+  const load = (art || alone) && FILES[portraitFile(subject, art, alone)];
+  return load ? portraitOf(subject, load) : null;
 }

@@ -37,8 +37,14 @@ const VISIT_HOURS = 0.7;
 // Le soir commence un peu après le coucher du soleil (la tournée du soir, autour du feu)
 const EVENING = 0.4;
 
+// La troupe des maîtres, dans son ordre : leur rang fixe (village/residents.js), qu'ils soient arrivés ou non ; les
+// camarades d'un maître, toujours les mêmes, dans cet ordre (sa visite du jour se tire parmi eux : celle d'un camarade
+// pas encore là, ou endormi, n'a pas lieu ; un jour passé se tire donc toujours de même)
+export const MASTERS = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier', 'foyer'];
+export const matesOf = role => MASTERS.filter(id => id !== role);
+
 // La visite d'un habitant ce jour-là : { from, to, who } (who : le rôle du camarade), ou null. others : les rôles des
-// camarades qu'on peut aller voir (pas lui)
+// camarades qu'on peut aller voir (pas lui ; matesOf)
 export function visitOf(r, day, others) {
   if (!others.length || hash(r.k * 11 + 1, day) > VISIT_ODDS) return null;
   const from = VISIT_FROM + hash(r.k * 11 + 2, day) * VISIT_SPREAD;
@@ -53,7 +59,8 @@ export function momentOf(r, h, sun, { rain = 0, calm = false, visit = null, show
   const evening = h >= sun.set + EVENING;
   const ritual = !calm && r.master && (RITUALS[r.role] || []).find(x => h >= x.from(sun) && h < x.to(sun));
   if (!shown && !ritual && (h < r.wake || h >= r.bed)) return { mode: r.guest ? 'absent' : 'nuit' };
-  if (!shown && rain > 0.5 && r.k % 2 === 1) return { mode: 'abri' };
+  // (un sur deux parmi ceux qui sont là : son tour dans la troupe présente, row ; à défaut, son rang)
+  if (!shown && rain > 0.5 && (r.row ?? r.k) % 2 === 1) return { mode: 'abri' };
   if (calm || r.guest) return { mode: evening ? 'soir' : 'jour' };
   if (ritual) return { mode: `rituel:${ritual.id}`, ritual };
   if (r.master && h >= MEAL.from && h < MEAL.to) return { mode: 'repas' };

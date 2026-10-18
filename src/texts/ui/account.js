@@ -33,6 +33,8 @@ export const ACCOUNT = {
   dataFailed: 'Tes données n’ont pas pu être préparées.',
   dataSent: 'Le fichier est parti dans tes téléchargements.',
   restartFailed: 'L’île n’a pas pu être recommencée.',
+  // Le bouton du mode debug (App : DebugReset ; le libellé du bouton du compte)
+  restartLabel: 'Recommencer l’île',
   pauseFailed: 'Le compte n’a pas pu être mis en pause.',
   deleteFailed: 'La suppression n’a pas pu être prévue.',
   // Parti (pause ou suppression) : le dernier mot avant la porte

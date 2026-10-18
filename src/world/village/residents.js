@@ -8,7 +8,7 @@ import { FAMILIARS } from '../bestiary';
 import { besideOf, nearestWalk, doorOf } from './paths';
 import { hash, beast } from './beast';
 import { plankAt, PLANK_SPRITE, PLANK_LIFT } from './plank';
-import { momentOf, visitOf, HOURS } from './agenda';
+import { momentOf, visitOf, matesOf, MASTERS, HOURS } from './agenda';
 import { coach } from '@/game/coach';
 import { SEASON } from '../plants';
 import { pavedAt } from '../terrain';
@@ -31,7 +31,8 @@ export function stepsOf(path, M) {
   }
   return { span, steps: fast ? steps : null };
 }
-const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
+// Les voyageurs installés : une maison chacun, au plus (serveur : services/annexes.js, les maisons du Foyer)
+const SETTLERS_MAX = 4;
 // Sans leur bâtiment, Lorena (Ponton) et Nathan (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
 const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
@@ -64,7 +65,46 @@ function edgeOf(grid, M, from, codes) {
   return best;
 }
 
-// Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Lorena et Nathan
+// Sa zone de vie (choix de l'auteur, 18 oct.) : l'emprise de son bâtiment (ou de sa maison) et ZONE_MARGIN cases
+// autour, où il flâne ; seulement les cases où l'on marche, que sa porte rejoint sans en sortir. Elle ne grandit pas :
+// ce sont les explorations du joueur qui ouvrent l'île. Une flânerie sur deux va vers le terrain de son métier
+// (TRADES), s'il y en a dans sa zone
+const ZONE_MARGIN = 3;
+const touches = (M, c, codes) => SIDES.some(([dx, dy]) => codes.includes(M.ground(c.x + dx, c.y + dy)));
+const TRADES = {
+  // Lorena, le sable et le rivage ; Maerys, les orées ; Léo, le bord de l'eau douce ; Maggy, l'herbe et les prés ;
+  // Robby, les hauteurs ; Nathan et Agathe, les chemins
+  ponton: (M, c) => 'sd'.includes(M.ground(c.x, c.y)) || touches(M, c, ['~']),
+  bosquet: (M, c) => touches(M, c, EDGES.forest),
+  puits: (M, c) => touches(M, c, EDGES.water),
+  potager: (M, c) => 'gm'.includes(M.ground(c.x, c.y)),
+  carriere: (M, c, from) => M.height(c.x, c.y) > M.height(from.x, from.y),
+  atelier: (M, c) => pavedAt(M, c.x, c.y) || M.ground(c.x, c.y) === 'p',
+  foyer: (M, c) => pavedAt(M, c.x, c.y) || M.ground(c.x, c.y) === 'p'
+};
+// rect : { x, y, w, h } ; from : sa porte → { cells, trade } (les cases du terrain de son métier parmi elles)
+export function lifeZoneOf(grid, rect, from, role) {
+  const inside = (x, y) => x >= rect.x - ZONE_MARGIN && x < rect.x + rect.w + ZONE_MARGIN && y >= rect.y - ZONE_MARGIN && y < rect.y + rect.h + ZONE_MARGIN;
+  const seen = new Set([from.y * grid.n + from.x]);
+  const cells = [from];
+  for (let i = 0; i < cells.length; i++) {
+    const c = cells[i];
+    for (const [dx, dy] of SIDES) {
+      const next = { x: c.x + dx, y: c.y + dy };
+      const key = next.y * grid.n + next.x;
+      if (seen.has(key) || !inside(next.x, next.y) || !grid.walk(next.x, next.y) || !grid.step(c, next)) continue;
+      seen.add(key);
+      cells.push(next);
+    }
+  }
+  const trade = TRADES[role] && grid.M ? cells.filter(c => TRADES[role](grid.M, c, from)) : [];
+  return { cells, trade };
+}
+
+// Habitants : la troupe rencontrée (7 maîtres). Chacun a son rang fixe (k : son allure, sa tournée, sa visite…) : les
+// maîtres dans l'ordre de la troupe (agenda.js : MASTERS), puis les voyageurs installés dans l'ordre où ils sont restés,
+// puis le voyageur de passage ; un nouveau venu ne change rien à la journée des autres. Son bâtiment bâti, chacun y
+// travaille, et flâne dans sa zone de vie (lifeZoneOf) ; sans bâtiment, Lorena et Nathan
 // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
 // beds : où dort un naufragé avant qu'on le réveille, quand ce n'est pas sa place (Map rôle → case : Maerys, à l'orée de sa
 // forêt ; WorldView, castaways.js : bedsOf)
@@ -74,10 +114,10 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
   const residents = [];
   const present = troupe && new Map(troupe.map(v => [v.id, v]));
   if (home) {
-    for (const id of [...WORK_ORDER, 'foyer']) {
+    MASTERS.forEach((id, k) => {
       const site = sites.find(s => s.id === id);
       const who = present ? present.get(id) : built.includes(site) && { built: true };
-      if (!site || !who) continue;
+      if (!site || !who) return;
       const asleep = Boolean(who.asleep);
       const post = posts && posts.get(id);
       // (qui nage reste à sa case d'eau : elle ne se marche pas)
@@ -85,10 +125,10 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
       const camp = !who.built && CAMP.includes(id) && !post;
       const bed = asleep && beds && beds.get(id);
       const work = swim ? { x: post.x, y: post.y } : post && post !== 'site' ? nearestWalk(grid, post) : bed ? nearestWalk(grid, bed) : who.built ? doors[id] : camp ? home : doorOf(grid, site);
-      if (!work) continue;
-      const k = residents.length;
+      if (!work) return;
       residents.push({
-        id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
+        // (row : son tour parmi ceux qui sont là ; l'abri sous la pluie, un sur deux : agenda.js)
+        id: `vil:${id}`, k, row: residents.length, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
         camp, waiting: !who.built && !camp && !asleep, asleep, swim,
         // Léo endormi sur sa planche échouée (game/stages.js : planche ; WorldView, castaways.js : { at } de sa dérive)
         plank: (post && post.plank) || null,
@@ -102,26 +142,29 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
         field: (() => { const annex = who.built && annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })(),
         water: id === 'puits' ? edgeOf(grid, M, work, EDGES.water) : null,
-        forest: id === 'bosquet' ? edgeOf(grid, M, work, EDGES.forest) : null
+        forest: id === 'bosquet' ? edgeOf(grid, M, work, EDGES.forest) : null,
+        // (sans son bâtiment, autour de là où il se tient)
+        zone: lifeZoneOf(grid, who.built ? site : { x: work.x, y: work.y, w: 1, h: 1 }, work, id)
       });
-    }
+    });
     // Visiteurs installés : au bâtiment de leur métier, et à leur maison (à la place de l'annexe)
-    for (const s of settlers) {
-      if (!doors[s.site]) continue;
-      const k = residents.length;
+    settlers.forEach((s, i) => {
+      if (!doors[s.site]) return;
+      const k = MASTERS.length + i;
+      const field = s.home ? besideOf(grid, s.home, doors[s.site]) : null;
       residents.push({
-        id: `vil:${s.id}`, k, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name,
+        id: `vil:${s.id}`, k, row: residents.length, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name,
         look: visitorLook(s.seed, s.role), work: doors[s.site], wake: 6.6 + (k % 3) * 0.25, bed: 21.4 + (k % 3) * 0.3,
-        field: s.home ? besideOf(grid, s.home, doors[s.site]) : null
+        // (il dort à sa maison, sinon à la porte de son métier ; sa zone de vie, autour de sa maison)
+        field, bedAt: field || doors[s.site],
+        zone: lifeZoneOf(grid, s.home ? { x: s.home.x, y: s.home.y, w: 1, h: 1 } : built.find(b => b.id === s.site), field || doors[s.site], s.site)
       });
-      // (il dort à sa maison, sinon à la porte de son métier)
-      residents[k].bedAt = residents[k].field || residents[k].work;
-    }
+    });
     // Le visiteur : il débarque au Ponton et flâne (il ne travaille pas)
     if (visitor && doors.ponton) {
-      const k = residents.length;
+      const k = MASTERS.length + SETTLERS_MAX;
       residents.push({
-        id: `vis:${visitor.id}`, k, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name,
+        id: `vis:${visitor.id}`, k, row: residents.length, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name,
         look: visitorLook(visitor.seed, visitor.role), work: doors.ponton, wake: 7, bed: 21.3, field: null
       });
     }
@@ -129,12 +172,20 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
   return residents;
 }
 
+// Sa visite du jour (agenda.js : visitOf), tirée parmi tous ses camarades : seulement si celui-là est là, éveillé
+// (present : les maîtres éveillés), sinon pas de visite
+export function visitHere(r, day, present) {
+  const v = visitOf(r, day, matesOf(r.role));
+  return v && present.some(o => o.role === v.who) ? v : null;
+}
+
 // Son allure à pied : la sienne, selon son humeur
 const speedOf = r => SPEED * (0.8 + 0.35 * hash(r.k, 7)) * (MOOD_PACE[r.mood] || 1);
 
-// Les tournées des habitants et l'arrivée d'un naufragé, gardées une fois tirées, et sa place à chaque instant selon
-// son agenda (village/agenda.js) : { planOf, introOf, placeOf, peekOf, seen }
-export function plannerOf({ grid, stops, home, calm, routeOf }) {
+// Les tournées des habitants et l'arrivée d'un naufragé, gardées une fois tirées (celles du jour de l'île seulement),
+// et sa place à chaque instant selon son agenda (village/agenda.js) : { planOf, introOf, placeOf, peekOf, seen, places }.
+// last : où se tenait chacun dans le village d'avant (Map id → { x, y }) : il repart de là, à pied (rien ne saute)
+export function plannerOf({ grid, stops, home, calm, routeOf, last = null }) {
   // Place d'un habitant à un arrêt : une case où l'on marche autour de la porte (ou la porte elle-même). Le tour
   // commence à une case tirée pour l'arrêt, puis chacun prend la suivante selon son rang : à un même arrêt, deux
   // habitants ne prennent pas la même case (tant qu'il y a des cases)
@@ -143,8 +194,13 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
     const around = RING.map(([dx, dy]) => ({ x: stop.x + dx, y: stop.y + dy })).filter((c, i) => i === 0 || grid.walk(c.x, c.y));
     return around[(Math.floor(hash(stop.x * 31 + stop.y, salt) * around.length) + r.k) % around.length];
   };
-  // Une case où flâner, à quelques pas de son travail (pendant le tutoriel, tout près)
+  // Une case où flâner : dans sa zone de vie, une fois sur deux sur le terrain de son métier ; pendant le tutoriel, tout
+  // près de sa place ; le voyageur de passage, à quelques pas
   const roamOf = (r, salt) => {
+    if (!calm && r.zone) {
+      const pool = r.zone.trade.length && hash(r.k * 31 + salt, 67) < 0.5 ? r.zone.trade : r.zone.cells;
+      return pool[Math.floor(hash(r.k * 29 + salt, 53) * pool.length)];
+    }
     const reach = calm ? CALM_REACH : 6;
     const near = grid.walkable.filter(c => Math.abs(c.x - r.work.x) + Math.abs(c.y - r.work.y) <= reach);
     return near.length ? near[Math.floor(hash(r.k * 29 + salt, 53) * near.length)] : r.work;
@@ -153,7 +209,13 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
   // une pause ; elle tourne en boucle. Tirée pour lui et pour ce jour-là : elle change d'un habitant et d'un jour à
   // l'autre. Chacun marche à son allure, dans sa file (un petit pas de côté)
   const plans = new Map();
+  let plansDay = null;
   const planOf = (r, evening, day) => {
+    // (un jour nouveau : les tournées d'hier ne servent plus)
+    if (day !== plansDay) {
+      plans.clear();
+      plansDay = day;
+    }
     const key = `${r.id}:${evening ? 'soir' : 'jour'}:${day}`;
     if (plans.has(key)) return plans.get(key);
     const salt = i => day * 13 + i;
@@ -242,38 +304,52 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
     if (m.mode === 'visite') return holdOf(r, 'visite', spotOf(r, doorOf(m.visit.who) || r.work, 91), 'idle');
     return planOf(r, m.mode === 'soir', day);
   };
-  // Sa place à l'instant t : quand son agenda change, il marche de là où il était jusqu'à sa nouvelle place (rien ne
-  // saute), puis la suit ; à la première image, il y est déjà
+  // Sa place à l'instant t (secondes de l'image) : sa tournée suit l'horloge de l'île (clock, en secondes : la même sur
+  // tous les appareils). Quand son agenda change, il marche de là où il était jusqu'à sa nouvelle place (rien ne
+  // saute), puis la suit ; à la première image, il y est déjà, sauf s'il se tenait ailleurs dans le village d'avant
   const moves = new Map();
-  const placeOf = (r, m, t, day, doorOf) => {
+  // Le chemin de from à to (deux places, leur petit décalage rest compris), ou null s'il y est déjà : par les cases
+  // quand c'est loin (null si aucun chemin ne l'y mène : il y va d'un coup), tout droit à deux pas. Il part de là où il
+  // se tient et finit là où il va, au décalage près (onPlan l'ajoute) : rien ne saute, ni au départ ni à l'arrivée
+  const tripOf = (from, to, rest) => {
+    const d = Math.hypot(from.x - to.x, from.y - to.y);
+    if (d < 0.02) return null;
+    const start = { x: from.x - rest.x, y: from.y - rest.y };
+    const end = { x: to.x - rest.x, y: to.y - rest.y };
+    if (d <= 0.6) return [start, end];
+    const cells = routeOf({ x: Math.round(from.x), y: Math.round(from.y) }, { x: Math.round(to.x), y: Math.round(to.y) });
+    return cells && cells.length > 1 ? [start, ...cells.slice(1, -1), end] : null;
+  };
+  const placeOf = (r, m, t, clock, day, doorOf) => {
     const target = targetOf(r, m, day, doorOf);
-    let move = moves.get(r.id);
+    let move = moves.get(r.id) || (last && last.has(r.id) ? { mode: null, last: last.get(r.id) } : null);
     if (!move || move.mode !== m.mode || move.day !== day || move.target !== target) {
       const from = move && move.last;
-      const to = onPlan(target, t);
-      const path = from && Math.hypot(from.x - to.x, from.y - to.y) > 0.6 ? routeOf({ x: Math.round(from.x), y: Math.round(from.y) }, { x: Math.round(to.x), y: Math.round(to.y) }) : null;
-      const pace = path && path.length > 1 ? stepsOf(path, grid.M) : null;
+      const to = onPlan(target, clock);
+      const path = from && tripOf(from, to, target.rest);
+      const pace = path ? stepsOf(path, grid.M) : null;
       const walk = pace ? pace.span / speedOf(r) : 0;
-      // (le chemin part de là où il se tient, pas du milieu de sa case)
-      const trip = walk ? { legs: [{ path: [{ x: from.x, y: from.y }, ...path.slice(1)], walk, steps: pace.steps, pause: 0, act: 'idle', start: 0 }], total: walk, speed: speedOf(r), lane: target.lane, rest: target.rest, offset: 0 } : null;
+      const trip = walk ? { legs: [{ path, walk, steps: pace.steps, pause: 0, act: 'idle', start: 0 }], total: walk, speed: speedOf(r), lane: target.lane, rest: target.rest, offset: 0 } : null;
       move = { mode: m.mode, day, at: t, walk, trip, target, last: from };
       moves.set(r.id, move);
     }
     const since = t - move.at;
-    const p = move.trip && since < move.walk ? onPlan(move.trip, since) : onPlan(target, t - move.walk);
+    const p = move.trip && since < move.walk ? onPlan(move.trip, since) : onPlan(target, clock - move.walk);
     move.last = p;
     return p;
   };
-  // Où il était à l'instant t (son familier le suit, un pas derrière), sans rien changer
-  const peekOf = (r, t) => {
+  // Où il était à l'instant t, clock (son familier le suit, un pas derrière), sans rien changer
+  const peekOf = (r, t, clock) => {
     const move = moves.get(r.id);
     if (!move || !move.target) return null;
     const since = t - move.at;
-    return move.trip && since < move.walk ? onPlan(move.trip, Math.max(0, since)) : onPlan(move.target, t - move.walk);
+    return move.trip && since < move.walk ? onPlan(move.trip, Math.max(0, since)) : onPlan(move.target, clock - move.walk);
   };
   // Sa place, vue d'ailleurs (sa marche d'arrivée) : son agenda repartira de là
   const seen = (r, p) => moves.set(r.id, { ...(moves.get(r.id) || {}), mode: null, last: p });
-  return { planOf, introOf, placeOf, peekOf, seen };
+  // Où se tient chacun à la dernière image (le village d'après en repartira : last)
+  const places = () => new Map([...moves].filter(([, move]) => move.last).map(([id, move]) => [id, { x: move.last.x, y: move.last.y }]));
+  return { planOf, introOf, placeOf, peekOf, seen, places };
 }
 
 // Place sur une tournée à l'instant t : case (fractionnaire), sens de marche, pose. En marche, un petit pas de côté
@@ -300,17 +376,24 @@ export function onPlan(plan, t) {
   const [a, b] = [leg.path[i], leg.path[i + 1]];
   const dx = b.x - a.x;
   const dy = b.y - a.y;
-  const side = { x: dy ? plan.lane : 0, y: dx ? plan.lane : 0 };
+  // (son pas de côté tourne avec le chemin : à mi-case, celui du bout de chemin ; aux virages, entre les deux)
+  const sideOf = j => {
+    const [p, q] = [leg.path[Math.max(0, Math.min(leg.path.length - 2, j))], leg.path[Math.max(1, Math.min(leg.path.length - 1, j + 1))]];
+    return { x: q.y - p.y ? plan.lane : 0, y: q.x - p.x ? plan.lane : 0 };
+  };
+  const [s0, s1] = k < 0.5 ? [sideOf(i - 1), sideOf(i)] : [sideOf(i), sideOf(i + 1)];
+  const u = k < 0.5 ? 0.5 + k : k - 0.5;
+  const side = { x: s0.x + (s1.x - s0.x) * u, y: s0.y + (s1.y - s0.y) * u };
   const blend = leg.path.length === 2 ? 1 : i === leg.path.length - 2 ? k : i === 0 ? 1 - k : 0;
   const ox = side.x + (plan.rest.x - side.x) * blend;
   const oy = side.y + (plan.rest.y - side.y) * blend;
   return { x: a.x + dx * k + ox, y: a.y + dy * k + oy, pose: 'walk', back: dx + dy < 0, flip: dx - dy < 0 };
 }
 
-// Les habitants à l'instant du dessin (f : t, h, rain, islandDay, phase, tapped, out, lights), selon leur agenda
+// Les habitants à l'instant du dessin (f : t, clock, h, rain, islandDay, phase, tapped, out, lights), selon leur agenda
 // (village/agenda.js), leur familier avec eux. calm : le tutoriel
 export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, arrivals, bestiary, calm = false }) {
-  const { t, h, rain, islandDay: day, phase, tapped, out, lights, meets = [] } = f;
+  const { t, clock, h, rain, islandDay: day, phase, tapped, out, lights, meets = [] } = f;
   // (la tenue des maîtres : d'hiver toute la saison, de pluie sous une averse ; le parapluie, au-delà de 0,5, passe avant)
   const tenue = SEASON === 'hiver' ? 'hiver' : rain > 0.15 ? 'pluie' : null;
   // Celui que le coach montre (« île:habitant:<rôle> » : Nathan qui sort de la brume) ne se cache jamais, ni au lit ni
@@ -374,10 +457,7 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     if (r.asleep) {
       const frame = Math.floor(t * 0.8 + r.k) % 2;
       const art = masterSprite(r.role, r.castaway, { pose: 'sleep', frame });
-      out.push({
-        id: r.id, kind: 'villager', role: r.role, x: bed.x, y: bed.y, z: lift, flip: false, pose: 'sleep',
-        sprite: art ? [art.key, art.make] : [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
-      });
+      if (art) out.push({ id: r.id, kind: 'villager', role: r.role, x: bed.x, y: bed.y, z: lift, flip: false, pose: 'sleep', sprite: [art.key, art.make] });
       if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
       continue;
     }
@@ -387,16 +467,20 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
       const tired = masterSprite(r.role, r.castaway, { pose: 'tired', frame: Math.floor(t * 3 + r.k) });
       const opts = { pose: 'wave', view: 'front', frame: Math.floor(t * 2.5 + r.k) % 2 };
       const art = tired || masterSprite(r.role, r.castaway, opts);
-      out.push({
-        id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: Math.sin(t * 1.8 + r.k) * 1.2, flip: false, pose: 'wave', swim: true,
-        sprite: art ? [art.key, art.make] : [`${r.key}-wave-front-${opts.frame}`, () => villagerSprite(r.look, opts)]
-      });
+      if (art) {
+        out.push({
+          id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: Math.sin(t * 1.8 + r.k) * 1.2, flip: false, pose: 'wave', swim: true,
+          sprite: [art.key, art.make]
+        });
+      }
       continue;
     }
     const evening = h >= phase.set + 0.4;
     // Un naufragé qui débarque : rien avant son arrivée ; sa marche depuis l'épave (de jour comme de nuit) ; puis son
     // agenda, qui repart de là où il s'est arrêté (aucun saut)
-    const arrive = arrivals && arrivals.get(r.role);
+    // (les naufragés qui débarquent, celui que le coach montre, les hôtes des rencontres : des maîtres ; un voyageur
+    // installé partage leur rôle, pas leur place)
+    const arrive = r.master && arrivals && arrivals.get(r.role);
     let p = null;
     let where = null;
     let m = null;
@@ -411,21 +495,20 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
       }
     }
     if (!p) {
-      const others = mates.filter(o => o !== r).map(o => o.role);
-      m = momentOf(r, h, phase, { rain, calm, visit: r.master && !calm ? visitOf(r, day, others) : null, shown: r.role === wanted });
+      m = momentOf(r, h, phase, { rain, calm, visit: r.master && !calm ? visitHere(r, day, mates) : null, shown: r.master && r.role === wanted });
       // (un voyageur de passage n'a pas de lit sur l'île : la nuit, on ne le voit pas)
       if (m.mode === 'absent') continue;
-      p = placeOf(r, m, t, day, doorOf);
-      where = dt => peekOf(r, t - dt);
+      p = placeOf(r, m, t, clock, day, doorOf);
+      where = dt => peekOf(r, t - dt, clock - dt);
       if (m.mode === 'visite' && p.pose !== 'walk') {
         visiting.push({ from: r.role, to: m.visit.who, day, x: p.x, y: p.y });
         // (arrivé, il se tourne vers son camarade : de trois quarts, du côté de l'écran où il se tient)
         const mate = mates.find(o => o.role === m.visit.who);
-        const there = mate && peekOf(mate, t);
+        const there = mate && peekOf(mate, t, clock);
         if (there) p = { ...p, view: 'se', toward: there.x - there.y < p.x - p.y };
       }
     }
-    if (p.pose !== 'walk') standing.set(r.role, p);
+    if (r.master && p.pose !== 'walk') standing.set(r.role, p);
     // La nuit, il dort couché à sa place, son familier à côté de lui (agenda.js : chez lui)
     if (p.pose === 'sleep') {
       const frame = Math.floor(t * 0.8 + r.k) % 2;

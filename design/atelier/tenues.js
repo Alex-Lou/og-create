@@ -9,11 +9,12 @@
 const { couche, habiller } = require('../personnages/avatar_accessoires');
 const { OUT, P, L, clip, r2 } = require('../personnages/troupe');
 const { tone } = require('../personnages/avatar_choix');
+const { fondre } = require('../personnages/couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les tenues d'hiver, par maître : par emplacement, [objet, couleurs] ; sansFoulard : l'écharpe remplace le foulard du
 // maître. Ondin garde son bonnet de nuit, Galet son bonnet troué, Mélisse son chapeau de paille et ses sabots, Aster
 // son ciré.
-const HIVER = {
+const HIVER = fondre({
   aster: { tete: ['bonnet', ['#3E5A8C', '#F1E6CC']], cou: ['echarpe', ['#C8463A', '#F1E6CC']], mains: ['moufles', ['#3E5A8C', '#F1E6CC']], sansFoulard: true },
   rivet: { tete: ['cacheOreilles', ['#C8463A', '#C8463A']], cou: ['echarpe', ['#E8A23A', '#F1E6CC']], mains: ['moufles', ['#C8463A', '#F1E6CC']] },
   cannelle: { dessus: ['chale', ['#7A3E5E', '#F1E6CC']], mains: ['moufles', ['#C8463A', '#F1E6CC']] },
@@ -21,7 +22,7 @@ const HIVER = {
   sylve: { dessus: ['etole', ['#E8DCC4']], mains: ['moufles', ['#6E7A44', '#E8DCC4']], pieds: ['bottesFourrees', ['#8A6A44', '#E8DCC4']] },
   galet: { dessus: ['pelerine', ['#6E5A8A', '#E8DCC4']], mains: ['moufles', ['#C8463A', '#F1E6CC']] },
   melisse: { cou: ['echarpe', ['#E3C27A', '#5A4A8A']], mains: ['moufles', ['#5A4A8A', '#E3C27A']] }
-};
+});
 const slug = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 // Le maître habillé pour l'hiver
@@ -56,7 +57,7 @@ function capuche(uid, view, [col, bord]) {
 
 // La troupe sous la pluie : capuche relevée [ciré, bord] (Aster, Ondin), ou ciré ouvert [couleur] ; les bottes de pluie ;
 // sansCape : Sylve range sa cape de feuilles sous le ciré
-const PLUIE = {
+const PLUIE = fondre({
   aster: { capuche: ['#F2C04B', '#FFE49A'], bottes: '#C8463A' },
   ondin: { capuche: ['#3D7CC9', '#A9CBEF'], bottes: '#F2C04B' },
   rivet: { cire: '#E8873A', bottes: '#3E5A8C' },
@@ -64,7 +65,7 @@ const PLUIE = {
   sylve: { cire: '#6FA3D9', bottes: '#F2C04B', sansCape: true },
   galet: { cire: '#C0453A', bottes: '#2E2A2A' },
   melisse: { cire: '#5A4A8A', bottes: '#7EC4A0' }
-};
+});
 
 // Le maître sous la pluie
 function sousLaPluie(m) {

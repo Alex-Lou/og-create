@@ -20,13 +20,12 @@
 // une manche retroussée ou arrachée, depuis le poignet), c.cuff (la couleur du poignet ou du revers), c.sleeve (le
 // tissu), c.brasNu (un bras nu), c.armW (l'épaisseur du bras), c.bandage.
 const { OUT, W, E, L, r2 } = require('./troupe');
+const { ton } = require('./couleurs');
 
 const pt = q => `${r2(q[0])},${r2(q[1])}`;
 const add = (p, v, k = 1) => [p[0] + v[0] * k, p[1] + v[1] * k];
 const unit = (a, b) => { const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [(b[0] - a[0]) / l, (b[1] - a[1]) / l]; };
 const trait = (d, color, w, extra = '') => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`;
-// un mélange vers le noir ou le blanc (k < 1 : plus sombre), en gardant la teinte à peu près
-const ton = (hex, k) => '#' + [16, 8, 0].map(s => { const v = (parseInt(hex.slice(1), 16) >> s) & 255; return Math.round(k < 1 ? v * k : v + (255 - v) * (k - 1)).toString(16).padStart(2, '0'); }).join('').toUpperCase();
 
 // Une ligne brisée (les points de l'épaule à la main) coupée à la longueur len depuis son début
 function couper(pts, len) {

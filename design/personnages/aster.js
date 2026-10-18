@@ -1,25 +1,26 @@
 // Aster, la navigatrice : ciré jaune, foulard rouge, cheveux roux au vent, queue de cheval à
 // ruban, taches de rousseur, longue-vue en laiton. Action : elle regarde dans sa longue-vue (trois quarts avant).
-const { P, E, L, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
+const { fondre } = require('./couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle range la queue de cheval
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
 
-const C = {
+const C = fondre({
   skin: '#F2C9A0', skinS: '#DDA982',
   hair: '#B94E3A', hairS: '#8E3328', hairH: '#DE7A57',
   coat: '#F2C04B', coatS: '#CC9A2F', coatH: '#FFE49A',
   scarf: '#C8463A', scarfS: '#9A2F28',
   brass: '#C9A24A', brassS: '#8E6E2C', brassH: '#F0D58A',
   cheek: '#F29E9A', freckle: '#C97B5A', mouth: '#7A3B30'
-};
+});
 
 // Longue-vue : à la hanche, ou tenue (rot = angle)
 function spyglass(x, y, rot, len = 9) {
   return `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">`
-    + `<rect x="-1.5" y="${-len / 2}" width="3" height="${len}" rx="0.8" fill="${C.brass}" stroke="#3C2819" stroke-width="0.9"/>`
+    + `<rect x="-1.5" y="${-len / 2}" width="3" height="${len}" rx="0.8" fill="${C.brass}" stroke="${OUT}" stroke-width="0.9"/>`
     + `<rect x="-1.1" y="${-len / 2 + 0.6}" width="0.8" height="${len - 1.2}" rx="0.4" fill="${C.brassH}"/>`
-    + `<rect x="-1.95" y="${-len / 2 - 0.4}" width="3.9" height="2.1" rx="0.6" fill="${C.brassS}" stroke="#3C2819" stroke-width="0.8"/>`
+    + `<rect x="-1.95" y="${-len / 2 - 0.4}" width="3.9" height="2.1" rx="0.6" fill="${C.brassS}" stroke="${OUT}" stroke-width="0.8"/>`
     + `<line x1="-1.5" y1="0.8" x2="1.5" y2="0.8" stroke="${C.brassS}" stroke-width="0.7"/></g>`;
 }
 
@@ -28,11 +29,11 @@ function heldGlass(x, y, rot, ext) {
   const seg = [[2.2, 1.15, C.brassS], [1.2 + 3 * ext, 1.5, C.brass], [4.8, 1.9, C.brass]];
   let s = '', x0 = 0;
   for (const [len, h, fill] of seg) {
-    s += `<rect x="${r2(x0 - len)}" y="${-h}" width="${r2(len)}" height="${2 * h}" rx="0.5" fill="${fill}" stroke="#3C2819" stroke-width="0.9"/>`
+    s += `<rect x="${r2(x0 - len)}" y="${-h}" width="${r2(len)}" height="${2 * h}" rx="0.5" fill="${fill}" stroke="${OUT}" stroke-width="0.9"/>`
       + `<rect x="${r2(x0 - len + 0.5)}" y="${r2(-h + 0.4)}" width="${r2(Math.max(len - 1, 0.2))}" height="0.6" rx="0.3" fill="${C.brassH}"/>`;
     x0 -= len;
   }
-  s += `<rect x="${r2(x0 - 1.6)}" y="-2.35" width="2" height="4.7" rx="0.6" fill="${C.brassS}" stroke="#3C2819" stroke-width="0.9"/>`;
+  s += `<rect x="${r2(x0 - 1.6)}" y="-2.35" width="2" height="4.7" rx="0.6" fill="${C.brassS}" stroke="${OUT}" stroke-width="0.9"/>`;
   return `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">${s}</g>`;
 }
 // Petit éclat (le large repéré)

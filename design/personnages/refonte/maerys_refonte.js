@@ -19,8 +19,9 @@ const { seam, suitOurlet } = require('./tissu');
 const { jambe, poserBras, anneau, ligneBras, pointLigne, sousLigne, longueurLigne } = require('./membres');
 const { capucheRabattue, reperes } = require('../avatar_accessoires');
 const { hole, rip, cord } = require('../../atelier/naufrage');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#E8B88E', skinS: '#CC9A70', skinH: '#F6D3B0', lid: '#DFA982', under: '#B9856E', nose: '#B97A58', cheek: '#EE9C8C',
   eye: '#241B18', iris: '#6B8A3A', irisL: '#B5D27E', eyeRx: 1.8, eyeRy: 2.45, brow: '#2E1F18', browW: 0.95, mouth: '#7A3B30',
   hair: '#4A3328', hairS: '#33231B', hairH: '#7A5642', rim: '#9FE3DA',
@@ -31,7 +32,7 @@ const C = {
   wither: '#8C9A4E', witherS: '#6E7A3A',
   twig: '#8A6440', feather: '#3E7FC1', featherS: '#1F3F66', featherH: '#9CC8EE',
   paint: '#3F8F4A', mud: '#6B5138', salt: '#FFF8E8', canvas: '#E6DCC3', canvasS: '#C9BB98', patch: '#B07E4C'
-};
+});
 
 // Les marques sur elle, réglées par l'état (maerys_tenues.js) : la terre (dirt) et la mousse (moss) de la forêt (0 → 1),
 // les brindilles dans les cheveux (twigs : 0, 1 ou 2), le sel (salt) ; la pièce cousue (patch) ; la cape (entiere, ou

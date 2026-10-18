@@ -9,16 +9,17 @@
 // plus : HISTOIRE.md, § 6.2).
 const { fade } = require('../../atelier/naufrage');
 const { maerys, C } = require('./maerys_refonte');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les palettes du vêtement (la tunique, la robe ou le manteau) : la couleur, son ombre, son reflet
-const PALETTES = {
+const PALETTES = fondre({
   lin: { nom: 'Lin', m: C.tunic, mS: C.tunicS, mH: C.tunicH },
   sauge: { nom: 'Sauge', m: C.robe, mS: C.robeS, mH: C.robeH },
   mousse: { nom: 'Mousse', m: C.moss, mS: C.mossS, mH: C.mossH },
   ecorce: { nom: 'Écorce', m: '#8E5A3C', mS: '#6C412A', mH: '#B07A58' },
   bruyere: { nom: 'Bruyère', m: '#8A6A8C', mS: '#6A4E6C', mH: '#AE90B0' },
   automne: { nom: 'Automne', m: '#C0743E', mS: '#97562A', mH: '#DE9A62' }
-};
+});
 
 // Les tenues : la forme (maerys_refonte.js, corps), la palette par défaut, les couleurs qu'elle règle
 const TENUES = {

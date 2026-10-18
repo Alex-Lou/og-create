@@ -6,16 +6,17 @@
 // Vue de face seulement pour l'étude : les autres vues reprennent encore le dessin d'aster.js.
 const { castaway, weed, fade, CANVAS } = require('../../atelier/naufrage');
 const { lorena, C } = require('./lorena_refonte');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
 // Les palettes du dessus (ciré, vareuse, gilet) : coat, son ombre, son reflet
-const PALETTES = {
+const PALETTES = fondre({
   signal: { nom: 'Jaune signal', coat: C.coat, coatS: C.coatS, coatH: C.coatH },
   rouille: { nom: 'Rouille', coat: '#C9673A', coatS: '#9A4626', coatH: '#F2A57A' },
   algue: { nom: 'Algue', coat: '#8C9A4A', coatS: '#66712F', coatH: '#C9D486' },
   quart: { nom: 'Bleu de quart', coat: '#3E5F86', coatS: '#2B4565', coatH: '#7FA3C9' },
   nuit: { nom: 'Laine de nuit', coat: '#2F4058', coatS: '#1F2C3E', coatH: '#5E7A9C' },
   toile: { nom: 'Toile brute', coat: '#9C8656', coatS: '#73603A', coatH: '#CDB98A' }
-};
+});
 
 // Les tenues : la forme (lorena_refonte.js, torse), la palette par défaut, les manches
 const TENUES = {

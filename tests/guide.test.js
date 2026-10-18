@@ -41,12 +41,21 @@ describe('le guide', () => {
     guide.dismiss();
     expect(guide.say(tip)).toBe(false);
   });
-  it('Brume naît à chaque réplique : complète quand elle paraît, courte quand elle enchaîne ; pas pour un portrait', () => {
+  it('Brume naît à chaque réplique : complète à sa toute première, vive ensuite ; pas pour un portrait', () => {
     const saturnin = { id: 'c', text: 'Hm.', who: 'Robby', face: 'carriere' };
-    expect(birthOf({ id: 'a', text: 'x' }, null)).toBe('full');
-    expect(birthOf({ id: 'b', text: 'y' }, { id: 'a', text: 'x' })).toBe('short');
-    expect(birthOf(saturnin, { id: 'b', text: 'y' })).toBeNull();
-    expect(birthOf({ id: 'd', text: 'z', who: 'Brume' }, saturnin)).toBe('full');
+    expect(birthOf({ id: 'a', text: 'x' }, null, false)).toBe('full');
+    expect(birthOf({ id: 'b', text: 'y' }, { id: 'a', text: 'x' }, false)).toBe('short');
+    expect(birthOf(saturnin, { id: 'b', text: 'y' }, false)).toBeNull();
+    expect(birthOf({ id: 'd', text: 'z', who: 'Brume' }, saturnin, false)).toBe('full');
+    // (déjà née une fois sur cet appareil : vive, même quand elle reparaît)
+    expect(birthOf({ id: 'e', text: 'w' }, null, true)).toBe('short');
+    expect(birthOf({ id: 'f', text: 'v', who: 'Brume' }, saturnin, true)).toBe('short');
+  });
+  it('sa naissance est retenue sur l’appareil, et oubliée quand l’île recommence', () => {
+    guide.born();
+    expect(birthOf({ id: 'g', text: 'u' }, null)).toBe('short');
+    guide.forget();
+    expect(birthOf({ id: 'h', text: 't' }, null)).toBe('full');
   });
   it('au plus deux répliques à la suite : la troisième attend un souffle', () => {
     vi.useFakeTimers();

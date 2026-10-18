@@ -280,13 +280,15 @@ export default {
         // Le tutoriel : chacun à sa place, pas encore de bêtes des bois ; les naufragés qui débarquent (castaways.js)
         calm: this.thickMist(state),
         acts: state.brume ? state.brume.acts : [],
-        arrivals: this.arrivals
+        arrivals: this.arrivals,
+        // (le village d'avant : ses chemins et ses tournées resservent, chacun repart d'où il se tenait)
+        before: this.village
       });
       this.showArrivals();
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, this.M) : null;
       if (state.visitor && this.visitorDock && !this.reduced()) {
-        let seen = null;
+        let seen;
         try { seen = localStorage.getItem('oc_visitor_seen'); } catch (e) { seen = null; }
         if (seen !== String(state.visitor.id)) {
           this.boatArrival = { id: state.visitor.id, at: performance.now() / 1000 };

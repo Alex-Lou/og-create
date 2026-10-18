@@ -3,6 +3,7 @@ import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
+import { CREATURE_TEXTS } from '@/texts/world/creatures';
 import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
@@ -381,7 +382,8 @@ describe('village : bêtes des climats', () => {
       expect(Math.abs(camel(time, scared).x - camel(time).x)).toBeLessThan(0.5);
       expect(Math.abs(camel(time, scared).y - camel(time).y)).toBeLessThan(0.5);
     }
-    expect(oasis.describe({ kind: 'beast', species: 'fennec' })).toEqual({ title: 'Fennec', text: 'Il dort le jour et trotte la nuit dans les Dunes.', hint: 'Toucher : il sursaute' });
+    // (sa fiche : celle du Bestiaire, texts/world/creatures.js)
+    expect(oasis.describe({ kind: 'beast', species: 'camel', id })).toEqual({ title: CREATURE_TEXTS.chameau[0], text: CREATURE_TEXTS.chameau[1], hint: 'Toucher : il sursaute' });
     expect(oasis.say({ kind: 'beast', species: 'camel' }, at(13))).toBeNull();
   });
   it('les douze dessins se font sans valeur manquante ni attribut en double, à chaque image', () => {
@@ -399,5 +401,91 @@ describe('village : bêtes des climats', () => {
       // Trois images distinctes : le geste et le sommeil se voient
       expect(new Set(frames).size).toBe(3);
     }
+  });
+});
+
+// Les fondations de la vie (choix de l'auteur, 18 oct.) : un rang fixe par habitant, un village refait sans saut ni
+// calcul pour rien, un voyageur installé qui ne prend pas la place de son maître
+describe('village : fondations de la vie', () => {
+  const base = { n: N, M, sites, owned: new Set([0]), crafts: [], props: [] };
+  const people = (v, t, h = 10) => v.at(t, at(h)).list.filter(c => c.kind === 'villager');
+  it('un rang fixe : celui de la troupe, puis les voyageurs installés, puis le voyageur de passage', () => {
+    const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
+    const v = villageOf({ ...base, settlers, visitor: { id: 3, seed: 77, name: 'Iris', role: 'Cartographe', site: 'ponton' } });
+    expect(v.residents.map(r => [r.id, r.k])).toEqual([['vil:potager', 0], ['vil:ponton', 4], ['vil:foyer', 6], ['vil:v5', 7], ['vis:3', 11]]);
+    // (un maître de plus dans la troupe ne change pas le rang des autres)
+    const fewer = villageOf({ ...base, troupe: [{ id: 'potager', built: true }, { id: 'foyer', built: true }] });
+    expect(fewer.residents.map(r => [r.role, r.k])).toEqual([['potager', 0], ['foyer', 6]]);
+  });
+  it('refait à l’identique, le village garde ses tournées : personne ne bouge d’une image à l’autre', () => {
+    const v1 = villageOf(base);
+    people(v1, 30);
+    const before = people(v1, 300);
+    const v2 = villageOf({ ...base, before: v1 });
+    expect(v2.life.planner).toBe(v1.life.planner);
+    for (const p of people(v2, 300.016)) {
+      const q = before.find(b => b.id === p.id);
+      expect(Math.hypot(p.x - q.x, p.y - q.y), p.id).toBeLessThan(0.1);
+    }
+  });
+  it('refait autrement (une création posée), chacun repart de là où il se tenait : rien ne saute', () => {
+    const v1 = villageOf(base);
+    people(v1, 30);
+    const before = people(v1, 300);
+    const v2 = villageOf({ ...base, crafts: [{ craft: 'banc', x: 2, y: 12 }], before: v1 });
+    expect(v2.life.planner).not.toBe(v1.life.planner);
+    for (const p of people(v2, 300.016)) {
+      const q = before.find(b => b.id === p.id);
+      expect(Math.hypot(p.x - q.x, p.y - q.y), p.id).toBeLessThan(0.1);
+    }
+  });
+  it('d’une image à l’autre, personne ne saute : ni quand l’agenda change (le repas), ni aux virages', () => {
+    const v = villageOf(base);
+    let prev = null;
+    let worst = 0;
+    for (let i = 0; i < 2400; i++) {
+      const list = people(v, 30 + i * 0.016, 11.4 + i * 0.0005);
+      if (prev) for (const p of list) { const q = prev.find(o => o.id === p.id); if (q) worst = Math.max(worst, Math.hypot(p.x - q.x, p.y - q.y)); }
+      prev = list;
+    }
+    // (un pas d'une image : bien moins d'une case)
+    expect(worst).toBeLessThan(0.05);
+  });
+  it('chacun a sa zone de vie : son bâtiment et 3 cases autour, où l’on marche ; son terrain de métier y est', () => {
+    const v = villageOf(base);
+    for (const r of v.residents) {
+      const site = sites.find(s => s.id === r.role);
+      expect(r.zone.cells.length, r.id).toBeGreaterThan(1);
+      for (const c of r.zone.cells) {
+        expect(c.x >= site.x - 3 && c.x < site.x + site.w + 3 && c.y >= site.y - 3 && c.y < site.y + site.h + 3, `${r.id} ${c.x},${c.y}`).toBe(true);
+        expect(M.ground(c.x, c.y)).not.toBe('~');
+      }
+      expect(r.zone.trade.every(c => r.zone.cells.includes(c))).toBe(true);
+    }
+    // (Maggy, l'herbe ; Agathe, les chemins)
+    expect(v.residents.find(r => r.role === 'potager').zone.trade.every(c => M.ground(c.x, c.y) === 'g')).toBe(true);
+    expect(v.residents.find(r => r.role === 'foyer').zone.trade.length).toBeGreaterThan(0);
+  });
+  it('il flâne dans sa zone de vie : loin des portes, on le trouve toujours chez lui', () => {
+    const v = villageOf(base);
+    const doors = v.residents.map(r => r.work);
+    let checked = 0;
+    for (let i = 0; i < 1500; i++) {
+      for (const p of people(v, 30 + i * 2, 9 + i * 0.002)) {
+        if (p.pose === 'walk' || doors.some(d => Math.hypot(d.x - p.x, d.y - p.y) < 2.2) || Math.hypot(v.home.x - p.x, v.home.y - p.y) < 2.2) continue;
+        const r = v.residents.find(o => o.id === p.id);
+        expect(r.zone.cells.some(c => Math.hypot(c.x - p.x, c.y - p.y) < 0.8), `${p.id} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).toBe(true);
+        checked++;
+      }
+    }
+    // (assez de flâneries vues pour que le test dise quelque chose)
+    expect(checked).toBeGreaterThan(100);
+  });
+  it('un voyageur installé n’attend pas l’arrivée du maître de son bâtiment', () => {
+    const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
+    const arrivals = new Map([['potager', { from: { x: 1, y: 1 }, at: 1000 }]]);
+    const ids = people(villageOf({ ...base, settlers, arrivals }), 30).map(p => p.id);
+    expect(ids).toContain('vil:v5');
+    expect(ids).not.toContain('vil:potager');
   });
 });

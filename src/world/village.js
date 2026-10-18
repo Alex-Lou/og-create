@@ -33,20 +33,30 @@
 // d'une bête (beast.js). Les paroles sont dans texts/village.js.
 import { bestiaryOf, FAMILIARS } from './bestiary';
 import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
-import { gridOf, route, doorOf } from './village/paths';
-import { residentsOf, plannerOf, drawResidents } from './village/residents';
+import { gridOf, gridKeyOf, route, doorOf } from './village/paths';
+import { residentsOf, plannerOf, drawResidents, visitHere } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
 import { habitatsOf, wildPainter, drawWild, drawKoi, isWild } from './village/wild';
 import { homesOf, wildLifeOf } from './village/wildLife';
+import { creatureOf, creatureOfHit } from './creatures';
 import { drawAnya, anyaSign, storyInfo } from './village/anya';
 import { hash } from './village/beast';
 import { dayHourOf } from './gameClock';
-import { momentOf, visitOf } from './village/agenda';
+import { momentOf } from './village/agenda';
 import { SEASON } from './plants';
 
 export { BEAST_NAMES, isWild };
 
 /* ---------- Le village ---------- */
+// Les chemins gardés, au plus (la mémoire reste bornée sur une longue partie)
+const ROUTES_MAX = 600;
+// L'empreinte de ce qui tire les tournées (le planificateur du village d'avant resservira tel quel) : chaque habitant
+// (son rang, ses places, son humeur, son allure), les portes, le Foyer, le tutoriel
+const cellKey = c => (c ? `${c.x},${c.y}` : '-');
+function lifeKeyOf(residents, stops, home, calm) {
+  const who = residents.map(r => [r.id, r.k, r.mood, r.asleep, r.swim, ...[r.work, r.field, r.bedAt, r.water, r.forest].map(cellKey)].join(':'));
+  return [calm, cellKey(home), stops.map(cellKey).join(' '), ...who].join('|');
+}
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
 // crafts : créations d'île posées ({ x, y }) ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
 // visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home }) ;
@@ -63,8 +73,15 @@ export { BEAST_NAMES, isWild };
 // plage où il a débarqué ; 'site' : à son chantier, même pas encore bâti, plutôt qu'au camp du Feu), ou null
 // arrivals : les naufragés qui débarquent sous les yeux (Map rôle → { from: case près de l'épave, at: instant, s }) :
 // ils marchent de l'épave à leur place (ARRIVE_SPEED), s'y arrêtent ARRIVE_PAUSE, puis reprennent leur journée
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], zoneIds = [], avoid = [], camp = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [], posts = null, beds = null }) {
-  const grid = gridOf({ n, M, sites, owned, crafts, props, annexes, camp });
+// before : le village d'avant (l'île relue, une action) : ses chemins restent bons si l'on marche partout pareil ; ses
+// tournées aussi si la troupe n'a pas changé ; sinon chacun repart d'où il se tenait (rien ne saute, rien ne se
+// recalcule pour rien)
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], zoneIds = [], avoid = [], camp = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [], posts = null, beds = null, before = null }) {
+  const fresh = gridOf({ n, M, sites, owned, crafts, props, annexes, camp });
+  const gridKey = gridKeyOf(fresh);
+  const prev = before && before.life;
+  const kept = prev && prev.gridKey === gridKey ? prev : null;
+  const grid = kept ? kept.grid : fresh;
   const bestiary = bestiaryOf(written);
   // Les bêtes des bois arrivent peu à peu, acte après acte (choix de l'auteur : pas toutes d'un coup sur l'île)
   const doneAct = id => acts.includes(id);
@@ -72,16 +89,21 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
   const foyer = built.find(s => s.id === 'foyer');
   const home = doors.foyer || Object.values(doors)[0] || null;
-  const routes = new Map();
+  // (les chemins déjà tirés, ROUTES_MAX au plus : au-delà, on repart de rien)
+  const routes = kept ? kept.routes : new Map();
   const routeOf = (a, b) => {
     const key = `${a.x},${a.y}>${b.x},${b.y}`;
-    if (!routes.has(key)) routes.set(key, route(grid, a, b));
+    if (!routes.has(key)) {
+      if (routes.size >= ROUTES_MAX) routes.clear();
+      routes.set(key, route(grid, a, b));
+    }
     return routes.get(key);
   };
   const stops = Object.values(doors);
 
   const residents = residentsOf({ grid, M, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary });
-  const planner = plannerOf({ grid, stops, home, calm, routeOf });
+  const lifeKey = lifeKeyOf(residents, stops, home, calm);
+  const planner = kept && kept.lifeKey === lifeKey ? kept.planner : plannerOf({ grid, stops, home, calm, routeOf, last: prev ? prev.planner.places() : null });
   const farm = farmOf({ grid, M, built, coop, bestiary });
   // Les coins des zones à soi (un seul parcours de l'île) ; les bêtes sauvages qui vivent de leur coin et de leurs
   // conditions (pendant le tutoriel, aucune : elles arrivent à sa fin)
@@ -98,9 +120,12 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const h = phase.hour;
     const rain = phase.weather.rain;
     // Le jour (les places des bêtes en changent) ; celui de l'île, pour l'agenda des habitants (gameClock.js : il change
-    // à minuit, toutes les 90 min)
-    const day = Math.floor(Date.now() / 86400000);
-    const islandDay = dayHourOf(Date.now()).day;
+    // à minuit, toutes les 90 min) ; l'horloge des tournées (secondes) : t ramené à l'heure de tous (Date.now), la même
+    // sur tous les appareils (en mouvement réduit, t vaut 0 : l'instant de l'arrivée, rien ne bouge)
+    const now = Date.now();
+    const day = Math.floor(now / 86400000);
+    const islandDay = dayHourOf(now).day;
+    const clock = t + performance.timeOrigin / 1000;
     const tapped = (id, span) => {
       const s = scared.get(id);
       return s && t - s.at < span ? (t - s.at) / span : null;
@@ -110,7 +135,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const dayTime = h > phase.rise + 0.5 && h < phase.set - 0.5;
     const night = phase.night > 0.5;
     const meets = [];
-    const f = { t, h, rain, day, islandDay, phase, tapped, out, lights, meets, dawn, dusk, dayTime, night };
+    const f = { t, clock, h, rain, day, islandDay, phase, tapped, out, lights, meets, dawn, dusk, dayTime, night };
     drawResidents(f, { residents, ...planner, arrivals, bestiary, calm });
     drawFarm(f, farm, loose);
     const paint = wildPainter(f);
@@ -134,8 +159,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   // Ce que fait un maître à cet instant (agenda.js), sa visite du jour comprise
   function moment(r, phase) {
     const day = dayHourOf(Date.now()).day;
-    const others = residents.filter(o => o.master && !o.asleep && !o.swim && o !== r).map(o => o.role);
-    return momentOf(r, phase.hour, phase, { rain: phase.weather.rain, calm, visit: r.master && !calm ? visitOf(r, day, others) : null });
+    const present = residents.filter(o => o.master && !o.asleep && !o.swim);
+    return momentOf(r, phase.hour, phase, { rain: phase.weather.rain, calm, visit: r.master && !calm ? visitHere(r, day, present) : null });
   }
   // La dernière réplique de chacun (il ne la redit pas tout de suite)
   const lastSaid = new Map();
@@ -200,8 +225,13 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     // Une poule d’Agathe : son prénom
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
     if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? TOUCH_HINTS.reactShe : TOUCH_HINTS.reactHe };
-    const [title, text] = BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];
+    // Une créature du Bestiaire : son nom et sa phrase (texts/world/creatures.js) ; une bête de la ferme ne sursaute pas,
+    // elle réagit
+    const creature = creatureOf(creatureOfHit({ who }));
+    if (creature && creature.category !== 'ferme') return { title: creature.name, text: creature.text, hint: TOUCH_HINTS.startle };
+    const [title, text] = creature ? [creature.name, creature.text] : BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];
     return { title, text, hint: isWild(who.species) ? TOUCH_HINTS.startle : TOUCH_HINTS.reactShe };
   }
-  return { residents, farm, at, say, describe, home, foyer };
+  // (life : pour le village d'après, before)
+  return { residents, farm, at, say, describe, home, foyer, life: { grid, gridKey, routes, lifeKey, planner } };
 }

@@ -1,0 +1,30 @@
+/* En bas à droite, à l'aplomb de l'onglet Sceau (le dernier des quatre), au-dessus du bouton Récolte de l'île ; sous Brume
+   et sa bulle (elle passe devant le temps de parler), les scènes et les fenêtres ; sur PC (onglets à gauche), dans le coin */
+.debug-reset {
+  --debug-ink: #fff4dc;
+  --debug-bg: rgba(40, 24, 18, .72);
+  --debug-ring: #f0c060;
+  position: fixed; z-index: calc(var(--z-guide) - 1);
+  /* (le milieu du dernier des quatre onglets : la barre a 8 px de marge de chaque côté) */
+  right: calc(12.5% - 14px); bottom: calc(var(--oc-tabbar-h) + 96px);
+  width: 40px; height: 40px; padding: 0; border: 0; border-radius: var(--r-round);
+  background: var(--debug-bg); color: var(--debug-ink); box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+  display: grid; place-items: center; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none;
+  -webkit-touch-callout: none; opacity: .8;
+}
+@media (min-width: 860px) {
+  .debug-reset { right: 20px; bottom: 20px; }
+}
+.debug-reset:focus-visible { outline: 3px solid var(--oc-gold); outline-offset: 2px; }
+.debug-reset.is-holding, .debug-reset.is-busy { opacity: 1; }
+.debug-reset__ring, .debug-reset__icon { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.debug-reset__icon { inset: 9px; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.debug-reset__ring { transform: rotate(-90deg); }
+.debug-reset__track { fill: none; stroke: rgba(255, 244, 220, .18); stroke-width: 3; }
+/* L'anneau se remplit tant que le doigt reste (107 : le tour du cercle de rayon 17) */
+.debug-reset__fill { fill: none; stroke: var(--debug-ring); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 107; stroke-dashoffset: 107; }
+.debug-reset.is-holding .debug-reset__fill { animation: debug-fill linear forwards; }
+.debug-reset.is-busy .debug-reset__fill { stroke-dashoffset: 0; }
+.debug-reset.is-busy .debug-reset__icon { animation: debug-spin .8s linear infinite; }
+@keyframes debug-fill { to { stroke-dashoffset: 0; } }
+@keyframes debug-spin { to { transform: rotate(360deg); } }

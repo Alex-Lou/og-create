@@ -9,7 +9,7 @@
  "regles": {
   "noms": "<sujet>_<vue>_<pose>[_<variante>]_<n>.svg pour les personnages et les bêtes ; <sujet>_<état>_<n>.svg ailleurs. Un dessin fixe n'a pas de numéro.",
   "directions": "avant : vient vers le bas à droite ; dos : s'éloigne vers le haut à droite ; profil : tourné vers la droite. Le miroir (scaleX(-1)) donne le bas à gauche, le haut à gauche, la gauche. Les trois quarts avant du grand format (maîtres, naufragés, Anya, le Passeur) sortent du kit tournés vers le bas à gauche : ils sont publiés en miroir pour suivre cette règle.",
-  "lumiere": "En haut à gauche. Trait brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume."
+  "lumiere": "En haut à gauche. Trait des personnages indigo #0A0418 (le papier néon, design/personnages/couleurs.js), trait du décor et des bêtes brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume."
  },
  "chapitres": [
   {
@@ -168562,6 +168562,26 @@
     -5,
     25,
     10
+   ],
+   "ms_par_image": 260,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/familiers/bol-soupe/bol-soupe",
+   "rubrique": "animaux",
+   "sujet": "bol-soupe",
+   "titre": "Bol soupe",
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/familiers/bol-soupe/bol-soupe_1.svg",
+    "svg/animaux/familiers/bol-soupe/bol-soupe_2.svg"
+   ],
+   "cadre": [
+    -7.5,
+    -12.5,
+    15,
+    13.75
    ],
    "ms_par_image": 260,
    "parcours": "partout",

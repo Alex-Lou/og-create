@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { KRAKEN_FOR, krakenNuit, krakenRoute, krakenAt, apercuAt, brasDuFond } from '../src/world/faune';
+import { KRAKEN_FOR, krakenNuit, krakenRoute, krakenAt, apercuAt, brasDuFond, toucherKraken, GEANT_FOR, geantAt, toucherGeant } from '../src/world/faune';
+import { worldOf, SEA_Z } from '../src/world/terrain';
 
 // Une mer d'eau libre (d : la distance à la terre), une île au milieu
 const OPEN = [];
@@ -105,5 +106,21 @@ describe('le Kraken', () => {
     expect(vus).toBeGreaterThan(0);
     expect(coups.size / 300).toBeGreaterThan(0.12);
     expect(coups.size / 300).toBeLessThan(0.4);
+  });
+});
+
+// Le Bestiaire : le Géant et le Kraken se touchent tant qu'on les voit bien
+describe('le Géant et le Kraken se touchent', () => {
+  it('seulement quand on les voit bien ; le Kraken à sa tête, le Géant au milieu de son corps', () => {
+    expect(toucherKraken(krakenAt(ROUTE, 0))).toBeNull();
+    const kr = krakenAt(ROUTE, KRAKEN_FOR / 2);
+    expect(toucherKraken(kr)).toMatchObject({ ...worldOf(kr.x, kr.y, SEA_Z), r: 120 });
+    expect(toucherGeant(geantAt({ x: 0, y: 0 }, [1, 0], 0))).toBeNull();
+    const g = geantAt({ x: 0, y: 0 }, [1, 0], GEANT_FOR / 2);
+    const head = worldOf(g.x, g.y, SEA_Z);
+    const hit = toucherGeant(g);
+    // (derrière sa tête, d'où il vient)
+    expect(Math.hypot(hit.x - head.x, hit.y - head.y)).toBeGreaterThan(100);
+    expect(hit.x).toBeLessThan(head.x);
   });
 });

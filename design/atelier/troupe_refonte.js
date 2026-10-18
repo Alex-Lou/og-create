@@ -5,6 +5,7 @@
 // dessiner) pour le repos, la marche, le salut, le geste de son métier, le sommeil ; les gestes communs du kit
 // (gestes.js : pêcher, piocher, la lanterne, le parapluie…) se jouent sur son corps refondu.
 const { frame } = require('./troupe');
+const { enPersonnage } = require('../personnages/couleurs');
 // (des require écrits en toutes lettres : esbuild en fait le module du générateur, build_bundle.js)
 const MODULES = {
   lorena: [require('../personnages/refonte/lorena_tenues'), require('../personnages/refonte/lorena_anims')],
@@ -43,7 +44,8 @@ const deux = N => (N >= 4 ? [1, 3] : [0, 1]);
 function refondu(m, etat, naufrage) {
   const [T, A] = MODULES[m.refonte];
   const c = { ...T.habiller(undefined, null, etat), name: m.name, action: [m.action[0], m.action[1]] };
-  const anim = (nom, v, n, expr, cc = c) => A.dessiner(cc, nom, DIR[v], n, expr);
+  // (ses animations à lui : à l'encre des personnages, comme les images du kit)
+  const anim = (nom, v, n, expr, cc = c) => enPersonnage(A.dessiner(cc, nom, DIR[v], n, expr));
   const joue = (nom, v) => { const X = A.ANIMS[nom]; return X && X.dirs.includes(DIR[v]) ? X : null; };
   c.refonte = {
     module: m.refonte,

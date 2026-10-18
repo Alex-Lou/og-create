@@ -56,7 +56,7 @@ export default {
     // (un jeu par-dessus l'île : la Récolte, un mini-jeu, la chasse aux poules, la marmite ; ou une scène plein écran :
     // l'île, cachée, ne se redessine pas, sauf pour finir de se charger : elle compte ses dessins en se dessinant,
     // quatre fois par seconde, loading.js)
-    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking && (!this.covered || this.loadingSince);
+    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking && !this.bestiaryOpen && (!this.covered || this.loadingSince);
     if (run && !this.raf) this.raf = requestAnimationFrame(this.frame);
     if (!run && this.raf) {
       cancelAnimationFrame(this.raf);
@@ -346,6 +346,8 @@ export default {
     // mouvement réduit)
     if (!this.reduced()) drawEmbruns(ctx, this.live.shore, view, t, 0.15 + 0.85 * agite);
     const life = this.seaLife(t, view, phase);
+    // (le Géant et le Kraken se touchent aussi : ils entrent au Bestiaire)
+    if (geant || kraken) this.seaHits.push(...this.legendHits(geant, kraken));
     drawRings(ctx, life.rings);
     // Sol des chantiers : terre battue (bâti) ou chantier, une tache par emprise qui se fond dans le sol autour
     // (terreBattue.js) ; cases libres pendant un déplacement ; case choisie
@@ -445,6 +447,8 @@ export default {
     // (qui marche sur l'île : les portes s'ouvrent devant lui, walls.js)
     const crowd = this.critters(t);
     this.swingDoors(t, crowd);
+    // (une créature rare ou légendaire sort près de ce qu'on regarde : le petit signe, WorldView, bestiary.js)
+    this.signRare(view);
     const standing = [
       ...this.shownSites().filter(site => met(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2)).map(site => ({ depth: site.x + site.y + site.w, site })),
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
@@ -819,7 +823,9 @@ export default {
   // par-dessus, comme de près où tout se dessine dans l'ordre du relief ; seulement dans sa boîte, pour ne pas doubler
   // ailleurs ce qui est transparent (l'ombre au pied d'un arbre). Sous la brume, le décor à demi effacé reste tel quel
   standInFront(ctx, critter) {
-    const [key, make] = this.critterSprite(critter);
+    const art = this.critterSprite(critter);
+    if (!art) return;
+    const [key, make] = art;
     const box = imageOf(key, make).box;
     const c = this.ground(critter.x, critter.y);
     const top = c.y - critter.z + box.y;

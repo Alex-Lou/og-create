@@ -15,8 +15,9 @@ const { EXPR, ALIAS, X, eye, brow, mouth, extras, wind, rides } = require('./vis
 const { seam, suitOurlet } = require('./tissu');
 const { fabriquerBras } = require('./lorena_bras');
 const { jambe } = require('./membres');
+const { fondre } = require('../couleurs'); // le fondu néon des couleurs (le corps et les métaux gardent les leurs)
 
-const C = {
+const C = fondre({
   skin: '#E9B98F', skinS: '#C99472', lid: '#E0AC84', under: '#B98A78', nose: '#B97A58',
   hair: '#D9D4CC', hairS: '#A9A39A', hairH: '#F5F2EC', brow: '#5E554C', browW: 0.7, rim: '#9FE3DA',
   eye: '#2A1F1A', iris: '#7A5634', irisL: '#C9A06A', eyeRx: 1.75, eyeRy: 2.3,
@@ -28,7 +29,7 @@ const C = {
   strap: '#6B4226', strapS: '#4E2F1A', spoon: '#C9CED6', spoonS: '#9AA2AD',
   herb: '#6E9A4A', herbS: '#4E7434',
   cheek: '#EE8C80', mouth: '#7A3B30', cloth: '#E6D4AE', clothS: '#B8A27A'
-};
+});
 
 // Les marques sur elle, réglées par l'état (agathe_tenues.js) : suie, sel, farine, boue (0 → 1) ; le tablier (torn :
 // déchiré, mended : recousu, clean : net) ; le chignon défait (wisps) ; le brin d'herbes ; trempée (wet)

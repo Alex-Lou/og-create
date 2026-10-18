@@ -3,7 +3,7 @@
 // récompense prête (pret, sa pastille « ! ») ; quatre images à 220 ms (la cadence des vivants de la bibliothèque). Cadre
 // 40 × 48, le centre du bas de la flamme en (20, 32), rayon 9. Ce que la bibliothèque n'a pas garde le feu follet par
 // code (brume.js).
-import { librarySprite, frameAt, textsOf } from './library';
+import { librarySprite, portraitOf, frameAt, textsOf } from './library';
 import { drawSprite } from './spriteCache';
 
 const ROOT = '/design/bibliotheque/svg/vivants/brume/';
@@ -28,6 +28,11 @@ export function brumeArtId(look = {}, ready = false) {
 const pathOf = (id, n) => `${ROOT}brume_${id}_${n + 1}.svg`;
 const ART = { fichiers: Array.from({ length: BRUME_FRAMES }, (_, n) => n), ms_par_image: BRUME_MS };
 const makes = new Map();
+// Son portrait en Phénix (le Bestiaire) : ailes de flamme déployées, recadré (library.js : portraitOf) ; null sans dessin
+export function phenixPortraitUrl() {
+  const load = FILES[pathOf('s6phenix', 3)];
+  return load ? portraitOf('phenix', load) : null;
+}
 
 // Ses expressions (brume_expr_<nom>_<n>.svg : le calque des yeux seuls, deux images), posées sur le corps d'un stade à la
 // place de ses yeux (world/brume.js : moodOf). La récompense prête garde son dessin entier
