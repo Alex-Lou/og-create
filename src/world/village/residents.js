@@ -184,6 +184,9 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
       for (let i = 1; i <= 5; i++) seq.push(moments[Math.floor(hash(r.k * 5 + i, salt(9)) * moments.length)](i));
       seq.push([spotOf(r, r.work, salt(8)), roll(8, 50, 90), 'work']);
     }
+    // Une place qu'aucun chemin ne rejoint depuis la sienne (une marche du relief, une case enclavée) : il reste à sa
+    // place plutôt que d'y sauter ; les places gardées se rejoignent alors toutes, le retour au début de la tournée compris
+    seq = seq.map(([to, pause, act]) => [routeOf(r.work, to) ? to : r.work, pause, act]);
     const speed = speedOf(r);
     const legs = [];
     let at = seq[seq.length - 1][0];
