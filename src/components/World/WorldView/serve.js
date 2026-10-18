@@ -54,8 +54,8 @@ export default {
       if ((state.villagers || []).length >= 2 && !this.thickMist(state)) guide.tip('friends');
       // Un habitant à qui il manque quelque chose : ses besoins et son humeur
       if ((state.villagers || []).some(v => missingOf(v).length)) guide.tip('needs');
-      // Un visiteur vient d'accoster
-      if (state.visitor) guide.tip('visitor');
+      // Un arrivant vient d'accoster
+      if (state.arrival) guide.tip('visitor');
       // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
       if ((state.games || []).some(g => g.open)) guide.tip('games');
       this.bestiaryTips(state);
@@ -260,7 +260,7 @@ export default {
       const camp = (state.camp || []).flatMap(c => Array.from({ length: c.w * c.h }, (_, i) => ({ x: c.x + (i % c.w), y: c.y + Math.floor(i / c.w) })));
       this.village = villageOf({
         n: state.size, M: this.M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
-        owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
+        owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.arrival || null,
         settlers: (state.villagers || []).filter(v => v.seed !== undefined),
         zoneIds: state.map.zones.map(z => z.id),
         // (les lieux, les gisements et le camp : on les contourne)
@@ -288,15 +288,15 @@ export default {
       this.showArrivals();
       // (les habitants venus d'ailleurs se dessinent par le générateur de l'avatar, chargé à la demande : l'île se
       // redessine quand il arrive ; arrivantArt.js)
-      if (!kitNow() && (state.visitor || (state.villagers || []).some(v => v.seed !== undefined))) loadKit().then(() => this.draw(performance.now()));
-      // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
-      this.visitorDock = state.visitor ? this.dockOf(state, this.M) : null;
-      if (state.visitor && this.visitorDock && !this.reduced()) {
+      if (!kitNow() && (state.arrival || (state.villagers || []).some(v => v.seed !== undefined))) loadKit().then(() => this.draw(performance.now()));
+      // Arrivant : sa barque s'amarre près du Ponton ; un arrivant jamais vu sur cet appareil arrive sous les yeux
+      this.visitorDock = state.arrival ? this.dockOf(state, this.M) : null;
+      if (state.arrival && this.visitorDock && !this.reduced()) {
         let seen;
-        try { seen = localStorage.getItem('oc_visitor_seen'); } catch (e) { seen = null; }
-        if (seen !== String(state.visitor.id)) {
-          this.boatArrival = { id: state.visitor.id, at: performance.now() / 1000 };
-          try { localStorage.setItem('oc_visitor_seen', String(state.visitor.id)); } catch (e) { /* stockage indisponible */ }
+        try { seen = localStorage.getItem('oc_arrival_seen'); } catch (e) { seen = null; }
+        if (seen !== String(state.arrival.id)) {
+          this.boatArrival = { id: state.arrival.id, at: performance.now() / 1000 };
+          try { localStorage.setItem('oc_arrival_seen', String(state.arrival.id)); } catch (e) { /* stockage indisponible */ }
         }
       }
     },

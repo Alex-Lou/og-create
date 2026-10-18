@@ -60,7 +60,7 @@ export default {
       if (quest.kind === 'crafts' || quest.kind === 'craft') return { label: 'Ouvrir l’établi', run: () => this.openBench() };
       if (quest.kind === 'annex' || quest.kind === 'house') return sheetOf('foyer');
       if (quest.kind === 'visitor' || quest.kind === 'settle') {
-        return state.visitor ? { label: 'Voir le voyageur', run: () => this.openVisitor() } : look('Montrer le Ponton', state.sites.find(s => s.id === 'ponton'));
+        return state.arrival ? { label: 'Accueillir l’arrivant', run: () => this.openArrival() } : look('Montrer le Ponton', state.sites.find(s => s.id === 'ponton'));
       }
       if (quest.kind === 'expedition') {
         const zone = state.map.zones.find(z => z.known === false && z.explorable && z.anchor);
@@ -130,7 +130,7 @@ export default {
       if (item.kind === 'site') this.openSiteSheet(item.arg);
       else if (item.kind === 'build') this.openSiteSheet(item.arg, 'evolution');
       else if (item.kind === 'villager') this.openVillager(item.arg);
-      else if (item.kind === 'visitor') this.openVisitor();
+      else if (item.kind === 'visitor') this.openArrival();
       else if (item.kind === 'beast') this.openBeast(item.arg);
       else if (item.kind === 'chests') this.chestsOpen = true;
       else if (item.kind === 'craft') this.placeFromBench(item.arg);

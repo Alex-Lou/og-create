@@ -23,6 +23,7 @@ export const FAILED = {
   // (folk.js)
   visitor: 'Le visiteur n’a pas pu être comblé.',
   settle: 'Le visiteur n’a pas pu s’installer.',
+  arrival: 'L’arrivant n’a pas pu s’installer.',
   anya: 'Anya n’a pas pu souffler.',
   brume: 'Brume n’a pas pu répondre.',
   villager: 'L’habitant n’a pas pu répondre.',

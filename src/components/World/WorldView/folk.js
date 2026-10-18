@@ -47,7 +47,10 @@ export default {
       brumeSaid: '',
       brumeHint: null,
       visitorOpen: false,
-      visitorSaid: ''
+      visitorSaid: '',
+      // L'accueil de l'arrivant qui attend au Ponton (ArrivalWelcome) : ouvert, sa dernière erreur
+      arrivalOpen: false,
+      arrivalError: ''
     };
   },
   computed: {
@@ -109,9 +112,9 @@ export default {
       if (!who || !who.beast || !this.state || !this.state.beasts) return null;
       return this.state.beasts.list.find(b => b.id === who.beast) || null;
     },
-    // Le visiteur qu'on touche (who : { kind: 'villager', id: 'vis:<id>' }), ou null
+    // L'arrivant qu'on touche, qui attend au Ponton (who : { kind: 'villager', id: 'vis:<id>' }), ou null
     guestOf(who) {
-      const v = this.state && this.state.visitor;
+      const v = this.state && this.state.arrival;
       return v && who && who.id === `vis:${v.id}` ? v : null;
     },
     // Case de mer où s'amarre le bateau du visiteur : la plus proche du Ponton, et d'où il arrive (vers le large)
@@ -138,6 +141,33 @@ export default {
     // graine (arrivantArt.js ; '' tant que le générateur de l'avatar se charge : il se refait quand il arrive)
     visitorPortrait(v) {
       return arrivantPortrait({ seed: v.seed, look: v.look || null });
+    },
+    // L'accueil de l'arrivant : composer son allure, choisir son métier et son prénom
+    openArrival() {
+      if (!this.state || !this.state.arrival) return;
+      this.site = null;
+      this.villagerId = null;
+      this.arrivalError = '';
+      this.arrivalOpen = true;
+    },
+    // Accueillir l'arrivant : le serveur vérifie (son prénom, ses choix, son métier, une maison libre) et l'installe
+    async welcomeArrival({ site, name, look }) {
+      const guest = this.state && this.state.arrival;
+      if (this.busy || !guest) return;
+      this.busy = true;
+      this.arrivalError = '';
+      try {
+        const { settled, coins, world } = await playService.arrivalWelcome(guest.id, { site, name, look });
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        this.arrivalOpen = false;
+        vibrate([12, 40, 18]);
+        this.$emit('show-alert', TOASTS.settled(settled));
+      } catch (error) {
+        this.arrivalError = messageOf(error, FAILED.arrival);
+      } finally {
+        this.busy = false;
+      }
     },
     openVisitor() {
       if (!this.state || !this.state.visitor) return;
