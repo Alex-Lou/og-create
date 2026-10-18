@@ -58,8 +58,9 @@ describe('reflet du phare', () => {
   it('l\'éclat vient du côté du soleil', () => {
     const matin = reflet(phase({ sun: { up: 0.4, progress: 0.15 } }));
     const soir = reflet(phase({ sun: { up: 0.4, progress: 0.85 } }));
-    expect(matin.eclat.cote).toBe(-1);
-    expect(soir.eclat.cote).toBe(1);
+    // (à droite le matin, à gauche le soir : lumiere/soleil.js)
+    expect(matin.eclat.cote).toBe(1);
+    expect(soir.eclat.cote).toBe(-1);
     expect(matin.eclat.force).toBeGreaterThan(0);
   });
 });
@@ -69,7 +70,8 @@ describe('éclats du reflet', () => {
     const soir = refletDuPhare(phase({ sun: { up: 0.4, progress: 0.85 } }), glitterOf(phase({ sun: { up: 0.4, progress: 0.85 } }), now));
     const e = eclatsDuReflet(soir, 1.3);
     expect(e.length).toBeGreaterThan(0);
-    expect(e.filter(p => p.x > 0).length).toBeGreaterThan(e.length / 2);
+    // (le soir, le soleil est à gauche)
+    expect(e.filter(p => p.x < 0).length).toBeGreaterThan(e.length / 2);
     expect(eclatsDuReflet({ eclat: { force: 0 } }, 1)).toEqual([]);
   });
 });

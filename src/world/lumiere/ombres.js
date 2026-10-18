@@ -1,6 +1,7 @@
 // Ombres vivantes : d'où vient la lumière qui porte les ombres (soleil, lune selon sa phase réelle, éclair) et les
 // ombres portées des bâtiments sur le sol (mauves à l'heure dorée).
 import { goldenOf } from './heureDoree';
+import { soleilOf } from './soleil';
 
 // Lune : âge dans sa lunaison (jours) et part éclairée (0 nouvelle lune, 1 pleine lune), d'après la date réelle
 const LUNAISON = 29.530588853;
@@ -25,16 +26,17 @@ function hull(points) {
   return lower.slice(0, -1).concat(upper.slice(0, -1));
 }
 
-// D'où vient la lumière qui porte les ombres, et avec quelle force : le soleil le jour (long le matin et le soir,
-// court à midi, pâle sous les nuages), la lune la nuit (selon sa phase), rien entre les deux
+// D'où vient la lumière qui porte les ombres, et avec quelle force : le soleil le jour (de son côté : soleil.js ; long le
+// matin et le soir, court à midi, pâle sous les nuages), la lune la nuit (selon sa phase), rien entre les deux. dx, dy :
+// où tombe l'ombre (à l'opposé de la lumière)
 export function shadowLight(phase, date, orage = null) {
   const { sun, weather } = phase;
   // l'éclair : une lumière dure et brève venue de son côté
   if (orage && orage.flash > 0.12) return { dx: (0.5 - orage.x) * 2.6, dy: -0.35, a: 0.55 * Math.min(1, orage.flash) };
   if (sun.up > 0.02) {
-    const p = sun.progress;
+    const { est, sud } = soleilOf(sun);
     const along = 0.55 + 1.9 * Math.pow(1 - sun.up, 1.4);
-    return { dx: -Math.cos(p * Math.PI) * along, dy: -0.42 * Math.sin(p * Math.PI) * along - 0.12, a: 0.24 * Math.min(1, sun.up * 4) * (1 - 0.85 * weather.cover), golden: goldenOf(phase).k };
+    return { dx: -est * along, dy: -0.42 * sud * along - 0.12, a: 0.24 * Math.min(1, sun.up * 4) * (1 - 0.85 * weather.cover), golden: goldenOf(phase).k };
   }
   if (phase.night > 0.5) {
     const moon = moonOf(date);
