@@ -8,9 +8,10 @@
 import { P, box, disc, f2, ln, poly, ell, dot } from './iso';
 import { WOOD_DARK } from './palette';
 
-// Crête (x, y écran) de chaque bâtiment, paliers I à VII
+// Crête (x, y écran) de chaque bâtiment, paliers I à VII (le Foyer : celles de son dessin refait, design/atelier/foyer.js,
+// 18 oct.)
 const CRESTS = {
-  foyer: [[-34, -11], [-9, -56], [18, -61], [23, -106], [41, -124], [63, -161], [30, -169]],
+  foyer: [[0, -24], [9, -62], [-2, -67], [2, -101], [0, -98], [-9, -92], [-9, -92]],
   carriere: [[-2, -68], [0, -67], [19, -74], [0, -116], [0, -116], [1, -107], [14, -136]],
   bosquet: [[-2, -63], [0, -67], [0, -69], [2, -123], [3, -119], [3, -119], [10, -143]],
   puits: [[-15, -60], [0, -41], [-19, -57], [0, -57], [-3, -105], [0, -119], [0, -57]],

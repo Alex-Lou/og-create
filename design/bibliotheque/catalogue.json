@@ -133963,9 +133963,18 @@
    "id": "batiments/paliers_hiver/foyer/foyer_palier3_hiver",
    "rubrique": "batiments",
    "titre": "Foyer — palier III, l'hiver",
-   "images": 1,
+   "images": 10,
    "fichiers": [
-    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver.svg"
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_1.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_2.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_3.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_4.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_5.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_6.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_7.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_8.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_9.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver_10.svg"
    ],
    "cadre": [
     -95,
@@ -133973,6 +133982,7 @@
     190,
     210
    ],
+   "ms_par_image": 83,
    "parcours": "acte-5",
    "statut": "ok"
   },
@@ -133980,12 +133990,18 @@
    "id": "batiments/paliers_hiver/foyer/foyer_palier4_hiver",
    "rubrique": "batiments",
    "titre": "Foyer — palier IV, l'hiver",
-   "images": 4,
+   "images": 10,
    "fichiers": [
     "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_1.svg",
     "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_2.svg",
     "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_3.svg",
-    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_4.svg"
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_4.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_5.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_6.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_7.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_8.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_9.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_10.svg"
    ],
    "cadre": [
     -140,
@@ -133993,7 +134009,7 @@
     280,
     330
    ],
-   "ms_par_image": 333,
+   "ms_par_image": 83,
    "parcours": "acte-5",
    "statut": "ok"
   },
@@ -134001,9 +134017,18 @@
    "id": "batiments/paliers/foyer/foyer_palier3",
    "rubrique": "batiments",
    "titre": "Foyer — palier III",
-   "images": 1,
+   "images": 10,
    "fichiers": [
-    "svg/batiments/paliers/foyer/foyer_palier3.svg"
+    "svg/batiments/paliers/foyer/foyer_palier3_1.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_2.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_3.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_4.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_5.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_6.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_7.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_8.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_9.svg",
+    "svg/batiments/paliers/foyer/foyer_palier3_10.svg"
    ],
    "cadre": [
     -95,
@@ -134011,6 +134036,7 @@
     190,
     210
    ],
+   "ms_par_image": 83,
    "parcours": "acte-5",
    "statut": "ok"
   },
@@ -134018,12 +134044,18 @@
    "id": "batiments/paliers/foyer/foyer_palier4",
    "rubrique": "batiments",
    "titre": "Foyer — palier IV",
-   "images": 4,
+   "images": 10,
    "fichiers": [
     "svg/batiments/paliers/foyer/foyer_palier4_1.svg",
     "svg/batiments/paliers/foyer/foyer_palier4_2.svg",
     "svg/batiments/paliers/foyer/foyer_palier4_3.svg",
-    "svg/batiments/paliers/foyer/foyer_palier4_4.svg"
+    "svg/batiments/paliers/foyer/foyer_palier4_4.svg",
+    "svg/batiments/paliers/foyer/foyer_palier4_5.svg",
+    "svg/batiments/paliers/foyer/foyer_palier4_6.svg",
+    "svg/batiments/paliers/foyer/foyer_palier4_7.svg",
+    "svg/batiments/paliers/foyer/foyer_palier4_8.svg",
+    "svg/batiments/paliers/foyer/foyer_palier4_9.svg",
+    "svg/batiments/paliers/foyer/foyer_palier4_10.svg"
    ],
    "cadre": [
     -140,
@@ -134031,7 +134063,7 @@
     280,
     330
    ],
-   "ms_par_image": 333,
+   "ms_par_image": 83,
    "parcours": "acte-5",
    "statut": "ok"
   },
@@ -134410,12 +134442,9 @@
    "id": "batiments/paliers_hiver/foyer/foyer_palier5_hiver",
    "rubrique": "batiments",
    "titre": "Foyer — palier V, l'hiver",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_1.svg",
-    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_2.svg",
-    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_3.svg",
-    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_4.svg"
+    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver.svg"
    ],
    "cadre": [
     -140,
@@ -134423,7 +134452,6 @@
     280,
     330
    ],
-   "ms_par_image": 333,
    "parcours": "acte-6",
    "statut": "ok"
   },
@@ -134431,20 +134459,24 @@
    "id": "batiments/paliers_hiver/foyer/foyer_palier6_hiver",
    "rubrique": "batiments",
    "titre": "Foyer — palier VI, l'hiver",
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_1.svg",
     "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_2.svg",
     "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_3.svg",
-    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_4.svg"
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_4.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_5.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_6.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_7.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_8.svg"
    ],
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
-   "ms_par_image": 333,
+   "ms_par_image": 250,
    "parcours": "acte-6",
    "statut": "ok"
   },
@@ -134469,12 +134501,9 @@
    "id": "batiments/paliers/foyer/foyer_palier5",
    "rubrique": "batiments",
    "titre": "Foyer — palier V",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/batiments/paliers/foyer/foyer_palier5_1.svg",
-    "svg/batiments/paliers/foyer/foyer_palier5_2.svg",
-    "svg/batiments/paliers/foyer/foyer_palier5_3.svg",
-    "svg/batiments/paliers/foyer/foyer_palier5_4.svg"
+    "svg/batiments/paliers/foyer/foyer_palier5.svg"
    ],
    "cadre": [
     -140,
@@ -134482,7 +134511,6 @@
     280,
     330
    ],
-   "ms_par_image": 333,
    "parcours": "acte-6",
    "statut": "ok"
   },
@@ -134490,20 +134518,24 @@
    "id": "batiments/paliers/foyer/foyer_palier6",
    "rubrique": "batiments",
    "titre": "Foyer — palier VI",
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/batiments/paliers/foyer/foyer_palier6_1.svg",
     "svg/batiments/paliers/foyer/foyer_palier6_2.svg",
     "svg/batiments/paliers/foyer/foyer_palier6_3.svg",
-    "svg/batiments/paliers/foyer/foyer_palier6_4.svg"
+    "svg/batiments/paliers/foyer/foyer_palier6_4.svg",
+    "svg/batiments/paliers/foyer/foyer_palier6_5.svg",
+    "svg/batiments/paliers/foyer/foyer_palier6_6.svg",
+    "svg/batiments/paliers/foyer/foyer_palier6_7.svg",
+    "svg/batiments/paliers/foyer/foyer_palier6_8.svg"
    ],
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
-   "ms_par_image": 333,
+   "ms_par_image": 250,
    "parcours": "acte-6",
    "statut": "ok"
   },
@@ -134835,10 +134867,10 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
-   "ms_par_image": 250,
+   "ms_par_image": 125,
    "parcours": "acte-7",
    "statut": "ok"
   },
@@ -134860,10 +134892,10 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
-   "ms_par_image": 250,
+   "ms_par_image": 125,
    "parcours": "acte-7",
    "statut": "ok"
   },
@@ -160385,7 +160417,7 @@
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -160403,7 +160435,7 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -160511,7 +160543,7 @@
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -160529,7 +160561,7 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -162898,7 +162930,7 @@
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -162916,7 +162948,7 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -163024,7 +163056,7 @@
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -163042,7 +163074,7 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -163150,7 +163182,7 @@
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
    "parcours": "evolutions",
@@ -163168,7 +163200,7 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
    "parcours": "evolutions",

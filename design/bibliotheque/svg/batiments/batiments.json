@@ -28,16 +28,22 @@
    ],
    "lumieres": [
     {
-     "u": 0,
-     "v": 0,
+     "u": 0.15,
+     "v": 0.15,
      "z": 12.5,
      "rayon": 67.5
+    },
+    {
+     "u": 0.68,
+     "v": -0.32,
+     "z": 17.5,
+     "rayon": 15
     }
    ],
    "fumees": [
     {
-     "u": 0,
-     "v": 0,
+     "u": 0.15,
+     "v": 0.15,
      "z": 30
     }
    ]
@@ -69,24 +75,39 @@
    ],
    "lumieres": [
     {
-     "u": 0.5,
-     "v": 0.36,
-     "z": 10,
-     "rayon": 50
+     "u": 0.83,
+     "v": 0.38,
+     "z": 12.5,
+     "rayon": 55
+    },
+    {
+     "u": 0.08,
+     "v": -0.58,
+     "z": 37.5,
+     "rayon": 20
     }
    ],
    "fumees": [
     {
-     "u": 0.5,
-     "v": 0.36,
-     "z": 22.5
+     "u": 0.83,
+     "v": 0.38,
+     "z": 37.5
     }
    ]
   },
   "foyer_palier3": {
    "nom": "Foyer — palier III",
    "fichiers": [
-    "paliers/foyer/foyer_palier3.svg"
+    "paliers/foyer/foyer_palier3_1.svg",
+    "paliers/foyer/foyer_palier3_2.svg",
+    "paliers/foyer/foyer_palier3_3.svg",
+    "paliers/foyer/foyer_palier3_4.svg",
+    "paliers/foyer/foyer_palier3_5.svg",
+    "paliers/foyer/foyer_palier3_6.svg",
+    "paliers/foyer/foyer_palier3_7.svg",
+    "paliers/foyer/foyer_palier3_8.svg",
+    "paliers/foyer/foyer_palier3_9.svg",
+    "paliers/foyer/foyer_palier3_10.svg"
    ],
    "cadre": [
     -95,
@@ -95,19 +116,35 @@
     210
    ],
    "emprise": "2 × 2",
+   "ms_par_image": 83,
+   "animations": [
+    "flame (10 images, 12/s)"
+   ],
    "lumieres": [
     {
-     "u": 0.55,
-     "v": -0.07,
-     "z": 17.5,
-     "rayon": 27.5
+     "u": -0.12,
+     "v": 0.74,
+     "z": 12.5,
+     "rayon": 50
+    },
+    {
+     "u": -0.34,
+     "v": 0.18,
+     "z": 26.25,
+     "rayon": 20
+    },
+    {
+     "u": -0.63,
+     "v": 0.18,
+     "z": 23.75,
+     "rayon": 17.5
     }
    ],
    "fumees": [
     {
-     "u": 0.3,
-     "v": -0.27,
-     "z": 77.5
+     "u": -0.12,
+     "v": 0.74,
+     "z": 32.5
     }
    ]
   },
@@ -117,7 +154,13 @@
     "paliers/foyer/foyer_palier4_1.svg",
     "paliers/foyer/foyer_palier4_2.svg",
     "paliers/foyer/foyer_palier4_3.svg",
-    "paliers/foyer/foyer_palier4_4.svg"
+    "paliers/foyer/foyer_palier4_4.svg",
+    "paliers/foyer/foyer_palier4_5.svg",
+    "paliers/foyer/foyer_palier4_6.svg",
+    "paliers/foyer/foyer_palier4_7.svg",
+    "paliers/foyer/foyer_palier4_8.svg",
+    "paliers/foyer/foyer_palier4_9.svg",
+    "paliers/foyer/foyer_palier4_10.svg"
    ],
    "cadre": [
     -140,
@@ -126,56 +169,42 @@
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 333,
+   "ms_par_image": 83,
    "animations": [
-    "vapor (4 images, 3/s)"
+    "flame (10 images, 12/s)"
    ],
    "lumieres": [
     {
-     "u": -0.81,
-     "v": 0.42,
-     "z": 16.25,
-     "rayon": 17.5
+     "u": 1.28,
+     "v": 0.92,
+     "z": 12.5,
+     "rayon": 55
     },
     {
-     "u": -0.79,
-     "v": 0.42,
-     "z": 40,
-     "rayon": 17.5
+     "u": -0.75,
+     "v": 0.13,
+     "z": 50,
+     "rayon": 20
     },
     {
-     "u": 0.17,
-     "v": 0.42,
-     "z": 40,
+     "u": -0.84,
+     "v": 0.05,
+     "z": 43.75,
      "rayon": 17.5
-    },
+    }
+   ],
+   "fumees": [
     {
-     "u": 0.42,
-     "v": -0.56,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.19,
-     "v": 0.42,
-     "z": 16.25,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.78,
-     "v": 0.06,
-     "z": 7.5,
-     "rayon": 22.5
+     "u": 1.28,
+     "v": 0.92,
+     "z": 35
     }
    ]
   },
   "foyer_palier5": {
    "nom": "Foyer — palier V",
    "fichiers": [
-    "paliers/foyer/foyer_palier5_1.svg",
-    "paliers/foyer/foyer_palier5_2.svg",
-    "paliers/foyer/foyer_palier5_3.svg",
-    "paliers/foyer/foyer_palier5_4.svg"
+    "paliers/foyer/foyer_palier5.svg"
    ],
    "cadre": [
     -140,
@@ -184,52 +213,43 @@
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 333,
-   "animations": [
-    "vapor (4 images, 3/s)"
-   ],
    "lumieres": [
     {
-     "u": -0.84,
-     "v": 0.42,
-     "z": 16.25,
+     "u": -0.94,
+     "v": 0.2,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": -0.82,
-     "v": 0.42,
-     "z": 40,
+     "u": 0.03,
+     "v": 0.2,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": -0.03,
-     "v": 0.42,
-     "z": 40,
+     "u": 0.32,
+     "v": -0.16,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": 0.22,
-     "v": -0.42,
-     "z": 40,
+     "u": 0.32,
+     "v": -0.76,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": -0.01,
-     "v": 0.42,
-     "z": 16.25,
-     "rayon": 17.5
-    },
+     "u": -0.07,
+     "v": 0.7,
+     "z": 32.5,
+     "rayon": 20
+    }
+   ],
+   "fumees": [
     {
-     "u": 0.9,
-     "v": -0.38,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.9,
-     "v": -0.38,
-     "z": 76.25,
-     "rayon": 17.5
+     "u": -0.44,
+     "v": -0.62,
+     "z": 126.25
     }
    ]
   },
@@ -239,61 +259,60 @@
     "paliers/foyer/foyer_palier6_1.svg",
     "paliers/foyer/foyer_palier6_2.svg",
     "paliers/foyer/foyer_palier6_3.svg",
-    "paliers/foyer/foyer_palier6_4.svg"
+    "paliers/foyer/foyer_palier6_4.svg",
+    "paliers/foyer/foyer_palier6_5.svg",
+    "paliers/foyer/foyer_palier6_6.svg",
+    "paliers/foyer/foyer_palier6_7.svg",
+    "paliers/foyer/foyer_palier6_8.svg"
    ],
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 333,
+   "ms_par_image": 250,
    "animations": [
-    "vapor (4 images, 3/s)"
+    "beam (8 images, 4/s)"
    ],
    "lumieres": [
     {
-     "u": -0.87,
-     "v": 0.5,
-     "z": 16.25,
+     "u": -1,
+     "v": 0.3,
+     "z": 32.5,
      "rayon": 17.5
     },
     {
-     "u": -0.85,
-     "v": 0.5,
-     "z": 40,
+     "u": 0.05,
+     "v": 0.3,
+     "z": 32.5,
      "rayon": 17.5
     },
     {
-     "u": -0.27,
-     "v": 0.5,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": -0.02,
-     "v": -0.1,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.74,
+     "u": 0.15,
      "v": -0.3,
-     "z": 52.5,
+     "z": 32.5,
      "rayon": 17.5
     },
     {
-     "u": 0.74,
-     "v": -0.3,
-     "z": 118.75,
-     "rayon": 17.5
+     "u": 0.92,
+     "v": -0.92,
+     "z": 175,
+     "rayon": 45
     },
     {
-     "u": -0.2,
-     "v": 0.75,
-     "z": 31.25,
-     "rayon": 20
+     "u": 0.4,
+     "v": 0.6,
+     "z": 32.5,
+     "rayon": 22.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.55,
+     "v": -0.5,
+     "z": 116.25
     }
    ]
   },
@@ -312,51 +331,56 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 250,
+   "ms_par_image": 125,
    "animations": [
-    "beam (8 images, 4/s)",
-    "vapor (4 images, 3/s)"
+    "beam, brasero (8 images, 8/s)"
    ],
    "lumieres": [
     {
-     "u": -0.87,
-     "v": 0.48,
-     "z": 16.25,
-     "rayon": 17.5
+     "u": 0.92,
+     "v": -0.92,
+     "z": 175,
+     "rayon": 35
     },
     {
-     "u": -0.85,
-     "v": 0.48,
-     "z": 40,
-     "rayon": 17.5
+     "u": -0.25,
+     "v": 1.15,
+     "z": 15,
+     "rayon": 40
     },
     {
-     "u": -0.29,
-     "v": 0.48,
-     "z": 40,
-     "rayon": 17.5
+     "u": -1.38,
+     "v": 1.42,
+     "z": 32.5,
+     "rayon": 15
     },
     {
-     "u": -0.04,
-     "v": -0.12,
-     "z": 40,
-     "rayon": 17.5
+     "u": 1.42,
+     "v": 1.42,
+     "z": 32.5,
+     "rayon": 15
     },
     {
-     "u": 0.42,
+     "u": 1.42,
+     "v": -0.98,
+     "z": 32.5,
+     "rayon": 15
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.55,
      "v": -0.5,
-     "z": 180,
-     "rayon": 42.5
+     "z": 116.25
     },
     {
-     "u": -0.24,
-     "v": 0.76,
-     "z": 31.25,
-     "rayon": 20
+     "u": -0.25,
+     "v": 1.15,
+     "z": 27.5
     }
    ]
   },
@@ -1687,16 +1711,22 @@
    ],
    "lumieres": [
     {
-     "u": 0,
-     "v": 0,
+     "u": 0.15,
+     "v": 0.15,
      "z": 12.5,
      "rayon": 67.5
+    },
+    {
+     "u": 0.68,
+     "v": -0.32,
+     "z": 17.5,
+     "rayon": 15
     }
    ],
    "fumees": [
     {
-     "u": 0,
-     "v": 0,
+     "u": 0.15,
+     "v": 0.15,
      "z": 30
     }
    ]
@@ -1729,17 +1759,23 @@
    ],
    "lumieres": [
     {
-     "u": 0.5,
-     "v": 0.36,
-     "z": 10,
-     "rayon": 50
+     "u": 0.83,
+     "v": 0.38,
+     "z": 12.5,
+     "rayon": 55
+    },
+    {
+     "u": 0.08,
+     "v": -0.58,
+     "z": 37.5,
+     "rayon": 20
     }
    ],
    "fumees": [
     {
-     "u": 0.5,
-     "v": 0.36,
-     "z": 22.5
+     "u": 0.83,
+     "v": 0.38,
+     "z": 37.5
     }
    ]
   },
@@ -1747,7 +1783,16 @@
    "nom": "Foyer — palier III, l'hiver",
    "ete": "foyer_palier3",
    "fichiers": [
-    "paliers_hiver/foyer/foyer_palier3_hiver.svg"
+    "paliers_hiver/foyer/foyer_palier3_hiver_1.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_2.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_3.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_4.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_5.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_6.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_7.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_8.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_9.svg",
+    "paliers_hiver/foyer/foyer_palier3_hiver_10.svg"
    ],
    "cadre": [
     -95,
@@ -1756,19 +1801,35 @@
     210
    ],
    "emprise": "2 × 2",
+   "ms_par_image": 83,
+   "animations": [
+    "flame (10 images, 12/s)"
+   ],
    "lumieres": [
     {
-     "u": 0.55,
-     "v": -0.07,
-     "z": 17.5,
-     "rayon": 27.5
+     "u": -0.12,
+     "v": 0.74,
+     "z": 12.5,
+     "rayon": 50
+    },
+    {
+     "u": -0.34,
+     "v": 0.18,
+     "z": 26.25,
+     "rayon": 20
+    },
+    {
+     "u": -0.63,
+     "v": 0.18,
+     "z": 23.75,
+     "rayon": 17.5
     }
    ],
    "fumees": [
     {
-     "u": 0.3,
-     "v": -0.27,
-     "z": 77.5
+     "u": -0.12,
+     "v": 0.74,
+     "z": 32.5
     }
    ]
   },
@@ -1779,7 +1840,13 @@
     "paliers_hiver/foyer/foyer_palier4_hiver_1.svg",
     "paliers_hiver/foyer/foyer_palier4_hiver_2.svg",
     "paliers_hiver/foyer/foyer_palier4_hiver_3.svg",
-    "paliers_hiver/foyer/foyer_palier4_hiver_4.svg"
+    "paliers_hiver/foyer/foyer_palier4_hiver_4.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_5.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_6.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_7.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_8.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_9.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_10.svg"
    ],
    "cadre": [
     -140,
@@ -1788,46 +1855,35 @@
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 333,
+   "ms_par_image": 83,
    "animations": [
-    "vapor (4 images, 3/s)"
+    "flame (10 images, 12/s)"
    ],
    "lumieres": [
     {
-     "u": -0.81,
-     "v": 0.42,
-     "z": 16.25,
-     "rayon": 17.5
+     "u": 1.28,
+     "v": 0.92,
+     "z": 12.5,
+     "rayon": 55
     },
     {
-     "u": -0.79,
-     "v": 0.42,
-     "z": 40,
-     "rayon": 17.5
+     "u": -0.75,
+     "v": 0.13,
+     "z": 50,
+     "rayon": 20
     },
     {
-     "u": 0.17,
-     "v": 0.42,
-     "z": 40,
+     "u": -0.84,
+     "v": 0.05,
+     "z": 43.75,
      "rayon": 17.5
-    },
+    }
+   ],
+   "fumees": [
     {
-     "u": 0.42,
-     "v": -0.56,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.19,
-     "v": 0.42,
-     "z": 16.25,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.78,
-     "v": 0.06,
-     "z": 7.5,
-     "rayon": 22.5
+     "u": 1.28,
+     "v": 0.92,
+     "z": 35
     }
    ]
   },
@@ -1835,10 +1891,7 @@
    "nom": "Foyer — palier V, l'hiver",
    "ete": "foyer_palier5",
    "fichiers": [
-    "paliers_hiver/foyer/foyer_palier5_hiver_1.svg",
-    "paliers_hiver/foyer/foyer_palier5_hiver_2.svg",
-    "paliers_hiver/foyer/foyer_palier5_hiver_3.svg",
-    "paliers_hiver/foyer/foyer_palier5_hiver_4.svg"
+    "paliers_hiver/foyer/foyer_palier5_hiver.svg"
    ],
    "cadre": [
     -140,
@@ -1847,52 +1900,43 @@
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 333,
-   "animations": [
-    "vapor (4 images, 3/s)"
-   ],
    "lumieres": [
     {
-     "u": -0.84,
-     "v": 0.42,
-     "z": 16.25,
+     "u": -0.94,
+     "v": 0.2,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": -0.82,
-     "v": 0.42,
-     "z": 40,
+     "u": 0.03,
+     "v": 0.2,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": -0.03,
-     "v": 0.42,
-     "z": 40,
+     "u": 0.32,
+     "v": -0.16,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": 0.22,
-     "v": -0.42,
-     "z": 40,
+     "u": 0.32,
+     "v": -0.76,
+     "z": 33.75,
      "rayon": 17.5
     },
     {
-     "u": -0.01,
-     "v": 0.42,
-     "z": 16.25,
-     "rayon": 17.5
-    },
+     "u": -0.07,
+     "v": 0.7,
+     "z": 32.5,
+     "rayon": 20
+    }
+   ],
+   "fumees": [
     {
-     "u": 0.9,
-     "v": -0.38,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.9,
-     "v": -0.38,
-     "z": 76.25,
-     "rayon": 17.5
+     "u": -0.44,
+     "v": -0.62,
+     "z": 126.25
     }
    ]
   },
@@ -1903,61 +1947,60 @@
     "paliers_hiver/foyer/foyer_palier6_hiver_1.svg",
     "paliers_hiver/foyer/foyer_palier6_hiver_2.svg",
     "paliers_hiver/foyer/foyer_palier6_hiver_3.svg",
-    "paliers_hiver/foyer/foyer_palier6_hiver_4.svg"
+    "paliers_hiver/foyer/foyer_palier6_hiver_4.svg",
+    "paliers_hiver/foyer/foyer_palier6_hiver_5.svg",
+    "paliers_hiver/foyer/foyer_palier6_hiver_6.svg",
+    "paliers_hiver/foyer/foyer_palier6_hiver_7.svg",
+    "paliers_hiver/foyer/foyer_palier6_hiver_8.svg"
    ],
    "cadre": [
     -140,
     -250,
-    280,
+    340,
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 333,
+   "ms_par_image": 250,
    "animations": [
-    "vapor (4 images, 3/s)"
+    "beam (8 images, 4/s)"
    ],
    "lumieres": [
     {
-     "u": -0.87,
-     "v": 0.5,
-     "z": 16.25,
+     "u": -1,
+     "v": 0.3,
+     "z": 32.5,
      "rayon": 17.5
     },
     {
-     "u": -0.85,
-     "v": 0.5,
-     "z": 40,
+     "u": 0.05,
+     "v": 0.3,
+     "z": 32.5,
      "rayon": 17.5
     },
     {
-     "u": -0.27,
-     "v": 0.5,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": -0.02,
-     "v": -0.1,
-     "z": 40,
-     "rayon": 17.5
-    },
-    {
-     "u": 0.74,
+     "u": 0.15,
      "v": -0.3,
-     "z": 52.5,
+     "z": 32.5,
      "rayon": 17.5
     },
     {
-     "u": 0.74,
-     "v": -0.3,
-     "z": 118.75,
-     "rayon": 17.5
+     "u": 0.92,
+     "v": -0.92,
+     "z": 175,
+     "rayon": 45
     },
     {
-     "u": -0.2,
-     "v": 0.75,
-     "z": 31.25,
-     "rayon": 20
+     "u": 0.4,
+     "v": 0.6,
+     "z": 32.5,
+     "rayon": 22.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.55,
+     "v": -0.5,
+     "z": 116.25
     }
    ]
   },
@@ -1977,51 +2020,56 @@
    "cadre": [
     -140,
     -250,
-    282.5,
+    340,
     330
    ],
    "emprise": "3 × 3",
-   "ms_par_image": 250,
+   "ms_par_image": 125,
    "animations": [
-    "beam (8 images, 4/s)",
-    "vapor (4 images, 3/s)"
+    "beam, brasero (8 images, 8/s)"
    ],
    "lumieres": [
     {
-     "u": -0.87,
-     "v": 0.48,
-     "z": 16.25,
-     "rayon": 17.5
+     "u": 0.92,
+     "v": -0.92,
+     "z": 175,
+     "rayon": 35
     },
     {
-     "u": -0.85,
-     "v": 0.48,
-     "z": 40,
-     "rayon": 17.5
+     "u": -0.25,
+     "v": 1.15,
+     "z": 15,
+     "rayon": 40
     },
     {
-     "u": -0.29,
-     "v": 0.48,
-     "z": 40,
-     "rayon": 17.5
+     "u": -1.38,
+     "v": 1.42,
+     "z": 32.5,
+     "rayon": 15
     },
     {
-     "u": -0.04,
-     "v": -0.12,
-     "z": 40,
-     "rayon": 17.5
+     "u": 1.42,
+     "v": 1.42,
+     "z": 32.5,
+     "rayon": 15
     },
     {
-     "u": 0.42,
+     "u": 1.42,
+     "v": -0.98,
+     "z": 32.5,
+     "rayon": 15
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.55,
      "v": -0.5,
-     "z": 180,
-     "rayon": 42.5
+     "z": 116.25
     },
     {
-     "u": -0.24,
-     "v": 0.76,
-     "z": 31.25,
-     "rayon": 20
+     "u": -0.25,
+     "v": 1.15,
+     "z": 27.5
     }
    ]
   },
@@ -3440,13 +3488,13 @@
     [
      -140,
      -250,
-     280,
+     340,
      330
     ],
     [
      -140,
      -250,
-     282.5,
+     340,
      330
     ]
    ]
@@ -3497,13 +3545,13 @@
     [
      -140,
      -250,
-     280,
+     340,
      330
     ],
     [
      -140,
      -250,
-     282.5,
+     340,
      330
     ]
    ]
@@ -3554,13 +3602,13 @@
     [
      -140,
      -250,
-     280,
+     340,
      330
     ],
     [
      -140,
      -250,
-     282.5,
+     340,
      330
     ]
    ]
@@ -8255,13 +8303,13 @@
     [
      -140,
      -250,
-     280,
+     340,
      330
     ],
     [
      -140,
      -250,
-     282.5,
+     340,
      330
     ]
    ],
@@ -8313,13 +8361,13 @@
     [
      -140,
      -250,
-     280,
+     340,
      330
     ],
     [
      -140,
      -250,
-     282.5,
+     340,
      330
     ]
    ],

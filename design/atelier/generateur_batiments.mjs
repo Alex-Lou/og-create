@@ -8,7 +8,11 @@
 import { lookAt, artMake, boatBody } from './port/src/world/looks.js';
 import { BUILDINGS } from './port/src/world/sprites.js';
 import { setHiver } from './port/src/world/iso.js';
+import { tintSvg } from './port/src/world/tints.js';
+import { itemLayers } from './port/src/world/shopSprites.js';
 import B from '../bibliotheque/svg/batiments/batiments.json' with { type: 'json' };
+// Le Foyer redessiné (foyer.js, choix de l'auteur, 18 oct.) : ses paliers, l'hiver, ses skins, ses pièces rares
+import FOYER from './foyer.js';
 
 const K = 1.25;
 const r2 = n => Math.round(n * 100) / 100;
@@ -29,6 +33,7 @@ export function palier(s, lv, n = 1, hiver = false) {
   const base = `${s}_palier${lv}${hiver ? '_hiver' : ''}`, e = (hiver ? B.paliers_hiver : B.paliers)[base];
   const images = e.fichiers.length;
   if (!(n >= 1 && n <= images)) throw new Error(`${base} : image ${n} (de 1 à ${images})`);
+  if (s === 'foyer') return { svg: FOYER.image(lv, n - 1, { hiver }), cadre: e.cadre, ms_par_image: e.ms_par_image ?? null };
   setHiver(hiver);
   try {
     const look = lookAt(s, lv), b = look.make(undefined);
@@ -52,7 +57,15 @@ export function skin(id, lv) {
   const i = e.fichiers.findIndex(f => f.endsWith(`_palier${lv}.svg`));
   if (i < 0) throw new Error(`${id} : palier ${lv} (le skin change le dessin aux paliers ${e.fichiers.map(f => f.match(/palier(\d)/)[1]).join(', ')})`);
   const cadre = e.cadres[i];
+  if (e.batiment === 'foyer') return { svg: FOYER.image(lv, 0, { skin: id }), cadre, ms_par_image: null };
   return { svg: svgOf(cadre, up(inner(artMake(e.batiment, lv, id)()))), cadre, ms_par_image: null };
+}
+// Le Foyer redessiné teinté par une pièce rare, son accessoire posé autour (celui du jeu : shopSprites.js, sur la crête)
+function rareFoyer(id, lv, cadre) {
+  const corps = tintSvg(FOYER.image(lv, 0), id).replace(/^<svg[^>]*><g transform="scale\(1\.25\)">/, '').replace(/<\/g><\/svg>$/, '');
+  const parts = itemLayers(id, lv, 0).map(layer => ({ ...layer, sprite: layer.make() }));
+  const placed = back => parts.filter(q => q.back === back).map(q => `<g transform="translate(${q.offset[0]} ${q.offset[1]})">${inner(q.sprite)}</g>`).join('');
+  return svgOf(cadre, up(placed(true) + corps + placed(false)));
 }
 // Une pièce rare (le bâtiment teinté et son accessoire, image 1) à un palier
 export function pieceRare(id, lv) {
@@ -60,6 +73,7 @@ export function pieceRare(id, lv) {
   if (!e) throw new Error(`pièce rare inconnue : ${id} (${Object.keys(B.pieces_rares).join(', ')})`);
   palierOk(lv);
   const cadre = e.cadres[lv - 1];
+  if (e.batiment === 'foyer') return { svg: rareFoyer(id, lv, cadre), cadre, ms_par_image: null };
   return { svg: svgOf(cadre, up(inner(artMake(e.batiment, lv, id)()))), cadre, ms_par_image: null };
 }
 
