@@ -547,13 +547,13 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     if (!quest.done && !seen.has('cannelle-parle')) return { phase: 'lines', lines: [], lesson: 'cannelle-parle' };
-    return { phase: 'lines', lines: quest.done ? ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient', ...lines] : ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] };
+    return { phase: 'lines', lines: quest.done ? ['soupe', 'soupe-aster', 'bulles-reviennent', 'brume-avale', 'brume-retient', ...lines] : ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] };
   }
   // Des caquets sur l'eau : la longue-vue de Lorena (vu : « cage-vue ») voit la cage dériver jusqu'au bout de la plage ;
   // ouverte, les poules s'échappent
   if (quest.id === 'cage') {
     if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
-    return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles'] };
+    return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles', 'fine-bouche'] };
   }
   // On les attrape (la chasse aux poules, une scène à part : vu « poule:<id> » ; game/stages.js, HENS), puis on les
   // nourrit (la scène finit sur « Les voilà toutes ! » : l'île passe à leur faim, choix de l'auteur, 13 oct.)
@@ -562,9 +562,9 @@ export function islandStep({ state, quest }) {
     return { phase: 'lines', lines: quest.done ? lines : ['deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
   }
   // Leur poulailler (posé, Lorena propose de démonter la cage vide) ; le soir à trois autour du feu, la troisième nuit
-  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', ...lines] : ['un-toit'] };
+  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', 'cage-agathe', ...lines] : ['un-toit'] };
   // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
-  if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint'] };
+  if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint', 'entends'] };
   if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
   // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)

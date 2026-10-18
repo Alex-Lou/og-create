@@ -125,10 +125,10 @@ describe('le tutoriel', () => {
     // Le jour d’Agathe : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
     expect(island({ id: 'soupe', done: false }, all)).toEqual({ phase: 'lines', lines: [], lesson: 'cannelle-parle' });
     expect(island({ id: 'soupe', done: false }, [...all, 'cannelle-parle'])).toEqual({ phase: 'lines', lines: ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] });
-    expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
+    expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'soupe-aster', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
     // La longue-vue de Lorena voit la cage (sa réplique y mène la caméra) ; ouverte, les poules s'échappent
     expect(island({ id: 'cage', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' });
-    expect(island({ id: 'cage', done: false }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['mes-filles'] });
+    expect(island({ id: 'cage', done: false }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['mes-filles', 'fine-bouche'] });
     expect(LINES['mes-filles']).toMatchObject({ look: 'cage' });
     expect(island({ id: 'cage', done: true }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['doucement'] });
     // Les attraper une à une, puis les nourrir (la Récolte rappelée s'il manque des vivres) ; leur poulailler ; le soir
@@ -138,9 +138,9 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres', 'recolte-nourrit'] });
     expect(island({ id: 'poules', done: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'poulailler', done: false }, all)).toEqual({ phase: 'lines', lines: ['un-toit'] });
-    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village', 'cage-bois'] });
+    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village', 'cage-bois', 'cage-agathe'] });
     // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
-    expect(island({ id: 'abri-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['marmite', 'se-plaint'] });
+    expect(island({ id: 'abri-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['marmite', 'se-plaint', 'entends'] });
     expect(island({ id: 'abri-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['toit-a-moi'] });
     expect(island({ id: 'enclos-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['cuisines', 'casseroles'] });
     expect(island({ id: 'enclos-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['en-ville'] });

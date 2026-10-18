@@ -134,13 +134,32 @@ export const SCENES = {
   // Agathe regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
   // follets ; son souvenir revient devant lui (son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)
   cannelle: [
-    { scene: '07_cannelle', who: 'Agathe', text: 'Deux nuits que je regarde ton feu depuis les rochers. Je n’osais pas… à cause de lui.' },
-    { scene: '07_cannelle', who: 'Agathe', text: 'Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine.' },
-    { scene: '07_souvenir', who: 'Agathe', text: 'Les marmites, la cuisine du bord… Agathe ! Je m’appelle Agathe. Cuisinière, et pas des pires.' },
+    { scene: '07_cannelle', who: 'Agathe', text: 'Deux nuits que je regarde ton feu depuis les rochers. Je n’osais pas approcher… à cause de lui.' },
+    { scene: '07_cannelle', who: 'joueur', text: 'Lui ? … Tu parles de Brume ?' },
     // (méfiante : le folklore des marais, la peur de toute une vie ; puis radoucie)
-    { scene: '07_souvenir', who: 'Agathe', mood: 'effraye', text: 'Un feu follet… Ma mère disait qu’ils mènent les gens dans les marais, et qu’on ne les revoit jamais.' },
-    { scene: '07_souvenir', who: 'Agathe', mood: 'emu', text: '… Celui-là a l’air plus perdu que nous.' },
-    { scene: '07_souvenir', who: 'Brume', text: 'Elle.' }
+    { scene: '07_cannelle', who: 'Agathe', mood: 'effraye', text: 'Un feu follet ! Ma mère disait qu’ils mènent les gens dans les marais, et qu’on ne les revoit jamais.' },
+    // (vexée)
+    { scene: '07_cannelle', who: 'Brume', text: 'Je ne mène personne dans les marais ! Je ne sais même pas où ils sont, moi.' },
+    { scene: '07_cannelle', who: 'Brume', text: 'Et d’abord, je suis une ELLE ! Arrêtez de me prendre pour un IL ! Je suis gentille, moi !' },
+    { scene: '07_cannelle', who: 'Agathe', mood: 'gene', text: 'Je… d’accord. J’ignorais que tu parlais. Et que fais-tu ici, au juste ?' },
+    { scene: '07_cannelle', who: 'Brume', text: 'Je suis la gardienne de l’île et du Grimoire. Il est maintenant entre les mains de celui|celle qui devait le recevoir.' },
+    { scene: '07_cannelle', who: 'Brume', text: 'Grâce à lui, vous pourrez redonner vie à l’île.' },
+    { scene: '07_cannelle', who: 'Agathe', mood: 'surpris', text: 'Tu dis qu’on peut tout fabriquer avec ce livre ?' },
+    { scene: '07_cannelle', who: 'Brume', text: 'Absolument tout !' },
+    { scene: '07_cannelle', who: 'Agathe', mood: 'emerveille', text: 'Mais ma parole ! C’est magnifique ! Je vais pouvoir cuisiner les saveurs du monde, et même en inventer de nouvelles !' },
+    { scene: '07_cannelle', who: 'Brume', text: 'Attention ! Vous pouvez tout fabriquer… à condition d’avoir ce qu’il faut pour le faire.' },
+    { scene: '07_cannelle', who: 'Brume', text: 'Les ingrédients ne sont pas toujours faciles à trouver, ni à atteindre. Il faudra traverser des endroits où même moi, j’ai peur d’aller.' },
+    { scene: '07_cannelle', who: 'Agathe', mood: 'effraye', text: 'C’est vrai… Je les ai vues. Et cette nuit, ces… choses, au bord de la brume. Je n’ai pas fermé l’œil.' },
+    { scene: '07_cannelle', who: 'joueur', text: 'Bienvenue au club. Ici, personne ne dort beaucoup.' },
+    { scene: '07_cannelle', who: 'Agathe', text: 'Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine.' },
+    // (son souvenir revient devant le feu : son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)
+    { scene: '07_souvenir', who: 'Agathe', text: 'Les marmites, la cheffe à bord… Agathe ! Je m’appelle Agathe. Adoratrice des saveurs en tous genres, et pas des pires.' },
+    { scene: '07_souvenir', who: 'joueur', text: 'Une cheffe ? Tu tombes à pic.' },
+    { scene: '07_souvenir', who: 'Lorena', mood: 'content', text: 'Depuis deux jours, on vit de baies et de racines !' },
+    { scene: '07_souvenir', who: 'Agathe', mood: 'degoute', text: 'Des racines ?! Ma pauvre brindille… Plus jamais ça tant que je serai là.' },
+    { scene: '07_souvenir', who: 'Agathe', mood: 'determine', text: 'Ensemble, nous serons plus forts. Mais avec l’estomac bien rempli, encore plus !' },
+    { scene: '07_souvenir', who: 'Agathe', mood: 'emu', text: '… Ton feu follet a l’air plus perdu que nous, finalement.' },
+    { scene: '07_souvenir', who: 'Brume', text: 'Elle. Je suis une ELLE. … Mais merci de le comprendre.' }
   ],
   // Nathan sous une voile échouée : l'homme qui répare tout n'ose plus rien construire de grand
   rivet: [
@@ -283,36 +302,40 @@ export const LINES = {
   // vers elle (« ! ») ; ses coquillages, sa soupe (la leçon des bulles) ; un fil d'histoire ; la longue-vue de Lorena voit
   // la cage dériver (look : la caméra la suit, WorldView coach.js) ; les poules échappées, attrapées, nourries ; leur
   // poulailler (la leçon des annexes) ; le soir à trois, la troisième nuit
-  'faim-aster': { who: 'ponton', mood: 'surpris', text: 'Une cuisinière ! Brume, dis-moi que je ne rêve pas.' },
+  'faim-aster': { who: 'ponton', mood: 'surpris', text: 'Brume, dis-moi que je ne rêve pas…' },
   'faim-cannelle': { who: 'foyer', mood: 'malicieux', text: 'Ton ventre, je l’entends depuis les rochers. Assieds-toi. Un ventre vide ne bâtit rien.' },
   'faim-bulle': 'Elle a raison. Et elle aussi a faim : regarde-la.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
-  'bulles-reviennent': 'Ça revient, tu sais. On a toujours un peu faim, ou froid, ou envie de parler.',
+  'soupe-aster': { who: 'ponton', mood: 'emu', text: 'Chaude, salée comme il faut… parfaite. Agathe, tu viens de me sauver la vie.' },
+  'bulles-reviennent': 'Ça reviendra, tu sais. On a toujours un peu faim, ou froid… ou envie de parler. Ça, je connais.',
   'brume-avale': { who: 'foyer', mood: 'pensif', text: 'Ta brume, Brume… elle a avalé le navire. Elle a peut-être avalé d’autres naufragés ?' },
-  'brume-retient': 'Peut-être. Je ne la retiens plus très bien. Ce qui y entre, je ne le vois pas toujours ressortir.',
-  'caquets-eau': { who: 'ponton', mood: 'surpris', text: 'Chut. Des caquets… sur l’eau ! Prends ma longue-vue.' },
-  'mes-filles': { who: 'foyer', mood: 'emu', text: 'Mes filles ! Caramel, Flocon, Réglisse… Elles ont tenu bon.', look: 'cage' },
-  doucement: { who: 'foyer', mood: 'surpris', text: 'Doucement. Elles ont vu la mer de trop près, elles aussi.' },
+  'brume-retient': 'Peut-être. Je ne la retiens plus très bien. Je ne sais même plus comment la rappeler… Elle ne m’écoute pas, et j’ai tout oublié.',
+  'caquets-eau': { who: 'ponton', mood: 'surpris', text: 'Chut ! Des caquets… dans l’eau ? Prends ma longue-vue, vite.' },
+  'mes-filles': { who: 'foyer', mood: 'emu', text: 'Mes filles ! Caramel, Flocon, Réglisse… Elles ont tenu bon !', look: 'cage' },
+  'fine-bouche': { who: 'ponton', mood: 'malicieux', text: 'Des poules en cage, au milieu des requins… Faut croire qu’ils ont fait la fine bouche.' },
+  doucement: { who: 'foyer', mood: 'surpris', text: 'Doucement ! Elles ont vu la mer de trop près, elles aussi.' },
   'tout-le-monde': { who: 'foyer', mood: 'adore', text: 'Caramel, Flocon, Réglisse… Tout le monde est là.' },
   'deux-vivres': { who: 'foyer', mood: 'triste', text: 'Elles ont faim. Une nuit en mer dans une cage, ça creuse.' },
-  'recolte-nourrit': { who: 'foyer', mood: 'malicieux', text: 'La marée nourrit aussi. Demande à Lorena.' },
+  'recolte-nourrit': { who: 'foyer', mood: 'malicieux', text: 'La marée nourrit aussi. Pas vrai ?' },
   'un-toit': { who: 'foyer', mood: 'determine', text: 'Il leur faut un toit. Un petit poulailler, là, dans l’herbe, près de ma cuisine.' },
   'un-coq': { who: 'foyer', mood: 'pensif', text: 'Un toit, du grain… Il ne leur manque qu’un coq, à mes filles. Un jour.' },
-  village: 'Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais.',
+  village: 'Un toit pour les poules, un feu pour nous… Ceux d’avant aussi avaient des… poules, c’est ça ? Je crois.',
   // La cage vide, le poulailler posé : Lorena propose de la démonter (choix de l'auteur, 15 oct. ; texte validé)
   'cage-bois': { who: 'ponton', mood: 'malicieux', text: 'Tes poules ont un vrai toit, maintenant. Cette vieille cage ? Démonte-la : du bois de navire, ça ne se jette pas.' },
+  'cage-agathe': { who: 'foyer', mood: 'malicieux', text: 'Prends-la. Mais si tu en fais un ponton, mes filles auront leur place dessus.' },
   // L'abri d’Agathe, puis son enclos (choix de l'auteur, 13 oct. ; textes validés)
-  marmite: { who: 'foyer', mood: 'fatigue', text: 'Mes filles ont un toit. Moi, je dors sur une marmite renversée… mais je ne me plains pas.' },
+  marmite: { who: 'foyer', mood: 'fatigue', text: 'Mes filles ont un toit. Moi, je dors comme je peux, mais ça fera l’affaire pour ce soir.' },
   'se-plaint': 'Elle se plaint un peu. Bâtis-lui un abri, à côté de sa cuisine.',
+  entends: { who: 'foyer', mood: 'boude', text: 'Je t’entends, feu follet.' },
   'toit-a-moi': { who: 'foyer', mood: 'content', text: 'Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe.' },
-  cuisines: 'Les égarés cherchent ce qui brille, et une cuisine brille toute la nuit. Un enclos autour de la sienne.',
+  cuisines: 'Les égarés cherchent ce qui brille, et une cuisine brille toute la nuit. Il lui faut un enclos, à elle aussi.',
   casseroles: { who: 'foyer', mood: 'malicieux', text: 'Et pas de piquet dans mes casseroles, hein.' },
-  'en-ville': { who: 'foyer', mood: 'rire', text: 'Une cuisine avec une clôture. On se croirait en ville !' },
+  'en-ville': { who: 'foyer', mood: 'rire', text: 'Une cuisine avec une clôture. C’est tellement pittoresque.' },
   'a-table': { who: 'foyer', mood: 'rire', text: 'À table ! Ce soir, on mange chaud.' },
-  'trois-feu': { who: 'ponton', mood: 'emu', text: 'Trois autour du feu. Hier encore, on était deux.' },
+  'trois-feu': { who: 'ponton', mood: 'emu', text: 'Trois autour du feu. Hier encore, on dînait de racines.' },
   chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… celle de mon Léo. Mangez, avant que ça refroidisse.' },
-  'soir-trois': 'Trois, ce soir. Dors : je veille.',
+  'soir-trois': 'Trois de plus qu’il y a trois jours… et une chaise vide. Dormez, je veille sur vous.',
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Elle te dira quand c’est la bonne.' },
   // Ses trois torches, une par côté d'où venaient les égarés (choix de l'auteur, 13 oct. ; textes validés)
   'torches-idee': { who: 'atelier', mood: 'determine', text: 'Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n’est pas du génie, c’est de l’arithmétique.' },
