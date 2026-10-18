@@ -218,12 +218,31 @@ describe('village : visiteur et visiteurs installés', () => {
     expect([guest.role, guest.key, guest.guest.name]).toEqual(['visitor', 'vis-77', 'Iris']);
     expect(busy.residents.map(r => r.look.build).includes('child')).toBe(false);
   });
+  // Le contrôle qualité (choix de l'auteur, 18 oct. : plus aucun dessin de l'ancien générateur à l'écran) : de jour, le soir
+  // à la lanterne, sous la pluie, la nuit, chaque habitant et chaque visiteur est un dessin de la bibliothèque
+  it('chacun, maître ou visiteur, est un dessin de la bibliothèque, à toute heure et par tous les temps', () => {
+    let seen = 0;
+    const who = new Set();
+    for (const hour of [6.5, 9, 12, 15, 18.5, 20.5, 21.8, 23, 2]) {
+      for (const weather of ['clair', 'pluie']) {
+        for (let t = 0; t < 300; t += 11) {
+          for (const p of busy.at(t, at(hour, weather)).list.filter(c => c.kind === 'villager')) {
+            expect(p.sprite[0], `${p.id} ${hour} h`).toMatch(/^lib-/);
+            who.add(p.id);
+            seen += 1;
+          }
+        }
+      }
+    }
+    expect(seen).toBeGreaterThan(500);
+    expect([who.has('vil:v5'), who.has('vis:3')]).toEqual([true, true]);
+  });
   it('le visiteur ne travaille pas ; touché, il laisse l’île parler pour lui ; appui long : son bateau au Ponton', () => {
     const noon = at(12);
     const seen = new Set();
     for (let t = 0; t < 600; t += 7) {
       const me = busy.at(t, noon).list.find(w => w.id === 'vis:3');
-      if (me) seen.add(me.sprite[0].split('-')[2]);
+      if (me) seen.add(me.pose);
     }
     expect(seen.has('work')).toBe(false);
     const who = { kind: 'villager', id: 'vis:3' };

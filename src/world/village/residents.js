@@ -2,8 +2,8 @@
 // du moment), leurs tournées du jour et du soir, l'arrivée d'un naufragé, et ce qu'on dessine d'eux à chaque instant,
 // leur familier compris.
 import { villagerSprite, ROLES, SKINS, HAIRS } from '../villagers';
-import { visitorLook } from '../visitors';
-import { masterSprite } from '../masterArt';
+import { visitorLook, visitorCast } from '../visitors';
+import { masterSprite, visitorSprite } from '../masterArt';
 import { FAMILIARS } from '../bestiary';
 import { besideOf, nearestWalk, doorOf } from './paths';
 import { hash, beast } from './beast';
@@ -105,12 +105,14 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
         forest: id === 'bosquet' ? edgeOf(grid, M, work, EDGES.forest) : null
       });
     }
+    // Qui ils sont dans la bibliothèque (visiteurs/) : les installés, dans l'ordre de leur arrivée, puis le visiteur
+    const cast = visitorCast([...settlers.map(s => s.seed), visitor && visitor.seed]);
     // Visiteurs installés : au bâtiment de leur métier, et à leur maison (à la place de l'annexe)
     for (const s of settlers) {
       if (!doors[s.site]) continue;
       const k = residents.length;
       residents.push({
-        id: `vil:${s.id}`, k, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name,
+        id: `vil:${s.id}`, k, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name, cast: cast.get(s.seed),
         look: visitorLook(s.seed, s.role), work: doors[s.site], wake: 6.6 + (k % 3) * 0.25, bed: 21.4 + (k % 3) * 0.3,
         field: s.home ? besideOf(grid, s.home, doors[s.site]) : null
       });
@@ -121,7 +123,7 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
     if (visitor && doors.ponton) {
       const k = residents.length;
       residents.push({
-        id: `vis:${visitor.id}`, k, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name,
+        id: `vis:${visitor.id}`, k, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name, cast: cast.get(visitor.seed),
         look: visitorLook(visitor.seed, visitor.role), work: doors.ponton, wake: 7, bed: 21.3, field: null
       });
     }
@@ -429,7 +431,7 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     // La nuit, il dort couché à sa place, son familier à côté de lui (agenda.js : chez lui)
     if (p.pose === 'sleep') {
       const frame = Math.floor(t * 0.8 + r.k) % 2;
-      const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, { pose: 'sleep', frame }) : null;
+      const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, { pose: 'sleep', frame }) : visitorSprite(r.cast, r.role, { pose: 'sleep', frame });
       out.push({
         // (night : il dort sa nuit, on ne le « réveille » pas comme un naufragé endormi ; gestures.js)
         id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: 0, flip: false, pose: 'sleep', night: true,
@@ -455,8 +457,8 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     // (à son rituel, il regarde où il le tient : au loin, vers l'eau…)
     const view = hop !== null ? 'front' : walking ? (p.back ? 'ne' : 'se') : p.view || (working ? 'se' : glance);
     const opts = { pose: hop !== null ? 'wave' : working ? 'work' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella, chore, tenue };
-    // Un maître : son dessin de la bibliothèque (jamais en miroir de face ; la lanterne luit où il la tient)
-    const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : null;
+    // Un maître ou un visiteur : son dessin de la bibliothèque (jamais en miroir de face ; la lanterne luit où il la tient)
+    const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : visitorSprite(r.cast, r.role, opts);
     const flip = hop !== null || (art && art.view === 'face') ? false : walking ? p.flip : p.toward !== undefined ? p.toward : hash(r.k, Math.floor(t / 20)) < 0.5;
     out.push({
       id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip, pose: opts.pose,
