@@ -145,16 +145,6 @@ S('01_pont', {
   titre: 'Le pont de l’Hirondelle dans la tempête', etapes: ['1a'], images: 3, ms: 160,
   avatar: { x: 232, y: 352, echelle: 3.4, vue: 'face', pose: 'grelotter', naufrage: false }
 });
-// Étape 1b — une vague énorme couvre l'écran
-S('01_vague', {
-  titre: 'La vague', etapes: ['1b'], images: 3, ms: 260,
-  avatar: null
-});
-// Étape 1b — le noir ; la mer, très loin
-S('01_noir', {
-  titre: 'Le noir ; la mer, très loin', etapes: ['1b'], images: 2, ms: 1200,
-  avatar: null
-});
 // Étape 1c — la plage de Brumelune, la nuit, dans la brume ; des débris, une chaise longue retournée ; l'avatar se redresse, grelotte
 S('01_greve', {
   titre: 'La plage de Brumelune, la nuit, dans la brume', etapes: ['1c'], images: 3, ms: 400,
@@ -550,8 +540,7 @@ const APRES_VENT = { x: 182, y: 348, echelle: 3.25, vue: 'avant', pose: 'repos',
 // (au vieux cercle de pierres, à sa gauche ; gravure_cercle.js)
 const AU_CERCLE = { x: 126, y: 384, echelle: 3.1, vue: 'avant', pose: 'repos', naufrage: true };
 const OUVERTURE = [
-  ['01_racines', '01_vague', 'Sous la surface, les racines', ['1b'], null, null],
-  ['01_paupieres', '01_noir', 'Les paupières qui battent ; la plage au couchant', ['1c'], null, null],
+  ['01_paupieres', '01_pont', 'Les paupières qui battent ; la plage au couchant', ['1c'], null, null],
   ['01_carte', '01_greve', 'Quelque chose de blanc sur le sable : la carte d’embarquement trempée', ['1d'], null, null],
   ['02_plage', '01_gilet', 'Face à la mer, au couchant', ['2a'], O.plage02, { x: 144, y: 376, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true }],
   ['03_trouee', '03_vent', 'La brume ouverte autour d’eux, les étoiles : ceux d’avant', ['3'], null, APRES_VENT],
@@ -584,7 +573,6 @@ const OUVERTURE = [
 // L'ouverture en gravures découpées, en cinématique de plans (choix de l'auteur, 16 oct. : le style des cinématiques
 // d'Alice Madness Returns, partout ; theatre_pont.js, gravure_plage.js, game/scenePlans.js) : la scène garde son
 // titre, ses étapes et sa place d'avatar ; ses pièces et sa partition remplacent son dessin
-const TP = require('./theatre_pont');
 const GR = require('./gravure_rencontre');
 const GL = require('./gravure_lorena');
 const GV = require('./gravure_vent');
@@ -592,7 +580,7 @@ const NN = require('./neon_naufrage');
 const NR = require('./neon_reveil');
 const NJ = require('./neon_jeu');
 const GC = require('./gravure_cercle');
-for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
+for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }

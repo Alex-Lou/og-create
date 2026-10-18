@@ -42,6 +42,18 @@
    Encre ; le livre, l'étagère et l'Athanor seulement */
 .oc-app--bare .hud, .oc-app--bare .tabbar, .oc-app--bare .book-view__head, .oc-app--bare .book-view__ariane,
 .oc-app--bare .book-view__shelf-head, .oc-app--bare .book-view__filters, .oc-app--bare .book-view__spot { display: none; }
+/* (la barre d'onglets cachée ne garde pas sa place : l'Athanor se pose tout en bas, sans bande vide dessous ; le livre
+   prend la hauteur rendue, ni en-tête ni barre à loger, en haut de la page ; la place libre sous l'étagère reçoit la
+   consigne du geste, sans couvrir le livre ; retour de l'auteur, 18 oct. : la page était trop basse, coupée) */
+.oc-app--bare { --oc-tabbar-h: env(safe-area-inset-bottom, 0px); }
+@media (max-width: 859px) {
+  /* (sous l'étagère, toujours la place de la consigne : 380 px de hauteur gardés hors du livre ; un petit écran a un
+     livre un peu plus petit, jamais sous 200 px de large) */
+  .oc-app.oc-app--bare .book-view__stage.is-single { --book-w: max(min(200px, calc(100cqw - 60px)), min(calc(100cqw - 60px), calc((100dvh - 380px) * .75), 460px)); }
+}
+/* (pendant que Brume parle en haut, le mot de la page s'efface : jamais deux textes l'un sur l'autre) */
+.oc-app--bare .book-view__hint { transition: opacity .3s ease; }
+.oc-app--bare:has(> .guide.is-top) .book-view__hint { opacity: 0; }
 
 /* Un onglet qui change : un rideau de la couleur du vélin, posé sur la vue (sous la barre d'onglets et Brume),
    s'efface en un demi-souffle ; la vue dessous ne change pas d'ordre de couches. Sans mouvement : rien */
