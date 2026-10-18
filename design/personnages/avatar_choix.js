@@ -307,7 +307,7 @@ const couleursAccessoire = a => a.couleurs.map((cle, i) => couleur(ACCESSOIRES[a
 const naufrageChoix = o => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a)) });
 
 // ---- au hasard ----
-// Un tirage harmonieux à partir d'une graine (le bouton « Au hasard », et plus tard les visiteurs) : cheveux naturels le
+// Un tirage à partir d'une graine (les visiteurs, les nouveaux venus et les portraits de la bibliothèque) : cheveux naturels le
 // plus souvent, un haut et un bas qui ne se confondent pas, deux accessoires au plus. gratuit : seulement ce qui est
 // libre à la création (pas d'accessoire ni de teinture à gagner).
 function graine(n) {
@@ -348,12 +348,12 @@ function auHasard(n, { gratuit = true } = {}) {
 }
 
 // ---- assorti ----
-// Le tirage des arrivants (choix de l'auteur, 18 oct. : « Laisser le jeu choisir » ; les combinaisons d'auHasard, tirées
-// pièce par pièce, ne s'accordaient pas) : une tenue d'abord, prise dans des palettes accordées (le haut, le bas, les
+// Le tirage des arrivants et du bouton « Au hasard » de l'atelier (choix de l'auteur, 18 oct. : « Laisser le jeu
+// choisir » ; les combinaisons d'auHasard, tirées pièce par pièce, ne s'accordaient pas) : une tenue d'abord, prise dans des palettes accordées (le haut, le bas, les
 // chaussures, une couleur d'accent pour les accessoires et les motifs) ; des cheveux et des yeux naturels presque
 // toujours, et des cheveux qui vont avec l'âge ; au plus deux accessoires, sobres, dans les couleurs de la tenue. Les
 // tissus sont ceux du nuancier : la tenue reste au papier néon. auHasard ne change pas (les dessins de la bibliothèque
-// et le bouton « Au hasard » de l'atelier en dépendent).
+// en dépendent).
 // [haut, bas, chaussures, accent, métal]
 const TENUES = [
   [['blanc', 'creme'], ['marine', 'jean'], ['blanc', 'cuir'], ['rouge', 'soleil'], 'argent'],

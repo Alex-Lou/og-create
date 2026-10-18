@@ -1,5 +1,5 @@
-// Le tirage des arrivants (design/personnages/avatar_choix.js : assorti ; choix de l'auteur, 18 oct.) : une tenue prise
-// dans une palette accordée, des cheveux et des yeux naturels presque toujours, des cheveux qui vont avec l'âge, au plus
+// Le tirage des arrivants et du bouton « Au hasard » de l'atelier (design/personnages/avatar_choix.js : assorti ; choix de
+// l'auteur, 18 oct.) : une tenue prise dans une palette accordée, des cheveux et des yeux naturels presque toujours, des cheveux qui vont avec l'âge, au plus
 // deux accessoires sobres dans les couleurs de la tenue ; toujours la même tenue pour la même graine ; auHasard ne bouge
 // pas (les dessins de la bibliothèque en dépendent). Le module du jeu (generateur/avatar.mjs) tire les mêmes.
 import { describe, it, expect } from 'vitest';
