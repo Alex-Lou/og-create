@@ -469,6 +469,68 @@ function palier5() {
   return s;
 }
 
+// ═══ palier V, trapu et généreux (proposition, choix de l'auteur, 18 oct. : « pas de vie », « tape au mieux ») ═══
+// La même maison, dessinée autrement : des rondins plus gros, un soubassement de grosses pierres, un toit de chaume dodu
+// et doré en gros bourrelets moussus, son égout qui roule en boudin ; une lumière franche (le soleil chaud, l'ombre
+// froide et profonde) ; des buissons aux grandes feuilles et des fleurs qui mangent le pied de la maison ; des fenêtres
+// qui luisent, la fumée en nuages ronds
+function palier5b() {
+  B.STYLE.organique = true; B.BORD.doux = true;
+  try {
+    const g = rnd(53), p = 'f5b';
+    const M = [-1.2, -1.1, 0.32, 0.2], hS = 9, hM = 44, xp = 0.4;
+    let s = sol(p, 112, 54, g, { sable: 0.15 }) + B.ombrePortee(`${p}op`, [iso(M[0], M[3], 0), iso(M[2], M[3], 0), iso(M[2], M[1], 0), iso(M[0], M[1], 0)], 70, 0.32);
+    { const pd = iso(M[0] + (M[2] - M[0]) * (xp + 0.09), M[3], 0); s += allee(`${p}al`, pd[0], pd[1], pd[0] - 30, pd[1] + 36, 8); }
+    s += vigie(`${p}v`, 0.95, -1.1, 104, g) + B.buisson(`${p}b3`, ...iso(M[0] - 0.1, M[1] + 0.2, 0), 14, g, { feuille: '#1E7A50', fleurs: ['#FF4FAE'] });
+    s += boite(`${p}s`, M, 0, hS, { gauche: (W, H) => tPierres(W, H, g, { haut: 4.6, long: 9, mousse: 0.5 }), droite: (W, H) => tPierres(W, H, g, { haut: 4.6, long: 9, mousse: 0.5 }), voile: { pied: 0.2, haut: 0 }, arete: null });
+    s += boite(`${p}m`, M, hS, hM, {
+      gauche: (W, H) => tRondins(W, H, g, { haut: 7.2, c: '#C8844A' })
+        + fenetre(`${p}w1`, W * 0.08, 10, 12, 13, { volets: '#2E8A7A', fleurs: ['#FF4FAE', '#FFD04A', '#FF8A5A'] })
+        + fenetre(`${p}w2`, W * 0.74, 10, 12, 13, { volets: '#2E8A7A', fleurs: ['#B898F0', '#FF8A5A', '#FFFFFF'] })
+        + `<path d="M${P2(W * xp, H)} L${P2(W * xp, 10)} Q${P2(W * xp + 9, 0)} ${P2(W * xp + 18, 10)} L${P2(W * xp + 18, H)} Z" fill="#8A4A2A" stroke="#4A2A18" stroke-width="1"/>`
+        + [1, 2, 3].map(i => `<rect x="${f(W * xp + i * 4.5)}" y="4" width=".7" height="${f(H - 4)}" fill="#5A2E18"/>`).join('') + [13, H - 8].map(y => `<rect x="${f(W * xp)}" y="${f(y)}" width="12" height="1.8" rx=".6" fill="#3A3A42"/>`).join('')
+        + `<circle cx="${f(W * xp + 14)}" cy="${f(H * 0.58)}" r="1.7" fill="none" stroke="#E0B050" stroke-width="1.1"/>`,
+      droite: (W, H) => tRondins(W, H, g, { haut: 7.2, c: '#C8844A' }) + fenetre(`${p}w3`, W * 0.2, 10, 11, 12, { volets: '#2E8A7A' }) + fenetre(`${p}w4`, W * 0.64, 10, 11, 12, { volets: '#2E8A7A' })
+    });
+    for (let z = hS + 3.6, r = 0; z < hM; z += 7.2, r++) for (const [cu, cv, du, dv] of [[M[2], M[3], 1, 0], [M[2], M[3], 0, 1], [M[0], M[3], -1, 0]]) {
+      if ((r + (du ? 0 : 1)) % 2) continue;
+      const q = iso(cu + du * 0.05, cv + dv * 0.05, z);
+      s += `<defs>${rad(`${p}le${r}${cu}${du}`, q[0] - 1, q[1] - 1, 4, [[0, '#F4C890'], [1, '#C8844A']])}</defs><ellipse cx="${f(q[0])}" cy="${f(q[1])}" rx="3.4" ry="3.3" fill="url(#${p}le${r}${cu}${du})" stroke="#7A4A2A" stroke-width=".7"/>` + `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="1.6" fill="none" stroke="#A86A3A" stroke-width=".45"/>`;
+    }
+    // ——— le toit de chaume dodu ———
+    const t = toit(`${p}t`, M, hM, 40, 0.24, 'v', { couvre: couverture(g, (W, H, soleil) => B.tChaumeDodu(W, H, g, soleil)), pignon: (W, H) => tRondins(W, H, g, { haut: 7.2, c: '#C8844A' }) + fenetre(`${p}wp`, W / 2 - 5.5, H * 0.42, 11, 11, { arc: true }), faitage: '#6A7A3A' });
+    s += t.svg;
+    // (l'égout qui roule en boudin de paille, le faîtage de mottes herbues)
+    const e0 = surPan(t, 0, 1), e1 = surPan(t, 1, 1);
+    s += `<path d="M${P2(e0[0], e0[1] - 1)} L${P2(e1[0], e1[1] - 1)}" stroke="#4A3414" stroke-width="5.4" stroke-linecap="round" opacity=".9"/><path d="M${P2(e0[0], e0[1] - 1.6)} L${P2(e1[0], e1[1] - 1.6)}" stroke="#8A6A2A" stroke-width="3.6" stroke-linecap="round"/><path d="M${P2(e0[0], e0[1] - 2.6)} L${P2(e1[0], e1[1] - 2.6)}" stroke="#C8A050" stroke-width="1.2" stroke-linecap="round" opacity=".8"/>`;
+    s += `<path d="M${P2(...surPan(t, 0.01, 0.01))} L${P2(...surPan(t, 0.99, 0.01))}" stroke="#3A6A38" stroke-width="5" stroke-linecap="round"/><path d="M${P2(...surPan(t, 0.01, -0.01))} L${P2(...surPan(t, 0.99, -0.01))}" stroke="#7AB858" stroke-width="2.2" stroke-linecap="round"/>`;
+    s += hirondelle(...iso(M[0] + (M[2] - M[0]) * (xp + 0.09), M[3], hM + 1), 1);
+    // ——— la cheminée de grosses pierres, la fumée en nuages ronds ———
+    const pierre = (W, H) => tPierres(W, H, g, { haut: 4.6, long: 7, mousse: 0.35 });
+    const cu = (M[0] + M[2]) / 2, cv = -0.62, zr = hM + 40;
+    s += boite(`${p}ch`, [cu - 0.14, cv - 0.14, cu + 0.14, cv + 0.14], zr - 6, zr + 18, { gauche: pierre, droite: pierre }) + boite(`${p}chc`, [cu - 0.17, cv - 0.17, cu + 0.17, cv + 0.17], zr + 18, zr + 22, { gauche: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#D8D2C2"/>`, droite: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#9B927F"/>`, dessus: (W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6E6656"/><ellipse cx="${f(W / 2)}" cy="${f(H / 2)}" rx="${f(W * 0.3)}" ry="${f(H * 0.3)}" fill="#2A221E"/>` });
+    // ——— l'abri à bois ———
+    const A = [M[2], -0.78, M[2] + 0.4, -0.12];
+    for (let r = 0; r < 4; r++) for (let i = 0; i < 5; i++) { const q = iso(A[2] - 0.02, A[1] + 0.07 + i * 0.13, 3.4 + r * 6); s += `<ellipse cx="${f(q[0])}" cy="${f(q[1])}" rx="3.2" ry="3.1" fill="${mix('#F0B878', '#C8844A', (i + r) % 2 * 0.5)}" stroke="#8A5A2A" stroke-width=".6"/><circle cx="${f(q[0])}" cy="${f(q[1])}" r="1.3" fill="none" stroke="#B87A48" stroke-width=".4"/>`; }
+    for (const v of [A[1], A[3]]) { const a = iso(A[2], v, 0), b2 = iso(A[2], v, 27); s += buche(a[0], a[1], b2[0], b2[1], 1.6, g, { c: '#8A5A36' }); }
+    s += plaque(`${p}ap`, iso(M[2] - 0.02, A[1] - 0.06, 33), B.AXE_V, B.unite([iso(A[2] + 0.08, 0, 25)[0] - iso(M[2] - 0.02, 0, 33)[0], iso(A[2] + 0.08, 0, 25)[1] - iso(M[2] - 0.02, 0, 33)[1]]), (A[3] - A[1] + 0.12) * PAS, Math.hypot(iso(A[2] + 0.08, 0, 25)[0] - iso(M[2] - 0.02, 0, 33)[0], iso(A[2] + 0.08, 0, 25)[1] - iso(M[2] - 0.02, 0, 33)[1]),
+      B.tChaumeDodu((A[3] - A[1] + 0.12) * PAS, 26, g, false, { haut: 6, mousse: 0.3 }));
+    // ——— la végétation qui mange le pied : buissons aux grandes feuilles, fleurs ———
+    s += B.buisson(`${p}b1`, ...iso(M[0] - 0.08, M[3] + 0.12, 0), 11, g, { fleurs: ['#FF4FAE', '#FF4FAE', '#FFD04A'] })
+      + B.buisson(`${p}b2`, ...iso(M[2] + 0.1, M[3] + 0.12, 0), 9, g, { feuille: '#3E9A6A', fleurs: ['#FF8A5A', '#FFFFFF'] });
+    s += fleurs(iso(M[0] + 0.25, M[3] + 0.05, 0), iso(M[0] + (M[2] - M[0]) * (xp - 0.02), M[3] + 0.05, 0), g, 3, ['#FF4FAE', '#FFD04A', '#C8FF6A']);
+    // ——— le banc, la lanterne, le potager ———
+    const lt = iso(M[0] + (M[2] - M[0]) * (xp + 0.34), M[3] + 0.5, 0);
+    s += contact(lt[0], lt[1], 4) + trait(`M${P2(...lt)} L${P2(lt[0], lt[1] - 30)} l5,0`, '#3A3038', 1.6) + lanterne(`${p}la`, lt[0] + 5, lt[1] - 30, 2);
+    s += potager(`${p}po`, [0.62, 0.35, 1.25, 0.9], g) + B.buisson(`${p}b4`, ...iso(1.32, 0.95, 0), 7, g, { feuille: '#3E9A6A' });
+    s += pied([[-112, 6], [-92, 30], [104, 10], [108, -16], [20, 62], [-40, 60], [70, 58]], g);
+    // (la fumée en nuages ronds)
+    const fm = iso(cu, cv, zr + 24);
+    s += [0, 1, 2].map(i => `<circle cx="${f(fm[0] + 3 + i * 4)}" cy="${f(fm[1] - 6 - i * 9)}" r="${f(4 + i * 2.4)}" fill="#F4F2F8" opacity="${f(0.85 - i * 0.22)}" stroke="#C8C8D8" stroke-width=".6"/>`).join('');
+    return s;
+  } finally { B.STYLE.organique = false; B.BORD.doux = false; }
+}
+
 // Le phare, au pied en (u, v) : la tour ronde de pierre chaulée qui s'affine, sa bande sarcelle, ses meurtrières, sa
 // porte ; le balcon et sa rambarde ; la lanterne où brûle la flamme de lune (le feu du premier soir, devenu néon), son
 // faisceau qui tourne (image n sur N) ; le dôme de cuivre vert-de-gris, sa boule et sa pointe. Fortifié (après
@@ -689,4 +751,4 @@ function image(lv, n = 0, { hiver = false, skin = '' } = {}) {
 
 // Les skins du Foyer que ce dessin sait faire
 const SKINS = Object.keys(TOITS);
-module.exports = { PALIERS, SKINS, image, palier1, palier2, palier3, palier4, palier5, palier6, palier7 };
+module.exports = { palier5b, PALIERS, SKINS, image, palier1, palier2, palier3, palier4, palier5, palier6, palier7 };

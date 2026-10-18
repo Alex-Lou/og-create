@@ -30,6 +30,30 @@ const ligne = pts => 'M' + pts.map(([x, y]) => P2(x, y)).join(' L');
 const stops = s => s.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join('');
 const lin = (id, x1, y1, x2, y2, s) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}">${stops(s)}</linearGradient>`;
 const rad = (id, cx, cy, r, s) => `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}">${stops(s)}</radialGradient>`;
+// ——— la main levée (choix de l'auteur, 18 oct. : « encore trop SVG codé, pas de vie ») ———
+// Aucun bord tiré à la règle : un contour se suit en petits tronçons qui hésitent un peu de part et d'autre, lissés ;
+// l'hésitation ne dépend que de la géométrie (le même dessin d'une image à l'autre, d'un skin à l'autre)
+const STYLE = { organique: false };
+const hache = (x, y, k) => { const v = Math.sin(x * 12.9898 + y * 78.233 + k * 37.719) * 43758.5453; return v - Math.floor(v); };
+function tremble(pts, amp = 0.6, ferme = true) {
+  const P = [];
+  const n = pts.length, seg = ferme ? n : n - 1;
+  for (let i = 0; i < seg; i++) {
+    const a = pts[i], b = pts[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), k = Math.max(1, Math.round(L / 7));
+    const nx = -(b[1] - a[1]) / (L || 1), ny = (b[0] - a[0]) / (L || 1);
+    for (let j = 0; j < k; j++) {
+      const t = j / k, x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t, d = j === 0 ? (hache(x, y, 1) - 0.5) * amp * 0.6 : (hache(x, y, 2) - 0.5) * 2 * amp;
+      P.push([x + nx * d, y + ny * d]);
+    }
+  }
+  if (!ferme) P.push(pts[n - 1]);
+  // (lissé : des courbes par les milieux)
+  const m = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+  if (!ferme) return `M${P2(...P[0])} ` + P.slice(1, -1).map((p, i) => `Q${P2(...p)} ${P2(...m(p, P[i + 2]))}`).join(' ') + ` L${P2(...P[P.length - 1])}`;
+  let d = `M${P2(...m(P[0], P[1]))}`;
+  for (let i = 1; i <= P.length; i++) d += ` Q${P2(...P[i % P.length])} ${P2(...m(P[i % P.length], P[(i + 1) % P.length]))}`;
+  return d + ' Z';
+}
 // (le bord d'une forme : pas un trait d'encre uniforme qui la découpe comme un autocollant, mais sa propre couleur
 // assombrie, plus fine ; choix de l'auteur, 18 oct. : « des bords qui donnent l'impression du sticker collé »)
 const BORD = { doux: false };
@@ -70,8 +94,11 @@ const plaque = (id, O, U, V, W, H, contenu, clip) => `<g transform="matrix(${f(U
 const voileFace = (W, H, soleil, { pied = 0.35, haut = 0.3 } = {}) => {
   const id = `vf${Math.round(W * 7 + H * 13)}${soleil ? 's' : 'o'}`;
   return `<defs><linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A0E08" stop-opacity="${haut}"/><stop offset=".22" stop-color="#1A0E08" stop-opacity="0"/><stop offset=".7" stop-color="#1A0E08" stop-opacity="0"/><stop offset="1" stop-color="#1A0E08" stop-opacity="${pied}"/></linearGradient></defs>`
-    + `<rect width="${f(W)}" height="${f(H)}" fill="${soleil ? SOLEIL : OMBRE_F}" opacity="${soleil ? 0.05 : 0.32}"/><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}a)"/>`
-    + (BORD.doux ? `<defs><linearGradient id="${id}r" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#81BA5E" stop-opacity="0"/><stop offset="1" stop-color="#81BA5E" stop-opacity=".22"/></linearGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}r)"/>` : '');
+    + `<rect width="${f(W)}" height="${f(H)}" fill="${soleil ? SOLEIL : OMBRE_F}" opacity="${soleil ? (STYLE.organique ? 0.1 : 0.05) : (STYLE.organique ? 0.42 : 0.32)}"/><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}a)"/>`
+    + (BORD.doux ? `<defs><linearGradient id="${id}r" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#81BA5E" stop-opacity="0"/><stop offset="1" stop-color="#81BA5E" stop-opacity=".22"/></linearGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}r)"/>` : '')
+    + (STYLE.organique ? `<defs><radialGradient id="${id}p" cx="${soleil ? 0.15 : 0.9}" cy="${soleil ? 0.1 : 0.95}" r="${soleil ? 0.9 : 0.8}"><stop offset="0" stop-color="${soleil ? '#FFF4D0' : '#14303A'}" stop-opacity="${soleil ? 0.32 : 0.35}"/><stop offset="1" stop-color="${soleil ? '#FFF4D0' : '#14303A'}" stop-opacity="0"/></radialGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}p)"/>`
+      + (soleil ? [0.12, 0.45].map(t => `<path d="M${f(W * t)},${f(H * 0.08 + 1)} q${f(W * 0.12)},${f(-0.8)} ${f(W * 0.26)},.4" stroke="#FFFFFF" stroke-width="1.1" stroke-linecap="round" opacity=".28" fill="none"/>`).join('') : '')
+      + `<path d="M${f(W * 0.05)},${f(H - 1.2)} q${f(W * 0.4)},1 ${f(W * 0.9)},-.2" stroke="#14202A" stroke-width="1.6" stroke-linecap="round" opacity=".18" fill="none"/>` : '');
 };
 
 // Une boîte posée de (u0, v0) à (u1, v1), de z0 à z1 : sa face gauche (v = v1, au soleil), sa face droite (u = u1, à
@@ -83,7 +110,9 @@ function boite(id, [u0, v0, u1, v1], z0, z1, { gauche, droite, dessus, voile = {
   if (droite) s += plaque(`${id}d`, iso(u1, v1, z1), [AXE_U[0], -AXE_U[1]], [0, 1], D, h, droite(D, h) + voileFace(D, h, false, voile));
   if (dessus) s += plaque(`${id}t`, iso(u0, v0, z1), AXE_U, AXE_V, G, D, dessus(G, D) + (ETAT.hiver ? `<rect x="1" y="1" width="${f(G - 2)}" height="${f(D - 2)}" rx="2" fill="${NEIGE}"/>` : ''));
   const c = [iso(u0, v1, z0), iso(u1, v1, z0), iso(u1, v0, z0), iso(u1, v0, z1), iso(u0, v0, z1), iso(u0, v1, z1)];
-  s += `<path d="${poly(c)}" fill="none" stroke="${ENCRE}" stroke-width="${BORD.doux ? 0.6 : TRAIT}" stroke-linejoin="round"${BORD.doux ? ' stroke-opacity=".45"' : ''}/>`
+  s += STYLE.organique
+    ? `<path d="${tremble(c, 0.55)}" fill="none" stroke="${ENCRE}" stroke-width="1.15" stroke-linejoin="round" stroke-opacity=".8"/>` + `<path d="${tremble([iso(u1, v1, z0), iso(u1, v1, z1)], 0.5, false)}" fill="none" stroke="${ENCRE}" stroke-width=".55" stroke-opacity=".5"/>`
+    : `<path d="${poly(c)}" fill="none" stroke="${ENCRE}" stroke-width="${BORD.doux ? 0.6 : TRAIT}" stroke-linejoin="round"${BORD.doux ? ' stroke-opacity=".45"' : ''}/>`
     + trait(ligne([iso(u1, v1, z0), iso(u1, v1, z1)]), ENCRE, BORD.doux ? 0.4 : 0.7, ` stroke-opacity="${BORD.doux ? 0.35 : 0.8}"`)
     // (l'arête au soleil : le coin de devant accroche la lumière)
     + (arete ? trait(ligne([iso(u1, v1, z0 + 1), iso(u1, v1, z1 - 1)]), arete, 0.7, ' stroke-opacity=".7" transform="translate(-.7 0)"') : '')
@@ -122,7 +151,13 @@ function toit(id, [u0, v0, u1, v1], z, rh, o, axe, { couvre, pignon, faitage = '
     s += couche(R0, unite(Vd), Hd, soleil, 'd');
     for (let k = 0.06; k < 0.96; k += 0.08) { const q = plus(E0, moins(E1, E0), k); s += `<path d="M${P2(q[0] - 1, q[1] - 0.5)} L${P2(q[0], q[1] + 2.4 + (k * 37 % 1) * 2)} L${P2(q[0] + 1, q[1] - 0.5)} Z" fill="#E8F4FC" stroke="${NEIGE_O}" stroke-width=".3"/>`; }
   }
-  s += `<path d="${poly([R0, R1, E1, E0])}" fill="none" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+  if (STYLE.organique) {
+    // (le faîte qui s'affaisse au milieu, l'égout qui ondule : la charpente a vécu)
+    const mid = [(R0[0] + R1[0]) / 2, (R0[1] + R1[1]) / 2 + 1.6];
+    s += `<path d="${tremble([R0, R1, E1, E0], 0.7)}" fill="none" stroke="${ENCRE}" stroke-width="1.15" stroke-linejoin="round" stroke-opacity=".8"/>`
+      + `<path d="M${P2(...R0)} Q${P2(...mid)} ${P2(...R1)}" fill="none" stroke="${faitage}" stroke-width="3"/>` + `<path d="M${P2(R0[0], R0[1] - 1)} Q${P2(mid[0], mid[1] - 1)} ${P2(R1[0], R1[1] - 1)}" fill="none" stroke="${mix(faitage, '#FFFFFF', 0.45)}" stroke-width=".8"/>`;
+  }
+  s += `<path d="${poly([R0, R1, E1, E0])}" fill="none" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"${STYLE.organique ? ' stroke-opacity="0"' : ''}/>`
     // (la rive du pignon, le faîtage, l'égout qui accroche la lumière)
     + trait(ligne([E1, R1, B1]), faitage, 1.8) + trait(ligne([E1, R1]), ENCRE, 0.5, ' transform="translate(0 1.1)" stroke-opacity=".6"')
     + trait(ligne([R0, R1]), faitage, 2.4) + trait(ligne([R0, R1]), mix(faitage, '#FFFFFF', 0.4), 0.6, ' transform="translate(0 -.8)"')
@@ -439,8 +474,39 @@ function bambou(x0, y0, x1, y1, r) {
   return s;
 }
 
+// ——— le style trapu et généreux (choix de l'auteur, 18 oct. : « pas de vie », « tape au mieux ») ———
+// Du chaume dodu : de gros bourrelets de paille, rang par rang du bas vers le haut, chacun bombé (clair en haut, sombre
+// dans son creux), leur bord inférieur festonné, quelques brins qui dépassent, des plaques de mousse
+function tChaumeDodu(W, H, g, soleil, { fonce = '#9A6A2A', clair = '#F6D27A', mousse = 0.5, haut = 9 } = {}) {
+  let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(fonce, '#2A1A0A', 0.5)}"/>`;
+  const rangs = Math.ceil(H / haut) + 1;
+  for (let r = rangs; r >= 0; r--) {
+    const y = r * haut - haut * 0.3, id = `chd${Math.round(W)}${r}${soleil ? 's' : 'o'}`;
+    const c1 = mix(fonce, clair, soleil ? 0.85 : 0.45), c2 = mix(fonce, '#2A1A0A', soleil ? 0.15 : 0.4);
+    let bord = `M-4,${f(y - haut)} L${f(W + 4)},${f(y - haut)} L${f(W + 4)},${f(y)}`;
+    for (let x = W + 4; x > -4;) { const l = 9 + g() * 6, nx = x - l; bord += ` Q${f(x - l / 2)},${f(y + haut * (0.5 + g() * 0.25))} ${f(nx)},${f(y)}`; x = nx; }
+    s += `<defs><linearGradient id="${id}" x1="0" y1="${f(y - haut)}" x2="0" y2="${f(y + haut * 0.6)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${c2}"/><stop offset=".45" stop-color="${c1}"/><stop offset="1" stop-color="${mix(c1, c2, 0.55)}"/></linearGradient></defs>`
+      + `<path d="${bord} Z" fill="url(#${id})"/>`;
+    for (let x = g() * 4; x < W; x += 3 + g() * 4) s += `<path d="M${f(x)},${f(y - haut * 0.5 + g() * 2)} l${f((g() - 0.5) * 1.4)},${f(haut * 0.55)}" stroke="${mix(c1, '#FFF4D0', 0.5)}" stroke-width=".6" opacity="${f(0.35 + g() * 0.3)}"/>`;
+  }
+  for (let i = 0; i < Math.round(W * H / 700 * mousse); i++) { const x = g() * W, y = g() * H, rx = 4 + g() * 8; s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(rx * 0.45)}" fill="${soleil ? '#6AA848' : '#3A7048'}" opacity=".75"/><ellipse cx="${f(x - rx * 0.25)}" cy="${f(y - rx * 0.12)}" rx="${f(rx * 0.5)}" ry="${f(rx * 0.2)}" fill="${soleil ? '#A8D86A' : '#5A9A58'}" opacity=".8"/>`; }
+  return s;
+}
+// Un buisson aux grandes feuilles rondes, en (x, y), de rayon r : ses touffes modelées (claires en haut à gauche), le
+// creux sombre entre elles, des fleurs de nos couleurs
+function buisson(id, x, y, r, g, { feuille = '#2E8A5A', fleurs = [] } = {}) {
+  const touffes = Array.from({ length: 6 }, (_, i) => { const a = Math.PI * (1.05 + i * 0.18) + (g() - 0.5) * 0.3, d = r * (0.35 + g() * 0.3); return [x + Math.cos(a) * d * 1.3, y - r * 0.4 + Math.sin(a) * d * 0.7, r * (0.45 + g() * 0.2)]; });
+  touffes.push([x, y - r * 0.55, r * 0.6]);
+  let s = `<ellipse cx="${f(x + r * 0.3)}" cy="${f(y + 1)}" rx="${f(r * 1.25)}" ry="${f(r * 0.4)}" fill="${OMBRE_F}" opacity=".3"/>`;
+  s += `<defs>${rad(`${id}r`, x - r * 0.5, y - r * 1.1, r * 2, [[0, mix(feuille, '#E8FF9A', 0.55)], [0.5, feuille], [1, mix(feuille, '#0A2A22', 0.6)]])}</defs>`;
+  s += touffes.sort((a, b) => a[1] - b[1]).map(([tx, ty, tr]) => `<circle cx="${f(tx)}" cy="${f(ty)}" r="${f(tr)}" fill="url(#${id}r)" stroke="${mix(feuille, '#0A2A22', 0.55)}" stroke-width=".7"/>`
+    + `<path d="M${P2(tx - tr * 0.55, ty - tr * 0.2)} Q${P2(tx - tr * 0.2, ty - tr * 0.75)} ${P2(tx + tr * 0.35, ty - tr * 0.6)}" stroke="#FFFFFF" stroke-width=".8" opacity=".35" fill="none" stroke-linecap="round"/>`).join('');
+  fleurs.forEach((c, i) => { const [tx, ty, tr] = touffes[(i * 2 + 1) % touffes.length]; const fx = tx + (g() - 0.5) * tr, fy = ty - tr * 0.3 + (g() - 0.5) * tr * 0.6; s += [0, 1, 2, 3, 4].map(k => { const a = k * 1.256; return `<circle cx="${f(fx + Math.cos(a) * 1.3)}" cy="${f(fy + Math.sin(a) * 1.1)}" r="1.1" fill="${c}"/>`; }).join('') + `<circle cx="${f(fx)}" cy="${f(fy)}" r=".7" fill="#FFF4C8"/>`; });
+  return s;
+}
+
 module.exports = {
-  f, rnd, setHiver, hiver, NEIGE, NEIGE_O, BORD, ombrePortee, ENCRE, TRAIT, SOLEIL, OMBRE_F, HERBE, SABLE, CYAN, MAGENTA, ACIDE, CHAUD, VIOLET,
+  f, rnd, setHiver, hiver, NEIGE, NEIGE_O, BORD, ombrePortee, STYLE, tremble, tChaumeDodu, buisson, ENCRE, TRAIT, SOLEIL, OMBRE_F, HERBE, SABLE, CYAN, MAGENTA, ACIDE, CHAUD, VIOLET,
   P2, poly, ligne, lin, rad, plan, trait, ovale, lueur, neon, mix, plus, moins, norme, unite,
   iso, PAS, AXE_U, AXE_V, plaque, voileFace, boite, toit, surPan,
   tPierres, tBriques, tPlanches, tRondins, tTuiles, tChaume, tColombage, tTole, tBordages, tPalmes, tTresse, tArgile, bambou,
