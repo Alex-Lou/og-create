@@ -18,6 +18,7 @@ import { seaOf } from '@/world/sea';
 import { memory } from '@/world/view/memory';
 import { variantsOf } from '@/world/annexes';
 import { villageOf } from '@/world/village';
+import { kitNow, loadKit } from '@/game/avatarKit';
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
@@ -285,6 +286,9 @@ export default {
         before: this.village
       });
       this.showArrivals();
+      // (les habitants venus d'ailleurs se dessinent par le générateur de l'avatar, chargé à la demande : l'île se
+      // redessine quand il arrive ; arrivantArt.js)
+      if (!kitNow() && (state.visitor || (state.villagers || []).some(v => v.seed !== undefined))) loadKit().then(() => this.draw(performance.now()));
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, this.M) : null;
       if (state.visitor && this.visitorDock && !this.reduced()) {

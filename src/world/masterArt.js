@@ -49,7 +49,7 @@ const VISITOR_LANTERNS = {
   'visiteur-07': [-8.1, -5.4], 'visiteur-08': [-10.6, -5.4], 'visiteur-09': [-10.6, -7.5], 'visiteur-10': [-7.3, -9.1], 'visiteur-11': [-8.1, -7.5], 'visiteur-12': [-8.1, -9.1]
 };
 // Le geste d'un visiteur installé à la porte de son métier (sur l'annexe, ceux du maître : residents.js, CHORES)
-const VISITOR_WORK = { potager: 'becher', bosquet: 'tailler', atelier: 'scier', foyer: 'recolter', puits: 'arroser', ponton: 'pecher', carriere: 'piocher' };
+export const VISITOR_WORK = { potager: 'becher', bosquet: 'tailler', atelier: 'scier', foyer: 'recolter', puits: 'arroser', ponton: 'pecher', carriere: 'piocher' };
 // Les douze visiteurs de la bibliothèque
 export const VISITORS = Object.keys(visiteurs);
 
@@ -91,11 +91,20 @@ export function visitorSprite(who, site, { pose = 'idle', view = 'se', frame = 0
   return poseOf(set.fichiers, { pose, view, frame, lantern, umbrella, chore, work: VISITOR_WORK[site] || 'repos', flame: VISITOR_LANTERNS[who] });
 }
 
+// Les dessins de la bibliothèque : seules les poses que l'île montre sont chargées ; la clé de cache d'un fichier ; son
+// texte, lu à la demande (une promesse ; poseOf, artOf). Un arrivant dessiné à la volée a sa propre source (arrivantArt.js)
+const LIBRARY = {
+  has: file => Boolean(FILES[ROOT + file]),
+  key: file => `lib-${file.split('/').pop().replace(/\.svg$/, '')}`,
+  text: file => FILES[ROOT + file]()
+};
+
 // Le tronc commun : l'image d'une pose dans les fichiers d'un personnage. work : le geste de « work » sans chore ; worn :
-// la tenue de saison d'une vue et d'un geste, s'il la porte ; steady : les gestes à une seule image ; flame : sa lanterne
-function poseOf(files, { pose, view, frame, lantern, umbrella, chore, work, worn = () => null, steady = [], flame }) {
-  // Les images d'une pose (seules celles que l'île montre sont chargées : une autre manque, et l'on se rabat)
-  const at = key => (files[key] && FILES[ROOT + files[key][0]] ? files[key] : null);
+// la tenue de saison d'une vue et d'un geste, s'il la porte ; steady : les gestes à une seule image ; flame : sa lanterne ;
+// source : d'où viennent ses dessins (LIBRARY)
+export function poseOf(files, { pose, view, frame, lantern, umbrella, chore, work, worn = () => null, steady = [], flame }, source = LIBRARY) {
+  // Les images d'une pose (seules celles que la source a : une autre manque, et l'on se rabat)
+  const at = key => (files[key] && source.has(files[key][0]) ? files[key] : null);
   let list;
   let drawn = VIEWS[view];
   let held = null;
@@ -119,20 +128,21 @@ function poseOf(files, { pose, view, frame, lantern, umbrella, chore, work, worn
   if (!list) return null;
   if (steady.includes(gesture) && list === at(`${drawn}_${gesture}`)) list = [list[0]];
   const file = list[frame % list.length];
-  if (!FILES[ROOT + file]) return null;
-  return artOf(file, pose, drawn, held, held === 'lanterne' ? flame : null);
+  if (!source.has(file)) return null;
+  return artOf(file, pose, drawn, held, held === 'lanterne' ? flame : null, source);
 }
 
-// Un fichier de la bibliothèque, prêt pour l'île : { key, make, view, lantern } (drawn : sa vue ; de dos, la lanterne est
-// dans l'autre main)
-function artOf(file, pose, drawn, held, flame) {
+// Un fichier, prêt pour l'île : { key, make, view, lantern } (drawn : sa vue ; de dos, la lanterne est dans l'autre main).
+// Le dessin d'une source qui le rend tout de suite (source.now : un texte, pas une promesse) se donne sans attendre
+function artOf(file, pose, drawn, held, flame, source = LIBRARY) {
   const anchor = pose === 'sleep' ? BED : FEET;
   return {
-    key: `lib-${file.split('/').pop().replace(/\.svg$/, '')}`,
+    key: source.key(file),
     make: () => {
       // Le cadre se lit dans le fichier : celui du parapluie est plus haut, celui du dormeur couché plus large
       const box = boxOf(pose === 'sleep' ? [0, 0, 64, 48] : held === 'parapluie' ? [0, -18, 48, 82] : [0, 0, 48, 64], anchor);
-      return { box, load: () => FILES[ROOT + file]().then(svg => fitTo(pose === 'sleep' ? svg : svg.replace(/(<svg[^>]*>)/, `$1${SHADOW}`), box)) };
+      const ready = svg => fitTo(pose === 'sleep' ? svg : svg.replace(/(<svg[^>]*>)/, `$1${SHADOW}`), box);
+      return source.now ? { box, svg: ready(source.text(file)) } : { box, load: () => source.text(file).then(ready) };
     },
     view: drawn,
     lantern: flame ? (drawn === 'dos' ? [-flame[0], flame[1]] : flame) : null
