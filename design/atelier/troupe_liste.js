@@ -1,7 +1,8 @@
 // Les poses du grand format et les personnages qui les portent (une seule source pour preview_quotidien.mjs,
 // preview_naufrages.js et le générateur des personnages, generateur_personnages.mjs) : les poses du quotidien, les
-// couvertures, les humeurs en marche des maîtres, les visiteurs et les nouveaux venus de l'épilogue, tirés du générateur
-// de l'avatar.
+// couvertures, les humeurs en marche des maîtres, les nouveaux venus de l'épilogue, tirés du générateur de l'avatar.
+// (Les habitants venus d'ailleurs ne sont plus dans la bibliothèque : le jeu les dessine d'après leurs choix,
+// generateur.mjs : quotidien.)
 const { frame, IMAGES } = require('./troupe');
 const A = require('../personnages/avatar.js');
 const G = require('./gestes.js');
@@ -75,14 +76,8 @@ const MOODS = {
   'Mélisse': ['content', 'rire', 'triste'] // tranquille, les lunes, le chagrin caché
 };
 
-// Les visiteurs (générateur de l'avatar) : 12, chacun ses choix, sa couverture et son parapluie
-const PARAPLUIES = ['#D9443A', '#3E78C8', '#F2C04B', '#7EC45B', '#C46AA8', '#2E3E66'];
-const COUV = [{ fond: '#C98F5A', motif: '#E8C07A' }, { fond: '#6E8FC4', motif: '#DDE7F4' }, { fond: '#8BAE6A', motif: '#E2EDC9' }, { fond: '#B86A7A', motif: '#F2D2D8' }];
+// (sans rien dans la main : la valise y va)
 const sansMain = o => { const acc = { ...o.accessoires }; delete acc.main; return { ...o, accessoires: acc }; };
-const VISITEURS = Array.from({ length: 12 }, (_, j) => {
-  const i = j + 1, choix = sansMain(A.auHasard(1000 + i * 7, { gratuit: false }));
-  return { i, cle: `visiteur-${String(i).padStart(2, '0')}`, choix, uid: `v${i}`, opts: { lanterne: true, couverture: COUV[i % COUV.length], parapluie: PARAPLUIES[i % PARAPLUIES.length] } };
-});
 
 // Les nouveaux venus de l'épilogue : habits de voyage, bagage sur le dos, chapeau, valise à la main ; pas couchés
 const VOYAGE = [
@@ -98,4 +93,4 @@ const ARRIVANTS = VOYAGE.map((t, j) => {
   return { i, cle: `arrivant-${String(i).padStart(2, '0')}`, choix, uid: `e${i}`, opts: { couche: false, valise: VALISES[j % VALISES.length] } };
 });
 
-module.exports = { STD, VUE, slug, poses, COUVERTURES, VOILE, MOODS, VISITEURS, ARRIVANTS };
+module.exports = { STD, VUE, slug, poses, COUVERTURES, VOILE, MOODS, ARRIVANTS };
