@@ -176,10 +176,11 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
   return residents;
 }
 
-// Sa visite du jour (agenda.js : visitOf), tirée parmi tous ses camarades : seulement si celui-là est là, éveillé
-// (present : les maîtres éveillés), sinon pas de visite ; market : jour de marché
+// Sa visite du jour (agenda.js : visitOf), tirée parmi tous ses camarades (un voyageur installé : parmi tous les
+// maîtres) : seulement si celui-là est là, éveillé (present : les maîtres éveillés), sinon pas de visite ; market :
+// jour de marché
 export function visitHere(r, day, present, market = false) {
-  const v = visitOf(r, day, matesOf(r.role), market);
+  const v = visitOf(r, day, r.master ? matesOf(r.role) : MASTERS, market);
   return v && present.some(o => o.role === v.who) ? v : null;
 }
 
@@ -513,13 +514,14 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
       }
     }
     if (!p) {
-      m = momentOf(r, h, phase, { rain, calm, visit: r.master && !calm ? visitHere(r, day, mates, market) : null, shown: r.master && r.role === wanted, day, market });
+      m = momentOf(r, h, phase, { rain, calm, visit: !r.guest && !calm ? visitHere(r, day, mates, market) : null, shown: r.master && r.role === wanted, day, market });
       // (un voyageur de passage n'a pas de lit sur l'île : la nuit, on ne le voit pas)
       if (m.mode === 'absent') continue;
       p = placeOf(r, m, t, clock, day, doorOf);
       where = dt => peekOf(r, t - dt, clock - dt);
       if (m.mode === 'visite' && p.pose !== 'walk') {
-        visiting.push({ from: r.role, to: m.visit.who, day, x: p.x, y: p.y });
+        // (un voyageur installé : son nom au serveur, et son métier pour ses bulles : folk.js)
+        visiting.push({ from: r.master ? r.role : r.id.slice('vil:'.length), settler: r.master ? null : r.role, to: m.visit.who, day, x: p.x, y: p.y });
         // (arrivé, il se tourne vers son camarade : de trois quarts, du côté de l'écran où il se tient)
         const mate = mates.find(o => o.role === m.visit.who);
         const there = mate && peekOf(mate, t, clock);

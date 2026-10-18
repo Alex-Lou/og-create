@@ -32,7 +32,7 @@
 // (paths.js), les habitants (residents.js), la ferme (farm.js), les bêtes sauvages (wild.js), Anya (anya.js), le dessin
 // d'une bête (beast.js). Les paroles sont dans texts/village.js.
 import { bestiaryOf, FAMILIARS } from './bestiary';
-import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS } from '@/texts/village';
+import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS, MARKET_SAYS, SETTLER_MEAL_SAYS, SETTLER_VISIT_SAYS } from '@/texts/village';
 import { gridOf, gridKeyOf, route, doorOf } from './village/paths';
 import { residentsOf, plannerOf, drawResidents, visitHere } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
@@ -163,7 +163,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const day = dayHourOf(Date.now()).day;
     const present = residents.filter(o => o.master && !o.asleep && !o.swim);
     const market = marketOn(day);
-    return momentOf(r, phase.hour, phase, { rain: phase.weather.rain, calm, visit: r.master && !calm ? visitHere(r, day, present, market) : null, day, market });
+    return momentOf(r, phase.hour, phase, { rain: phase.weather.rain, calm, visit: !r.guest && !calm ? visitHere(r, day, present, market) : null, day, market });
   }
   // La dernière réplique de chacun (il ne la redit pas tout de suite)
   const lastSaid = new Map();
@@ -180,12 +180,15 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const evening = phase.hour >= phase.set + 0.4;
       // (le temps qu'il fait : la réplique du maître, ou la commune pour un voyageur installé)
       const voice = r.key.startsWith('vil-') ? r.role : null;
-      // Ce qu'il fait (agenda.js, lot B) : la réplique de son rituel, du repas, de sa visite, d'abord
-      const now = voice && moment(r, phase);
+      // Ce qu'il fait (agenda.js, lot B) : la réplique de son rituel, du repas, de sa visite, d'abord (un voyageur
+      // installé : celles de son métier, au repas et en visite)
+      const now = moment(r, phase);
       // (il dort sa nuit : il ne dit rien, comme un dormeur)
-      if (now && now.mode === 'nuit') return { title: r.look.label, text: '' };
-      const doing = now && (now.ritual ? RITUAL_SAYS : now.mode === 'repas' ? MEAL_SAYS : now.mode === 'marche' ? MARKET_SAYS : now.mode === 'visite' ? VISIT_SAYS : null);
-      if (doing && doing[voice]) return { title: r.look.label, text: doing[voice] };
+      if (now.mode === 'nuit') return { title: r.look.label, text: '' };
+      const doing = voice
+        ? now.ritual ? RITUAL_SAYS : now.mode === 'repas' ? MEAL_SAYS : now.mode === 'marche' ? MARKET_SAYS : now.mode === 'visite' ? VISIT_SAYS : null
+        : now.mode === 'repas' ? SETTLER_MEAL_SAYS : now.mode === 'visite' ? SETTLER_VISIT_SAYS : null;
+      if (doing && doing[voice || r.role]) return { title: r.look.label, text: doing[voice || r.role] };
       const weather = says => says[voice] || says.common;
       // (un voyageur installé a la voix de son métier, pas celle du maître qui travaille là)
       const work = voice ? WORK_LINES[r.role] : SETTLER_SAYS[r.role] || [];

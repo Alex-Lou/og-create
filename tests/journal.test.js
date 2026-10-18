@@ -68,4 +68,11 @@ describe('le journal de l’île', () => {
     expect(dayLines(masters, 300, 24, sky(clear))).not.toContain(JOURNAL.marche.clair);
     expect(journalOf({ masters, today: 300, hour: 24, skyOf: sky(clear), marketOn: d => d === 299 })[1].lines).toContain(JOURNAL.marche.clair);
   });
+  it('un voyageur installé en visite chez un maître y a sa ligne, à partir du jour où il est resté', () => {
+    const settlers = [{ name: 'Basile', role: 'Botaniste', k: 7, since: { day: 220, hour: 8 } }];
+    const said = d => dayLines(masters, d, 24, sky(clear), false, settlers).some(line => line.startsWith('Basile, notre botaniste, a rendu visite à'));
+    const days = Array.from({ length: 80 }, (_, k) => 200 + k);
+    expect(days.filter(d => d < 220).some(said)).toBe(false);
+    expect(days.filter(d => d > 220).some(said)).toBe(true);
+  });
 });

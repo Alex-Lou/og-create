@@ -79,4 +79,9 @@ describe('l’agenda des habitants', () => {
     const count = market => Array.from({ length: 200 }, (_, d) => visitOf(r, d, ['puits', 'foyer'], market)).filter(Boolean).length;
     expect(count(true)).toBeGreaterThan(count(false));
   });
+  it('un voyageur installé mange avec la troupe ; le voyageur de passage, non', () => {
+    const settler = { role: 'potager', k: 7, wake: 6.6, bed: 21.4 };
+    expect(mode(settler, (MEAL.from + MEAL.to) / 2)).toBe('repas');
+    expect(mode({ ...settler, guest: {}, k: 11 }, (MEAL.from + MEAL.to) / 2)).toBe('jour');
+  });
 });
