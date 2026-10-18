@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest';
 import { talkLine, giftLine } from '@/world/friends';
 import { noteOf } from '@/world/chest';
-import { ROLES } from '@/world/villagers';
+import { ROLES } from '@/world/roles';
 import { TIPS } from '@/texts/guide/tips';
 
 const IDS = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier', 'foyer'];
@@ -22,15 +22,7 @@ describe('la troupe de la bible', () => {
       foyer: 'Cuisinière-guérisseuse'
     });
   });
-  it('chacun porte les pièces de sa fiche (§ 8.2 et § 14) et son sceau', () => {
-    const { potager: melisse, carriere: galet, bosquet: sylve, puits: ondin, ponton: aster, atelier: rivet, foyer: cannelle } = ROLES;
-    expect([aster.neckerchief, aster.freckles, aster.boots, aster.tool]).toEqual(['#D9443A', true, true, 'spyglass']);
-    expect([cannelle.style, cannelle.spoon, cannelle.tool, cannelle.hat]).toEqual(['bun', true, 'ladle', null]);
-    expect([rivet.loupes, rivet.lock, rivet.pencil, rivet.pockets]).toEqual([true, true, true, true]);
-    expect([ondin.build, ondin.hat, ondin.tool, ondin.barefoot]).toEqual(['child', 'nightcap', 'dowsing', true]);
-    expect([sylve.cape, sylve.twigs, sylve.paint, sylve.barefoot, sylve.tool]).toEqual(['#4E7A36', true, true, true, 'fagot']);
-    expect([galet.beard, galet.hat, galet.tool, galet.shape.legs < 6]).toEqual(['lichen', 'wool', 'mallet', true]);
-    expect([melisse.hat, melisse.shawl, melisse.tool]).toEqual(['flowerStraw', '#2E3A6B', 'tin']);
+  it('chacun a son sceau (sa tenue est celle de la bibliothèque : masterArt.js)', () => {
     expect(IDS.every(id => ROLES[id].seal)).toBe(true);
   });
   it('ses répliques (cœurs 0 à 5, cadeau adoré) tiennent en une bulle et ne citent aucun ancien prénom', () => {

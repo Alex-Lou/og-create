@@ -11,7 +11,7 @@ describe('ce qui change sur l’île sans y toucher (lot 1)', () => {
     expect(dueIn({ charges: { nextIn: 12 * MIN } })).toBe(12 * MIN);
     expect(dueIn({ charges: { nextIn: null }, expedition: { endsIn: 40 * MIN } })).toBe(40 * MIN);
     expect(dueIn({ games: [{ open: true, nextIn: 30 * MIN }, { open: false, nextIn: 5 * MIN }] })).toBe(30 * MIN);
-    expect(dueIn({ visitor: { leavesIn: 3 * H }, deposits: [{ readyIn: 0 }, { readyIn: 2 * H }] })).toBe(2 * H);
+    expect(dueIn({ deposits: [{ readyIn: 0 }, { readyIn: 2 * H }] })).toBe(2 * H);
     expect(dueIn({ sites: [{ fullIn: 0 }, { fullIn: null }, { fullIn: 7 * MIN }] })).toBe(7 * MIN);
   });
 

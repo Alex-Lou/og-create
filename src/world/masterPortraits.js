@@ -5,8 +5,6 @@
 // que celui que liste quotidien.json (tests/masterPortraits.test.js le vérifie pour chaque maître et chaque pose).
 const ROOT = '/design/bibliotheque/svg/personnages/';
 const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis}_1.svg', { query: '?url', import: 'default', eager: true });
-// (les visiteurs : de face, au repos)
-const GUESTS = import.meta.glob('/design/bibliotheque/svg/personnages/visiteurs/*/*_face_repos_1.svg', { query: '?url', import: 'default', eager: true });
 
 // Le maître de chaque bâtiment
 export const MASTERS = { ponton: 'aster', foyer: 'cannelle', atelier: 'rivet', puits: 'ondin', bosquet: 'sylve', carriere: 'galet', potager: 'melisse' };
@@ -23,5 +21,3 @@ export function masterPortrait(role, castaway, { view = 'front', pose = 'idle' }
   return URLS[fileOf(name, castaway, drawn, POSES[pose])] || URLS[fileOf(name, castaway, drawn, 'repos')] || null;
 }
 
-// Le portrait d'un visiteur de la bibliothèque (visitors.js : visitorCast), de face, au repos ; ou null
-export const visitorPortraitUrl = who => GUESTS[`${ROOT}visiteurs/${who}/${who}_face_repos_1.svg`] || null;

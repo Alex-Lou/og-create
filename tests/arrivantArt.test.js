@@ -1,34 +1,38 @@
 // Les habitants venus d'ailleurs (world/arrivantArt.js) : dessinés à la volée par le générateur de l'avatar
 // (generateur/avatar.mjs : quotidien), à la même qualité que la bibliothèque (les mêmes images, octet pour octet, que
-// celles d'un visiteur de design/bibliotheque/svg/personnages/visiteurs) ; une image pour chaque pose du jeu ; rien
-// tant que le générateur n'est pas chargé ; jamais l'ancien générateur.
+// celles qu'en tire l'atelier : design/atelier/troupe_liste.js, poses ; generateur_personnages.mjs) ; une image pour
+// chaque pose du jeu ; rien tant que le générateur n'est pas chargé ; jamais l'ancien générateur.
 import { describe, it, expect, beforeAll } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import * as KIT from '../design/bibliotheque/generateur/avatar.mjs';
-import DATA from '../design/bibliotheque/svg/personnages/quotidien.json';
 import { loadKit } from '@/game/avatarKit';
 import { arrivantSprite, arrivantPortrait } from '@/world/arrivantArt';
 import { MASTERS } from '@/world/masterArt';
 
-const DIR = 'design/bibliotheque/svg/personnages/visiteurs';
-// (les options de la bibliothèque pour le visiteur i : design/atelier/troupe_liste.js, VISITEURS)
-const PARAPLUIES = ['#D9443A', '#3E78C8', '#F2C04B', '#7EC45B', '#C46AA8', '#2E3E66'];
-const COUV = [{ fond: '#C98F5A', motif: '#E8C07A' }, { fond: '#6E8FC4', motif: '#DDE7F4' }, { fond: '#8BAE6A', motif: '#E2EDC9' }, { fond: '#B86A7A', motif: '#F2D2D8' }];
+// (l'atelier, tel que la bibliothèque le publie : le cadre de chaque pose, le trois quarts avant en miroir)
+const require = createRequire(import.meta.url);
+const Q = require('../design/atelier/troupe_liste.js');
+const A = require('../design/personnages/avatar.js');
+const { miroir } = require('../design/atelier/noms_personnages.js');
+const r2 = n => Math.round(n * 100) / 100;
+const svgOf = (vb, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(vb[2])}" height="${r2(vb[3])}" viewBox="${vb.join(' ')}">${body}</svg>`;
 
 describe('les habitants venus d’ailleurs', () => {
   beforeAll(() => loadKit());
 
-  it('quotidien dessine les mêmes images que la bibliothèque', () => {
-    const i = 3, cle = 'visiteur-03';
-    const q = KIT.quotidien(DATA.visiteurs[cle].choix, `v${i}`, { couverture: COUV[i % COUV.length], parapluie: PARAPLUIES[i % PARAPLUIES.length] });
-    const files = Object.values(DATA.visiteurs[cle].fichiers).flat().map(f => f.split('/').pop());
+  it('quotidien dessine les mêmes images que l’atelier', () => {
+    const choix = KIT.assorti(42, { gratuit: true });
+    const opts = { couverture: { fond: '#6E8FC4', motif: '#DDE7F4' }, parapluie: '#3E78C8' };
+    const q = KIT.quotidien(choix, 'a1', opts);
     let seen = 0;
-    for (const file of files) {
-      const [, name, n] = file.match(new RegExp(`^${cle}_(.+)_(\\d+)\\.svg$`));
-      if (!q.images(name)) continue;
-      // (le fichier finit par un saut de ligne)
-      expect(q.image(name, Number(n)) === readFileSync(`${DIR}/${cle}/${file}`, 'utf8').replace(/\n$/, ''), file).toBe(true);
-      seen++;
+    for (const [pose, , vb, images] of Q.poses(A.avatar(choix, { uid: 'a1' }), { lanterne: true, ...opts })) {
+      if (!q.images(pose)) continue;
+      expect(q.images(pose), pose).toBe(images.length);
+      images.forEach((body, n) => {
+        const svg = svgOf(vb, body);
+        expect(q.image(pose, n + 1) === (pose.startsWith('avant_') ? miroir(svg) : svg), `${pose} ${n + 1}`).toBe(true);
+        seen++;
+      });
     }
     expect(seen).toBeGreaterThan(100);
   });

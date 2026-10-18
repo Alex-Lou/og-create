@@ -6,7 +6,7 @@
 // catalogue.json et la page index.html.
 //
 // La règle des noms, pour les personnages et les bêtes : <sujet>_<vue>_<pose>[_<variante>]_<n>.svg
-//   - sujet : sans « _ » (les mots se lient par « - ») : aster, aster-naufrage, poule-rousse, visiteur-03 ;
+//   - sujet : sans « _ » (les mots se lient par « - ») : aster, aster-naufrage, poule-rousse, arrivant-03 ;
 //   - vue : face, avant (trois quarts avant, vient vers le bas à droite), dos (trois quarts dos,
 //     s'éloigne vers le haut à droite), profil (tourné vers la droite) ; le miroir donne l'autre côté ;
 //   - n : le numéro d'image, à partir de 1 ; un dessin fixe n'a pas de numéro.
@@ -105,7 +105,6 @@ function moment(id, meta) {
   if (top === 'personnages') {
     if (a === 'epilogue') return 'epilogue';
     if (a === 'avatar') return 'tuto-1';
-    if (a === 'visiteurs') return 'acte-4';
     const m = MAITRES[b];
     if (!m) return 'partout';
     return a === 'naufrages' ? m[0] : m[1];
@@ -377,8 +376,6 @@ const ETAT_COFFRE = { ferme: 'fermé', ouverture: 'ouverture', ouvert: 'ouvert',
 function titreSujet(sujet) {
   const av = sujet.match(/^avatar-(\d+)(-naufrage)?$/);
   if (av) return `Avatar, exemple ${+av[1]}${av[2] ? ' (naufragé)' : ''}`;
-  const vi = sujet.match(/^visiteur-(\d+)$/);
-  if (vi) return `Visiteur ${+vi[1]}`;
   const ar = sujet.match(/^arrivant-(\d+)$/);
   if (ar) return `Nouveau venu ${+ar[1]} (épilogue)`;
   const m = sujet.match(/^([a-z]+)-naufrage$/);
