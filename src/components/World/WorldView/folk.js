@@ -4,7 +4,6 @@
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { villagerSprite } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
 import { thanksOf, askOr, affordable } from '@/world/needs';
