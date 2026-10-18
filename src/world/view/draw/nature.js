@@ -9,7 +9,8 @@ import { SEASON } from '@/world/plants';
 const RIMMED = new Set(['tree', 'palm', 'bush', 'birch', 'apple', 'autumn', 'snowpine', 'banana', 'treefern', 'kapok', 'monstera']);
 // Ce qui plie au vent, et de combien
 const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08, snowpine: 0.02, heather: 0.04,
-  banana: 0.05, treefern: 0.04, kapok: 0.025, monstera: 0.03, heliconia: 0.05, croton: 0.04, caladium: 0.05 };
+  banana: 0.05, treefern: 0.04, kapok: 0.025, monstera: 0.03, heliconia: 0.05, croton: 0.04, caladium: 0.05,
+  bromelia: 0.02, fiddlehead: 0.07, orchid: 0.08 };
 
 export default {
   // Décor fixe d'une case, cuit dans le sol sauf de près (sans le vent ; à demi effacé sous la brume, comme le sol) :

@@ -11,6 +11,7 @@ import { bubbleFace, builtOf } from '@/world/faces';
 import { islandOf, liveOf, TerrainCache, FEATHER, pavedAt } from '@/world/terrain';
 import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
+import { JUNGLE_ZONE } from '@/world/plants';
 import { riverLampsOf } from '@/world/pontRiviere';
 import { seaOf } from '@/world/sea';
 import { memory } from '@/world/view/memory';
@@ -167,6 +168,9 @@ export default {
         // (les cases pavées : terrain.js, pavedAt ; la clé de la carte change avec elles, serveur : world/paths.js)
         const paved = new Set(((state.roads && state.roads.paved) || []).map(([x, y]) => y * state.size + x));
         M.isPaved = (x, y) => paved.has(y * state.size + x);
+        // (la jungle du départ : son sol, son air ; terrain.js, lumiere/jungle.js)
+        const jungleZone = state.map.zones.findIndex(z => z.id === JUNGLE_ZONE);
+        M.jungle = (x, y) => jungleZone >= 0 && M.zone(x, y) === jungleZone;
         if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
         else if (this.M) {
           // Le sol a changé (un chemin tracé, un quartier dévoilé) : les carrés des cases changées et de leurs voisines

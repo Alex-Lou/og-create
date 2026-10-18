@@ -10,13 +10,17 @@
 //   le croton : un éventail de feuilles en lanière, magenta, violettes ou corail, nervurées de clair ;
 //   le caladium : des feuilles en cœur au ras du sol, roses bordées de vert ;
 //   le fromager : le grand arbre de la jungle, ses contreforts, son houppier sarcelle, ses lianes et leurs orchidées.
-const { OUT, E, r2 } = require('./troupe');
+const { r2 } = require('./troupe');
 
-const W = 1.1;
+// (le trait de la jungle : plus fin et plus froid que celui de l'île, une encre sarcelle profonde au lieu du brun ;
+// choix de l'auteur, 18 oct. : les plantes ne doivent pas faire « stickers collés » sur la carte)
+const OUT = '#123432';
+const W = 0.85;
+const E = (cx, cy, rx, ry, fill, w = W) => `<ellipse cx="${r2(cx)}" cy="${r2(cy)}" rx="${r2(rx)}" ry="${r2(ry)}" fill="${fill}" ${w ? `stroke="${OUT}" stroke-width="${r2(w)}"` : 'stroke="none"'}/>`;
 const pts = a => a.map(([x, y]) => `${r2(x)},${r2(y)}`).join(' L');
 const qPt = (a, c, b, t) => [0, 1].map(j => (1 - t) * (1 - t) * a[j] + 2 * (1 - t) * t * c[j] + t * t * b[j]);
 const qTan = (a, c, b, t) => [0, 1].map(j => 2 * (1 - t) * (c[j] - a[j]) + 2 * t * (b[j] - c[j]));
-const ombre = (rx, ry = rx * 0.42, dx = 3) => E(dx, 1.5, rx, ry, 'rgba(30,60,30,0.24)', 0);
+const ombre = (rx, ry = rx * 0.4, dx = 2) => E(dx, 1, rx * 0.8, ry * 0.8, 'rgba(6,40,36,0.16)', 0);
 
 // ——— les lueurs de la nuit (choix de l'auteur, 18 oct. : les couleurs néon de ses références le soir et la nuit, moins le
 // jour) : chaque plante a, en plus de son dessin, sa couche de lueurs (ses nervures, ses fleurs, ses bords qui luisent),
@@ -198,6 +202,49 @@ function fromager({ teinte = 'sarcelle', lianes = true } = {}) {
   return s;
 }
 
+// ——— les plantes basses du sous-bois (choix de l'auteur, 18 oct. : l'herbe et les petites plantes du décor passent en
+// jungle, à la place des touffes et des fleurs) ———
+// la broméliacée : une rosette de larges feuilles raides en lanière, et son cœur, une étoile de bractées vives
+function bromelia({ teinte = 'sarcelle', fleur = 'magenta', petit = false } = {}) {
+  const k = petit ? 0.72 : 1, c = T[teinte], f = T[fleur], id = `bro${teinte[0]}${fleur[0]}${petit ? 'p' : 'g'}`;
+  let s = ombre(17 * k);
+  const A = [-172, -8, -152, -28, -132, -48, -114, -66, -96, -82];
+  A.forEach((a, i) => { const r = (a * Math.PI) / 180, L = (i < 4 ? 21 : i < 8 ? 18 : 15) * k; s += feuille(`${id}${i}`, [0, -2 * k], [Math.cos(r) * L, -2 * k + Math.sin(r) * L * 1.05 + 2 * k], 4.2 * k, i % 2 ? c : T.profond, { fleche: 0.3, nervures: 4, maigre: 0.45 }); });
+  // (l'étoile de bractées, du fond vers nous, leurs pointes claires qui luisent la nuit)
+  [[-150, 9], [-30, 9], [-118, 11], [-62, 11], [-90, 12], [-135, 7], [-45, 7]].forEach(([a, l], i) => {
+    const r = (a * Math.PI) / 180, b = [0, -9 * k], q = [b[0] + Math.cos(r) * l * k * 1.1, b[1] + Math.sin(r) * l * k * 1.1], n = [-Math.sin(r) * 2.2 * k, Math.cos(r) * 2.2 * k];
+    s += `<path d="M${r2(b[0] + n[0])},${r2(b[1] + n[1])} L${r2(q[0])},${r2(q[1])} L${r2(b[0] - n[0])},${r2(b[1] - n[1])} Z" fill="${i % 2 ? f.light : f.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`;
+    luit(`M${r2(b[0])},${r2(b[1])} L${r2(q[0])},${r2(q[1])}`, neonDe(f), 0.55); point(q[0], q[1], 0.7 * k, neonDe(f));
+  });
+  return s + E(0, -9 * k, 2.2 * k, 1.6 * k, f.light, W);
+}
+// les crosses de fougère : une petite fougère au ras du sol, ses frondes basses et deux crosses qui se déroulent
+function crosses({ teinte = 'emeraude' } = {}) {
+  const c = T[teinte], id = `cro_s${teinte[0]}`;
+  let s = ombre(18);
+  s += [[-172, 28], [-8, 28], [-150, 24], [-30, 24], [-125, 20], [-55, 20]].map(([a, l], i) => fronde(`${id}${i}`, [0, -1], a, l, i < 2 ? T.profond : c, 0.7)).join('');
+  for (const [x, sg, h] of [[-3, -1, 6], [2, 1, 8]]) {
+    const top = -h, d = `M${x},-1 Q${x + sg * 0.5},${top * 0.6} ${x + sg * 1.2},${top} A2 2 0 1 1 ${x + sg * 3.6},${top - 2.2} A1 1 0 1 1 ${x + sg * 2.6},${top - 2.8}`;
+    s += `<path d="${d}" stroke="${OUT}" stroke-width="${r2(1.8 + 2 * W)}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${c.mid}" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${c.light}" stroke-width="0.6" fill="none" stroke-linecap="round"/>`;
+    luit(d, neonDe(c), 0.55);
+  }
+  return s;
+}
+// les orchidées terrestres : de longues feuilles fines, une hampe en arceau et ses fleurs (pétales, labelle vif)
+function orchidees({ fleur = 'magenta' } = {}) {
+  const f = fleur === 'blanches' ? { light: '#FFFFFF', mid: '#F4ECFF', dark: '#C8B4F0' } : T[fleur], labelle = fleur === 'blanches' ? T.magenta.mid : T.rose.light, id = `orc${fleur[0]}`, z = 1.3;
+  let s = ombre(15);
+  s += [[-150, 16], [-30, 17], [-118, 14], [-62, 15]].map(([a, l], i) => { const r = (a * Math.PI) / 180; return feuille(`${id}${i}`, [0, -1], [Math.cos(r) * l * z, -1 + (Math.sin(r) * l * 0.7 + 4) * z], 2.4 * z, i % 2 ? T.emeraude : T.profond, { fleche: 0.3, nervures: 3, maigre: 0.55 }); }).join('');
+  s += tige([0, -2], [10 * z, -26 * z], '#5E8A3A', 1.2);
+  [[3, -20], [7, -25], [12, -27], [16, -24], [-2, -15]].forEach(([x0, y0], i) => {
+    const k = (i === 4 ? 0.8 : 1) * z, x = x0 * z, y = y0 * z;
+    s += [0, 72, 144, 216, 288].map(a => { const r = ((a - 90) * Math.PI) / 180; return E(x + Math.cos(r) * 2.2 * k, y + Math.sin(r) * 2 * k, 1.9 * k, 1.9 * k, a % 144 ? f.mid : f.light, 0.7); }).join('');
+    s += E(x, y + 0.6 * k, 1.3 * k, 1.5 * k, labelle, 0.7) + E(x, y, 0.5, 0.5, '#FFE070', 0);
+    point(x, y, 1.1 * k, fleur === 'blanches' ? '#E8FFFA' : neonDe(f));
+  });
+  return s;
+}
+
 // [fichier, libellé, id du décor du jeu, dessin]
 const JUNGLE = [
   ...['acide', 'emeraude'].flatMap(t => [false, true].map(p => [`bananier${t === 'emeraude' ? '_emeraude' : ''}${p ? '_petit' : ''}`, `Bananier (${p ? 'petit' : 'grand'}, ${t})`, 'banana', () => bananier({ teinte: t, petit: p })])),
@@ -206,6 +253,9 @@ const JUNGLE = [
   ...['rouge', 'orange'].flatMap(f => [false, true].map(p => [`heliconia${f === 'orange' ? '_orange' : ''}${p ? '_petit' : ''}`, `Héliconia (${p ? 'petit' : 'grand'}, fleurs ${f}s)`, 'heliconia', () => heliconia({ fleur: f, petit: p })])),
   ...['magenta', 'corail', 'violet'].map(t => [`croton${t === 'magenta' ? '' : `_${t}`}`, `Croton (${t})`, 'croton', () => croton({ teinte: t })]),
   ...['rose', 'magenta'].map(t => [`caladium${t === 'rose' ? '' : `_${t}`}`, `Caladium (${t})`, 'caladium', () => caladium({ teinte: t })]),
+  ...[['sarcelle', 'magenta', false, ''], ['violet', 'corail', false, '_rouge'], ['acide', 'magenta', true, '_petite']].map(([t, f, p, n]) => [`bromelia${n}`, `Broméliacée (${t}, bractées ${f}${p ? ', petite' : ''})`, 'bromelia', () => bromelia({ teinte: t, fleur: f, petit: p })]),
+  ...['emeraude', 'acide', 'sarcelle'].map(t => [`crosses${t === 'emeraude' ? '' : `_${t}`}`, `Crosses de fougère (${t})`, 'fiddlehead', () => crosses({ teinte: t })]),
+  ...['magenta', 'blanches', 'violet'].map(f => [`orchidees${f === 'magenta' ? '' : `_${f === 'violet' ? 'violettes' : f}`}`, `Orchidées terrestres (${f})`, 'orchid', () => orchidees({ fleur: f })]),
   ...['sarcelle', 'emeraude'].flatMap(t => [true, false].map(l => [`fromager${t === 'emeraude' ? '_emeraude' : ''}${l ? '' : '_nu'}`, `Fromager (${t}${l ? ', lianes et orchidées' : ''})`, 'kapok', () => fromager({ teinte: t, lianes: l })]))
 ];
 
@@ -213,4 +263,4 @@ const JUNGLE = [
 // variantes : world/plants.js)
 const JUNGLE_NUIT = JUNGLE.map(([fichier, libelle, decor, dessin]) => [`${fichier}_nuit`, `${libelle}, ses lueurs de nuit`, decor, () => lueurDe(dessin)]);
 
-module.exports = { JUNGLE, JUNGLE_NUIT, lueurDe, bananier, monstera, fougere, heliconia, croton, caladium, fromager };
+module.exports = { JUNGLE, JUNGLE_NUIT, lueurDe, bananier, monstera, fougere, heliconia, croton, caladium, fromager, bromelia, crosses, orchidees };

@@ -152,6 +152,15 @@ const ZONE_MIX = 0.4;
 const zoneHue = i => (i < 0 ? null : ZONE_HUES[Math.floor(rnd(i, 7, 5) * ZONE_HUES.length)]);
 // L'herbe en hauteur prend un peu plus de soleil ; au pied d'une falaise, une ombre douce (couleur de sous-bois)
 const HEIGHT_LIGHT = '#F2F6C8', FOOT_SHADE = '#24474A';
+// Le sol de la jungle du départ (choix de l'auteur, 18 oct. : l'herbe s'adapte à la jungle ; M.jungle) : une mousse
+// émeraude et sarcelle, plus sombre et plus saturée, par grandes nappes, trouée de taches de soleil vert acide ; elle
+// prend le dessus sur l'herbe à mesure qu'on entre dans la jungle (la part de jungle des cases autour)
+const JUNGLE_DEEP = '#16855A', JUNGLE_TEAL = '#0E7270', JUNGLE_SUN = '#9EE04A', JUNGLE_FLOOR = 0.66;
+function jungleFloor(px, py) {
+  const n = vnoise(px * 0.2 + 5, py * 0.2 + 9, 301), sun = vnoise(px * 0.12 + 13, py * 0.12 + 2, 302);
+  const base = mixHex(JUNGLE_DEEP, JUNGLE_TEAL, n);
+  return sun > 0.62 ? mixHex(base, JUNGLE_SUN, Math.min(1, (sun - 0.62) * 3) * 0.7) : base;
+}
 export function paintColor(g, h, px, py) {
   const key = g === 't' ? 'g' : g === 'd' ? 's' : g === 'k' ? 'w' : g;
   const set = TOPS[key] || TOPS.g;
@@ -219,6 +228,18 @@ function groundField(M) {
       }
       return hues[k] < -1 ? null : k;
     };
+    // (la part de jungle autour d'une case, à deux cases : la mousse gagne en dégradé ; gardée par case)
+    const jungles = new Float32Array(n * n).fill(-1);
+    const jungleAt = (x, y) => {
+      if (!M.jungle) return 0;
+      const k = y * n + x;
+      if (jungles[k] < 0) {
+        let count = 0;
+        for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) if (M.jungle(x + i, y + j)) count++;
+        jungles[k] = count / 25;
+      }
+      return jungles[k];
+    };
     const tintAt = (nx, ny, cx, cy) => {
       const k = (((cy * (n + 1) + cx) * 4) + (ny - cy + 1) * 2 + (nx - cx + 1)) * 3;
       if (tint[k] < 0) {
@@ -227,6 +248,8 @@ function groundField(M) {
         if ('gmf'.includes(key)) col = mixHex(col, HEIGHT_LIGHT, Math.min(0.12, 0.035 * Math.max(0, h)));
         const rgb = rgbOf(col), hk = 'gmf'.includes(key) ? hueAt(nx, ny) : null;
         if (hk !== null) for (let c = 0; c < 3; c++) rgb[c] = rgb[c] * (1 - ZONE_MIX) + hues[hk + c] * ZONE_MIX;
+        const jw = 'gm'.includes(key) ? jungleAt(nx, ny) : 0;
+        if (jw > 0) { const floor = rgbOf(jungleFloor(cx - 0.5, cy - 0.5)); for (let c = 0; c < 3; c++) rgb[c] = rgb[c] * (1 - JUNGLE_FLOOR * jw) + floor[c] * JUNGLE_FLOOR * jw; }
         tint.set(rgb, k);
       }
       return k;
@@ -454,6 +477,41 @@ function grassSeed(ctx, x, y, c, base, bloom = 0.76) {
     const px = c.x + (rnd(x, y, 166) - 0.5) * 24, py = c.y + (rnd(x, y, 167) - 0.5) * 9;
     ctx.fillStyle = '#8F887C'; ctx.beginPath(); ctx.ellipse(px, py, 2.6, 1.6, 0, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#C9C2B4'; ctx.beginPath(); ctx.ellipse(px - 0.5, py - 0.6, 1.5, 0.8, 0, 0, Math.PI * 2); ctx.fill();
+  }
+}
+// Le semis de la jungle du départ, à la place des brins et des fleurs (choix de l'auteur, 18 oct.) : des feuilles
+// tombées (émeraude, sarcelle, vert acide, rarement un pétale magenta), leur nervure claire, parfois un brin de
+// fougère, des points de mousse
+const LITTER = ['#0B5A46', '#1C9A6A', '#0E6E6C', '#8CCB34', '#0B5A46', '#E2348E'];
+function jungleSeed(ctx, x, y, c) {
+  const count = 2 + Math.floor(rnd(x, y, 300) * 3);
+  for (let k = 0; k < count; k++) {
+    const u = rnd(x, y, k + 310) - 0.5, v = rnd(x, y, k + 320) - 0.5;
+    const px = c.x + (u - v) * TW * 0.44, py = c.y + (u + v) * TH * 0.44, a = rnd(x, y, k + 330) * Math.PI;
+    const tone = LITTER[Math.floor(rnd(x, y, k + 340) * (rnd(x, y, k + 350) < 0.15 ? LITTER.length : LITTER.length - 1))];
+    const L = 2.6 + rnd(x, y, k + 360) * 1.6;
+    ctx.fillStyle = 'rgba(6, 30, 26, .28)';
+    ctx.beginPath(); ctx.ellipse(px + 0.8, py + 0.6, L, L * 0.42, a, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = tone;
+    ctx.beginPath(); ctx.ellipse(px, py, L, L * 0.42, a, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(220, 255, 200, .45)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(px - Math.cos(a) * L * 0.8, py - Math.sin(a) * L * 0.8); ctx.lineTo(px + Math.cos(a) * L * 0.8, py + Math.sin(a) * L * 0.8); ctx.stroke();
+  }
+  const r = rnd(x, y, 370);
+  if (r < 0.3) {
+    // un brin de fougère : une nervure, ses folioles
+    const px = c.x + (rnd(x, y, 371) - 0.5) * 22, py = c.y + (rnd(x, y, 372) - 0.5) * 8;
+    ctx.strokeStyle = '#1FA070';
+    ctx.lineWidth = 0.9;
+    ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.quadraticCurveTo(px + 1, py - 4, px + 3.5, py - 6.5);
+    for (let i = 1; i <= 4; i++) { const qx = px + i * 0.8, qy = py - i * 1.5; ctx.moveTo(qx, qy); ctx.lineTo(qx - 2, qy - 0.8); ctx.moveTo(qx, qy); ctx.lineTo(qx + 1.8, qy + 0.4); }
+    ctx.stroke();
+  } else if (r < 0.55) {
+    // des points de mousse claire
+    ctx.fillStyle = 'rgba(170, 240, 120, .55)';
+    for (let k = 0; k < 4; k++) ctx.fillRect(c.x - 12 + rnd(x, y, k + 380) * 24, c.y - 4 + rnd(x, y, k + 390) * 8, 1.4, 1.4);
   }
 }
 // Eau douce : claire et turquoise le long des berges (le milieu paraît plus profond), un liseré lumineux au bord
@@ -832,6 +890,8 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   if (g === 'p' && !drawn) {
     ctx.fillStyle = 'rgba(120, 90, 50, .28)';
     for (let k = 0; k < 4; k++) ctx.fillRect(c.x - 14 + rnd(x, y, k) * 28, c.y - 5 + rnd(x, y, k + 9) * 10, 2, 2);
+  } else if ('gmt'.includes(g) && M.jungle && M.jungle(x, y)) {
+    jungleSeed(ctx, x, y, c);
   } else if (g === 'm') {
     // la prairie : des brins, et ses fleurs en nappes (plus souvent que dans l'herbe)
     grassSeed(ctx, x, y, c, paintColor(g, h, x, y), 0.44);

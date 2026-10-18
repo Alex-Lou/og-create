@@ -12,7 +12,7 @@ const DIR = fileURLToPath(new URL('../design/bibliotheque/svg/plantes/', import.
 // Ce que natureOf (WorldView/terrain.js) fait pousser
 const GROWN = ['tree', 'apple', 'birch', 'pine', 'autumn', 'palm', 'rock', 'rocks', 'crag', 'mossy', 'tuft', 'reeds', 'lily',
   'stump', 'heather', 'bush', 'snowpine', 'deadtree', 'cactus', 'flowers', 'mushrooms', 'log', 'shells', 'driftwood', 'nest',
-  'banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok'];
+  'banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok', 'bromelia', 'fiddlehead', 'orchid'];
 
 describe('les plantes de la bibliothèque', () => {
   it('chaque sorte qui pousse sur l\'île a son dessin, le dessin par défaut en tête', () => {
@@ -70,7 +70,7 @@ describe('les plantes de la bibliothèque', () => {
   });
 
   it('la jungle de la zone de départ luit la nuit : chaque plante a ses lueurs, qui ne se tirent pas comme variantes', () => {
-    for (const kind of ['banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok']) {
+    for (const kind of ['banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok', 'bromelia', 'fiddlehead', 'orchid']) {
       const look = plantLook(kind, 3, 5);
       expect(look.glow, kind).toEqual({ key: `plante-${look.name}_nuit`, make: expect.any(Function) });
     }
