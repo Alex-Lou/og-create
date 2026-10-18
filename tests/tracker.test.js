@@ -37,7 +37,8 @@ describe('à faire aussi', () => {
         { id: 'atelier', name: 'Nathan', needs: [{ id: 'outils', met: false, cost: { stone: 9 } }] }, // trop cher : pas encore
         { id: 'ponton', name: 'Lorena', needs: [{ id: 'manger', met: true }] }
       ],
-      visitor: { name: 'Pip', satisfied: false, request: { kind: 'livrer', resource: 'wood', amount: 3 } },
+      arrival: { id: 4, name: 'Pip', moment: 'ponton' },
+      houses: { total: 1, used: 0 },
       beasts: { list: [{ id: 'b1', name: 'Caramel', fed: false, ready: 0 }, { id: 'b2', name: 'Flocon', fed: true, ready: 2 }] },
       crafts: { catalog: [{ id: 'lanterne', name: 'Lanterne', reserve: 1, spots: [[1, 2]] }, { id: 'banc', name: 'Banc', reserve: 1, spots: [] }] }
     };
@@ -45,7 +46,7 @@ describe('à faire aussi', () => {
     expect(todo.map(t => [t.kind, t.arg ?? null, t.text])).toEqual([
       ['site', 'puits', 'Répare Le Puits'],
       ['villager', 'foyer', 'Agathe a faim'],
-      ['visitor', null, 'Pip attend sa demande'],
+      ['visitor', null, 'Pip peut s’installer'],
       ['beast', 'b1', 'Caramel a faim'],
       ['beast', 'b2', 'Tes bêtes ont quelque chose pour toi'],
       ['chests', null, '2 coffres à ouvrir'],
@@ -57,10 +58,10 @@ describe('à faire aussi', () => {
     expect(new Set(todo.map(t => t.id)).size).toBe(todo.length);
     expect(MAX_TODO).toBe(4);
   });
-  it('un voyageur comblé s’installe s’il reste une maison ; plusieurs bêtes affamées comptées ; rien sans île', () => {
+  it('un arrivant s’installe s’il reste une maison ; plusieurs bêtes affamées comptées ; rien sans île', () => {
     const base = { sites, villagers: [] };
-    expect(todoOf({ state: { ...base, visitor: { name: 'Pip', satisfied: true, request: { kind: 'livrer' } }, houses: { total: 2, used: 1 } } })[0].text).toBe('Pip peut s’installer');
-    expect(todoOf({ state: { ...base, visitor: { name: 'Pip', satisfied: true, request: { kind: 'livrer' } }, houses: { total: 1, used: 1 } } })).toEqual([]);
+    expect(todoOf({ state: { ...base, arrival: { id: 4, name: 'Pip', moment: 'ponton' }, houses: { total: 2, used: 1 } } })[0].text).toBe('Pip peut s’installer');
+    expect(todoOf({ state: { ...base, arrival: { id: 4, name: 'Pip', moment: 'ponton' }, houses: { total: 1, used: 1 } } })).toEqual([]);
     expect(todoOf({ state: { ...base, beasts: { list: [{ id: 'a', fed: false }, { id: 'b', fed: false }] } } })[0].text).toBe('2 bêtes ont faim');
     expect(todoOf({ state: null })).toEqual([]);
     expect(todoOf({ state: base })).toEqual([]);

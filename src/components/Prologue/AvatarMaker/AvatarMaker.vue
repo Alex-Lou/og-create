@@ -27,7 +27,7 @@
       <span v-if="!figure" class="avm__wait g-italic">{{ MAKER.wait }}</span>
       <div class="avm__thought"><slot name="thought" /></div>
       <!-- échoué, ou tel qu'avant la vague : un bouton qui bascule (il dit ce qu'on verra) -->
-      <button v-if="figure" type="button" class="avm__vague" :aria-pressed="!castawayLook" @pointerdown.stop @click.stop="castawayLook = !castawayLook">
+      <button v-if="figure && vague" type="button" class="avm__vague" :aria-pressed="!castawayLook" @pointerdown.stop @click.stop="castawayLook = !castawayLook">
         {{ castawayLook ? MAKER.vague.avant : MAKER.vague.echoue }}
       </button>
       <button type="button" class="avm__turn avm__turn--left" aria-label="Tourner vers la gauche" @click.stop="turn(-1)">↺</button>
@@ -189,7 +189,9 @@ export default {
     // Les choix complets (game/avatarCatalog.js, freeChoicesOf)
     modelValue: { type: Object, required: true },
     // Vu d'abord en naufragé (le prologue) ; sinon, tel qu'avant la vague (Mon compte)
-    castaway: { type: Boolean, default: true }
+    castaway: { type: Boolean, default: true },
+    // Le bouton échoué / avant la vague (pas pour un arrivant : il n'a pas fait naufrage)
+    vague: { type: Boolean, default: true }
   },
   emits: ['update:modelValue'],
   data() {

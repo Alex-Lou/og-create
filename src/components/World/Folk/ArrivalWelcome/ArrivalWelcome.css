@@ -1,0 +1,49 @@
+/* L'accueil d'un arrivant : l'éditeur de l'avatar prend tout l'écran, comme au prologue (PrologueAvatar.css : ses
+   jetons, ses boutons de bois flotté et de voile) ; le prénom et le métier sous la feuille des choix */
+.arw {
+  --arw-night: #05080f;
+  --arw-ink: #e8eef8;
+  --arw-muted: rgba(232, 238, 248, .7);
+  --arw-btn-rgb: 232, 238, 248;
+  --arw-error: #ffb4a8;
+  position: fixed; inset: 0; z-index: var(--z-modal); overflow: hidden; display: flex; flex-direction: column;
+  background: var(--arw-night); color: var(--arw-ink);
+}
+.arw__editor { flex: 1; min-height: 0; }
+.arw__thought { margin: 0; font-family: var(--font-fell); font-style: italic; font-size: 17px; line-height: 1.3; }
+.arw__wait { margin: auto; font-family: var(--font-fell); font-size: 18px; color: var(--arw-muted); }
+.arw__form { display: flex; flex-direction: column; gap: 6px; }
+/* (le prénom sur une ligne, son étiquette devant ; les métiers sur une rangée qui défile : la feuille des choix garde sa
+   place, même sur un téléphone) */
+.arw__name { display: flex; align-items: baseline; gap: 10px; }
+.arw__name .arw__label { flex: none; }
+.arw__label { display: block; margin: 0; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: var(--arw-muted); }
+.arw__name input {
+  flex: 1; min-width: 0; padding: 2px; border: 0; border-bottom: 2px solid rgba(var(--arw-btn-rgb), .45); background: transparent;
+  font-family: var(--font-fell); font-size: 20px; color: var(--arw-ink); outline: none;
+}
+.arw__name input:focus { border-bottom-color: var(--arw-ink); }
+.arw__roles { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -2px; padding: 0 2px; }
+.arw__roles::-webkit-scrollbar { display: none; }
+.arw__role {
+  flex: none; min-height: 40px; padding: 0 12px; white-space: nowrap; cursor: pointer; border-radius: 999px; background: rgba(var(--arw-btn-rgb), .08);
+  border: 1.5px solid rgba(var(--arw-btn-rgb), .3); color: var(--arw-ink); font-family: var(--font-fell); font-size: 16px;
+}
+.arw__role.is-on { background: rgba(var(--arw-btn-rgb), .22); border-color: var(--arw-ink); }
+.arw__note { margin: 0; font-family: var(--font-fell); font-style: italic; font-size: 14px; line-height: 1.25; color: var(--arw-muted); }
+.arw__error { margin: 0; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: var(--arw-error); }
+.arw__actions { display: flex; gap: 10px; margin-top: 4px; }
+.arw__back {
+  flex: none; min-height: 52px; padding: 0 16px; cursor: pointer; color: var(--ink-900); background: none;
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/perso/feuille_voile_repos.svg') 48 56 56 56 fill / 9px 10px 11px 10px stretch;
+  font-family: var(--font-fell); font-size: 18px;
+}
+.arw__back:active { border-image-source: url('/design/bibliotheque/svg/perso/feuille_voile_appuye.svg'); }
+.arw__ok {
+  flex: 1; min-height: 56px; cursor: pointer; background: none; color: var(--ink-900);
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/perso/feuille_bouton_repos.svg') 64 88 80 88 fill / 16px 22px 20px 22px stretch;
+  font-family: var(--font-fell); font-size: 21px;
+}
+.arw__ok:active { border-image-source: url('/design/bibliotheque/svg/perso/feuille_bouton_appuye.svg'); }
+.arw__ok:disabled { border-image-source: url('/design/bibliotheque/svg/perso/feuille_bouton_desactive.svg'); opacity: .8; cursor: default; }
+.arw__back:focus-visible, .arw__ok:focus-visible, .arw__role:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }

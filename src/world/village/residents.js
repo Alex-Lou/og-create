@@ -1,9 +1,10 @@
 // Le village (world/village.js) : les habitants. Qui vit où (la troupe rencontrée, les visiteurs installés, le visiteur
 // du moment), leurs tournées du jour et du soir, l'arrivée d'un naufragé, et ce qu'on dessine d'eux à chaque instant,
 // leur familier compris.
-import { villagerSprite, ROLES, SKINS, HAIRS } from '../villagers';
-import { visitorLook, visitorCast } from '../visitors';
-import { masterSprite, visitorSprite } from '../masterArt';
+import { ROLES, SKINS, HAIRS } from '../villagers';
+import { visitorLook } from '../visitors';
+import { masterSprite } from '../masterArt';
+import { arrivantSprite } from '../arrivantArt';
 import { FAMILIARS } from '../bestiary';
 import { besideOf, nearestWalk, doorOf } from './paths';
 import { hash, beast } from './beast';
@@ -151,15 +152,14 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
         zone: lifeZoneOf(grid, who.built ? site : { x: work.x, y: work.y, w: 1, h: 1 }, work, id)
       });
     });
-    // Qui ils sont dans la bibliothèque (visiteurs/) : les installés, dans l'ordre de leur arrivée, puis le visiteur
-    const cast = visitorCast([...settlers.map(s => s.seed), visitor && visitor.seed]);
     // Visiteurs installés : au bâtiment de leur métier, et à leur maison (à la place de l'annexe)
     settlers.forEach((s, i) => {
       if (!doors[s.site]) return;
       const k = MASTERS.length + i;
       const field = s.home ? besideOf(grid, s.home, doors[s.site]) : null;
       residents.push({
-        id: `vil:${s.id}`, k, row: residents.length, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name, cast: cast.get(s.seed),
+        // (settler : sa graine et ses choix d'allure, pour son dessin : arrivantArt.js)
+        id: `vil:${s.id}`, k, row: residents.length, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name, settler: { seed: s.seed, look: s.look || null },
         look: visitorLook(s.seed, s.role), work: doors[s.site], wake: 6.6 + (k % 3) * 0.25, bed: 21.4 + (k % 3) * 0.3,
         // (il dort à sa maison, sinon à la porte de son métier ; sa zone de vie, autour de sa maison)
         field, bedAt: field || doors[s.site],
@@ -170,7 +170,7 @@ export function residentsOf({ grid, M, sites, built, doors, home, foyer, troupe,
     if (visitor && doors.ponton) {
       const k = MASTERS.length + SETTLERS_MAX;
       residents.push({
-        id: `vis:${visitor.id}`, k, row: residents.length, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name, cast: cast.get(visitor.seed),
+        id: `vis:${visitor.id}`, k, row: residents.length, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name, settler: { seed: visitor.seed, look: null },
         look: visitorLook(visitor.seed, visitor.role), work: doors.ponton, wake: 7, bed: 21.3, field: null
       });
     }
@@ -532,12 +532,11 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     // La nuit, il dort couché à sa place, son familier à côté de lui (agenda.js : chez lui)
     if (p.pose === 'sleep') {
       const frame = Math.floor(t * 0.8 + r.k) % 2;
-      const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, { pose: 'sleep', frame }) : visitorSprite(r.cast, r.role, { pose: 'sleep', frame });
-      out.push({
-        // (night : il dort sa nuit, on ne le « réveille » pas comme un naufragé endormi ; gestures.js)
-        id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: 0, flip: false, pose: 'sleep', night: true,
-        sprite: art ? [art.key, art.make] : [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
-      });
+      // (un maître : son dessin de la bibliothèque ; un habitant venu d'ailleurs : le sien, dessiné à la volée, et rien
+      // tant que le générateur de l'avatar n'est pas chargé)
+      const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, { pose: 'sleep', frame }) : arrivantSprite(r.settler, r.role, { pose: 'sleep', frame });
+      // (night : il dort sa nuit, on ne le « réveille » pas comme un naufragé endormi ; gestures.js)
+      if (art) out.push({ id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: 0, flip: false, pose: 'sleep', night: true, sprite: [art.key, art.make] });
       if (pet) out.push(familiar(r, p.x + 0.34, p.y + 0.28, 0, false, 'rest'));
       continue;
     }
@@ -558,14 +557,15 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     // (à son rituel, il regarde où il le tient : au loin, vers l'eau…)
     const view = hop !== null ? 'front' : walking ? (p.back ? 'ne' : 'se') : p.view || (working ? 'se' : glance);
     const opts = { pose: hop !== null ? 'wave' : working ? 'work' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella, chore, tenue };
-    // Un maître ou un visiteur : son dessin de la bibliothèque (jamais en miroir de face ; la lanterne luit où il la tient)
-    const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : visitorSprite(r.cast, r.role, opts);
-    const flip = hop !== null || (art && art.view === 'face') ? false : walking ? p.flip : p.toward !== undefined ? p.toward : hash(r.k, Math.floor(t / 20)) < 0.5;
+    // Un maître : son dessin de la bibliothèque ; un habitant venu d'ailleurs : le sien, dessiné à la volée (rien tant que
+    // le générateur de l'avatar n'est pas chargé) ; jamais en miroir de face ; la lanterne luit où il la tient
+    const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : arrivantSprite(r.settler, r.role, opts);
+    if (!art) continue;
+    const flip = hop !== null || art.view === 'face' ? false : walking ? p.flip : p.toward !== undefined ? p.toward : hash(r.k, Math.floor(t / 20)) < 0.5;
     out.push({
-      id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip, pose: opts.pose,
-      sprite: art ? [art.key, art.make] : [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, { ...opts, chore: undefined })]
+      id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip, pose: opts.pose, sprite: [art.key, art.make]
     });
-    if (art ? art.lantern : lantern) lights.push(art ? { x: p.x, y: p.y, dx: flip ? -art.lantern[0] : art.lantern[0], dy: art.lantern[1] } : { x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
+    if (art.lantern) lights.push({ x: p.x, y: p.y, dx: flip ? -art.lantern[0] : art.lantern[0], dy: art.lantern[1] });
     if (pet) follow(r, pet, where, p, flip, t);
   }
   // Une rencontre : le visiteur arrivé, son hôte chez lui, tout près (agenda.js : la visite)

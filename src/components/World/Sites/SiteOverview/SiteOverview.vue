@@ -61,12 +61,13 @@
             <span v-else-if="awaits(v)" class="world__friend-dot" aria-hidden="true"></span>
           </button>
         </li>
+        <!-- l'arrivant qui attend au Ponton : on l'accueille (ArrivalWelcome) -->
         <li v-if="visitor">
-          <button type="button" class="world__friend is-guest" :aria-label="`${visitor.name}, ${visitor.role}, de passage`" @click="$emit('visitor')">
+          <button type="button" class="world__friend is-guest" :aria-label="`${visitor.name}, à accueillir`" @click="$emit('visitor')">
             <span class="world__friend-face"><img :src="visitorArt" alt="" /></span>
             <span class="world__friend-name">{{ visitor.name }}</span>
-            <span class="world__friend-guest">de passage</span>
-            <span v-if="!visitor.satisfied" class="world__friend-need is-quest" aria-hidden="true"><ElementGlyph glyph="ui:spark" /></span>
+            <span class="world__friend-guest">à accueillir</span>
+            <span class="world__friend-need is-quest" aria-hidden="true"><ElementGlyph glyph="ui:spark" /></span>
           </button>
         </li>
       </ul>

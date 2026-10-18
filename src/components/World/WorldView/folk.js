@@ -7,7 +7,7 @@ import playService from '@/services/playService';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
 import { thanksOf, askOr, affordable } from '@/world/needs';
-import { visitorCast, THANKS as VISITOR_THANKS } from '@/world/visitors';
+import { THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
 import { vibrate } from '@/utils/fx';
@@ -17,7 +17,8 @@ import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { momentsDue, momentLines } from '@/game/firstTimes';
-import { masterPortrait, visitorPortraitUrl } from '@/world/masterPortraits';
+import { masterPortrait } from '@/world/masterPortraits';
+import { arrivantPortrait } from '@/world/arrivantArt';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/texts/guide/tips';
 import { ANYA_RESTED, MEETINGS } from '@/texts/village';
@@ -46,7 +47,10 @@ export default {
       brumeSaid: '',
       brumeHint: null,
       visitorOpen: false,
-      visitorSaid: ''
+      visitorSaid: '',
+      // L'accueil de l'arrivant qui attend au Ponton (ArrivalWelcome) : ouvert, sa dernière erreur
+      arrivalOpen: false,
+      arrivalError: ''
     };
   },
   computed: {
@@ -108,9 +112,9 @@ export default {
       if (!who || !who.beast || !this.state || !this.state.beasts) return null;
       return this.state.beasts.list.find(b => b.id === who.beast) || null;
     },
-    // Le visiteur qu'on touche (who : { kind: 'villager', id: 'vis:<id>' }), ou null
+    // L'arrivant qu'on touche, qui attend au Ponton (who : { kind: 'villager', id: 'vis:<id>' }), ou null
     guestOf(who) {
-      const v = this.state && this.state.visitor;
+      const v = this.state && this.state.arrival;
       return v && who && who.id === `vis:${v.id}` ? v : null;
     },
     // Case de mer où s'amarre le bateau du visiteur : la plus proche du Ponton, et d'où il arrive (vers le large)
@@ -133,11 +137,37 @@ export default {
       const dy = (best.y - cy) / len;
       return { x: best.x, y: best.y, dx, dy, flip: dx - dy > 0 };
     },
-    // Portrait d'un visiteur (le visiteur du moment ou un installé) : le même visiteur de la bibliothèque que sur l'île
-    // (village/residents.js : visitorCast, sur les mêmes graines dans le même ordre)
+    // Portrait d'un habitant venu d'ailleurs (ou du visiteur du moment) : le même que sur l'île, d'après ses choix ou sa
+    // graine (arrivantArt.js ; '' tant que le générateur de l'avatar se charge : il se refait quand il arrive)
     visitorPortrait(v) {
-      const settlers = (this.state.villagers || []).filter(s => s.seed !== undefined).map(s => s.seed);
-      return visitorPortraitUrl(visitorCast([...settlers, this.state.visitor && this.state.visitor.seed]).get(v.seed));
+      return arrivantPortrait({ seed: v.seed, look: v.look || null });
+    },
+    // L'accueil de l'arrivant : composer son allure, choisir son métier et son prénom
+    openArrival() {
+      if (!this.state || !this.state.arrival) return;
+      this.site = null;
+      this.villagerId = null;
+      this.arrivalError = '';
+      this.arrivalOpen = true;
+    },
+    // Accueillir l'arrivant : le serveur vérifie (son prénom, ses choix, son métier, une maison libre) et l'installe
+    async welcomeArrival({ site, name, look }) {
+      const guest = this.state && this.state.arrival;
+      if (this.busy || !guest) return;
+      this.busy = true;
+      this.arrivalError = '';
+      try {
+        const { settled, coins, world } = await playService.arrivalWelcome(guest.id, { site, name, look });
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        this.arrivalOpen = false;
+        vibrate([12, 40, 18]);
+        this.$emit('show-alert', TOASTS.settled(settled));
+      } catch (error) {
+        this.arrivalError = messageOf(error, FAILED.arrival);
+      } finally {
+        this.busy = false;
+      }
     },
     openVisitor() {
       if (!this.state || !this.state.visitor) return;
@@ -198,7 +228,7 @@ export default {
       if (!info || !friend) return info;
       return { ...info, title: `${friend.name} · ${friend.role}`, text: ask ? askOr(friend, info.text) : info.text, hint: BUBBLES.hold };
     },
-    // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face ; un visiteur installé, d'après sa graine
+    // Portrait d'un habitant : un maître, celui de la bibliothèque ; un habitant venu d'ailleurs, le sien (visitorPortrait)
     // Portraits des habitants pour l'Aperçu du Foyer : refaits à chaque rendu de l'île, comme quand le gabarit appelait
     // portraitOf (le village, d'où vient l'apparence, n'est pas réactif)
     villagerPortraits() {

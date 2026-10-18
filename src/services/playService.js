@@ -325,6 +325,11 @@ export default {
   visitorSettle(id) {
     return http.post('/play/world/visitor/settle', { id }).then(response => response.data);
   },
+  // Accueillir l'arrivant qui attend au Ponton : son métier (site), son prénom, son allure (les choix de l'avatar)
+  // → { settled, coins?, world }
+  arrivalWelcome(id, { site, name, look }) {
+    return http.post('/play/world/arrival', { id, site, name, look }).then(response => response.data);
+  },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));
