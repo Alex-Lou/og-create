@@ -195,7 +195,7 @@ export const SCENES = {
     { scene: '11_reveil', who: 'Agathe', mood: 'emu', text: 'Mon caneton… Mon caneton !' },
     { scene: '11_reveil', who: 'Léo', text: 'Tatie ? … Tu sens la soupe. Alors c’est vrai, je rêve plus… On est bien perdus sur une île, alors ?' },
     { scene: '11_reveil', who: 'Agathe', mood: 'emu', text: 'Tu t’es réveillé… Tu t’es réveillé ! Je le savais, que tu savais nager.' },
-    { scene: '11_reveil', who: 'Léo', mood: 'surpris', text: 'Nager ? Je n’ai jamais su nager, Tatie… Je me suis réveillé sur une porte.' },
+    { scene: '11_reveil', who: 'Léo', mood: 'surpris', text: 'Nager ? Je n’ai jamais su nager, Tatie… Je me suis réveillé sur une planche.' },
     { scene: '11_reveil', who: 'Léo', text: 'Et ensuite, je me suis pris un coup sur la tête, et je me suis réveillé ici.' },
     { scene: '11_reveil', who: 'joueur', text: 'Encore un qui a eu une chance inouïe…' },
     { scene: '11_reveil', who: 'Nathan', mood: 'gene', text: '… Bon. Quelqu’un a un mouchoir ? C’est pour… Agathe.' }
@@ -394,7 +394,7 @@ export const LINES = {
   respire: { who: 'joueur', text: 'Il respire ? … Il respire.' },
   baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Ici, rien ne semble fonctionner normalement. Ni les baguettes, ni mes sens.' },
   ruban: 'Si Léo savait beaucoup de choses, ma brume lui en a peut-être pris une partie. On devra les retrouver dans le Grimoire.',
-  'grimoire-vole': { who: 'ponton', mood: 'pensif', text: 'Cette histoire de Grimoire est des plus étranges. Il fabrique tout, mais vole des connaissances aux autres.' },
+  'grimoire-vole': { who: 'ponton', mood: 'pensif', text: 'Cette histoire de brume et de Grimoire est des plus étranges. L’un fabrique tout, l’autre vole des connaissances.' },
   'pas-expres': { who: 'puits', mood: 'pensif', text: 'C’est pas grave. Tu l’as pas fait exprès… hein ?' },
   'expres-brume': 'Non… Il n’y a plus rien que je fasse exprès, depuis que j’ai tout oublié.',
   chut: { who: 'puits', mood: 'emerveille', text: 'Oui… Voilà ! Ça y est ! Je pense pouvoir sentir la source, et même peut-être l’atteindre avec… des outils…' },

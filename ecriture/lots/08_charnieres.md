@@ -1,5 +1,7 @@
 # Lot 08 — Les charnières de l'arc du Phare
 
+> **Révision du 18 octobre 2026** : le conseil (§ 1) a été réécrit par l'auteur (Nathan et le joueur y parlent, Brume finit sur « … Ma brume. ») ; le texte en jeu est celui de `lots/10_reecriture_auteur.md`. Les autres charnières ne changent pas.
+
 > Les répliques qu'ajoute l'arc du Phare (`ecriture/arc_phare.md`, décisions de l'auteur du 15 octobre, § 7, 1 à 6).
 > - **En ajout seulement** : aucune réplique des lots 01 à 07 n'est réécrite. Là où une réplique nouvelle s'appuie sur une ancienne, l'ancienne est citée, inchangée.
 > - Les règles : `ton.md` (140 caractères ; 6 bulles au plus par scène, 2 sur l'île ; un geste ciblé compte comme une reprise de main) ; ce qui dort sous l'île ne se nomme jamais ; Héliane ne dit jamais « Voile » ; pas de morale dite tout haut ; personne ne lit l'interface.
