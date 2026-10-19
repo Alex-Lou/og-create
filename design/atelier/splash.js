@@ -119,7 +119,7 @@ function fond(autour = {}) {
     + `<circle cx="${CX}" cy="${LY}" r="${f(120 * LUNE + 9)}" fill="none" stroke="#FFF6D8" stroke-width="1.6" opacity=".45"/>`
     + `<circle cx="${CX}" cy="${LY}" r="${f(120 * LUNE + 17)}" fill="none" stroke="#FFF6D8" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="0.1 9" opacity=".6"/>`;
   s += `<ellipse cx="${ax}" cy="300" rx="230" ry="170" fill="url(#spAura)"/>`
-    + `<g transform="translate(${f(ax - 40 * ka)} ${f(LY - 34 * ka)}) scale(${ka})">${anyaVeille()}</g>`
+    + `<g transform="translate(${f(ax - 40 * ka)} ${f(LY - 34 * ka)}) scale(${ka})">${(autour.anya || anyaVeille)()}</g>`
     + poussieres(ax, 290, 270, 170, 11) + brumeDevant(CX, 404);
   // l'île des naufragés, dessinée pour cet écran (splash_ile.js), devant elle ; la lumière de ses mains y tombe
   // (autour.ile : une autre île à sa place, celle de l'orage, splash_survie.js)

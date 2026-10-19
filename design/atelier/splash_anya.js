@@ -83,10 +83,12 @@ const etincelle = (x, y, r, a = 1, c = '#FFF8DC') => `<g opacity="${f(a)}"><path
 // la lumière chaude de ses mains ouvertes éclaire le devant de sa robe et son visage par en dessous ; des étincelles
 // montent de ses mains. Le bas de sa robe s'efface (sous la brume, derrière l'île). uid : le préfixe de ses
 // identifiants (chacun de ses exemplaires a les siens)
-const eveil = uid => A.anyaFrame('front', 'action', 1, 'content')
-  .replace(/id="([^"]+)"/g, `id="${uid}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${uid}$1)`).replace(/href="#([^"]+)"/g, `href="#${uid}$1"`);
+const prefixer = (svg, uid) => svg.replace(/id="([^"]+)"/g, `id="${uid}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${uid}$1)`).replace(/href="#([^"]+)"/g, `href="#${uid}$1"`);
+const eveil = uid => prefixer(A.anyaFrame('front', 'action', 1, 'content'), uid);
+// (dans la foudre de l'orage, son visage terrible, noir et argent, les bras toujours ouverts : anya.js, anyaTerrible)
+const eveilTerrible = uid => prefixer(A.anyaTerrible('front', 'action', 1), uid);
 const MAINS = [[14.4, 69], [65.6, 69]];
-function anyaVeille() {
+function anyaVeille(dessin = eveil) {
   const defs = '<defs>'
     + `<mask id="saFondu"><rect x="-40" y="-40" width="160" height="220" fill="url(#saFonduG)"/></mask>`
     + degrade('saFonduG', 0, 84, 0, 114, [[0, '#FFFFFF'], [0.5, '#FFFFFF', 0.55], [1, '#FFFFFF', 0]])
@@ -94,9 +96,12 @@ function anyaVeille() {
     + rayonne('saChaud', 40, 70, 40, [[0, '#FFE7A0', 0.4], [0.5, '#FFD978', 0.14], [1, '#FFD978', 0]])
     + rayonne('saMain', 0, 0, 16, [[0, '#FFFDF0'], [0.18, '#FFF4C0', 0.9], [0.5, '#FFE08A', 0.32], [1, '#FFE08A', 0]])
     + '</defs>';
-  let s = contreJour(eveil, 'sa', [0, 0, 80, 128], 70, 1.15);
-  s += `<rect x="-4" y="20" width="88" height="100" fill="url(#saChaud)" mask="url(#saS)"/>`;
-  s += MAINS.map(([x, y]) => `<circle transform="translate(${x} ${y})" r="16" fill="url(#saMain)"/>`).join('');
+  let s = contreJour(dessin, 'sa', [0, 0, 80, 128], 70, 1.15);
+  // (terrible, la chaleur de ses mains s'éteint : il reste ses étincelles)
+  if (dessin === eveil) {
+    s += `<rect x="-4" y="20" width="88" height="100" fill="url(#saChaud)" mask="url(#saS)"/>`;
+    s += MAINS.map(([x, y]) => `<circle transform="translate(${x} ${y})" r="16" fill="url(#saMain)"/>`).join('');
+  }
   // les étincelles qui montent de ses mains, de plus en plus petites
   const g = rnd(7);
   MAINS.forEach(([x, y], k) => {
@@ -109,4 +114,7 @@ function anyaVeille() {
   return defs + `<g mask="url(#saFondu)">${s}</g>`;
 }
 
-module.exports = { anyaVeille, etincelle, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };
+// Anya dans la foudre de l'orage de l'écran (splash_survie.js) : la même, à la même place, son visage terrible
+const anyaTerrible = () => anyaVeille(eveilTerrible);
+
+module.exports = { anyaVeille, anyaTerrible, etincelle, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };
