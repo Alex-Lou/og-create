@@ -10,13 +10,11 @@
 // profondeurs s'écarte quand il vient. Tout se déduit du temps.
 import { TH, TW, SEA_Z, worldOf } from '../terrain';
 import { hash } from '../scene';
+import { lisse as smooth } from '../maths';
 import { nearestOpen } from '../sea';
 import { along, ease } from '../flight';
 import { coupOf, cycleOf as coupDuCycle } from '../lumiere/eclairs';
 import { repere, poser } from './geant';
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
 
 export const KRAKEN_FOR = 80; // durée d'un passage (s)
 // Un passage imposé, pour le voir (essais : ?kraken, avec ?heure=nuit) : il commence 4 s après l'arrivée sur l'île

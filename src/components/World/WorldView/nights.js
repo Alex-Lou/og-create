@@ -6,6 +6,7 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
+import { loadText, saveText } from '@/utils/storage';
 import { recapOf, MS_PER_CELL } from '@/world/strays';
 import { SOUNDS } from '@/texts/village';
 import { coach } from '@/game/coach';
@@ -14,9 +15,7 @@ import { FAILED } from '@/texts/world/screens/alerts';
 
 // Le bilan d'une nuit se dit une fois par appareil (la dernière nuit racontée)
 const TOLD_KEY = 'oc_night_told';
-const told = () => {
-  try { return localStorage.getItem(TOLD_KEY); } catch (e) { return null; }
-};
+const told = () => loadText(TOLD_KEY);
 // Le chant du coq se montre s'il vient de passer (ms), ou s'il viendra dans la nuit
 const CROW_LATE_MS = 4000;
 const CROW_AHEAD_MS = 10 * 3600 * 1000;
@@ -104,7 +103,7 @@ export default {
       this.nightSheet = null;
       if (!sheet) return;
       if (sheet.mode === 'recap') {
-        try { localStorage.setItem(TOLD_KEY, sheet.id); } catch (e) { /* le confort seulement */ }
+        saveText(TOLD_KEY, sheet.id);
         return;
       }
       try {

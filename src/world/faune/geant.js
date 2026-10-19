@@ -5,10 +5,8 @@
 // queue. Elle est du décor (pour tous) ; tout se déduit du temps.
 import { TW, TH, SEA_Z, worldOf } from '../terrain';
 import { hash } from '../scene';
+import { clamp, lisse as smooth } from '../maths';
 import { IRIS } from '../lumiere/arcEnCiel';
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
 
 export const GEANT_EVERY = 420; // secondes entre deux passages (rare : choix de l'auteur, 18 oct.)
 export const GEANT_FOR = 48; // durée d'un passage

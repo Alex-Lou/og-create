@@ -25,3 +25,21 @@ export function remove(key) {
     // Stockage indisponible
   }
 }
+
+// Le même confort pour une valeur gardée en texte brut, sans JSON (un identifiant, « 1 ») : le format déjà écrit sur
+// les appareils ne change pas. Absente ou illisible : null.
+export function loadText(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+export function saveText(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Stockage indisponible
+  }
+}

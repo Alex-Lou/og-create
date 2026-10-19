@@ -4,8 +4,7 @@
 // en éclairant le sol, puis revient à sa place et se replie en petite flamme. Avant l'acte VI, rien : on ne dévoile
 // rien. Un toucher : elle lâche une gerbe de braises. Tout se déduit du temps.
 
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
+import { clamp, lisse as smooth } from './maths';
 
 export const PHENIX_EVERY = 240; // secondes entre deux vols
 export const PHENIX_FOR = 16; // durée d'un vol

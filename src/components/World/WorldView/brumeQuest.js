@@ -10,8 +10,12 @@ import { builtOf } from '@/world/faces';
 import { questShort, questPlan } from '@/game/prologue';
 import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
+import { load, save } from '@/utils/storage';
 import { BRUME_ALERTS, BRUME_ERRORS } from '@/texts/world/brume';
 import { MEMORY_HELP } from '@/texts/tutorial/coach';
+
+// Les naufrages déjà annoncés sur cet appareil (leurs ids)
+const WRECKS_KEY = 'oc_wrecks';
 
 // Un point de l'écran, s'il y est assez pour la bannière ; sinon le milieu de l'écran
 const MARGIN = 110;
@@ -56,12 +60,12 @@ export default {
     },
     // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
     checkWreck() {
-      let seen;
-      try { seen = JSON.parse(localStorage.getItem('oc_wrecks') || '[]'); } catch (e) { seen = []; }
-      const wreck = wreckOf(this.quest, Array.isArray(seen) ? seen : []);
+      const stored = load(WRECKS_KEY, []);
+      const seen = Array.isArray(stored) ? stored : [];
+      const wreck = wreckOf(this.quest, seen);
       if (!wreck || this.wreck || this.reveal || this.haul || this.holdWreck) return;
       this.wreck = wreck;
-      try { localStorage.setItem('oc_wrecks', JSON.stringify([...seen, wreck.id])); } catch (e) { /* le confort seulement */ }
+      save(WRECKS_KEY, [...seen, wreck.id]);
     },
     // Fin de l'annonce : la caméra va vers le quartier où dort le naufragé
     closeWreck() {

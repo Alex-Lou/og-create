@@ -25,6 +25,7 @@
 import { lueur, etoile, anneau, fumee } from '@/utils/vfx';
 import { roman } from '@/utils/roman';
 import { hash } from './scene';
+import { clamp, entre as smooth } from './maths';
 import { TINT, font } from './charte';
 import { FETE_WORDS as WORDS } from '@/texts/world/fetes';
 
@@ -40,8 +41,6 @@ export const burstOf = kind => (kind === 'decouverte' ? FIND_BURST_MS : BURST_MS
 // Le palier qui a son Grand moment
 export const GRAND_LEVEL = 4;
 
-const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const smooth = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
 const out = k => 1 - (1 - k) ** 3;
 
 // Teintes, en canaux

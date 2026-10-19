@@ -25,6 +25,10 @@ import { CLIMATE_NAMES } from '@/world/climates';
 import { gatheredBetween } from '@/world/pending';
 import { dueIn } from '@/world/due';
 import { TOASTS } from '@/texts/world/screens/alerts';
+import { loadText, saveText } from '@/utils/storage';
+
+// Le dernier arrivant vu accoster sur cet appareil (son id, en texte)
+const ARRIVAL_SEEN_KEY = 'oc_arrival_seen';
 
 export default {
   watch: {
@@ -292,11 +296,9 @@ export default {
       // Arrivant : sa barque s'amarre près du Ponton ; un arrivant jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.arrival ? this.dockOf(state, this.M) : null;
       if (state.arrival && this.visitorDock && !this.reduced()) {
-        let seen;
-        try { seen = localStorage.getItem('oc_arrival_seen'); } catch (e) { seen = null; }
-        if (seen !== String(state.arrival.id)) {
+        if (loadText(ARRIVAL_SEEN_KEY) !== String(state.arrival.id)) {
           this.boatArrival = { id: state.arrival.id, at: performance.now() / 1000 };
-          try { localStorage.setItem('oc_arrival_seen', String(state.arrival.id)); } catch (e) { /* stockage indisponible */ }
+          saveText(ARRIVAL_SEEN_KEY, String(state.arrival.id));
         }
       }
     },

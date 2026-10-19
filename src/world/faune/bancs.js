@@ -6,10 +6,8 @@
 // mouettes plongent dedans. Tout se déduit du temps, sauf le toucher (l'instant où l'on a touché le banc).
 import { TW, TH, SEA_Z, worldOf } from '../terrain';
 import { hash } from '../scene';
+import { clamp, lisse as smooth } from '../maths';
 import { lueur } from '@/utils/vfx';
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
 
 const AMPLE = 0.85; // le chemin du banc s'écarte de son centre (cases)
 const RETARD = 0.34; // chaque poisson suit le précédent avec ce retard (s)

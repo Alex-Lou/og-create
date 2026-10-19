@@ -11,6 +11,7 @@
 // (x, y) : l'ancre du phare dans le monde (le centre de l'îlot, au sol), en unités du monde.
 import { shadowTint } from './lumiere/ombres';
 import { goldenOf } from './lumiere/heureDoree';
+import { clamp } from './maths';
 
 // Le profil du phare (design/atelier/phare.mjs), en unités du monde : [hauteur, rayon] du pied au sommet du dôme
 const Z0 = 34, Z1 = 330, R0 = 46, R1 = 28, ZL0 = Z1 + 12, ZL1 = ZL0 + 52, RD = R1 + 2;
@@ -64,7 +65,6 @@ export function drawPhareOmbre(ctx, x, y, light) {
   ctx.restore();
 }
 
-const clamp = v => Math.min(1, Math.max(0, v));
 const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
 // Les couleurs du ciel que la mer renvoie
 const JOUR = [118, 168, 208], COUCHANT = [255, 168, 112], LUNE = [150, 170, 232], NUIT = [40, 52, 92], ORAGE = [96, 108, 128];
