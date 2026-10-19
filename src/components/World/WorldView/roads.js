@@ -24,8 +24,6 @@ import { BANNERS, BUBBLES } from '@/texts/world/screens/island';
 // Le creusement d'une case : 5 étapes de STAGE_MS, chaque case un peu après la précédente (STAGGER_MS)
 const STAGE_MS = 130;
 const STAGGER_MS = 70;
-// L'appui long qui trace d'un trait (plus court que celui des bulles d'info : on veut tracer)
-export const ROAD_HOLD_MS = 260;
 // Le zoom du tracé : une case d'environ 80 × 40 px, assez grande pour le doigt
 export const ROAD_SCALE = 1.25;
 // Le bord qui fait défiler pendant un trait : sa largeur (px) et la vitesse au plus près du bord (px d'écran par ms)
@@ -52,6 +50,11 @@ export default {
     this.roadDigs = [];
     // Cases qu'on vient de paver : leurs pierres se posent, de même
     this.roadSets = [];
+  },
+  beforeUnmount() {
+    // (le bord qui fait défiler pendant un tracé)
+    cancelAnimationFrame(this.edgeRaf);
+    this.edgeRaf = 0;
   },
   computed: {
     // Ce que dit le serveur des chemins : { laid: [[x, y, offerte]], stone, free, max }
