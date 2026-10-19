@@ -52,6 +52,9 @@ export default {
     this.stopGlide();
     this.feteCalm = performance.now();
     this.$refs.canvas.setPointerCapture(event.pointerId);
+    // Un premier doigt (isPrimary) : aucun autre n'est posé ; ceux encore retenus sont des restes (un lâcher jamais reçu),
+    // qui feraient d'un toucher un pincement et d'un glissement des sauts
+    if (event.isPrimary) this.pointers.clear();
     this.pointers.set(event.pointerId, this.point(event));
     clearTimeout(this.holdTimer);
     if (this.pointers.size === 1 && this.roadMode) {
