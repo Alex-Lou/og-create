@@ -16,14 +16,11 @@ export const MOMENTS = {
   feu: [19.6, 20.5],
   nuit: [21.5, 23.5],
   // Jour 2, Lorena (choix de l'auteur, 11 oct. : l'heure avance à chaque étape) : sa scène au réveil et sa caisse, sa
-  // longue-vue et sa Récolte, son Ponton, le chemin, ses piquets, ses portes au couchant ; le soir autour du feu, puis
-  // la deuxième nuit
+  // longue-vue et sa Récolte, son Ponton, le chemin ; le soir autour du feu, puis la deuxième nuit
   caisse: [7.5, 9.5],
   recolte: [10, 11.5],
   'premier-ponton': [12, 13.5],
   'chemin-aster': [14, 15.5],
-  clotures: [16, 17.5],
-  portes: [17.5, 18.5],
   veille: [19, 23.5],
   // Jour 3, Agathe (choix de l'auteur, 11 oct.) : sa scène au réveil et sa soupe, la cage, ses poules, leur
   // poulailler ; le soir à trois autour du feu, puis la troisième nuit
@@ -31,9 +28,9 @@ export const MOMENTS = {
   cage: [11, 12],
   poules: [12, 14],
   poulailler: [14, 15.5],
-  // (son abri, puis son enclos : choix de l'auteur, 13 oct.)
+  // (son abri, choix de l'auteur, 13 oct. ; puis la barrière du nord, 19 oct.)
   'abri-cannelle': [15.5, 16.5],
-  'enclos-cannelle': [16.5, 18],
+  barriere: [16.5, 18],
   'nuit-cannelle': [19, 23.5],
   // Jour 4, Nathan (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin et s'installe
   // dans son coin ; ses trois torches vers midi ; son premier outil l'après-midi (18 oct.) ; le soir à quatre, puis la

@@ -16,7 +16,7 @@ describe('l’horloge du tutoriel', () => {
     expect(tutorialDate('nuit', 0, today).getHours()).toBe(21);
     expect(hm(tutorialDate('caisse', 0, today))).toBe('7:30');
     // Le jour de Lorena : l'heure avance à chaque étape, jusqu'au soir autour du feu
-    expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 16, 19]);
+    expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille', 'barriere'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 19, 16]);
     // Le jour d’Agathe de même, jusqu'à la troisième nuit ; Nathan au matin
     expect(['soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 12, 14, 19, 8]);
     // Le jour de Nathan finit par la quatrième nuit ; Léo au matin suivant, jamais le même jour (choix de l'auteur, 13 oct.)

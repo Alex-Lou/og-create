@@ -94,7 +94,7 @@ export default {
         const c = this.ground(cells.reduce((t, p) => t + p.x, 0) / cells.length, cells.reduce((t, p) => t + p.y, 0) / cells.length);
         return { x: c.x, y: c.y, r: TW };
       }
-      // Le passage des égarés vers le camp de Lorena, où se plantent ses piquets (game/prologue.js : BARRAGE)
+      // Le passage des égarés vers le camp, au nord, où se plante la barrière (game/prologue.js : BARRAGE)
       if (kind === 'barrage') {
         const c = this.ground(BARRAGE.reduce((t, p) => t + p.x, 0) / BARRAGE.length, BARRAGE.reduce((t, p) => t + p.y, 0) / BARRAGE.length);
         return { x: c.x, y: c.y, r: TW };
@@ -119,12 +119,12 @@ export default {
         const c = this.ground(corner.x + (corner.w - 1) / 2, corner.y + (corner.h - 1) / 2);
         return { x: c.x, y: c.y - TW * 0.3, r: TW * 0.6 };
       }
-      // Le trait de l'enclos (leçon des clôtures) : la première case de l'anneau qui n'est pas encore dans le trait, d'où
-      // le doigt part (pendant la pose d'une création qui se trace)
+      // Le trait de la barrière (sa leçon) : la première case de la rangée qui n'est pas encore dans le trait, d'où le
+      // doigt part (pendant la pose d'une création qui se trace)
       if (kind === 'trace') {
         if (!this.lineCraft) return null;
         const cells = this.craftTrace ? this.craftTrace.cells : [];
-        const next = this.enclos.find(sp => !cells.some(c => c.x === sp.x && c.y === sp.y));
+        const next = this.barrier.find(sp => !cells.some(c => c.x === sp.x && c.y === sp.y));
         if (!next) return null;
         const g = this.ground(next.x, next.y);
         return { x: g.x, y: g.y, r: TW * 0.42 };

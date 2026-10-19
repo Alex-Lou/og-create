@@ -111,13 +111,12 @@ describe('le tutoriel', () => {
     expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse', 'ponton-moyens'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
     expect(island({ id: 'chemin-aster', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['voisins'] });
-    expect(island({ id: 'clotures', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] });
-    expect(island({ id: 'clotures', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chez-nous'] });
-    // Le soir : un égaré bute sur la clôture (Brume le montre), puis autour du feu personne ne sait cuisiner ; la deuxième
-    // nuit près de Brume
-    // (les égarés et la clôture : la scène de la veillée, quand on touche Brume pour dormir ; VEILLEE)
-    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' });
+    // Le soir : autour du feu personne ne sait cuisiner ; Brume dit ce qui sort de sa brume la nuit ; la deuxième nuit
+    // près de Brume (les égarés et le feu, sans clôture encore : la scène de la veillée, quand on touche Brume pour
+    // dormir ; VEILLEE ; choix de l'auteur, 19 oct.)
+    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller', 'egares-nuit'], line: 'soir' });
     for (const line of VEILLEE) expect(LINES[line], line).toBeTruthy();
+    expect(VEILLEE).toContain('dormeur-feu');
     expect(LINES['egare-la']).toMatchObject({ look: 'barrage', demo: 'egare' });
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
@@ -143,9 +142,10 @@ describe('le tutoriel', () => {
     // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
     expect(island({ id: 'abri-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['marmite', 'se-plaint', 'entends'] });
     expect(island({ id: 'abri-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['toit-a-moi'] });
-    expect(island({ id: 'enclos-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['cuisines', 'casseroles'] });
-    expect(island({ id: 'enclos-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['en-ville'] });
-    for (const line of ['marmite', 'se-plaint', 'toit-a-moi', 'cuisines', 'casseroles', 'en-ville']) expect(LINES[line], line).toBeTruthy();
+    // (puis la barrière du nord : ses poules filent, le Dormeur est venu jusqu'au feu ; choix de l'auteur, 19 oct.)
+    expect(island({ id: 'barriere', done: false }, all)).toEqual({ phase: 'lines', lines: ['poules-filent', 'barriere-nord', 'barriere-brume'] });
+    expect(island({ id: 'barriere', done: true }, all)).toEqual({ phase: 'lines', lines: ['chez-nous', 'poules-restent'] });
+    for (const line of ['marmite', 'se-plaint', 'toit-a-moi', 'poules-filent', 'barriere-nord', 'barriere-brume', 'chez-nous', 'poules-restent']) expect(LINES[line], line).toBeTruthy();
     expect(island({ id: 'nuit-cannelle', done: false }, all)).toEqual({ phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' });
     // (Nathan sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
@@ -191,7 +191,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
     // Chaque réplique nommée existe
-    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'ponton-moyens', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'ponton-moyens', 'chemin-camps', 'chemin-pieds', 'voisins', 'egares-nuit', 'egare-la', 'cloture-voyez', 'aster-dormir', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'cage-bois', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin de Lorena.
@@ -261,16 +261,16 @@ describe('les torches de Nathan (choix de l’auteur, 13 oct.)', () => {
     expect(torchSpotsOf(foyer, busy, [{ x: 99, y: 89 }, { x: 103, y: 93 }])).toHaveLength(1);
     expect(torchSpotsOf(foyer, spots, [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }])).toEqual([]);
   });
-  it('la nuit des lumières : un Sans-Nom voit la torche, va vers elle et s’arrête à son bord ; le téméraire s’y brûle ; le Dormeur s’endort contre l’enclos', () => {
+  it('la nuit des lumières : un Sans-Nom voit la torche, va vers elle et s’arrête à son bord ; le téméraire s’y brûle ; le Dormeur s’endort contre la barrière du nord', () => {
     const foyer = { x: 98, y: 92, w: 3, h: 3 };
     const torches = [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }].map(c => ({ craft: 'torche', ...c }));
-    const wall = [90, 91, 92, 93, 94, 95, 96].map(y => ({ craft: 'cloture', x: 96, y }));
-    const fates = lumieresOf(foyer, [...torches, ...wall]);
+    const barrier = [96, 97, 98, 99, 100, 101, 102].map(x => ({ craft: 'cloture', x, y: 90 }));
+    const fates = lumieresOf(foyer, [...torches, ...barrier]);
     expect(fates.map(f => [f.kind, f.end])).toEqual([['fantome', 'brule'], ['fantome', 'repousse'], ['fantome', 'repousse'], ['zombie', 'dort']]);
     // (à deux cases de sa torche, sa portée ; le téméraire, un pas plus loin)
     expect(fates.slice(0, 3).map(f => f.path[f.step])).toEqual([{ x: 99, y: 88 }, { x: 93, y: 93 }, { x: 105, y: 93 }]);
     // (le Dormeur s'arrête juste avant le piquet)
-    expect(fates[3].path[fates[3].step]).toEqual({ x: 95, y: 94 });
+    expect(fates[3].path[fates[3].step]).toEqual({ x: 97, y: 89 });
     // Sans torche ni clôture : tout droit sur le feu
     expect(lumieresOf(foyer, []).map(f => f.end)).toEqual(['arrive', 'arrive', 'arrive', 'arrive']);
   });

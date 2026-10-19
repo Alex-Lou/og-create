@@ -78,7 +78,7 @@
               @click="$emit('place', c.id)"
             >Poser · {{ c.reserve }}</button>
             <!-- (ce qui se pose d'un trait, sans réserve : fabriqué et payé en passant, une fois le premier assemblé, ou à
-                 l'enclos d’Agathe : le serveur le dit, traceable) -->
+                 la barrière du nord : le serveur le dit, traceable) -->
             <button
               v-else-if="c.line && c.traceable"
               type="button"

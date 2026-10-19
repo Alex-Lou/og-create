@@ -63,15 +63,11 @@ export const COACH = {
   clotures: {
     aster: 'Va voir Lorena : ses piquets t’attendent.',
     reserve: 'Tes clôtures attendent dans la réserve : touche « Poser ».',
-    cells: 'Plante tes premiers piquets sur les cases dorées, autour du feu.',
+    // (la barrière du nord : choix de l'auteur, 19 oct., textes validés)
+    cells: 'Plante tes premiers piquets sur les cases dorées, au nord du feu.',
     confirm: 'Touche « Poser ici ».',
-    trace: 'Appui long sur une case dorée, puis glisse le long de l’anneau : un piquet par case, jusqu’à boucler l’enclos.',
-    go: 'L’enclos est bouclé : touche « Valider ».'
-  },
-  // Les portes de l'enclos (choix de l'auteur, 15 oct. ; texte validé)
-  portes: {
-    lock: 'Les portes de Lorena ont leur verrou : touche « Avec verrou ».',
-    cells: 'Touche une case dorée : là où le sentier traverse l’enclos.'
+    trace: 'Appui long sur une case dorée, puis glisse le long de la ligne : un piquet par case, jusqu’au bout.',
+    go: 'La barrière est complète : touche « Valider ».'
   },
   feu: {
     site: 'Le chantier du feu de camp : touche-le.',
@@ -157,19 +153,12 @@ export const COACH = {
     deco: 'Il manque de quoi bâtir l’abri de Nathan : lance une Récolte, l’île en donne.',
     'torches-rivet': 'Il manque du bois pour les torches : lance une Récolte, l’île en donne.',
     'premier-ponton': 'Il manque du bois pour le Ponton : touche Lorena, une autre Récolte en donnera.',
-    'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
-    'enclos-cannelle': 'Il manque du bois pour l’enclos : lance une Récolte, l’île en donne.'
+    'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.'
   },
-  // L'abri d’Agathe, puis son enclos (choix de l'auteur, 13 oct.)
+  // L'abri d’Agathe (choix de l'auteur, 13 oct.)
   'abri-cannelle': {
     coin: 'Le coin d’Agathe : touche-le.',
     build: 'Vingt bois, dix pierres : bâtis son abri.'
-  },
-  'enclos-cannelle': {
-    cannelle: 'Va voir Agathe : son enclos t’attend.',
-    trace: 'Touche « Tracer » : les piquets se fabriquent en passant.',
-    glide: 'Appui long sur une case dorée, puis glisse autour de son coin.',
-    room: 'Plus de bois pour d’autres piquets : touche « Valider ». Une Récolte donnera le reste.'
   },
   claim: {
     brume: 'Ta récompense t’attend auprès de Brume.',

@@ -19,10 +19,6 @@ const WALL_CRAFTS = new Set(['cloture', 'muret', 'porte']);
 const DOOR = 'porte';
 // Les sols où une porte peut aller (herbe, sable, mousse, chemins, terre battue : serveur, la porte « gsmpkt »)
 const DOOR_GROUND = 'gsmpkt';
-// Les leçons du tutoriel où la porte se propose quand même (les clôtures de Lorena, ses portes) ; celle des portes, où
-// l'île la propose d'elle-même, sans « Plus tard » (lessonDoor)
-const DOOR_LESSONS = new Set(['quest-clotures', 'quest-portes']);
-const DOOR_LESSON = 'quest-portes';
 
 export default {
   data() {
@@ -79,7 +75,7 @@ export default {
     enclosures() {
       return this.enclosureMap ? enclosuresOf(this.enclosureMap) : [];
     },
-    // Le trait d'une clôture ou d'un muret en cours (hors leçon du tutoriel, qui montre déjà son anneau) : la boucle qui
+    // Le trait d'une clôture ou d'un muret en cours (hors leçon du tutoriel, qui montre déjà sa ligne) : la boucle qui
     // le fermerait, en pointillés, et ce qu'il y manque (world/enclosures.js : loopHintOf) ; { cells, closes }, ou null
     loopHint() {
       const map = this.enclosureMap;
@@ -112,26 +108,6 @@ export default {
         // (rien à payer tant qu'une porte attend en réserve, même verrouillée : serveur, placeDoor)
         plain: card.reserve > 0 ? DOOR_OFFER.reserve : costText(card.cost)
       };
-    },
-    // La leçon des portes, à l'écran (pas refermée d'une croix) : l'île propose la porte d'elle-même, sans « Plus tard »
-    doorLesson() {
-      return this.coachLessonId === DOOR_LESSON && !this.coachHidden;
-    },
-    // L'enclos dont la leçon des portes attend la porte (un trou dans son mur), quand rien d'autre n'est en cours : sa
-    // clé, ou null
-    lessonDoor() {
-      if (!this.doorLesson || this.doorOffer || this.craftPlacing || this.busy) return null;
-      const pen = this.enclosures.find(p => p.gaps.length);
-      return pen ? pen.key : null;
-    }
-  },
-  watch: {
-    lessonDoor: {
-      handler(key) {
-        const pen = key !== null && this.enclosures.find(p => p.key === key);
-        if (pen) this.doorOffer = { key, missing: pen.gaps.length };
-      },
-      immediate: true
     }
   },
   methods: {
@@ -140,10 +116,9 @@ export default {
       return new Map(this.enclosures.map(pen => [pen.key, pen.gaps.length]));
     },
     // Après une pose : un enclos nouveau, ou dont un trou vient de se combler, sans porte encore, propose la sienne (pas
-    // pendant une leçon du tutoriel, sauf celles des portes de Lorena)
+    // pendant une leçon du tutoriel : sa barrière du nord n'enclôt rien, choix de l'auteur, 19 oct.)
     offerDoor(before) {
-      const lesson = coach.state.lesson;
-      if (lesson && !DOOR_LESSONS.has(lesson.id)) return;
+      if (coach.state.lesson) return;
       const doors = new Set(this.crafted.filter(c => c.craft === DOOR).map(c => `${c.x},${c.y}`));
       const pen = this.enclosures.find(p => !before.has(p.key) && !p.fences.some(c => doors.has(`${c.x},${c.y}`)));
       if (!pen) return;

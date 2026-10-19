@@ -179,7 +179,7 @@ export default {
     }
   },
   watch: {
-    // (la même leçon, d'autres gestes : l'enclos, après les deux premiers piquets, se trace) : le geste montré repart
+    // (la même leçon, d'autres gestes : la barrière, après les premiers piquets, se trace) : le geste montré repart
     'lesson.steps'() {
       this.hole = null;
       this.shownAt = 0;

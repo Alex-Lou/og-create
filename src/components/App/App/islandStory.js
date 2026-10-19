@@ -33,9 +33,8 @@ const ACTS = {
   'quest-longue-vue': 'habitant:ponton',
   'quest-recolte': 'habitant:ponton',
   'short-premier-ponton': 'habitant:ponton',
-  'quest-clotures': 'habitant:ponton',
-  // (son enclos : Agathe touchée ouvre l'établi, « Tracer »)
-  'quest-enclos-cannelle': 'habitant:foyer',
+  // (la barrière du nord, au jour d’Agathe : Lorena touchée ouvre l'établi sur ses piquets ; choix de l'auteur, 19 oct.)
+  'quest-barriere': 'habitant:ponton',
   // (Nathan sort de la brume : sa scène ; puis il ouvre son établi sur ses trois torches : choix de l'auteur, 13 oct.)
   'quest-rivet-brume': 'habitant:atelier',
   'quest-torches-rivet': 'habitant:atelier',
@@ -51,11 +50,11 @@ const ACTS = {
 // sur sa planche, en attendant ses images sur la plage) : leurs répliques (texts/tutorial/scenes.js), puis l'étape suivante
 const ON_ISLAND = new Set(['ondin']);
 
-// Les leçons où toucher le personnage ouvre l'établi (les clôtures de Lorena, la lanterne et les torches de Nathan,
-// l'enclos d’Agathe)
+// Les leçons où toucher le personnage ouvre l'établi (la barrière du nord, avec les piquets de Lorena ; les torches de
+// Nathan)
 // Les nuits qui jouent leur scène avant qu'on dorme (veillee) : la veillée, la nuit des lumières ; seen : vue
 const NIGHT_SCENES = { 'quest-veille': { seen: 'veillee', lines: VEILLEE }, 'quest-nuit-rivet': { seen: 'lumieres', lines: LUMIERES } };
-const BENCH_LESSONS = new Set(['quest-clotures', 'quest-torches-rivet', 'quest-enclos-cannelle']);
+const BENCH_LESSONS = new Set(['quest-barriere', 'quest-torches-rivet']);
 
 // La croix d'une fenêtre ouverte (GModal) : la main y va quand une scène attend qu'on la ferme
 const CLOSE_WINDOW = '.g-modal__close';

@@ -107,7 +107,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour de Lorena (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'portes', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'barriere', 'nuit-cannelle', 'deco', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -224,30 +224,23 @@ const LESSONS = {
     { target: 'île:chemin', text: COACH['chemin-aster'].cells, free: true },
     { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: COACH['chemin-aster'].trace }
   ],
-  // Ses quatre piquets : toucher Lorena ouvre l'établi sur la réserve ; une case dorée (seulement celles du passage des
-  // égarés : BARRAGE), « Poser ici » ; la pose reprend tant qu'il en reste (WorldView, workshop.js : CHAIN_LESSONS)
-  clotures: [
+  // La barrière du nord (choix de l'auteur, 19 oct. : au jour d’Agathe, une barrière, pas un enclos) : toucher Lorena
+  // ouvre l'établi sur la réserve (les piquets de sa caisse) ; une case dorée de la barrière (barrierOf), « Poser ici » ;
+  // la pose reprend tant qu'il en reste (WorldView, workshop.js : CHAIN_LESSONS)
+  barriere: [
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
     { target: '.bench__btn--place', text: COACH.clotures.reserve },
     { target: 'île:pose', text: COACH.clotures.cells, free: true },
     { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
-  // (les deux premiers piquets posés à la main : le reste de l'enclos d'un trait, jusqu'à le boucler ; « Valider »
-  // seulement quand le trait le boucle : LineBar, full. Les gestes sur l'île restent libres : ↶ et « Annuler » se
+  // (les deux premiers piquets posés à la main : le reste de la barrière d'un trait, jusqu'au bout ; « Valider »
+  // seulement quand le trait la complète : LineBar, full. Les gestes sur l'île restent libres : ↶ et « Annuler » se
   // touchent, pour défaire un trait parti dans le mauvais sens, jusqu'au premier piquet ; choix de l'auteur, 15 oct.)
-  'clotures-trait': [
+  'barriere-trait': [
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
     { target: '.bench__btn--place', text: COACH.clotures.reserve },
     { target: 'île:trace', text: COACH.clotures.trace, free: true },
-    { target: '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', text: COACH.clotures.go }
-  ],
-  // Ses deux portes (choix de l'auteur, 15 oct.) : une sur chaque sentier qui traverse l'enclos. L'île les propose d'elle-
-  // même (WorldView, enclosures.js : lessonDoor) ; « Avec verrou » (sa caisse les a), une case dorée du mur, « Poser
-  // ici » ; la pose reprend sur le trou qui reste
-  portes: [
-    { target: '[data-coach="door-lock"]:not(:disabled)', text: COACH.portes.lock },
-    { target: 'île:pose', text: COACH.portes.cells },
-    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
+    { target: '[data-coach="line-go"][data-full="ligne"]:not(:disabled)', text: COACH.clotures.go }
   ],
   // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Nathan, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.) ; ses torches plantées, puis
@@ -297,19 +290,11 @@ const LESSONS = {
     { target: 'île:pose', text: COACH.poulailler.cells },
     { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],
-  // Son abri (choix de l'auteur, 13 oct.) : son coin touché, sa bulle, « Bâtir son abri » ; puis son enclos, que le
-  // joueur fabrique et paie : Agathe touchée ouvre l'établi, « Tracer », l'anneau autour de son coin, « Poser »
+  // Son abri (choix de l'auteur, 13 oct.) : son coin touché, sa bulle, « Bâtir son abri » ; puis la barrière du nord
+  // (barriere, plus haut)
   'abri-cannelle': [
     { target: 'île:coin:cannelle', text: COACH['abri-cannelle'].coin },
     { target: '.world__tip-btn[data-pick="coin:cannelle"]', text: COACH['abri-cannelle'].build }
-  ],
-  'enclos-cannelle': [
-    { target: 'île:habitant:foyer', text: COACH['enclos-cannelle'].cannelle },
-    { target: '[data-coach="bench-trace"]:not(:disabled)', text: COACH['enclos-cannelle'].trace },
-    { target: 'île:trace', text: COACH['enclos-cannelle'].glide, free: true },
-    { target: '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', text: COACH.clotures.go },
-    // (pas assez de bois pour tout l'anneau : on pose ce qu'on peut, la Récolte donnera le reste)
-    { target: '[data-coach="line-go"][data-full="bois"]:not(:disabled)', text: COACH['enclos-cannelle'].room }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour de Nathan (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis il
@@ -368,8 +353,7 @@ const SHORT = {
   deco: { target: '.world__play', text: COACH.short.deco },
   'torches-rivet': { target: '.world__play', text: COACH.short['torches-rivet'] },
   'premier-ponton': { target: 'île:habitant:ponton', text: COACH.short['premier-ponton'] },
-  'abri-cannelle': { target: '.world__play', text: COACH.short['abri-cannelle'] },
-  'enclos-cannelle': { target: '.world__play', text: COACH.short['enclos-cannelle'] }
+  'abri-cannelle': { target: '.world__play', text: COACH.short['abri-cannelle'] }
 };
 // Le coin dont chaque quête bâtit l'abri (serveur : world/shelters.js)
 const SHELTER_OF = { 'abri-cannelle': 'cannelle', deco: 'rivet' };
@@ -392,14 +376,10 @@ export function questShort(quest, state, stock) {
     const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'torche');
     return Boolean(made && !made.reserve && lacks(made.cost));
   }
-  // (l'abri d’Agathe, celui de Nathan ; son enclos à elle, tant qu'il n'y a pas de quoi payer un piquet)
+  // (l'abri d’Agathe, celui de Nathan)
   if (SHELTER_OF[quest.id]) {
     const shelter = state.shelters && state.shelters[SHELTER_OF[quest.id]];
     return Boolean(shelter && !shelter.built && lacks(shelter.cost));
-  }
-  if (quest.id === 'enclos-cannelle') {
-    const fence = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'cloture');
-    return Boolean(fence && !fence.reserve && lacks(fence.cost));
   }
   // (la cage s'ouvre sans rien payer : seul le repas compte)
   if (quest.id === 'poules') return !(state.camp || []).some(c => c.art === 'cage_coincee') && Boolean(state.beasts && lacks(state.beasts.cost));
@@ -419,21 +399,22 @@ export function questPlan(quest, state) {
 export const CLAIM_TAUGHT = 'pages';
 
 // Le passage des égarés vers le feu de camp, sur une île à la plage (serveur : world/places.js, BEACH : le Feu en
-// (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord (BARRAGE, sur l'enclos : là où la caméra regarde
-// quand Brume le dit). La nuit de la veillée, les égarés de EGARES (d'où ils sortent, et quand, en s ; side 'x' : ils viennent de
-// côté) descendent droit sur le feu et butent sur l'enclos (demos.js, strayDemo)
+// (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord (BARRAGE, sur la barrière du nord : là où la
+// caméra regarde quand Brume le dit). La nuit de la veillée, sans clôture encore (choix de l'auteur, 19 oct.), les égarés
+// de EGARES (d'où ils sortent, et quand, en s ; side 'x' : ils viennent de côté) descendent droit sur le feu : sa lumière
+// les arrête ; le Dormeur, qui ne la voit pas, vient s'endormir contre lui (demos.js, strayDemo)
 export const BARRAGE = [{ x: 98, y: 90 }, { x: 99, y: 90 }, { x: 100, y: 90 }, { x: 101, y: 90 }];
-// (qui : le Sans-Nom au nord, le Dormeur à l'ouest, l'Esprit à l'est, choix de l'auteur, 14 oct. ; kind : leur espèce,
-// serveur : services/nights.js, KINDS)
+// (qui : le Sans-Nom au nord, l'Esprit à l'est, choix de l'auteur, 14 oct. ; le Dormeur au nord aussi, sous les yeux de
+// la caméra, 19 oct. ; kind : leur espèce, serveur : services/nights.js, KINDS)
 export const EGARES = [
-  { x: 99, y: 86, at: 0, kind: 'fantome' }, { x: 92, y: 93, at: 1.2, side: 'x', kind: 'zombie' }, { x: 101, y: 85, at: 2.2, kind: 'fantome' },
+  { x: 99, y: 86, at: 0, kind: 'fantome' }, { x: 97, y: 85, at: 1.2, kind: 'zombie' }, { x: 101, y: 85, at: 2.2, kind: 'fantome' },
   { x: 106, y: 94, at: 3.2, side: 'x', kind: 'esprit' }, { x: 98, y: 85, at: 4.1, kind: 'fantome' }
 ];
 // La nuit des lumières (LUMIERES) : un Sans-Nom de chaque côté où Nathan a planté ses torches (le nord, l'ouest, l'est ;
-// celui du nord, un téméraire : bold), puis le Dormeur, à l'ouest
+// celui du nord, un téméraire : bold), puis le Dormeur, au nord : il s'endort contre la barrière
 const LUMIERES_FROM = [
   { x: 99, y: 84, at: 0, kind: 'fantome', bold: true }, { x: 90, y: 93, at: 1, side: 'x', kind: 'fantome' },
-  { x: 108, y: 93, at: 2, side: 'x', kind: 'fantome' }, { x: 91, y: 94, at: 3.2, side: 'x', kind: 'zombie' }
+  { x: 108, y: 93, at: 2, side: 'x', kind: 'fantome' }, { x: 97, y: 84, at: 3.2, kind: 'zombie' }
 ];
 // Ce qu'une lumière fait aux égarés, la règle du serveur (services/nights.js : fateOf), sans le passage en biais : le
 // Sans-Nom voit une lumière à SIGHT cases et part droit vers elle ; une clôture sur son chemin l'arrête d'abord (le
@@ -466,16 +447,15 @@ export function lumieresOf(foyer, placed) {
     return { kind: from.kind, at: from.at, path, step, end };
   });
 }
-// L'enclos du camp (choix de l'auteur, 13 oct. ; à deux cases, 15 oct. : une rangée libre dedans, pour ce qu'on défend) :
-// les cases de clôture permises (spots) à ENCLOS_GAP cases de la grande emprise du Feu (3 × 3 : elle ne bouge pas quand
-// il grandit), dans l'ordre d'un tour, en partant de la brèche ; foyer : le Feu de la vue (son emprise du moment). Les
-// sentiers qui le traversent restent libres (les portes, ensuite). [{ x, y }]
-const ENCLOS_GAP = 2;
-const gapTo = (v, a, w) => Math.max(a - v, 0, v - (a + w - 1));
+// La barrière du nord (choix de l'auteur, 19 oct. : une barrière, pas un enclos) : les cases de clôture permises (spots)
+// d'une rangée à deux cases au-dessus de la grande emprise du Feu (3 × 3 : elle ne bouge pas quand il grandit), de deux
+// cases à sa gauche à quatre à sa droite (serveur : world/migrate.js, toV6), d'ouest en est ; foyer : le Feu de la vue
+// (son emprise du moment). [{ x, y }]
 // La grande emprise du Feu (3 × 3), de la place de la vue (2 × 2 avant le palier IV : au coin bas-droit de la grande)
 const bigOf = foyer => (foyer.w >= 3 ? { x: foyer.x, y: foyer.y, w: 3, h: 3 } : { x: foyer.x - 1, y: foyer.y - 1, w: 3, h: 3 });
-export function enclosOf(foyer, spots) {
-  return ringOf(bigOf(foyer), spots, ENCLOS_GAP);
+export function barrierOf(foyer, spots) {
+  const big = bigOf(foyer);
+  return spots.filter(sp => sp.y === big.y - 2 && sp.x >= big.x - 2 && sp.x <= big.x + 4).sort((a, b) => a.x - b.x);
 }
 // Les trois torches de Nathan (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
 // le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu. Pour chaque côté encore sans torche (une
@@ -491,43 +471,18 @@ export function torchSpotsOf(foyer, spots, torches = []) {
     .map(side => spots.reduce((best, sp) => (!best || far(sp, side) < far(best, side) ? sp : best), null))
     .filter(Boolean);
 }
-// L'enclos d'un coin du camp (celui d’Agathe : state.camp, { x, y, w, h }) : à une case de lui, sauf ce qui borde le
-// Feu (son enclos à lui) ; même ordre (serveur : world/creations.js, fenceRingOf)
-export function cornerRingOf(corner, foyer, spots) {
-  const big = bigOf(foyer);
-  return ringOf(corner, spots.filter(sp => Math.max(gapTo(sp.x, big.x, 3), gapTo(sp.y, big.y, 3)) > 1));
-}
-// Les cases (parmi spots) à d cases du rectangle r, dans l'ordre d'un tour, en partant après le plus grand trou
-function ringOf(r, spots, d = 1) {
-  const ring = spots.filter(sp => Math.max(gapTo(sp.x, r.x, r.w), gapTo(sp.y, r.y, r.h)) === d);
-  const angle = sp => Math.atan2(sp.y - (r.y + (r.h - 1) / 2), sp.x - (r.x + (r.w - 1) / 2));
-  ring.sort((a, b) => angle(a) - angle(b));
-  if (ring.length < 2) return ring;
-  // (le tour commence juste après le plus grand trou : la brèche)
-  let cut = 0;
-  let widest = -1;
-  ring.forEach((sp, i) => {
-    const next = ring[(i + 1) % ring.length];
-    const d = (angle(next) - angle(sp) + 2 * Math.PI) % (2 * Math.PI);
-    if (d > widest) {
-      widest = d;
-      cut = (i + 1) % ring.length;
-    }
-  });
-  return [...ring.slice(cut), ...ring.slice(0, cut)];
-}
 // La nuit de la veillée (choix de l'auteur, 12 oct.) : touchée pour dormir, Brume joue la scène sur l'île, ces répliques
 // dans l'ordre (texts/tutorial/scenes.js : demo, ce que chacune fait voir ; App, islandStory.js : veillee), puis on dort.
-// Le Dormeur endormi contre l'enclos a sa réplique, et Lorena parle après la démonstration (choix de l'auteur, 15 oct. :
-// ecriture/lots/03_egares.md ; six bulles au plus, comme une scène)
-export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'dormeur-pique', 'cloture-voyez', 'aster-dormir'];
+// Le Dormeur, endormi tout contre le feu (pas de clôture encore : choix de l'auteur, 19 oct.), a sa réplique, et Lorena
+// parle après la démonstration (choix de l'auteur, 15 oct. : ecriture/lots/03_egares.md ; six bulles au plus)
+export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'dormeur-feu', 'cloture-voyez', 'aster-dormir'];
 // La nuit des lumières (choix de l'auteur, 18 oct.) : la quatrième nuit, touchée pour dormir, Brume montre à Nathan ce
 // qu'une lumière fait aux égarés (sa promesse : « On le saura cette nuit ») ; les égarés de LUMIERES_EGARES (demos.js)
 export const LUMIERES = ['lumieres-regarde', 'lumieres-bord', 'lumieres-brule', 'lumieres-nathan', 'lumieres-dormeur', 'lumieres-nourrir'];
-// Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
-// fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
-const COUNTED = new Set(['ramasser', 'clotures', 'portes', 'enclos-cannelle', 'torches-rivet']);
-// Les piquets de l'enclos posés un à un, à la main, avant le trait
+// Les leçons qui se répètent (trois trouvailles, les piquets de la barrière ; choix de l'auteur, 13 oct.) : chaque consigne
+// dite une fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
+const COUNTED = new Set(['ramasser', 'barriere', 'torches-rivet']);
+// Les piquets de la barrière posés un à un, à la main, avant le trait
 const BY_HAND = 2;
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
@@ -555,8 +510,8 @@ export function islandLesson(quest) {
     return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, quest.id in PLAN_WHY ? PLAN_WHY[quest.id] : PLAN_WHY.default) };
   }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [SHORT[quest.id]] };
-  // (l'enclos : deux piquets à la main, puis le reste d'un trait)
-  const steps = quest.id === 'clotures' && (quest.have || 0) >= BY_HAND ? LESSONS['clotures-trait'] : LESSONS[quest.id];
+  // (la barrière : deux piquets à la main, puis le reste d'un trait)
+  const steps = quest.id === 'barriere' && (quest.have || 0) >= BY_HAND ? LESSONS['barriere-trait'] : LESSONS[quest.id];
   const lesson = { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps };
   return COUNTED.has(quest.id) ? { ...lesson, once: true, tally: quest.need ? { have: quest.have || 0, need: quest.need } : null } : lesson;
 }
@@ -598,11 +553,10 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'premier-ponton') return { phase: 'lines', lines: quest.done ? ['ponton-tient', 'ponton-promesse', 'ponton-moyens'] : ['ponton-bois'] };
   // Le chemin entre son camp et le nôtre
   if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
-  // Ses quatre piquets, en travers du passage des égarés (BARRAGE) : Brume vous dit à quoi ils servent
-  if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] };
-  // Le soir : autour du feu, personne ne sait cuisiner (Agathe viendra au matin) ; la deuxième nuit, près de Brume, et
-  // sa scène quand on la touche pour dormir (VEILLEE : les égarés butent sur la clôture)
-  if (quest.id === 'veille') return { phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' };
+  // Le soir : autour du feu, personne ne sait cuisiner (Agathe viendra au matin) ; Brume dit ce qui sort de sa brume la
+  // nuit ; la deuxième nuit, près de Brume, et sa scène quand on la touche pour dormir (VEILLEE : le feu arrête les
+  // égarés, sauf le Dormeur)
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller', 'egares-nuit'], line: 'soir' };
   // Le jour d’Agathe (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
   // fait connaissance (vu : « cannelle-parle ») ; ses coquillages, sa soupe ; un fil d'histoire, sans tâche
   if (quest.id === 'soupe') {
@@ -624,9 +578,10 @@ export function islandStep({ state, quest }) {
   }
   // Leur poulailler (posé, Lorena propose de démonter la cage vide) ; le soir à trois autour du feu, la troisième nuit
   if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', 'cage-agathe', ...lines] : ['un-toit'] };
-  // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
+  // Son abri (choix de l'auteur, 13 oct.), puis la barrière du nord : ses poules filent, le Dormeur est venu jusqu'au feu
+  // (choix de l'auteur, 19 oct.)
   if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint', 'entends'] };
-  if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
+  if (quest.id === 'barriere') return { phase: 'lines', lines: quest.done ? ['chez-nous', 'poules-restent'] : ['poules-filent', 'barriere-nord', 'barriere-brume'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
   // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.) ; puis
   // il s'installe dans son coin, Lorena et Agathe curieuses : son abri (18 oct.)

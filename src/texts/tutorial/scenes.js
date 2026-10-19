@@ -304,20 +304,18 @@ export const LINES = {
   'chemin-camps': { who: 'ponton', mood: 'pensif', text: 'Avec deux camps, on sera d’abord moins serrés, mais on pourra aussi commencer à former une communauté de survivants.' },
   'chemin-pieds': 'Un chemin. Ça commence à ressembler à un petit village… Comme avant.',
   voisins: { who: 'ponton', mood: 'content', text: 'Voilà. Deux pas, et on est voisins.' },
-  'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
-  // Les clôtures : Brume vous apprend, à Lorena et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; la nuit de la
-  // veillée (game/prologue.js : VEILLEE ; choix de l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés butent
-  // dessus sous vos yeux (egare : demos.js, strayDemo), puis le feu repart (rallume)
-  'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils cherchent ce qui brille sans savoir pourquoi… et attaquent parfois ce qui bouge.',
-  'egares-nord': { text: 'Ils viennent de partout. Une clôture tout autour du feu… et ils s’arrêtent, je crois.', look: 'barrage' },
+  // Le soir, Brume dit ce qui sort de sa brume la nuit ; la nuit de la veillée (game/prologue.js : VEILLEE ; choix de
+  // l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés viennent sous vos yeux (egare : demos.js, strayDemo),
+  // puis le feu repart (rallume) : sa lumière les arrête, sauf le Dormeur, qui s'endort contre lui (choix de l'auteur,
+  // 19 oct. : pas de clôture encore)
+  'egares-nuit': 'La nuit, des égarés sortent de ma brume. Ils cherchent ce qui brille sans savoir pourquoi… et attaquent parfois ce qui bouge.',
   cachons: { text: 'Chut… Cachons-nous. Ne bougez plus.', look: 'site:foyer', demo: 'eteint' },
   'egare-la': { text: 'Chut… Là, au bord de la brume. Des égarés.', look: 'barrage', demo: 'egare' },
   visiteurs: { text: 'Celui-là marche les yeux fermés. Il ne regarde même pas le feu.', look: 'barrage' },
-  // (le Dormeur, endormi contre l'enclos : choix de l'auteur, 15 oct., ecriture/lots/03_egares.md)
-  'dormeur-pique': { text: 'Il s’est endormi contre les piquets. … Comme s’il n’attendait que ça… Étrange…', look: 'barrage' },
+  // (le Dormeur, endormi tout contre le feu : choix de l'auteur, 19 oct., texte validé)
+  'dormeur-feu': { text: 'Celui-là ne voit pas le feu. Il s’est endormi tout contre… Comme s’il n’attendait que ça… Étrange…', look: 'site:foyer' },
   'cloture-voyez': { text: 'Le feu repart. Ils rentrent dans la brume, sans un bruit, mais ils reviendront.', look: 'site:foyer', demo: 'rallume' },
   'aster-dormir': { who: 'ponton', mood: 'effraye', text: 'Je ne suis pas certaine de pouvoir fermer l’œil de la nuit, maintenant.' },
-  'cloture-deux': 'Une clôture, ça décore. Bien placée, ça protège aussi. Tout autour du feu, alors.',
   'chez-nous': 'Ça ressemble à un chez-nous.',
   cuisiner: { who: 'ponton', mood: 'gene', text: 'On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner.' },
   manger: 'Moi, je ne mange pas. Ça n’aide pas, je sais.',
@@ -360,14 +358,17 @@ export const LINES = {
   // La cage vide, le poulailler posé : Lorena propose de la démonter (choix de l'auteur, 15 oct. ; texte validé)
   'cage-bois': { who: 'ponton', mood: 'malicieux', text: 'Tes poules ont un vrai toit, maintenant. Cette vieille cage ? Démonte-la : du bois de navire, ça ne se jette pas.' },
   'cage-agathe': { who: 'foyer', mood: 'malicieux', text: 'Prends-la. Mais si tu en fais un ponton, mes filles auront leur place dessus.' },
-  // L'abri d’Agathe, puis son enclos (choix de l'auteur, 13 oct. ; textes validés)
+  // L'abri d’Agathe (choix de l'auteur, 13 oct. ; textes validés)
   marmite: { who: 'foyer', mood: 'fatigue', text: 'Mes filles ont un toit. Moi, je dors comme je peux, mais ça fera l’affaire pour ce soir.' },
   'se-plaint': 'Elle se plaint un peu. Bâtis-lui un abri, à côté de sa cuisine.',
   entends: { who: 'foyer', mood: 'boude', text: 'Je t’entends, feu follet.' },
   'toit-a-moi': { who: 'foyer', mood: 'content', text: 'Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe.' },
-  cuisines: 'Les égarés cherchent ce qui brille, et une cuisine brille toute la nuit. Il lui faut un enclos, à elle aussi.',
-  casseroles: { who: 'foyer', mood: 'malicieux', text: 'Et pas de piquet dans mes casseroles, hein.' },
-  'en-ville': { who: 'foyer', mood: 'rire', text: 'Une cuisine avec une clôture. C’est tellement pittoresque.' },
+  // Puis la barrière du nord : ses poules filent, le Dormeur est venu jusqu'au feu (choix de l'auteur, 19 oct. ; textes
+  // validés) ; « Ça ressemble à un chez-nous » (chez-nous) la salue
+  'poules-filent': { who: 'foyer', mood: 'boude', text: 'Mes poules filent vers la brume dès que j’ai le dos tourné.' },
+  'barriere-nord': { who: 'ponton', mood: 'determine', text: 'Et cette nuit, le dormeur est venu jusqu’au feu. Une barrière au nord : les piquets sont dans ma caisse.', look: 'barrage' },
+  'barriere-brume': 'Une clôture, ça décore. Bien placée, ça protège aussi. Pas besoin d’en faire le tour : le feu garde le reste.',
+  'poules-restent': { who: 'foyer', mood: 'rire', text: 'Mes poules restent de ce côté. Le dormeur, lui, ira dormir ailleurs.' },
   'a-table': { who: 'foyer', mood: 'rire', text: 'À table ! Ce soir, on mange chaud.' },
   'trois-feu': { who: 'ponton', mood: 'emu', text: 'Trois autour du feu. Hier encore, on dînait de racines.' },
   chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… celle de mon Léo. Mangez, avant que ça refroidisse.' },
@@ -400,7 +401,7 @@ export const LINES = {
   'outil-fait': { who: 'ponton', mood: 'rire', text: 'Une vraie canne ! Je pêchais avec une ficelle et beaucoup d’espoir.' },
   // La nuit des lumières (choix de l'auteur, 18 oct. ; textes validés) : Brume touchée pour dormir, les égarés vont vers
   // les torches et s'arrêtent à leur bord, le téméraire s'y brûle (lumieres : demos.js, lightDemo) ; le Dormeur s'endort
-  // contre l'enclos ; les flammes, il faudra les nourrir
+  // contre la barrière du nord ; les flammes, il faudra les nourrir
   'lumieres-regarde': { text: 'Regarde, Nathan. Ta réponse arrive.', look: 'site:foyer', demo: 'lumieres' },
   'lumieres-bord': { text: 'La plupart s’arrêtent au bord de la lumière, et rebroussent chemin.', look: 'site:foyer' },
   'lumieres-brule': { text: 'Celui-là a osé. La flamme l’a mordu : il s’est dissipé.', look: 'site:foyer' },

@@ -2,7 +2,7 @@
 // chaque étape de l'île (game/prologue.js : islandLesson)
 import { describe, it, expect, beforeEach } from 'vitest';
 import { coach } from '@/game/coach';
-import { islandLesson, questShort, questPlan, enclosOf, cornerRingOf } from '@/game/prologue';
+import { islandLesson, questShort, questPlan, barrierOf } from '@/game/prologue';
 
 describe('le coach', () => {
   beforeEach(() => {
@@ -85,7 +85,7 @@ describe('les leçons de l’île', () => {
     expect(first({ id: 'caisse', done: false })).toBe('île:caisse');
     expect(first({ id: 'premier-ponton', done: false })).toBe('île:site:ponton');
     expect(first({ id: 'premier-ponton', done: false, short: true })).toBe('île:habitant:ponton');
-    expect(first({ id: 'clotures', done: false })).toBe('île:habitant:ponton');
+    expect(first({ id: 'barriere', done: false })).toBe('île:habitant:ponton');
     expect(islandLesson({ id: 'chemin-aster', done: false }).steps.map(st => st.target)[1]).toBe('île:chemin');
     expect(first({ id: 'soupe', done: false })).toBe('île:besoin:foyer');
     expect(first({ id: 'puits-ondin', done: false })).toBe('île:site:puits');
@@ -99,61 +99,36 @@ describe('les leçons de l’île', () => {
     expect(pages.steps.map(st => st.target)).toEqual(['.book-view__shelf [data-name="Air"]', '.athanor__fuse:not(:disabled)']);
     expect(islandLesson(null)).toBeNull();
   });
-  it('ramasser et les clôtures comptent (consigne dite une fois) ; la récompense : la main seule sur Brume', () => {
+  it('ramasser et la barrière comptent (consigne dite une fois) ; la récompense : la main seule sur Brume', () => {
     expect(islandLesson({ id: 'ramasser', done: false, have: 1, need: 3 })).toMatchObject({ once: true, tally: { have: 1, need: 3 } });
-    expect(islandLesson({ id: 'clotures', done: false, have: 2, need: 4 })).toMatchObject({ once: true, tally: { have: 2, need: 4 } });
+    expect(islandLesson({ id: 'barriere', done: false, have: 2, need: 7 })).toMatchObject({ once: true, tally: { have: 2, need: 7 } });
     expect(islandLesson({ id: 'recolte', done: false }).once).toBeUndefined();
     const claim = islandLesson({ id: 'soupe', done: true }).steps;
     expect(claim[0]).toMatchObject({ target: 'île:brume', hush: true });
     expect(claim[0].text).toBeTruthy();
     expect(claim.slice(1).some(st => st.hush)).toBe(false);
   });
-  it('l’enclos : deux piquets à la main, puis le reste d’un trait, « Poser » quand il boucle', () => {
-    const targets = have => islandLesson({ id: 'clotures', done: false, have, need: 20 }).steps.map(st => st.target);
+  it('la barrière du nord : deux piquets à la main, puis le reste d’un trait, « Valider » quand elle est complète', () => {
+    const targets = have => islandLesson({ id: 'barriere', done: false, have, need: 7 }).steps.map(st => st.target);
     expect(targets(1)).toContain('île:pose');
     expect(targets(2)).toContain('île:trace');
-    expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full="anneau"]:not(:disabled)');
+    expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full="ligne"]:not(:disabled)');
+    // (plus de leçon des portes ni de l'enclos d’Agathe : choix de l'auteur, 19 oct.)
+    expect([islandLesson({ id: 'portes', done: false }), islandLesson({ id: 'enclos-cannelle', done: false })]).toEqual([null, null]);
   });
-  it('l’anneau de l’enclos : à deux cases de la grande emprise du Feu, dans l’ordre d’un tour depuis la brèche', () => {
-    // (le Feu au palier I : 2 × 2 en (99, 93) ; sa grande emprise, 3 × 3 en (98, 92) ; choix de l'auteur, 15 oct. : une
-    // rangée libre dedans ; les sentiers en (96, 92) et (96, 95), l'épave en (96..97, 96))
-    const ring = [[96, 90], [97, 90], [98, 90], [99, 90], [100, 90], [101, 90], [102, 90], [102, 91], [102, 92], [102, 93], [102, 94], [102, 95],
-      [102, 96], [101, 96], [100, 96], [99, 96], [98, 96], [96, 94], [96, 93], [96, 91]];
-    const spots = [...ring, [97, 92], [104, 93], [99, 88]].map(([x, y]) => ({ x, y }));
-    const out = enclosOf({ x: 99, y: 93, w: 2, h: 2 }, spots);
-    expect(out).toHaveLength(20);
-    // (le tour part d'un bord de la brèche, le coin de l'épave, et finit à l'autre ; deux cases se suivent toujours de
-    // près, le sentier en (96, 92) ne laissant qu'un saut d'une case)
-    const ends = [out[0], out.at(-1)].map(c => `${c.x},${c.y}`).sort();
-    expect(ends).toEqual(['96,94', '98,96']);
-    out.slice(1).forEach((c, i) => expect(Math.max(Math.abs(c.x - out[i].x), Math.abs(c.y - out[i].y))).toBeLessThanOrEqual(2));
-    // (au palier IV, l'emprise est déjà la grande : le même anneau)
-    expect(enclosOf({ x: 98, y: 92, w: 3, h: 3 }, spots)).toHaveLength(20);
+  it('la barrière du nord : une rangée à deux cases au-dessus de la grande emprise du Feu, de deux cases à sa gauche à quatre à sa droite, d’ouest en est', () => {
+    // (le Feu au palier I : 2 × 2 en (99, 93) ; sa grande emprise, 3 × 3 en (98, 92) ; choix de l'auteur, 19 oct.)
+    const row = [[96, 90], [97, 90], [98, 90], [99, 90], [100, 90], [101, 90], [102, 90]];
+    const spots = [[102, 90], ...row.slice(0, 6), [95, 90], [103, 90], [99, 89], [102, 91], [96, 93]].map(([x, y]) => ({ x, y }));
+    expect(barrierOf({ x: 99, y: 93, w: 2, h: 2 }, spots).map(c => [c.x, c.y])).toEqual(row);
+    // (au palier IV, l'emprise est déjà la grande : la même rangée)
+    expect(barrierOf({ x: 98, y: 92, w: 3, h: 3 }, spots)).toHaveLength(7);
   });
-  it('les portes de l’enclos : « Avec verrou », une case dorée du mur, « Poser ici » ; elles comptent', () => {
-    const doors = islandLesson({ id: 'portes', done: false, have: 1, need: 2 });
-    expect(doors.steps.map(st => st.target)).toEqual(['[data-coach="door-lock"]:not(:disabled)', 'île:pose', '[data-coach="craft-confirm"]:not(:disabled)']);
-    expect(doors).toMatchObject({ id: 'quest-portes', once: true, tally: { have: 1, need: 2 } });
-    doors.steps.forEach(st => expect(st.text).toBeTruthy());
-  });
-  it('l’abri d’Agathe, puis son enclos : son coin, « Bâtir son abri » ; Agathe, « Tracer », le trait, « Poser »', () => {
+  it('l’abri d’Agathe : son coin, « Bâtir son abri » ; il manque de quoi payer : une Récolte', () => {
     expect(islandLesson({ id: 'abri-cannelle', done: false }).steps.map(st => st.target)).toEqual(['île:coin:cannelle', '.world__tip-btn[data-pick="coin:cannelle"]']);
-    const yard = islandLesson({ id: 'enclos-cannelle', done: false, have: 0, need: 8 });
-    expect(yard.steps.map(st => st.target)).toEqual(['île:habitant:foyer', '[data-coach="bench-trace"]:not(:disabled)', 'île:trace', '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', '[data-coach="line-go"][data-full="bois"]:not(:disabled)']);
-    expect(yard).toMatchObject({ once: true, tally: { have: 0, need: 8 } });
-    // (il manque de quoi payer : une Récolte)
-    const state = { shelters: { cannelle: { cost: { wood: 20, stone: 10 }, open: true, built: false } }, crafts: { catalog: [{ id: 'cloture', reserve: 0, cost: { wood: 8 } }] } };
+    const state = { shelters: { cannelle: { cost: { wood: 20, stone: 10 }, open: true, built: false } } };
     expect(questShort({ id: 'abri-cannelle', done: false }, state, { wood: 20, stone: 5 })).toBe(true);
     expect(questShort({ id: 'abri-cannelle', done: false }, state, { wood: 20, stone: 10 })).toBe(false);
-    expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 7 })).toBe(true);
-    expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 8 })).toBe(false);
-  });
-  it('l’anneau du coin d’Agathe : à une case de lui, sans ce qui borde le Feu (son enclos à lui)', () => {
-    // (sa cuisine, 2 × 2 en (99, 96) ; le Feu au palier I, 2 × 2 en (99, 93), sa grande emprise en (98, 92))
-    const spots = [];
-    for (let y = 93; y <= 99; y++) for (let x = 96; x <= 103; x++) spots.push({ x, y });
-    const ring = cornerRingOf({ x: 99, y: 96, w: 2, h: 2 }, { x: 99, y: 93, w: 2, h: 2 }, spots);
-    expect(ring.map(c => `${c.x},${c.y}`).sort()).toEqual(['100,98', '101,96', '101,97', '101,98', '98,96', '98,97', '98,98', '99,98']);
   });
   it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
     // (ses coquillages d'abord, tant qu'il en reste sur le rivage : le geste le plus avancé à l'écran ; puis sa bulle)

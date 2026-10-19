@@ -9,14 +9,14 @@ import { TW, TH } from '@/world/view/constants';
 import { moveSpots, straighten } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
 import { coach } from '@/game/coach';
-import { enclosOf, cornerRingOf, torchSpotsOf } from '@/game/prologue';
+import { barrierOf, torchSpotsOf } from '@/game/prologue';
 import { stepCells } from '@/game/roads';
 import { costText } from '@/world/needs';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 import { BANNERS } from '@/texts/world/screens/island';
 
-// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos de Lorena : game/prologue.js)
-const CHAIN_LESSONS = new Set(['quest-clotures', 'quest-enclos-cannelle']);
+// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (la barrière du nord : game/prologue.js)
+const CHAIN_LESSONS = new Set(['quest-barriere']);
 // Au plus tant de cases d'un trait (serveur : crafts.js, LINE_MAX)
 const LINE_MAX = 40;
 // Une case refusée rougit tant de ms (choix de l'auteur, 15 oct. : le fantôme dit où ça ne va pas)
@@ -45,8 +45,8 @@ export default {
       // ou null ; les cases refusées un instant, qui rougissent ([{ x, y, at }])
       craftTrace: null,
       traceRefused: [],
-      // Les piquets posés pendant une leçon des clôtures (choix de l'auteur, 15 oct. : on peut les défaire un à un jusqu'au
-      // premier, tant que l'enclos n'est pas validé) : { lesson, cells: [{ x, y }] }, ou null
+      // Les piquets posés pendant la leçon de la barrière (choix de l'auteur, 15 oct. : on peut les défaire un à un jusqu'au
+      // premier, tant qu'elle n'est pas validée) : { lesson, cells: [{ x, y }] }, ou null
       lessonPosed: null
     };
   },
@@ -58,11 +58,11 @@ export default {
   },
   computed: {
     // Ce que demande la tâche en cours à l'établi ({ création: pièces qui manquent }) : la quête de Brume (« Pose trois
-    // torches »), ou l'enclos d’Agathe ; moins ce qui attend déjà dans la réserve
+    // torches ») ; moins ce qui attend déjà dans la réserve
     benchNeeds() {
       const quest = this.quest;
       if (!quest || quest.done || !this.state || !this.state.crafts) return {};
-      const craft = quest.craft || (quest.kind === 'fence' ? 'cloture' : null);
+      const craft = quest.craft;
       const card = craft && this.state.crafts.catalog.find(c => c.id === craft);
       if (!card) return {};
       const left = (quest.need || 1) - (quest.have || 0) - (card.reserve || 0);
@@ -86,11 +86,11 @@ export default {
       if (from) return moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps);
       // (la porte d'un enclos : les cases de son mur, enclosures.js)
       if (this.craftPlacing.door) return this.craftPlacing.door.cells;
-      // (l'enclos de Lorena : l'anneau autour du Feu, game/prologue.js : enclosOf ; s'il est bouclé, toutes les cases)
+      // (la barrière du nord : sa rangée, game/prologue.js : barrierOf ; complète, toutes les cases)
       const lesson = coach.state.lesson;
       if (lesson && CHAIN_LESSONS.has(lesson.id)) {
-        const ring = this.enclos;
-        if (ring.length) return ring;
+        const line = this.barrier;
+        if (line.length) return line;
       }
       // (les torches de Nathan : du côté d'où venaient les égarés, game/prologue.js : torchSpotsOf ; tous gardés, toutes)
       if (lesson && lesson.id === 'quest-torches-rivet') {
@@ -100,17 +100,10 @@ export default {
       }
       return this.placingCraft.spots;
     },
-    // L'anneau de l'enclos encore libre (dans l'ordre du tour, depuis la brèche), pendant la leçon des clôtures : autour
-    // du Feu, ou autour du coin d’Agathe (le jour de son abri)
-    enclos() {
+    // Les cases encore libres de la barrière du nord (d'ouest en est), pendant la pose d'une création
+    barrier() {
       const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
-      if (!foyer || !this.placingCraft) return [];
-      const lesson = coach.state.lesson;
-      if (lesson && lesson.id === 'quest-enclos-cannelle') {
-        const corner = (this.state.camp || []).find(c => c.id === 'cannelle');
-        return corner ? cornerRingOf(corner, foyer, this.placingCraft.spots) : [];
-      }
-      return enclosOf(foyer, this.placingCraft.spots);
+      return foyer && this.placingCraft ? barrierOf(foyer, this.placingCraft.spots) : [];
     },
     // La création en pose se trace d'un glisser (pas en déplacement)
     lineCraft() {
@@ -124,14 +117,13 @@ export default {
       const paid = Math.min(...Object.entries(c.cost || {}).map(([r, n]) => Math.floor(has(r) / n)));
       return Math.min(LINE_MAX, c.reserve + (Number.isFinite(paid) ? paid : LINE_MAX));
     },
-    // Le trait boucle l'enclos : toutes ses cases encore libres y sont (au tutoriel, « Poser » vient alors)
-    // Le trait boucle l'enclos de la leçon ('anneau'), ou il pose déjà tout ce que la réserve et le stock paient ('bois' :
-    // l'enclos d’Agathe sans assez de bois pour tout ; on valide ce qu'on peut, la Récolte donnera le reste ; sinon la
-    // leçon attendait un bouclage impossible) ; '' sinon
+    // Le trait complète la barrière de la leçon ('ligne' : toutes ses cases encore libres y sont ; au tutoriel, « Valider »
+    // vient alors), ou il pose déjà tout ce que la réserve et le stock paient ('bois' : on valide ce qu'on peut, la
+    // Récolte donnera le reste) ; '' sinon
     lineFull() {
       const cells = this.craftTrace ? this.craftTrace.cells : [];
       if (!cells.length) return '';
-      if (this.enclos.length > 0 && this.enclos.every(sp => cells.some(c => c.x === sp.x && c.y === sp.y))) return 'anneau';
+      if (this.barrier.length > 0 && this.barrier.every(sp => cells.some(c => c.x === sp.x && c.y === sp.y))) return 'ligne';
       return cells.length >= this.lineRoom ? 'bois' : '';
     },
     lineBanner() {
@@ -358,7 +350,7 @@ export default {
       ctx.restore();
       this.drawSoon();
     },
-    // La leçon des clôtures en cours (CHAIN_LESSONS), ou null
+    // La leçon de la barrière en cours (CHAIN_LESSONS), ou null
     fenceLesson() {
       const lesson = coach.state.lesson;
       return lesson && CHAIN_LESSONS.has(lesson.id) ? lesson.id : null;
