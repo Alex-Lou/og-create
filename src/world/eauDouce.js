@@ -386,6 +386,5 @@ export function drawFresh(ctx, M, live, fresh, view, t, light, still = false) {
   if (!still) drawLeaps(ctx, M, live, fresh, seen, t);
 }
 
-// Les espèces, et un poisson seul (aperçus, tests)
+// Les espèces (aperçus, tests)
 export const SPECIES_IDS = Object.keys(SPECIES);
-export const drawSpecies = (ctx, species, wag = 0) => drawFish(ctx, SPECIES[species], wag);

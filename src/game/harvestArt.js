@@ -5,12 +5,7 @@
 const URLS = import.meta.glob('/design/bibliotheque/svg/minijeux/recolte/*.svg', { query: '?url', import: 'default', eager: true });
 const DIR = '/design/bibliotheque/svg/minijeux/recolte/';
 
-export const PICK_MS = 90;
 export const PICK_FRAMES = 4;
-export const LAND_MS = 140;
-export const LAND_FRAMES = 2;
-// Une chaîne d'au moins ce nombre de tuiles éclate
-export const LONG_CHAIN = 5;
 
 const url = name => URLS[`${DIR}${name}.svg`] || null;
 // La tuile d'une sorte : au repos, choisie, ou une image de sa cueillette (n : 1 à 4) ou de son atterrissage (1 à 2)
