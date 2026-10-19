@@ -6,7 +6,7 @@
 // celui des créations (u, v en cases, z en pixels ; ancrage au centre de la case : world/iso.js).
 import { P, box, face, sprite } from './iso';
 import { WOOD_DARK, STONE, WHITE_STONE } from './palette';
-import { ln, poly, ell, dot, IRON, DARK_IRON } from './shopSprites';
+import { ln, poly, ell, dot, IRON, DARK_IRON } from './spriteKit';
 
 // Ce qui se raccorde ainsi (serveur : crafts.WALL_CRAFTS)
 export const WALL_LOOKS = new Set(['cloture', 'muret', 'porte']);

@@ -140,7 +140,7 @@ export function sprite(body, box) {
 
 // Petits tracés SVG arrondis au centième (pièces rares)
 export const f2 = n => Math.round(n * 100) / 100;
-const xy = ([x, y]) => `${f2(x)},${f2(y)}`;
+export const xy = ([x, y]) => `${f2(x)},${f2(y)}`;
 export const ln = (a, b, color, w = 1.2, extra = '') => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"${extra}/>`;
 export const poly = (points, fill, extra = '') => `<polygon points="${points.map(xy).join(' ')}" fill="${fill}"${extra}/>`;
 export const ell = (x, y, rx, ry, fill, extra = '') => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(rx)}" ry="${f2(ry)}" fill="${fill}"${extra}/>`;
