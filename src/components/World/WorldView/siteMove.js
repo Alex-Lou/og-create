@@ -35,8 +35,7 @@ export default {
     async startSiteMove(siteId) {
       if (this.busy) return;
       this.site = null;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.siteMoveStart, async () => {
         const corners = await playService.siteSpots(siteId);
         if (!corners.length) {
           this.$emit('show-alert', TOASTS.siteNoRoom);
@@ -49,11 +48,7 @@ export default {
         if (site) this.beginPoseLevel(site.x + Math.floor(site.w / 2), site.y + Math.floor(site.h / 2), this.siteMoving.spots);
         vibrate(8);
         this.draw(performance.now());
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.siteMoveStart), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     cancelSiteMove() {
       this.siteMoving = null;

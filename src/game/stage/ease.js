@@ -2,7 +2,6 @@
 export const clamp01 = t => (t < 0 ? 0 : t > 1 ? 1 : t);
 export const outCubic = t => 1 - (1 - t) ** 3;
 export const inCubic = t => t * t * t;
-export const inOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
 // Dépasse un peu sa cible, puis revient (un objet qui se pose avec élan)
 export const outBack = (t, s = 1.70158) => 1 + (s + 1) * (t - 1) ** 3 + s * (t - 1) ** 2;
 // Rebondit sur sa cible (une tuile qui tombe)

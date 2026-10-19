@@ -269,36 +269,26 @@ export default {
         this.showTip(px, py, { title: 'Anya', text: ANYA_RESTED });
         return;
       }
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.anya, async () => {
         const { savoir, world } = await playService.villagerTalk('anya', heardPages());
         this.apply(world);
         if (savoir) keepSavoir(savoir, 'Anya');
         const text = savoir ? BUBBLES.anyaBreath(BREATH_LINE, savoir.chapter, savoir.ingredient) : BUBBLES.anyaNoPage;
         this.showTip(px, py, { title: 'Anya', text });
         vibrate([8, 30, 8]);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.anya), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // Bavarder avec Brume, le Phare allumé : un Savoir par jour sur les Légendes ; s'il n'y a pas de page, rien n'est compté
     async talkBrume() {
       if (this.busy) return;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.brume, async () => {
         const { savoir, world } = await playService.villagerTalk('brume', heardPages());
         this.apply(world);
         this.brumeHint = savoir;
         if (savoir) keepSavoir(savoir, 'Brume');
         this.brumeSaid = savoir ? savoirLine('brume', savoir) : BUBBLES.brumeNoPage;
         vibrate(8);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.brume), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     openBrumeSavoir() {
       const { page } = this.brumeHint;
@@ -319,8 +309,7 @@ export default {
     async befriend(call, lineOf) {
       if (this.busy) return;
       const friend = this.villagerView;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.villager, async () => {
         const reply = await call();
         const { hearts, rewards, coins, world } = reply;
         this.apply(world);
@@ -333,11 +322,7 @@ export default {
         const chests = rewards.filter(r => r.chest).map(r => r.chest);
         if (chests.length === 1) this.showChest(chests[0]);
         else if (chests.length > 1) this.haul = chests;
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.villager), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // Combler un besoin depuis la fiche (le serveur prend les ressources du stock) : l'habitant remercie
     async fillNeed(need) {
@@ -348,18 +333,13 @@ export default {
         this.openCooking();
         return;
       }
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.need, async () => {
         const { coins, world } = await playService.villagerNeed(this.villagerView.id, need);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.villagerSaid = thanksOf(need, this.villagerView.id) || '';
         vibrate(10);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.need), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // Toucher la bulle d'un besoin (la faim, la soif… d'un habitant ; la faim d'une poule) : il est comblé tout de suite
     // si la réserve suffit (ce qui attend dans les bâtiments compte) ; sinon une bulle dit ce qui manque et mène à la
@@ -389,8 +369,7 @@ export default {
         this.openCooking();
         return;
       }
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.need, async () => {
         const { coins, world } = asking.beast ? await playService.beastFeed(asking.beast) : await playService.villagerNeed(friend.id, need.id);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
@@ -398,27 +377,18 @@ export default {
         vibrate(10);
         const thanks = friend && thanksOf(need.id, friend.id);
         if (thanks) this.showTip(px, py, { title: friend.name, text: thanks });
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.need), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // Nourrir la bête dont la fiche est ouverte (2 vivres du stock ; sa bulle est ramassée d'abord)
     async feedBeast() {
       if (this.busy || !this.beastView) return;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.beast, async () => {
         const { collected, coins, world } = await playService.beastFeed(this.beastView.id);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate(10);
         if (collected) this.$emit('show-alert', TOASTS.beastBubble, 'gain', this.gainsOf({ food: collected }));
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.beast), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // Ramasser les bulles de toutes les bêtes : chaque bulle pleine pétille, la première montre ce qu'on gagne
     // (world/fetes.js) ; at : point de l'écran touché (s'il n'y avait aucune bulle à l'écran, c'est là que ça pétille)
@@ -427,8 +397,7 @@ export default {
       const full = (this.needBubbles || []).filter(b => b.ready).map(b => ({ x: b.x, y: b.y + b.r, top: b.r * 2 }));
       // (des œufs à ramasser : Agathe le dit, la première fois)
       const eggs = Boolean(this.state && this.state.beasts && this.state.beasts.list.some(b => b.species === 'hen' && b.ready > 0));
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.bubbles, async () => {
         const { food, world } = await playService.beastsCollect();
         this.apply(world);
         if (food && eggs) this.coopLines(world, true);
@@ -438,28 +407,19 @@ export default {
           else this.sparkleAt('petille', at, gains);
           vibrate([10, 30, 14]);
         }
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.bubbles), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // « Tout combler » (fiche du Foyer) : tout ce qui peut l'être, tant que le stock suffit
     async fillAllNeeds() {
       if (this.busy) return;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.needs, async () => {
         const { filled, coins, world } = await playService.villagersNeeds();
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([10, 30, 10]);
         const n = filled.length;
         this.$emit('show-alert', TOASTS.needsFilled(n));
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.needs), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     }
   }
 };
