@@ -11,6 +11,7 @@ import { itemArt, itemLock, itemBuyable } from '@/world/shop';
 import { levelAffordable, levelReady } from '@/world/levels';
 import { roman } from '@/utils/roman';
 import { guide } from '@/game/guide';
+import { load, save } from '@/utils/storage';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
@@ -18,20 +19,12 @@ const UNDO_MS = 4000;
 // Sortes d'articles dont le mode d'emploi a déjà été montré (une fois par sorte, sur cet appareil)
 const GUIDES_KEY = 'oc_item_guides';
 function guidesSeen() {
-  try {
-    return JSON.parse(localStorage.getItem(GUIDES_KEY) || '[]');
-  } catch (error) {
-    return [];
-  }
+  const seen = load(GUIDES_KEY, []);
+  return Array.isArray(seen) ? seen : [];
 }
 const guideSeen = kind => guidesSeen().includes(kind);
-function markGuideSeen(kind) {
-  try {
-    localStorage.setItem(GUIDES_KEY, JSON.stringify([...new Set([...guidesSeen(), kind])]));
-  } catch (error) {
-    // Stockage indisponible : le mode d'emploi reviendra au prochain achat
-  }
-}
+// (stockage indisponible : le mode d'emploi reviendra au prochain achat)
+const markGuideSeen = kind => save(GUIDES_KEY, [...new Set([...guidesSeen(), kind])]);
 
 export default {
   data() {
