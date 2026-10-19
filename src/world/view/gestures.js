@@ -37,6 +37,8 @@ const MIN_TOUCH = 22;
 const RING_PAD = 8;
 // La phrase de l'arrivant qui attend au Ponton : celle du moment du récit qui l'amène
 const arrivalLine = guest => ARRIVAL_WELCOME.moments[guest.moment] || ARRIVAL_WELCOME.moments.ponton;
+// Le contour doré d'une chose choisie : une ellipse de rayon r, aplatie comme le sol
+const ring = (x, y, r) => ({ x, y, rx: r, ry: r * 0.55 });
 
 export default {
   /* ---------- Gestes : glisser, pincer, toucher ---------- */
@@ -485,7 +487,10 @@ export default {
   // Ce que choisit un premier toucher : { key, action (texte du bouton), info (bulle), ring (contour), bounce, run } ;
   // null pour ce qui ne fait que réagir (bêtes, habitants, mer, Brume, bulles de production, case libre)
   pickOf(hit, px, py) {
-    const ring = (x, y, r) => ({ x, y, rx: r, ry: r * 0.55 });
+    return this.pickBeing(hit) || this.pickThing(hit, px, py) || this.pickPlace(hit, px, py);
+  },
+  // Les êtres : un besoin, l'arrivant, un camarade ou une bête de la ferme (rien d'autre : undefined)
+  pickBeing(hit) {
     if (hit.asking && hit.asking.beast) {
       const { asking } = hit;
       return { key: `ask:beast:${asking.beast}`, action: 'Sa fiche', info: this.tipOf(hit), ring: ring(asking.x, asking.y, asking.r + 3), run: () => this.openBeast(asking.beast) };
@@ -526,6 +531,10 @@ export default {
         run: () => (friend ? this.openVillager(friend.id) : this.openBeast(who.beast))
       };
     }
+  },
+  // Les choses : la bouteille, un objet, un panneau, le coin d'un abri, la cage, une annexe, une création (rien d'autre :
+  // undefined)
+  pickThing(hit, px, py) {
     if (hit.bottle) {
       const c = this.ground(this.bottleSpot.x + 0.5, this.bottleSpot.y + 0.5);
       return { key: 'bottle', action: 'L’ouvrir', info: this.tipOf(hit), ring: ring(c.x, c.y, 14), run: () => this.openChest('bouteille') };
@@ -577,6 +586,9 @@ export default {
       const c = this.ground(craft.x, craft.y);
       return { key: `craft:${craft.x},${craft.y}`, action: 'La déplacer ou la ranger', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4), bounce: `craft:${craft.x},${craft.y}`, run: () => this.openCraftMenu(craft) };
     }
+  },
+  // Les lieux : un lieu remarquable, un gisement, un quartier, un bâtiment ; null sinon
+  pickPlace(hit, px, py) {
     if (hit.landmark) {
       const { landmark } = hit;
       const zone = this.state.map.zones.find(z => z.id === landmark.zone);
