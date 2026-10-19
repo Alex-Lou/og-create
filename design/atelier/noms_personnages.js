@@ -34,7 +34,7 @@ function miroir(svg) {
   return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
 }
 
-const ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260, foudre: [120, 500, 500] };
+const ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260, foudre: [300, 160, 180, 700, 320] };
 // La vitesse d'une animation des vivants ou des personnages (id rangé, sans le numéro d'image), d'après sa pose
 function vitessePersonnage(id, pose) {
   const [top, a] = id.split('/');

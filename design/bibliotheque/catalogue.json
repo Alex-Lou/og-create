@@ -111878,11 +111878,13 @@
    "titre": "Anya, trois quarts avant, foudre",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_avant_foudre_1.svg",
     "svg/vivants/anya/anya_avant_foudre_2.svg",
-    "svg/vivants/anya/anya_avant_foudre_3.svg"
+    "svg/vivants/anya/anya_avant_foudre_3.svg",
+    "svg/vivants/anya/anya_avant_foudre_4.svg",
+    "svg/vivants/anya/anya_avant_foudre_5.svg"
    ],
    "cadre": [
     0,
@@ -111891,9 +111893,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -111908,11 +111912,13 @@
    "titre": "Anya, trois quarts avant, foudre, automne",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_avant_foudre_automne_1.svg",
     "svg/vivants/anya/anya_avant_foudre_automne_2.svg",
-    "svg/vivants/anya/anya_avant_foudre_automne_3.svg"
+    "svg/vivants/anya/anya_avant_foudre_automne_3.svg",
+    "svg/vivants/anya/anya_avant_foudre_automne_4.svg",
+    "svg/vivants/anya/anya_avant_foudre_automne_5.svg"
    ],
    "cadre": [
     0,
@@ -111921,9 +111927,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -111938,11 +111946,13 @@
    "titre": "Anya, trois quarts avant, foudre, hiver",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_avant_foudre_hiver_1.svg",
     "svg/vivants/anya/anya_avant_foudre_hiver_2.svg",
-    "svg/vivants/anya/anya_avant_foudre_hiver_3.svg"
+    "svg/vivants/anya/anya_avant_foudre_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_foudre_hiver_4.svg",
+    "svg/vivants/anya/anya_avant_foudre_hiver_5.svg"
    ],
    "cadre": [
     0,
@@ -111951,9 +111961,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -111968,11 +111980,13 @@
    "titre": "Anya, trois quarts avant, foudre, printemps",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_avant_foudre_printemps_1.svg",
     "svg/vivants/anya/anya_avant_foudre_printemps_2.svg",
-    "svg/vivants/anya/anya_avant_foudre_printemps_3.svg"
+    "svg/vivants/anya/anya_avant_foudre_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_foudre_printemps_4.svg",
+    "svg/vivants/anya/anya_avant_foudre_printemps_5.svg"
    ],
    "cadre": [
     0,
@@ -111981,9 +111995,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -112798,11 +112814,13 @@
    "titre": "Anya, trois quarts dos, foudre",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_dos_foudre_1.svg",
     "svg/vivants/anya/anya_dos_foudre_2.svg",
-    "svg/vivants/anya/anya_dos_foudre_3.svg"
+    "svg/vivants/anya/anya_dos_foudre_3.svg",
+    "svg/vivants/anya/anya_dos_foudre_4.svg",
+    "svg/vivants/anya/anya_dos_foudre_5.svg"
    ],
    "cadre": [
     0,
@@ -112811,9 +112829,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -112828,11 +112848,13 @@
    "titre": "Anya, trois quarts dos, foudre, automne",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_dos_foudre_automne_1.svg",
     "svg/vivants/anya/anya_dos_foudre_automne_2.svg",
-    "svg/vivants/anya/anya_dos_foudre_automne_3.svg"
+    "svg/vivants/anya/anya_dos_foudre_automne_3.svg",
+    "svg/vivants/anya/anya_dos_foudre_automne_4.svg",
+    "svg/vivants/anya/anya_dos_foudre_automne_5.svg"
    ],
    "cadre": [
     0,
@@ -112841,9 +112863,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -112858,11 +112882,13 @@
    "titre": "Anya, trois quarts dos, foudre, hiver",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_dos_foudre_hiver_1.svg",
     "svg/vivants/anya/anya_dos_foudre_hiver_2.svg",
-    "svg/vivants/anya/anya_dos_foudre_hiver_3.svg"
+    "svg/vivants/anya/anya_dos_foudre_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_foudre_hiver_4.svg",
+    "svg/vivants/anya/anya_dos_foudre_hiver_5.svg"
    ],
    "cadre": [
     0,
@@ -112871,9 +112897,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -112888,11 +112916,13 @@
    "titre": "Anya, trois quarts dos, foudre, printemps",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_dos_foudre_printemps_1.svg",
     "svg/vivants/anya/anya_dos_foudre_printemps_2.svg",
-    "svg/vivants/anya/anya_dos_foudre_printemps_3.svg"
+    "svg/vivants/anya/anya_dos_foudre_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_foudre_printemps_4.svg",
+    "svg/vivants/anya/anya_dos_foudre_printemps_5.svg"
    ],
    "cadre": [
     0,
@@ -112901,9 +112931,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -114383,11 +114415,13 @@
    "pose": "foudre",
    "titre": "Anya, de face, foudre",
    "regarde": "face",
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_face_foudre_1.svg",
     "svg/vivants/anya/anya_face_foudre_2.svg",
-    "svg/vivants/anya/anya_face_foudre_3.svg"
+    "svg/vivants/anya/anya_face_foudre_3.svg",
+    "svg/vivants/anya/anya_face_foudre_4.svg",
+    "svg/vivants/anya/anya_face_foudre_5.svg"
    ],
    "cadre": [
     0,
@@ -114396,9 +114430,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -114412,11 +114448,13 @@
    "variante": "automne",
    "titre": "Anya, de face, foudre, automne",
    "regarde": "face",
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_face_foudre_automne_1.svg",
     "svg/vivants/anya/anya_face_foudre_automne_2.svg",
-    "svg/vivants/anya/anya_face_foudre_automne_3.svg"
+    "svg/vivants/anya/anya_face_foudre_automne_3.svg",
+    "svg/vivants/anya/anya_face_foudre_automne_4.svg",
+    "svg/vivants/anya/anya_face_foudre_automne_5.svg"
    ],
    "cadre": [
     0,
@@ -114425,9 +114463,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -114441,11 +114481,13 @@
    "variante": "hiver",
    "titre": "Anya, de face, foudre, hiver",
    "regarde": "face",
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_face_foudre_hiver_1.svg",
     "svg/vivants/anya/anya_face_foudre_hiver_2.svg",
-    "svg/vivants/anya/anya_face_foudre_hiver_3.svg"
+    "svg/vivants/anya/anya_face_foudre_hiver_3.svg",
+    "svg/vivants/anya/anya_face_foudre_hiver_4.svg",
+    "svg/vivants/anya/anya_face_foudre_hiver_5.svg"
    ],
    "cadre": [
     0,
@@ -114454,9 +114496,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -114470,11 +114514,13 @@
    "variante": "printemps",
    "titre": "Anya, de face, foudre, printemps",
    "regarde": "face",
-   "images": 3,
+   "images": 5,
    "fichiers": [
     "svg/vivants/anya/anya_face_foudre_printemps_1.svg",
     "svg/vivants/anya/anya_face_foudre_printemps_2.svg",
-    "svg/vivants/anya/anya_face_foudre_printemps_3.svg"
+    "svg/vivants/anya/anya_face_foudre_printemps_3.svg",
+    "svg/vivants/anya/anya_face_foudre_printemps_4.svg",
+    "svg/vivants/anya/anya_face_foudre_printemps_5.svg"
    ],
    "cadre": [
     0,
@@ -114483,9 +114529,11 @@
     128
    ],
    "ms_par_image": [
-    120,
-    500,
-    500
+    300,
+    160,
+    180,
+    700,
+    320
    ],
    "parcours": "revelation",
    "statut": "ok"

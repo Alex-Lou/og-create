@@ -211,7 +211,9 @@ function anyaFrame(view, pose, n, expr, saison = 'ete', o = {}) {
       cheeks: [[31.8 + k, 2.2], [48.2 + k, 2.2]], cheekY: 37, temple: [26.4 + k, 30],
       // (terrible, sa colère n'a pas de marque : elle part hors du cadre)
       anger: o.terrible ? [-40, -40] : [60, 18], zz: [56, 14]
-    }, { expr, n, id: uid, blink: pose === 'repos' && n % 4 === 3, open: false });
+    // (terrible, ses sourcils se durcissent à peine : à mi-chemin du repos et de la colère, sans le V d'un dessin animé ;
+    // choix de l'auteur, 19 oct.)
+    }, { expr, n, id: uid, blink: pose === 'repos' && n % 4 === 3, open: false, ...(o.terrible ? { brow: [0.5, -0.2, -0.35] } : {}) });
   }
   s += `<g transform="translate(0 ${bob})">${g}${over}</g>`;
   s += flies.filter(f => !f.back).map(f => firefly(f.x, f.y)).join('');
@@ -222,11 +224,13 @@ function anyaFrame(view, pose, n, expr, saison = 'ete', o = {}) {
   return enPersonnage(defs + peindre(s, table));
 }
 
-// La foudre (choix de l'auteur, 19 oct. : « un sacré effet orage… plus démoniaque pendant une seconde ») : l'éclair de
-// son orage la frappe. n = 0 : elle n'est que lumière ; n = 1, 2 : son visage terrible, une seconde, fort mais beau,
-// jamais effrayant pour un enfant : noir et argent, les yeux deux lumières blanches, une ombre qui creuse ses traits, la
-// chevelure soulevée (de dos, sans visage). Le jeu l'agrandit un peu le temps de la frappe (dessinée plus grande, elle
-// sortirait de son cadre). Vues face, trois quarts avant, dos ; repos, sa première image
+// La foudre (choix de l'auteur, 19 oct. : « un sacré effet orage… plus démoniaque pendant une seconde », mais jamais
+// une frayeur qui saute au visage) : l'éclair de son orage la frappe, annoncé, et tout passe en fondu. n = 0 : ses
+// étincelles se resserrent autour d'elle, son aura s'avive ; n = 1 : une lueur pâle passe sur elle ; n = 2 à 4 : son
+// visage terrible paraît, reste une seconde, s'en va : fort mais beau, jamais effrayant pour un enfant ; noir et argent,
+// les yeux deux lumières blanches, une ombre qui creuse ses traits, la chevelure soulevée (de dos, sans visage). Le jeu
+// l'agrandit un peu, au même rythme (dessinée plus grande, elle sortirait de son cadre). Vues face, trois quarts avant,
+// dos ; repos, sa première image
 const NOIR = [7, 6, 15], ARGENT = [176, 186, 208];
 const versHex = c => `#${c.map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase()}`;
 // une couleur, passée au noir et argent (claire, elle va à l'argent ; sombre, au noir)
@@ -240,24 +244,39 @@ const enArgent = svg => svg
   .replace(/(stop-color|fill|stroke)="(\d+),(\d+),(\d+)"/g, (m, a, r, g, b) => `${a}="${argentDe(+r, +g, +b)}"`);
 // tout en lumière (les teintes à plat ; les opacités restent : sa silhouette, son halo)
 const enLumiere = svg => svg.replace(/#[0-9A-Fa-f]{6}\b/g, '#F4FAFF').replace(/rgb\(\d+,\s*\d+,\s*\d+\)/g, '#F4FAFF');
+// (chaque calque d'une image a ses propres identifiants : leurs dégradés ne se mêlent jamais)
+const renommer = (svg, suffixe) => svg.replace(/id="([^"]+)"/g, `id="$1${suffixe}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${suffixe})`);
+const voile = (svg, k) => `<g opacity="${k}">${svg}</g>`;
 // la chevelure soulevée par le souffle de l'éclair : des mèches qui montent du haut de la tête (sous la couronne)
 function soulevee(k, n) {
-  const ondule = n === 2 ? 6 : 0;
+  const ondule = n % 2 ? 6 : 0;
   return [-68, -44, -20, 20, 44, 68].map((a, i) => {
     const rad = (a * Math.PI) / 180;
     return leaf(40 + k + Math.sin(rad) * 10, 27 - Math.cos(rad) * 10, 12 + (i % 2) * 3, 2.6, 180 + a + (i % 2 ? ondule : -ondule), i % 2 ? C.hairH : C.hair);
   }).join('');
 }
-function anyaFoudre(view, n, saison = 'ete') {
+// son visage terrible, en entier
+function terrible(view, n, saison) {
   const k = view === 'se' ? -2.4 : 0, uid = `anf${view}${n}${saison}`;
   const corps = anyaFrame(view, 'repos', 0, 'fache', saison, { terrible: true });
-  // (la lumière a ses propres identifiants : ses dégradés blancs ne se mêlent jamais à ceux de l'argent)
-  if (n === 0) return enLumiere(soulevee(k, 1) + corps).replace(/id="([^"]+)"/g, 'id="$1l"').replace(/url\(#([^)]+)\)/g, 'url(#$1l)');
   const yeux = view === 'ne' ? [] : view === 'se' ? [[33.4, 32.4], [41.8, 32.4]] : [[35, 32.4], [45, 32.4]];
   const ombre = view === 'ne' ? '' : `<defs><radialGradient id="${uid}s" cx=".5" cy=".15" r=".8"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".75" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>`
     + `<ellipse cx="${40 + k}" cy="29" rx="12" ry="10" fill="url(#${uid}s)"/>`;
   const lumieres = yeux.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.2" fill="#F4FAFF" opacity="0.35"/>` + E(x, y, 1.9, 1.15, '#F4FAFF', 0)).join('');
   return enArgent(soulevee(k, n) + corps) + ombre + lumieres;
+}
+// l'annonce : ses étincelles se resserrent autour d'elle (plus nombreuses, plus près), son aura s'avive
+const RESSERREES = [[18, 30, 0.8], [56, 34, 0.8], [14, 58, 0.9], [62, 64, 0.9], [20, 88, 0.8], [58, 92, 0.8]];
+function annonce(view, saison) {
+  const doux = anyaFrame(view, 'repos', 0, 'neutre', saison);
+  return doux + `<ellipse cx="40" cy="62" rx="38" ry="60" fill="#7FB4FF" opacity="0.12"/>` + RESSERREES.map(a => etincelle(...a)).join('');
+}
+function anyaFoudre(view, n, saison = 'ete') {
+  const doux = () => anyaFrame(view, 'repos', 0, 'neutre', saison);
+  if (n === 0) return annonce(view, saison);
+  if (n === 1) return doux() + voile(renommer(enLumiere(soulevee(view === 'se' ? -2.4 : 0, 1) + doux()), 'l'), 0.5);
+  if (n === 3) return terrible(view, n, saison);
+  return doux() + voile(terrible(view, n, saison), n === 2 ? 0.55 : 0.45);
 }
 
 const POSES_A = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_benediction', 'front', 'salut', IMAGES.salut], ['face_eveil', 'front', 'action', 2]];

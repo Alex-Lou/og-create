@@ -38,8 +38,8 @@ export function anyaPath(t, center, seed = 0) {
   const p = smooth((s - PAUSE) / (LEG - PAUSE));
   return { x: a.x + (b.x - a.x) * p, y: a.y + (b.y - a.y) * p, dx: b.x - a.x, dy: b.y - a.y, moving: true };
 }
-// La foudre de son orage (choix de l'auteur, 19 oct.) : de temps en temps, un éclair la frappe, et une seconde elle
-// montre son visage terrible (anyaArt.js : foudre). Une fois toutes les FOUDRE secondes à peu près (de 15 à 45 s), plus
+// La foudre de son orage (choix de l'auteur, 19 oct.) : de temps en temps, un éclair la frappe, annoncé, et une seconde
+// elle montre son visage terrible, en fondu (anyaArt.js : foudre ; jamais une frayeur qui saute au visage). Une fois toutes les FOUDRE secondes à peu près (de 15 à 45 s), plus
 // souvent sous un vrai orage (FOUDRE_ORAGE) ; au même instant sur tous les appareils pour une même graine ; en mouvement
 // réduit (t immobile), jamais
 const FOUDRE = 30;
@@ -90,8 +90,8 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
     const look = anyaPose(t, { clock: anyaVisitClock(h, phase.rise, phase.set, visit.slot), path, touch: touched === null ? null : touched * MURMURE_S, seed, storm: phase.weather.storm });
     const art = anyaArt(look.pose, look.view, look.n, { season: SEASON, phrase: look.phrase || 0 });
     if (art) out.push({ id: 'anya:dame', kind: 'beast', species: 'anya', x: path.x, y: path.y, z, flip: look.flip, sprite: [art.key, art.make] });
-    // (l'éclair qui la frappe éclaire l'île autour d'elle, le temps de son image de lumière)
-    if (look.pose === 'foudre' && look.n === 1) f.lights.push({ x: path.x, y: path.y, dx: 0, dy: -40, r: 70, color: '220,232,255', a: 1 });
+    // (l'éclair qui la frappe éclaire doucement l'île autour d'elle, le temps de sa lueur pâle)
+    if (look.pose === 'foudre' && look.n === 2) f.lights.push({ x: path.x, y: path.y, dx: 0, dy: -40, r: 60, color: '220,232,255', a: 0.6 });
     // son cerf, derrière elle, à côté : il marche quand elle flotte, sinon il se tient debout, tourné vers elle
     const trail = anyaPath(t - TRAIL, center, seed);
     const cx = trail.x + CERF_SIDE[0];

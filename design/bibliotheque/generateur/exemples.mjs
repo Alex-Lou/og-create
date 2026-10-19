@@ -493,7 +493,7 @@ var require_troupe = __commonJS({
       const w = g.mw;
       const cx = g.eyes.reduce((a, e) => a + e[0], 0) / g.eyes.length;
       let s = "";
-      const [bi, bo, a0] = BROW[expr], arch = a0 + (g.browArch || 0);
+      const [bi, bo, a0] = ctx.brow || BROW[expr], arch = a0 + (g.browArch || 0);
       for (const [x, y, rx] of g.eyes) {
         const k = cx > x ? 1 : -1, hw = rx + 0.45 + (g.browLen || 0), by = y + g.browY + (g.browLift || 0);
         s += `<path d="M${r2(x - k * hw)},${r2(by + bo)} Q${r2(x)},${r2(by + (bi + bo) / 2 + arch)} ${r2(x + k * hw)},${r2(by + bi)}" fill="none" stroke="${g.brow}" stroke-width="${g.browW}" stroke-linecap="round"/>`;
@@ -4932,7 +4932,7 @@ var require_noms_personnages = __commonJS({
       return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
     }
     __name(miroir, "miroir");
-    var ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260, foudre: [120, 500, 500] };
+    var ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260, foudre: [300, 160, 180, 700, 320] };
     function vitessePersonnage(id, pose) {
       const [top, a] = id.split("/");
       if (top === "vivants") {

@@ -277,8 +277,8 @@
     <g v-if="revelation" class="pa__anya">
       <circle cx="196" cy="220" r="124" fill="url(#pa-anya)" />
       <image :href="revelation.cerf" transform="translate(381 136) scale(-1 1)" width="150" height="180" />
-      <!-- (frappée par la foudre, elle paraît plus grande, depuis ses pieds) -->
-      <image :href="revelation.anya" x="132" y="119" width="128" height="205" :transform="revelation.big ? 'translate(196 319) scale(1.08) translate(-196 -319)' : null" />
+      <!-- (frappée par la foudre, elle paraît plus grande, depuis ses pieds, en douceur) -->
+      <image :href="revelation.anya" x="132" y="119" width="128" height="205" :transform="revelation.size !== 1 ? `translate(196 319) scale(${revelation.size}) translate(-196 -319)` : null" />
       <g class="pa__flies" transform="translate(196 316)"><circle v-for="(f, k) in FLIES" :key="`ff${k}`" :cx="f[0]" :cy="f[1]" r="1.8" fill="#FFF3A0" :style="{ '--k': k }" /></g>
     </g>
 
@@ -321,7 +321,7 @@ import { WISP, STAGES } from '@/world/brume';
 import { SIGILS, CHAPTER_IDS } from '@/book/grimoire';
 import { faceHref } from '@/world/faces';
 import { SEASON } from '@/world/plants';
-import { ANYA_POSES, CERF_POSES, frameOf, durationOf } from '@/world/anyaArt';
+import { ANYA_POSES, CERF_POSES, FOUDRE_TAILLE, frameOf, durationOf } from '@/world/anyaArt';
 import { foudreAt } from '@/world/village/anya';
 
 // Étoiles (x, y, rayon, opacité) et nappes de brume (x, y, rayons), fixes
@@ -440,10 +440,11 @@ export default {
       const t = this.since;
       // (frappée à son éveil, puis de temps en temps ; jamais pour qui demande moins de mouvement)
       const struck = STILL || t < EVEIL_S ? null : t - EVEIL_S < FOUDRE_S ? t - EVEIL_S : foudreAt(t - EVEIL_S);
+      const foudre = struck === null ? 0 : frameOf(ANYA_POSES.foudre, struck, true);
       return {
         anya: t < EVEIL_S ? anyaUrl('eveil', frameOf(ANYA_POSES.eveil, t, true))
-          : struck !== null ? anyaUrl('foudre', frameOf(ANYA_POSES.foudre, struck, true)) : anyaUrl('repos', frameOf(ANYA_POSES.repos, t - EVEIL_S)),
-        big: struck !== null,
+          : foudre ? anyaUrl('foudre', foudre) : anyaUrl('repos', frameOf(ANYA_POSES.repos, t - EVEIL_S)),
+        size: foudre ? FOUDRE_TAILLE[foudre - 1] : 1,
         cerf: vivant(`cerf-blanc/cerf-blanc_avant_debout_${frameOf(CERF_POSES.debout, t)}`)
       };
     },

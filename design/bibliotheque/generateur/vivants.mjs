@@ -493,7 +493,7 @@ var require_troupe = __commonJS({
       const w = g.mw;
       const cx = g.eyes.reduce((a, e) => a + e[0], 0) / g.eyes.length;
       let s = "";
-      const [bi, bo, a0] = BROW[expr], arch = a0 + (g.browArch || 0);
+      const [bi, bo, a0] = ctx.brow || BROW[expr], arch = a0 + (g.browArch || 0);
       for (const [x, y, rx] of g.eyes) {
         const k = cx > x ? 1 : -1, hw = rx + 0.45 + (g.browLen || 0), by = y + g.browY + (g.browLift || 0);
         s += `<path d="M${r2(x - k * hw)},${r2(by + bo)} Q${r2(x)},${r2(by + (bi + bo) / 2 + arch)} ${r2(x + k * hw)},${r2(by + bi)}" fill="none" stroke="${g.brow}" stroke-width="${g.browW}" stroke-linecap="round"/>`;
@@ -1089,7 +1089,9 @@ var require_anya = __commonJS({
           // (terrible, sa colère n'a pas de marque : elle part hors du cadre)
           anger: o.terrible ? [-40, -40] : [60, 18],
           zz: [56, 14]
-        }, { expr, n, id: uid, blink: pose === "repos" && n % 4 === 3, open: false });
+          // (terrible, ses sourcils se durcissent à peine : à mi-chemin du repos et de la colère, sans le V d'un dessin animé ;
+          // choix de l'auteur, 19 oct.)
+        }, { expr, n, id: uid, blink: pose === "repos" && n % 4 === 3, open: false, ...o.terrible ? { brow: [0.5, -0.2, -0.35] } : {} });
       }
       s += `<g transform="translate(0 ${bob})">${g}${over}</g>`;
       s += flies.filter((f) => !f.back).map((f) => firefly(f.x, f.y)).join("");
@@ -1108,22 +1110,37 @@ var require_anya = __commonJS({
     __name(argentDe, "argentDe");
     var enArgent = /* @__PURE__ */ __name((svg) => svg.replace(/#([0-9A-Fa-f]{6})\b/g, (m, h) => argentDe(...[0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)))).replace(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g, (m, r, g, b) => argentDe(+r, +g, +b)).replace(/(stop-color|fill|stroke)="(\d+),(\d+),(\d+)"/g, (m, a, r, g, b) => `${a}="${argentDe(+r, +g, +b)}"`), "enArgent");
     var enLumiere = /* @__PURE__ */ __name((svg) => svg.replace(/#[0-9A-Fa-f]{6}\b/g, "#F4FAFF").replace(/rgb\(\d+,\s*\d+,\s*\d+\)/g, "#F4FAFF"), "enLumiere");
+    var renommer = /* @__PURE__ */ __name((svg, suffixe) => svg.replace(/id="([^"]+)"/g, `id="$1${suffixe}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${suffixe})`), "renommer");
+    var voile = /* @__PURE__ */ __name((svg, k) => `<g opacity="${k}">${svg}</g>`, "voile");
     function soulevee(k, n) {
-      const ondule = n === 2 ? 6 : 0;
+      const ondule = n % 2 ? 6 : 0;
       return [-68, -44, -20, 20, 44, 68].map((a, i) => {
         const rad = a * Math.PI / 180;
         return leaf(40 + k + Math.sin(rad) * 10, 27 - Math.cos(rad) * 10, 12 + i % 2 * 3, 2.6, 180 + a + (i % 2 ? ondule : -ondule), i % 2 ? C.hairH : C.hair);
       }).join("");
     }
     __name(soulevee, "soulevee");
-    function anyaFoudre(view, n, saison = "ete") {
+    function terrible(view, n, saison) {
       const k = view === "se" ? -2.4 : 0, uid = `anf${view}${n}${saison}`;
       const corps = anyaFrame(view, "repos", 0, "fache", saison, { terrible: true });
-      if (n === 0) return enLumiere(soulevee(k, 1) + corps).replace(/id="([^"]+)"/g, 'id="$1l"').replace(/url\(#([^)]+)\)/g, "url(#$1l)");
       const yeux = view === "ne" ? [] : view === "se" ? [[33.4, 32.4], [41.8, 32.4]] : [[35, 32.4], [45, 32.4]];
       const ombre = view === "ne" ? "" : `<defs><radialGradient id="${uid}s" cx=".5" cy=".15" r=".8"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".75" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs><ellipse cx="${40 + k}" cy="29" rx="12" ry="10" fill="url(#${uid}s)"/>`;
       const lumieres = yeux.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.2" fill="#F4FAFF" opacity="0.35"/>` + E(x, y, 1.9, 1.15, "#F4FAFF", 0)).join("");
       return enArgent(soulevee(k, n) + corps) + ombre + lumieres;
+    }
+    __name(terrible, "terrible");
+    var RESSERREES = [[18, 30, 0.8], [56, 34, 0.8], [14, 58, 0.9], [62, 64, 0.9], [20, 88, 0.8], [58, 92, 0.8]];
+    function annonce(view, saison) {
+      const doux = anyaFrame(view, "repos", 0, "neutre", saison);
+      return doux + `<ellipse cx="40" cy="62" rx="38" ry="60" fill="#7FB4FF" opacity="0.12"/>` + RESSERREES.map((a) => etincelle(...a)).join("");
+    }
+    __name(annonce, "annonce");
+    function anyaFoudre(view, n, saison = "ete") {
+      const doux = /* @__PURE__ */ __name(() => anyaFrame(view, "repos", 0, "neutre", saison), "doux");
+      if (n === 0) return annonce(view, saison);
+      if (n === 1) return doux() + voile(renommer(enLumiere(soulevee(view === "se" ? -2.4 : 0, 1) + doux()), "l"), 0.5);
+      if (n === 3) return terrible(view, n, saison);
+      return doux() + voile(terrible(view, n, saison), n === 2 ? 0.55 : 0.45);
     }
     __name(anyaFoudre, "anyaFoudre");
     var POSES_A = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_benediction", "front", "salut", IMAGES.salut], ["face_eveil", "front", "action", 2]];
@@ -2136,8 +2153,9 @@ var require_vivants_refonte = __commonJS({
       ["marche", ["avant", "dos"], IMAGES.marche, (vue, n, saison) => A.anyaFrame(VUE[vue], "marche", n, "neutre", saison)],
       ["benediction", ["face"], IMAGES.salut, (vue, n, saison) => A.anyaFrame(VUE[vue], "salut", n, "content", saison)],
       ["eveil", ["face"], IMAGES.action, (vue, n, saison) => A.anyaFrame(VUE[vue], "action", n, "content", saison)],
-      // (la foudre de son orage : l'éclair la frappe, une image de lumière, puis son visage terrible : anya.js, anyaFoudre)
-      ["foudre", ["face", "avant", "dos"], 3, (vue, n, saison) => A.anyaFoudre(VUE[vue], n, saison)],
+      // (la foudre de son orage, annoncée et en fondu : ses étincelles se resserrent, une lueur pâle, son visage terrible
+      // qui paraît, reste, s'en va : anya.js, anyaFoudre)
+      ["foudre", ["face", "avant", "dos"], 5, (vue, n, saison) => A.anyaFoudre(VUE[vue], n, saison)],
       ["apparaitre", ["face", "avant", "dos"], 6, (vue, n, saison) => apparitionSur(() => repos(vue, 0, saison), n)],
       ["disparaitre", ["face", "avant", "dos"], 6, (vue, n, saison) => apparitionSur(() => repos(vue, 0, saison), 5 - n)],
       // (elle dit les glyphes l'un après l'autre ; elle ne cligne pas en parlant : les trois premières images du repos)
@@ -2338,7 +2356,7 @@ var require_noms_personnages = __commonJS({
       return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
     }
     __name(miroir, "miroir");
-    var ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260, foudre: [120, 500, 500] };
+    var ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260, foudre: [300, 160, 180, 700, 320] };
     function vitessePersonnage(id, pose) {
       const [top, a] = id.split("/");
       if (top === "vivants") {

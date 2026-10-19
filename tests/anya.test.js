@@ -181,13 +181,13 @@ describe('Anya sur l’île', () => {
     expect(orage.length).toBe(300);
     // (le mouvement réduit fige t à 0 : jamais)
     expect(foudreAt(0, 7, 1)).toBe(null);
-    // frappée, elle joue la foudre, une image de lumière puis son visage terrible, dans sa vue
+    // frappée, elle joue la foudre dans sa vue : annoncée (ses étincelles), puis en fondu, son visage terrible une seconde
     const t0 = calme[0] + 0.01;
     expect(anyaPose(t0, { clock: null, path: rest, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', view: 'face', n: 1 });
-    expect(anyaPose(t0 + 0.5, { clock: null, path: rest, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', n: 2 });
-    expect(anyaPose(t0 + 0.5, { clock: null, path: { ...rest, dx: 1, dy: 0.5, moving: true }, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', view: 'avant' });
+    expect(anyaPose(t0 + 1, { clock: null, path: rest, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', n: 4 });
+    expect(anyaPose(t0 + 1, { clock: null, path: { ...rest, dx: 1, dy: 0.5, moving: true }, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', view: 'avant' });
     expect(anyaPose(t0 + 2, { clock: null, path: rest, touch: null, seed: 7 }).pose).toBe('repos');
-    for (const view of ['face', 'avant', 'dos']) expect(anyaArt('foudre', view, 3, { season: 'automne' })).not.toBe(null);
+    for (const view of ['face', 'avant', 'dos']) expect(anyaArt('foudre', view, 5, { season: 'automne' })).not.toBe(null);
   });
   it('les dessins d’Anya et de son cerf de lune dans la bibliothèque', () => {
     for (const [pose, n] of [['repos', 4], ['marche', 8], ['apparaitre', 6], ['disparaitre', 6], ['murmure', 4]]) {
