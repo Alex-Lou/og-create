@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol, orageDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawJungleJour, drawJungleNuit, drawEffetsJour, drawEffetsNuit, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, neigeAuSol, drawNeigeSol, drawGlace, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawJungleJour, drawJungleNuit, drawEffetsJour, drawEffetsNuit, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, luneOf, poserLiseres, drawLiseres, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, neigeAuSol, drawNeigeSol, drawGlace, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -441,6 +441,9 @@ export default {
     // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
     // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
     const far = s < FAR_SCALE;
+    // Le liseré vivant des personnages (lumiere/lisere.js : la lumière qui domine là où chacun se tient, celles de
+    // l'image d'avant ; il respire) : de près seulement ; drawCritter le marque, il se pose avant le voile de la nuit
+    this.liseres = far ? null : { phase, lune: luneOf(phase, date), lumieres: this.lightSpots || [], t, still: this.reduced(), liste: [] };
     const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
     const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
     // (les bâtiments et le camp des personnages ne se montrent pas sous la brume du tutoriel, même à demi : on ne les a
@@ -625,6 +628,9 @@ export default {
     // et son halo restent sous quatre fois son rayon. Le Voile et les reflets sur la mer gardent toutes les lumières)
     const vue = l => l.x + l.r * 4 > view.x && l.x - l.r * 4 < view.x + view.w && l.y + l.r * 4 > view.y && l.y - l.r * 4 < view.y + view.h;
     if (!crete) libererAurore();
+    // (ce que les liserés des personnages éclairent encore, devant quoi rien ne s'est dessiné ; ils brillent après le voile)
+    const liseres = this.liseres ? poserLiseres(ctx, this.liseres.liste) : null;
+    this.liseres = null;
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, crete ? [...lights, ...lumieresAurore(crete, aurore)] : lights, flash, vue)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);
@@ -665,6 +671,8 @@ export default {
     drawEtalonnage(ctx, width, height, phase);
     // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
     this.drawVeillee(ctx, width, height);
+    // Le liseré vivant des personnages, en lumière par-dessus le voile de la nuit (lumiere/lisere.js)
+    drawLiseres(ctx, liseres);
     ctx.setTransform(worldTransform);
     // (ses nappes de brume qui luisent et ses lucioles, posées sur l'île)
     this.drawVeilleeMonde(ctx, view, t, s);

@@ -16,6 +16,7 @@ export { solArt } from './solArt';
 export { drawHalos, hazeOf } from './halos';
 export { drawRays, drawFaisceaux, deLoin, drawMotes, raysOf, motesOf, motesIn } from './ambiance';
 export { goldenOf, drawGolden, rimOf, rimImage, clearRims, imageSuivanteRims } from './heureDoree';
+export { lisereOf, luneOf, graineOf, marquerLisere, poserLiseres, drawLiseres, BUSTE } from './lisere';
 export { etalonnageOf, drawEtalonnage } from './etalonnage';
 export { aigrettesOf, aigrettesIn, drawAigrettes, braisesFor, braisesIn, drawBraises } from './petiteVie';
 export { drawJungleJour, drawJungleNuit, drawEffetsJour, drawEffetsNuit } from './jungle';
