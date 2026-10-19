@@ -255,10 +255,11 @@ function soulevee(k, n) {
     return leaf(40 + k + Math.sin(rad) * 10, 27 - Math.cos(rad) * 10, 12 + (i % 2) * 3, 2.6, 180 + a + (i % 2 ? ondule : -ondule), i % 2 ? C.hairH : C.hair);
   }).join('');
 }
-// son visage terrible, en entier
-function terrible(view, n, saison) {
-  const k = view === 'se' ? -2.4 : 0, uid = `anf${view}${n}${saison}`;
-  const corps = anyaFrame(view, 'repos', 0, 'fache', saison, { terrible: true });
+// son visage terrible, en entier ; pose, image : celles du dessin (son repos, sa première image ; l'écran de démarrage la
+// garde dans son éveil, les bras ouverts : splash_anya.js)
+function terrible(view, n, saison, pose = 'repos', image = 0) {
+  const k = view === 'se' ? -2.4 : 0, uid = `anf${view}${n}${saison}${pose === 'repos' ? '' : pose}`;
+  const corps = anyaFrame(view, pose, image, 'fache', saison, { terrible: true });
   const yeux = view === 'ne' ? [] : view === 'se' ? [[33.4, 32.4], [41.8, 32.4]] : [[35, 32.4], [45, 32.4]];
   const ombre = view === 'ne' ? '' : `<defs><radialGradient id="${uid}s" cx=".5" cy=".15" r=".8"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".75" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>`
     + `<ellipse cx="${40 + k}" cy="29" rx="12" ry="10" fill="url(#${uid}s)"/>`;
@@ -282,4 +283,5 @@ function anyaFoudre(view, n, saison = 'ete') {
 const POSES_A = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_benediction', 'front', 'salut', IMAGES.salut], ['face_eveil', 'front', 'action', 2]];
 const EXPR_OF = { repos: 'neutre', marche: 'neutre', salut: 'content', action: 'content' };
 const svgA = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`;
-module.exports = { anyaFrame, anyaFoudre, POSES_A, EXPR_OF, svgA, SAISONS_A };
+const anyaTerrible = (view, pose, image, saison = 'ete') => terrible(view, 3, saison, pose, image);
+module.exports = { anyaFrame, anyaFoudre, anyaTerrible, POSES_A, EXPR_OF, svgA, SAISONS_A };

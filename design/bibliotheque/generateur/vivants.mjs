@@ -1120,9 +1120,9 @@ var require_anya = __commonJS({
       }).join("");
     }
     __name(soulevee, "soulevee");
-    function terrible(view, n, saison) {
-      const k = view === "se" ? -2.4 : 0, uid = `anf${view}${n}${saison}`;
-      const corps = anyaFrame(view, "repos", 0, "fache", saison, { terrible: true });
+    function terrible(view, n, saison, pose = "repos", image2 = 0) {
+      const k = view === "se" ? -2.4 : 0, uid = `anf${view}${n}${saison}${pose === "repos" ? "" : pose}`;
+      const corps = anyaFrame(view, pose, image2, "fache", saison, { terrible: true });
       const yeux = view === "ne" ? [] : view === "se" ? [[33.4, 32.4], [41.8, 32.4]] : [[35, 32.4], [45, 32.4]];
       const ombre = view === "ne" ? "" : `<defs><radialGradient id="${uid}s" cx=".5" cy=".15" r=".8"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".75" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs><ellipse cx="${40 + k}" cy="29" rx="12" ry="10" fill="url(#${uid}s)"/>`;
       const lumieres = yeux.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.2" fill="#F4FAFF" opacity="0.35"/>` + E(x, y, 1.9, 1.15, "#F4FAFF", 0)).join("");
@@ -1146,7 +1146,8 @@ var require_anya = __commonJS({
     var POSES_A = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_benediction", "front", "salut", IMAGES.salut], ["face_eveil", "front", "action", 2]];
     var EXPR_OF = { repos: "neutre", marche: "neutre", salut: "content", action: "content" };
     var svgA = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`, "svgA");
-    module.exports = { anyaFrame, anyaFoudre, POSES_A, EXPR_OF, svgA, SAISONS_A };
+    var anyaTerrible = /* @__PURE__ */ __name((view, pose, image2, saison = "ete") => terrible(view, 3, saison, pose, image2), "anyaTerrible");
+    module.exports = { anyaFrame, anyaFoudre, anyaTerrible, POSES_A, EXPR_OF, svgA, SAISONS_A };
   }
 });
 
