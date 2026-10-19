@@ -270,24 +270,24 @@ export default {
         return;
       }
       await this.runAction(FAILED.anya, async () => {
-          const { savoir, world } = await playService.villagerTalk('anya', heardPages());
-          this.apply(world);
-          if (savoir) keepSavoir(savoir, 'Anya');
-          const text = savoir ? BUBBLES.anyaBreath(BREATH_LINE, savoir.chapter, savoir.ingredient) : BUBBLES.anyaNoPage;
-          this.showTip(px, py, { title: 'Anya', text });
-          vibrate([8, 30, 8]);
+        const { savoir, world } = await playService.villagerTalk('anya', heardPages());
+        this.apply(world);
+        if (savoir) keepSavoir(savoir, 'Anya');
+        const text = savoir ? BUBBLES.anyaBreath(BREATH_LINE, savoir.chapter, savoir.ingredient) : BUBBLES.anyaNoPage;
+        this.showTip(px, py, { title: 'Anya', text });
+        vibrate([8, 30, 8]);
       });
     },
     // Bavarder avec Brume, le Phare allumé : un Savoir par jour sur les Légendes ; s'il n'y a pas de page, rien n'est compté
     async talkBrume() {
       if (this.busy) return;
       await this.runAction(FAILED.brume, async () => {
-          const { savoir, world } = await playService.villagerTalk('brume', heardPages());
-          this.apply(world);
-          this.brumeHint = savoir;
-          if (savoir) keepSavoir(savoir, 'Brume');
-          this.brumeSaid = savoir ? savoirLine('brume', savoir) : BUBBLES.brumeNoPage;
-          vibrate(8);
+        const { savoir, world } = await playService.villagerTalk('brume', heardPages());
+        this.apply(world);
+        this.brumeHint = savoir;
+        if (savoir) keepSavoir(savoir, 'Brume');
+        this.brumeSaid = savoir ? savoirLine('brume', savoir) : BUBBLES.brumeNoPage;
+        vibrate(8);
       });
     },
     openBrumeSavoir() {
@@ -310,18 +310,18 @@ export default {
       if (this.busy) return;
       const friend = this.villagerView;
       await this.runAction(FAILED.villager, async () => {
-          const reply = await call();
-          const { hearts, rewards, coins, world } = reply;
-          this.apply(world);
-          this.$emit('coins-updated', coins);
-          this.villagerSaid = lineOf(friend, hearts, reply);
-          this.villagerPopped = hearts > friend.hearts ? hearts : 0;
-          vibrate(hearts > friend.hearts ? [12, 40, 18] : 8);
-          const gained = rewards.filter(r => r.kind === 'coins').reduce((sum, r) => sum + r.amount, 0);
-          if (gained) this.$emit('show-alert', TOASTS.friendCoins(friend.name), 'gain', this.gainsOf({}, gained));
-          const chests = rewards.filter(r => r.chest).map(r => r.chest);
-          if (chests.length === 1) this.showChest(chests[0]);
-          else if (chests.length > 1) this.haul = chests;
+        const reply = await call();
+        const { hearts, rewards, coins, world } = reply;
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.villagerSaid = lineOf(friend, hearts, reply);
+        this.villagerPopped = hearts > friend.hearts ? hearts : 0;
+        vibrate(hearts > friend.hearts ? [12, 40, 18] : 8);
+        const gained = rewards.filter(r => r.kind === 'coins').reduce((sum, r) => sum + r.amount, 0);
+        if (gained) this.$emit('show-alert', TOASTS.friendCoins(friend.name), 'gain', this.gainsOf({}, gained));
+        const chests = rewards.filter(r => r.chest).map(r => r.chest);
+        if (chests.length === 1) this.showChest(chests[0]);
+        else if (chests.length > 1) this.haul = chests;
       });
     },
     // Combler un besoin depuis la fiche (le serveur prend les ressources du stock) : l'habitant remercie
@@ -334,11 +334,11 @@ export default {
         return;
       }
       await this.runAction(FAILED.need, async () => {
-          const { coins, world } = await playService.villagerNeed(this.villagerView.id, need);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          this.villagerSaid = thanksOf(need, this.villagerView.id) || '';
-          vibrate(10);
+        const { coins, world } = await playService.villagerNeed(this.villagerView.id, need);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        this.villagerSaid = thanksOf(need, this.villagerView.id) || '';
+        vibrate(10);
       });
     },
     // Toucher la bulle d'un besoin (la faim, la soif… d'un habitant ; la faim d'une poule) : il est comblé tout de suite
@@ -370,24 +370,24 @@ export default {
         return;
       }
       await this.runAction(FAILED.need, async () => {
-          const { coins, world } = asking.beast ? await playService.beastFeed(asking.beast) : await playService.villagerNeed(friend.id, need.id);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          this.sparkle('petille', { x: asking.x, y: asking.y + asking.r, top: asking.r * 2 });
-          vibrate(10);
-          const thanks = friend && thanksOf(need.id, friend.id);
-          if (thanks) this.showTip(px, py, { title: friend.name, text: thanks });
+        const { coins, world } = asking.beast ? await playService.beastFeed(asking.beast) : await playService.villagerNeed(friend.id, need.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        this.sparkle('petille', { x: asking.x, y: asking.y + asking.r, top: asking.r * 2 });
+        vibrate(10);
+        const thanks = friend && thanksOf(need.id, friend.id);
+        if (thanks) this.showTip(px, py, { title: friend.name, text: thanks });
       });
     },
     // Nourrir la bête dont la fiche est ouverte (2 vivres du stock ; sa bulle est ramassée d'abord)
     async feedBeast() {
       if (this.busy || !this.beastView) return;
       await this.runAction(FAILED.beast, async () => {
-          const { collected, coins, world } = await playService.beastFeed(this.beastView.id);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          vibrate(10);
-          if (collected) this.$emit('show-alert', TOASTS.beastBubble, 'gain', this.gainsOf({ food: collected }));
+        const { collected, coins, world } = await playService.beastFeed(this.beastView.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate(10);
+        if (collected) this.$emit('show-alert', TOASTS.beastBubble, 'gain', this.gainsOf({ food: collected }));
       });
     },
     // Ramasser les bulles de toutes les bêtes : chaque bulle pleine pétille, la première montre ce qu'on gagne
@@ -398,27 +398,27 @@ export default {
       // (des œufs à ramasser : Agathe le dit, la première fois)
       const eggs = Boolean(this.state && this.state.beasts && this.state.beasts.list.some(b => b.species === 'hen' && b.ready > 0));
       await this.runAction(FAILED.bubbles, async () => {
-          const { food, world } = await playService.beastsCollect();
-          this.apply(world);
-          if (food && eggs) this.coopLines(world, true);
-          if (food) {
-            const gains = this.gainsOf({ food });
-            if (full.length) full.forEach((spot, i) => this.sparkle('petille', spot, i ? [] : gains));
-            else this.sparkleAt('petille', at, gains);
-            vibrate([10, 30, 14]);
-          }
+        const { food, world } = await playService.beastsCollect();
+        this.apply(world);
+        if (food && eggs) this.coopLines(world, true);
+        if (food) {
+          const gains = this.gainsOf({ food });
+          if (full.length) full.forEach((spot, i) => this.sparkle('petille', spot, i ? [] : gains));
+          else this.sparkleAt('petille', at, gains);
+          vibrate([10, 30, 14]);
+        }
       });
     },
     // « Tout combler » (fiche du Foyer) : tout ce qui peut l'être, tant que le stock suffit
     async fillAllNeeds() {
       if (this.busy) return;
       await this.runAction(FAILED.needs, async () => {
-          const { filled, coins, world } = await playService.villagersNeeds();
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          vibrate([10, 30, 10]);
-          const n = filled.length;
-          this.$emit('show-alert', TOASTS.needsFilled(n));
+        const { filled, coins, world } = await playService.villagersNeeds();
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate([10, 30, 10]);
+        const n = filled.length;
+        this.$emit('show-alert', TOASTS.needsFilled(n));
       });
     }
   }

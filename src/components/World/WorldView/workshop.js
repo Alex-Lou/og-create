@@ -267,12 +267,12 @@ export default {
     async buildShelter(who) {
       if (this.busy) return;
       await this.runAction(FAILED.shelter, async () => {
-          const { coins, world } = await playService.shelter(who);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          const corner = (this.state.camp || []).find(c => c.id === who);
-          if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
-          vibrate([12, 40, 18]);
+        const { coins, world } = await playService.shelter(who);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        const corner = (this.state.camp || []).find(c => c.id === who);
+        if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
+        vibrate([12, 40, 18]);
       });
     },
     /* ---------- Pose d'un trait (clôture, muret) : l'appui long puis le glisser, comme un chemin (roads.js) ---------- */
@@ -378,11 +378,11 @@ export default {
       if (this.busy) return;
       const cell = this.lessonPosed.cells[this.lessonPosed.cells.length - 1];
       await this.runAction(FAILED.craftStore, async () => {
-          const { coins, world } = await playService.craftUnpose(cell.x, cell.y);
-          this.lessonPosed.cells.pop();
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          vibrate(4);
+        const { coins, world } = await playService.craftUnpose(cell.x, cell.y);
+        this.lessonPosed.cells.pop();
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate(4);
       });
     },
     undoKey(event) {
@@ -516,12 +516,12 @@ export default {
       if (!this.craftMenu || this.busy) return;
       const { x, y } = this.craftMenu;
       await this.runAction(FAILED.craftTurn, async () => {
-          const { coins, world } = await playService.craftTurn(x, y, !this.placedAt({ x, y }).flip);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          // (le tutoriel apprend à pivoter : App, islandStory.js)
-          this.$emit('turned', this.craftMenu && this.craftMenu.craft);
-          vibrate(8);
+        const { coins, world } = await playService.craftTurn(x, y, !this.placedAt({ x, y }).flip);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        // (le tutoriel apprend à pivoter : App, islandStory.js)
+        this.$emit('turned', this.craftMenu && this.craftMenu.craft);
+        vibrate(8);
       });
     },
     // Menu d'une création posée (appui long) : déplacer, pivoter, ranger
@@ -550,10 +550,10 @@ export default {
         return;
       }
       await this.runAction(FAILED.craftStore, async () => {
-          const { coins, world } = await playService.craftStore(x, y);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          this.$emit('show-alert', TOASTS.craftStored(this.craftName(craft)));
+        const { coins, world } = await playService.craftStore(x, y);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        this.$emit('show-alert', TOASTS.craftStored(this.craftName(craft)));
       });
     }
   }

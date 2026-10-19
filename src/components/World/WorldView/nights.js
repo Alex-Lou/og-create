@@ -129,14 +129,14 @@ export default {
     async repairSite(site) {
       if (this.busy || !this.blightOf(site)) return;
       await this.runAction(FAILED.repair, async () => {
-          const { coins, world } = await playService.worldRepair(site.id);
-          this.heals.set(site.id, performance.now());
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          vibrate([10, 30, 14]);
-          // (la brume se dissipe sous les yeux, un Éclat sur le bâtiment : pas de notification en double, choix de
-          // l'auteur, 13 oct.)
-          this.sparkle('eclat', this.siteAt(site));
+        const { coins, world } = await playService.worldRepair(site.id);
+        this.heals.set(site.id, performance.now());
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate([10, 30, 14]);
+        // (la brume se dissipe sous les yeux, un Éclat sur le bâtiment : pas de notification en double, choix de
+        // l'auteur, 13 oct.)
+        this.sparkle('eclat', this.siteAt(site));
       });
     }
   }

@@ -101,12 +101,12 @@ export default {
     /* ---------- Actions ---------- */
     async build(site) {
       await this.runAction(FAILED.build, async () => {
-          const { coins, world } = await playService.worldBuild(site.id);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          this.site = null;
-          // (la fête se joue sur l'île même, avec son mot au-dessus du bâtiment : world/fetes.js, lancée par apply)
-          vibrate([14, 40, 20]);
+        const { coins, world } = await playService.worldBuild(site.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        this.site = null;
+        // (la fête se joue sur l'île même, avec son mot au-dessus du bâtiment : world/fetes.js, lancée par apply)
+        vibrate([14, 40, 20]);
       });
     },
     // Nom d'un bâtiment de l'île (celui que le joueur lui a donné)
@@ -129,9 +129,9 @@ export default {
     async saveName(name) {
       const { kind, id } = this.renaming;
       await this.runAction(FAILED.rename, async () => {
-          this.apply(await playService.worldName(kind, id, name));
-          this.renaming = null;
-          vibrate(8);
+        this.apply(await playService.worldName(kind, id, name));
+        this.renaming = null;
+        vibrate(8);
       });
     },
     // Ramassage de la production des bâtiments : chacun pétille et montre ce qu'il donne (world/fetes.js) ; at = point
@@ -143,18 +143,18 @@ export default {
       const waiting = (this.state ? this.state.sites : []).filter(s => !s.locked && s.pending && Object.values(s.pending).some(n => n > 0))
         .map(s => ({ at: this.siteAt(s), pending: s.pending }));
       await this.runAction(FAILED.collect, async () => {
-          const { gained, stock, coins, world } = await playService.worldCollect();
-          this.apply(world, { quiet: true });
-          this.$emit('coins-updated', coins);
-          const got = gained > 0 || Object.values(stock || {}).some(n => n > 0);
-          // (la première production ramassée : Agathe dit la suite, si elle l'a montrée)
-          if (got && guide.state.seen.has('dlg-premiere-production-1')) this.sayMoment('premiere-production', true);
-          if (got) {
-            if (waiting.length) {
-              waiting.forEach(({ at: spot, pending: { coins: earned = 0, ...made } }) => this.sparkle('petille', spot, this.gainsOf(made, earned)));
-            } else this.sparkleAt('petille', from, this.gainsOf(stock, gained));
-            vibrate([12, 40, 18]);
-          }
+        const { gained, stock, coins, world } = await playService.worldCollect();
+        this.apply(world, { quiet: true });
+        this.$emit('coins-updated', coins);
+        const got = gained > 0 || Object.values(stock || {}).some(n => n > 0);
+        // (la première production ramassée : Agathe dit la suite, si elle l'a montrée)
+        if (got && guide.state.seen.has('dlg-premiere-production-1')) this.sayMoment('premiere-production', true);
+        if (got) {
+          if (waiting.length) {
+            waiting.forEach(({ at: spot, pending: { coins: earned = 0, ...made } }) => this.sparkle('petille', spot, this.gainsOf(made, earned)));
+          } else this.sparkleAt('petille', from, this.gainsOf(stock, gained));
+          vibrate([12, 40, 18]);
+        }
       });
     },
     // Achat d'un article en un toucher ; « Annuler » reste proposé UNDO_MS
@@ -165,22 +165,22 @@ export default {
         return;
       }
       await this.runAction(FAILED.buy, async () => {
-          const { bought, coins, world } = await playService.worldItem(item.id);
-          this.apply(world);
-          this.$emit('coins-updated', coins);
-          // (l'article tombe à sa place sur le bâtiment, la poussière roule à son pied, et son nom monte : world/fetes.js ;
-          // un habillage n'a pas de dessin à poser)
-          if (item.kind !== 'skin') this.pops.set(`item:${site.id}:${item.id}`, performance.now());
-          this.sparkle('pose', this.siteAt(site), [{ text: bought }]);
-          vibrate([12, 40, 18]);
-          clearTimeout(this.undoTimer);
-          this.undoable = { id: item.id, name: bought };
-          // Premier achat de cette sorte : son mode d'emploi, une fois l'achat devenu définitif
-          const firstOfKind = !guideSeen(guideKind(item)) ? { siteId: site.id, itemId: item.id } : null;
-          this.undoTimer = setTimeout(() => {
-            this.undoable = null;
-            if (firstOfKind && !this.gone) this.guide = firstOfKind;
-          }, UNDO_MS);
+        const { bought, coins, world } = await playService.worldItem(item.id);
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        // (l'article tombe à sa place sur le bâtiment, la poussière roule à son pied, et son nom monte : world/fetes.js ;
+        // un habillage n'a pas de dessin à poser)
+        if (item.kind !== 'skin') this.pops.set(`item:${site.id}:${item.id}`, performance.now());
+        this.sparkle('pose', this.siteAt(site), [{ text: bought }]);
+        vibrate([12, 40, 18]);
+        clearTimeout(this.undoTimer);
+        this.undoable = { id: item.id, name: bought };
+        // Premier achat de cette sorte : son mode d'emploi, une fois l'achat devenu définitif
+        const firstOfKind = !guideSeen(guideKind(item)) ? { siteId: site.id, itemId: item.id } : null;
+        this.undoTimer = setTimeout(() => {
+          this.undoable = null;
+          if (firstOfKind && !this.gone) this.guide = firstOfKind;
+        }, UNDO_MS);
       });
     },
     // « Annuler » juste après un achat : l'article est rendu, ses écus remboursés par le serveur
@@ -190,10 +190,10 @@ export default {
       clearTimeout(this.undoTimer);
       this.undoable = null;
       await this.runAction(FAILED.undo, async () => {
-          const { undone, coins, world } = await playService.worldItemUndo(item.id);
-          this.apply(world);
-          this.$emit('coins-updated', coins);
-          this.$emit('show-alert', TOASTS.undone(undone));
+        const { undone, coins, world } = await playService.worldItemUndo(item.id);
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.$emit('show-alert', TOASTS.undone(undone));
       });
     },
     // Fiche d'un article (toucher sur son dessin, appui long sur son prix)
@@ -228,8 +228,8 @@ export default {
     // Skin porté par un bâtiment ('' : apparence d'origine)
     async wearSkin(site, skin) {
       await this.runAction(FAILED.skin, async () => {
-          this.apply(await playService.worldSkin(site.id, skin));
-          vibrate(8);
+        this.apply(await playService.worldSkin(site.id, skin));
+        vibrate(8);
       });
     }
   }

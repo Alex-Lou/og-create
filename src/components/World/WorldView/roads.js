@@ -357,18 +357,18 @@ export default {
       const mode = this.roadMode;
       if (!mode || !this.roadReady || this.busy) return;
       await this.runAction(FAILED.road, async () => {
-          const cells = list => list.map(c => [c.x, c.y]);
-          const { world } = await playService.worldPaths(cells(mode.lay), cells(mode.erase), cells(mode.pave), cells(mode.unpave));
-          const now = performance.now();
-          this.roadMode = null;
-          this.apply(world);
-          // Les cases tracées se creusent, l'une après l'autre ; les pierres des cases pavées se posent (pas en mouvement
-          // réduit)
-          if (!this.reduced()) {
-            this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
-            this.roadSets = mode.pave.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
-          }
-          vibrate([10, 30, 14]);
+        const cells = list => list.map(c => [c.x, c.y]);
+        const { world } = await playService.worldPaths(cells(mode.lay), cells(mode.erase), cells(mode.pave), cells(mode.unpave));
+        const now = performance.now();
+        this.roadMode = null;
+        this.apply(world);
+        // Les cases tracées se creusent, l'une après l'autre ; les pierres des cases pavées se posent (pas en mouvement
+        // réduit)
+        if (!this.reduced()) {
+          this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
+          this.roadSets = mode.pave.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
+        }
+        vibrate([10, 30, 14]);
       });
     },
     // L'aperçu du tracé (au-dessus du sol) : cases en attente en terre claire, cases à effacer barrées, case refusée

@@ -133,15 +133,15 @@ export default {
     // Achat d'un quartier : la brume se dissipe, le panneau éclate
     async buyZone(zone) {
       await this.runAction(FAILED.zone, async () => {
-          const sign = this.signs.find(sg => sg.zone.id === zone.id);
-          const { bought, coins, world } = await playService.worldZone(zone.id);
-          this.unveils.set(zone.id, performance.now());
-          this.zone = null;
-          this.apply(world);
-          this.$emit('coins-updated', coins);
-          // (sa Fête, au pied de son panneau, avec son nom sous le mot : world/fetes.js)
-          if (sign) this.celebrateAt(`quartier:${zone.id}`, { x: sign.x, y: sign.y + 30, top: 40 }, NEW_ZONE(bought));
-          vibrate([14, 40, 20]);
+        const sign = this.signs.find(sg => sg.zone.id === zone.id);
+        const { bought, coins, world } = await playService.worldZone(zone.id);
+        this.unveils.set(zone.id, performance.now());
+        this.zone = null;
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        // (sa Fête, au pied de son panneau, avec son nom sous le mot : world/fetes.js)
+        if (sign) this.celebrateAt(`quartier:${zone.id}`, { x: sign.x, y: sign.y + 30, top: 40 }, NEW_ZONE(bought));
+        vibrate([14, 40, 20]);
       });
     },
     // Expédition vers un quartier inconnu : le serveur prend vivres, bois et une partie de Récolte ; elle revient après
@@ -149,13 +149,13 @@ export default {
     async explore(zone) {
       if (this.busy) return;
       await this.runAction(FAILED.expedition, async () => {
-          const { world, coins } = await playService.worldExpedition(zone.id);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          this.zone = null;
-          vibrate([10, 30, 10]);
-          this.$emit('show-alert', TOASTS.expedition(zone.trip));
-          guide.tip('expedition');
+        const { world, coins } = await playService.worldExpedition(zone.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        this.zone = null;
+        vibrate([10, 30, 10]);
+        this.$emit('show-alert', TOASTS.expedition(zone.trip));
+        guide.tip('expedition');
       });
     },
     // La boussole : la caméra va vers le quartier qu'explore l'expédition en route, sinon vers une terre à explorer, et
