@@ -252,23 +252,23 @@ describe('les torches de Nathan (choix de l’auteur, 13 oct.)', () => {
   const foyer = { x: 99, y: 93, w: 2, h: 2 };
   const spots = [];
   for (let y = 84; y <= 100; y++) for (let x = 90; x <= 108; x++) spots.push({ x, y });
-  it('une case par côté d’où venaient les égarés : le nord, l’ouest, l’est, à trois cases de la grande emprise du Feu', () => {
-    expect(torchSpotsOf(foyer, spots)).toEqual([{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }]);
+  it('une case par côté d’où venaient les égarés : le nord, l’ouest, à trois cases de la grande emprise du Feu ; l’est, au bout de la barrière du nord', () => {
+    expect(torchSpotsOf(foyer, spots)).toEqual([{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 90 }]);
   });
   it('un côté déjà gardé (une torche à deux cases de sa place) ne se propose plus ; une case prise : la plus proche', () => {
-    expect(torchSpotsOf(foyer, spots, [{ x: 100, y: 88 }])).toEqual([{ x: 95, y: 93 }, { x: 103, y: 93 }]);
+    expect(torchSpotsOf(foyer, spots, [{ x: 100, y: 88 }])).toEqual([{ x: 95, y: 93 }, { x: 103, y: 90 }]);
     const busy = spots.filter(sp => !(sp.x === 95 && sp.y === 93));
-    expect(torchSpotsOf(foyer, busy, [{ x: 99, y: 89 }, { x: 103, y: 93 }])).toHaveLength(1);
-    expect(torchSpotsOf(foyer, spots, [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }])).toEqual([]);
+    expect(torchSpotsOf(foyer, busy, [{ x: 99, y: 89 }, { x: 103, y: 90 }])).toHaveLength(1);
+    expect(torchSpotsOf(foyer, spots, [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 90 }])).toEqual([]);
   });
   it('la nuit des lumières : un Sans-Nom voit la torche, va vers elle et s’arrête à son bord ; le téméraire s’y brûle ; le Dormeur s’endort contre la barrière du nord', () => {
     const foyer = { x: 98, y: 92, w: 3, h: 3 };
-    const torches = [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }].map(c => ({ craft: 'torche', ...c }));
+    const torches = [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 90 }].map(c => ({ craft: 'torche', ...c }));
     const barrier = [96, 97, 98, 99, 100, 101, 102].map(x => ({ craft: 'cloture', x, y: 90 }));
     const fates = lumieresOf(foyer, [...torches, ...barrier]);
     expect(fates.map(f => [f.kind, f.end])).toEqual([['fantome', 'brule'], ['fantome', 'repousse'], ['fantome', 'repousse'], ['zombie', 'dort']]);
     // (à deux cases de sa torche, sa portée ; le téméraire, un pas plus loin)
-    expect(fates.slice(0, 3).map(f => f.path[f.step])).toEqual([{ x: 99, y: 88 }, { x: 93, y: 93 }, { x: 105, y: 93 }]);
+    expect(fates.slice(0, 3).map(f => f.path[f.step])).toEqual([{ x: 99, y: 88 }, { x: 93, y: 93 }, { x: 105, y: 91 }]);
     // (le Dormeur s'arrête juste avant le piquet)
     expect(fates[3].path[fates[3].step]).toEqual({ x: 97, y: 89 });
     // Sans torche ni clôture : tout droit sur le feu

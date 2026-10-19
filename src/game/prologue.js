@@ -458,14 +458,15 @@ export function barrierOf(foyer, spots) {
   return spots.filter(sp => sp.y === big.y - 2 && sp.x >= big.x - 2 && sp.x <= big.x + 4).sort((a, b) => a.x - b.x);
 }
 // Les trois torches de Nathan (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
-// le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu. Pour chaque côté encore sans torche (une
-// torche à deux cases de sa place le garde), la case libre la plus proche de sa place, parmi spots. torches : celles
-// posées ({ x, y }). [{ x, y }]
+// le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu ; celle de l'est, au bout de la barrière du
+// nord (choix de l'auteur, 19 oct. : sa place d'avant est celle de la cuisine d’Agathe). Pour chaque côté encore sans
+// torche (une torche à deux cases de sa place le garde), la case libre la plus proche de sa place, parmi spots.
+// torches : celles posées ({ x, y }). [{ x, y }]
 const TORCH_GAP = 3;
 export function torchSpotsOf(foyer, spots, torches = []) {
   const big = bigOf(foyer);
   const middle = { x: big.x + 1, y: big.y + 1 };
-  const sides = [{ x: middle.x, y: big.y - TORCH_GAP }, { x: big.x - TORCH_GAP, y: middle.y }, { x: big.x + big.w - 1 + TORCH_GAP, y: middle.y }];
+  const sides = [{ x: middle.x, y: big.y - TORCH_GAP }, { x: big.x - TORCH_GAP, y: middle.y }, { x: big.x + 5, y: big.y - 2 }];
   const far = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
   return sides.filter(side => !torches.some(t => far(t, side) <= 2))
     .map(side => spots.reduce((best, sp) => (!best || far(sp, side) < far(best, side) ? sp : best), null))
