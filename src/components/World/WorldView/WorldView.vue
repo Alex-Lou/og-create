@@ -617,6 +617,7 @@ import questHud from './questHud';
 import enclosures from './enclosures';
 import walls from './walls';
 import phare from './phare';
+import brumeQuest from './brumeQuest';
 import { defineAsyncComponent } from 'vue';
 import PanelLoading from '../PanelLoading/PanelLoading.vue';
 
@@ -643,7 +644,7 @@ export default {
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
-  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, bestiary, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
+  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, bestiary, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare, brumeQuest],
   components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, ArrivalWelcome, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, BestiaryBook, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -832,7 +833,6 @@ export default {
     if (this.playing) this.$emit('playing', false);
     this.endLoading();
     if (this.immersive) this.setImmersive(false);
-    clearTimeout(this.undoTimer);
     clearTimeout(this.holdTimer);
     clearTimeout(this.tipTimer);
     if (this.ac) this.ac.abort();
@@ -844,11 +844,10 @@ export default {
     // (et les dessins demandés pour l'image suivante : rien ne se dessine plus sur une île quittée)
     cancelAnimationFrame(this.soonRaf);
     cancelAnimationFrame(this.repaintRaf);
-    // (la caméra qui glisse ou file sur son élan, le bord qui fait défiler pendant un tracé)
+    // (la caméra qui glisse ou file sur son élan ; le bord qui fait défiler un tracé s'arrête dans roads.js)
     cancelAnimationFrame(this.glideRaf);
-    cancelAnimationFrame(this.edgeRaf);
     cancelAnimationFrame(this.elanRaf);
-    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = this.elanRaf = 0;
+    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.elanRaf = 0;
     // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) memory.view = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();
