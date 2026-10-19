@@ -50,6 +50,9 @@ describe('village : habitants', () => {
   // (la nuit, chacun dort couché chez lui : choix de l'auteur, 16 oct. ; agenda.js)
   it('ils marchent par des cases praticables voisines, le jour ; dorment chez eux la nuit ; rentrent avec une lanterne le soir', () => {
     vi.useFakeTimers({ toFake: ['Date'], now: UN_JOUR });
+    // (l'horloge des tournées part de l'heure où la page s'ouvre, performance.timeOrigin : village.js, at ; figée elle
+    // aussi, sinon certains départs laissent chacun à l'arrêt aux deux instants comparés)
+    const origine = vi.spyOn(performance, 'timeOrigin', 'get').mockReturnValue(UN_JOUR.getTime());
     try {
       const noon = at(13);
       for (let t = 0; t < 600; t += 7) {
@@ -77,6 +80,7 @@ describe('village : habitants', () => {
       expect(life.list.filter(c => c.kind === 'villager').length).toBeGreaterThan(0);
       expect(life.lights.length).toBe(life.list.filter(c => c.kind === 'villager' && c.pose !== 'sleep').length);
     } finally {
+      origine.mockRestore();
       vi.useRealTimers();
     }
   });
