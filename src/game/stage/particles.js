@@ -130,4 +130,3 @@ const SHAPES = {
     ctx.stroke();
   }
 };
-export const SHAPE_NAMES = Object.keys(SHAPES);

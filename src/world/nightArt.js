@@ -15,11 +15,6 @@ const MIST = '/design/bibliotheque/svg/decor/embrume/';
 const SCALE = 1.25;
 const boxOf = ([x, y, w, h]) => ({ x: x / SCALE, y: y / SCALE, w: w / SCALE, h: h / SCALE });
 
-// Cadence des poses (egares.json) : marche, bouderie, luciole, brume (ms par image)
-export const STRAY_MS = { marche: 240, bouderie: 500, luciole: 200, brume: 220 };
-// Les images de chaque pose jouée une fois
-export const STRAY_FRAMES = { bouderie: 2, luciole: 4, brume: 3 };
-
 // Le dessin d'un égaré, selon son espèce (le serveur la décide : services/nights.js, KINDS) : le sien dans la
 // bibliothèque ; la bête de brume (bete), celle du climat d'où il sort (climate : null, le cœur, tempéré). Une espèce
 // sans dessin prend celui du Sans-Nom
