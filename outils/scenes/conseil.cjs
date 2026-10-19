@@ -70,9 +70,16 @@ const EXPRS = {
   nathan: ['personnages/refonte/nathan_refonte', 'braises', 'pensive', { look: [-0.55, 0.55], browL: [-0.6, -0.2, -0.4] }],
   leo: ['personnages/refonte/leo_refonte', 'voit', 'surprise', { look: [0.8, -0.45] }]
 };
+// (l'iris ne sort jamais de son œil : ces yeux n'ont pas de blanc, et un regard poussé plus loin découvrait leur fond
+// sombre d'un côté, comme un œil abîmé ; visage.js : eye, l'iris fait 1,45 de large, l'œil grand ouvert 0,15 de plus)
+const dansLOeil = (e, K) => {
+  const marge = K.eyeRx + (e.wide ? 0.15 : 0) - 1.45;
+  return [Math.max(-marge, Math.min(marge, e.look[0])), e.look[1]];
+};
 for (const [file, name, base, plus] of Object.values(EXPRS)) {
-  const E2 = need(file).EXPR;
-  E2[name] = { ...E2[base], ...plus };
+  const { EXPR: E2, C } = need(file);
+  const e = { ...E2[base], ...plus };
+  E2[name] = { ...e, look: dansLOeil(e, C) };
 }
 
 // Léo montre l'îlot : le bras du côté de la mer levé, l'index tendu ; l'autre main posée sur son genou (assis.js : un
