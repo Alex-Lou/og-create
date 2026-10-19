@@ -4,7 +4,7 @@
 // images/s). Le nom n'est pas dans le dessin : paintName l'écrit au canvas dans le cadre de texte du style, avec les
 // polices du jeu (Fraunces, Nunito), au-dessus de l'image, et suit le balancement de l'enseigne en fer forgé.
 import { sprite } from './iso';
-import { ln, dot, ell, poly, f2, OUT } from './shopSprites';
+import { ln, dot, ell, poly, f2, OUT } from './spriteKit';
 import { cleanName } from '@/utils/names';
 import { signArtLayer } from './decorArt';
 

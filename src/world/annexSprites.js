@@ -6,7 +6,8 @@
 // petite annexe, qui change ce qui y pousse (blé, carottes, citrouilles…).
 import { box, gable, sprite, boulder, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WALL, BRICK, THATCH, GLASS, SLATE_ROOF, ROOF_RED, BLUE_ROOF, planksLeft, planksRight } from './palette';
-import { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2, SHOP_SPRITES } from './shopSprites';
+import { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2 } from './spriteKit';
+import { SHOP_SPRITES } from './shopSprites';
 import { annexArtLayer, annexArtThumb } from './decorArt';
 import { objectAnnexLayer, objectAnnexThumb } from './objectArt';
 import { spriteUrl } from './spriteCache';
