@@ -245,8 +245,8 @@ export default {
       if (!this.annexSheet || this.busy) return;
       const { x, y } = this.annexSheet;
       await this.runAction(FAILED.annexLook, async () => {
-          this.apply(await playService.worldAnnexPose(x, y, pose));
-          vibrate(8);
+        this.apply(await playService.worldAnnexPose(x, y, pose));
+        vibrate(8);
       });
     },
     // Fiche d'une annexe : « Déplacer » allume les cases libres autour de son bâtiment ; « Bâtiment » ouvre sa fiche

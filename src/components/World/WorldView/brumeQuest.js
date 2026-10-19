@@ -116,9 +116,9 @@ export default {
       const name = this.peopleName.trim();
       if (this.busy || name.length < 2) return;
       await this.runAction(BRUME_ERRORS.people, async () => {
-          this.apply(await playService.worldPeople(name));
-          this.peopleName = '';
-          this.$emit('show-alert', BRUME_ALERTS.people(this.state.people));
+        this.apply(await playService.worldPeople(name));
+        this.peopleName = '';
+        this.$emit('show-alert', BRUME_ALERTS.people(this.state.people));
       });
     },
     // La quête demande une Récolte : la fiche se ferme, la Récolte commence

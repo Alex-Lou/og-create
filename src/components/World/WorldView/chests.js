@@ -145,16 +145,16 @@ export default {
     // Enseigne : un style porté (acheté au passage s'il ne l'est pas : le solde suit), ou le nom écrit dessus
     async chooseSign(site, look) {
       await this.runAction(FAILED.sign, async () => {
-          const { coins, world } = await playService.worldSign(site.id, look.id);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          vibrate([8, 30, 12]);
+        const { coins, world } = await playService.worldSign(site.id, look.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate([8, 30, 12]);
       });
     },
     async renameSigns(name) {
       await this.runAction(FAILED.rename, async () => {
-          this.apply(await playService.worldSignName(name));
-          vibrate(8);
+        this.apply(await playService.worldSignName(name));
+        vibrate(8);
       });
     },
     // Appui long sur une enseigne : la boutique de son bâtiment, à la section Enseigne

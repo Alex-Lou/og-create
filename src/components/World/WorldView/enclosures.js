@@ -179,10 +179,10 @@ export default {
       if (!this.craftMenu || this.busy) return;
       const { x, y } = this.craftMenu;
       await this.runAction(FAILED.craftPose, async () => {
-          const { coins, world } = await playService.craftLock(x, y, lock);
-          this.apply(world);
-          if (coins !== undefined) this.$emit('coins-updated', coins);
-          vibrate(10);
+        const { coins, world } = await playService.craftLock(x, y, lock);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate(10);
       });
     },
     // La boucle suggérée d'un trait : des pointillés clairs qui courent sur les cases qui la fermeraient, et leur cœur
