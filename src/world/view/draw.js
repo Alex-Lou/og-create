@@ -21,5 +21,7 @@ import ground from './draw/passes/ground';
 import standing from './draw/passes/standing';
 import sky from './draw/passes/sky';
 import overlay from './draw/passes/overlay';
+import critters from './draw/critters';
+import seaLife from './draw/seaLife';
 
-export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks, ...veillee, ...fetes, ...feux, ...pas, ...frame, ...sea, ...ground, ...standing, ...sky, ...overlay };
+export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks, ...veillee, ...fetes, ...feux, ...pas, ...frame, ...sea, ...ground, ...standing, ...sky, ...overlay, ...critters, ...seaLife };

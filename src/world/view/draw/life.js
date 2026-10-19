@@ -7,38 +7,28 @@ import { P } from '@/world/iso';
 import { campPerches } from '@/world/campArt';
 import { drawSprite, readyImage } from '@/world/spriteCache';
 import { lisereOf, graineOf, marquerLisere, BUSTE } from '@/world/lumiere';
-import { drawSpout, seaGuests, DOLPHIN_EVERY, DOLPHIN_FOR, podAt, WHALE_EVERY, WHALE_FOR, whaleAt, jelliesAt, circling, crossing, nearestOpen, spread } from '@/world/sea';
+import { drawSpout, seaGuests, nearestOpen, spread } from '@/world/sea';
 import { FLOATING_ZONE, COLONY_ZONE, ferryPose } from '@/world/islets';
 import { SEA_Z, HS, worldOf } from '@/world/terrain';
 import { beastSprite, lookOf } from '@/world/beastArt';
 import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
-import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
-import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons, KRAKEN_FOR, KRAKEN_FORCE, krakenNuit, krakenRoute, krakenAt, apercuAt, toucherGeant, toucherKraken } from '@/world/faune';
+import { SEA_SPRITES } from '@/world/seaSprites';
+import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, bouleAt, KRAKEN_FOR, KRAKEN_FORCE, krakenNuit, krakenRoute, krakenAt, apercuAt, toucherGeant, toucherKraken } from '@/world/faune';
 import { cycleAt, cycleStart, gameDate } from '@/world/gameClock';
 import { nearestOpen as eauLibre } from '@/world/sea';
 import { KRAKEN_LINES } from '@/texts/world/kraken';
 import { guide } from '@/game/guide';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
-import { BOTTLE } from '@/world/chest';
 import { ISLET_SPRITES } from '@/world/isletSprites';
-import { strayAt, nightNow } from '@/world/strays';
-import { strayLayer, strayKind } from '@/world/nightArt';
 import { SEA_KINDS } from '../constants';
 
-// Ce qui barre un égaré (serveur : services/nights.js, FENCES)
-const STRAY_FENCES = new Set(['cloture', 'muret']);
 
 // Qui nage : de combien son dessin s'enfonce sous l'eau (le maître de la bibliothèque fait 51 de haut : restent la tête
 // et les épaules)
 const SWIM_SINK = 26;
 
-// Arrivée du bateau d'un visiteur (secondes) et distance d'où il vient (cases)
-const BOAT_SAIL = 6;
-const BOAT_FAR = 7;
-// Mouettes posées effrayées : envol (s), puis retour
-const FLY_OFF = 2.6;
-const GULL_BACK = 30;
+export const GULL_BACK = 30;
 
 // Les petites bêtes et la mer prises dans la bibliothèque : [sorte de beastArt, variante (sinon l'espèce), pose selon
 // l'image du jeu]. Le dauphin a ses trois images (il sort de l'eau, au sommet, il replonge) ; la baleine nage (deux
@@ -69,114 +59,10 @@ export default {
       const c = this.ground(x, y);
       hits.push({ key, kind, x: c.x, y: c.y - z - 6, r: 13 });
     };
-    const foyer = this.state.sites.find(s => s.id === 'foyer');
-    // (pendant le tutoriel, pas d'autres poules que celles d’Agathe : celles-ci arrivent à sa fin)
-    if (foyer && !this.thickMist()) {
-      // Poules : elles picorent autour du Foyer ; la nuit elles dorment serrées contre lui, sous la pluie elles s'abritent
-      const asleep = phase.night > 0.6;
-      const huddle = asleep || rain > 0.5;
-      for (let k = 0; k < 2; k++) {
-        const a = huddle ? k * 2.4 + 0.6 : t * 0.22 + k * 2.4;
-        const r = foyer.w / 2;
-        const reach = huddle ? r * 0.6 + 0.3 : r + 0.55;
-        const x = foyer.x + r + Math.cos(a) * reach + (huddle ? 0 : Math.sin(t * 0.9 + k) * 0.08);
-        const y = foyer.y + r + Math.sin(a * 1.3) * (huddle ? reach : r + 0.35);
-        const pecking = !asleep && Math.sin(t * 0.7 + k * 3) > 0.55;
-        const jump = fright(`hen:${k}`, 0.7);
-        const z = jump === null ? 0 : Math.sin(jump * Math.PI) * 10;
-        out.push({ kind: 'chicken', x, y, z, frame: jump !== null || (pecking && Math.sin(t * 9) > 0) ? 1 : 0, flip: Math.sin(a) > 0 });
-        touchable(`hen:${k}`, 'chicken', x, y, z);
-      }
-    }
-    // Poisson : un saut toutes les 7 s, à un endroit différent du rivage des quartiers à soi (sous la brume, rien :
-    // serve.js, fishShore ; sardine, daurade) ; le poisson volant plane vers le large
-    const cycle = Math.floor(t / 7);
-    const into = (t % 7) / 7;
-    const species = FISH_SPECIES[Math.floor(hash(cycle, 5) * FISH_SPECIES.length)];
-    const span = species === 'volant' ? 0.2 : 0.12;
-    if (into < span && this.fishShore.length) {
-      const spot = this.fishShore[Math.floor(hash(cycle, 2) * this.fishShore.length)];
-      if (species === 'volant') {
-        const k = into / span, alongX = hash(cycle, 3) < 0.5;
-        out.push({ kind: 'fish', species, x: spot.x + 0.2 + (alongX ? k * 1.4 : 0), y: spot.y + 0.2 + (alongX ? 0 : k * 1.4), z: 0, frame: 0, flip: !alongX });
-      } else out.push({ kind: 'fish', species, x: spot.x + 0.2, y: spot.y + 0.2, z: 0, frame: into < 0.06 ? 0 : 1, flip: hash(cycle, 3) < 0.5 });
-    }
-    // Mouettes posées sur les plages (envolées après un toucher, elles reviennent plus tard)
-    for (const perch of this.perches) {
-      const fled = this.scared.get(`perch:${perch.id}`);
-      if (fled && t - fled.at < GULL_BACK) continue;
-      for (let i = 0; i < perch.count; i++) {
-        const gull = { kind: 'gull', x: perch.x + i * 0.32 - 0.1, y: perch.y + 0.1 - i * 0.18, z: 0, frame: Math.sin(t * 0.7 + i * 2 + perch.x) > 0.75 ? 1 : 0, flip: (i + Math.floor(t / 9 + perch.y)) % 2 === 1 };
-        // (perchée sur l'épave : à sa place dans le monde, en hauteur, rangée devant elle)
-        out.push(perch.at ? { ...gull, x: perch.x, y: perch.y, at: perch.at, z: perch.z, depth: perch.depth } : gull);
-      }
-    }
-    // Bouteille à la mer échouée : la vague la berce ; un toucher l'ouvre
-    if (this.bottleSpot) {
-      const { x, y } = this.bottleSpot;
-      const frame = Math.sin(t * 1.6) > 0.6 ? 1 : 0;
-      // (dessin de la bibliothèque, à sa cadence, sinon celui du code)
-      const lib = isletArtLayer('bouteille', isletFrameAt('bouteille', t));
-      out.push({ kind: 'bottle', x: x + 0.5, y: y + 0.5, z: 0, frame, flip: false, sprite: lib ? [lib.key, lib.make] : [`bottle-${frame}`, BOTTLE[frame]] });
-      const c = this.ground(x + 0.5, y + 0.5);
-      hits.push({ key: 'bottle', kind: 'bottle', bottle: true, x: c.x, y: c.y - 6, r: 14 });
-    }
-    // Habitants et bêtes du village (on peut les toucher)
-    const life = this.village ? this.village.at(t, phase, this.scared, this.looseHens) : { list: [], lights: [] };
-    // (deux camarades qui se retrouvent, à l'écran : leurs bulles ; WorldView, folk.js)
-    if (life.meets && life.meets.length) this.meetNow(life.meets);
-    for (const who of life.list) {
-      out.push(who);
-      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche de Léo : on touche Léo)
-      if (who.kind === 'egg' || who.kind === 'plank') continue;
-      const c = this.ground(who.x, who.y);
-      const person = who.kind === 'villager';
-      // Anya est grande (environ 100 de haut), son cerf de lune aussi : on les touche au corps, pas seulement aux pieds ;
-      // un maître dessiné par la bibliothèque (grand format, 51 de haut) aussi, tête comprise
-      const tall = who.species === 'anya' || who.id === 'anya:cerf';
-      const big = person && who.sprite[0].startsWith('lib-');
-      // head : du point touché au-dessus de la tête (et de la toile du parapluie), où se pose la bulle d'un besoin
-      const head = big ? (who.sprite[0].includes('_parapluie_') ? 41 : 27) : 16;
-      // Qui nage : on le touche à la tête et aux épaules, seules hors de l'eau (drawCritter : SWIM_SINK)
-      if (person && who.swim) {
-        hits.push({ key: who.id, kind: 'villager', who, x: c.x, y: c.y - SEA_Z * HS - who.z - 12, r: 18, head: 18 });
-        continue;
-      }
-      // Un dormeur est couché : on le touche sur tout son corps, à ras du sol (son dessin fait 51 × 38, ancré au lit)
-      if (person && who.pose === 'sleep') {
-        hits.push({ key: who.id, kind: 'villager', who, x: c.x, y: c.y - 3, r: 24, head: 20 });
-        continue;
-      }
-      hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (big ? 24 : person ? 16 : tall ? 44 : 6), r: big ? 20 : person ? 15 : tall ? 34 : 12, head });
-    }
-    // Les égarés de la nuit (serveur : nights) : ils marchent vers leur bâtiment, un toucher en repousse un ; changés en
-    // lucioles, ils luisent sur place jusqu'au matin. Au tutoriel, celui que Brume montre buter sur la clôture
-    // (tutoStrays : demos.js, strayDemo), à toute heure, et qu'on ne touche pas
-    const glows = [];
-    const nights = this.state.nights;
-    const now = Date.now();
-    const shown = [...(nightNow(nights, now) ? nights.creatures || [] : []), ...(this.tutoStrays || [])];
-    if (shown.length) {
-      // (la Racine passe sous les clôtures et les murets)
-      const fences = new Set((this.crafted || []).filter(p => STRAY_FENCES.has(p.craft)).map(p => `${p.x},${p.y}`));
-      const under = (x, y) => fences.has(`${x},${y}`);
-      for (const c of shown) {
-        const s = strayAt(c, now, this.repelled.has(c.id) ? this.repelled.get(c.id) : null, under);
-        if (!s) continue;
-        if (s.glow) {
-          glows.push({ x: s.x, y: s.y, dx: Math.sin(t * 1.3 + s.x) * 4, dy: -12 + Math.sin(t * 2.1 + s.y) * 3, r: 8, color: '210,255,160' });
-          continue;
-        }
-        const zone = this.state.map.zones[this.M.zone(c.path[0].x, c.path[0].y)];
-        const art = strayKind(c.kind, zone && zone.climate);
-        const layer = strayLayer(art, s.view, s.pose, s.n);
-        if (!layer) continue;
-        out.push({ id: `stray:${c.id}`, kind: 'stray', x: s.x, y: s.y, z: 0, flip: s.flip, frame: 0, sprite: [layer.key, layer.make] });
-        const g = this.ground(s.x, s.y);
-        // (art : son dessin, sa page au Bestiaire)
-        if (s.pose === 'marche' && !c.demo) hits.push({ key: `stray:${c.id}`, kind: 'stray', stray: c, art, x: g.x, y: g.y - 10, r: 16 });
-      }
-    }
+    this.henCritters({ t, phase, rain, out, fright, touchable });
+    this.shoreCritters({ t, out, hits });
+    const { life } = this.villageCritters({ t, phase, out, hits });
+    const { glows } = this.strayCritters({ t, out, hits });
     this.villageLights = glows.length ? [...life.lights, ...glows] : life.lights;
     this.landHits = hits;
     return out;
@@ -287,99 +173,10 @@ export default {
     const guests = seaGuests(new Set(this.state.map.zones.filter(z => z.owned).map(z => z.id)), phase);
     const center = this.cellAt(view.x + view.w / 2, view.y + view.h / 2);
     const surface = (x, y) => { const c = this.world(x, y); return { x: c.x, y: c.y - SEA_Z * HS }; };
-    if (!still && guests.dolphins) {
-      const go = this.passageOf('pod', t, DOLPHIN_EVERY, DOLPHIN_FOR, 3, center);
-      const fled = go && this.scared.get(go.key);
-      if (go && !fled) {
-        const pod = podAt(go.spot, go.dir, go.τ);
-        out.rings.push(...pod.rings);
-        for (const d of pod.dolphins) {
-          out.standing.push({ kind: 'dolphin', ...d });
-          const c = surface(d.x, d.y);
-          hits.push({ key: go.key, kind: 'pod', x: c.x, y: c.y - d.z - 4, r: 26, where: pod.dolphins.map(p => ({ x: p.x, y: p.y })) });
-        }
-      } else if (fled && t - fled.at < 1.2) fled.where.forEach(p => out.rings.push({ x: p.x, y: p.y, k: (t - fled.at) / 1.2 }));
-    }
-    if (!still && guests.whale) {
-      const go = this.passageOf('whale', t, WHALE_EVERY, WHALE_FOR, 5, center);
-      if (go) {
-        const w = whaleAt(go.spot, go.dir, go.τ);
-        const tapped = this.scared.get(go.key);
-        if (tapped && t - tapped.at < 1.8) w.spouts.push({ x: tapped.x, y: tapped.y, k: (t - tapped.at) / 1.8 });
-        out.rings.push(...w.rings);
-        if (w.back) {
-          const depth = w.back.x + w.back.y;
-          // (deux images de nage dans la bibliothèque, 420 ms chacune)
-          out.standing.push({ kind: 'whale', x: w.back.x, y: w.back.y, z: 0, e: w.back.e, flip: w.flip, frame: Math.floor(t / 0.42) % 2 });
-          w.spouts.forEach(sp => out.standing.push({ kind: 'spout', ...sp, depth: depth + 0.5 }));
-          const c = surface(w.back.x, w.back.y);
-          hits.push({ key: go.key, kind: 'whale', x: c.x, y: c.y - 6, r: 44, at: { x: w.back.x, y: w.back.y } });
-        }
-        if (w.fluke) out.standing.push({ kind: 'fluke', x: w.fluke.x, y: w.fluke.y, z: 0, e: w.fluke.e, flip: w.flip, frame: Math.floor(t / 0.42) % 2 });
-      }
-    }
-    if (guests.jellies) out.jellies = jelliesAt(this.waterSeen().open, t);
-    // Les bancs de poissons (faune/bancs.js) : on peut les toucher (ils fusent, des ronds là où ils étaient) ; le jour,
-    // les mouettes plongent dans la boule de sardines
-    if (!still) {
-      const boule = this.bouleOf(t, view);
-      this.waterSeen().schools.forEach((sc, k) => {
-        const key = `school:${k}`, touched = this.scared.get(key);
-        // (le banc ramassé en boule se touche là où est la boule)
-        const c = boule && boule.k === k && boule.m > 0.5 ? boule : centreOf(sc, k, t);
-        if (touched && t - touched.at < FUITE) {
-          if (t - touched.at < 1.2) out.rings.push({ x: c.x, y: c.y, k: (t - touched.at) / 1.2 });
-        } else {
-          const w = surface(c.x, c.y);
-          hits.push({ key, kind: 'school', x: w.x, y: w.y, r: 30 });
-        }
-      });
-      if (boule && phase.night < 0.6) {
-        const p = plongeons(boule, t);
-        out.gulls.push(...p.gulls);
-        out.rings.push(...p.rings);
-      }
-    }
-    // Mouettes : un vol tourne au-dessus du ponton (ou de la plage), un autre traverse l'île de temps en temps ; la nuit,
-    // elles dorment
-    if (!still && phase.night < 0.6) {
-      const harbor = this.state.sites.find(site => site.id === 'ponton' && site.level);
-      const greve = this.state.map.zones.find(z => z.id === 'coeur');
-      const home = harbor ? this.centerOf(harbor) : greve && greve.anchor ? this.ground(greve.anchor.x, greve.anchor.y) : null;
-      if (home) out.gulls.push(...circling(home.x, home.y, t, 1));
-      out.gulls.push(...crossing(this.terrain.bounds, t));
-      const colony = this.islets.colony;
-      if (colony.length && this.owns(this.state, COLONY_ZONE)) {
-        const c = this.ground(colony.reduce((sum, p) => sum + p.x, 0) / colony.length, colony.reduce((sum, p) => sum + p.y, 0) / colony.length);
-        out.gulls.push(...circling(c.x, c.y, t, 3, 5));
-      }
-    }
-    // Mouettes posées : on peut les toucher ; celles qu'on vient d'effrayer s'envolent vers le large
-    for (const perch of this.perches) {
-      const key = `perch:${perch.id}`;
-      const fled = this.scared.get(key);
-      const c = perch.at ? { x: perch.at.x, y: perch.at.y - perch.z } : this.ground(perch.x, perch.y);
-      if (!fled || t - fled.at >= GULL_BACK) hits.push({ key, kind: 'perch', x: c.x, y: c.y - 8, r: 16 });
-      else if (t - fled.at < FLY_OFF) {
-        const k = (t - fled.at) / FLY_OFF;
-        for (let i = 0; i < perch.count; i++) out.gulls.push({ wx: c.x + (60 + i * 14) * k, wy: c.y + i * 4 - 20 * k, alt: 6 + 90 * k * k, flip: false, phase: i });
-      }
-    }
-    // La barque de l'arrivant : elle arrive du large (BOAT_SAIL secondes), puis se balance à quai
-    const dock = this.visitorDock;
-    if (dock && this.state.arrival) {
-      const arrival = this.boatArrival && this.boatArrival.id === this.state.arrival.id ? this.boatArrival : null;
-      const k = arrival ? Math.min(1, (t - arrival.at) / BOAT_SAIL) : 1;
-      const ease = 1 - (1 - k) ** 3;
-      const x = dock.x + dock.dx * BOAT_FAR * (1 - ease);
-      const y = dock.y + dock.dy * BOAT_FAR * (1 - ease);
-      // (dessin de la bibliothèque, son fanion à sa cadence)
-      const lib = isletArtLayer('bateau_visiteur', isletFrameAt('bateau_visiteur', t));
-      if (lib) out.standing.push({ kind: 'vboat', x, y, z: Math.sin(t * 1.4) * 1.2, flip: dock.flip, sprite: [lib.key, lib.make] });
-      if (k < 1) out.rings.push({ x: x - dock.dx * 0.4, y: y - dock.dy * 0.4, k: (t * 1.5) % 1 });
-      const c = surface(x, y);
-      hits.push({ key: 'vboat', kind: 'vboat', x: c.x, y: c.y - 18, r: 26 });
-    }
+    this.seaGuestsNow({ t, out, hits, still, guests, center, surface });
+    this.seaSchoolsNow({ t, view, phase, out, hits, still, surface });
+    this.seaGullsNow({ t, phase, out, hits, still });
+    this.seaBoatNow({ t, out, hits, surface });
     // Ronds dans l'eau là où le doigt a touché la mer (1,2 s)
     this.ripples = this.ripples.filter(r => t - r.at < 1.2);
     this.ripples.forEach(r => out.rings.push({ x: r.x, y: r.y, k: (t - r.at) / 1.2 }));
