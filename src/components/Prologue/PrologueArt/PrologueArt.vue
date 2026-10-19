@@ -277,7 +277,8 @@
     <g v-if="revelation" class="pa__anya">
       <circle cx="196" cy="220" r="124" fill="url(#pa-anya)" />
       <image :href="revelation.cerf" transform="translate(381 136) scale(-1 1)" width="150" height="180" />
-      <image :href="revelation.anya" x="132" y="119" width="128" height="205" />
+      <!-- (frappée par la foudre, elle paraît plus grande, depuis ses pieds, en douceur) -->
+      <image :href="revelation.anya" x="132" y="119" width="128" height="205" :transform="revelation.size !== 1 ? `translate(196 319) scale(${revelation.size}) translate(-196 -319)` : null" />
       <g class="pa__flies" transform="translate(196 316)"><circle v-for="(f, k) in FLIES" :key="`ff${k}`" :cx="f[0]" :cy="f[1]" r="1.8" fill="#FFF3A0" :style="{ '--k': k }" /></g>
     </g>
 
@@ -320,7 +321,8 @@ import { WISP, STAGES } from '@/world/brume';
 import { SIGILS, CHAPTER_IDS } from '@/book/grimoire';
 import { faceHref } from '@/world/faces';
 import { SEASON } from '@/world/plants';
-import { ANYA_POSES, CERF_POSES, frameOf, durationOf } from '@/world/anyaArt';
+import { ANYA_POSES, CERF_POSES, FOUDRE_TAILLE, frameOf, durationOf } from '@/world/anyaArt';
+import { foudreAt } from '@/world/village/anya';
 
 // Étoiles (x, y, rayon, opacité) et nappes de brume (x, y, rayons), fixes
 const STARS = [[40, 40, 1.2, 0.8], [92, 70, 0.9, 0.6], [150, 30, 1.4, 0.9], [210, 58, 0.8, 0.5], [356, 140, 1, 0.7], [250, 24, 1.1, 0.8], [120, 120, 0.8, 0.5], [380, 40, 1.2, 0.7], [20, 150, 1, 0.6]];
@@ -351,10 +353,12 @@ const WISPS = {
 // Anya et son cerf de lune à la Révélation (la bibliothèque : anyaArt.js ; choix de l'auteur, 16 oct. : l'Anya initiale,
 // argentée, et le cerf refondu) : elle s'éveille (ses bras s'ouvrent, une fois), puis se repose (son manteau de la
 // saison) ; son cerf se tient debout à côté
-const VIVANTS = import.meta.glob(['/design/bibliotheque/svg/vivants/anya/anya_face_{eveil,repos}_*.svg', '/design/bibliotheque/svg/vivants/cerf-blanc/cerf-blanc_avant_debout_[0-9].svg'], { query: '?url', import: 'default', eager: true });
+const VIVANTS = import.meta.glob(['/design/bibliotheque/svg/vivants/anya/anya_face_{eveil,repos,foudre}_*.svg', '/design/bibliotheque/svg/vivants/cerf-blanc/cerf-blanc_avant_debout_[0-9].svg'], { query: '?url', import: 'default', eager: true });
 const vivant = name => VIVANTS[`/design/bibliotheque/svg/vivants/${name}.svg`];
 const anyaUrl = (pose, n) => vivant(`anya/anya_face_${pose}_${SEASON}_${n}`) || vivant(`anya/anya_face_${pose}_${n}`);
 const EVEIL_S = durationOf(ANYA_POSES.eveil);
+// (la foudre de son orage la frappe quand elle s'éveille, puis de temps en temps, comme sur l'île : village/anya.js)
+const FOUDRE_S = durationOf(ANYA_POSES.foudre);
 // (qui demande moins de mouvement la voit déjà éveillée, immobile)
 const STILL = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Le Cercle fleuri (fleurs autour du centre, x, y, rayon, couleur) et les lucioles d'Anya
@@ -434,8 +438,13 @@ export default {
     revelation() {
       if (this.art !== 'anya') return null;
       const t = this.since;
+      // (frappée à son éveil, puis de temps en temps ; jamais pour qui demande moins de mouvement)
+      const struck = STILL || t < EVEIL_S ? null : t - EVEIL_S < FOUDRE_S ? t - EVEIL_S : foudreAt(t - EVEIL_S);
+      const foudre = struck === null ? 0 : frameOf(ANYA_POSES.foudre, struck, true);
       return {
-        anya: t < EVEIL_S ? anyaUrl('eveil', frameOf(ANYA_POSES.eveil, t, true)) : anyaUrl('repos', frameOf(ANYA_POSES.repos, t - EVEIL_S)),
+        anya: t < EVEIL_S ? anyaUrl('eveil', frameOf(ANYA_POSES.eveil, t, true))
+          : foudre ? anyaUrl('foudre', foudre) : anyaUrl('repos', frameOf(ANYA_POSES.repos, t - EVEIL_S)),
+        size: foudre ? FOUDRE_TAILLE[foudre - 1] : 1,
         cerf: vivant(`cerf-blanc/cerf-blanc_avant_debout_${frameOf(CERF_POSES.debout, t)}`)
       };
     },

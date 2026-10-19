@@ -3,7 +3,7 @@
 // le Cercle fleuri.
 import { describe, it, expect } from 'vitest';
 import { TRACES, TRACE_COUNT, traceDue, traceFrames, tracesOf, seenOf, PRESENTIMENTS, revelationFrames, anyaHere, anyaSceneOf, anyaVisitClock } from '@/game/anya';
-import { anyaPath, anyaPose, anyaSign } from '@/world/village/anya';
+import { anyaPath, anyaPose, anyaSign, foudreAt } from '@/world/village/anya';
 import { anyaArt, cerfArt, frameOf, durationOf, ANYA_POSES } from '@/world/anyaArt';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
@@ -165,6 +165,29 @@ describe('Anya sur l’île', () => {
     expect(murmures.length).toBeGreaterThan(20);
     expect(murmures.length).toBeLessThan(100);
     expect(new Set(murmures.map(l => l.phrase)).size).toBe(3);
+  });
+  it('la foudre de son orage : de temps en temps, une seconde de visage terrible ; plus souvent sous l’orage ; jamais en mouvement réduit', () => {
+    const rest = { x: 0, y: 0, dx: 0, dy: 0, moving: false };
+    const coups = (storm, seed = 7) => {
+      const starts = [];
+      for (let t = 0; t < 3600; t += 0.05) if (foudreAt(t, seed, storm) !== null && foudreAt(t - 0.05, seed, storm) === null) starts.push(t);
+      return starts;
+    };
+    // (une heure de calme : une frappe toutes les 15 à 45 s ; sous l'orage, bien plus souvent)
+    const calme = coups(0), orage = coups(1);
+    expect(calme.length).toBe(120);
+    expect(Math.min(...calme.slice(1).map((t, i) => t - calme[i]))).toBeGreaterThan(14.9);
+    expect(Math.max(...calme.slice(1).map((t, i) => t - calme[i]))).toBeLessThan(45.1);
+    expect(orage.length).toBe(300);
+    // (le mouvement réduit fige t à 0 : jamais)
+    expect(foudreAt(0, 7, 1)).toBe(null);
+    // frappée, elle joue la foudre dans sa vue : annoncée (ses étincelles), puis en fondu, son visage terrible une seconde
+    const t0 = calme[0] + 0.01;
+    expect(anyaPose(t0, { clock: null, path: rest, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', view: 'face', n: 1 });
+    expect(anyaPose(t0 + 1, { clock: null, path: rest, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', n: 4 });
+    expect(anyaPose(t0 + 1, { clock: null, path: { ...rest, dx: 1, dy: 0.5, moving: true }, touch: null, seed: 7 })).toMatchObject({ pose: 'foudre', view: 'avant' });
+    expect(anyaPose(t0 + 2, { clock: null, path: rest, touch: null, seed: 7 }).pose).toBe('repos');
+    for (const view of ['face', 'avant', 'dos']) expect(anyaArt('foudre', view, 5, { season: 'automne' })).not.toBe(null);
   });
   it('les dessins d’Anya et de son cerf de lune dans la bibliothèque', () => {
     for (const [pose, n] of [['repos', 4], ['marche', 8], ['apparaitre', 6], ['disparaitre', 6], ['murmure', 4]]) {
