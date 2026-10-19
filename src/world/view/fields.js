@@ -26,6 +26,12 @@ export function viewFields() {
     // Bâtiments en train de s'élever : id → { at, from } ; décor naturel des cases libres
     raises: new Map(),
     props: [],
+    // Ce décor rangé par case (y × taille + x → [prop]), refait avec lui (WorldView serve.js : apply ; draw/nature.js,
+    // draw/loop.js le lisent)
+    propsAt: null,
+    // Les îlots de la carte (world/islets.js : isletsOf ; colonie, route du passeur, îlot flottant, source, lanternes),
+    // refaits avec la carte (WorldView serve.js : apply)
+    islets: null,
     // Quartiers qui viennent d'être achetés (brume qui se dissipe), bulles de production et panneaux dessinés (pour le toucher)
     unveils: new Map(),
     bubbles: [],
@@ -103,6 +109,8 @@ export function viewFields() {
     seaHits: [],
     // Brume dans la dernière image (pour le toucher) ; appui long en cours sur l'île ; barque du passeur
     brumeHit: null,
+    // Un coffre est ouvert ou va s'ouvrir : le naufrage de la quête suivante l'attend (WorldView chests.js, brumeQuest.js)
+    holdWreck: false,
     // Le vol du Phénix en cours (draw/brume.js : phenixOf), et où le toucher
     phenix: null,
     // Les sources de la carte de lumière de la dernière image (le Voile recule devant elles : world/voile.js)

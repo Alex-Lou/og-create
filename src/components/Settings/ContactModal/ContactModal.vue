@@ -35,7 +35,7 @@
 
 <script>
 import { messageOf } from '@/utils/errors';
-import http from '@/services/http';
+import contactService from '@/services/contactService';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { CONTACT } from '@/texts/ui/settings';
 
@@ -65,10 +65,7 @@ export default {
       this.successMessage = '';
 
       try {
-        await http.post('/contact/send', {
-          email: this.email,
-          message: this.message
-        });
+        await contactService.send(this.email, this.message);
 
         this.successMessage = CONTACT.sent;
         this.email = '';

@@ -30,3 +30,5 @@ export const NEAR_SCALE = 0.9;
 // par unité du monde) : des carrés moins nombreux, préparés d'avance (WorldView, phare.js : prepareLighthouse) ; à
 // l'arrêt sur la tour, il reprend toute sa finesse
 export const PAN_SCALE = 1;
+// L'appui long qui trace d'un trait (plus court que celui des bulles d'info : on veut tracer ; gestures.js)
+export const ROAD_HOLD_MS = 260;

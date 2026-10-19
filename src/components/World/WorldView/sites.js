@@ -82,6 +82,10 @@ export default {
       return guideOf(this.guideItem, this.guideSite);
     }
   },
+  beforeUnmount() {
+    // (le bandeau « Annuler » d'un achat)
+    clearTimeout(this.undoTimer);
+  },
   methods: {
     // Ressources du palier suivant réunies ; palier suivant prêt à bâtir (world/levels.js). Ce qui attend dans les
     // bâtiments compte : le serveur l'encaisse avant de bâtir
