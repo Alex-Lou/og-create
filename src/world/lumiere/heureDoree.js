@@ -47,10 +47,11 @@ let rims = new WeakMap();
 const NEUFS_PAR_IMAGE = 6;
 let neufs = 0;
 export const imageSuivanteRims = () => { neufs = 0; };
-export function rimImage(img, side, color = GOLD) {
+// (epaisseur : celle de la bande, en part du dessin ; les personnages ont la leur, plus large : lisere.js)
+export function rimImage(img, side, color = GOLD, epaisseur = 0.014) {
   let pair = rims.get(img);
   if (!pair) rims.set(img, (pair = {}));
-  const key = side + color;
+  const key = side + color + epaisseur;
   if (pair[key]) return pair[key];
   if (neufs >= NEUFS_PAR_IMAGE) return null;
   neufs++;
@@ -65,7 +66,7 @@ export function rimImage(img, side, color = GOLD) {
   g.fillStyle = color;
   g.fillRect(0, 0, w, h);
   // (ôte la silhouette décalée vers l'ombre : il reste la bande du bord éclairé, et un peu le haut)
-  const o = Math.max(1, Math.min(w, h) * 0.014);
+  const o = Math.max(1, Math.min(w, h) * epaisseur);
   g.globalCompositeOperation = 'destination-out';
   g.drawImage(m, -side * o, o * 0.7);
   m.width = m.height = 0;

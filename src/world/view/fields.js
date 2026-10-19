@@ -42,6 +42,8 @@ export function viewFields() {
     sparks: [],
     // Le liseré doré de l'image en cours ({ side, alpha } à l'heure dorée, sinon null : lumiere/heureDoree.js)
     rim: null,
+    // Le liseré vivant des personnages de l'image en cours (lumiere/lisere.js ; draw/loop.js) : null hors du dessin
+    liseres: null,
     // La qualité des particules selon l'appareil (perf.js : qualiteSuivante ; draw/loop.js : drawTimed). L'averse
     // (lumiere/averse.js) : le mouillé du sol ({ minute, value }), les flaques et les ronds de l'île ({ fresh, puddles,
     // spots })

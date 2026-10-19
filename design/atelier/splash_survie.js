@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const { fond, affiche, fixe } = require('./splash');
 const { ileVivante } = require('./splash_ile');
+const { anyaTerrible } = require('./splash_anya');
 const { frame, OUT } = require('./troupe');
 const TR = require('./troupe_refonte');
 const { vernis } = require('./vernis');
@@ -197,6 +198,8 @@ function tentacule(id, x, y, cote, long, large, enroule = 1) {
 const ileSurvie = () => ileVivante({ survie: true });
 const fondSurvie = () => fixe(fond({
   ile: ileSurvie,
+  // (Anya, dans la foudre, son visage terrible : splash_anya.js, anyaTerrible ; choix de l'auteur, 19 oct.)
+  anya: anyaTerrible,
   avantIle: tentacule('svk1', 586, 470, 1, 230, 30) + tentacule('svk2', 1016, 472, -1, 250, 32) + egares(),
   apresIle: tentacule('svk3', 600, 592, 1, 92, 14, 1.2) + tentacule('svk4', 1004, 586, -1, 78, 12, 1.3)
 }));
