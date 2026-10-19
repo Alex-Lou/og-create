@@ -15,5 +15,11 @@ import veillee from './draw/veillee';
 import fetes from './draw/fetes';
 import feux from './draw/feux';
 import pas from './draw/pas';
+import frame from './draw/passes/frame';
+import sea from './draw/passes/sea';
+import ground from './draw/passes/ground';
+import standing from './draw/passes/standing';
+import sky from './draw/passes/sky';
+import overlay from './draw/passes/overlay';
 
-export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks, ...veillee, ...fetes, ...feux, ...pas };
+export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks, ...veillee, ...fetes, ...feux, ...pas, ...frame, ...sea, ...ground, ...standing, ...sky, ...overlay };
