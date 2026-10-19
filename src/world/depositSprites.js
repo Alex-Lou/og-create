@@ -3,7 +3,7 @@
 // d'obsidienne. Repère et calques : ceux des créations d'île (craftSprites.js), case u, v ∈ [-0,5 ; 0,5].
 import { boulder, sprite, EDGE } from './iso';
 import { WOOD_DARK } from './palette';
-import { tools, ln, poly, ell, dot, wave, star, OUT, f2 } from './shopSprites';
+import { tools, ln, poly, ell, dot, wave, star, OUT, f2 } from './spriteKit';
 import { depositArtLayer } from './decorArt';
 
 const TAU = Math.PI * 2;

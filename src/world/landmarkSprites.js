@@ -5,7 +5,7 @@
 import { boulder, pyramid, sprite, mixHex, EDGE } from './iso';
 import { HS } from './terrain';
 import { WOOD, WOOD_DARK, THATCH, GLASS } from './palette';
-import { tools, ln, poly, ell, dot, wave, star, OUT, f2 } from './shopSprites';
+import { tools, ln, poly, ell, dot, wave, star, OUT, f2 } from './spriteKit';
 import { landmarkArtLayer } from './decorArt';
 
 const TAU = Math.PI * 2;

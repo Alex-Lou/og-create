@@ -4,7 +4,7 @@
 // fixe ou n images jouées à fps images/s.
 import { gable, pyramid, sprite, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WHITE_STONE, ROOF_RED, BLUE_ROOF, GLASS, SOIL } from './palette';
-import { tools, ln, poly, ell, dot, wave, star, bird, IRON, DARK_IRON, COPPER, STRAW, OUT, f2 } from './shopSprites';
+import { tools, ln, poly, ell, dot, wave, star, bird, IRON, DARK_IRON, COPPER, STRAW, OUT, f2 } from './spriteKit';
 import { creationLayer, ART_LIGHTS, defenseLight } from './creations';
 
 const TAU = Math.PI * 2;
