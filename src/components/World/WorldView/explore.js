@@ -132,8 +132,7 @@ export default {
     },
     // Achat d'un quartier : la brume se dissipe, le panneau éclate
     async buyZone(zone) {
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.zone, async () => {
         const sign = this.signs.find(sg => sg.zone.id === zone.id);
         const { bought, coins, world } = await playService.worldZone(zone.id);
         this.unveils.set(zone.id, performance.now());
@@ -143,18 +142,13 @@ export default {
         // (sa Fête, au pied de son panneau, avec son nom sous le mot : world/fetes.js)
         if (sign) this.celebrateAt(`quartier:${zone.id}`, { x: sign.x, y: sign.y + 30, top: 40 }, NEW_ZONE(bought));
         vibrate([14, 40, 20]);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.zone), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // Expédition vers un quartier inconnu : le serveur prend vivres, bois et une partie de Récolte ; elle revient après
     // zone.trip heures (l'île se recharge alors, le quartier se dévoile)
     async explore(zone) {
       if (this.busy) return;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.expedition, async () => {
         const { world, coins } = await playService.worldExpedition(zone.id);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
@@ -162,11 +156,7 @@ export default {
         vibrate([10, 30, 10]);
         this.$emit('show-alert', TOASTS.expedition(zone.trip));
         guide.tip('expedition');
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.expedition), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // La boussole : la caméra va vers le quartier qu'explore l'expédition en route, sinon vers une terre à explorer, et
     // sa fiche s'ouvre

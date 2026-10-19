@@ -244,15 +244,10 @@ export default {
     async poseFromSheet(pose) {
       if (!this.annexSheet || this.busy) return;
       const { x, y } = this.annexSheet;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.annexLook, async () => {
         this.apply(await playService.worldAnnexPose(x, y, pose));
         vibrate(8);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.annexLook), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     },
     // Fiche d'une annexe : « Déplacer » allume les cases libres autour de son bâtiment ; « Bâtiment » ouvre sa fiche
     moveFromSheet() {

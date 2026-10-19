@@ -128,8 +128,7 @@ export default {
     // « Réparer » (fiche du bâtiment embrumé) : un peu de pierre ou de bois ; la brume se dissipe
     async repairSite(site) {
       if (this.busy || !this.blightOf(site)) return;
-      this.busy = true;
-      try {
+      await this.runAction(FAILED.repair, async () => {
         const { coins, world } = await playService.worldRepair(site.id);
         this.heals.set(site.id, performance.now());
         this.apply(world);
@@ -138,11 +137,7 @@ export default {
         // (la brume se dissipe sous les yeux, un Éclat sur le bâtiment : pas de notification en double, choix de
         // l'auteur, 13 oct.)
         this.sparkle('eclat', this.siteAt(site));
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.repair), 'error');
-      } finally {
-        this.busy = false;
-      }
+      });
     }
   }
 };
