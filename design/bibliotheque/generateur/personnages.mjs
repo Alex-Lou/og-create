@@ -9708,6 +9708,8 @@ var require_maerys_refonte = __commonJS({
     var MECHE_G = "M12.8,16 Q10.4,23.2 11.2,31 L12.4,28.6 L13.2,31.6 Q13.2,24.8 14.6,18.4 Z";
     var MECHE_D = "M35.2,16 Q37.6,23.2 36.8,31 L35.6,28.6 L34.8,31.6 Q34.8,24.8 33.4,18.4 Z";
     var meches = /* @__PURE__ */ __name((K, k) => [MECHE_G, MECHE_D].map((d) => P(decaler(d, k), K.hair, 0.8)).join("") + L([12.4 + k, 19.4], [11.9 + k, 26.6], K.hairH, 0.5).replace("/>", ' opacity=".7"/>') + L([35.6 + k, 19.4], [36.1 + k, 26.6], K.hairS, 0.5), "meches");
+    var MECHE_AVANT = "M31.2,15.6 Q30,23.4 31,31.6 L32.4,29.2 L33.2,32.4 L34.4,29.8 L35.4,31.8 Q35.8,23 34.8,14.8 Z";
+    var mecheAvant = /* @__PURE__ */ __name((K) => P(MECHE_AVANT, K.hair, 0.8) + L([32.2, 18.6], [31.8, 27.4], K.hairH, 0.5).replace("/>", ' opacity=".7"/>'), "mecheAvant");
     var brindilles = /* @__PURE__ */ __name((K, n, k) => (n >= 1 ? brindille(K, [36.2 + k, 21.2], [40.2 + k, 22.6], [[38.4 + k, 21.8], [39.6 + k, 20.2]]) : "") + (n >= 2 ? brindille(K, [12.6 + k, 14.2], [8.2 + k, 12.6], [[10.2 + k, 13.2], [9.2 + k, 15]]) : ""), "brindilles");
     function tete(c, ctx) {
       const K = pal(c), M = marks(c), id = `${c.uid}${ctx.view}${ctx.expr}`, mir = !!c.miroir;
@@ -9724,6 +9726,7 @@ var require_maerys_refonte = __commonJS({
       const frange = decaler(FRANGE, k);
       const traits = [[16.6, 1], [31.4, -1]].map(([x]) => [26.2, 27.6].map((y) => L([Xv(x - 1.7), y + 0.2], [Xv(x + 1.5), y - 0.2], K.paint, 0.7)).join("")).join("");
       s += P(V.face, K.skin) + clip(`${id}f`, V.face, `<path d="${frange}" fill="${K.skinS}" transform="translate(0 1.4)"/><g transform="translate(${k} 0)"><path d="M33.4,14.6 Q36.6,22.4 32.6,31.8 L37,31.8 L37,14.6 Z" fill="${K.rim}" opacity=".4"/></g>` + E(Xv(16.4), 27, 2.3 * V.rk[0], 1.3, K.cheek, 0).replace("/>", ' opacity=".5"/>') + E(Xv(31.6), 27, 2.3 * V.rk[1], 1.3, K.cheek, 0).replace("/>", ' opacity=".5"/>') + traits + (M.dirt ? reflet(Xv(24), `<ellipse cx="${Xv(18)}" cy="29.6" rx="1.5" ry="0.6" fill="${K.mud}" opacity="${r22(0.45 * M.dirt)}" transform="rotate(-12 ${Xv(18)} 29.6)"/>`, mir) : "") + (M.salt ? E(Xv(30.4), 16.4, 0.9, 0.4, K.salt, 0).replace("/>", ` opacity="${r22(0.6 * M.salt)}"/>`) : "")) + P(V.face, "none");
+      if (se) s += mecheAvant(K);
       s += P(frange, K.hair) + clip(`${id}fr`, frange, `<path d="M10,17 Q24,13.4 38,17 L38,21 L10,21 Z" fill="${K.hairS}" opacity=".45"/>`) + P(frange, "none") + L([15.6 + k, 11.2], [21.6 + k, 9.6], K.hairH, 1.1) + L([26.4 + k, 10], [29.4 + k, 10.8], K.hairH, 0.6);
       s += reflet(axe, plume(K, 34 + k, 14.8, 1, -6), mir);
       s += se ? P("M20.6,25.3 Q21.3,26 22.2,25.5", "none", 0.65).replace(`stroke="${OUT}"`, `stroke="${K.nose}"`) : P("M23.2,25.4 Q24,26.2 24.8,25.4", "none", 0.75).replace(`stroke="${OUT}"`, `stroke="${K.nose}"`) + E(24.4, 24.9, 0.32, 0.22, "#F6D3B4", 0);
