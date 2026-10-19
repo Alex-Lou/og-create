@@ -770,6 +770,821 @@ var require_torche = __commonJS({
   }
 });
 
+// atelier/batir.js
+var require_batir = __commonJS({
+  "atelier/batir.js"(exports, module) {
+    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
+    var rnd = /* @__PURE__ */ __name((s) => {
+      let x = s;
+      return () => (x = x * 16807 % 2147483647) / 2147483647;
+    }, "rnd");
+    var ETAT = { hiver: false };
+    var setHiver = /* @__PURE__ */ __name((b) => {
+      ETAT.hiver = Boolean(b);
+    }, "setHiver");
+    var hiver = /* @__PURE__ */ __name(() => ETAT.hiver, "hiver");
+    var NEIGE2 = "#F4F8FC";
+    var NEIGE_O = "#B8CCE0";
+    var ENCRE = "#3C2819";
+    var TRAIT = 0.9;
+    var SOLEIL = "#F4F1BE";
+    var OMBRE_F = "#24474A";
+    var HERBE = ["#3A8068", "#81BA5E", "#A1D46C", "#D6DF7C"];
+    var SABLE = ["#EBD49B", "#DCC28B"];
+    var CYAN = "#3FE6D8";
+    var MAGENTA = "#FF4FAE";
+    var ACIDE = "#C8FF6A";
+    var CHAUD = "#FFB85A";
+    var VIOLET = "#9A5AF0";
+    var P2 = /* @__PURE__ */ __name((x, y) => `${f(x)},${f(y)}`, "P2");
+    var poly3 = /* @__PURE__ */ __name((pts2) => "M" + pts2.map(([x, y]) => P2(x, y)).join(" L") + " Z", "poly");
+    var ligne = /* @__PURE__ */ __name((pts2) => "M" + pts2.map(([x, y]) => P2(x, y)).join(" L"), "ligne");
+    var stops = /* @__PURE__ */ __name((s) => s.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join(""), "stops");
+    var lin = /* @__PURE__ */ __name((id, x1, y1, x2, y2, s) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}">${stops(s)}</linearGradient>`, "lin");
+    var rad = /* @__PURE__ */ __name((id, cx, cy, r, s) => `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}">${stops(s)}</radialGradient>`, "rad");
+    var STYLE = { organique: false };
+    var hache2 = /* @__PURE__ */ __name((x, y, k) => {
+      const v = Math.sin(x * 12.9898 + y * 78.233 + k * 37.719) * 43758.5453;
+      return v - Math.floor(v);
+    }, "hache");
+    function tremble(pts2, amp = 0.6, ferme = true) {
+      const P3 = [];
+      const n = pts2.length, seg = ferme ? n : n - 1;
+      for (let i = 0; i < seg; i++) {
+        const a = pts2[i], b = pts2[(i + 1) % n], L = Math.hypot(b[0] - a[0], b[1] - a[1]), k = Math.max(1, Math.round(L / 7));
+        const nx = -(b[1] - a[1]) / (L || 1), ny = (b[0] - a[0]) / (L || 1);
+        for (let j = 0; j < k; j++) {
+          const t = j / k, x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t, d2 = j === 0 ? (hache2(x, y, 1) - 0.5) * amp * 0.6 : (hache2(x, y, 2) - 0.5) * 2 * amp;
+          P3.push([x + nx * d2, y + ny * d2]);
+        }
+      }
+      if (!ferme) P3.push(pts2[n - 1]);
+      const m = /* @__PURE__ */ __name((p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], "m");
+      if (!ferme) return `M${P2(...P3[0])} ` + P3.slice(1, -1).map((p, i) => `Q${P2(...p)} ${P2(...m(p, P3[i + 2]))}`).join(" ") + ` L${P2(...P3[P3.length - 1])}`;
+      let d = `M${P2(...m(P3[0], P3[1]))}`;
+      for (let i = 1; i <= P3.length; i++) d += ` Q${P2(...P3[i % P3.length])} ${P2(...m(P3[i % P3.length], P3[(i + 1) % P3.length]))}`;
+      return d + " Z";
+    }
+    __name(tremble, "tremble");
+    var BORD = { doux: false };
+    var bordDe = /* @__PURE__ */ __name((fill) => BORD.doux && /^#[0-9A-Fa-f]{6}$/.test(fill) ? mix(fill, "#24150C", 0.55) : ENCRE, "bordDe");
+    var plan = /* @__PURE__ */ __name((d, fill, w = TRAIT, extra = "") => `<path d="${d}" fill="${fill}" stroke="${bordDe(fill)}" stroke-width="${f(BORD.doux ? w * 0.75 : w)}" stroke-linejoin="round"${extra}/>`, "plan");
+    var trait = /* @__PURE__ */ __name((d, c, w, extra = "") => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`, "trait");
+    var ovale = /* @__PURE__ */ __name((cx, cy, rx, ry, fill, w = TRAIT, extra = "") => `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? ` stroke="${bordDe(fill)}" stroke-width="${f(BORD.doux ? w * 0.75 : w)}"` : ""}${extra}/>`, "ovale");
+    var ombrePortee = /* @__PURE__ */ __name((id, pts2, h, a = 0.34) => {
+      const k = h * 0.45, ext = [...pts2, ...pts2.map(([x, y]) => [x + k * 0.9, y + k * 0.35])];
+      const cx = ext.reduce((t, p) => t + p[0], 0) / ext.length, cy = ext.reduce((t, p) => t + p[1], 0) / ext.length;
+      const hull = ext.slice().sort((p, q) => Math.atan2(p[1] - cy, p[0] - cx) - Math.atan2(q[1] - cy, q[0] - cx));
+      return `<defs><filter id="${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${f(1.6 + h * 0.04)}"/></filter></defs><path d="${"M" + hull.map(([x, y]) => `${f(x)},${f(y)}`).join(" L") + " Z"}" fill="${OMBRE_F}" opacity="${a}" filter="url(#${id})"/>`;
+    }, "ombrePortee");
+    var lueur = /* @__PURE__ */ __name((id, x, y, r, c, a = 0.5) => `<defs>${rad(id, x, y, r, [[0, c, a], [0.45, c, a * 0.35], [1, c, 0]])}</defs><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="url(#${id})"/>`, "lueur");
+    var neon = /* @__PURE__ */ __name((d, c, w = 1) => trait(d, c, w * 4, ' stroke-opacity=".16"') + trait(d, c, w) + trait(d, "#FFFFFF", w * 0.35, ' stroke-opacity=".8"'), "neon");
+    var mix = /* @__PURE__ */ __name((a, b, t) => "#" + [1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - t) + parseInt(b.slice(i, i + 2), 16) * t).toString(16).padStart(2, "0")).join(""), "mix");
+    var plus = /* @__PURE__ */ __name((a, b, k = 1) => [a[0] + b[0] * k, a[1] + b[1] * k], "plus");
+    var moins = /* @__PURE__ */ __name((a, b) => [a[0] - b[0], a[1] - b[1]], "moins");
+    var norme = /* @__PURE__ */ __name((v) => Math.hypot(v[0], v[1]), "norme");
+    var unite = /* @__PURE__ */ __name((v) => {
+      const n = norme(v);
+      return [v[0] / n, v[1] / n];
+    }, "unite");
+    var iso = /* @__PURE__ */ __name((u, v, z = 0) => [40 * (u - v), 20 * (u + v) - z], "iso");
+    var PAS = Math.hypot(40, 20);
+    var AXE_U = [40 / PAS, 20 / PAS];
+    var AXE_V = [-40 / PAS, 20 / PAS];
+    var plaque = /* @__PURE__ */ __name((id, O, U, V, W, H, contenu, clip) => `<g transform="matrix(${f(U[0])} ${f(U[1])} ${f(V[0])} ${f(V[1])} ${f(O[0])} ${f(O[1])})"><clipPath id="${id}"><path d="${clip || `M0,0 H${f(W)} V${f(H)} H0 Z`}"/></clipPath><g clip-path="url(#${id})">${contenu}</g></g>`, "plaque");
+    var voileFace = /* @__PURE__ */ __name((W, H, soleil, { pied = 0.35, haut = 0.3 } = {}) => {
+      const id = `vf${Math.round(W * 7 + H * 13)}${soleil ? "s" : "o"}`;
+      return `<defs><linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A0E08" stop-opacity="${haut}"/><stop offset=".22" stop-color="#1A0E08" stop-opacity="0"/><stop offset=".7" stop-color="#1A0E08" stop-opacity="0"/><stop offset="1" stop-color="#1A0E08" stop-opacity="${pied}"/></linearGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="${soleil ? SOLEIL : OMBRE_F}" opacity="${soleil ? STYLE.organique ? 0.1 : 0.05 : STYLE.organique ? 0.42 : 0.32}"/><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}a)"/>` + (BORD.doux ? `<defs><linearGradient id="${id}r" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#81BA5E" stop-opacity="0"/><stop offset="1" stop-color="#81BA5E" stop-opacity=".22"/></linearGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}r)"/>` : "") + (STYLE.organique ? `<defs><radialGradient id="${id}p" cx="${soleil ? 0.15 : 0.9}" cy="${soleil ? 0.1 : 0.95}" r="${soleil ? 0.9 : 0.8}"><stop offset="0" stop-color="${soleil ? "#FFF4D0" : "#14303A"}" stop-opacity="${soleil ? 0.32 : 0.35}"/><stop offset="1" stop-color="${soleil ? "#FFF4D0" : "#14303A"}" stop-opacity="0"/></radialGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="url(#${id}p)"/>` + (soleil ? [0.12, 0.45].map((t) => `<path d="M${f(W * t)},${f(H * 0.08 + 1)} q${f(W * 0.12)},${f(-0.8)} ${f(W * 0.26)},.4" stroke="#FFFFFF" stroke-width="1.1" stroke-linecap="round" opacity=".28" fill="none"/>`).join("") : "") + `<path d="M${f(W * 0.05)},${f(H - 1.2)} q${f(W * 0.4)},1 ${f(W * 0.9)},-.2" stroke="#14202A" stroke-width="1.6" stroke-linecap="round" opacity=".18" fill="none"/>` : "");
+    }, "voileFace");
+    function boite(id, [u0, v0, u1, v1], z0, z1, { gauche, droite, dessus, voile = {}, arete = SOLEIL } = {}) {
+      const G = (u1 - u0) * PAS, D = (v1 - v0) * PAS, h = z1 - z0;
+      let s = "";
+      if (gauche) s += plaque(`${id}g`, iso(u0, v1, z1), AXE_U, [0, 1], G, h, gauche(G, h) + voileFace(G, h, true, voile));
+      if (droite) s += plaque(`${id}d`, iso(u1, v1, z1), [AXE_U[0], -AXE_U[1]], [0, 1], D, h, droite(D, h) + voileFace(D, h, false, voile));
+      if (dessus) s += plaque(`${id}t`, iso(u0, v0, z1), AXE_U, AXE_V, G, D, dessus(G, D) + (ETAT.hiver ? `<rect x="1" y="1" width="${f(G - 2)}" height="${f(D - 2)}" rx="2" fill="${NEIGE2}"/>` : ""));
+      const c = [iso(u0, v1, z0), iso(u1, v1, z0), iso(u1, v0, z0), iso(u1, v0, z1), iso(u0, v0, z1), iso(u0, v1, z1)];
+      s += STYLE.organique ? `<path d="${tremble(c, 0.55)}" fill="none" stroke="${ENCRE}" stroke-width="1.15" stroke-linejoin="round" stroke-opacity=".8"/><path d="${tremble([iso(u1, v1, z0), iso(u1, v1, z1)], 0.5, false)}" fill="none" stroke="${ENCRE}" stroke-width=".55" stroke-opacity=".5"/>` : `<path d="${poly3(c)}" fill="none" stroke="${ENCRE}" stroke-width="${BORD.doux ? 0.6 : TRAIT}" stroke-linejoin="round"${BORD.doux ? ' stroke-opacity=".45"' : ""}/>` + trait(ligne([iso(u1, v1, z0), iso(u1, v1, z1)]), ENCRE, BORD.doux ? 0.4 : 0.7, ` stroke-opacity="${BORD.doux ? 0.35 : 0.8}"`) + (arete ? trait(ligne([iso(u1, v1, z0 + 1), iso(u1, v1, z1 - 1)]), arete, 0.7, ' stroke-opacity=".7" transform="translate(-.7 0)"') : "") + (dessus ? trait(ligne([iso(u0, v1, z1), iso(u1, v1, z1), iso(u1, v0, z1)]), ENCRE, 0.6, ' stroke-opacity=".7"') : "");
+      return s;
+    }
+    __name(boite, "boite");
+    function neigePan(id, W, H, sol) {
+      const bord = `M0,0 H${f(W)} V${f(H - 3)} ${Array.from({ length: 9 }, (_, i) => `Q${f(W * (1 - (i + 0.5) / 9))},${f(H - 0.6)} ${f(W * (1 - (i + 1) / 9))},${f(H - 3 - i % 2 * 1.4)}`).join(" ")} Z`;
+      let s = `<path d="${bord}" fill="${sol ? NEIGE2 : mix(NEIGE2, NEIGE_O, 0.55)}"/>`;
+      if (STYLE.organique) {
+        s += `<defs>${lin(`${id}g`, 0, 0, 0, H, [[0, "#FFFFFF", 0.55], [0.65, NEIGE_O, 0.12], [1, NEIGE_O, 0.5]])}</defs><path d="${bord}" fill="url(#${id}g)"/>`;
+        for (let y = 9; y < H - 7; y += 9) s += `<path d="M2,${f(y)} ${Array.from({ length: 6 }, (_, i) => `Q${f(W * (i + 0.5) / 6)},${f(y + 2.2)} ${f(W * (i + 1) / 6 - (i === 5 ? 2 : 0))},${f(y)}`).join(" ")}" fill="none" stroke="${NEIGE_O}" stroke-width=".7" opacity=".5"/>`;
+        s += `<path d="M1.5,${f(H - 1.8)} H${f(W - 1.5)}" stroke="${NEIGE_O}" stroke-width="4.6" stroke-linecap="round"/><path d="M1.5,${f(H - 2.6)} H${f(W - 1.5)}" stroke="${NEIGE2}" stroke-width="3.6" stroke-linecap="round"/>`;
+      }
+      return s + `<path d="M0,0 H${f(W)}" stroke="#FFFFFF" stroke-width="2"/>`;
+    }
+    __name(neigePan, "neigePan");
+    function toit(id, [u0, v0, u1, v1], z, rh, o, axe, { couvre, pignon, faitage = "#3A2418", egout, faitieres } = {}) {
+      const A = axe === "u" ? (a, b, zz) => iso(a, b, zz) : (a, b, zz) => iso(b, a, zz);
+      const [a0, a1, b0, b1] = axe === "u" ? [u0, u1, v0, v1] : [v0, v1, u0, u1];
+      const bm = (b0 + b1) / 2, chute = o * rh / ((b1 - b0) / 2);
+      const R0 = A(a0 - o, bm, z + rh), R1 = A(a1 + o, bm, z + rh);
+      const E0 = A(a0 - o, b1 + o, z - chute), E1 = A(a1 + o, b1 + o, z - chute);
+      const B0 = A(a0 - o, b0 - o, z - chute), B1 = A(a1 + o, b0 - o, z - chute);
+      const U = unite(moins(R1, R0)), Wr = norme(moins(R1, R0));
+      const Vd = moins(E0, R0), Vb = moins(B0, R0), Hd = norme(Vd), Hb = norme(Vb);
+      const soleil = axe === "u";
+      let s = plaque(`${id}b`, R0, U, unite(Vb), Wr, Hb, couvre(Wr, Hb, false) + `<rect width="${f(Wr)}" height="${f(Hb)}" fill="${OMBRE_F}" opacity=".25"/>`);
+      s += `<path d="${poly3([R0, R1, B1, B0])}" fill="none" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
+      if (pignon) {
+        const G0 = A(a1, b0, z + rh), across = unite(moins(A(a1, b1, 0), A(a1, b0, 0))), Wg = (b1 - b0) * PAS;
+        s += plaque(`${id}p`, G0, across, [0, 1], Wg, rh, pignon(Wg, rh) + voileFace(Wg, rh, !soleil, { pied: 0, haut: 0.45 }), `M0,${f(rh)} L${f(Wg)},${f(rh)} L${f(Wg / 2)},0 Z`) + `<path d="${poly3([A(a1, b0, z), A(a1, bm, z + rh), A(a1, b1, z)])}" fill="none" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
+      }
+      s += plaque(`${id}d`, R0, U, unite(Vd), Wr, Hd, couvre(Wr, Hd, soleil) + `<rect width="${f(Wr)}" height="${f(Hd)}" fill="${soleil ? SOLEIL : OMBRE_F}" opacity="${soleil ? 0.12 : 0.22}"/>`);
+      if (ETAT.hiver) {
+        const couche = /* @__PURE__ */ __name((O, V, H, sol, k) => plaque(`${id}n${k}`, O, U, V, Wr, H, neigePan(`${id}n${k}`, Wr, H, sol)), "couche");
+        s += couche(R0, unite(Vb), Hb, false, "b");
+        s = s.replace(`<path d="${poly3([R0, R1, B1, B0])}"`, `<path d="${poly3([R0, R1, B1, B0])}"`);
+        s += couche(R0, unite(Vd), Hd, soleil, "d");
+        for (let k = 0.06; k < 0.96; k += 0.08) {
+          const q = plus(E0, moins(E1, E0), k);
+          s += `<path d="M${P2(q[0] - 1, q[1] - 0.5)} L${P2(q[0], q[1] + 2.4 + k * 37 % 1 * 2)} L${P2(q[0] + 1, q[1] - 0.5)} Z" fill="#E8F4FC" stroke="${NEIGE_O}" stroke-width=".3"/>`;
+        }
+      }
+      if (STYLE.organique) {
+        const mid = [(R0[0] + R1[0]) / 2, (R0[1] + R1[1]) / 2 + 1.6];
+        s += `<path d="${tremble([R0, R1, E1, E0], 0.7)}" fill="none" stroke="${ENCRE}" stroke-width="1.15" stroke-linejoin="round" stroke-opacity=".8"/><path d="M${P2(...R0)} Q${P2(...mid)} ${P2(...R1)}" fill="none" stroke="${faitage}" stroke-width="3"/><path d="M${P2(R0[0], R0[1] - 1)} Q${P2(mid[0], mid[1] - 1)} ${P2(R1[0], R1[1] - 1)}" fill="none" stroke="${mix(faitage, "#FFFFFF", 0.45)}" stroke-width=".8"/>`;
+      }
+      s += `<path d="${poly3([R0, R1, E1, E0])}" fill="none" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"${STYLE.organique ? ' stroke-opacity="0"' : ""}/>` + trait(ligne([E1, R1, B1]), faitage, 1.8) + trait(ligne([E1, R1]), ENCRE, 0.5, ' transform="translate(0 1.1)" stroke-opacity=".6"') + trait(ligne([R0, R1]), faitage, 2.4) + trait(ligne([R0, R1]), mix(faitage, "#FFFFFF", 0.4), 0.6, ' transform="translate(0 -.8)"') + (faitieres ? Array.from({ length: Math.round(Wr / 5) }, (_, i) => {
+        const q = plus(R0, U, (i + 0.5) * Wr / Math.round(Wr / 5));
+        return `<ellipse cx="${f(q[0])}" cy="${f(q[1] - 1)}" rx="2.8" ry="1.9" fill="${faitieres}" stroke="${ENCRE}" stroke-width=".5"/><ellipse cx="${f(q[0] - 0.8)}" cy="${f(q[1] - 1.8)}" rx="1.2" ry=".6" fill="#FFFFFF" opacity=".4"/>`;
+      }).join("") : "") + trait(ligne([E0, E1]), egout || mix(faitage, "#FFFFFF", 0.3), 1.2);
+      return { svg: s, R0, U, V: unite(Vd), Wr, Hd, B0, B1, R1 };
+    }
+    __name(toit, "toit");
+    var surPan = /* @__PURE__ */ __name((t, x, y) => plus(plus(t.R0, t.U, t.Wr * x), t.V, t.Hd * y), "surPan");
+    function tPierres(W, H, g, { fonce = "#9B927F", clair = "#EDE8DC", joint = "#6E6656", haut = 7, long = 12, mousse = 0.14 } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${joint}"/>`;
+      for (let y = 0, r = 0; y < H; y += haut, r++) {
+        for (let x = -(r % 2) * long * 0.5 - g() * 3; x < W; ) {
+          const l = long * (0.7 + g() * 0.6), t = 0.45 + g() * 0.5, c = mix(fonce, clair, t);
+          const x0 = x + 0.6, x1 = x + l - 0.6, y0 = y + 0.6, y1 = y + haut - 0.6, e = g() < 0.25 ? Math.min(2.4, haut * 0.35) : 0;
+          s += `<path d="M${P2(x0 + e, y0)} L${P2(x1, y0)} L${P2(x1, y1)} L${P2(x0, y1)} L${P2(x0, y0 + e)} Z" fill="${c}"/><path d="M${P2(x0 + e + 0.4, y0 + 0.5)} L${P2(x1 - 0.4, y0 + 0.5)}" stroke="#FFFFFF" stroke-width=".6" opacity="${f(0.2 + t * 0.4)}"/><path d="M${P2(x0 + 0.4, y1 - 0.4)} L${P2(x1, y1 - 0.4)}" stroke="#1A0E08" stroke-width=".6" opacity=".25"/>`;
+          if (g() < mousse * (0.25 + 1.5 * y / H)) s += `<ellipse cx="${f(x0 + g() * l)}" cy="${f(y1 + 0.3)}" rx="${f(1.4 + g() * 2.2)}" ry="${f(0.7 + g() * 0.7)}" fill="${g() < 0.5 ? "#3A8068" : "#81BA5E"}"/>`;
+          x += l;
+        }
+      }
+      return s;
+    }
+    __name(tPierres, "tPierres");
+    var tBriques = /* @__PURE__ */ __name((W, H, g, o = {}) => tPierres(W, H, g, { fonce: "#8A3A2A", clair: "#E08A62", joint: "#5A2A20", haut: 3.2, long: 6.5, mousse: 0, ...o }), "tBriques");
+    function tPlanches(W, H, g, { c = "#BF8049", larg = 5, horiz = false, use = 0.3 } = {}) {
+      const Lg = horiz ? H : W, M = horiz ? W : H;
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(c, "#1A0E08", 0.55)}"/>`;
+      for (let a = 0; a < Lg; a += larg) {
+        const col = mix(mix(c, "#1A0E08", 0.18), mix(c, "#FFF0D8", 0.28), g());
+        const r = horiz ? [0, a + 0.35, W, larg - 0.7] : [a + 0.35, 0, larg - 0.7, H];
+        s += `<rect x="${f(r[0])}" y="${f(r[1])}" width="${f(r[2])}" height="${f(r[3])}" fill="${col}"/><rect x="${f(r[0])}" y="${f(r[1])}" width="${f(horiz ? W : 0.7)}" height="${f(horiz ? 0.7 : H)}" fill="#FFFFFF" opacity=".18"/>`;
+        for (let k = 0; k < 2; k++) {
+          const o = a + larg * (0.3 + k * 0.38), j = (g() - 0.5) * 1.6;
+          s += `<path d="${horiz ? `M0,${f(o)} Q${f(W * 0.5)},${f(o + j)} ${f(W)},${f(o)}` : `M${f(o)},0 Q${f(o + j)},${f(H * 0.5)} ${f(o)},${f(H)}`}" fill="none" stroke="${mix(c, "#1A0E08", 0.45)}" stroke-width=".4" opacity=".7"/>`;
+        }
+        if (g() < use) {
+          const q = 2 + g() * (M - 4);
+          s += `<ellipse cx="${f(horiz ? q : a + larg / 2)}" cy="${f(horiz ? a + larg / 2 : q)}" rx="1" ry=".6" fill="${mix(c, "#1A0E08", 0.55)}"/>`;
+        }
+        for (const q of [1.8, M - 1.8]) s += `<circle cx="${f(horiz ? q : a + larg / 2)}" cy="${f(horiz ? a + larg / 2 : q)}" r=".45" fill="#5A5048"/>`;
+      }
+      return s;
+    }
+    __name(tPlanches, "tPlanches");
+    function tRondins(W, H, g, { c = "#C8894E", haut = 5.5 } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(c, "#1A0E08", 0.6)}"/>`;
+      for (let y = 0; y < H; y += haut) {
+        const col = mix(c, g() < 0.5 ? "#FFF0D8" : "#1A0E08", g() * 0.25);
+        s += `<rect x="0" y="${f(y + 0.3)}" width="${f(W)}" height="${f(haut - 0.6)}" rx="${f(haut * 0.45)}" fill="${col}"/><rect x="0" y="${f(y + 0.9)}" width="${f(W)}" height="${f(haut * 0.22)}" fill="#FFFFFF" opacity=".22"/><rect x="0" y="${f(y + haut * 0.72)}" width="${f(W)}" height="${f(haut * 0.2)}" fill="#1A0E08" opacity=".2"/><path d="M${P2(g() * W * 0.3, y + haut * 0.5)} Q${P2(W * 0.5, y + haut * (0.4 + g() * 0.2))} ${P2(W * (0.7 + g() * 0.3), y + haut * 0.55)}" fill="none" stroke="${mix(c, "#1A0E08", 0.5)}" stroke-width=".4"/>`;
+        for (let x = g() * 8; x < W; x += 6 + g() * 10) {
+          const r = g();
+          if (r < 0.3) s += `<ellipse cx="${f(x)}" cy="${f(y + haut * 0.5)}" rx="${f(1 + g())}" ry="${f(haut * 0.22)}" fill="${mix(c, "#3A2210", 0.55)}"/><ellipse cx="${f(x)}" cy="${f(y + haut * 0.5)}" rx=".5" ry="${f(haut * 0.1)}" fill="#2A1808"/>`;
+          else if (r < 0.6) s += `<path d="M${P2(x, y + haut * 0.3)} l${f(3 + g() * 4)},${f((g() - 0.5) * 1)}" stroke="${mix(c, "#1A0E08", 0.5)}" stroke-width=".5"/>`;
+          else s += `<rect x="${f(x)}" y="${f(y + haut * 0.62)}" width="${f(3 + g() * 5)}" height="${f(haut * 0.22)}" rx=".8" fill="${mix(c, "#4A2E16", 0.5)}" opacity=".7"/>`;
+        }
+      }
+      return s;
+    }
+    __name(tRondins, "tRondins");
+    function tTuiles(W, H, g, soleil, { fonce = "#5A3A9A", clair = "#B898F0", larg = 6, haut = 4, manque = 0, rouille = 0 } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(fonce, "#1A0E08", 0.45)}"/>`;
+      const rangs = Math.ceil(H / haut) + 2;
+      for (let r = rangs; r >= 0; r--) {
+        const y = r * haut - haut;
+        for (let x = r % 2 * larg * 0.5 - larg; x < W + larg; x += larg) {
+          if (manque && g() < manque) continue;
+          const t = (soleil ? 0.55 : 0.25) + g() * 0.35 + 0.15 * y / H, w = larg / 2;
+          const c = rouille && g() < rouille ? mix("#8A4A2A", "#C87A3A", g()) : mix(fonce, clair, Math.min(1, t));
+          const cc = g() < 0.08 ? mix(c, "#3A2A1A", 0.3) : g() < 0.08 ? mix(c, "#F4E8D0", 0.3) : c;
+          s += `<path d="M${P2(x - w, y - haut)} L${P2(x - w, y)} Q${P2(x - w, y + haut * 0.8)} ${P2(x, y + haut * 0.85)} Q${P2(x + w, y + haut * 0.8)} ${P2(x + w, y)} L${P2(x + w, y - haut)} Z" fill="${cc}" stroke="${mix(fonce, "#1A0E08", 0.5)}" stroke-width=".5"/><path d="M${P2(x - w * 0.7, y + haut * 0.42)} Q${P2(x, y + haut * 0.95)} ${P2(x + w * 0.7, y + haut * 0.42)}" fill="none" stroke="#FFFFFF" stroke-width=".5" opacity="${f(0.15 + t * 0.35)}"/><path d="M${P2(x - w * 0.9, y - haut * 0.2)} L${P2(x - w * 0.9, y + haut * 0.3)}" stroke="#1A0E08" stroke-width=".6" opacity=".18"/>` + (g() < 0.05 ? `<circle cx="${f(x + (g() - 0.5) * w)}" cy="${f(y)}" r="${f(0.8 + g())}" fill="${g() < 0.5 ? "#B8C878" : "#E0D8A0"}" opacity=".8"/>` : "");
+        }
+      }
+      return s;
+    }
+    __name(tTuiles, "tTuiles");
+    function tChaume(W, H, g, soleil, { fonce = "#8A6A2A", clair = "#F0D07A", haut = 5 } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(fonce, "#1A0E08", 0.4)}"/>`;
+      for (let y = H + haut; y > -haut; y -= haut) {
+        s += `<rect x="0" y="${f(y - haut * 1.6)}" width="${f(W)}" height="${f(haut * 1.6)}" fill="${mix(fonce, clair, soleil ? 0.45 : 0.2)}"/>`;
+        for (let x = -1; x < W + 1; x += 1.3 + g() * 0.6) {
+          const t = (soleil ? 0.5 : 0.2) + g() * 0.45, l = haut * (1.1 + g() * 0.7);
+          s += `<path d="M${P2(x, y - haut * 1.5)} L${P2(x + (g() - 0.5) * 1.2, y - haut * 1.5 + l)}" stroke="${mix(fonce, clair, t)}" stroke-width="${f(0.8 + g() * 0.5)}" stroke-linecap="round"/>`;
+        }
+        s += `<rect x="0" y="${f(y - 0.6)}" width="${f(W)}" height="1.2" fill="#1A0E08" opacity=".22"/>`;
+      }
+      for (let i = 0; i < Math.max(2, Math.round(W * H / 900)); i++) {
+        const x = g() * W, y = g() * H, w = 6 + g() * 12, h = 4 + g() * 6;
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(w)}" ry="${f(h)}" fill="${g() < 0.5 ? clair : "#8A8A70"}" opacity="${f(0.14 + g() * 0.12)}"/>`;
+      }
+      for (let y = haut * 3; y < H; y += haut * 3) for (let x = 3 + g() * 6; x < W; x += 9 + g() * 6) s += `<path d="M${P2(x, y - 1.2)} l2.4,1.6" stroke="${mix(fonce, "#1A0E08", 0.4)}" stroke-width=".8" opacity=".55"/>`;
+      return s;
+    }
+    __name(tChaume, "tChaume");
+    function tColombage(W, H, g, { enduit = "#F4E8D0", bois = "#5A3420" } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${enduit}"/>`;
+      for (let i = 0; i < 8; i++) s += `<ellipse cx="${f(g() * W)}" cy="${f(g() * H)}" rx="${f(3 + g() * 6)}" ry="${f(2 + g() * 4)}" fill="${g() < 0.5 ? "#E2D2B4" : "#FFF8EA"}" opacity=".6"/>`;
+      const b = /* @__PURE__ */ __name((d, w = 2.4) => `<path d="${d}" stroke="${bois}" stroke-width="${w}" fill="none"/><path d="${d}" stroke="#A87048" stroke-width=".5" fill="none" opacity=".7" transform="translate(-.5 -.5)"/>`, "b");
+      const n = Math.max(2, Math.round(W / 15)), m = H * 0.5;
+      s += b(`M0,1.2 H${f(W)} M0,${f(m)} H${f(W)} M0,${f(H - 1.2)} H${f(W)}`, 2.6);
+      for (let i = 0; i <= n; i++) {
+        const x = i / n * W;
+        s += b(`M${f(x)},0 V${f(H)}`);
+        if (i < n && i % 2 === 0) s += b(`M${f(x)},${f(m)} L${f(x + W / n)},${f(H)} M${f(x + W / n)},${f(m)} L${f(x)},${f(H)}`, 1.6);
+      }
+      return s;
+    }
+    __name(tColombage, "tColombage");
+    function tTole(W, H, g, soleil, { c = "#8A94A0" } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(c, "#1A0E08", soleil ? 0.1 : 0.35)}"/>`;
+      for (let x = 0; x < W; x += 2.4) s += `<rect x="${f(x)}" y="0" width="1.1" height="${f(H)}" fill="#FFFFFF" opacity="${soleil ? 0.28 : 0.12}"/><rect x="${f(x + 1.2)}" y="0" width=".8" height="${f(H)}" fill="#1A0E08" opacity=".18"/>`;
+      for (let i = 0; i < 6; i++) s += `<ellipse cx="${f(g() * W)}" cy="${f(g() * H)}" rx="${f(2 + g() * 5)}" ry="${f(1.5 + g() * 4)}" fill="#B0602A" opacity="${f(0.25 + g() * 0.3)}"/>`;
+      for (let x = 1.5; x < W; x += 6) s += `<circle cx="${f(x)}" cy="1.5" r=".5" fill="#3A3A40"/><circle cx="${f(x)}" cy="${f(H - 1.5)}" r=".5" fill="#3A3A40"/>`;
+      return s;
+    }
+    __name(tTole, "tTole");
+    function galet(x, y, r, g, c = "#C8C0B0", mousse = false) {
+      const ry = r * 0.62;
+      return `<ellipse cx="${f(x + 0.8)}" cy="${f(y + ry * 0.5)}" rx="${f(r)}" ry="${f(ry * 0.6)}" fill="${OMBRE_F}" opacity=".25"/>` + ovale(x, y, r, ry, c) + `<path d="M${P2(x + r, y)} A${f(r)},${f(ry)} 0 0,1 ${P2(x - r * 0.6, y + ry * 0.8)} Q${P2(x + r * 0.2, y + ry * 0.55)} ${P2(x + r, y)} Z" fill="${mix(c, "#1A0E08", 0.3)}"/>` + ovale(x - r * 0.3, y - ry * 0.35, r * 0.4, ry * 0.3, mix(c, "#FFFFFF", 0.5), 0) + (mousse ? `<path d="M${P2(x - r * 0.9, y - ry * 0.1)} Q${P2(x - r * 0.3, y - ry * 1.05)} ${P2(x + r * 0.5, y - ry * 0.75)} Q${P2(x, y - ry * 0.4)} ${P2(x - r * 0.9, y - ry * 0.1)} Z" fill="#6AA84A"/>` : "");
+    }
+    __name(galet, "galet");
+    function buche(x0, y0, x1, y1, r, g, { c = "#BF8049", bois = "#E0A96C", flotte = false } = {}) {
+      const d = unite([x1 - x0, y1 - y0]), n = [-d[1], d[0]], ry = r * 0.9;
+      const ecorce = flotte ? "#C3BBA9" : c, ombre = mix(ecorce, OMBRE_F, 0.4);
+      let s = `<path d="${poly3([plus([x0, y0], n, r), plus([x1, y1], n, r), plus([x1, y1], n, -r), plus([x0, y0], n, -r)])}" fill="${ecorce}" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/><path d="${poly3([plus([x0, y0], n, -r * 0.1), plus([x1, y1], n, -r * 0.1), plus([x1, y1], n, -r), plus([x0, y0], n, -r)])}" fill="${ombre}" opacity=".6"/>` + trait(ligne([plus([x0, y0], n, r * 0.55), plus([x1, y1], n, r * 0.55)]), "#FFFFFF", 0.6, ' opacity=".35"');
+      for (let i = 0; i < 3; i++) {
+        const t = 0.2 + g() * 0.6, p = plus([x0, y0], [x1 - x0, y1 - y0], t);
+        s += trait(ligne([plus(p, n, r * 0.7), plus(plus(p, d, 2 + g() * 3), n, r * 0.2)]), mix(ecorce, "#1A0E08", 0.45), 0.5);
+      }
+      if (flotte && r > 2.2) {
+        const L = norme([x1 - x0, y1 - y0]);
+        for (let k = -2; k <= 2; k++) {
+          const o = k * r * 0.32, a2 = plus([x0, y0], n, o), b = plus([x1, y1], n, o * 0.9), m = plus(plus(a2, [x1 - x0, y1 - y0], 0.5), n, (g() - 0.5) * r * 0.4);
+          s += `<path d="M${P2(...a2)} Q${P2(...m)} ${P2(...b)}" fill="none" stroke="${k > 0 ? "#8A8272" : "#EAE4D6"}" stroke-width=".45" opacity=".8"/>`;
+        }
+        const kn = plus(plus([x0, y0], [x1 - x0, y1 - y0], 0.35 + g() * 0.3), n, r * 0.25);
+        s += `<ellipse cx="${f(kn[0])}" cy="${f(kn[1])}" rx="${f(r * 0.32)}" ry="${f(r * 0.22)}" fill="#8A8272"/><ellipse cx="${f(kn[0])}" cy="${f(kn[1])}" rx="${f(r * 0.14)}" ry="${f(r * 0.09)}" fill="#5A5246"/>`;
+        if (L > r * 6) {
+          const sb = plus(plus([x0, y0], [x1 - x0, y1 - y0], 0.62), n, r * 0.9), se = plus(sb, plus(n, d, 0.6), r * 0.9);
+          s += plan(`M${P2(...plus(sb, d, -r * 0.3))} L${P2(...se)} L${P2(...plus(se, d, r * 0.35))} L${P2(...plus(sb, d, r * 0.4))} Z`, "#C3BBA9", 0.6);
+        }
+      }
+      if (ETAT.hiver && r > 1.4 && Math.abs(d[1]) < 0.85) s += trait(ligne([plus([x0, y0], n, -r * 0.75), plus([x1, y1], n, -r * 0.75)]), NEIGE2, r * 0.9);
+      const a = Math.atan2(d[1], d[0]) * 180 / Math.PI;
+      s += `<ellipse cx="${f(x1)}" cy="${f(y1)}" rx="${f(r * 0.45)}" ry="${f(ry)}" transform="rotate(${f(a)} ${f(x1)} ${f(y1)})" fill="${bois}" stroke="${ENCRE}" stroke-width="${TRAIT}"/><ellipse cx="${f(x1)}" cy="${f(y1)}" rx="${f(r * 0.25)}" ry="${f(ry * 0.55)}" transform="rotate(${f(a)} ${f(x1)} ${f(y1)})" fill="none" stroke="${mix(bois, "#8A5A36", 0.6)}" stroke-width=".5"/>`;
+      return s;
+    }
+    __name(buche, "buche");
+    function caisse(id, u, v, c, h, g, { teinte = "#B07A48", marque = true } = {}) {
+      const b = [u - c / 2, v - c / 2, u + c / 2, v + c / 2];
+      const face2 = /* @__PURE__ */ __name((soleil) => (W, H) => tPlanches(W, H, g, { c: teinte, larg: 3.2, horiz: true, use: 0.1 }) + `<path d="M0,0 L${f(W)},${f(H)} M${f(W)},0 L0,${f(H)}" stroke="${mix(teinte, "#1A0E08", 0.45)}" stroke-width="1.6"/><rect width="${f(W)}" height="${f(H)}" fill="none" stroke="${mix(teinte, "#1A0E08", 0.45)}" stroke-width="2.4"/>` + (marque && soleil ? `<circle cx="${f(W / 2)}" cy="${f(H / 2)}" r="${f(H * 0.2)}" fill="none" stroke="#2A4A6A" stroke-width=".8" opacity=".7"/>` : ""), "face");
+      return boite(id, b, 0, h, { gauche: face2(true), droite: face2(false), dessus: /* @__PURE__ */ __name((W, H) => tPlanches(W, H, g, { c: mix(teinte, "#FFF0D8", 0.15), larg: 3.2, use: 0.1 }), "dessus"), voile: { pied: 0.2, haut: 0 } });
+    }
+    __name(caisse, "caisse");
+    function tonneau(x, y, r, h, g, { c = "#9A6438" } = {}) {
+      const ry = r * 0.5;
+      let s = `<ellipse cx="${f(x + 1.5)}" cy="${f(y + 1)}" rx="${f(r * 1.1)}" ry="${f(ry * 0.9)}" fill="#1A0E08" opacity=".2"/>` + plan(`M${P2(x - r, y)} Q${P2(x - r * 1.12, y - h / 2)} ${P2(x - r, y - h)} A${f(r)},${f(ry)} 0 0,0 ${P2(x + r, y - h)} Q${P2(x + r * 1.12, y - h / 2)} ${P2(x + r, y)} A${f(r)},${f(ry)} 0 0,1 ${P2(x - r, y)} Z`, c) + `<path d="M${P2(x + r * 0.2, y + ry * 0.9)} Q${P2(x + r * 0.5, y - h / 2)} ${P2(x + r * 0.2, y - h + ry * 0.9)} L${P2(x + r, y - h)} Q${P2(x + r * 1.12, y - h / 2)} ${P2(x + r, y)} Z" fill="#1A0E08" opacity=".22"/>` + trait(`M${P2(x - r * 0.55, y - h + ry)} Q${P2(x - r * 0.7, y - h / 2)} ${P2(x - r * 0.55, y + ry * 0.6)}`, "#FFFFFF", 0.8, ' opacity=".3"');
+      for (const t of [0.2, 0.8]) {
+        const yy = y - h * t;
+        s += trait(`M${P2(x - r * 1.08, yy)} A${f(r * 1.08)},${f(ry)} 0 0,0 ${P2(x + r * 1.08, yy)}`, "#5A5A62", 1.4) + trait(`M${P2(x - r * 1.05, yy - 0.5)} A${f(r * 1.05)},${f(ry)} 0 0,0 ${P2(x - r * 0.2, yy + ry - 0.5)}`, "#B8B8C0", 0.5);
+      }
+      s += ovale(x, y - h, r, ry, mix(c, "#FFF0D8", 0.15)) + trait(`M${P2(x - r * 0.7, y - h)} L${P2(x + r * 0.7, y - h)} M${P2(x - r * 0.6, y - h - ry * 0.45)} L${P2(x + r * 0.6, y - h - ry * 0.45)}`, mix(c, "#1A0E08", 0.4), 0.5);
+      return s;
+    }
+    __name(tonneau, "tonneau");
+    var lanterne = /* @__PURE__ */ __name((id, x, y, l = 4, c = CHAUD) => trait(`M${P2(x, y)} L${P2(x, y + l)}`, "#3A3038", 0.8, ' stroke-dasharray="1 .5"') + `<g transform="translate(${f(x)} ${f(y + l)})">${lueur(id, 0, 4, 12, c, 0.55)}${plan("M-2.8,0 L2.8,0 L0,-2.2 Z", "#3A3038", 0.6)}${plan("M-2.3,0 L2.3,0 L1.9,6 L-1.9,6 Z", "#FFE2A0", 0.7)}<rect x="-1.2" y="1" width="2.4" height="4" fill="#FFFFFF" opacity=".7"/>${trait("M0,0 L0,6", "#3A3038", 0.5)}${plan("M-2.5,6 L2.5,6 L1.6,7.4 L-1.6,7.4 Z", "#3A3038", 0.5)}</g>`, "lanterne");
+    var touffe = /* @__PURE__ */ __name((x, y, g, k = 1, c0 = HERBE, c = ETAT.hiver ? c0.map((x2) => mix(x2, "#E8F0F4", 0.55)) : c0) => [0, 1, 2, 3, 4].map((i) => {
+      const a = -0.9 + i * 0.45 + (g() - 0.5) * 0.2, l = (5 + g() * 4) * k;
+      return trait(`M${P2(x + (i - 2) * 0.8 * k, y)} Q${P2(x + Math.sin(a) * l * 0.4, y - l * 0.6)} ${P2(x + Math.sin(a) * l, y - l * Math.cos(a))}`, c[(i + 1) % c.length], 1.1 * k);
+    }).join(""), "touffe");
+    var ombreSol = /* @__PURE__ */ __name((id, x, y, rx, ry, a = 0.28) => `<defs>${rad(id, 0, 0, 1, [[0, OMBRE_F, a], [0.6, OMBRE_F, a * 0.5], [1, OMBRE_F, 0]])}</defs><ellipse cx="0" cy="0" rx="1" ry="1" fill="url(#${id})" transform="translate(${f(x)} ${f(y)}) scale(${f(rx)} ${f(ry)})"/>`, "ombreSol");
+    function fenetre(id, x, y, w, h, { arc = false, volets, fleurs, verre = ["#FFF4D0", "#FFC870"], cadre = "#F4E8D0" } = {}) {
+      const forme = /* @__PURE__ */ __name((i = 0) => arc ? `M${P2(x + i, y + h - i)} L${P2(x + i, y + w / 2)} Q${P2(x + w / 2, y - w * 0.2 + i * 1.6)} ${P2(x + w - i, y + w / 2)} L${P2(x + w - i, y + h - i)} Z` : `M${P2(x + i, y + i)} H${f(x + w - i)} V${f(y + h - i)} H${f(x + i)} Z`, "forme");
+      let s = "";
+      if (volets) for (const sg of [-1, 1]) {
+        const vx = sg < 0 ? x - w * 0.55 - 1 : x + w + 1;
+        s += `<rect x="${f(vx)}" y="${f(y - 0.5)}" width="${f(w * 0.55)}" height="${f(h + 1)}" fill="${volets}" stroke="${ENCRE}" stroke-width=".7"/>` + [0.3, 0.6].map((t) => `<rect x="${f(vx + 0.6)}" y="${f(y + h * t)}" width="${f(w * 0.55 - 1.2)}" height=".7" fill="#1A0E08" opacity=".3"/>`).join("");
+      }
+      s += `<path d="${forme(-1.4)}" fill="${cadre}" stroke="${ENCRE}" stroke-width=".8"/><defs>${lin(`${id}v`, 0, y, 0, y + h, [[0, verre[0]], [1, verre[1]]])}</defs><path d="${forme(0)}" fill="url(#${id}v)"/><path d="${forme(0)}" fill="none" stroke="#1A0E08" stroke-width="${f(Math.max(1, w * 0.14))}" opacity=".35"/><path d="M${P2(x + w * 0.15, y + h * 0.8)} L${P2(x + w * 0.5, y + h * 0.2)}" stroke="#FFFFFF" stroke-width="${f(w * 0.12)}" opacity=".5"/>` + trait(`M${P2(x + w / 2, y + (arc ? w * 0.02 : 0))} L${P2(x + w / 2, y + h)} M${P2(x, y + h * 0.5)} L${P2(x + w, y + h * 0.5)}`, mix(cadre, "#1A0E08", 0.35), Math.max(0.6, w * 0.1)) + `<path d="M${P2(x - 1.6, y + h)} H${f(x + w + 1.6)} V${f(y + h + 1.4)} H${f(x - 1.6)} Z" fill="${mix(cadre, "#1A0E08", 0.15)}" stroke="${ENCRE}" stroke-width=".5"/>`;
+      if (fleurs) s += `<rect x="${f(x - 1.2)}" y="${f(y + h + 1.4)}" width="${f(w + 2.4)}" height="2.6" fill="#8A5A36" stroke="${ENCRE}" stroke-width=".5"/>` + Array.from({ length: Math.max(3, Math.round(w / 2.2)) }, (_, i, nb = Math.max(3, Math.round(w / 2.2))) => {
+        const fx = x + (i + 0.5) * w / nb;
+        return `<circle cx="${f(fx)}" cy="${f(y + h + 0.6)}" r="1.5" fill="#4A9A3A"/><circle cx="${f(fx)}" cy="${f(y + h - 0.2)}" r="1.1" fill="${fleurs[i % fleurs.length]}"/>`;
+      }).join("");
+      return s;
+    }
+    __name(fenetre, "fenetre");
+    function coque(id, uc, vc, lg, lb, z, hh, g, { peinte = "#3E9A9A", bois = "#C8894E", rangs = 6 } = {}) {
+      const N = 16, larg = /* @__PURE__ */ __name((a) => Math.pow(Math.sin(Math.PI * (0.14 + 0.86 * a)), 0.75), "larg"), haut = /* @__PURE__ */ __name((a) => 0.7 + 0.3 * Math.sin(Math.PI * (0.05 + 0.75 * a)), "haut");
+      const pt = /* @__PURE__ */ __name((a, th) => iso(uc - lg / 2 + a * lg, vc + lb * larg(a) * Math.cos(th), z + hh * haut(a) * Math.sin(th)), "pt");
+      let s = "";
+      for (const cote of [-1, 1]) {
+        for (let k = 0; k < rangs; k++) {
+          const t0 = Math.PI / 2 + cote * (-k / rangs) * Math.PI / 2 * -1, t1 = Math.PI / 2 + cote * ((k + 1) / rangs) * Math.PI / 2 * -1;
+          const th0 = cote > 0 ? Math.PI / 2 - k / rangs * Math.PI / 2 : Math.PI / 2 + k / rangs * Math.PI / 2;
+          const th1 = cote > 0 ? Math.PI / 2 - (k + 1) / rangs * Math.PI / 2 : Math.PI / 2 + (k + 1) / rangs * Math.PI / 2;
+          void t0;
+          void t1;
+          const haut0 = Array.from({ length: N + 1 }, (_, i) => pt(i / N, th0)), bas = Array.from({ length: N + 1 }, (_, i) => pt(i / N, th1 - cote * 0.04)).reverse();
+          const lum = cote > 0 ? 0.66 - k * 0.07 + k % 2 * 0.06 : 0.28;
+          const usee = g() < 0.45;
+          const c = mix(mix(peinte, "#1A2A2A", 0.35), mix(peinte, "#FFFFFF", 0.35), lum);
+          s += `<path d="${poly3([...haut0, ...bas])}" fill="${c}" stroke="${mix(peinte, "#0A1A1A", 0.6)}" stroke-width=".6" stroke-linejoin="round"/>`;
+          if (usee && cote > 0) {
+            const a0 = 0.15 + g() * 0.55, a1 = a0 + 0.12 + g() * 0.15, m = (th0 + th1) / 2;
+            s += `<path d="${poly3([pt(a0, th0 - 0.02), pt(a1, th0 - 0.03), pt(a1 - 0.03, m), pt(a0 + 0.02, th1 + 0.03)])}" fill="${bois}" opacity=".85"/>`;
+          }
+          if (cote > 0) s += `<path d="M${Array.from({ length: N + 1 }, (_, i) => P2(...pt(i / N, th1 + 0.02))).join(" L")}" fill="none" stroke="#FFFFFF" stroke-width=".55" opacity="${f(0.25 + lum * 0.3)}"/>` + Array.from({ length: 4 }, (_, i) => {
+            const q = pt(0.2 + i * 0.2, (th0 + th1) / 2);
+            return `<circle cx="${f(q[0])}" cy="${f(q[1])}" r=".45" fill="#5A5048"/>`;
+          }).join("");
+        }
+      }
+      s += trait(`M${Array.from({ length: N + 1 }, (_, i) => P2(...pt(i / N, 0.02))).join(" L")}`, "#5A3A22", 3) + trait(`M${Array.from({ length: N + 1 }, (_, i) => P2(...plus(pt(i / N, 0.02), [0, -0.7]))).join(" L")}`, "#E0A96C", 1.4);
+      s += trait(`M${Array.from({ length: N + 1 }, (_, i) => P2(...pt(i / N, Math.PI / 2))).join(" L")}`, "#5A3A22", 3) + trait(`M${Array.from({ length: N + 1 }, (_, i) => P2(...plus(pt(i / N, Math.PI / 2), [0, -0.8]))).join(" L")}`, "#C8894E", 0.8);
+      const e0 = pt(0.97, Math.PI / 2), e1 = iso(uc + lg / 2 + 0.04, vc, z + hh * 0.15);
+      s += trait(`M${P2(...e0)} L${P2(...e1)}`, "#5A3A22", 3.2) + trait(`M${P2(...e0)} L${P2(...e1)}`, "#A8703E", 1.2);
+      return s;
+    }
+    __name(coque, "coque");
+    function aviron(x0, y0, x1, y1, g, { pale = 10 } = {}) {
+      const d = unite([x1 - x0, y1 - y0]), n = [-d[1], d[0]], b = plus([x1, y1], d, pale);
+      return buche(x0, y0, x1, y1, 1.3, g, { c: "#D8A868", bois: "#F0D0A0" }) + plan(`M${P2(...plus([x1, y1], n, 1.3))} Q${P2(...plus(plus([x1, y1], d, pale * 0.3), n, 3.4))} ${P2(...plus(b, n, 2.6))} Q${P2(...plus(b, d, 1.6))} ${P2(...plus(b, n, -2.6))} Q${P2(...plus(plus([x1, y1], d, pale * 0.3), n, -3.4))} ${P2(...plus([x1, y1], n, -1.3))} Z`, "#E8B878") + `<path d="M${P2(...plus(plus([x1, y1], d, pale * 0.3), n, 0))} L${P2(...plus(b, d, 0.6))}" stroke="#B8844A" stroke-width=".6"/><path d="M${P2(...plus(plus([x1, y1], d, pale * 0.55), n, -2.6))} L${P2(...plus(plus([x1, y1], d, pale * 0.95), n, -2.4))}" stroke="#E8504A" stroke-width="1.6" opacity=".85"/>`;
+    }
+    __name(aviron, "aviron");
+    var hublot = /* @__PURE__ */ __name((id, x, y, r) => `<defs>${rad(`${id}v`, x - r * 0.3, y - r * 0.3, r * 1.4, [[0, "#FFF4D0"], [1, "#FFC060"]])}</defs><circle cx="${f(x)}" cy="${f(y)}" r="${f(r + 1.8)}" fill="#C8963A" stroke="${ENCRE}" stroke-width=".7"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="url(#${id}v)" stroke="#8A5A1A" stroke-width=".7"/>` + Array.from({ length: 8 }, (_, i) => {
+      const a = i * Math.PI / 4;
+      return `<circle cx="${f(x + Math.cos(a) * (r + 0.9))}" cy="${f(y + Math.sin(a) * (r + 0.9))}" r=".4" fill="#FFE8A0"/>`;
+    }).join("") + `<path d="M${P2(x - r * 0.5, y + r * 0.2)} L${P2(x + r * 0.1, y - r * 0.6)}" stroke="#FFFFFF" stroke-width="${f(r * 0.25)}" opacity=".6"/>`, "hublot");
+    function tBordages(W, H, g, { peintures = ["#4E9A96", "#E6DECA", "#E6DECA", "#C8B898", "#D27A5E"], bois = "#C8894E", larg = 4.4 } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(bois, "#1A0E08", 0.6)}"/>`;
+      for (let y = 0; y < H; y += larg) {
+        let x = -g() * 10;
+        while (x < W) {
+          const l = 14 + g() * 22, c = peintures[Math.floor(g() * peintures.length)], use = 0.25 + g() * 0.35;
+          s += `<rect x="${f(x + 0.3)}" y="${f(y + 0.3)}" width="${f(l - 0.6)}" height="${f(larg - 0.6)}" fill="${mix(c, "#FFFFFF", 0.08)}"/><rect x="${f(x + 0.3)}" y="${f(y + 0.3)}" width="${f(l - 0.6)}" height=".7" fill="#FFFFFF" opacity=".25"/><rect x="${f(x + 0.3)}" y="${f(y + larg - 1)}" width="${f(l - 0.6)}" height=".6" fill="#1A0E08" opacity=".25"/>`;
+          for (let k = 0; k < 2; k++) if (g() < use) {
+            const ex = x + g() * l, ew = 2 + g() * 6;
+            s += `<path d="M${P2(ex, y + 0.6)} q${f(ew * 0.5)},${f(larg * 0.3)} ${f(ew)},0 q${f(-ew * 0.2)},${f(larg * 0.5)} ${f(-ew * 0.6)},${f(larg * 0.7)} Z" fill="${bois}" opacity=".9"/>`;
+          }
+          s += `<circle cx="${f(x + 1.4)}" cy="${f(y + larg / 2)}" r=".45" fill="#8A4A2A"/><circle cx="${f(x + l - 1.4)}" cy="${f(y + larg / 2)}" r=".45" fill="#8A4A2A"/>`;
+          x += l;
+        }
+      }
+      return s;
+    }
+    __name(tBordages, "tBordages");
+    function tPalmes(W, H, g, soleil, { haut = 6 } = {}) {
+      const base = soleil ? "#5A9A48" : "#2E6A4A";
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(base, "#0E2A22", 0.4)}"/>`;
+      for (let y = H + haut, r = 0; y > -haut; y -= haut, r++) {
+        const ton = (soleil ? 0.55 : 0.2) + r % 2 * 0.08;
+        for (let x = r % 2 * 1.6 - 2; x < W + 3; x += 3.1) {
+          const l = haut * (1.5 + g() * 0.35), t = ton + (g() - 0.5) * 0.18, x0 = x + (g() - 0.5) * 0.6, top = y - haut * 1.7;
+          const vert = mix("#2E6A4A", "#A1D46C", t), sec = mix("#B89A4A", "#EBC46F", t);
+          s += `<path d="M${P2(x0 - 1.5, top)} Q${P2(x0 - 1.7, top + l * 0.6)} ${P2(x0, top + l)} Q${P2(x0 + 1.7, top + l * 0.6)} ${P2(x0 + 1.5, top)} Z" fill="${vert}"/>` + (g() < 0.45 ? `<path d="M${P2(x0 - 1.1, top + l * 0.62)} Q${P2(x0, top + l * 0.7)} ${P2(x0 + 1.1, top + l * 0.62)} Q${P2(x0 + 0.8, top + l * 0.85)} ${P2(x0, top + l)} Q${P2(x0 - 0.8, top + l * 0.85)} ${P2(x0 - 1.1, top + l * 0.62)} Z" fill="${sec}"/>` : "") + `<path d="M${P2(x0, top + 0.5)} L${P2(x0, top + l - 1)}" stroke="${mix(vert, "#0E2A22", 0.35)}" stroke-width=".4"/>`;
+        }
+        s += `<rect x="0" y="${f(y - haut * 1.7)}" width="${f(W)}" height="1.6" fill="#0E2A22" opacity=".3"/>`;
+      }
+      return s;
+    }
+    __name(tPalmes, "tPalmes");
+    function tTresse(W, H, g, { c = "#D8B868" } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(c, "#1A0E08", 0.55)}"/>`;
+      for (let x = 0; x < W; x += 2.6) {
+        const col = mix(c, g() < 0.5 ? "#FFF4DC" : "#8A6A2A", g() * 0.3);
+        s += `<rect x="${f(x + 0.2)}" y="0" width="2.2" height="${f(H)}" rx="1" fill="${col}"/><rect x="${f(x + 0.6)}" y="0" width=".6" height="${f(H)}" fill="#FFFFFF" opacity=".3"/>`;
+        for (let y = 3 + g() * 6; y < H; y += 7 + g() * 2) s += `<rect x="${f(x + 0.2)}" y="${f(y)}" width="2.2" height=".7" fill="${mix(c, "#5A4A1A", 0.6)}"/>`;
+      }
+      for (const y of [H * 0.3, H * 0.75]) s += `<rect x="0" y="${f(y)}" width="${f(W)}" height="1.4" fill="#8A6A3A"/><rect x="0" y="${f(y)}" width="${f(W)}" height=".5" fill="#C8A060"/>`;
+      return s;
+    }
+    __name(tTresse, "tTresse");
+    function tArgile(W, H, g, { c = "#F6EAD2" } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${c}"/>`;
+      for (let i = 0; i < 10; i++) s += `<ellipse cx="${f(g() * W)}" cy="${f(g() * H)}" rx="${f(3 + g() * 7)}" ry="${f(2 + g() * 4)}" fill="${g() < 0.5 ? "#EAD8B8" : "#FFFAF0"}" opacity=".7"/>`;
+      for (let i = 0; i < 4; i++) {
+        let x = g() * W, y = g() * H, d = `M${P2(x, y)}`;
+        for (let k = 0; k < 4; k++) {
+          x += (g() - 0.5) * 5;
+          y += 1.5 + g() * 2;
+          d += ` L${P2(x, y)}`;
+        }
+        s += `<path d="${d}" fill="none" stroke="#B8A080" stroke-width=".4" opacity=".7"/>`;
+      }
+      for (let i = 0; i < 2; i++) {
+        const x = g() * W * 0.8, y = H * (0.2 + g() * 0.5), w = 8 + g() * 8, h = 5 + g() * 4;
+        s += `<path d="M${P2(x, y)} q${f(w * 0.3)},${f(-h * 0.6)} ${f(w * 0.7)},${f(-h * 0.3)} q${f(w * 0.4)},${f(h * 0.4)} ${f(w * 0.3)},${f(h)} q${f(-w * 0.5)},${f(h * 0.4)} ${f(-w)},${f(-h * 0.1)} Z" fill="#B8A890" stroke="#A89878" stroke-width=".5"/>` + [0, 1, 2].map((k) => `<rect x="${f(x + 1 + k * w * 0.3)}" y="${f(y - h * 0.3 + k % 2 * 2.4)}" width="${f(w * 0.26)}" height="2.2" rx=".6" fill="#D8CCB4" stroke="#8A7A62" stroke-width=".3"/>`).join("");
+      }
+      return s + `<defs><linearGradient id="arg${Math.round(W)}" x1="0" y1="0" x2="0" y2="1"><stop offset=".72" stop-color="#C89A6A" stop-opacity="0"/><stop offset="1" stop-color="#C89A6A" stop-opacity=".55"/></linearGradient></defs><rect width="${f(W)}" height="${f(H)}" fill="url(#arg${Math.round(W)})"/>`;
+    }
+    __name(tArgile, "tArgile");
+    function bambou(x0, y0, x1, y1, r) {
+      const d = unite([x1 - x0, y1 - y0]), n = [-d[1], d[0]], L = norme([x1 - x0, y1 - y0]);
+      let s = `<path d="${poly3([plus([x0, y0], n, r), plus([x1, y1], n, r), plus([x1, y1], n, -r), plus([x0, y0], n, -r)])}" fill="#C8B060" stroke="${ENCRE}" stroke-width="${f(TRAIT * 0.8)}"/>` + trait(ligne([plus([x0, y0], n, -r * 0.3), plus([x1, y1], n, -r * 0.3)]), "#F0E0A0", r * 0.5, ' opacity=".7"') + trait(ligne([plus([x0, y0], n, r * 0.6), plus([x1, y1], n, r * 0.6)]), "#8A7A3A", r * 0.4, ' opacity=".5"');
+      for (let t = 9; t < L; t += 9) {
+        const q = plus([x0, y0], d, t);
+        s += trait(ligne([plus(q, n, r), plus(q, n, -r)]), "#7A6A2A", 0.9);
+      }
+      return s;
+    }
+    __name(bambou, "bambou");
+    function tChaumeDodu(W, H, g, soleil, { fonce = "#9A6A2A", clair = "#F6D27A", mousse = 0.5, haut = 9 } = {}) {
+      let s = `<rect width="${f(W)}" height="${f(H)}" fill="${mix(fonce, "#2A1A0A", 0.5)}"/>`;
+      const rangs = Math.ceil(H / haut) + 1;
+      for (let r = rangs; r >= 0; r--) {
+        const y = r * haut - haut * 0.3, id = `chd${Math.round(W)}${r}${soleil ? "s" : "o"}`;
+        const c1 = mix(fonce, clair, soleil ? 0.85 : 0.45), c2 = mix(fonce, "#2A1A0A", soleil ? 0.15 : 0.4);
+        let bord = `M-4,${f(y - haut)} L${f(W + 4)},${f(y - haut)} L${f(W + 4)},${f(y)}`;
+        for (let x = W + 4; x > -4; ) {
+          const l = 9 + g() * 6, nx = x - l;
+          bord += ` Q${f(x - l / 2)},${f(y + haut * (0.5 + g() * 0.25))} ${f(nx)},${f(y)}`;
+          x = nx;
+        }
+        s += `<defs><linearGradient id="${id}" x1="0" y1="${f(y - haut)}" x2="0" y2="${f(y + haut * 0.6)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${c2}"/><stop offset=".45" stop-color="${c1}"/><stop offset="1" stop-color="${mix(c1, c2, 0.55)}"/></linearGradient></defs><path d="${bord} Z" fill="url(#${id})"/>`;
+        for (let x = g() * 4; x < W; x += 3 + g() * 4) s += `<path d="M${f(x)},${f(y - haut * 0.5 + g() * 2)} l${f((g() - 0.5) * 1.4)},${f(haut * 0.55)}" stroke="${mix(c1, "#FFF4D0", 0.5)}" stroke-width=".6" opacity="${f(0.35 + g() * 0.3)}"/>`;
+      }
+      for (let i = 0; i < Math.round(W * H / 700 * mousse); i++) {
+        const x = g() * W, y = g() * H, rx = 4 + g() * 8;
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(rx * 0.45)}" fill="${soleil ? "#6AA848" : "#3A7048"}" opacity=".75"/><ellipse cx="${f(x - rx * 0.25)}" cy="${f(y - rx * 0.12)}" rx="${f(rx * 0.5)}" ry="${f(rx * 0.2)}" fill="${soleil ? "#A8D86A" : "#5A9A58"}" opacity=".8"/>`;
+      }
+      return s;
+    }
+    __name(tChaumeDodu, "tChaumeDodu");
+    function buisson(id, x, y, r, g, { feuille = "#2E8A5A", fleurs = [] } = {}) {
+      const touffes = Array.from({ length: 6 }, (_, i) => {
+        const a = Math.PI * (1.05 + i * 0.18) + (g() - 0.5) * 0.3, d = r * (0.35 + g() * 0.3);
+        return [x + Math.cos(a) * d * 1.3, y - r * 0.4 + Math.sin(a) * d * 0.7, r * (0.45 + g() * 0.2)];
+      });
+      touffes.push([x, y - r * 0.55, r * 0.6]);
+      let s = `<ellipse cx="${f(x + r * 0.3)}" cy="${f(y + 1)}" rx="${f(r * 1.25)}" ry="${f(r * 0.4)}" fill="${OMBRE_F}" opacity=".3"/>`;
+      s += `<defs>${rad(`${id}r`, x - r * 0.5, y - r * 1.1, r * 2, [[0, mix(feuille, "#E8FF9A", 0.55)], [0.5, feuille], [1, mix(feuille, "#0A2A22", 0.6)]])}</defs>`;
+      s += touffes.sort((a, b) => a[1] - b[1]).map(([tx, ty, tr]) => `<circle cx="${f(tx)}" cy="${f(ty)}" r="${f(tr)}" fill="url(#${id}r)" stroke="${mix(feuille, "#0A2A22", 0.55)}" stroke-width=".7"/><path d="M${P2(tx - tr * 0.55, ty - tr * 0.2)} Q${P2(tx - tr * 0.2, ty - tr * 0.75)} ${P2(tx + tr * 0.35, ty - tr * 0.6)}" stroke="#FFFFFF" stroke-width=".8" opacity=".35" fill="none" stroke-linecap="round"/>`).join("");
+      if (ETAT.hiver) return s + touffes.map(([tx, ty, tr]) => `<path d="M${P2(tx - tr * 0.8, ty - tr * 0.25)} Q${P2(tx - tr * 0.5, ty - tr * 1.05)} ${P2(tx, ty - tr * 1.02)} Q${P2(tx + tr * 0.6, ty - tr * 1)} ${P2(tx + tr * 0.75, ty - tr * 0.35)} Q${P2(tx, ty - tr * 0.6)} ${P2(tx - tr * 0.8, ty - tr * 0.25)} Z" fill="${NEIGE2}" stroke="${NEIGE_O}" stroke-width=".4"/>`).join("");
+      fleurs.forEach((c, i) => {
+        const [tx, ty, tr] = touffes[(i * 2 + 1) % touffes.length];
+        const fx = tx + (g() - 0.5) * tr, fy = ty - tr * 0.3 + (g() - 0.5) * tr * 0.6;
+        s += [0, 1, 2, 3, 4].map((k) => {
+          const a = k * 1.256;
+          return `<circle cx="${f(fx + Math.cos(a) * 1.3)}" cy="${f(fy + Math.sin(a) * 1.1)}" r="1.1" fill="${c}"/>`;
+        }).join("") + `<circle cx="${f(fx)}" cy="${f(fy)}" r=".7" fill="#FFF4C8"/>`;
+      });
+      return s;
+    }
+    __name(buisson, "buisson");
+    module.exports = {
+      f,
+      rnd,
+      setHiver,
+      hiver,
+      NEIGE: NEIGE2,
+      NEIGE_O,
+      neigePan,
+      BORD,
+      ombrePortee,
+      STYLE,
+      tremble,
+      tChaumeDodu,
+      buisson,
+      ENCRE,
+      TRAIT,
+      SOLEIL,
+      OMBRE_F,
+      HERBE,
+      SABLE,
+      CYAN,
+      MAGENTA,
+      ACIDE,
+      CHAUD,
+      VIOLET,
+      P2,
+      poly: poly3,
+      ligne,
+      lin,
+      rad,
+      plan,
+      trait,
+      ovale,
+      lueur,
+      neon,
+      mix,
+      plus,
+      moins,
+      norme,
+      unite,
+      iso,
+      PAS,
+      AXE_U,
+      AXE_V,
+      plaque,
+      voileFace,
+      boite,
+      toit,
+      surPan,
+      tPierres,
+      tBriques,
+      tPlanches,
+      tRondins,
+      tTuiles,
+      tChaume,
+      tColombage,
+      tTole,
+      tBordages,
+      tPalmes,
+      tTresse,
+      tArgile,
+      bambou,
+      galet,
+      buche,
+      caisse,
+      tonneau,
+      lanterne,
+      touffe,
+      ombreSol,
+      fenetre,
+      coque,
+      aviron,
+      hublot
+    };
+  }
+});
+
+// atelier/foyer_annexes.js
+var require_foyer_annexes = __commonJS({
+  "atelier/foyer_annexes.js"(exports, module) {
+    var B = require_batir();
+    var { f, rnd, CYAN, MAGENTA, ACIDE, P2, rad, lin, plan, trait, ovale, lueur, mix, plus, iso, boite, tPierres, tPlanches, buche, tonneau, touffe } = B;
+    var SARCELLE = "#3E9A96";
+    var EMERAUDE = "#16855A";
+    var CORAIL = "#FF8A5A";
+    var ARGILE = "#E08A62";
+    var VIOLET = "#9A6AE0";
+    var contact = /* @__PURE__ */ __name((x, y, rx, a = 0.32) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(rx * 0.42)}" fill="${B.OMBRE_F}" opacity="${a}"/>`, "contact");
+    var modele = /* @__PURE__ */ __name((id, x, y, r, c) => `<defs>${rad(id, x - r * 0.4, y - r * 0.5, r * 1.6, [[0, mix(c, "#FFF4E0", 0.45)], [0.45, c], [1, mix(c, "#1A2A2A", 0.45)]])}</defs>`, "modele");
+    var coquille = /* @__PURE__ */ __name((x, y, r, a, c) => `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(a)})"><path d="M${f(-r)},0 Q0,${f(-r * 1.5)} ${f(r)},0 Q0,${f(r * 0.4)} ${f(-r)},0 Z" fill="${c}"/>` + [-0.5, 0, 0.5].map((k) => `<path d="M0,${f(r * 0.2)} L${f(k * r)},${f(-r * 0.9)}" stroke="${mix(c, "#5A3A2A", 0.5)}" stroke-width=".35"/>`).join("") + "</g>", "coquille");
+    var conserve = /* @__PURE__ */ __name((id, x, y, c, k = 1) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${lueur(id, 0, -4, 8, c, 0.4)}<path d="M-2.4,0 L-2.6,-5.6 Q0,-7 2.6,-5.6 L2.4,0 Z" fill="#E8F8F0" fill-opacity=".55"/><path d="M-2.2,-.4 L-2.3,-4 Q0,-5 2.3,-4 L2.2,-.4 Z" fill="${c}"/><circle cx="-.8" cy="-2" r=".7" fill="${mix(c, "#FFFFFF", 0.5)}"/><circle cx="1" cy="-2.8" r=".6" fill="${mix(c, "#FFFFFF", 0.5)}"/><rect x="-2.3" y="-7" width="4.6" height="1.5" rx=".5" fill="#C89A5A"/><path d="M-1.6,-1 L-1.7,-4.6" stroke="#FFFFFF" stroke-width=".6" opacity=".7"/></g>`, "conserve");
+    var runes = /* @__PURE__ */ __name((x, y, t, n = 4, r = 9, h = 18) => Array.from({ length: n }, (_, i) => {
+      const tt = (t + i / n) % 1, a = tt * Math.PI * 2 + i, rx = x + Math.cos(a) * r, ry = y - tt * h, c = [CYAN, MAGENTA, ACIDE, CYAN][i % 4];
+      const d = ["M-1.6,1.4 L0,-1.6 L1.6,1.4 Z", "M-1.6,0 L1.6,0 M0,-1.6 L0,1.6", "M-1.4,-1.4 L1.4,1.4 M1.4,-1.4 L-1.4,1.4", "M-1.6,1 Q0,-2.4 1.6,1"][i % 4];
+      return `<g opacity="${f(Math.sin(tt * Math.PI))}"><circle cx="${f(rx)}" cy="${f(ry)}" r="3.2" fill="${c}" opacity=".28"/>${trait(d, c, 0.9, ` transform="translate(${f(rx)} ${f(ry)})"`)}</g>`;
+    }).join(""), "runes");
+    var fumee = /* @__PURE__ */ __name((x, y, t, k = 1) => [0, 1, 2].map((i) => {
+      const tt = (t + i / 3) % 1;
+      return `<circle cx="${f(x + (Math.sin(tt * 6) * 1.6 + tt * 5) * k)}" cy="${f(y - tt * 20 * k)}" r="${f((1.8 + tt * 3.6) * k)}" fill="#F4F2F8" opacity="${f(0.8 * (1 - tt))}" stroke="#C8C8D8" stroke-width=".5" stroke-opacity="${f(0.8 * (1 - tt))}"/>`;
+    }).join(""), "fumee");
+    function cuisine1() {
+      const g = rnd(301);
+      let s = B.ombrePortee("cuo", [iso(-0.3, 0.12, 0), iso(0.46, 0.2, 0), iso(0.46, -0.2, 0), iso(-0.3, -0.26, 0)], 26, 0.3);
+      s += [[-0.2, 0.08], [0.1, 0.14], [0.32, 0.04], [0.04, -0.14]].map(([u, v]) => {
+        const [x, y] = iso(u, v, 0);
+        return ovale(x, y, 6 + g() * 2, 3 + g(), mix("#C8C0B0", "#EDE8DC", g()), 0.5);
+      }).join("");
+      s += boite("cus", [-0.3, -0.26, 0.06, 0.1], 0, 6, { gauche: /* @__PURE__ */ __name((W, H) => tPierres(W, H, g, { haut: 3, long: 5, mousse: 0.45 }), "gauche"), droite: /* @__PURE__ */ __name((W, H) => tPierres(W, H, g, { haut: 3, long: 5, mousse: 0.45 }), "droite"), dessus: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#D8CCB4"/>`, "dessus"), arete: null });
+      const [ox, oy] = iso(-0.12, -0.08, 6);
+      s += modele("cud", ox, oy - 9, 12, ARGILE) + plan(`M${P2(ox - 11.5, oy)} Q${P2(ox - 12.5, oy - 17)} ${P2(ox, oy - 19)} Q${P2(ox + 12.5, oy - 17)} ${P2(ox + 11.5, oy)} Q${P2(ox, oy + 5)} ${P2(ox - 11.5, oy)} Z`, "url(#cud)", 0.9) + Array.from({ length: 9 }, (_, i) => {
+        const a = i * 0.9, r = 2 + i * 0.8;
+        return coquille(ox + 3 + Math.cos(a) * r, oy - 10 + Math.sin(a) * r * 0.7, 1 + i * 0.05, a * 57, ["#FFF4E8", "#FFC8B8", "#FFE0A8"][i % 3]);
+      }).join("") + `<path d="M${P2(ox - 11.2, oy - 2.4)} Q${P2(ox, oy + 2.6)} ${P2(ox + 11.2, oy - 2.4)}" stroke="${SARCELLE}" stroke-width="1.8" fill="none" stroke-linecap="round"/>` + Array.from({ length: 6 }, (_, i) => `<circle cx="${f(ox - 9 + i * 3.6)}" cy="${f(oy - 0.8 + Math.sin(i / 5 * Math.PI) * 2)}" r=".6" fill="${CORAIL}"/>`).join("");
+      s += Array.from({ length: 6 }, (_, i) => {
+        const a = Math.PI * (1 - i / 5);
+        return ovale(ox - 4 + Math.cos(a) * 5.4, oy - 1.6 - Math.sin(a) * 6, 1.6, 1.3, mix("#C8C0B0", "#F4F0E8", i % 2 * 0.6), 0.4);
+      }).join("") + `<path d="M${P2(ox - 8.2, oy)} L${P2(ox - 8.2, oy - 3)} Q${P2(ox - 4, oy - 9)} ${P2(ox + 0.2, oy - 3)} L${P2(ox + 0.2, oy + 1)} Z" fill="#2A140A"/>` + [[-6, -0.6], [-4, 0], [-2.2, -0.4]].map(([dx, dy]) => `<circle cx="${f(ox + dx)}" cy="${f(oy + dy)}" r=".8" fill="#FF6A2A"/>`).join("");
+      const [tx, ty] = [ox + 5, oy - 15];
+      s += modele("cut", tx, ty - 6, 3, "#C8784A") + plan(`M${P2(tx - 1.9, ty + 2)} L${P2(tx - 1.9, ty - 11)} L${P2(tx + 1.9, ty - 11)} L${P2(tx + 1.9, ty + 2)} Z`, "url(#cut)", 0.6) + [-3, -8].map((dy) => `<rect x="${f(tx - 2.3)}" y="${f(ty + dy)}" width="4.6" height="1.1" rx=".4" fill="#8A4A2A"/>`).join("") + plan(`M${P2(tx - 4, ty - 11)} L${P2(tx, ty - 14.4)} L${P2(tx + 4, ty - 11)} Z`, "#B8C0C8", 0.5) + `<path d="M${P2(tx - 2.8, ty - 11.3)} L${P2(tx, ty - 13.6)}" stroke="#FFFFFF" stroke-width=".5"/>`;
+      for (const [u, v, c, bande] of [[0.36, -0.08, "#8A5A3A", CORAIL], [0.2, 0.12, "#A86A3A", SARCELLE]]) {
+        const [x, y] = iso(u, v, 0);
+        s += tonneau(x, y, 3.6, 9.5, g, { c }) + `<rect x="${f(x - 3.8)}" y="${f(y - 6.4)}" width="7.6" height="1.3" fill="${bande}" opacity=".9"/>`;
+      }
+      const T2 = [0.1, -0.18, 0.46, 0.2];
+      s += boite("cup", T2, 9.5, 11, { gauche: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6A6A72"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#4A4A54"/>`, "droite"), dessus: /* @__PURE__ */ __name((W, H) => tPlanches(W, H, g, { larg: 3.4, c: "#C8945A" }) + `<rect width="${f(W)}" height="${f(H)}" fill="none" stroke="#5A5A62" stroke-width="1.3"/><circle cx="1.8" cy="1.8" r=".5" fill="#3A3A42"/><circle cx="${f(W - 1.8)}" cy="1.8" r=".5" fill="#3A3A42"/>`, "dessus"), arete: null });
+      const at = /* @__PURE__ */ __name((u, v) => iso(u, v, 11), "at");
+      const [px, py] = at(0.22, 0.08);
+      s += plan(`M${P2(px - 4.6, py)} L${P2(px + 1.4, py - 3)} L${P2(px + 5.4, py - 1.2)} L${P2(px - 0.6, py + 1.8)} Z`, "#E0B070", 0.5) + `<g transform="translate(${f(px)} ${f(py - 0.8)}) rotate(-26) scale(.8)">${plan("M-4,0 Q-1,-2.4 3,-1 L5,-2.4 L4.6,0 L5,2.2 L3,.9 Q-1,2.2 -4,0 Z", "#9AC8D8", 0.4)}<circle cx="-2.6" cy="-.4" r=".5" fill="#1A2A2A"/></g>`;
+      {
+        const [x, y] = at(0.4, 0.1);
+        s += ovale(x, y, 2.8, 1.3, "#8A5A2A", 0.4) + ovale(x, y - 0.3, 2.1, 0.8, "#F4ECDC", 0);
+      }
+      s += conserve("cuj1", ...at(0.32, -0.12), ACIDE, 0.85) + conserve("cuj2", ...at(0.4, -0.14), MAGENTA, 0.85);
+      {
+        const [x, y] = at(0.3, 0.14);
+        s += plan(`M${P2(x - 3.4, y)} Q${P2(x - 3.4, y - 3.4)} ${P2(x, y - 3.4)} Q${P2(x + 3.4, y - 3.4)} ${P2(x + 3.4, y)} Z`, "#D8964A", 0.5) + trait(`M${P2(x - 1.6, y - 2)} l1,-.8 M${P2(x + 0.4, y - 2.2)} l1,-.8`, "#F4D49A", 0.5);
+      }
+      const [fx, fy] = iso(0.5, 0.2, 0);
+      s += modele("cupot", fx, fy - 2.6, 3, SARCELLE) + plan(`M${P2(fx - 2.8, fy)} L${P2(fx - 3, fy - 5)} L${P2(fx + 3, fy - 5)} L${P2(fx + 2.8, fy)} Z`, "url(#cupot)", 0.5) + `<rect x="${f(fx - 3)}" y="${f(fy - 3.4)}" width="6" height="1" fill="${CORAIL}"/>` + [[-1.8, -8, MAGENTA], [0.8, -9.6, "#FF7AC8"], [2.4, -7, ACIDE]].map(([dx, dy, c]) => trait(`M${P2(fx, fy - 5)} L${P2(fx + dx, fy + dy)}`, EMERAUDE, 0.7) + `<circle cx="${f(fx + dx)}" cy="${f(fy + dy)}" r="1.3" fill="${c}"/><circle cx="${f(fx + dx)}" cy="${f(fy + dy)}" r=".45" fill="#FFF4C8"/>`).join("");
+      s += [[-18, 4], [-8, 9], [26, 6]].map(([x, y]) => touffe(x, y, g, 0.6)).join("");
+      return s;
+    }
+    __name(cuisine1, "cuisine1");
+    function cuisine2(n) {
+      const t = n / 8, [ox, oy] = iso(-0.12, -0.08, 6), glow = 0.75 + 0.25 * Math.sin(t * Math.PI * 2);
+      return lueur("cuf", ox - 4, oy - 3, 11, "#FF8A3A", 0.5 * glow) + `<path d="M${P2(ox - 7, oy + 0.4)} Q${P2(ox - 4, oy - 5.4 - glow)} ${P2(ox - 1, oy + 0.8)} Z" fill="#FF8A3A" opacity="${f(glow)}"/><path d="M${P2(ox - 5.4, oy + 0.6)} Q${P2(ox - 4, oy - 2.4 - glow)} ${P2(ox - 2.6, oy + 0.8)} Z" fill="#FFE8B0" opacity="${f(glow)}"/>` + fumee(ox + 5, oy - 31, t, 0.9);
+    }
+    __name(cuisine2, "cuisine2");
+    var HAUT = 22;
+    var P0 = [0, -0.46];
+    var P1 = [0, 0.46];
+    function lit1() {
+      const g = rnd(311);
+      let s = B.ombrePortee("lio", [iso(-0.08, -0.5, 0), iso(0.08, -0.5, 0), iso(0.08, 0.5, 0), iso(-0.08, 0.5, 0)], 22, 0.24);
+      for (const [u, v] of [P0, P1]) {
+        const a = iso(u, v, 0), b = iso(u, v, HAUT + 3);
+        s += contact(a[0], a[1] + 0.6, 4, 0.35) + buche(a[0], a[1], b[0], b[1], 2.2, g, { flotte: true }) + trait(`M${P2(b[0] - 2.4, b[1] + 4)} l4.8,1.6 M${P2(b[0] - 2.4, b[1] + 6)} l4.8,1.6`, "#E0C08A", 1) + touffe(a[0] - 2, a[1] + 1, g, 0.6) + touffe(a[0] + 3, a[1] + 1.4, g, 0.5);
+      }
+      const q = iso(...P1, HAUT - 2);
+      s += trait(`M${P2(q[0] - 2, q[1])} l-1.6,4`, "#C8A060", 0.5) + coquille(q[0] - 3.6, q[1] + 5.6, 1.6, 180, CORAIL);
+      return s;
+    }
+    __name(lit1, "lit1");
+    function lit2(n) {
+      const t = n / 8, sw = Math.sin(t * Math.PI * 2) * 1.6;
+      const a = iso(...P0, HAUT - 1), b = iso(...P1, HAUT - 1), mx = (a[0] + b[0]) / 2 + sw, my = (a[1] + b[1]) / 2, low = my + 15 + Math.sin(t * Math.PI * 2 + 1) * 0.6;
+      const toile = `M${P2(a[0], a[1] + 1)} Q${P2(mx, low + 5)} ${P2(b[0], b[1] + 1)} Q${P2(mx, low - 9)} ${P2(a[0], a[1] + 1)} Z`;
+      let s = `<ellipse cx="${f(mx)}" cy="${f(my + 22)}" rx="${f(12 - Math.abs(sw))}" ry="3" fill="${B.OMBRE_F}" opacity=".18"/>` + trait(`M${P2(...a)} L${P2(a[0] + 1.6, a[1] + 2)}`, "#C8A060", 0.8) + trait(`M${P2(...b)} L${P2(b[0] - 1.6, b[1] + 2)}`, "#C8A060", 0.8) + `<defs><clipPath id="lih${n}"><path d="${toile}"/></clipPath>${lin(`lil${n}`, 0, low - 10, 0, low + 5, [[0, "#FFFFFF", 0.25], [1, B.OMBRE_F, 0.3]])}</defs>` + plan(toile, "#F2E6CC", 0.7) + `<g clip-path="url(#lih${n})">` + [[0.18, SARCELLE], [0.46, CORAIL], [0.72, "#EBC46F"]].map(([k, c]) => {
+        const x = a[0] + (b[0] - a[0]) * k + sw * 0.6, y = a[1] + (b[1] - a[1]) * k;
+        return `<rect x="${f(x - 4)}" y="${f(y - 4)}" width="8" height="22" fill="${c}" opacity=".9"/><rect x="${f(x - 3.4)}" y="${f(y - 3.4)}" width="6.8" height="20.8" fill="none" stroke="#5A4A3A" stroke-width=".35" stroke-dasharray="1 .7"/>`;
+      }).join("") + `<rect x="${f(Math.min(a[0], b[0]) - 4)}" y="${f(a[1] - 4)}" width="${f(Math.abs(b[0] - a[0]) + 8)}" height="${f(low + 8 - a[1])}" fill="url(#lil${n})"/></g>`;
+      const kx = a[0] + (b[0] - a[0]) * 0.24 + sw * 0.5, ky = a[1] + (b[1] - a[1]) * 0.24 + 6;
+      s += plan(`M${P2(kx - 4, ky)} Q${P2(kx - 4.4, ky - 3.6)} ${P2(kx, ky - 3.4)} Q${P2(kx + 4.4, ky - 3.6)} ${P2(kx + 4, ky)} Q${P2(kx, ky + 1.6)} ${P2(kx - 4, ky)} Z`, "#FFF4E6", 0.5) + `<circle cx="${f(kx)}" cy="${f(ky - 1.4)}" r=".6" fill="${CORAIL}"/>`;
+      const cx = mx + 2, cy = (my + low) / 2 - 1.4;
+      s += plan(`M${P2(cx - 4, cy)} l4,-1.4 l4,1.4 l0,2 l-4,-1.2 l-4,1.2 Z`, "#3E7AB0", 0.5) + trait(`M${P2(cx - 3.4, cy + 0.2)} l3.4,-1.1 l3.4,1.1`, "#FFF4E6", 0.5);
+      return s;
+    }
+    __name(lit2, "lit2");
+    function chat2(n) {
+      const t = n / 8, souffle = Math.sin(t * Math.PI * 2) * 0.5, queue = n === 2 || n === 3 ? -1.8 : 0, oreille = n === 6 ? -16 : 0;
+      let s = contact(0, 1.6, 13, 0.3);
+      s += `<defs>${rad("cap", -3, -3, 14, [[0, "#E8C878"], [0.6, "#C89A48"], [1, "#8A6428"]])}</defs>` + plan("M-12,-2 Q-12.6,2.6 0,3.2 Q12.6,2.6 12,-2 Q0,1.4 -12,-2 Z", "url(#cap)", 0.7) + Array.from({ length: 7 }, (_, i) => trait(`M${-10 + i * 3.3},${f(-1.2 + Math.abs(i - 3) * 0.12)} l.6,3.4`, "#8A6428", 0.5, ' opacity=".6"')).join("") + ovale(0, -2, 12, 3.4, "#5A8A88", 0.6) + `<ellipse cx="0" cy="-2.4" rx="10" ry="2.4" fill="${SARCELLE}"/>`;
+      s += plan(`M-9,-2 Q-11,${f(-8 - souffle)} -3,${f(-10 - souffle)} Q5,${f(-11 - souffle)} 9,${f(-6 - souffle)} Q10,-2 4,-1.4 Q-4,-1 -9,-2 Z`, "#F0944A", 0.7) + `<path d="M-6,${f(-8.6 - souffle)} Q-1,${f(-10.6 - souffle)} 5,${f(-8.4 - souffle)}" stroke="#FFC890" stroke-width="1.2" fill="none" opacity=".7"/>` + [-5, -1, 3].map((x) => trait(`M${x},${f(-9.6 - souffle)} q1.2,2.6 0,4.6`, "#C8642A", 0.8)).join("") + trait(`M-9,-3 q-2.4,3 2.4,3.6 q4.4,.4 6.4,${f(-1.4 + queue)}`, "#F0944A", 2.2) + trait(`M-0.6,${f(-0.2 + queue * 0.5)} q1.6,${f(-0.4 + queue)} 2.6,${f(-1.6 + queue)}`, "#FFF4E6", 2.2) + plan(`M3,${f(-5 - souffle)} Q10,${f(-7.6 - souffle)} 11.4,-3 Q10,-0.6 5,-1.2 Z`, "#F0944A", 0.6) + `<g transform="rotate(${oreille} 9.4 -6)">${plan("M8,-5.4 L9.4,-8.8 L10.6,-5 Z", "#F0944A", 0.4)}<path d="M8.6,-5.6 L9.4,-7.6 L10,-5.4 Z" fill="#F7B8B0"/></g>` + plan("M5.4,-6 L5.8,-9 L7.6,-6.2 Z", "#F0944A", 0.4) + trait("M7.6,-3.4 q.7,.5 1.4,0 M9.8,-3.6 q.5,.4 1,0", "#5E3A22", 0.5) + '<ellipse cx="11" cy="-2.4" rx=".5" ry=".35" fill="#E07A7A"/>';
+      return s;
+    }
+    __name(chat2, "chat");
+    function sablier2(n) {
+      const g = rnd(331), t = n / 8;
+      let s = B.ombrePortee("sao", [[-9, 1], [9, 1], [9, -3], [-9, -3]], 30, 0.26);
+      s += buche(-10, 0, 10, -2, 3.4, g, { flotte: true });
+      for (const x of [-7.4, 7.4]) s += buche(x, -2, x, -40, 1.5, g, { flotte: true });
+      s += buche(-10, -40, 10, -41, 1.8, g, { flotte: true }) + [-7.4, 7.4].map((x) => trait(`M${x - 2},-38 l4,1.4 M${x - 2},-36 l4,1.4`, "#E0C08A", 0.8)).join("");
+      const y0 = -5, y1 = -38, ym = (y0 + y1) / 2;
+      s += lueur("sal", 0, ym, 16, CYAN, 0.38);
+      const bouteille = /* @__PURE__ */ __name((sens, y) => `M-4.6,${y} Q-5.4,${y - sens * 9} -1.4,${ym + sens * 3} L-1,${ym + sens * 0.6} L1,${ym + sens * 0.6} L1.4,${ym + sens * 3} Q5.4,${y - sens * 9} 4.6,${y} Z`, "bouteille");
+      s += `<path d="${bouteille(1, y0)}" fill="#7AC8A8" fill-opacity=".35" stroke="#4A8A70" stroke-width=".6"/><path d="${bouteille(-1, y1)}" fill="#7AC8A8" fill-opacity=".35" stroke="#4A8A70" stroke-width=".6"/>`;
+      const haut = 1 - t;
+      s += `<path d="M${f(-4.2 * Math.max(haut, 0.2))},${f(ym - 3 - 9 * haut)} Q0,${f(ym - 2)} ${f(4.2 * Math.max(haut, 0.2))},${f(ym - 3 - 9 * haut)} L1,${f(ym - 1.2)} L-1,${f(ym - 1.2)} Z" fill="${CYAN}"/><path d="M-4.4,${y0 - 0.4} Q0,${f(y0 - 0.4 - 9 * t - 2)} 4.4,${y0 - 0.4} Z" fill="${CYAN}"/>` + trait(`M0,${ym} L0,${y0 - 2}`, "#C8FFF8", 0.7, ' stroke-dasharray="1 1"') + `<path d="M-3.4,${y0 - 1} Q-4.2,${y0 - 6} -2,${y0 - 9}" stroke="#FFFFFF" stroke-width=".7" fill="none" opacity=".7"/><path d="M-3.4,${y1 + 1} Q-4.2,${y1 + 5} -2,${y1 + 8}" stroke="#FFFFFF" stroke-width=".7" fill="none" opacity=".6"/>` + trait(`M-2,${ym - 1.4} L2,${ym + 1.4} M-2,${ym + 1.4} L2,${ym - 1.4}`, "#C8A060", 1.1) + plan(`M-2.6,${y1 - 0.6} L2.6,${y1 - 0.6} L2,${y1 + 1} L-2,${y1 + 1} Z`, "#C89A5A", 0.4) + plan(`M-2.6,${y0 + 0.4} L2.6,${y0 + 0.4} L2,${y0 - 1.2} L-2,${y0 - 1.2} Z`, "#C89A5A", 0.4);
+      return s + touffe(-9, 1, g, 0.6) + touffe(10, 0.6, g, 0.5);
+    }
+    __name(sablier2, "sablier");
+    function hibou2(n) {
+      const g = rnd(341), cligne = n === 6, tete = n === 2 || n === 3 ? 1.6 : n === 5 ? -1.2 : 0;
+      let s = contact(0, 1.4, 6, 0.35);
+      s += B.aviron(0, 0, 0, -34, g, { pale: 11 }) + touffe(-2, 1, g, 0.6) + touffe(3, 1.4, g, 0.5);
+      s += buche(-11, -27, 11, -28, 1.4, g, { c: "#9A6A3A" }) + trait("M-2,-30 l4,1.6 M-2,-28 l4,1.6", "#E0C08A", 0.8);
+      s += trait("M9,-27.4 L9,-23", "#6A5A3A", 0.5) + lueur("hil", 9, -18, 9, ACIDE, 0.5) + '<path d="M6.8,-17.6 L6.6,-22 Q9,-23.4 11.4,-22 L11.2,-17.6 Q9,-16.6 6.8,-17.6 Z" fill="#E8F8F0" fill-opacity=".5" stroke="#9AC8B0" stroke-width=".5"/>' + [[8, -19.4], [10, -20.6], [9.2, -18.4]].map(([x, y], i) => `<circle cx="${f(x + (n % 2 ? 0.4 : 0) * (i - 1))}" cy="${f(y)}" r=".75" fill="${ACIDE}"/>`).join("") + '<rect x="7.2" y="-23.4" width="3.6" height="1.2" rx=".4" fill="#C89A5A"/>';
+      const ox = -1, oy = -28;
+      s += modele("hic", ox, oy - 8, 7, "#9C6B43") + plan(`M${ox - 6},${oy} Q${ox - 7.4},${oy - 8} ${ox - 4},${oy - 12} Q${ox},${oy - 14} ${ox + 4},${oy - 12} Q${ox + 7.4},${oy - 8} ${ox + 6},${oy} Z`, "url(#hic)", 0.7) + plan(`M${ox - 3.6},${oy - 0.6} Q${ox - 4.4},${oy - 7} ${ox},${oy - 9} Q${ox + 4.4},${oy - 7} ${ox + 3.6},${oy - 0.6} Z`, "#E8D4AE", 0.4) + [[-1.4, -6], [1.2, -5], [-0.2, -3]].map(([dx, dy]) => trait(`M${ox + dx - 0.7},${oy + dy} l.7,.7 l.7,-.7`, "#B88A5A", 0.5)).join("") + plan(`M${ox - 6},${oy - 1} Q${ox - 8},${oy - 6} ${ox - 5.4},${oy - 10} Q${ox - 4.4},${oy - 5} ${ox - 3.6},${oy - 1} Z`, "#7A4E30", 0.4) + plan(`M${ox + 6},${oy - 1} Q${ox + 8},${oy - 6} ${ox + 5.4},${oy - 10} Q${ox + 4.4},${oy - 5} ${ox + 3.6},${oy - 1} Z`, "#8A5A36", 0.4) + [-1.6, 0, 1.6].map((dx) => trait(`M${ox + dx},${oy - 0.6} l0,1.6`, "#E8A13A", 0.7)).join("");
+      const hx = ox + tete;
+      s += `<g>${plan(`M${hx - 5.6},${oy - 12} Q${hx - 6.4},${oy - 19} ${hx},${oy - 19.6} Q${hx + 6.4},${oy - 19} ${hx + 5.6},${oy - 12} Q${hx},${oy - 9.4} ${hx - 5.6},${oy - 12} Z`, "#9C6B43", 0.6)}` + plan(`M${hx - 4.8},${oy - 17} l-.8,-3.4 l2.8,2 Z`, "#7A4E30", 0.3) + plan(`M${hx + 4.8},${oy - 17} l.8,-3.4 l-2.8,2 Z`, "#7A4E30", 0.3) + `<ellipse cx="${hx - 2.2}" cy="${oy - 14.4}" rx="2.7" ry="2.5" fill="#E8D4AE"/><ellipse cx="${hx + 2.2}" cy="${oy - 14.4}" rx="2.7" ry="2.5" fill="#E8D4AE"/>` + (cligne ? trait(`M${hx - 3.8},${oy - 14.4} q1.6,1 3.2,0 M${hx + 0.6},${oy - 14.4} q1.6,1 3.2,0`, "#3A2A1E", 0.7) : [-2.2, 2.2].map((dx) => `<circle cx="${hx + dx}" cy="${oy - 14.4}" r="1.9" fill="#FFB830"/><circle cx="${hx + dx + tete * 0.25}" cy="${oy - 14.4}" r=".9" fill="#1E1A17"/><circle cx="${hx + dx - 0.5}" cy="${oy - 15}" r=".35" fill="#FFFFFF"/>`).join("")) + `<path d="M${hx - 0.7},${oy - 13} l.7,1.6 l.7,-1.6 Z" fill="#E8A040"/></g>`;
+      return s;
+    }
+    __name(hibou2, "hibou");
+    function grimoire1() {
+      const g = rnd(351);
+      let s = B.ombrePortee("gro", [iso(-0.12, 0.12, 0), iso(0.12, 0.12, 0), iso(0.12, -0.12, 0), iso(-0.12, -0.12, 0)], 18, 0.3);
+      const face2 = /* @__PURE__ */ __name((c) => (W, H) => tPlanches(W, H, g, { c, larg: 2.6, horiz: true, use: 0.1 }) + `<rect width="${f(W)}" height="${f(H)}" fill="none" stroke="${mix(c, "#1A0E08", 0.45)}" stroke-width="1.6"/>`, "face");
+      s += boite("grb", [-0.12, -0.12, 0.12, 0.12], 0, 8, { gauche: face2("#B07A48"), droite: face2("#8A5A36"), dessus: /* @__PURE__ */ __name((W, H) => tPlanches(W, H, g, { c: "#C8945A", larg: 2.6, use: 0.1 }), "dessus"), voile: { pied: 0.2, haut: 0 } }) + boite("grh", [-0.09, -0.09, 0.09, 0.09], 8, 14, { gauche: face2(SARCELLE), droite: face2("#2E7A76"), dessus: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#5AAAA6"/>`, "dessus"), voile: { pied: 0.2, haut: 0 } });
+      const [rx, ry] = iso(0.14, 0.04, 6);
+      s += `<g transform="translate(${f(rx + 2)} ${f(ry)}) rotate(-12)"><ellipse rx="5.6" ry="6" fill="none" stroke="#6A4428" stroke-width="1.6"/><ellipse rx="5.6" ry="6" fill="none" stroke="#C8945A" stroke-width=".7"/>` + Array.from({ length: 8 }, (_, i) => {
+        const a = i * Math.PI / 4;
+        return trait(`M0,0 L${f(Math.cos(a) * 8)},${f(Math.sin(a) * 8.4)}`, "#8A5A36", 1);
+      }).join("") + '<circle r="1.6" fill="#C8963A"/></g>';
+      const [cx, cy] = iso(0, 0, 14);
+      return s + `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="5" ry="2.4" fill="#C8A0FF" opacity=".55"/><ellipse cx="${f(cx)}" cy="${f(cy)}" rx="2.6" ry="1.2" fill="#F0E4FF" opacity=".85"/>`;
+    }
+    __name(grimoire1, "grimoire1");
+    function grimoire2(n) {
+      const t = n / 8, x = 0, y = -26;
+      const ex = x + 9 * Math.cos(Math.PI * t), ey = y - 2 - Math.sin(Math.PI * t) * 6;
+      let s = lueur("grl", x, y - 4, 16, VIOLET, 0.32) + `<ellipse cx="${x}" cy="${y + 2}" rx="10" ry="2.6" fill="#C8A0FF" opacity=".22"/>`;
+      s += plan(`M${x},${y + 1.4} L${x - 11},${y - 2} L${x - 11},${y - 3.4} L${x},${y} L${x + 11},${y - 3.4} L${x + 11},${y - 2} Z`, "#2E7A76", 0.5) + `<circle cx="${x - 10.4}" cy="${y - 2.6}" r=".8" fill="#E0B04A"/><circle cx="${x + 10.4}" cy="${y - 2.6}" r=".8" fill="#E0B04A"/>` + plan(`M${x},${y} Q${x - 5},${y - 5} ${x - 10},${y - 3.4} L${x - 10},${y - 5} Q${x - 5},${y - 7} ${x},${y - 2} Z`, "#FBF3DF", 0.4) + plan(`M${x},${y} Q${x + 5},${y - 5} ${x + 10},${y - 3.4} L${x + 10},${y - 5} Q${x + 5},${y - 7} ${x},${y - 2} Z`, "#F2E6CC", 0.4) + [-1, 1].map((sg) => [0, 1, 2].map((k) => trait(`M${x + sg * 2.4},${y - 3.6 + k * 1.2} L${x + sg * 8},${y - 4.8 + k * 1.2}`, "#8A7A9A", 0.4, ' opacity=".6"')).join("")).join("") + plan(`M${x},${y - 2} Q${f((x + ex) / 2)},${f(Math.min(y - 6, ey - 3))} ${f(ex)},${f(ey - 3)} L${f(ex)},${f(ey - 1.6)} Q${f((x + ex) / 2)},${f(Math.min(y - 4.4, ey - 1.4))} ${x},${y} Z`, "#FFFDF4", 0.4);
+      return s + runes(x, y - 8, t, 3, 7, 14);
+    }
+    __name(grimoire2, "grimoire2");
+    function chantier(phase) {
+      const g = rnd(251 + phase);
+      let s = "";
+      for (let i = 0; i < 5; i++) {
+        const a = g() * Math.PI * 2, d = g() * 0.3, k = 0.6 + g() * 0.45;
+        s += `<defs>${rad(`chs${phase}${i}`, 0, 0, 1, [[0, "#D8BE88", 0.8], [0.55, "#D8BE88", 0.45], [1, "#D8BE88", 0]])}</defs><ellipse cx="0" cy="0" rx="1" ry="1" fill="url(#chs${phase}${i})" transform="translate(${f(Math.cos(a) * 60 * d)} ${f(2 + Math.sin(a) * 30 * d)}) scale(${f(66 * k)} ${f(33 * k)})"/>`;
+      }
+      s += Array.from({ length: 14 }, () => {
+        const a = g() * Math.PI * 2, d = 0.2 + g() * 0.6;
+        return `<ellipse cx="${f(Math.cos(a) * 60 * d)}" cy="${f(2 + Math.sin(a) * 30 * d)}" rx="${f(0.6 + g() * 0.7)}" ry="${f(0.4 + g() * 0.3)}" fill="${g() < 0.5 ? "#B8A07A" : "#FFF4DC"}" opacity=".8"/>`;
+      }).join("");
+      const coins = [[-0.9, -0.9], [0.9, -0.9], [0.9, 0.9], [-0.9, 0.9]], H = 11;
+      const pieu = /* @__PURE__ */ __name(([u, v], i) => {
+        const a = iso(u, v, 0), b = iso(u, v, H + 2);
+        return contact(a[0], a[1] + 0.6, 3.4, 0.35) + buche(a[0], a[1], b[0], b[1], 1.6, g, { flotte: true }) + plan(`M${P2(b[0] + 1, b[1] + 1.4)} Q${P2(b[0] + 5, b[1] + 1.6)} ${P2(b[0] + 7, b[1] + 3.6)} Q${P2(b[0] + 4.4, b[1] + 4.6)} ${P2(b[0] + 1, b[1] + 5.4)} Z`, i % 2 ? SARCELLE : CORAIL, 0.4);
+      }, "pieu");
+      const corde = /* @__PURE__ */ __name((a, b) => {
+        const p = iso(...a, H), q = iso(...b, H);
+        return trait(`M${P2(...p)} Q${P2((p[0] + q[0]) / 2, (p[1] + q[1]) / 2 + 2)} ${P2(...q)}`, "#F4E8C8", 0.9) + trait(`M${P2(...p)} Q${P2((p[0] + q[0]) / 2, (p[1] + q[1]) / 2 + 2)} ${P2(...q)}`, "#B89A6A", 0.4, ' stroke-dasharray="1 1"');
+      }, "corde");
+      s += pieu(coins[0], 0) + corde(coins[0], coins[1]) + corde(coins[3], coins[0]) + pieu(coins[1], 1) + pieu(coins[3], 3);
+      s += [[-24, 6, 3.6], [-18, 10, 3], [-29, 11, 2.6], [-21, 14, 2.2]].map(([x, y, r]) => B.galet(x, y, r, g, mix("#C8C0B0", "#EDE8DC", g()), g() < 0.4)).join("");
+      s += `<defs>${rad(`cht${phase}`, 18, 2, 12, [[0, "#B88A5A"], [1, "#7A5230"]])}</defs>` + plan("M8,11 Q12,1 19,0 Q27,1 30,11 Q19,14 8,11 Z", `url(#cht${phase})`, 0.6) + [[13, 9], [20, 6], [25, 9]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".7" fill="#5A3A20"/>`).join("");
+      s += buche(19, 4, 25, -14, 1.2, g, { c: "#C8945A", bois: "#E8C08A" }) + plan("M24.2,-14 L27.4,-15.6 L28.4,-13.4 L25.2,-12 Z", "#C8945A", 0.4) + plan("M15.8,4.6 L21.8,3 L22.6,8.6 Q19.4,10.4 16.6,9 Z", "#9AA4B0", 0.5) + trait("M16.6,5.2 L21.4,4", "#E0E8F0", 0.6);
+      if (phase >= 2) {
+        const [px, py] = iso(-0.42, -0.38, 0);
+        s += contact(px, py + 1, 8, 0.28) + [[-6, 0, -2, -24], [6, 0, 2, -24], [0, -3, 0, -21]].map(([a, b, c, d]) => buche(px + a, py + b, px + c, py + d, 1.1, g, { flotte: true })).join("") + plan(`M${P2(px - 9, py - 24)} L${P2(px + 9, py - 24.6)} L${P2(px + 8.2, py - 10)} L${P2(px - 8.4, py - 9.6)} Z`, "#F4ECD4", 0.6) + `<path d="M${P2(px - 8.4, py - 12)} L${P2(px + 8.2, py - 12.4)} L${P2(px + 8.2, py - 10)} L${P2(px - 8.4, py - 9.6)} Z" fill="#E0D4B4"/>` + trait(`M${P2(px - 5, py - 13.6)} L${P2(px - 5, py - 19)} L${P2(px + 0.6, py - 21.6)} L${P2(px + 5.4, py - 18.4)} L${P2(px + 5.4, py - 13.6)} Z`, "#3E7AB0", 0.7) + trait(`M${P2(px - 5, py - 19)} L${P2(px + 5.4, py - 18.4)} M${P2(px - 1, py - 13.6)} L${P2(px - 1, py - 16.4)} L${P2(px + 1.6, py - 16.4)} L${P2(px + 1.6, py - 13.6)}`, "#3E7AB0", 0.5) + [[-8, -23.2], [8, -23.8]].map(([dx, dy]) => `<circle cx="${f(px + dx)}" cy="${f(py + dy)}" r=".9" fill="${CORAIL}"/>`).join("");
+        const peintures = ["#C8945A", SARCELLE, "#E6DECA", CORAIL, "#B8844A"];
+        for (let r = 0; r < 4; r++) s += boite(`chp${phase}${r}`, [0.12, 0.3 + r % 2 * 0.02, 0.74, 0.5 + r % 2 * 0.02], r * 2.6, r * 2.6 + 2.4, { gauche: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="${peintures[r]}"/><rect width="${f(W)}" height=".7" fill="#FFFFFF" opacity=".35"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#E0A96C"/><circle cx="${f(W / 2)}" cy="${f(Hh / 2)}" r=".6" fill="#9A6A3A"/>`, "droite"), dessus: /* @__PURE__ */ __name((W, Hh) => tPlanches(W, Hh, g, { larg: 3.4, c: r === 3 ? peintures[1] : "#D8A868" }), "dessus"), arete: null });
+      }
+      if (phase >= 3) {
+        const P3 = [[0.18, -0.78], [0.78, -0.78], [0.78, -0.18], [0.18, -0.18]];
+        const perche = /* @__PURE__ */ __name(([u, v], z = 46) => {
+          const a = iso(u, v, 0), b = iso(u, v, z);
+          return contact(a[0], a[1] + 0.6, 3, 0.3) + buche(a[0], a[1], b[0], b[1], 1.5, g, { c: "#B8844A" });
+        }, "perche");
+        s += perche(P3[0]) + perche(P3[1]);
+        for (const z of [18, 36]) {
+          const a = iso(...P3[0], z), b = iso(...P3[1], z), c = iso(...P3[2], z);
+          s += buche(a[0], a[1], b[0], b[1], 1.1, g, { c: "#A8743E" }) + buche(b[0], b[1], c[0], c[1], 1.1, g, { c: "#A8743E" }) + [a, b, c].map((q) => trait(`M${P2(q[0] - 2, q[1] - 1)} l4,1.4 M${P2(q[0] - 2, q[1] + 1)} l4,1.4`, "#E0C08A", 0.8)).join("");
+        }
+        s += boite(`che${phase}`, [0.2, -0.76, 0.76, -0.48], 18, 19.6, { dessus: /* @__PURE__ */ __name((W, Hh) => tPlanches(W, Hh, g, { larg: 3.4, c: "#D8A868" }), "dessus"), gauche: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#A8743E"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#8A5A36"/>`, "droite"), arete: null });
+        s += perche(P3[2]) + trait(ligne3(iso(...P3[1], 2), iso(...P3[2], 34)), "#A8743E", 1.2);
+        s += B.caisse(`chc${phase}`, -0.62, 0.42, 0.3, 7, g, { marque: false }) + (() => {
+          const [x, y] = iso(-0.62, 0.42, 7);
+          return buche(x - 3, y - 1, x + 4, y - 7, 0.9, g, { c: "#C8945A" }) + plan(`M${P2(x + 2.6, y - 8.6)} L${P2(x + 6, y - 6.4)} L${P2(x + 5, y - 5)} L${P2(x + 1.8, y - 7.2)} Z`, "#7A828C", 0.4) + plan(`M${P2(x - 4, y - 2)} L${P2(x - 1, y - 9)} L${P2(x + 1, y - 8)} L${P2(x - 2, y - 1)} Z`, "#B8C0C8", 0.4);
+        })();
+        {
+          const [x, y] = iso(-0.22, 0.72, 0);
+          s += contact(x, y + 0.6, 4.6) + plan(`M${P2(x - 3.6, y - 7)} L${P2(x - 3, y)} Q${P2(x, y + 1.4)} ${P2(x + 3, y)} L${P2(x + 3.6, y - 7)} Z`, "#9AA4B0", 0.5) + ovale(x, y - 7, 3.6, 1.4, "#5A6470", 0.4) + trait(`M${P2(x - 3.6, y - 7)} Q${P2(x, y - 13)} ${P2(x + 3.6, y - 7)}`, "#5A6470", 0.6) + `<path d="M${P2(x - 2.6, y - 6)} L${P2(x - 2.2, y - 1)}" stroke="#FFFFFF" stroke-width=".6" opacity=".6"/>`;
+        }
+        for (let i = 0; i < 5; i++) {
+          const u0 = 0.42 + i % 3 * 0.13 + (i > 2 ? 0.06 : 0), v0 = -0.02 + (i > 2 ? 0.02 : 0), z0 = i > 2 ? 4.4 : 0;
+          s += boite(`cht${phase}${i}`, [u0, v0, u0 + 0.11, v0 + 0.11], z0, z0 + 4.4, { gauche: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="${mix("#D8D2C2", "#C3BBA9", g())}"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#A8A090"/>`, "droite"), dessus: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#F0ECE0"/>`, "dessus"), arete: null });
+        }
+      }
+      s += corde(coins[1], coins[2]) + corde(coins[2], coins[3]) + pieu(coins[2], 2);
+      return s + [[-60, 4], [56, 8], [-10, 36], [32, 32], [-40, -18]].map(([x, y]) => touffe(x, y, g, 0.8)).join("");
+    }
+    __name(chantier, "chantier");
+    var ligne3 = /* @__PURE__ */ __name((a, b) => `M${P2(...a)} L${P2(...b)}`, "ligne3");
+    var C = /* @__PURE__ */ __name((k, dessin, cadre, n = 1, ms = null, opt = {}) => ({ k, dessin, cadre, n, ms, derriere: false, ...opt }), "C");
+    var ANNEXES = {
+      cuisine: { paliers: [1, 2, 3, 4, 5, 6, 7], calques: [C(0, cuisine1, [-32.5, -50, 72.5, 67.5]), C(1, cuisine2, [-25, -80, 45, 75], 8, 200)] },
+      lit: { paliers: [1, 2, 3, 4, 5, 6, 7], calques: [C(0, lit1, [-32.5, -45, 62.5, 60]), C(1, lit2, [-27.5, -32.5, 57.5, 52.5], 8, 333)] },
+      chat: { paliers: [1, 2, 3, 4, 5, 6, 7], calques: [C(0, chat2, [-20, -20, 40, 27.5], 8, 333)] },
+      sablier: { paliers: [5, 6, 7], calques: [C(0, sablier2, [-20, -60, 40, 65], 8, 500)] },
+      hibou: { paliers: [5, 6, 7], calques: [C(0, hibou2, [-20, -65, 40, 70], 8, 333)] },
+      grimoire: { paliers: [5, 6, 7], calques: [C(0, grimoire1, [-20, -30, 40, 35]), C(1, grimoire2, [-27.5, -62.5, 55, 45], 8, 200, { mouvement: true })] }
+    };
+    var svgDe = /* @__PURE__ */ __name((cadre, corps) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(" ")}"><g transform="scale(1.25)">${corps}</g></svg>`, "svgDe");
+    function image(id, k, n = 0) {
+      const c = ANNEXES[id].calques[k];
+      B.STYLE.organique = true;
+      B.BORD.doux = true;
+      try {
+        return svgDe(c.cadre, c.dessin(n));
+      } finally {
+        B.STYLE.organique = false;
+        B.BORD.doux = false;
+      }
+    }
+    __name(image, "image");
+    function imageChantier(phase, cadre) {
+      B.STYLE.organique = true;
+      B.BORD.doux = true;
+      try {
+        return svgDe(cadre, chantier(phase));
+      } finally {
+        B.STYLE.organique = false;
+        B.BORD.doux = false;
+      }
+    }
+    __name(imageChantier, "imageChantier");
+    module.exports = { ANNEXES, image, imageChantier };
+  }
+});
+
 // atelier/port/src/world/iso.js
 var TW = 64;
 var TH = 32;
@@ -890,7 +1705,7 @@ var dot = /* @__PURE__ */ __name((x, y, r, fill) => `<circle cx="${f2(x)}" cy="$
 
 // atelier/port/src/world/rareSprites.js
 var CRESTS = {
-  foyer: [[-34, -11], [-9, -56], [18, -61], [23, -106], [41, -124], [63, -161], [30, -169]],
+  foyer: [[0, -24], [9, -62], [-2, -67], [2, -101], [0, -102], [-9, -92], [-9, -92]],
   carriere: [[-2, -68], [0, -67], [19, -74], [0, -116], [0, -116], [1, -107], [14, -136]],
   bosquet: [[-2, -63], [0, -67], [0, -69], [2, -123], [3, -119], [3, -119], [10, -143]],
   puits: [[-15, -60], [0, -41], [-19, -57], [0, -57], [-3, -105], [0, -119], [0, -57]],
@@ -2362,13 +3177,24 @@ var athanor = {
     }, "draw")
   }]
 };
-var OVEN_AT = [-0.84, 0.8];
+var FOYER_PLACES = {
+  cuisine: [[-0.15, -1], [-0.95, 0.3], [0.55, 0.72], [-0.47, 1.27], [-0.5, 1.3], [-0.9, 1.4], [-1.05, 1.15]],
+  lit: [[1, -0.55], [0.98, -0.5], [0.92, -0.44], [-1.4, 1], [1.4, -0.85], [1.4, -0.2], [1.25, 0]],
+  chat: [[0.15, 1], [0.3, 0.85], [-0.7, 0.95], [0.75, 0.95], [0.97, 0.92], [0.65, 0.85], [0.65, 1.35]],
+  sablier: [[1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.38, 0.88], [1.04, 1.16]],
+  hibou: [[-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [1.25, -1.25], [0.57, -0.17]],
+  grimoire: [[0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.97, 1.32], [-0.14, 0.74]]
+};
+var placeAt = /* @__PURE__ */ __name((id) => (level) => FOYER_PLACES[id][Math.min(Math.max(level, 1), 7) - 1], "placeAt");
 var OVEN_H = 13;
 var cuisine = {
-  light: /* @__PURE__ */ __name(() => [OVEN_AT[0] - 0.02, OVEN_AT[1] + 0.12, 10, 16], "light"),
+  light: /* @__PURE__ */ __name((level) => {
+    const [u, v] = placeAt("cuisine")(level);
+    return [u - 0.14, v + 0.02, 10, 16];
+  }, "light"),
   layers: [{
-    at: OVEN_AT,
-    frame: [-24, -38, 46, 46],
+    at: placeAt("cuisine"),
+    frame: [-26, -40, 58, 54],
     draw: /* @__PURE__ */ __name((T2) => {
       const [x, y] = T2.p(0, 0, 7);
       const rx = 7.6;
@@ -2379,8 +3205,8 @@ var cuisine = {
       return T2.shadow(0, 0, 0.22, 0.2) + T2.box(-0.15, -0.15, 0.15, 0.15, 0, 7, STONE) + ln2(T2.p(-0.15, 0.15, 3.5), T2.p(0.15, 0.15, 3.5), joint, 0.6) + [-0.08, 0.02, 0.11].map((du, k) => ln2(T2.p(du, 0.15, k % 2 ? 0 : 3.5), T2.p(du, 0.15, k % 2 ? 3.5 : 7), joint, 0.6)).join("") + `<defs><linearGradient id="${T2.id("dome")}" x1="0" x2="1"><stop offset="0" stop-color="#E3B486"/><stop offset="1" stop-color="#A9724A"/></linearGradient></defs><path d="M${f22(x - rx)},${f22(y)} C${f22(x - rx)},${f22(y - OVEN_H * 1.3)} ${f22(x + rx)},${f22(y - OVEN_H * 1.3)} ${f22(x + rx)},${f22(y)} A${rx},${ry} 0 0 1 ${f22(x - rx)},${f22(y)} Z" fill="url(#${T2.id("dome")})" stroke="${OUT}" stroke-width="0.7"/><path d="M${f22(x - rx * 0.8)},${f22(y - 4)} Q${f22(x)},${f22(y - 1)} ${f22(x + rx * 0.8)},${f22(y - 4)} M${f22(x - rx * 0.55)},${f22(y - 8.4)} Q${f22(x)},${f22(y - 6.4)} ${f22(x + rx * 0.55)},${f22(y - 8.4)}" stroke="rgba(110,60,30,.35)" stroke-width="0.6" fill="none"/>` + T2.cyl(0.02, -0.04, 7 + OVEN_H * 0.9, 7 + OVEN_H * 0.9 + 5, 0.028, { top: "#5E3A2A", left: "#B87E52", right: "#8C5A34" }, "flue") + `<path d="M${f22(x - 5.6)},${f22(y + 1.8)} L${f22(x - 5.6)},${f22(y - 2.4)} A2.6,2.8 0 0 1 ${f22(x - 0.6)},${f22(y - 2.4)} L${f22(x - 0.6)},${f22(y + 2.6)} Z" fill="#3A1E14" stroke="#7A4E30" stroke-width="0.8"/>` + log(0.18, -0.12, 0) + log(0.235, -0.12, 0) + log(0.205, -0.12, 3.4) + ln2([px, py], [px - 9, py - 16], WOOD.right, 1.2) + `<ellipse cx="${f22(px + 1.4)}" cy="${f22(py + 0.6)}" rx="3" ry="1.4" fill="${WOOD.left}" transform="rotate(-30 ${f22(px + 1.4)} ${f22(py + 0.6)})"/>`;
     }, "draw")
   }, {
-    at: OVEN_AT,
-    frame: [-14, -54, 30, 58],
+    at: placeAt("cuisine"),
+    frame: [-20, -64, 36, 60],
     n: 8,
     fps: 5,
     draw: /* @__PURE__ */ __name((T2, level, f, n) => {
@@ -2395,15 +3221,14 @@ var cuisine = {
     }, "draw")
   }]
 };
-var HAMMOCK_AT = [0.9, -0.22];
 var lit = {
   layers: [{
-    at: HAMMOCK_AT,
-    frame: [-22, -32, 46, 46],
+    at: placeAt("lit"),
+    frame: [-26, -36, 50, 48],
     draw: /* @__PURE__ */ __name((T2) => T2.shadow(0, -0.5, 0.06, 0.2) + T2.shadow(0, 0.5, 0.06, 0.2) + T2.box(-0.025, -0.525, 0.025, -0.475, 0, 22, WOOD_DARK) + T2.box(-0.025, 0.475, 0.025, 0.525, 0, 22, WOOD_DARK) + ln2(T2.p(0, -0.5, 22), T2.p(0, -0.5, 24), WOOD_DARK.right, 1.4) + ln2(T2.p(0, 0.5, 22), T2.p(0, 0.5, 24), WOOD_DARK.right, 1.4), "draw")
   }, {
-    at: HAMMOCK_AT,
-    frame: [-20, -26, 42, 34],
+    at: placeAt("lit"),
+    frame: [-22, -26, 46, 42],
     n: 8,
     fps: 3,
     draw: /* @__PURE__ */ __name((T2, level, f, n) => {
@@ -2422,8 +3247,8 @@ var lit = {
 };
 var chat = {
   layers: [{
-    at: [0.46, 0.8],
-    frame: [-14, -16, 28, 20],
+    at: placeAt("chat"),
+    frame: [-16, -16, 32, 22],
     n: 8,
     fps: 3,
     draw: /* @__PURE__ */ __name((T2, level, f, n) => {
@@ -2453,8 +3278,8 @@ var chien = {
 };
 var sablier = {
   layers: [{
-    at: [0.92, 0.62],
-    frame: [-16, -46, 32, 52],
+    at: placeAt("sablier"),
+    frame: [-16, -48, 32, 52],
     n: 8,
     fps: 2,
     draw: /* @__PURE__ */ __name((T2, level, f, n) => {
@@ -2470,8 +3295,8 @@ var sablier = {
 };
 var hibou = {
   layers: [{
-    at: [-0.92, 0.36],
-    frame: [-16, -46, 32, 52],
+    at: placeAt("hibou"),
+    frame: [-16, -52, 32, 56],
     n: 8,
     fps: 3,
     draw: /* @__PURE__ */ __name((T2, level, f) => {
@@ -2484,15 +3309,14 @@ var hibou = {
     }, "draw")
   }]
 };
-var GRIMOIRE_AT = [0.88, 0.95];
 var grimoire = {
-  light: /* @__PURE__ */ __name(() => [GRIMOIRE_AT[0], GRIMOIRE_AT[1], 24, 22, "200,160,255"], "light"),
+  light: /* @__PURE__ */ __name((level) => [...placeAt("grimoire")(level), 24, 22, "200,160,255"], "light"),
   layers: [{
-    at: GRIMOIRE_AT,
-    frame: [-14, -22, 28, 28],
+    at: placeAt("grimoire"),
+    frame: [-16, -24, 32, 28],
     draw: /* @__PURE__ */ __name((T2) => T2.shadow(0, 0, 0.1, 0.2) + T2.box(-0.07, -0.07, 0.07, 0.07, 0, 3, STONE) + T2.cyl(0, 0, 3, 13, 0.035, STONE, "col") + T2.box(-0.06, -0.06, 0.06, 0.06, 13, 15, STONE) + T2.disc(0, 0, 15, 0.045, "rgba(200,160,255,.55)") + T2.disc(0, 0, 15, 0.025, "rgba(240,225,255,.8)"), "draw")
   }, {
-    at: GRIMOIRE_AT,
+    at: placeAt("grimoire"),
     frame: [-22, -50, 44, 36],
     n: 8,
     fps: 5,
@@ -2603,10 +3427,11 @@ __name(calques, "calques");
 
 // atelier/generateur_objets.mjs
 var import_torche = __toESM(require_torche(), 1);
+var import_foyer_annexes = __toESM(require_foyer_annexes(), 1);
 
 // bibliotheque/svg/batiments/batiments.json
 var batiments_default = {
-  _lisez_moi: "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0), centre de l'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Paliers d'hiver (paliers_hiver) : les mêmes images, les toits sous la neige, même ancre ; ete = le palier d'été qu'il remplace. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d'un objet), le cadre est élargi juste ce qu'il faut, l'ancre ne bouge pas : prendre le cadre noté ici.",
+  _lisez_moi: "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0), centre de l'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Paliers d'hiver (paliers_hiver) : les mêmes images, les toits sous la neige, même ancre ; ete = le palier d'été qu'il remplace. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d'un objet), le cadre est élargi juste ce qu'il faut, l'ancre ne bouge pas : prendre le cadre noté ici. Bois (bois) : les réserves de bois d'un palier, un calque au cadre du palier, posé sur lui (même ancre) quand le joueur a du bois : à moitié ou pleines, l'été et l'hiver (sans bois : rien).",
   paliers: {
     foyer_palier1: {
       nom: "Foyer — palier I",
@@ -2635,16 +3460,22 @@ var batiments_default = {
       ],
       lumieres: [
         {
-          u: 0,
-          v: 0,
+          u: 0.15,
+          v: 0.15,
           z: 12.5,
           rayon: 67.5
+        },
+        {
+          u: 0.68,
+          v: -0.32,
+          z: 17.5,
+          rayon: 15
         }
       ],
       fumees: [
         {
-          u: 0,
-          v: 0,
+          u: 0.15,
+          v: 0.15,
           z: 30
         }
       ]
@@ -2676,24 +3507,39 @@ var batiments_default = {
       ],
       lumieres: [
         {
-          u: 0.5,
-          v: 0.36,
-          z: 10,
-          rayon: 50
+          u: 0.83,
+          v: 0.38,
+          z: 12.5,
+          rayon: 55
+        },
+        {
+          u: 0.08,
+          v: -0.58,
+          z: 37.5,
+          rayon: 20
         }
       ],
       fumees: [
         {
-          u: 0.5,
-          v: 0.36,
-          z: 22.5
+          u: 0.83,
+          v: 0.38,
+          z: 37.5
         }
       ]
     },
     foyer_palier3: {
       nom: "Foyer — palier III",
       fichiers: [
-        "paliers/foyer/foyer_palier3.svg"
+        "paliers/foyer/foyer_palier3_1.svg",
+        "paliers/foyer/foyer_palier3_2.svg",
+        "paliers/foyer/foyer_palier3_3.svg",
+        "paliers/foyer/foyer_palier3_4.svg",
+        "paliers/foyer/foyer_palier3_5.svg",
+        "paliers/foyer/foyer_palier3_6.svg",
+        "paliers/foyer/foyer_palier3_7.svg",
+        "paliers/foyer/foyer_palier3_8.svg",
+        "paliers/foyer/foyer_palier3_9.svg",
+        "paliers/foyer/foyer_palier3_10.svg"
       ],
       cadre: [
         -95,
@@ -2702,19 +3548,35 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
+      ms_par_image: 83,
+      animations: [
+        "flame (10 images, 12/s)"
+      ],
       lumieres: [
         {
-          u: 0.55,
-          v: -0.07,
-          z: 17.5,
-          rayon: 27.5
+          u: -0.12,
+          v: 0.74,
+          z: 12.5,
+          rayon: 50
+        },
+        {
+          u: -0.34,
+          v: 0.18,
+          z: 26.25,
+          rayon: 20
+        },
+        {
+          u: -0.63,
+          v: 0.18,
+          z: 23.75,
+          rayon: 17.5
         }
       ],
       fumees: [
         {
-          u: 0.3,
-          v: -0.27,
-          z: 77.5
+          u: -0.12,
+          v: 0.74,
+          z: 32.5
         }
       ]
     },
@@ -2724,7 +3586,13 @@ var batiments_default = {
         "paliers/foyer/foyer_palier4_1.svg",
         "paliers/foyer/foyer_palier4_2.svg",
         "paliers/foyer/foyer_palier4_3.svg",
-        "paliers/foyer/foyer_palier4_4.svg"
+        "paliers/foyer/foyer_palier4_4.svg",
+        "paliers/foyer/foyer_palier4_5.svg",
+        "paliers/foyer/foyer_palier4_6.svg",
+        "paliers/foyer/foyer_palier4_7.svg",
+        "paliers/foyer/foyer_palier4_8.svg",
+        "paliers/foyer/foyer_palier4_9.svg",
+        "paliers/foyer/foyer_palier4_10.svg"
       ],
       cadre: [
         -140,
@@ -2733,56 +3601,42 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 333,
+      ms_par_image: 83,
       animations: [
-        "vapor (4 images, 3/s)"
+        "flame (10 images, 12/s)"
       ],
       lumieres: [
         {
-          u: -0.81,
-          v: 0.42,
-          z: 16.25,
-          rayon: 17.5
+          u: 1.28,
+          v: 0.92,
+          z: 12.5,
+          rayon: 55
         },
         {
-          u: -0.79,
-          v: 0.42,
-          z: 40,
-          rayon: 17.5
+          u: -0.75,
+          v: 0.13,
+          z: 50,
+          rayon: 20
         },
         {
-          u: 0.17,
-          v: 0.42,
-          z: 40,
+          u: -0.84,
+          v: 0.05,
+          z: 43.75,
           rayon: 17.5
-        },
+        }
+      ],
+      fumees: [
         {
-          u: 0.42,
-          v: -0.56,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: 0.19,
-          v: 0.42,
-          z: 16.25,
-          rayon: 17.5
-        },
-        {
-          u: 0.78,
-          v: 0.06,
-          z: 7.5,
-          rayon: 22.5
+          u: 1.28,
+          v: 0.92,
+          z: 35
         }
       ]
     },
     foyer_palier5: {
       nom: "Foyer — palier V",
       fichiers: [
-        "paliers/foyer/foyer_palier5_1.svg",
-        "paliers/foyer/foyer_palier5_2.svg",
-        "paliers/foyer/foyer_palier5_3.svg",
-        "paliers/foyer/foyer_palier5_4.svg"
+        "paliers/foyer/foyer_palier5.svg"
       ],
       cadre: [
         -140,
@@ -2791,52 +3645,43 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 333,
-      animations: [
-        "vapor (4 images, 3/s)"
-      ],
       lumieres: [
         {
-          u: -0.84,
-          v: 0.42,
-          z: 16.25,
+          u: -0.94,
+          v: 0.2,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: -0.82,
-          v: 0.42,
-          z: 40,
+          u: 0.03,
+          v: 0.2,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: -0.03,
-          v: 0.42,
-          z: 40,
+          u: 0.32,
+          v: -0.16,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: 0.22,
-          v: -0.42,
-          z: 40,
+          u: 0.32,
+          v: -0.76,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: -0.01,
-          v: 0.42,
-          z: 16.25,
-          rayon: 17.5
-        },
+          u: -0.07,
+          v: 0.7,
+          z: 32.5,
+          rayon: 20
+        }
+      ],
+      fumees: [
         {
-          u: 0.9,
-          v: -0.38,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: 0.9,
-          v: -0.38,
-          z: 76.25,
-          rayon: 17.5
+          u: -0.44,
+          v: -0.62,
+          z: 132.5
         }
       ]
     },
@@ -2846,61 +3691,60 @@ var batiments_default = {
         "paliers/foyer/foyer_palier6_1.svg",
         "paliers/foyer/foyer_palier6_2.svg",
         "paliers/foyer/foyer_palier6_3.svg",
-        "paliers/foyer/foyer_palier6_4.svg"
+        "paliers/foyer/foyer_palier6_4.svg",
+        "paliers/foyer/foyer_palier6_5.svg",
+        "paliers/foyer/foyer_palier6_6.svg",
+        "paliers/foyer/foyer_palier6_7.svg",
+        "paliers/foyer/foyer_palier6_8.svg"
       ],
       cadre: [
         -140,
         -250,
-        280,
+        340,
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 333,
+      ms_par_image: 250,
       animations: [
-        "vapor (4 images, 3/s)"
+        "beam (8 images, 4/s)"
       ],
       lumieres: [
         {
-          u: -0.87,
-          v: 0.5,
-          z: 16.25,
+          u: -1,
+          v: 0.3,
+          z: 32.5,
           rayon: 17.5
         },
         {
-          u: -0.85,
-          v: 0.5,
-          z: 40,
+          u: 0.05,
+          v: 0.3,
+          z: 32.5,
           rayon: 17.5
         },
         {
-          u: -0.27,
-          v: 0.5,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: -0.02,
-          v: -0.1,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: 0.74,
+          u: 0.15,
           v: -0.3,
-          z: 52.5,
+          z: 32.5,
           rayon: 17.5
         },
         {
-          u: 0.74,
-          v: -0.3,
-          z: 118.75,
-          rayon: 17.5
+          u: 0.92,
+          v: -0.92,
+          z: 175,
+          rayon: 45
         },
         {
-          u: -0.2,
-          v: 0.75,
-          z: 31.25,
-          rayon: 20
+          u: 0.4,
+          v: 0.6,
+          z: 32.5,
+          rayon: 22.5
+        }
+      ],
+      fumees: [
+        {
+          u: -0.55,
+          v: -0.5,
+          z: 116.25
         }
       ]
     },
@@ -2919,51 +3763,56 @@ var batiments_default = {
       cadre: [
         -140,
         -250,
-        282.5,
+        340,
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 250,
+      ms_par_image: 125,
       animations: [
-        "beam (8 images, 4/s)",
-        "vapor (4 images, 3/s)"
+        "beam, brasero (8 images, 8/s)"
       ],
       lumieres: [
         {
-          u: -0.87,
-          v: 0.48,
-          z: 16.25,
-          rayon: 17.5
+          u: 0.92,
+          v: -0.92,
+          z: 175,
+          rayon: 35
         },
         {
-          u: -0.85,
-          v: 0.48,
-          z: 40,
-          rayon: 17.5
+          u: -0.25,
+          v: 1.15,
+          z: 15,
+          rayon: 40
         },
         {
-          u: -0.29,
-          v: 0.48,
-          z: 40,
-          rayon: 17.5
+          u: -1.38,
+          v: 1.42,
+          z: 32.5,
+          rayon: 15
         },
         {
-          u: -0.04,
-          v: -0.12,
-          z: 40,
-          rayon: 17.5
+          u: 1.42,
+          v: 1.42,
+          z: 32.5,
+          rayon: 15
         },
         {
-          u: 0.42,
+          u: 1.42,
+          v: -0.98,
+          z: 32.5,
+          rayon: 15
+        }
+      ],
+      fumees: [
+        {
+          u: -0.55,
           v: -0.5,
-          z: 180,
-          rayon: 42.5
+          z: 116.25
         },
         {
-          u: -0.24,
-          v: 0.76,
-          z: 31.25,
-          rayon: 20
+          u: -0.25,
+          v: 1.15,
+          z: 27.5
         }
       ]
     },
@@ -4294,16 +5143,22 @@ var batiments_default = {
       ],
       lumieres: [
         {
-          u: 0,
-          v: 0,
+          u: 0.15,
+          v: 0.15,
           z: 12.5,
           rayon: 67.5
+        },
+        {
+          u: 0.68,
+          v: -0.32,
+          z: 17.5,
+          rayon: 15
         }
       ],
       fumees: [
         {
-          u: 0,
-          v: 0,
+          u: 0.15,
+          v: 0.15,
           z: 30
         }
       ]
@@ -4336,17 +5191,23 @@ var batiments_default = {
       ],
       lumieres: [
         {
-          u: 0.5,
-          v: 0.36,
-          z: 10,
-          rayon: 50
+          u: 0.83,
+          v: 0.38,
+          z: 12.5,
+          rayon: 55
+        },
+        {
+          u: 0.08,
+          v: -0.58,
+          z: 37.5,
+          rayon: 20
         }
       ],
       fumees: [
         {
-          u: 0.5,
-          v: 0.36,
-          z: 22.5
+          u: 0.83,
+          v: 0.38,
+          z: 37.5
         }
       ]
     },
@@ -4354,7 +5215,16 @@ var batiments_default = {
       nom: "Foyer — palier III, l'hiver",
       ete: "foyer_palier3",
       fichiers: [
-        "paliers_hiver/foyer/foyer_palier3_hiver.svg"
+        "paliers_hiver/foyer/foyer_palier3_hiver_1.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_2.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_3.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_4.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_5.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_6.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_7.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_8.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_9.svg",
+        "paliers_hiver/foyer/foyer_palier3_hiver_10.svg"
       ],
       cadre: [
         -95,
@@ -4363,19 +5233,35 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
+      ms_par_image: 83,
+      animations: [
+        "flame (10 images, 12/s)"
+      ],
       lumieres: [
         {
-          u: 0.55,
-          v: -0.07,
-          z: 17.5,
-          rayon: 27.5
+          u: -0.12,
+          v: 0.74,
+          z: 12.5,
+          rayon: 50
+        },
+        {
+          u: -0.34,
+          v: 0.18,
+          z: 26.25,
+          rayon: 20
+        },
+        {
+          u: -0.63,
+          v: 0.18,
+          z: 23.75,
+          rayon: 17.5
         }
       ],
       fumees: [
         {
-          u: 0.3,
-          v: -0.27,
-          z: 77.5
+          u: -0.12,
+          v: 0.74,
+          z: 32.5
         }
       ]
     },
@@ -4386,7 +5272,13 @@ var batiments_default = {
         "paliers_hiver/foyer/foyer_palier4_hiver_1.svg",
         "paliers_hiver/foyer/foyer_palier4_hiver_2.svg",
         "paliers_hiver/foyer/foyer_palier4_hiver_3.svg",
-        "paliers_hiver/foyer/foyer_palier4_hiver_4.svg"
+        "paliers_hiver/foyer/foyer_palier4_hiver_4.svg",
+        "paliers_hiver/foyer/foyer_palier4_hiver_5.svg",
+        "paliers_hiver/foyer/foyer_palier4_hiver_6.svg",
+        "paliers_hiver/foyer/foyer_palier4_hiver_7.svg",
+        "paliers_hiver/foyer/foyer_palier4_hiver_8.svg",
+        "paliers_hiver/foyer/foyer_palier4_hiver_9.svg",
+        "paliers_hiver/foyer/foyer_palier4_hiver_10.svg"
       ],
       cadre: [
         -140,
@@ -4395,46 +5287,35 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 333,
+      ms_par_image: 83,
       animations: [
-        "vapor (4 images, 3/s)"
+        "flame (10 images, 12/s)"
       ],
       lumieres: [
         {
-          u: -0.81,
-          v: 0.42,
-          z: 16.25,
-          rayon: 17.5
+          u: 1.28,
+          v: 0.92,
+          z: 12.5,
+          rayon: 55
         },
         {
-          u: -0.79,
-          v: 0.42,
-          z: 40,
-          rayon: 17.5
+          u: -0.75,
+          v: 0.13,
+          z: 50,
+          rayon: 20
         },
         {
-          u: 0.17,
-          v: 0.42,
-          z: 40,
+          u: -0.84,
+          v: 0.05,
+          z: 43.75,
           rayon: 17.5
-        },
+        }
+      ],
+      fumees: [
         {
-          u: 0.42,
-          v: -0.56,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: 0.19,
-          v: 0.42,
-          z: 16.25,
-          rayon: 17.5
-        },
-        {
-          u: 0.78,
-          v: 0.06,
-          z: 7.5,
-          rayon: 22.5
+          u: 1.28,
+          v: 0.92,
+          z: 35
         }
       ]
     },
@@ -4442,10 +5323,7 @@ var batiments_default = {
       nom: "Foyer — palier V, l'hiver",
       ete: "foyer_palier5",
       fichiers: [
-        "paliers_hiver/foyer/foyer_palier5_hiver_1.svg",
-        "paliers_hiver/foyer/foyer_palier5_hiver_2.svg",
-        "paliers_hiver/foyer/foyer_palier5_hiver_3.svg",
-        "paliers_hiver/foyer/foyer_palier5_hiver_4.svg"
+        "paliers_hiver/foyer/foyer_palier5_hiver.svg"
       ],
       cadre: [
         -140,
@@ -4454,52 +5332,43 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 333,
-      animations: [
-        "vapor (4 images, 3/s)"
-      ],
       lumieres: [
         {
-          u: -0.84,
-          v: 0.42,
-          z: 16.25,
+          u: -0.94,
+          v: 0.2,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: -0.82,
-          v: 0.42,
-          z: 40,
+          u: 0.03,
+          v: 0.2,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: -0.03,
-          v: 0.42,
-          z: 40,
+          u: 0.32,
+          v: -0.16,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: 0.22,
-          v: -0.42,
-          z: 40,
+          u: 0.32,
+          v: -0.76,
+          z: 33.75,
           rayon: 17.5
         },
         {
-          u: -0.01,
-          v: 0.42,
-          z: 16.25,
-          rayon: 17.5
-        },
+          u: -0.07,
+          v: 0.7,
+          z: 32.5,
+          rayon: 20
+        }
+      ],
+      fumees: [
         {
-          u: 0.9,
-          v: -0.38,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: 0.9,
-          v: -0.38,
-          z: 76.25,
-          rayon: 17.5
+          u: -0.44,
+          v: -0.62,
+          z: 132.5
         }
       ]
     },
@@ -4510,61 +5379,60 @@ var batiments_default = {
         "paliers_hiver/foyer/foyer_palier6_hiver_1.svg",
         "paliers_hiver/foyer/foyer_palier6_hiver_2.svg",
         "paliers_hiver/foyer/foyer_palier6_hiver_3.svg",
-        "paliers_hiver/foyer/foyer_palier6_hiver_4.svg"
+        "paliers_hiver/foyer/foyer_palier6_hiver_4.svg",
+        "paliers_hiver/foyer/foyer_palier6_hiver_5.svg",
+        "paliers_hiver/foyer/foyer_palier6_hiver_6.svg",
+        "paliers_hiver/foyer/foyer_palier6_hiver_7.svg",
+        "paliers_hiver/foyer/foyer_palier6_hiver_8.svg"
       ],
       cadre: [
         -140,
         -250,
-        280,
+        340,
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 333,
+      ms_par_image: 250,
       animations: [
-        "vapor (4 images, 3/s)"
+        "beam (8 images, 4/s)"
       ],
       lumieres: [
         {
-          u: -0.87,
-          v: 0.5,
-          z: 16.25,
+          u: -1,
+          v: 0.3,
+          z: 32.5,
           rayon: 17.5
         },
         {
-          u: -0.85,
-          v: 0.5,
-          z: 40,
+          u: 0.05,
+          v: 0.3,
+          z: 32.5,
           rayon: 17.5
         },
         {
-          u: -0.27,
-          v: 0.5,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: -0.02,
-          v: -0.1,
-          z: 40,
-          rayon: 17.5
-        },
-        {
-          u: 0.74,
+          u: 0.15,
           v: -0.3,
-          z: 52.5,
+          z: 32.5,
           rayon: 17.5
         },
         {
-          u: 0.74,
-          v: -0.3,
-          z: 118.75,
-          rayon: 17.5
+          u: 0.92,
+          v: -0.92,
+          z: 175,
+          rayon: 45
         },
         {
-          u: -0.2,
-          v: 0.75,
-          z: 31.25,
-          rayon: 20
+          u: 0.4,
+          v: 0.6,
+          z: 32.5,
+          rayon: 22.5
+        }
+      ],
+      fumees: [
+        {
+          u: -0.55,
+          v: -0.5,
+          z: 116.25
         }
       ]
     },
@@ -4584,51 +5452,56 @@ var batiments_default = {
       cadre: [
         -140,
         -250,
-        282.5,
+        340,
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 250,
+      ms_par_image: 125,
       animations: [
-        "beam (8 images, 4/s)",
-        "vapor (4 images, 3/s)"
+        "beam, brasero (8 images, 8/s)"
       ],
       lumieres: [
         {
-          u: -0.87,
-          v: 0.48,
-          z: 16.25,
-          rayon: 17.5
+          u: 0.92,
+          v: -0.92,
+          z: 175,
+          rayon: 35
         },
         {
-          u: -0.85,
-          v: 0.48,
-          z: 40,
-          rayon: 17.5
+          u: -0.25,
+          v: 1.15,
+          z: 15,
+          rayon: 40
         },
         {
-          u: -0.29,
-          v: 0.48,
-          z: 40,
-          rayon: 17.5
+          u: -1.38,
+          v: 1.42,
+          z: 32.5,
+          rayon: 15
         },
         {
-          u: -0.04,
-          v: -0.12,
-          z: 40,
-          rayon: 17.5
+          u: 1.42,
+          v: 1.42,
+          z: 32.5,
+          rayon: 15
         },
         {
-          u: 0.42,
+          u: 1.42,
+          v: -0.98,
+          z: 32.5,
+          rayon: 15
+        }
+      ],
+      fumees: [
+        {
+          u: -0.55,
           v: -0.5,
-          z: 180,
-          rayon: 42.5
+          z: 116.25
         },
         {
-          u: -0.24,
-          v: 0.76,
-          z: 31.25,
-          rayon: 20
+          u: -0.25,
+          v: 1.15,
+          z: 27.5
         }
       ]
     },
@@ -6047,13 +6920,13 @@ var batiments_default = {
         [
           -140,
           -250,
-          280,
+          340,
           330
         ],
         [
           -140,
           -250,
-          282.5,
+          340,
           330
         ]
       ]
@@ -6104,13 +6977,13 @@ var batiments_default = {
         [
           -140,
           -250,
-          280,
+          340,
           330
         ],
         [
           -140,
           -250,
-          282.5,
+          340,
           330
         ]
       ]
@@ -6161,13 +7034,13 @@ var batiments_default = {
         [
           -140,
           -250,
-          280,
+          340,
           330
         ],
         [
           -140,
           -250,
-          282.5,
+          340,
           330
         ]
       ]
@@ -9654,40 +10527,40 @@ var batiments_default = {
             "objets/foyer/cuisine/cuisine_calque1.svg"
           ],
           cadre: [
-            -30,
-            -47.5,
-            57.5,
-            58
+            -32.5,
+            -50,
+            72.5,
+            67.5
           ],
           derriere: false,
           place: {
             I: [
-              -0.84,
-              0.8
+              -0.15,
+              -1
             ],
             II: [
-              -0.84,
-              0.8
+              -0.95,
+              0.3
             ],
             III: [
-              -0.84,
-              0.8
+              0.55,
+              0.72
             ],
             IV: [
-              -1.26,
-              1.2
+              -0.47,
+              1.27
             ],
             V: [
-              -1.26,
-              1.2
+              -0.5,
+              1.3
             ],
             VI: [
-              -1.26,
-              1.2
+              -0.9,
+              1.4
             ],
             VII: [
-              -1.26,
-              1.2
+              -1.05,
+              1.15
             ]
           }
         },
@@ -9703,48 +10576,48 @@ var batiments_default = {
             "objets/foyer/cuisine/cuisine_calque2_8.svg"
           ],
           cadre: [
-            -17.5,
-            -67.5,
-            37.5,
-            72.5
+            -25,
+            -80,
+            45,
+            75
           ],
           derriere: false,
           ms_par_image: 200,
           place: {
             I: [
-              -0.84,
-              0.8
+              -0.15,
+              -1
             ],
             II: [
-              -0.84,
-              0.8
+              -0.95,
+              0.3
             ],
             III: [
-              -0.84,
-              0.8
+              0.55,
+              0.72
             ],
             IV: [
-              -1.26,
-              1.2
+              -0.47,
+              1.27
             ],
             V: [
-              -1.26,
-              1.2
+              -0.5,
+              1.3
             ],
             VI: [
-              -1.26,
-              1.2
+              -0.9,
+              1.4
             ],
             VII: [
-              -1.26,
-              1.2
+              -1.05,
+              1.15
             ]
           }
         }
       ],
       lumiere: {
-        u: -1.29,
-        v: 1.38,
+        u: -0.61,
+        v: 1.29,
         z: 12.5,
         rayon: 20
       }
@@ -9759,40 +10632,40 @@ var batiments_default = {
             "objets/foyer/lit/lit_calque1.svg"
           ],
           cadre: [
-            -27.5,
-            -41.5,
-            57.5,
-            59
+            -32.5,
+            -45,
+            62.5,
+            60
           ],
           derriere: false,
           place: {
             I: [
-              0.9,
-              -0.22
+              1,
+              -0.55
             ],
             II: [
-              0.9,
-              -0.22
+              0.98,
+              -0.5
             ],
             III: [
-              0.9,
-              -0.22
+              0.92,
+              -0.44
             ],
             IV: [
-              1.35,
-              -0.33
+              -1.4,
+              1
             ],
             V: [
-              1.35,
-              -0.33
+              1.4,
+              -0.85
             ],
             VI: [
-              1.35,
-              -0.33
+              1.4,
+              -0.2
             ],
             VII: [
-              1.35,
-              -0.33
+              1.25,
+              0
             ]
           }
         },
@@ -9808,41 +10681,41 @@ var batiments_default = {
             "objets/foyer/lit/lit_calque2_8.svg"
           ],
           cadre: [
-            -25,
-            -33,
-            52.5,
-            43
+            -27.5,
+            -32.5,
+            57.5,
+            52.5
           ],
           derriere: false,
           ms_par_image: 333,
           place: {
             I: [
-              0.9,
-              -0.22
+              1,
+              -0.55
             ],
             II: [
-              0.9,
-              -0.22
+              0.98,
+              -0.5
             ],
             III: [
-              0.9,
-              -0.22
+              0.92,
+              -0.44
             ],
             IV: [
-              1.35,
-              -0.33
+              -1.4,
+              1
             ],
             V: [
-              1.35,
-              -0.33
+              1.4,
+              -0.85
             ],
             VI: [
-              1.35,
-              -0.33
+              1.4,
+              -0.2
             ],
             VII: [
-              1.35,
-              -0.33
+              1.25,
+              0
             ]
           }
         }
@@ -9865,41 +10738,41 @@ var batiments_default = {
             "objets/foyer/chat/chat_8.svg"
           ],
           cadre: [
-            -17.5,
             -20,
-            35,
-            25
+            -20,
+            40,
+            27.5
           ],
           derriere: false,
           ms_par_image: 333,
           place: {
             I: [
-              0.46,
-              0.8
+              0.15,
+              1
             ],
             II: [
-              0.46,
-              0.8
+              0.3,
+              0.85
             ],
             III: [
-              0.46,
-              0.8
+              -0.7,
+              0.95
             ],
             IV: [
-              0.69,
-              1.2
+              0.75,
+              0.95
             ],
             V: [
-              0.69,
-              1.2
+              0.97,
+              0.92
             ],
             VI: [
-              0.69,
-              1.2
+              0.65,
+              0.85
             ],
             VII: [
-              0.69,
-              1.2
+              0.65,
+              1.35
             ]
           }
         }
@@ -9980,7 +10853,7 @@ var batiments_default = {
           ],
           cadre: [
             -20,
-            -57.5,
+            -60,
             40,
             65
           ],
@@ -9988,16 +10861,16 @@ var batiments_default = {
           ms_par_image: 500,
           place: {
             V: [
-              1.38,
-              0.93
+              1.25,
+              0.25
             ],
             VI: [
               1.38,
-              0.93
+              0.88
             ],
             VII: [
-              1.38,
-              0.93
+              1.04,
+              1.16
             ]
           }
         }
@@ -10021,24 +10894,24 @@ var batiments_default = {
           ],
           cadre: [
             -20,
-            -57.5,
+            -65,
             40,
-            65
+            70
           ],
           derriere: false,
           ms_par_image: 333,
           place: {
             V: [
-              -1.38,
-              0.54
+              -1.18,
+              1.28
             ],
             VI: [
-              -1.38,
-              0.54
+              1.25,
+              -1.25
             ],
             VII: [
-              -1.38,
-              0.54
+              0.57,
+              -0.17
             ]
           }
         }
@@ -10054,24 +10927,24 @@ var batiments_default = {
             "objets/foyer/grimoire/grimoire_calque1.svg"
           ],
           cadre: [
-            -17.5,
-            -27.5,
-            35,
+            -20,
+            -30,
+            40,
             35
           ],
           derriere: false,
           place: {
             V: [
-              1.32,
-              1.42
+              0.73,
+              1.38
             ],
             VI: [
-              1.32,
-              1.42
+              0.97,
+              1.32
             ],
             VII: [
-              1.32,
-              1.42
+              -0.14,
+              0.74
             ]
           }
         },
@@ -10097,23 +10970,23 @@ var batiments_default = {
           mouvement: true,
           place: {
             V: [
-              1.32,
-              1.42
+              0.73,
+              1.38
             ],
             VI: [
-              1.32,
-              1.42
+              0.97,
+              1.32
             ],
             VII: [
-              1.32,
-              1.42
+              -0.14,
+              0.74
             ]
           }
         }
       ],
       lumiere: {
-        u: 1.32,
-        v: 1.42,
+        u: 0.73,
+        v: 1.38,
         z: 30,
         rayon: 27.5
       }
@@ -10862,13 +11735,13 @@ var batiments_default = {
         [
           -140,
           -250,
-          280,
+          340,
           330
         ],
         [
           -140,
           -250,
-          282.5,
+          340,
           330
         ]
       ],
@@ -10920,13 +11793,13 @@ var batiments_default = {
         [
           -140,
           -250,
-          280,
+          340,
           330
         ],
         [
           -140,
           -250,
-          282.5,
+          340,
           330
         ]
       ],
@@ -10965,6 +11838,274 @@ var batiments_default = {
       "lierre"
     ],
     outil: "teintes/teinter.mjs : tintSvg(svg, idDeTeinte)"
+  },
+  bois: {
+    foyer_palier1: {
+      nom: "Foyer — palier I, réserves de bois",
+      batiment: "foyer",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      etats: {
+        moitie: {
+          nom: "Foyer — palier I, réserves de bois à moitié",
+          fichiers: [
+            "bois/foyer/foyer_palier1_bois_moitie.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier I, réserves de bois pleines",
+          fichiers: [
+            "bois/foyer/foyer_palier1_bois_plein.svg"
+          ]
+        }
+      },
+      hiver: {
+        moitie: {
+          nom: "Foyer — palier I, réserves de bois à moitié, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier1_bois_moitie_hiver.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier I, réserves de bois pleines, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier1_bois_plein_hiver.svg"
+          ]
+        }
+      }
+    },
+    foyer_palier2: {
+      nom: "Foyer — palier II, réserves de bois",
+      batiment: "foyer",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      etats: {
+        moitie: {
+          nom: "Foyer — palier II, réserves de bois à moitié",
+          fichiers: [
+            "bois/foyer/foyer_palier2_bois_moitie.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier II, réserves de bois pleines",
+          fichiers: [
+            "bois/foyer/foyer_palier2_bois_plein.svg"
+          ]
+        }
+      },
+      hiver: {
+        moitie: {
+          nom: "Foyer — palier II, réserves de bois à moitié, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier2_bois_moitie_hiver.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier II, réserves de bois pleines, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier2_bois_plein_hiver.svg"
+          ]
+        }
+      }
+    },
+    foyer_palier3: {
+      nom: "Foyer — palier III, réserves de bois",
+      batiment: "foyer",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      etats: {
+        moitie: {
+          nom: "Foyer — palier III, réserves de bois à moitié",
+          fichiers: [
+            "bois/foyer/foyer_palier3_bois_moitie.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier III, réserves de bois pleines",
+          fichiers: [
+            "bois/foyer/foyer_palier3_bois_plein.svg"
+          ]
+        }
+      },
+      hiver: {
+        moitie: {
+          nom: "Foyer — palier III, réserves de bois à moitié, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier3_bois_moitie_hiver.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier III, réserves de bois pleines, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier3_bois_plein_hiver.svg"
+          ]
+        }
+      }
+    },
+    foyer_palier4: {
+      nom: "Foyer — palier IV, réserves de bois",
+      batiment: "foyer",
+      cadre: [
+        -140,
+        -250,
+        280,
+        330
+      ],
+      etats: {
+        moitie: {
+          nom: "Foyer — palier IV, réserves de bois à moitié",
+          fichiers: [
+            "bois/foyer/foyer_palier4_bois_moitie.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier IV, réserves de bois pleines",
+          fichiers: [
+            "bois/foyer/foyer_palier4_bois_plein.svg"
+          ]
+        }
+      },
+      hiver: {
+        moitie: {
+          nom: "Foyer — palier IV, réserves de bois à moitié, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier4_bois_moitie_hiver.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier IV, réserves de bois pleines, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier4_bois_plein_hiver.svg"
+          ]
+        }
+      }
+    },
+    foyer_palier5: {
+      nom: "Foyer — palier V, réserves de bois",
+      batiment: "foyer",
+      cadre: [
+        -140,
+        -250,
+        280,
+        330
+      ],
+      etats: {
+        moitie: {
+          nom: "Foyer — palier V, réserves de bois à moitié",
+          fichiers: [
+            "bois/foyer/foyer_palier5_bois_moitie.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier V, réserves de bois pleines",
+          fichiers: [
+            "bois/foyer/foyer_palier5_bois_plein.svg"
+          ]
+        }
+      },
+      hiver: {
+        moitie: {
+          nom: "Foyer — palier V, réserves de bois à moitié, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier5_bois_moitie_hiver.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier V, réserves de bois pleines, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier5_bois_plein_hiver.svg"
+          ]
+        }
+      }
+    },
+    foyer_palier6: {
+      nom: "Foyer — palier VI, réserves de bois",
+      batiment: "foyer",
+      cadre: [
+        -140,
+        -250,
+        340,
+        330
+      ],
+      etats: {
+        moitie: {
+          nom: "Foyer — palier VI, réserves de bois à moitié",
+          fichiers: [
+            "bois/foyer/foyer_palier6_bois_moitie.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier VI, réserves de bois pleines",
+          fichiers: [
+            "bois/foyer/foyer_palier6_bois_plein.svg"
+          ]
+        }
+      },
+      hiver: {
+        moitie: {
+          nom: "Foyer — palier VI, réserves de bois à moitié, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier6_bois_moitie_hiver.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier VI, réserves de bois pleines, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier6_bois_plein_hiver.svg"
+          ]
+        }
+      }
+    },
+    foyer_palier7: {
+      nom: "Foyer — palier VII, réserves de bois",
+      batiment: "foyer",
+      cadre: [
+        -140,
+        -250,
+        340,
+        330
+      ],
+      etats: {
+        moitie: {
+          nom: "Foyer — palier VII, réserves de bois à moitié",
+          fichiers: [
+            "bois/foyer/foyer_palier7_bois_moitie.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier VII, réserves de bois pleines",
+          fichiers: [
+            "bois/foyer/foyer_palier7_bois_plein.svg"
+          ]
+        }
+      },
+      hiver: {
+        moitie: {
+          nom: "Foyer — palier VII, réserves de bois à moitié, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier7_bois_moitie_hiver.svg"
+          ]
+        },
+        plein: {
+          nom: "Foyer — palier VII, réserves de bois pleines, l'hiver",
+          fichiers: [
+            "bois/foyer/foyer_palier7_bois_plein_hiver.svg"
+          ]
+        }
+      }
+    }
   }
 };
 
@@ -10986,6 +12127,7 @@ var calquesDe = /* @__PURE__ */ __name((id) => {
   return cache.get(id);
 }, "calquesDe");
 function objet(id, calque = 1, palier, image = 1) {
+  if (import_foyer_annexes.default.ANNEXES[id]) return annexe(id, calque, palier, image);
   const cs = calquesDe(id), c = cs[calque - 1];
   if (!c) throw new Error(`${id} : calque ${calque} (de 1 à ${cs.length})`);
   if (!c.levels.includes(+palier)) throw new Error(`${id} : palier ${palier} (${c.levels.map((l) => ROMAN[l - 1]).join(", ")})`);
@@ -10995,6 +12137,15 @@ function objet(id, calque = 1, palier, image = 1) {
   return { svg: svgOf(cadre, `<g transform="scale(${K})">${vr.frames[image - 1]}</g>`), cadre, ms_par_image: c.layer.n ? Math.round(1e3 / c.layer.fps) : null };
 }
 __name(objet, "objet");
+function annexe(id, calque, palier, image) {
+  const a = import_foyer_annexes.default.ANNEXES[id], c = a.calques[calque - 1];
+  if (!c) throw new Error(`${id} : calque ${calque} (de 1 à ${a.calques.length})`);
+  if (!a.paliers.includes(+palier)) throw new Error(`${id} : palier ${palier} (${a.paliers.map((l) => ROMAN[l - 1]).join(", ")})`);
+  if (!(image >= 1 && image <= c.n)) throw new Error(`${id} : image ${image} (de 1 à ${c.n})`);
+  return { svg: import_foyer_annexes.default.image(id, calque - 1, image - 1), cadre: c.cadre, ms_par_image: c.ms };
+}
+__name(annexe, "annexe");
+var nomAnnexe = /* @__PURE__ */ __name((id, k, f) => id + (import_foyer_annexes.default.ANNEXES[id].calques.length > 1 ? `_calque${k + 1}` : "") + (import_foyer_annexes.default.ANNEXES[id].calques[k].n > 1 ? `_${f + 1}` : ""), "nomAnnexe");
 var CADRE_TORCHE = [-50, -115, 100, 140];
 function torche(etat = "allumee", image = 1) {
   if (etat !== "allumee" && etat !== "eteinte") throw new Error(`torche : état ${etat} (allumee ou eteinte)`);
@@ -11010,6 +12161,12 @@ var LUMIERE_TORCHE = import_torche.default.LUMIERE;
 function liste() {
   const out = [];
   for (const [id, site] of Object.entries(SITE)) {
+    if (import_foyer_annexes.default.ANNEXES[id]) {
+      import_foyer_annexes.default.ANNEXES[id].calques.forEach((c) => {
+        for (let f = 0; f < c.n; f++) out.push({ fichier: `batiments/objets/${site}/${id}/${nomAnnexe(id, c.k, f)}.svg`, fonction: "objet", args: [id, c.k + 1, import_foyer_annexes.default.ANNEXES[id].paliers[0], f + 1] });
+      });
+      continue;
+    }
     for (const c of calquesDe(id)) for (const vr of c.variantes) vr.frames.forEach((_, f) => out.push({ fichier: `batiments/objets/${site}/${id}/${c.nom(vr, f)}.svg`, fonction: "objet", args: [id, c.k + 1, vr.from, f + 1] }));
   }
   for (let n = 1; n <= TORCHE.allumee; n++) out.push({ fichier: `decor/defenses/torche_allumee_${n}.svg`, fonction: "torche", args: ["allumee", n] });
@@ -11023,6 +12180,7 @@ export {
   OBJETS,
   TORCHE,
   liste,
+  nomAnnexe,
   objet,
   torche,
   torcheIcone

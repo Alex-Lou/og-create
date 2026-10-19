@@ -705,8 +705,8 @@ function tasBois(u, v, n, rangs, g, { r = 3.4, l = 0.3, axe = 'v', droit = false
 // La place du tas à chaque palier (au calme, rien devant lui) : [u, v, n, rangs] à moitié et plein, ses options ; devant :
 // ce que le calque repeint par-dessus les bûches
 const BOIS = [
-  { moitie: [1.12, 0.42, 3, 2], plein: [1.06, 0.42, 4, 3] },
-  { moitie: [0.66, -0.45, 3, 2], plein: [0.6, -0.45, 4, 3] },
+  { moitie: [0.72, 0.68, 3, 2], plein: [0.66, 0.68, 4, 3] },
+  { moitie: [0.5, -0.7, 3, 2], plein: [0.45, -0.7, 4, 3] },
   // (III : contre le mur de droite, les bouts vers nous à droite)
   { moitie: [0.5, -0.5, 3, 2], plein: [0.5, -0.56, 4, 3], options: { axe: 'u', l: 0.26 } },
   { moitie: [0.84, 0.25, 3, 2], plein: [0.78, 0.25, 4, 3] },

@@ -1493,14 +1493,25 @@ const athanor = {
 };
 
 /* ---------- Foyer ---------- */
+// Les places des annexes du Foyer, palier par palier (I à VII), en cases autour du centre du bâtiment, déjà à l'échelle
+// de son emprise (choix de l'auteur, 19 oct. : recalées autour du Foyer redessiné ; aux paliers où un objet ne se vend
+// pas, celle du premier où il se vend)
+export const FOYER_PLACES = {
+  cuisine: [[-0.15, -1.0], [-0.95, 0.3], [0.55, 0.72], [-0.47, 1.27], [-0.5, 1.3], [-0.9, 1.4], [-1.05, 1.15]],
+  lit: [[1.0, -0.55], [0.98, -0.5], [0.92, -0.44], [-1.4, 1.0], [1.4, -0.85], [1.4, -0.2], [1.25, 0.0]],
+  chat: [[0.15, 1.0], [0.3, 0.85], [-0.7, 0.95], [0.75, 0.95], [0.97, 0.92], [0.65, 0.85], [0.65, 1.35]],
+  sablier: [[1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.38, 0.88], [1.04, 1.16]],
+  hibou: [[-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [1.25, -1.25], [0.57, -0.17]],
+  grimoire: [[0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.97, 1.32], [-0.14, 0.74]]
+};
+const placeAt = id => level => FOYER_PLACES[id][Math.min(Math.max(level, 1), 7) - 1];
 // Cuisine : four à pain de pierre et d'argile, bouche rougeoyante, pelle à enfourner, bûches ; il fume
-const OVEN_AT = [-0.84, 0.8];
 const OVEN_H = 13;
 const cuisine = {
-  light: () => [OVEN_AT[0] - 0.02, OVEN_AT[1] + 0.12, 10, 16],
+  light: level => { const [u, v] = placeAt('cuisine')(level); return [u - 0.14, v + 0.02, 10, 16]; },
   layers: [{
-    at: OVEN_AT,
-    frame: [-24, -38, 46, 46],
+    at: placeAt('cuisine'),
+    frame: [-26, -40, 58, 54],
     draw: T => {
       const [x, y] = T.p(0, 0, 7);
       const rx = 7.6;
@@ -1522,8 +1533,8 @@ const cuisine = {
         + ln([px, py], [px - 9, py - 16], WOOD.right, 1.2) + `<ellipse cx="${f2(px + 1.4)}" cy="${f2(py + 0.6)}" rx="3" ry="1.4" fill="${WOOD.left}" transform="rotate(-30 ${f2(px + 1.4)} ${f2(py + 0.6)})"/>`;
     }
   }, {
-    at: OVEN_AT,
-    frame: [-14, -54, 30, 58],
+    at: placeAt('cuisine'),
+    frame: [-20, -64, 36, 60],
     n: 8,
     fps: 5,
     draw: (T, level, f, n) => {
@@ -1539,17 +1550,16 @@ const cuisine = {
   }]
 };
 // Lit douillet : un hamac rayé entre deux poteaux, coussin et livre ouvert ; il se balance
-const HAMMOCK_AT = [0.9, -0.22];
 const lit = {
   layers: [{
-    at: HAMMOCK_AT,
-    frame: [-22, -32, 46, 46],
+    at: placeAt('lit'),
+    frame: [-26, -36, 50, 48],
     draw: T => T.shadow(0, -0.5, 0.06, 0.2) + T.shadow(0, 0.5, 0.06, 0.2)
       + T.box(-0.025, -0.525, 0.025, -0.475, 0, 22, WOOD_DARK) + T.box(-0.025, 0.475, 0.025, 0.525, 0, 22, WOOD_DARK)
       + ln(T.p(0, -0.5, 22), T.p(0, -0.5, 24), WOOD_DARK.right, 1.4) + ln(T.p(0, 0.5, 22), T.p(0, 0.5, 24), WOOD_DARK.right, 1.4)
   }, {
-    at: HAMMOCK_AT,
-    frame: [-20, -26, 42, 34],
+    at: placeAt('lit'),
+    frame: [-22, -26, 46, 42],
     n: 8,
     fps: 3,
     draw: (T, level, f, n) => {
@@ -1573,8 +1583,8 @@ const lit = {
 // Chat roulé en boule sur un coussin près de la porte : il respire, le bout de la queue bat, une oreille frémit
 const chat = {
   layers: [{
-    at: [0.46, 0.8],
-    frame: [-14, -16, 28, 20],
+    at: placeAt('chat'),
+    frame: [-16, -16, 32, 22],
     n: 8,
     fps: 3,
     draw: (T, level, f, n) => {
@@ -1630,8 +1640,8 @@ const chien = {
 // Grand sablier sur un guéridon : le sable s'écoule et monte en dune dans l'ampoule du bas (palier V)
 const sablier = {
   layers: [{
-    at: [0.92, 0.62],
-    frame: [-16, -46, 32, 52],
+    at: placeAt('sablier'),
+    frame: [-16, -48, 32, 52],
     n: 8,
     fps: 2,
     draw: (T, level, f, n) => {
@@ -1659,8 +1669,8 @@ const sablier = {
 // Hibou sur son perchoir : il tourne la tête, cligne de ses grands yeux d'or (palier VI)
 const hibou = {
   layers: [{
-    at: [-0.92, 0.36],
-    frame: [-16, -46, 32, 52],
+    at: placeAt('hibou'),
+    frame: [-16, -52, 32, 56],
     n: 8,
     fps: 3,
     draw: (T, level, f) => {
@@ -1691,17 +1701,16 @@ const hibou = {
 };
 // Grimoire volant : il flotte au-dessus de son lutrin de pierre, ses pages tournent seules, des runes s'en échappent ;
 // il luit la nuit (palier VII)
-const GRIMOIRE_AT = [0.88, 0.95];
 const grimoire = {
-  light: () => [GRIMOIRE_AT[0], GRIMOIRE_AT[1], 24, 22, '200,160,255'],
+  light: level => [...placeAt('grimoire')(level), 24, 22, '200,160,255'],
   layers: [{
-    at: GRIMOIRE_AT,
-    frame: [-14, -22, 28, 28],
+    at: placeAt('grimoire'),
+    frame: [-16, -24, 32, 28],
     draw: T => T.shadow(0, 0, 0.1, 0.2)
       + T.box(-0.07, -0.07, 0.07, 0.07, 0, 3, STONE) + T.cyl(0, 0, 3, 13, 0.035, STONE, 'col') + T.box(-0.06, -0.06, 0.06, 0.06, 13, 15, STONE)
       + T.disc(0, 0, 15, 0.045, 'rgba(200,160,255,.55)') + T.disc(0, 0, 15, 0.025, 'rgba(240,225,255,.8)')
   }, {
-    at: GRIMOIRE_AT,
+    at: placeAt('grimoire'),
     frame: [-22, -50, 44, 36],
     n: 8,
     fps: 5,
@@ -1796,6 +1805,8 @@ const spread = level => (level >= BIG_FROM ? 1.5 : 1);
 // écartée de moitié en plus quand l'emprise passe à 3 × 3
 function placeOf(layer, level) {
   const at = layer.at;
+  // (une place par palier, déjà à l'échelle de l'emprise : les annexes du Foyer, FOYER_PLACES)
+  if (typeof at === 'function') return at(level);
   const base = typeof at[0] === 'number' ? at : at[Math.min(level, 3)] || at[2] || at[1];
   const k = spread(level);
   return [base[0] * k, base[1] * k];
@@ -1836,7 +1847,9 @@ export function itemLight(id, level) {
   const item = SHOP_SPRITES[id];
   if (!item || !item.light) return null;
   const [u, v, z, r, color] = item.light(level);
-  return [u * spread(level), v * spread(level), z, r, color];
+  // (une annexe du Foyer a déjà sa place à l'échelle de l'emprise)
+  const k = typeof item.layers[0].at === 'function' ? 1 : spread(level);
+  return [u * k, v * k, z, r, color];
 }
 
 // Vignette d'un article pour la boutique : tous ses calques (première image), cadrés au plus juste

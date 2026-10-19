@@ -157932,10 +157932,10 @@
     "svg/batiments/objets/foyer/chat/chat_8.svg"
    ],
    "cadre": [
-    -17.5,
     -20,
-    35,
-    25
+    -20,
+    40,
+    27.5
    ],
    "ms_par_image": 333,
    "parcours": "evolutions",
@@ -157977,10 +157977,10 @@
     "svg/batiments/objets/foyer/cuisine/cuisine_calque1.svg"
    ],
    "cadre": [
-    -30,
-    -47.5,
-    57.5,
-    58
+    -32.5,
+    -50,
+    72.5,
+    67.5
    ],
    "parcours": "evolutions",
    "statut": "ok"
@@ -158002,10 +158002,10 @@
     "svg/batiments/objets/foyer/cuisine/cuisine_calque2_8.svg"
    ],
    "cadre": [
-    -17.5,
-    -67.5,
-    37.5,
-    72.5
+    -25,
+    -80,
+    45,
+    75
    ],
    "ms_par_image": 200,
    "parcours": "evolutions",
@@ -158021,9 +158021,9 @@
     "svg/batiments/objets/foyer/grimoire/grimoire_calque1.svg"
    ],
    "cadre": [
-    -17.5,
-    -27.5,
-    35,
+    -20,
+    -30,
+    40,
     35
    ],
    "parcours": "evolutions",
@@ -158073,9 +158073,9 @@
    ],
    "cadre": [
     -20,
-    -57.5,
+    -65,
     40,
-    65
+    70
    ],
    "ms_par_image": 333,
    "parcours": "evolutions",
@@ -158091,10 +158091,10 @@
     "svg/batiments/objets/foyer/lit/lit_calque1.svg"
    ],
    "cadre": [
-    -27.5,
-    -41.5,
-    57.5,
-    59
+    -32.5,
+    -45,
+    62.5,
+    60
    ],
    "parcours": "evolutions",
    "statut": "ok"
@@ -158116,10 +158116,10 @@
     "svg/batiments/objets/foyer/lit/lit_calque2_8.svg"
    ],
    "cadre": [
-    -25,
-    -33,
-    52.5,
-    43
+    -27.5,
+    -32.5,
+    57.5,
+    52.5
    ],
    "ms_par_image": 333,
    "parcours": "evolutions",
@@ -158143,7 +158143,7 @@
    ],
    "cadre": [
     -20,
-    -57.5,
+    -60,
     40,
     65
    ],

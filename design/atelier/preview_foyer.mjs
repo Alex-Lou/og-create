@@ -1,6 +1,6 @@
 // Le Foyer redessiné dans la bibliothèque (choix de l'auteur, 18 oct. : la refonte des bâtiments, un à la fois, le Foyer
 // d'abord) : ses entrées de batiments.json (paliers, l'hiver, les cadres de ses skins et de ses pièces rares, ses
-// réserves de bois), puis ses
+// réserves de bois, ses annexes, et le chantier commun aux sept bâtiments), puis ses
 // fichiers, écrits par le générateur du jeu (generateur_batiments.mjs, qui dessine le Foyer avec foyer.js) ; les
 // fichiers que le nouveau découpage en images rend inutiles sont retirés (accord de l'auteur, 18 oct.).
 // node design/atelier/preview_foyer.mjs
@@ -35,6 +35,20 @@ const boisDe = (lv, hiver) => Object.fromEntries(FOYER.BOIS_ETATS.map(etat => [e
 B.bois = Object.fromEntries(FOYER.PALIERS.map((P, i) => [`foyer_palier${i + 1}`, { nom: `Foyer — palier ${ROMAN[i]}, réserves de bois`, batiment: 'foyer', cadre: P.cadre, etats: boisDe(i + 1, false), hiver: boisDe(i + 1, true) }]));
 const LISEZ = " Bois (bois) : les réserves de bois d'un palier, un calque au cadre du palier, posé sur lui (même ancre) quand le joueur a du bois : à moitié ou pleines, l'été et l'hiver (sans bois : rien).";
 if (!B._lisez_moi.includes(LISEZ)) B._lisez_moi += LISEZ;
+// (les annexes redessinées : leurs calques, leurs cadres, leurs places à chaque palier où elles se vendent, la lumière
+// du jeu au palier IV ; le chien garde les siennes, le jeu le cache pour l'instant)
+const { FOYER_PLACES, itemLight } = await import('./port/src/world/shopSprites.js');
+const ANNEXES = require('./foyer_annexes.js').ANNEXES;
+const r2 = n => Math.round(n * 100) / 100;
+for (const [id, a] of Object.entries(ANNEXES)) {
+  const e = B.objets[id], lt = itemLight(id, 4);
+  e.calques = a.calques.map(c => ({
+    fichiers: Array.from({ length: c.n }, (_, k) => `objets/foyer/${id}/${id}${a.calques.length > 1 ? `_calque${c.k + 1}` : ''}${c.n > 1 ? `_${k + 1}` : ''}.svg`),
+    cadre: c.cadre, derriere: false, ...(c.n > 1 ? { ms_par_image: c.ms } : {}), ...(c.mouvement ? { mouvement: true } : {}),
+    place: Object.fromEntries(a.paliers.map(lv => [ROMAN[lv - 1], FOYER_PLACES[id][lv - 1]]))
+  }));
+  if (lt) e.lumiere = { u: r2(lt[0]), v: r2(lt[1]), z: r2(lt[2] * 1.25), rayon: r2(lt[3] * 1.25) };
+}
 fs.writeFileSync(INDEX, JSON.stringify(B, null, 1) + '\n');
 
 // 2. les fichiers, par le générateur (lu après l'index : il y prend ses cadres)
@@ -44,6 +58,9 @@ let n = 0;
 for (const hiver of [false, true]) for (let lv = 1; lv <= 7; lv++) noms(lv, hiver).forEach((rel, k) => { ecrire(rel, G.palier('foyer', lv, k + 1, hiver).svg); n++; });
 for (const [id, e] of Object.entries(B.skins)) if (e.batiment === 'foyer') e.fichiers.forEach(rel => { ecrire(rel, G.skin(id, +rel.match(/palier(\d)/)[1]).svg); n++; });
 for (const [id, e] of Object.entries(B.pieces_rares)) if (e.batiment === 'foyer') e.fichiers.forEach((rel, k) => { ecrire(rel, G.pieceRare(id, k + 1).svg); n++; });
+const GO = await import('./generateur_objets.mjs');
+for (const [id, a] of Object.entries(ANNEXES)) a.calques.forEach((c, k) => B.objets[id].calques[k].fichiers.forEach((rel, f) => { ecrire(rel, GO.objet(id, k + 1, a.paliers[0], f + 1).svg); n++; }));
+B.chantier.fichiers.forEach((rel, k) => { ecrire(rel, G.chantier(k + 1).svg); n++; });
 for (const [key, e] of Object.entries(B.bois)) for (const [hiver, etats] of [[false, e.etats], [true, e.hiver]]) for (const [etat, x] of Object.entries(etats)) { ecrire(x.fichiers[0], G.bois('foyer', +key.match(/palier(\d)/)[1], etat, hiver).svg); n++; }
 
 // 3. les fichiers devenus inutiles

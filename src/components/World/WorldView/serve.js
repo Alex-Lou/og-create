@@ -25,6 +25,7 @@ import { CLIMATE_NAMES } from '@/world/climates';
 import { gatheredBetween } from '@/world/pending';
 import { dueIn } from '@/world/due';
 import { TOASTS } from '@/texts/world/screens/alerts';
+import { withoutHidden } from '@/world/shop';
 
 export default {
   watch: {
@@ -91,11 +92,12 @@ export default {
     },
     // quiet : une simple relecture de l'île (rien n'a été ramassé en passant), ou « Tout ramasser », qui le dit lui-même
     apply(served, { quiet = false } = {}) {
-      // (ce que le serveur a envoyé, gardé tel quel ; l'île montre ce que le tutoriel laisse voir : unsettledView)
+      // (ce que le serveur a envoyé, gardé tel quel ; l'île montre ce que le tutoriel laisse voir, unsettledView, sans les
+      // articles que le jeu cache encore : shop.js, withoutHidden)
       this.served = served;
       this.appliedSeq = (this.appliedSeq || 0) + 1;
       const before = this.state;
-      const state = this.unsettledView(served);
+      const state = this.unsettledView(withoutHidden(served));
       this.noticeChanges(state, quiet);
       this.syncGeometry(state);
       this.syncDecor(state);

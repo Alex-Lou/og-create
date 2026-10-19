@@ -8,6 +8,15 @@ import { objectThumb } from '@/world/objectArt';
 import { tintOf } from '@/world/tints';
 import { SKIN_LATER, BUY_LABEL } from '@/texts/world/shop';
 
+// Les articles que le jeu ne montre pas encore (ni en boutique ni sur l'île), le serveur les garde : le chien du Foyer,
+// qui sera à découvrir et à acheter (choix de l'auteur, 19 oct.)
+export const HIDDEN_ITEMS = new Set(['chien']);
+// L'île telle que le serveur l'envoie, sans les articles cachés
+export function withoutHidden(state) {
+  if (!state || !state.sites) return state;
+  return { ...state, sites: state.sites.map(site => (site.shop && site.shop.some(item => HIDDEN_ITEMS.has(item.id)) ? { ...site, shop: site.shop.filter(item => !HIDDEN_ITEMS.has(item.id)) } : site)) };
+}
+
 // Rubriques dans l'ordre de la fiche
 const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['rare', 'Pièces rares'], ['skin', 'Skins'], ['teinte', 'Teintes']];
 // Rubrique d'un article : les skins se partagent entre pièces rares, skins dessinés et teintes

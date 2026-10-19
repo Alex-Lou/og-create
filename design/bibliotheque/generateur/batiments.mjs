@@ -1206,8 +1206,8 @@ var require_foyer = __commonJS({
     }
     __name(tasBois, "tasBois");
     var BOIS2 = [
-      { moitie: [1.12, 0.42, 3, 2], plein: [1.06, 0.42, 4, 3] },
-      { moitie: [0.66, -0.45, 3, 2], plein: [0.6, -0.45, 4, 3] },
+      { moitie: [0.72, 0.68, 3, 2], plein: [0.66, 0.68, 4, 3] },
+      { moitie: [0.5, -0.7, 3, 2], plein: [0.45, -0.7, 4, 3] },
       // (III : contre le mur de droite, les bouts vers nous à droite)
       { moitie: [0.5, -0.5, 3, 2], plein: [0.5, -0.56, 4, 3], options: { axe: "u", l: 0.26 } },
       { moitie: [0.84, 0.25, 3, 2], plein: [0.78, 0.25, 4, 3] },
@@ -1267,6 +1267,263 @@ var require_foyer = __commonJS({
     __name(image, "image");
     var SKINS = Object.keys(TOITS);
     module.exports = { PALIERS, SKINS, image, bois: bois2, BOIS_ETATS, palier1, palier2, palier3, palier4, palier5b, palier6, palier7 };
+  }
+});
+
+// atelier/foyer_annexes.js
+var require_foyer_annexes = __commonJS({
+  "atelier/foyer_annexes.js"(exports, module) {
+    var B = require_batir();
+    var { f, rnd, CYAN, MAGENTA, ACIDE, P2, rad, lin, plan, trait: trait2, ovale, lueur, mix, plus, iso, boite, tPierres, tPlanches, buche: buche2, tonneau, touffe: touffe2 } = B;
+    var SARCELLE = "#3E9A96";
+    var EMERAUDE = "#16855A";
+    var CORAIL = "#FF8A5A";
+    var ARGILE = "#E08A62";
+    var VIOLET2 = "#9A6AE0";
+    var contact = /* @__PURE__ */ __name((x, y, rx, a = 0.32) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(rx * 0.42)}" fill="${B.OMBRE_F}" opacity="${a}"/>`, "contact");
+    var modele = /* @__PURE__ */ __name((id, x, y, r, c) => `<defs>${rad(id, x - r * 0.4, y - r * 0.5, r * 1.6, [[0, mix(c, "#FFF4E0", 0.45)], [0.45, c], [1, mix(c, "#1A2A2A", 0.45)]])}</defs>`, "modele");
+    var coquille = /* @__PURE__ */ __name((x, y, r, a, c) => `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(a)})"><path d="M${f(-r)},0 Q0,${f(-r * 1.5)} ${f(r)},0 Q0,${f(r * 0.4)} ${f(-r)},0 Z" fill="${c}"/>` + [-0.5, 0, 0.5].map((k) => `<path d="M0,${f(r * 0.2)} L${f(k * r)},${f(-r * 0.9)}" stroke="${mix(c, "#5A3A2A", 0.5)}" stroke-width=".35"/>`).join("") + "</g>", "coquille");
+    var conserve = /* @__PURE__ */ __name((id, x, y, c, k = 1) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${lueur(id, 0, -4, 8, c, 0.4)}<path d="M-2.4,0 L-2.6,-5.6 Q0,-7 2.6,-5.6 L2.4,0 Z" fill="#E8F8F0" fill-opacity=".55"/><path d="M-2.2,-.4 L-2.3,-4 Q0,-5 2.3,-4 L2.2,-.4 Z" fill="${c}"/><circle cx="-.8" cy="-2" r=".7" fill="${mix(c, "#FFFFFF", 0.5)}"/><circle cx="1" cy="-2.8" r=".6" fill="${mix(c, "#FFFFFF", 0.5)}"/><rect x="-2.3" y="-7" width="4.6" height="1.5" rx=".5" fill="#C89A5A"/><path d="M-1.6,-1 L-1.7,-4.6" stroke="#FFFFFF" stroke-width=".6" opacity=".7"/></g>`, "conserve");
+    var runes = /* @__PURE__ */ __name((x, y, t, n = 4, r = 9, h = 18) => Array.from({ length: n }, (_, i) => {
+      const tt = (t + i / n) % 1, a = tt * Math.PI * 2 + i, rx = x + Math.cos(a) * r, ry = y - tt * h, c = [CYAN, MAGENTA, ACIDE, CYAN][i % 4];
+      const d = ["M-1.6,1.4 L0,-1.6 L1.6,1.4 Z", "M-1.6,0 L1.6,0 M0,-1.6 L0,1.6", "M-1.4,-1.4 L1.4,1.4 M1.4,-1.4 L-1.4,1.4", "M-1.6,1 Q0,-2.4 1.6,1"][i % 4];
+      return `<g opacity="${f(Math.sin(tt * Math.PI))}"><circle cx="${f(rx)}" cy="${f(ry)}" r="3.2" fill="${c}" opacity=".28"/>${trait2(d, c, 0.9, ` transform="translate(${f(rx)} ${f(ry)})"`)}</g>`;
+    }).join(""), "runes");
+    var fumee = /* @__PURE__ */ __name((x, y, t, k = 1) => [0, 1, 2].map((i) => {
+      const tt = (t + i / 3) % 1;
+      return `<circle cx="${f(x + (Math.sin(tt * 6) * 1.6 + tt * 5) * k)}" cy="${f(y - tt * 20 * k)}" r="${f((1.8 + tt * 3.6) * k)}" fill="#F4F2F8" opacity="${f(0.8 * (1 - tt))}" stroke="#C8C8D8" stroke-width=".5" stroke-opacity="${f(0.8 * (1 - tt))}"/>`;
+    }).join(""), "fumee");
+    function cuisine1() {
+      const g = rnd(301);
+      let s = B.ombrePortee("cuo", [iso(-0.3, 0.12, 0), iso(0.46, 0.2, 0), iso(0.46, -0.2, 0), iso(-0.3, -0.26, 0)], 26, 0.3);
+      s += [[-0.2, 0.08], [0.1, 0.14], [0.32, 0.04], [0.04, -0.14]].map(([u, v]) => {
+        const [x, y] = iso(u, v, 0);
+        return ovale(x, y, 6 + g() * 2, 3 + g(), mix("#C8C0B0", "#EDE8DC", g()), 0.5);
+      }).join("");
+      s += boite("cus", [-0.3, -0.26, 0.06, 0.1], 0, 6, { gauche: /* @__PURE__ */ __name((W, H) => tPierres(W, H, g, { haut: 3, long: 5, mousse: 0.45 }), "gauche"), droite: /* @__PURE__ */ __name((W, H) => tPierres(W, H, g, { haut: 3, long: 5, mousse: 0.45 }), "droite"), dessus: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#D8CCB4"/>`, "dessus"), arete: null });
+      const [ox, oy] = iso(-0.12, -0.08, 6);
+      s += modele("cud", ox, oy - 9, 12, ARGILE) + plan(`M${P2(ox - 11.5, oy)} Q${P2(ox - 12.5, oy - 17)} ${P2(ox, oy - 19)} Q${P2(ox + 12.5, oy - 17)} ${P2(ox + 11.5, oy)} Q${P2(ox, oy + 5)} ${P2(ox - 11.5, oy)} Z`, "url(#cud)", 0.9) + Array.from({ length: 9 }, (_, i) => {
+        const a = i * 0.9, r = 2 + i * 0.8;
+        return coquille(ox + 3 + Math.cos(a) * r, oy - 10 + Math.sin(a) * r * 0.7, 1 + i * 0.05, a * 57, ["#FFF4E8", "#FFC8B8", "#FFE0A8"][i % 3]);
+      }).join("") + `<path d="M${P2(ox - 11.2, oy - 2.4)} Q${P2(ox, oy + 2.6)} ${P2(ox + 11.2, oy - 2.4)}" stroke="${SARCELLE}" stroke-width="1.8" fill="none" stroke-linecap="round"/>` + Array.from({ length: 6 }, (_, i) => `<circle cx="${f(ox - 9 + i * 3.6)}" cy="${f(oy - 0.8 + Math.sin(i / 5 * Math.PI) * 2)}" r=".6" fill="${CORAIL}"/>`).join("");
+      s += Array.from({ length: 6 }, (_, i) => {
+        const a = Math.PI * (1 - i / 5);
+        return ovale(ox - 4 + Math.cos(a) * 5.4, oy - 1.6 - Math.sin(a) * 6, 1.6, 1.3, mix("#C8C0B0", "#F4F0E8", i % 2 * 0.6), 0.4);
+      }).join("") + `<path d="M${P2(ox - 8.2, oy)} L${P2(ox - 8.2, oy - 3)} Q${P2(ox - 4, oy - 9)} ${P2(ox + 0.2, oy - 3)} L${P2(ox + 0.2, oy + 1)} Z" fill="#2A140A"/>` + [[-6, -0.6], [-4, 0], [-2.2, -0.4]].map(([dx, dy]) => `<circle cx="${f(ox + dx)}" cy="${f(oy + dy)}" r=".8" fill="#FF6A2A"/>`).join("");
+      const [tx, ty] = [ox + 5, oy - 15];
+      s += modele("cut", tx, ty - 6, 3, "#C8784A") + plan(`M${P2(tx - 1.9, ty + 2)} L${P2(tx - 1.9, ty - 11)} L${P2(tx + 1.9, ty - 11)} L${P2(tx + 1.9, ty + 2)} Z`, "url(#cut)", 0.6) + [-3, -8].map((dy) => `<rect x="${f(tx - 2.3)}" y="${f(ty + dy)}" width="4.6" height="1.1" rx=".4" fill="#8A4A2A"/>`).join("") + plan(`M${P2(tx - 4, ty - 11)} L${P2(tx, ty - 14.4)} L${P2(tx + 4, ty - 11)} Z`, "#B8C0C8", 0.5) + `<path d="M${P2(tx - 2.8, ty - 11.3)} L${P2(tx, ty - 13.6)}" stroke="#FFFFFF" stroke-width=".5"/>`;
+      for (const [u, v, c, bande] of [[0.36, -0.08, "#8A5A3A", CORAIL], [0.2, 0.12, "#A86A3A", SARCELLE]]) {
+        const [x, y] = iso(u, v, 0);
+        s += tonneau(x, y, 3.6, 9.5, g, { c }) + `<rect x="${f(x - 3.8)}" y="${f(y - 6.4)}" width="7.6" height="1.3" fill="${bande}" opacity=".9"/>`;
+      }
+      const T = [0.1, -0.18, 0.46, 0.2];
+      s += boite("cup", T, 9.5, 11, { gauche: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#6A6A72"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#4A4A54"/>`, "droite"), dessus: /* @__PURE__ */ __name((W, H) => tPlanches(W, H, g, { larg: 3.4, c: "#C8945A" }) + `<rect width="${f(W)}" height="${f(H)}" fill="none" stroke="#5A5A62" stroke-width="1.3"/><circle cx="1.8" cy="1.8" r=".5" fill="#3A3A42"/><circle cx="${f(W - 1.8)}" cy="1.8" r=".5" fill="#3A3A42"/>`, "dessus"), arete: null });
+      const at = /* @__PURE__ */ __name((u, v) => iso(u, v, 11), "at");
+      const [px, py] = at(0.22, 0.08);
+      s += plan(`M${P2(px - 4.6, py)} L${P2(px + 1.4, py - 3)} L${P2(px + 5.4, py - 1.2)} L${P2(px - 0.6, py + 1.8)} Z`, "#E0B070", 0.5) + `<g transform="translate(${f(px)} ${f(py - 0.8)}) rotate(-26) scale(.8)">${plan("M-4,0 Q-1,-2.4 3,-1 L5,-2.4 L4.6,0 L5,2.2 L3,.9 Q-1,2.2 -4,0 Z", "#9AC8D8", 0.4)}<circle cx="-2.6" cy="-.4" r=".5" fill="#1A2A2A"/></g>`;
+      {
+        const [x, y] = at(0.4, 0.1);
+        s += ovale(x, y, 2.8, 1.3, "#8A5A2A", 0.4) + ovale(x, y - 0.3, 2.1, 0.8, "#F4ECDC", 0);
+      }
+      s += conserve("cuj1", ...at(0.32, -0.12), ACIDE, 0.85) + conserve("cuj2", ...at(0.4, -0.14), MAGENTA, 0.85);
+      {
+        const [x, y] = at(0.3, 0.14);
+        s += plan(`M${P2(x - 3.4, y)} Q${P2(x - 3.4, y - 3.4)} ${P2(x, y - 3.4)} Q${P2(x + 3.4, y - 3.4)} ${P2(x + 3.4, y)} Z`, "#D8964A", 0.5) + trait2(`M${P2(x - 1.6, y - 2)} l1,-.8 M${P2(x + 0.4, y - 2.2)} l1,-.8`, "#F4D49A", 0.5);
+      }
+      const [fx, fy] = iso(0.5, 0.2, 0);
+      s += modele("cupot", fx, fy - 2.6, 3, SARCELLE) + plan(`M${P2(fx - 2.8, fy)} L${P2(fx - 3, fy - 5)} L${P2(fx + 3, fy - 5)} L${P2(fx + 2.8, fy)} Z`, "url(#cupot)", 0.5) + `<rect x="${f(fx - 3)}" y="${f(fy - 3.4)}" width="6" height="1" fill="${CORAIL}"/>` + [[-1.8, -8, MAGENTA], [0.8, -9.6, "#FF7AC8"], [2.4, -7, ACIDE]].map(([dx, dy, c]) => trait2(`M${P2(fx, fy - 5)} L${P2(fx + dx, fy + dy)}`, EMERAUDE, 0.7) + `<circle cx="${f(fx + dx)}" cy="${f(fy + dy)}" r="1.3" fill="${c}"/><circle cx="${f(fx + dx)}" cy="${f(fy + dy)}" r=".45" fill="#FFF4C8"/>`).join("");
+      s += [[-18, 4], [-8, 9], [26, 6]].map(([x, y]) => touffe2(x, y, g, 0.6)).join("");
+      return s;
+    }
+    __name(cuisine1, "cuisine1");
+    function cuisine2(n) {
+      const t = n / 8, [ox, oy] = iso(-0.12, -0.08, 6), glow = 0.75 + 0.25 * Math.sin(t * Math.PI * 2);
+      return lueur("cuf", ox - 4, oy - 3, 11, "#FF8A3A", 0.5 * glow) + `<path d="M${P2(ox - 7, oy + 0.4)} Q${P2(ox - 4, oy - 5.4 - glow)} ${P2(ox - 1, oy + 0.8)} Z" fill="#FF8A3A" opacity="${f(glow)}"/><path d="M${P2(ox - 5.4, oy + 0.6)} Q${P2(ox - 4, oy - 2.4 - glow)} ${P2(ox - 2.6, oy + 0.8)} Z" fill="#FFE8B0" opacity="${f(glow)}"/>` + fumee(ox + 5, oy - 31, t, 0.9);
+    }
+    __name(cuisine2, "cuisine2");
+    var HAUT = 22;
+    var P0 = [0, -0.46];
+    var P1 = [0, 0.46];
+    function lit1() {
+      const g = rnd(311);
+      let s = B.ombrePortee("lio", [iso(-0.08, -0.5, 0), iso(0.08, -0.5, 0), iso(0.08, 0.5, 0), iso(-0.08, 0.5, 0)], 22, 0.24);
+      for (const [u, v] of [P0, P1]) {
+        const a = iso(u, v, 0), b = iso(u, v, HAUT + 3);
+        s += contact(a[0], a[1] + 0.6, 4, 0.35) + buche2(a[0], a[1], b[0], b[1], 2.2, g, { flotte: true }) + trait2(`M${P2(b[0] - 2.4, b[1] + 4)} l4.8,1.6 M${P2(b[0] - 2.4, b[1] + 6)} l4.8,1.6`, "#E0C08A", 1) + touffe2(a[0] - 2, a[1] + 1, g, 0.6) + touffe2(a[0] + 3, a[1] + 1.4, g, 0.5);
+      }
+      const q = iso(...P1, HAUT - 2);
+      s += trait2(`M${P2(q[0] - 2, q[1])} l-1.6,4`, "#C8A060", 0.5) + coquille(q[0] - 3.6, q[1] + 5.6, 1.6, 180, CORAIL);
+      return s;
+    }
+    __name(lit1, "lit1");
+    function lit2(n) {
+      const t = n / 8, sw = Math.sin(t * Math.PI * 2) * 1.6;
+      const a = iso(...P0, HAUT - 1), b = iso(...P1, HAUT - 1), mx = (a[0] + b[0]) / 2 + sw, my = (a[1] + b[1]) / 2, low = my + 15 + Math.sin(t * Math.PI * 2 + 1) * 0.6;
+      const toile = `M${P2(a[0], a[1] + 1)} Q${P2(mx, low + 5)} ${P2(b[0], b[1] + 1)} Q${P2(mx, low - 9)} ${P2(a[0], a[1] + 1)} Z`;
+      let s = `<ellipse cx="${f(mx)}" cy="${f(my + 22)}" rx="${f(12 - Math.abs(sw))}" ry="3" fill="${B.OMBRE_F}" opacity=".18"/>` + trait2(`M${P2(...a)} L${P2(a[0] + 1.6, a[1] + 2)}`, "#C8A060", 0.8) + trait2(`M${P2(...b)} L${P2(b[0] - 1.6, b[1] + 2)}`, "#C8A060", 0.8) + `<defs><clipPath id="lih${n}"><path d="${toile}"/></clipPath>${lin(`lil${n}`, 0, low - 10, 0, low + 5, [[0, "#FFFFFF", 0.25], [1, B.OMBRE_F, 0.3]])}</defs>` + plan(toile, "#F2E6CC", 0.7) + `<g clip-path="url(#lih${n})">` + [[0.18, SARCELLE], [0.46, CORAIL], [0.72, "#EBC46F"]].map(([k, c]) => {
+        const x = a[0] + (b[0] - a[0]) * k + sw * 0.6, y = a[1] + (b[1] - a[1]) * k;
+        return `<rect x="${f(x - 4)}" y="${f(y - 4)}" width="8" height="22" fill="${c}" opacity=".9"/><rect x="${f(x - 3.4)}" y="${f(y - 3.4)}" width="6.8" height="20.8" fill="none" stroke="#5A4A3A" stroke-width=".35" stroke-dasharray="1 .7"/>`;
+      }).join("") + `<rect x="${f(Math.min(a[0], b[0]) - 4)}" y="${f(a[1] - 4)}" width="${f(Math.abs(b[0] - a[0]) + 8)}" height="${f(low + 8 - a[1])}" fill="url(#lil${n})"/></g>`;
+      const kx = a[0] + (b[0] - a[0]) * 0.24 + sw * 0.5, ky = a[1] + (b[1] - a[1]) * 0.24 + 6;
+      s += plan(`M${P2(kx - 4, ky)} Q${P2(kx - 4.4, ky - 3.6)} ${P2(kx, ky - 3.4)} Q${P2(kx + 4.4, ky - 3.6)} ${P2(kx + 4, ky)} Q${P2(kx, ky + 1.6)} ${P2(kx - 4, ky)} Z`, "#FFF4E6", 0.5) + `<circle cx="${f(kx)}" cy="${f(ky - 1.4)}" r=".6" fill="${CORAIL}"/>`;
+      const cx = mx + 2, cy = (my + low) / 2 - 1.4;
+      s += plan(`M${P2(cx - 4, cy)} l4,-1.4 l4,1.4 l0,2 l-4,-1.2 l-4,1.2 Z`, "#3E7AB0", 0.5) + trait2(`M${P2(cx - 3.4, cy + 0.2)} l3.4,-1.1 l3.4,1.1`, "#FFF4E6", 0.5);
+      return s;
+    }
+    __name(lit2, "lit2");
+    function chat2(n) {
+      const t = n / 8, souffle = Math.sin(t * Math.PI * 2) * 0.5, queue = n === 2 || n === 3 ? -1.8 : 0, oreille = n === 6 ? -16 : 0;
+      let s = contact(0, 1.6, 13, 0.3);
+      s += `<defs>${rad("cap", -3, -3, 14, [[0, "#E8C878"], [0.6, "#C89A48"], [1, "#8A6428"]])}</defs>` + plan("M-12,-2 Q-12.6,2.6 0,3.2 Q12.6,2.6 12,-2 Q0,1.4 -12,-2 Z", "url(#cap)", 0.7) + Array.from({ length: 7 }, (_, i) => trait2(`M${-10 + i * 3.3},${f(-1.2 + Math.abs(i - 3) * 0.12)} l.6,3.4`, "#8A6428", 0.5, ' opacity=".6"')).join("") + ovale(0, -2, 12, 3.4, "#5A8A88", 0.6) + `<ellipse cx="0" cy="-2.4" rx="10" ry="2.4" fill="${SARCELLE}"/>`;
+      s += plan(`M-9,-2 Q-11,${f(-8 - souffle)} -3,${f(-10 - souffle)} Q5,${f(-11 - souffle)} 9,${f(-6 - souffle)} Q10,-2 4,-1.4 Q-4,-1 -9,-2 Z`, "#F0944A", 0.7) + `<path d="M-6,${f(-8.6 - souffle)} Q-1,${f(-10.6 - souffle)} 5,${f(-8.4 - souffle)}" stroke="#FFC890" stroke-width="1.2" fill="none" opacity=".7"/>` + [-5, -1, 3].map((x) => trait2(`M${x},${f(-9.6 - souffle)} q1.2,2.6 0,4.6`, "#C8642A", 0.8)).join("") + trait2(`M-9,-3 q-2.4,3 2.4,3.6 q4.4,.4 6.4,${f(-1.4 + queue)}`, "#F0944A", 2.2) + trait2(`M-0.6,${f(-0.2 + queue * 0.5)} q1.6,${f(-0.4 + queue)} 2.6,${f(-1.6 + queue)}`, "#FFF4E6", 2.2) + plan(`M3,${f(-5 - souffle)} Q10,${f(-7.6 - souffle)} 11.4,-3 Q10,-0.6 5,-1.2 Z`, "#F0944A", 0.6) + `<g transform="rotate(${oreille} 9.4 -6)">${plan("M8,-5.4 L9.4,-8.8 L10.6,-5 Z", "#F0944A", 0.4)}<path d="M8.6,-5.6 L9.4,-7.6 L10,-5.4 Z" fill="#F7B8B0"/></g>` + plan("M5.4,-6 L5.8,-9 L7.6,-6.2 Z", "#F0944A", 0.4) + trait2("M7.6,-3.4 q.7,.5 1.4,0 M9.8,-3.6 q.5,.4 1,0", "#5E3A22", 0.5) + '<ellipse cx="11" cy="-2.4" rx=".5" ry=".35" fill="#E07A7A"/>';
+      return s;
+    }
+    __name(chat2, "chat");
+    function sablier2(n) {
+      const g = rnd(331), t = n / 8;
+      let s = B.ombrePortee("sao", [[-9, 1], [9, 1], [9, -3], [-9, -3]], 30, 0.26);
+      s += buche2(-10, 0, 10, -2, 3.4, g, { flotte: true });
+      for (const x of [-7.4, 7.4]) s += buche2(x, -2, x, -40, 1.5, g, { flotte: true });
+      s += buche2(-10, -40, 10, -41, 1.8, g, { flotte: true }) + [-7.4, 7.4].map((x) => trait2(`M${x - 2},-38 l4,1.4 M${x - 2},-36 l4,1.4`, "#E0C08A", 0.8)).join("");
+      const y0 = -5, y1 = -38, ym = (y0 + y1) / 2;
+      s += lueur("sal", 0, ym, 16, CYAN, 0.38);
+      const bouteille = /* @__PURE__ */ __name((sens, y) => `M-4.6,${y} Q-5.4,${y - sens * 9} -1.4,${ym + sens * 3} L-1,${ym + sens * 0.6} L1,${ym + sens * 0.6} L1.4,${ym + sens * 3} Q5.4,${y - sens * 9} 4.6,${y} Z`, "bouteille");
+      s += `<path d="${bouteille(1, y0)}" fill="#7AC8A8" fill-opacity=".35" stroke="#4A8A70" stroke-width=".6"/><path d="${bouteille(-1, y1)}" fill="#7AC8A8" fill-opacity=".35" stroke="#4A8A70" stroke-width=".6"/>`;
+      const haut = 1 - t;
+      s += `<path d="M${f(-4.2 * Math.max(haut, 0.2))},${f(ym - 3 - 9 * haut)} Q0,${f(ym - 2)} ${f(4.2 * Math.max(haut, 0.2))},${f(ym - 3 - 9 * haut)} L1,${f(ym - 1.2)} L-1,${f(ym - 1.2)} Z" fill="${CYAN}"/><path d="M-4.4,${y0 - 0.4} Q0,${f(y0 - 0.4 - 9 * t - 2)} 4.4,${y0 - 0.4} Z" fill="${CYAN}"/>` + trait2(`M0,${ym} L0,${y0 - 2}`, "#C8FFF8", 0.7, ' stroke-dasharray="1 1"') + `<path d="M-3.4,${y0 - 1} Q-4.2,${y0 - 6} -2,${y0 - 9}" stroke="#FFFFFF" stroke-width=".7" fill="none" opacity=".7"/><path d="M-3.4,${y1 + 1} Q-4.2,${y1 + 5} -2,${y1 + 8}" stroke="#FFFFFF" stroke-width=".7" fill="none" opacity=".6"/>` + trait2(`M-2,${ym - 1.4} L2,${ym + 1.4} M-2,${ym + 1.4} L2,${ym - 1.4}`, "#C8A060", 1.1) + plan(`M-2.6,${y1 - 0.6} L2.6,${y1 - 0.6} L2,${y1 + 1} L-2,${y1 + 1} Z`, "#C89A5A", 0.4) + plan(`M-2.6,${y0 + 0.4} L2.6,${y0 + 0.4} L2,${y0 - 1.2} L-2,${y0 - 1.2} Z`, "#C89A5A", 0.4);
+      return s + touffe2(-9, 1, g, 0.6) + touffe2(10, 0.6, g, 0.5);
+    }
+    __name(sablier2, "sablier");
+    function hibou2(n) {
+      const g = rnd(341), cligne = n === 6, tete = n === 2 || n === 3 ? 1.6 : n === 5 ? -1.2 : 0;
+      let s = contact(0, 1.4, 6, 0.35);
+      s += B.aviron(0, 0, 0, -34, g, { pale: 11 }) + touffe2(-2, 1, g, 0.6) + touffe2(3, 1.4, g, 0.5);
+      s += buche2(-11, -27, 11, -28, 1.4, g, { c: "#9A6A3A" }) + trait2("M-2,-30 l4,1.6 M-2,-28 l4,1.6", "#E0C08A", 0.8);
+      s += trait2("M9,-27.4 L9,-23", "#6A5A3A", 0.5) + lueur("hil", 9, -18, 9, ACIDE, 0.5) + '<path d="M6.8,-17.6 L6.6,-22 Q9,-23.4 11.4,-22 L11.2,-17.6 Q9,-16.6 6.8,-17.6 Z" fill="#E8F8F0" fill-opacity=".5" stroke="#9AC8B0" stroke-width=".5"/>' + [[8, -19.4], [10, -20.6], [9.2, -18.4]].map(([x, y], i) => `<circle cx="${f(x + (n % 2 ? 0.4 : 0) * (i - 1))}" cy="${f(y)}" r=".75" fill="${ACIDE}"/>`).join("") + '<rect x="7.2" y="-23.4" width="3.6" height="1.2" rx=".4" fill="#C89A5A"/>';
+      const ox = -1, oy = -28;
+      s += modele("hic", ox, oy - 8, 7, "#9C6B43") + plan(`M${ox - 6},${oy} Q${ox - 7.4},${oy - 8} ${ox - 4},${oy - 12} Q${ox},${oy - 14} ${ox + 4},${oy - 12} Q${ox + 7.4},${oy - 8} ${ox + 6},${oy} Z`, "url(#hic)", 0.7) + plan(`M${ox - 3.6},${oy - 0.6} Q${ox - 4.4},${oy - 7} ${ox},${oy - 9} Q${ox + 4.4},${oy - 7} ${ox + 3.6},${oy - 0.6} Z`, "#E8D4AE", 0.4) + [[-1.4, -6], [1.2, -5], [-0.2, -3]].map(([dx, dy]) => trait2(`M${ox + dx - 0.7},${oy + dy} l.7,.7 l.7,-.7`, "#B88A5A", 0.5)).join("") + plan(`M${ox - 6},${oy - 1} Q${ox - 8},${oy - 6} ${ox - 5.4},${oy - 10} Q${ox - 4.4},${oy - 5} ${ox - 3.6},${oy - 1} Z`, "#7A4E30", 0.4) + plan(`M${ox + 6},${oy - 1} Q${ox + 8},${oy - 6} ${ox + 5.4},${oy - 10} Q${ox + 4.4},${oy - 5} ${ox + 3.6},${oy - 1} Z`, "#8A5A36", 0.4) + [-1.6, 0, 1.6].map((dx) => trait2(`M${ox + dx},${oy - 0.6} l0,1.6`, "#E8A13A", 0.7)).join("");
+      const hx = ox + tete;
+      s += `<g>${plan(`M${hx - 5.6},${oy - 12} Q${hx - 6.4},${oy - 19} ${hx},${oy - 19.6} Q${hx + 6.4},${oy - 19} ${hx + 5.6},${oy - 12} Q${hx},${oy - 9.4} ${hx - 5.6},${oy - 12} Z`, "#9C6B43", 0.6)}` + plan(`M${hx - 4.8},${oy - 17} l-.8,-3.4 l2.8,2 Z`, "#7A4E30", 0.3) + plan(`M${hx + 4.8},${oy - 17} l.8,-3.4 l-2.8,2 Z`, "#7A4E30", 0.3) + `<ellipse cx="${hx - 2.2}" cy="${oy - 14.4}" rx="2.7" ry="2.5" fill="#E8D4AE"/><ellipse cx="${hx + 2.2}" cy="${oy - 14.4}" rx="2.7" ry="2.5" fill="#E8D4AE"/>` + (cligne ? trait2(`M${hx - 3.8},${oy - 14.4} q1.6,1 3.2,0 M${hx + 0.6},${oy - 14.4} q1.6,1 3.2,0`, "#3A2A1E", 0.7) : [-2.2, 2.2].map((dx) => `<circle cx="${hx + dx}" cy="${oy - 14.4}" r="1.9" fill="#FFB830"/><circle cx="${hx + dx + tete * 0.25}" cy="${oy - 14.4}" r=".9" fill="#1E1A17"/><circle cx="${hx + dx - 0.5}" cy="${oy - 15}" r=".35" fill="#FFFFFF"/>`).join("")) + `<path d="M${hx - 0.7},${oy - 13} l.7,1.6 l.7,-1.6 Z" fill="#E8A040"/></g>`;
+      return s;
+    }
+    __name(hibou2, "hibou");
+    function grimoire1() {
+      const g = rnd(351);
+      let s = B.ombrePortee("gro", [iso(-0.12, 0.12, 0), iso(0.12, 0.12, 0), iso(0.12, -0.12, 0), iso(-0.12, -0.12, 0)], 18, 0.3);
+      const face2 = /* @__PURE__ */ __name((c) => (W, H) => tPlanches(W, H, g, { c, larg: 2.6, horiz: true, use: 0.1 }) + `<rect width="${f(W)}" height="${f(H)}" fill="none" stroke="${mix(c, "#1A0E08", 0.45)}" stroke-width="1.6"/>`, "face");
+      s += boite("grb", [-0.12, -0.12, 0.12, 0.12], 0, 8, { gauche: face2("#B07A48"), droite: face2("#8A5A36"), dessus: /* @__PURE__ */ __name((W, H) => tPlanches(W, H, g, { c: "#C8945A", larg: 2.6, use: 0.1 }), "dessus"), voile: { pied: 0.2, haut: 0 } }) + boite("grh", [-0.09, -0.09, 0.09, 0.09], 8, 14, { gauche: face2(SARCELLE), droite: face2("#2E7A76"), dessus: /* @__PURE__ */ __name((W, H) => `<rect width="${f(W)}" height="${f(H)}" fill="#5AAAA6"/>`, "dessus"), voile: { pied: 0.2, haut: 0 } });
+      const [rx, ry] = iso(0.14, 0.04, 6);
+      s += `<g transform="translate(${f(rx + 2)} ${f(ry)}) rotate(-12)"><ellipse rx="5.6" ry="6" fill="none" stroke="#6A4428" stroke-width="1.6"/><ellipse rx="5.6" ry="6" fill="none" stroke="#C8945A" stroke-width=".7"/>` + Array.from({ length: 8 }, (_, i) => {
+        const a = i * Math.PI / 4;
+        return trait2(`M0,0 L${f(Math.cos(a) * 8)},${f(Math.sin(a) * 8.4)}`, "#8A5A36", 1);
+      }).join("") + '<circle r="1.6" fill="#C8963A"/></g>';
+      const [cx, cy] = iso(0, 0, 14);
+      return s + `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="5" ry="2.4" fill="#C8A0FF" opacity=".55"/><ellipse cx="${f(cx)}" cy="${f(cy)}" rx="2.6" ry="1.2" fill="#F0E4FF" opacity=".85"/>`;
+    }
+    __name(grimoire1, "grimoire1");
+    function grimoire2(n) {
+      const t = n / 8, x = 0, y = -26;
+      const ex = x + 9 * Math.cos(Math.PI * t), ey = y - 2 - Math.sin(Math.PI * t) * 6;
+      let s = lueur("grl", x, y - 4, 16, VIOLET2, 0.32) + `<ellipse cx="${x}" cy="${y + 2}" rx="10" ry="2.6" fill="#C8A0FF" opacity=".22"/>`;
+      s += plan(`M${x},${y + 1.4} L${x - 11},${y - 2} L${x - 11},${y - 3.4} L${x},${y} L${x + 11},${y - 3.4} L${x + 11},${y - 2} Z`, "#2E7A76", 0.5) + `<circle cx="${x - 10.4}" cy="${y - 2.6}" r=".8" fill="#E0B04A"/><circle cx="${x + 10.4}" cy="${y - 2.6}" r=".8" fill="#E0B04A"/>` + plan(`M${x},${y} Q${x - 5},${y - 5} ${x - 10},${y - 3.4} L${x - 10},${y - 5} Q${x - 5},${y - 7} ${x},${y - 2} Z`, "#FBF3DF", 0.4) + plan(`M${x},${y} Q${x + 5},${y - 5} ${x + 10},${y - 3.4} L${x + 10},${y - 5} Q${x + 5},${y - 7} ${x},${y - 2} Z`, "#F2E6CC", 0.4) + [-1, 1].map((sg) => [0, 1, 2].map((k) => trait2(`M${x + sg * 2.4},${y - 3.6 + k * 1.2} L${x + sg * 8},${y - 4.8 + k * 1.2}`, "#8A7A9A", 0.4, ' opacity=".6"')).join("")).join("") + plan(`M${x},${y - 2} Q${f((x + ex) / 2)},${f(Math.min(y - 6, ey - 3))} ${f(ex)},${f(ey - 3)} L${f(ex)},${f(ey - 1.6)} Q${f((x + ex) / 2)},${f(Math.min(y - 4.4, ey - 1.4))} ${x},${y} Z`, "#FFFDF4", 0.4);
+      return s + runes(x, y - 8, t, 3, 7, 14);
+    }
+    __name(grimoire2, "grimoire2");
+    function chantier2(phase) {
+      const g = rnd(251 + phase);
+      let s = "";
+      for (let i = 0; i < 5; i++) {
+        const a = g() * Math.PI * 2, d = g() * 0.3, k = 0.6 + g() * 0.45;
+        s += `<defs>${rad(`chs${phase}${i}`, 0, 0, 1, [[0, "#D8BE88", 0.8], [0.55, "#D8BE88", 0.45], [1, "#D8BE88", 0]])}</defs><ellipse cx="0" cy="0" rx="1" ry="1" fill="url(#chs${phase}${i})" transform="translate(${f(Math.cos(a) * 60 * d)} ${f(2 + Math.sin(a) * 30 * d)}) scale(${f(66 * k)} ${f(33 * k)})"/>`;
+      }
+      s += Array.from({ length: 14 }, () => {
+        const a = g() * Math.PI * 2, d = 0.2 + g() * 0.6;
+        return `<ellipse cx="${f(Math.cos(a) * 60 * d)}" cy="${f(2 + Math.sin(a) * 30 * d)}" rx="${f(0.6 + g() * 0.7)}" ry="${f(0.4 + g() * 0.3)}" fill="${g() < 0.5 ? "#B8A07A" : "#FFF4DC"}" opacity=".8"/>`;
+      }).join("");
+      const coins = [[-0.9, -0.9], [0.9, -0.9], [0.9, 0.9], [-0.9, 0.9]], H = 11;
+      const pieu2 = /* @__PURE__ */ __name(([u, v], i) => {
+        const a = iso(u, v, 0), b = iso(u, v, H + 2);
+        return contact(a[0], a[1] + 0.6, 3.4, 0.35) + buche2(a[0], a[1], b[0], b[1], 1.6, g, { flotte: true }) + plan(`M${P2(b[0] + 1, b[1] + 1.4)} Q${P2(b[0] + 5, b[1] + 1.6)} ${P2(b[0] + 7, b[1] + 3.6)} Q${P2(b[0] + 4.4, b[1] + 4.6)} ${P2(b[0] + 1, b[1] + 5.4)} Z`, i % 2 ? SARCELLE : CORAIL, 0.4);
+      }, "pieu");
+      const corde = /* @__PURE__ */ __name((a, b) => {
+        const p = iso(...a, H), q = iso(...b, H);
+        return trait2(`M${P2(...p)} Q${P2((p[0] + q[0]) / 2, (p[1] + q[1]) / 2 + 2)} ${P2(...q)}`, "#F4E8C8", 0.9) + trait2(`M${P2(...p)} Q${P2((p[0] + q[0]) / 2, (p[1] + q[1]) / 2 + 2)} ${P2(...q)}`, "#B89A6A", 0.4, ' stroke-dasharray="1 1"');
+      }, "corde");
+      s += pieu2(coins[0], 0) + corde(coins[0], coins[1]) + corde(coins[3], coins[0]) + pieu2(coins[1], 1) + pieu2(coins[3], 3);
+      s += [[-24, 6, 3.6], [-18, 10, 3], [-29, 11, 2.6], [-21, 14, 2.2]].map(([x, y, r]) => B.galet(x, y, r, g, mix("#C8C0B0", "#EDE8DC", g()), g() < 0.4)).join("");
+      s += `<defs>${rad(`cht${phase}`, 18, 2, 12, [[0, "#B88A5A"], [1, "#7A5230"]])}</defs>` + plan("M8,11 Q12,1 19,0 Q27,1 30,11 Q19,14 8,11 Z", `url(#cht${phase})`, 0.6) + [[13, 9], [20, 6], [25, 9]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".7" fill="#5A3A20"/>`).join("");
+      s += buche2(19, 4, 25, -14, 1.2, g, { c: "#C8945A", bois: "#E8C08A" }) + plan("M24.2,-14 L27.4,-15.6 L28.4,-13.4 L25.2,-12 Z", "#C8945A", 0.4) + plan("M15.8,4.6 L21.8,3 L22.6,8.6 Q19.4,10.4 16.6,9 Z", "#9AA4B0", 0.5) + trait2("M16.6,5.2 L21.4,4", "#E0E8F0", 0.6);
+      if (phase >= 2) {
+        const [px, py] = iso(-0.42, -0.38, 0);
+        s += contact(px, py + 1, 8, 0.28) + [[-6, 0, -2, -24], [6, 0, 2, -24], [0, -3, 0, -21]].map(([a, b, c, d]) => buche2(px + a, py + b, px + c, py + d, 1.1, g, { flotte: true })).join("") + plan(`M${P2(px - 9, py - 24)} L${P2(px + 9, py - 24.6)} L${P2(px + 8.2, py - 10)} L${P2(px - 8.4, py - 9.6)} Z`, "#F4ECD4", 0.6) + `<path d="M${P2(px - 8.4, py - 12)} L${P2(px + 8.2, py - 12.4)} L${P2(px + 8.2, py - 10)} L${P2(px - 8.4, py - 9.6)} Z" fill="#E0D4B4"/>` + trait2(`M${P2(px - 5, py - 13.6)} L${P2(px - 5, py - 19)} L${P2(px + 0.6, py - 21.6)} L${P2(px + 5.4, py - 18.4)} L${P2(px + 5.4, py - 13.6)} Z`, "#3E7AB0", 0.7) + trait2(`M${P2(px - 5, py - 19)} L${P2(px + 5.4, py - 18.4)} M${P2(px - 1, py - 13.6)} L${P2(px - 1, py - 16.4)} L${P2(px + 1.6, py - 16.4)} L${P2(px + 1.6, py - 13.6)}`, "#3E7AB0", 0.5) + [[-8, -23.2], [8, -23.8]].map(([dx, dy]) => `<circle cx="${f(px + dx)}" cy="${f(py + dy)}" r=".9" fill="${CORAIL}"/>`).join("");
+        const peintures = ["#C8945A", SARCELLE, "#E6DECA", CORAIL, "#B8844A"];
+        for (let r = 0; r < 4; r++) s += boite(`chp${phase}${r}`, [0.12, 0.3 + r % 2 * 0.02, 0.74, 0.5 + r % 2 * 0.02], r * 2.6, r * 2.6 + 2.4, { gauche: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="${peintures[r]}"/><rect width="${f(W)}" height=".7" fill="#FFFFFF" opacity=".35"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#E0A96C"/><circle cx="${f(W / 2)}" cy="${f(Hh / 2)}" r=".6" fill="#9A6A3A"/>`, "droite"), dessus: /* @__PURE__ */ __name((W, Hh) => tPlanches(W, Hh, g, { larg: 3.4, c: r === 3 ? peintures[1] : "#D8A868" }), "dessus"), arete: null });
+      }
+      if (phase >= 3) {
+        const P3 = [[0.18, -0.78], [0.78, -0.78], [0.78, -0.18], [0.18, -0.18]];
+        const perche = /* @__PURE__ */ __name(([u, v], z = 46) => {
+          const a = iso(u, v, 0), b = iso(u, v, z);
+          return contact(a[0], a[1] + 0.6, 3, 0.3) + buche2(a[0], a[1], b[0], b[1], 1.5, g, { c: "#B8844A" });
+        }, "perche");
+        s += perche(P3[0]) + perche(P3[1]);
+        for (const z of [18, 36]) {
+          const a = iso(...P3[0], z), b = iso(...P3[1], z), c = iso(...P3[2], z);
+          s += buche2(a[0], a[1], b[0], b[1], 1.1, g, { c: "#A8743E" }) + buche2(b[0], b[1], c[0], c[1], 1.1, g, { c: "#A8743E" }) + [a, b, c].map((q) => trait2(`M${P2(q[0] - 2, q[1] - 1)} l4,1.4 M${P2(q[0] - 2, q[1] + 1)} l4,1.4`, "#E0C08A", 0.8)).join("");
+        }
+        s += boite(`che${phase}`, [0.2, -0.76, 0.76, -0.48], 18, 19.6, { dessus: /* @__PURE__ */ __name((W, Hh) => tPlanches(W, Hh, g, { larg: 3.4, c: "#D8A868" }), "dessus"), gauche: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#A8743E"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#8A5A36"/>`, "droite"), arete: null });
+        s += perche(P3[2]) + trait2(ligne3(iso(...P3[1], 2), iso(...P3[2], 34)), "#A8743E", 1.2);
+        s += B.caisse(`chc${phase}`, -0.62, 0.42, 0.3, 7, g, { marque: false }) + (() => {
+          const [x, y] = iso(-0.62, 0.42, 7);
+          return buche2(x - 3, y - 1, x + 4, y - 7, 0.9, g, { c: "#C8945A" }) + plan(`M${P2(x + 2.6, y - 8.6)} L${P2(x + 6, y - 6.4)} L${P2(x + 5, y - 5)} L${P2(x + 1.8, y - 7.2)} Z`, "#7A828C", 0.4) + plan(`M${P2(x - 4, y - 2)} L${P2(x - 1, y - 9)} L${P2(x + 1, y - 8)} L${P2(x - 2, y - 1)} Z`, "#B8C0C8", 0.4);
+        })();
+        {
+          const [x, y] = iso(-0.22, 0.72, 0);
+          s += contact(x, y + 0.6, 4.6) + plan(`M${P2(x - 3.6, y - 7)} L${P2(x - 3, y)} Q${P2(x, y + 1.4)} ${P2(x + 3, y)} L${P2(x + 3.6, y - 7)} Z`, "#9AA4B0", 0.5) + ovale(x, y - 7, 3.6, 1.4, "#5A6470", 0.4) + trait2(`M${P2(x - 3.6, y - 7)} Q${P2(x, y - 13)} ${P2(x + 3.6, y - 7)}`, "#5A6470", 0.6) + `<path d="M${P2(x - 2.6, y - 6)} L${P2(x - 2.2, y - 1)}" stroke="#FFFFFF" stroke-width=".6" opacity=".6"/>`;
+        }
+        for (let i = 0; i < 5; i++) {
+          const u0 = 0.42 + i % 3 * 0.13 + (i > 2 ? 0.06 : 0), v0 = -0.02 + (i > 2 ? 0.02 : 0), z0 = i > 2 ? 4.4 : 0;
+          s += boite(`cht${phase}${i}`, [u0, v0, u0 + 0.11, v0 + 0.11], z0, z0 + 4.4, { gauche: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="${mix("#D8D2C2", "#C3BBA9", g())}"/>`, "gauche"), droite: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#A8A090"/>`, "droite"), dessus: /* @__PURE__ */ __name((W, Hh) => `<rect width="${f(W)}" height="${f(Hh)}" fill="#F0ECE0"/>`, "dessus"), arete: null });
+        }
+      }
+      s += corde(coins[1], coins[2]) + corde(coins[2], coins[3]) + pieu2(coins[2], 2);
+      return s + [[-60, 4], [56, 8], [-10, 36], [32, 32], [-40, -18]].map(([x, y]) => touffe2(x, y, g, 0.8)).join("");
+    }
+    __name(chantier2, "chantier");
+    var ligne3 = /* @__PURE__ */ __name((a, b) => `M${P2(...a)} L${P2(...b)}`, "ligne3");
+    var C = /* @__PURE__ */ __name((k, dessin, cadre, n = 1, ms = null, opt = {}) => ({ k, dessin, cadre, n, ms, derriere: false, ...opt }), "C");
+    var ANNEXES = {
+      cuisine: { paliers: [1, 2, 3, 4, 5, 6, 7], calques: [C(0, cuisine1, [-32.5, -50, 72.5, 67.5]), C(1, cuisine2, [-25, -80, 45, 75], 8, 200)] },
+      lit: { paliers: [1, 2, 3, 4, 5, 6, 7], calques: [C(0, lit1, [-32.5, -45, 62.5, 60]), C(1, lit2, [-27.5, -32.5, 57.5, 52.5], 8, 333)] },
+      chat: { paliers: [1, 2, 3, 4, 5, 6, 7], calques: [C(0, chat2, [-20, -20, 40, 27.5], 8, 333)] },
+      sablier: { paliers: [5, 6, 7], calques: [C(0, sablier2, [-20, -60, 40, 65], 8, 500)] },
+      hibou: { paliers: [5, 6, 7], calques: [C(0, hibou2, [-20, -65, 40, 70], 8, 333)] },
+      grimoire: { paliers: [5, 6, 7], calques: [C(0, grimoire1, [-20, -30, 40, 35]), C(1, grimoire2, [-27.5, -62.5, 55, 45], 8, 200, { mouvement: true })] }
+    };
+    var svgDe = /* @__PURE__ */ __name((cadre, corps) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(" ")}"><g transform="scale(1.25)">${corps}</g></svg>`, "svgDe");
+    function image(id, k, n = 0) {
+      const c = ANNEXES[id].calques[k];
+      B.STYLE.organique = true;
+      B.BORD.doux = true;
+      try {
+        return svgDe(c.cadre, c.dessin(n));
+      } finally {
+        B.STYLE.organique = false;
+        B.BORD.doux = false;
+      }
+    }
+    __name(image, "image");
+    function imageChantier(phase, cadre) {
+      B.STYLE.organique = true;
+      B.BORD.doux = true;
+      try {
+        return svgDe(cadre, chantier2(phase));
+      } finally {
+        B.STYLE.organique = false;
+        B.BORD.doux = false;
+      }
+    }
+    __name(imageChantier, "imageChantier");
+    module.exports = { ANNEXES, image, imageChantier };
   }
 });
 
@@ -6362,13 +6619,24 @@ var athanor = {
     }, "draw")
   }]
 };
-var OVEN_AT = [-0.84, 0.8];
+var FOYER_PLACES = {
+  cuisine: [[-0.15, -1], [-0.95, 0.3], [0.55, 0.72], [-0.47, 1.27], [-0.5, 1.3], [-0.9, 1.4], [-1.05, 1.15]],
+  lit: [[1, -0.55], [0.98, -0.5], [0.92, -0.44], [-1.4, 1], [1.4, -0.85], [1.4, -0.2], [1.25, 0]],
+  chat: [[0.15, 1], [0.3, 0.85], [-0.7, 0.95], [0.75, 0.95], [0.97, 0.92], [0.65, 0.85], [0.65, 1.35]],
+  sablier: [[1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.25, 0.25], [1.38, 0.88], [1.04, 1.16]],
+  hibou: [[-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [-1.18, 1.28], [1.25, -1.25], [0.57, -0.17]],
+  grimoire: [[0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.73, 1.38], [0.97, 1.32], [-0.14, 0.74]]
+};
+var placeAt = /* @__PURE__ */ __name((id) => (level) => FOYER_PLACES[id][Math.min(Math.max(level, 1), 7) - 1], "placeAt");
 var OVEN_H = 13;
 var cuisine = {
-  light: /* @__PURE__ */ __name(() => [OVEN_AT[0] - 0.02, OVEN_AT[1] + 0.12, 10, 16], "light"),
+  light: /* @__PURE__ */ __name((level) => {
+    const [u, v] = placeAt("cuisine")(level);
+    return [u - 0.14, v + 0.02, 10, 16];
+  }, "light"),
   layers: [{
-    at: OVEN_AT,
-    frame: [-24, -38, 46, 46],
+    at: placeAt("cuisine"),
+    frame: [-26, -40, 58, 54],
     draw: /* @__PURE__ */ __name((T) => {
       const [x, y] = T.p(0, 0, 7);
       const rx = 7.6;
@@ -6379,8 +6647,8 @@ var cuisine = {
       return T.shadow(0, 0, 0.22, 0.2) + T.box(-0.15, -0.15, 0.15, 0.15, 0, 7, STONE) + ln3(T.p(-0.15, 0.15, 3.5), T.p(0.15, 0.15, 3.5), joint, 0.6) + [-0.08, 0.02, 0.11].map((du, k) => ln3(T.p(du, 0.15, k % 2 ? 0 : 3.5), T.p(du, 0.15, k % 2 ? 3.5 : 7), joint, 0.6)).join("") + `<defs><linearGradient id="${T.id("dome")}" x1="0" x2="1"><stop offset="0" stop-color="#E3B486"/><stop offset="1" stop-color="#A9724A"/></linearGradient></defs><path d="M${f24(x - rx)},${f24(y)} C${f24(x - rx)},${f24(y - OVEN_H * 1.3)} ${f24(x + rx)},${f24(y - OVEN_H * 1.3)} ${f24(x + rx)},${f24(y)} A${rx},${ry} 0 0 1 ${f24(x - rx)},${f24(y)} Z" fill="url(#${T.id("dome")})" stroke="${OUT2}" stroke-width="0.7"/><path d="M${f24(x - rx * 0.8)},${f24(y - 4)} Q${f24(x)},${f24(y - 1)} ${f24(x + rx * 0.8)},${f24(y - 4)} M${f24(x - rx * 0.55)},${f24(y - 8.4)} Q${f24(x)},${f24(y - 6.4)} ${f24(x + rx * 0.55)},${f24(y - 8.4)}" stroke="rgba(110,60,30,.35)" stroke-width="0.6" fill="none"/>` + T.cyl(0.02, -0.04, 7 + OVEN_H * 0.9, 7 + OVEN_H * 0.9 + 5, 0.028, { top: "#5E3A2A", left: "#B87E52", right: "#8C5A34" }, "flue") + `<path d="M${f24(x - 5.6)},${f24(y + 1.8)} L${f24(x - 5.6)},${f24(y - 2.4)} A2.6,2.8 0 0 1 ${f24(x - 0.6)},${f24(y - 2.4)} L${f24(x - 0.6)},${f24(y + 2.6)} Z" fill="#3A1E14" stroke="#7A4E30" stroke-width="0.8"/>` + log(0.18, -0.12, 0) + log(0.235, -0.12, 0) + log(0.205, -0.12, 3.4) + ln3([px, py], [px - 9, py - 16], WOOD.right, 1.2) + `<ellipse cx="${f24(px + 1.4)}" cy="${f24(py + 0.6)}" rx="3" ry="1.4" fill="${WOOD.left}" transform="rotate(-30 ${f24(px + 1.4)} ${f24(py + 0.6)})"/>`;
     }, "draw")
   }, {
-    at: OVEN_AT,
-    frame: [-14, -54, 30, 58],
+    at: placeAt("cuisine"),
+    frame: [-20, -64, 36, 60],
     n: 8,
     fps: 5,
     draw: /* @__PURE__ */ __name((T, level, f, n) => {
@@ -6395,15 +6663,14 @@ var cuisine = {
     }, "draw")
   }]
 };
-var HAMMOCK_AT = [0.9, -0.22];
 var lit = {
   layers: [{
-    at: HAMMOCK_AT,
-    frame: [-22, -32, 46, 46],
+    at: placeAt("lit"),
+    frame: [-26, -36, 50, 48],
     draw: /* @__PURE__ */ __name((T) => T.shadow(0, -0.5, 0.06, 0.2) + T.shadow(0, 0.5, 0.06, 0.2) + T.box(-0.025, -0.525, 0.025, -0.475, 0, 22, WOOD_DARK) + T.box(-0.025, 0.475, 0.025, 0.525, 0, 22, WOOD_DARK) + ln3(T.p(0, -0.5, 22), T.p(0, -0.5, 24), WOOD_DARK.right, 1.4) + ln3(T.p(0, 0.5, 22), T.p(0, 0.5, 24), WOOD_DARK.right, 1.4), "draw")
   }, {
-    at: HAMMOCK_AT,
-    frame: [-20, -26, 42, 34],
+    at: placeAt("lit"),
+    frame: [-22, -26, 46, 42],
     n: 8,
     fps: 3,
     draw: /* @__PURE__ */ __name((T, level, f, n) => {
@@ -6422,8 +6689,8 @@ var lit = {
 };
 var chat = {
   layers: [{
-    at: [0.46, 0.8],
-    frame: [-14, -16, 28, 20],
+    at: placeAt("chat"),
+    frame: [-16, -16, 32, 22],
     n: 8,
     fps: 3,
     draw: /* @__PURE__ */ __name((T, level, f, n) => {
@@ -6453,8 +6720,8 @@ var chien = {
 };
 var sablier = {
   layers: [{
-    at: [0.92, 0.62],
-    frame: [-16, -46, 32, 52],
+    at: placeAt("sablier"),
+    frame: [-16, -48, 32, 52],
     n: 8,
     fps: 2,
     draw: /* @__PURE__ */ __name((T, level, f, n) => {
@@ -6470,8 +6737,8 @@ var sablier = {
 };
 var hibou = {
   layers: [{
-    at: [-0.92, 0.36],
-    frame: [-16, -46, 32, 52],
+    at: placeAt("hibou"),
+    frame: [-16, -52, 32, 56],
     n: 8,
     fps: 3,
     draw: /* @__PURE__ */ __name((T, level, f) => {
@@ -6484,15 +6751,14 @@ var hibou = {
     }, "draw")
   }]
 };
-var GRIMOIRE_AT = [0.88, 0.95];
 var grimoire = {
-  light: /* @__PURE__ */ __name(() => [GRIMOIRE_AT[0], GRIMOIRE_AT[1], 24, 22, "200,160,255"], "light"),
+  light: /* @__PURE__ */ __name((level) => [...placeAt("grimoire")(level), 24, 22, "200,160,255"], "light"),
   layers: [{
-    at: GRIMOIRE_AT,
-    frame: [-14, -22, 28, 28],
+    at: placeAt("grimoire"),
+    frame: [-16, -24, 32, 28],
     draw: /* @__PURE__ */ __name((T) => T.shadow(0, 0, 0.1, 0.2) + T.box(-0.07, -0.07, 0.07, 0.07, 0, 3, STONE) + T.cyl(0, 0, 3, 13, 0.035, STONE, "col") + T.box(-0.06, -0.06, 0.06, 0.06, 13, 15, STONE) + T.disc(0, 0, 15, 0.045, "rgba(200,160,255,.55)") + T.disc(0, 0, 15, 0.025, "rgba(240,225,255,.8)"), "draw")
   }, {
-    at: GRIMOIRE_AT,
+    at: placeAt("grimoire"),
     frame: [-22, -50, 44, 36],
     n: 8,
     fps: 5,
@@ -6571,6 +6837,7 @@ var BIG_FROM = 4;
 var spread = /* @__PURE__ */ __name((level) => level >= BIG_FROM ? 1.5 : 1, "spread");
 function placeOf(layer, level) {
   const at = layer.at;
+  if (typeof at === "function") return at(level);
   const base = typeof at[0] === "number" ? at : at[Math.min(level, 3)] || at[2] || at[1];
   const k = spread(level);
   return [base[0] * k, base[1] * k];
@@ -13786,40 +14053,40 @@ var batiments_default = {
             "objets/foyer/cuisine/cuisine_calque1.svg"
           ],
           cadre: [
-            -30,
-            -47.5,
-            57.5,
-            58
+            -32.5,
+            -50,
+            72.5,
+            67.5
           ],
           derriere: false,
           place: {
             I: [
-              -0.84,
-              0.8
+              -0.15,
+              -1
             ],
             II: [
-              -0.84,
-              0.8
+              -0.95,
+              0.3
             ],
             III: [
-              -0.84,
-              0.8
+              0.55,
+              0.72
             ],
             IV: [
-              -1.26,
-              1.2
+              -0.47,
+              1.27
             ],
             V: [
-              -1.26,
-              1.2
+              -0.5,
+              1.3
             ],
             VI: [
-              -1.26,
-              1.2
+              -0.9,
+              1.4
             ],
             VII: [
-              -1.26,
-              1.2
+              -1.05,
+              1.15
             ]
           }
         },
@@ -13835,48 +14102,48 @@ var batiments_default = {
             "objets/foyer/cuisine/cuisine_calque2_8.svg"
           ],
           cadre: [
-            -17.5,
-            -67.5,
-            37.5,
-            72.5
+            -25,
+            -80,
+            45,
+            75
           ],
           derriere: false,
           ms_par_image: 200,
           place: {
             I: [
-              -0.84,
-              0.8
+              -0.15,
+              -1
             ],
             II: [
-              -0.84,
-              0.8
+              -0.95,
+              0.3
             ],
             III: [
-              -0.84,
-              0.8
+              0.55,
+              0.72
             ],
             IV: [
-              -1.26,
-              1.2
+              -0.47,
+              1.27
             ],
             V: [
-              -1.26,
-              1.2
+              -0.5,
+              1.3
             ],
             VI: [
-              -1.26,
-              1.2
+              -0.9,
+              1.4
             ],
             VII: [
-              -1.26,
-              1.2
+              -1.05,
+              1.15
             ]
           }
         }
       ],
       lumiere: {
-        u: -1.29,
-        v: 1.38,
+        u: -0.61,
+        v: 1.29,
         z: 12.5,
         rayon: 20
       }
@@ -13891,40 +14158,40 @@ var batiments_default = {
             "objets/foyer/lit/lit_calque1.svg"
           ],
           cadre: [
-            -27.5,
-            -41.5,
-            57.5,
-            59
+            -32.5,
+            -45,
+            62.5,
+            60
           ],
           derriere: false,
           place: {
             I: [
-              0.9,
-              -0.22
+              1,
+              -0.55
             ],
             II: [
-              0.9,
-              -0.22
+              0.98,
+              -0.5
             ],
             III: [
-              0.9,
-              -0.22
+              0.92,
+              -0.44
             ],
             IV: [
-              1.35,
-              -0.33
+              -1.4,
+              1
             ],
             V: [
-              1.35,
-              -0.33
+              1.4,
+              -0.85
             ],
             VI: [
-              1.35,
-              -0.33
+              1.4,
+              -0.2
             ],
             VII: [
-              1.35,
-              -0.33
+              1.25,
+              0
             ]
           }
         },
@@ -13940,41 +14207,41 @@ var batiments_default = {
             "objets/foyer/lit/lit_calque2_8.svg"
           ],
           cadre: [
-            -25,
-            -33,
-            52.5,
-            43
+            -27.5,
+            -32.5,
+            57.5,
+            52.5
           ],
           derriere: false,
           ms_par_image: 333,
           place: {
             I: [
-              0.9,
-              -0.22
+              1,
+              -0.55
             ],
             II: [
-              0.9,
-              -0.22
+              0.98,
+              -0.5
             ],
             III: [
-              0.9,
-              -0.22
+              0.92,
+              -0.44
             ],
             IV: [
-              1.35,
-              -0.33
+              -1.4,
+              1
             ],
             V: [
-              1.35,
-              -0.33
+              1.4,
+              -0.85
             ],
             VI: [
-              1.35,
-              -0.33
+              1.4,
+              -0.2
             ],
             VII: [
-              1.35,
-              -0.33
+              1.25,
+              0
             ]
           }
         }
@@ -13997,41 +14264,41 @@ var batiments_default = {
             "objets/foyer/chat/chat_8.svg"
           ],
           cadre: [
-            -17.5,
             -20,
-            35,
-            25
+            -20,
+            40,
+            27.5
           ],
           derriere: false,
           ms_par_image: 333,
           place: {
             I: [
-              0.46,
-              0.8
+              0.15,
+              1
             ],
             II: [
-              0.46,
-              0.8
+              0.3,
+              0.85
             ],
             III: [
-              0.46,
-              0.8
+              -0.7,
+              0.95
             ],
             IV: [
-              0.69,
-              1.2
+              0.75,
+              0.95
             ],
             V: [
-              0.69,
-              1.2
+              0.97,
+              0.92
             ],
             VI: [
-              0.69,
-              1.2
+              0.65,
+              0.85
             ],
             VII: [
-              0.69,
-              1.2
+              0.65,
+              1.35
             ]
           }
         }
@@ -14112,7 +14379,7 @@ var batiments_default = {
           ],
           cadre: [
             -20,
-            -57.5,
+            -60,
             40,
             65
           ],
@@ -14120,16 +14387,16 @@ var batiments_default = {
           ms_par_image: 500,
           place: {
             V: [
-              1.38,
-              0.93
+              1.25,
+              0.25
             ],
             VI: [
               1.38,
-              0.93
+              0.88
             ],
             VII: [
-              1.38,
-              0.93
+              1.04,
+              1.16
             ]
           }
         }
@@ -14153,24 +14420,24 @@ var batiments_default = {
           ],
           cadre: [
             -20,
-            -57.5,
+            -65,
             40,
-            65
+            70
           ],
           derriere: false,
           ms_par_image: 333,
           place: {
             V: [
-              -1.38,
-              0.54
+              -1.18,
+              1.28
             ],
             VI: [
-              -1.38,
-              0.54
+              1.25,
+              -1.25
             ],
             VII: [
-              -1.38,
-              0.54
+              0.57,
+              -0.17
             ]
           }
         }
@@ -14186,24 +14453,24 @@ var batiments_default = {
             "objets/foyer/grimoire/grimoire_calque1.svg"
           ],
           cadre: [
-            -17.5,
-            -27.5,
-            35,
+            -20,
+            -30,
+            40,
             35
           ],
           derriere: false,
           place: {
             V: [
-              1.32,
-              1.42
+              0.73,
+              1.38
             ],
             VI: [
-              1.32,
-              1.42
+              0.97,
+              1.32
             ],
             VII: [
-              1.32,
-              1.42
+              -0.14,
+              0.74
             ]
           }
         },
@@ -14229,23 +14496,23 @@ var batiments_default = {
           mouvement: true,
           place: {
             V: [
-              1.32,
-              1.42
+              0.73,
+              1.38
             ],
             VI: [
-              1.32,
-              1.42
+              0.97,
+              1.32
             ],
             VII: [
-              1.32,
-              1.42
+              -0.14,
+              0.74
             ]
           }
         }
       ],
       lumiere: {
-        u: 1.32,
-        v: 1.42,
+        u: 0.73,
+        v: 1.38,
         z: 30,
         rayon: 27.5
       }
@@ -15370,6 +15637,7 @@ var batiments_default = {
 
 // atelier/generateur_batiments.mjs
 var import_foyer2 = __toESM(require_foyer(), 1);
+var import_foyer_annexes = __toESM(require_foyer_annexes(), 1);
 var K = 1.25;
 var r2 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
 var up = /* @__PURE__ */ __name((body) => `<g transform="scale(${K})">${body}</g>`, "up");
@@ -15404,10 +15672,9 @@ function palier(s, lv, n = 1, hiver = false) {
 }
 __name(palier, "palier");
 function chantier(phase) {
-  const make = BUILDINGS.chantier[phase - 1];
-  if (!make) throw new Error(`chantier : phase ${phase} (1, 2 ou 3)`);
+  if (![1, 2, 3].includes(phase)) throw new Error(`chantier : phase ${phase} (1, 2 ou 3)`);
   const cadre = batiments_default.chantier.cadres[phase - 1];
-  return { svg: svgOf(cadre, up(inner2(make()))), cadre, ms_par_image: null };
+  return { svg: import_foyer_annexes.default.imageChantier(phase, cadre), cadre, ms_par_image: null };
 }
 __name(chantier, "chantier");
 function skin(id, lv) {

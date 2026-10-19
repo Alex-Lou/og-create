@@ -5,6 +5,8 @@
 // objets de la boutique, mesurés à la génération, viennent de l'index de la bibliothèque (batiments.json).
 import { SHOP_ITEMS, paliers, calques } from './objets_boutique.mjs';
 import T from './torche.js';
+// Les annexes du Foyer redessinées (foyer_annexes.js, choix de l'auteur, 19 oct. ; pas le chien, caché pour l'instant)
+import FA from './foyer_annexes.js';
 import batiments from '../bibliotheque/svg/batiments/batiments.json' with { type: 'json' };
 
 const K = 1.25; // la bibliothèque est à l'échelle du jeu × 1,25
@@ -27,6 +29,7 @@ const calquesDe = id => { if (!SITE[id]) throw new Error(`objet inconnu : ${id} 
 // Un objet de la boutique : son calque (1, 2…), au palier donné (1 à 7), image n (pour un calque animé) ; posé à sa place
 // par le jeu (batiments.json, place), derrière le bâtiment si derriere
 export function objet(id, calque = 1, palier, image = 1) {
+  if (FA.ANNEXES[id]) return annexe(id, calque, palier, image);
   const cs = calquesDe(id), c = cs[calque - 1];
   if (!c) throw new Error(`${id} : calque ${calque} (de 1 à ${cs.length})`);
   if (!c.levels.includes(+palier)) throw new Error(`${id} : palier ${palier} (${c.levels.map(l => ROMAN[l - 1]).join(', ')})`);
@@ -35,6 +38,17 @@ export function objet(id, calque = 1, palier, image = 1) {
   const cad = batiments.objets[id].calques[calque - 1].cadre, cadre = Array.isArray(cad[0]) ? cad[i] : cad;
   return { svg: svgOf(cadre, `<g transform="scale(${K})">${vr.frames[image - 1]}</g>`), cadre, ms_par_image: c.layer.n ? Math.round(1000 / c.layer.fps) : null };
 }
+
+// Une annexe du Foyer redessinée : la même image à chaque palier où elle se vend
+function annexe(id, calque, palier, image) {
+  const a = FA.ANNEXES[id], c = a.calques[calque - 1];
+  if (!c) throw new Error(`${id} : calque ${calque} (de 1 à ${a.calques.length})`);
+  if (!a.paliers.includes(+palier)) throw new Error(`${id} : palier ${palier} (${a.paliers.map(l => ROMAN[l - 1]).join(', ')})`);
+  if (!(image >= 1 && image <= c.n)) throw new Error(`${id} : image ${image} (de 1 à ${c.n})`);
+  return { svg: FA.image(id, calque - 1, image - 1), cadre: c.cadre, ms_par_image: c.ms };
+}
+// Le nom de fichier d'une image d'une annexe (sans le dossier)
+export const nomAnnexe = (id, k, f) => id + (FA.ANNEXES[id].calques.length > 1 ? `_calque${k + 1}` : '') + (FA.ANNEXES[id].calques[k].n > 1 ? `_${f + 1}` : '');
 
 const CADRE_TORCHE = [-50, -115, 100, 140]; // le cadre des créations posées sur une case
 // La torche : 'allumee' (image 1 à 3, en boucle) ou 'eteinte' ; torcheIcone : 32 × 32, pour la boutique
@@ -53,6 +67,7 @@ export const LUMIERE_TORCHE = T.LUMIERE;
 export function liste() {
   const out = [];
   for (const [id, site] of Object.entries(SITE)) {
+    if (FA.ANNEXES[id]) { FA.ANNEXES[id].calques.forEach(c => { for (let f = 0; f < c.n; f++) out.push({ fichier: `batiments/objets/${site}/${id}/${nomAnnexe(id, c.k, f)}.svg`, fonction: 'objet', args: [id, c.k + 1, FA.ANNEXES[id].paliers[0], f + 1] }); }); continue; }
     for (const c of calquesDe(id)) for (const vr of c.variantes) vr.frames.forEach((_, f) => out.push({ fichier: `batiments/objets/${site}/${id}/${c.nom(vr, f)}.svg`, fonction: 'objet', args: [id, c.k + 1, vr.from, f + 1] }));
   }
   for (let n = 1; n <= TORCHE.allumee; n++) out.push({ fichier: `decor/defenses/torche_allumee_${n}.svg`, fonction: 'torche', args: ['allumee', n] });

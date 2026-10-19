@@ -1,6 +1,6 @@
 // La boutique d'un bâtiment côté navigateur : rubriques, verrous et libellés d'achat (le serveur reste seul juge)
 import { describe, it, expect } from 'vitest';
-import { shopGroups, itemArt, itemNote, itemLock, itemBuyable, itemBuyLabel } from '@/world/shop';
+import { shopGroups, itemArt, itemNote, itemLock, itemBuyable, itemBuyLabel, withoutHidden } from '@/world/shop';
 
 const item = (id, extra = {}) => ({ id, name: id, kind: 'outil', minLevel: 1, price: 100, effect: `effet de ${id}`, ...extra });
 const site = (extra = {}) => ({ id: 'carriere', level: 3, ...extra });
@@ -62,5 +62,19 @@ describe('itemNote et itemArt', () => {
     const art = itemArt(site(), item('pioche'));
     expect(art).toMatch(/^data:image\/svg\+xml/);
     expect(itemArt(site(), item('pioche'))).toBe(art);
+  });
+});
+
+// Le chien du Foyer : le serveur le garde, le jeu ne le montre pas encore (il sera à découvrir et à acheter)
+describe('withoutHidden', () => {
+  it('retire les articles cachés de chaque boutique, sans toucher au reste ni à ce que le serveur a envoyé', () => {
+    const served = { stock: { wood: 3 }, sites: [{ id: 'foyer', shop: [{ id: 'cuisine' }, { id: 'chien', owned: true }, { id: 'chat' }] }, { id: 'puits', shop: [{ id: 'pompe' }] }, { id: 'atelier' }] };
+    const state = withoutHidden(served);
+    expect(state.sites[0].shop.map(item => item.id)).toEqual(['cuisine', 'chat']);
+    expect(state.sites[1]).toBe(served.sites[1]);
+    expect(state.sites[2]).toBe(served.sites[2]);
+    expect(state.stock).toBe(served.stock);
+    expect(served.sites[0].shop.length).toBe(3);
+    expect(withoutHidden(null)).toBe(null);
   });
 });

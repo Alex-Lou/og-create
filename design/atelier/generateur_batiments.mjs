@@ -6,13 +6,14 @@
 // génération, viennent de l'index de la bibliothèque (batiments.json). Les objets de la boutique sont dans
 // generateur/objets.mjs, le montage dans generateur/chantiers.mjs.
 import { lookAt, artMake, boatBody } from './port/src/world/looks.js';
-import { BUILDINGS } from './port/src/world/sprites.js';
 import { setHiver } from './port/src/world/iso.js';
 import { tintSvg } from './port/src/world/tints.js';
 import { itemLayers } from './port/src/world/shopSprites.js';
 import B from '../bibliotheque/svg/batiments/batiments.json' with { type: 'json' };
 // Le Foyer redessiné (foyer.js, choix de l'auteur, 18 oct.) : ses paliers, l'hiver, ses skins, ses pièces rares
 import FOYER from './foyer.js';
+// Le chantier redessiné dans la direction du Foyer (foyer_annexes.js, choix de l'auteur, 19 oct.)
+import FA from './foyer_annexes.js';
 
 const K = 1.25;
 const r2 = n => Math.round(n * 100) / 100;
@@ -43,12 +44,11 @@ export function palier(s, lv, n = 1, hiver = false) {
     return { svg: svgOf(e.cadre, body), cadre: e.cadre, ms_par_image: e.ms_par_image ?? null };
   } finally { setHiver(false); }
 }
-// Le chantier qui attend : phase 1 (plan pas trouvé), 2 (plan trouvé), 3 (prêt à bâtir)
+// Le chantier qui attend : phase 1 (plan pas trouvé), 2 (plan trouvé), 3 (prêt à bâtir) ; commun aux sept bâtiments
 export function chantier(phase) {
-  const make = BUILDINGS.chantier[phase - 1];
-  if (!make) throw new Error(`chantier : phase ${phase} (1, 2 ou 3)`);
+  if (![1, 2, 3].includes(phase)) throw new Error(`chantier : phase ${phase} (1, 2 ou 3)`);
   const cadre = B.chantier.cadres[phase - 1];
-  return { svg: svgOf(cadre, up(inner(make()))), cadre, ms_par_image: null };
+  return { svg: FA.imageChantier(phase, cadre), cadre, ms_par_image: null };
 }
 // Un skin à un palier (seulement les paliers où il change le dessin : BATIMENTS.skins[skin].fichiers)
 export function skin(id, lv) {
