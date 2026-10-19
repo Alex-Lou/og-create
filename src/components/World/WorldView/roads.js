@@ -376,6 +376,40 @@ export default {
     drawRoads(ctx, t, s) {
       const now = performance.now();
       const mode = this.roadMode;
+      this.drawRoadPlan({ ctx, t, s, now, mode });
+      this.settleRoadStones({ ctx, now });
+      if (!this.roadDigs.length || !this.M) return;
+      const left = [];
+      for (const dig of this.roadDigs) {
+        const ms = now - dig.at;
+        if (ms >= 5 * STAGE_MS + 400) continue;
+        left.push(dig);
+        const p = this.ground(dig.x, dig.y);
+        // Avant son tour, la case garde son herbe ; puis les étapes, jusqu'au chemin de terre (déjà peint dessous)
+        const stage = ms < 0 ? 0 : Math.floor(ms / STAGE_MS) + 1;
+        if (stage <= 5) {
+          // (l'herbe de la case : celle de ses voisines, sans damier, sous le dessin du creusement : terrain.js)
+          const smooth = paintSmooth(ctx, this.M, dig.x, dig.y, p);
+          const img = stage ? pathImage(digFile(stage, pathMask(this.M, dig.x, dig.y)), smooth ? CLEAR_GRASS : pathGrass(this.M, dig.x, dig.y)) : null;
+          this.diamond(ctx, p.x, p.y, TW, TH);
+          ctx.save();
+          ctx.clip();
+          if (img) ctx.drawImage(img, p.x - TW / 2, p.y - TH / 2, TW, TH);
+          else if (!smooth) {
+            ctx.fillStyle = pathGrass(this.M, dig.x, dig.y);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+        // Les mottes au coup de bêche, la poussière à la fin
+        const fx = ms >= 0 && ms < 360 ? effectImage('mottes', ms) : ms >= 5 * STAGE_MS ? effectImage('poussiere', ms - 5 * STAGE_MS) : null;
+        if (fx) ctx.drawImage(fx, p.x - TW / 2, p.y - TH / 2 - 16, TW, TH * 1.5);
+      }
+      this.roadDigs = left;
+    },
+    // L'aperçu du tracé en cours (mode chemin) : cases à poser, pavé en attente, cases à effacer ou à dépaver, cases
+    // conseillées (ou libres autour de la dernière posée), case refusée
+    drawRoadPlan({ ctx, t, s, now, mode }) {
       if (mode) {
         ctx.lineJoin = 'round';
         for (const c of mode.lay) {
@@ -454,6 +488,8 @@ export default {
           ctx.stroke();
         }
       }
+    },
+    settleRoadStones({ ctx, now }) {
       // Les pierres des cases qu'on vient de paver se posent (la pierre qui tombe, puis un peu de poussière)
       if (this.roadSets.length) {
         const sets = [];
@@ -467,34 +503,6 @@ export default {
         }
         this.roadSets = sets;
       }
-      if (!this.roadDigs.length || !this.M) return;
-      const left = [];
-      for (const dig of this.roadDigs) {
-        const ms = now - dig.at;
-        if (ms >= 5 * STAGE_MS + 400) continue;
-        left.push(dig);
-        const p = this.ground(dig.x, dig.y);
-        // Avant son tour, la case garde son herbe ; puis les étapes, jusqu'au chemin de terre (déjà peint dessous)
-        const stage = ms < 0 ? 0 : Math.floor(ms / STAGE_MS) + 1;
-        if (stage <= 5) {
-          // (l'herbe de la case : celle de ses voisines, sans damier, sous le dessin du creusement : terrain.js)
-          const smooth = paintSmooth(ctx, this.M, dig.x, dig.y, p);
-          const img = stage ? pathImage(digFile(stage, pathMask(this.M, dig.x, dig.y)), smooth ? CLEAR_GRASS : pathGrass(this.M, dig.x, dig.y)) : null;
-          this.diamond(ctx, p.x, p.y, TW, TH);
-          ctx.save();
-          ctx.clip();
-          if (img) ctx.drawImage(img, p.x - TW / 2, p.y - TH / 2, TW, TH);
-          else if (!smooth) {
-            ctx.fillStyle = pathGrass(this.M, dig.x, dig.y);
-            ctx.fill();
-          }
-          ctx.restore();
-        }
-        // Les mottes au coup de bêche, la poussière à la fin
-        const fx = ms >= 0 && ms < 360 ? effectImage('mottes', ms) : ms >= 5 * STAGE_MS ? effectImage('poussiere', ms - 5 * STAGE_MS) : null;
-        if (fx) ctx.drawImage(fx, p.x - TW / 2, p.y - TH / 2 - 16, TW, TH * 1.5);
-      }
-      this.roadDigs = left;
     }
   }
 };
