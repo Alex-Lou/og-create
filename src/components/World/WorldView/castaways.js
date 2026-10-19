@@ -14,16 +14,16 @@ const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer', cage: 'c
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Lorena, à son Ponton)
 const SETTLED = ['ponton'];
 // Ceux qui n'arrivent pas de l'épave : Lorena à la nage, au pied de son Ponton ; Nathan de la brume du nord, au pied du
-// chemin de son Atelier ; Léo de sa planche, échouée un peu plus loin que le Ponton (game/stages.js : nage, lisiere,
+// chemin de son Atelier ; Léo de sa planche, échouée sur le rivage sous le Feu (game/stages.js : nage, lisiere,
 // planche)
 const ENTRANCES = ['ponton', 'atelier', 'puits'];
 // Ceux qui dorment dans leur forêt, pas à leur place (choix de l'auteur, 14 oct. : Maerys, à l'orée de la Lisière ; son
 // Bosquet, près du Puits) : rôle → le quartier de la forêt, et jusqu'où chercher son orée autour de sa place (cases)
 const FOREST_BEDS = { bosquet: 'lisiere' };
 const BED_REACH = 14;
-// La case de sable où la planche de Léo s'échoue (choix de l'auteur, 14 oct. : un peu plus loin que le Ponton, à
-// l'ouest, sur la plage du camp de Lorena, hors de la brume)
-const PLANK = { x: 91, y: 98 };
+// La case de sable où la planche de Léo s'échoue (choix de l'auteur, 18 oct. : là où était la cuisine d’Agathe, sur le
+// rivage sous l'enclos du Feu ; la grande Hirondelle couvre maintenant son ancienne case, contre sa poupe)
+const PLANK = { x: 99, y: 98 };
 // Le premier débarque un instant après la vue (le temps de souffler), le suivant un peu après (s)
 const ARRIVE_DELAY = 0.8;
 const ARRIVE_GAP = 6;

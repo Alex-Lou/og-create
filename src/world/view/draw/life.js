@@ -305,12 +305,12 @@ export default {
         if (w.fluke) out.standing.push({ kind: 'fluke', x: w.fluke.x, y: w.fluke.y, z: 0, e: w.fluke.e, flip: w.flip, frame: Math.floor(t / 0.42) % 2 });
       }
     }
-    if (guests.jellies) out.jellies = jelliesAt(this.sea.open, t);
+    if (guests.jellies) out.jellies = jelliesAt(this.waterSeen().open, t);
     // Les bancs de poissons (faune/bancs.js) : on peut les toucher (ils fusent, des ronds là où ils étaient) ; le jour,
     // les mouettes plongent dans la boule de sardines
     if (!still) {
       const boule = this.bouleOf(t, view);
-      this.sea.schools.forEach((sc, k) => {
+      this.waterSeen().schools.forEach((sc, k) => {
         const key = `school:${k}`, touched = this.scared.get(key);
         // (le banc ramassé en boule se touche là où est la boule)
         const c = boule && boule.k === k && boule.m > 0.5 ? boule : centreOf(sc, k, t);
@@ -380,7 +380,7 @@ export default {
     if (τ >= length) return null;
     let p = this.passages[name];
     if (!p || p.cycle !== cycle) {
-      const spot = nearestOpen(this.sea.open, center.x, center.y, far);
+      const spot = nearestOpen(this.waterSeen().open, center.x, center.y, far);
       if (!spot) return null;
       p = { cycle, spot, dir: spot.dirs[Math.floor(hash(cycle, name.length) * spot.dirs.length)], key: `${name}:${cycle}` };
       this.passages[name] = p;
@@ -418,7 +418,7 @@ export default {
     if (!pass || τ < 0 || τ >= KRAKEN_FOR || !(phase.night > 0.35 || phase.weather.storm >= 0.5)) return null;
     let p = this.passages.kraken;
     if (!p || p.key !== pass.key) {
-      const route = krakenRoute(this.sea.open, pass.cycle);
+      const route = krakenRoute(this.waterSeen().open, pass.cycle);
       if (!route) return null;
       p = this.passages.kraken = { key: pass.key, route, said: false };
     }
@@ -469,7 +469,7 @@ export default {
     let a = this.passages.apercu;
     if (!a || a.coup !== ap.coup) {
       const c = this.cellAt(view.x + view.w * (0.15 + 0.7 * ap.x), view.y + view.h * 0.22);
-      a = this.passages.apercu = { coup: ap.coup, at: eauLibre(this.sea.open, c.x, c.y, 5) };
+      a = this.passages.apercu = { coup: ap.coup, at: eauLibre(this.waterSeen().open, c.x, c.y, 5) };
     }
     return a.at ? { ap, at: a.at } : null;
   },
@@ -477,7 +477,7 @@ export default {
   // se ramasse en boule ; null entre deux
   bouleOf(t, view) {
     const cycle = Math.floor(t / BOULE_EVERY), τ = t - cycle * BOULE_EVERY;
-    const schools = this.sea.schools;
+    const schools = this.waterSeen().schools;
     if (τ >= BOULE_FOR || !schools.length) return null;
     let p = this.passages.boule;
     if (!p || p.cycle !== cycle) {

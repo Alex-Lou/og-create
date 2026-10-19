@@ -215,6 +215,25 @@ export default {
     mistFade(base, zone) {
       return this.zoneThick(zone) ? 0.9 : base;
     },
+    // Les eaux qu'on voit (choix de l'auteur, 18 oct. : sous la brume, rien ne vit ni ne bouge dans l'eau, ça coûte pour
+    // rien ; tout reprend à la découverte du quartier) : les vagues et l'écume, l'eau douce et ses poissons, les eaux peu
+    // profondes, les bancs, l'eau libre (dauphins, baleine, méduses, Géant, Kraken), hors des cases voilées (veilAt).
+    // Refaites quand la brume change, pas à chaque image ; clear(c) : cette case (ou ce point) est-elle dégagée ?
+    waterSeen() {
+      const key = [this.M, this.sea, this.live, this.fresh, this.mistKey, this.veiled];
+      if (this.seenWater && this.seenWater.key.every((k, i) => k === key[i])) return this.seenWater;
+      const clear = c => this.veilAt(Math.round(c.x), Math.round(c.y)) <= 0;
+      const fresh = this.fresh;
+      this.seenWater = {
+        key, clear,
+        live: { ...this.live, water: this.live.water.filter(clear), falls: this.live.falls.filter(clear), shore: this.live.shore.filter(clear), back: this.live.back.filter(clear) },
+        open: this.sea.open.filter(clear),
+        schools: this.sea.schools.filter(clear),
+        shallow: this.sea.shallow.map(list => list.filter(clear)),
+        fresh: fresh ? { ...fresh, cells: fresh.cells.filter(clear), fish: fresh.fish.filter(clear) } : null
+      };
+      return this.seenWater;
+    },
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
     // (lu sur l'état brut : le sol le demande pour chaque case de chaque carré, et passer par l'état réactif en coûtait
     // plus de la moitié ; seul le dessin le lit, hors de tout suivi de Vue)

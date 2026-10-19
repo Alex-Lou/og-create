@@ -245,29 +245,33 @@ export default {
     const file = filante && filante.cycle !== this.filanteCaught ? filante : null;
     // Sous le sol : reflets, vagues qui arrivent derrière l'île, bancs de poissons, puis les eaux peu profondes par-dessus
     // (la terre les recouvre)
+    // (sous la brume, rien ne vit ni ne bouge dans l'eau : seules les eaux dégagées s'animent, WorldView terrain.js,
+    // waterSeen ; le courant de l'eau douce se calcule une fois par île)
+    if (!this.fresh || this.fresh.live !== this.live) this.fresh = { live: this.live, ...freshOf(this.M, this.live) };
+    const water = this.waterSeen();
     // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
     drawSparkles(ctx, view, t, Math.max(phase.night, phase.weather.cover * 0.85), s);
     // (l'état de la mer suit le temps du jeu, et chaque jour sa houle : houle, moutons, embruns, reflets plus brisés :
     // sea.js)
     const agite = agitationOf(phase.weather, date);
-    drawWaves(ctx, this.live.back, view, t, false, agite);
+    drawWaves(ctx, water.live.back, view, t, false, agite);
     // Les bancs (faune/bancs.js) : ceux qu'on vient de toucher fusent, celui de la boule de sardines se ramasse (pas en
     // mouvement réduit)
     const boule = this.reduced() ? null : this.bouleOf(t, view);
-    const bancs = bancsOf(this.sea.schools, t, k => (this.scared.get(`school:${k}`) || {}).at, boule);
+    const bancs = bancsOf(water.schools, t, k => (this.scared.get(`school:${k}`) || {}).at, boule);
     drawBancs(ctx, bancs, view, phase.night);
-    drawShallows(ctx, this.sea.shallow, view, phase.night);
+    drawShallows(ctx, water.shallow, view, phase.night);
     drawEclatsBancs(ctx, bancs, phase.night);
     // La lumière qui danse au fond des eaux peu profondes, puis le chemin du soleil, de la lune ou de l'éclair (posé
     // sur la mer : il suit la caméra, comme les reflets), et le reflet de l'arc-en-ciel qui ondule
-    drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
+    drawCaustics(ctx, water.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
     // (les nuits voilées, la lune assez pleine : son halo, un grand anneau pâle sur la mer au bout de son chemin ; immobile
     // en mouvement réduit : lumiere/aurore.js)
     drawHalo(ctx, view, this.reduced() ? 0 : t, haloOf(phase, date), this.terrain.bounds, agite);
     // Les moutons du large quand la mer forcit ; la nuit, les lumières du rivage qui se reflètent sur l'eau (celles de
     // l'image d'avant ; la terre, par-dessus, cache ce qui ne tombe pas sur la mer)
-    drawMoutons(ctx, view, t, agite, (x, y) => { const c = this.cellAt(x, y); return !this.M.land(Math.round(c.x), Math.round(c.y)); });
+    drawMoutons(ctx, view, t, agite, (x, y) => { const c = this.cellAt(x, y); return !this.M.land(Math.round(c.x), Math.round(c.y)) && water.clear(c); });
     drawRefletsMer(ctx, this.lightSpots, view, t, phase.night, agite);
     if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
     // Le reflet du phare des Anciens sur la mer, sous son îlot (la terre le cache où elle passe), teinté du ciel
@@ -306,9 +310,8 @@ export default {
     // carrés, préparés pendant qu'on lit le conseil, suivent sans à-coups ; WorldView, phare.js)
     const missing = this.terrain.draw(ctx, view, this.flightPan ? Math.min(s * dpr, PAN_SCALE) : s * dpr, 8, baked || NEAR_BAKE);
     if (gridWanted()) this.drawGrid(ctx, view);
-    drawLive(ctx, this.M, this.live, view, t);
-    // L'eau douce vivante : poissons, lumière au fond, courant, cascades, bonds (le courant se calcule une fois par île)
-    if (!this.fresh || this.fresh.live !== this.live) this.fresh = { live: this.live, ...freshOf(this.M, this.live) };
+    drawLive(ctx, this.M, water.live, view, t);
+    // L'eau douce vivante : poissons, lumière au fond, courant, cascades, bonds
     // La météo au sol (le mouillé, la neige, les flaques, la glace) va partout où la terre se voit, même à travers un
     // peu de brume (le Voile léger, le cœur que le tutoriel n'a pas encore levé) ; rien sous la brume épaisse, jusqu'à
     // la découverte du quartier (choix de l'auteur)
@@ -317,18 +320,17 @@ export default {
     // les rivières et la mer coulent toujours)
     const gel = SEASON === 'hiver';
     const prise = c => c.mare && visible(c.x, c.y) > 0;
-    const eau = gel ? { ...this.fresh, cells: this.fresh.cells.filter(c => !prise(c)), fish: this.fresh.fish.filter(f => !prise(f)) } : this.fresh;
-    drawFresh(ctx, this.M, this.live, eau, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6), this.reduced());
+    const eau = gel ? { ...water.fresh, cells: water.fresh.cells.filter(c => !prise(c)), fish: water.fresh.fish.filter(f => !prise(f)) } : water.fresh;
+    drawFresh(ctx, this.M, water.live, eau, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6), this.reduced());
     const wet = this.wetOf(date);
     if (gel) drawGlace(ctx, this.fresh.cells, view, neigeAuSol(wet, SEASON), visible);
     // L'averse : les flaques du sol mouillé (elles sèchent après la pluie), puis les ronds de la pluie sur l'eau
-    // (flaques et ronds se placent une fois par île ; le mouillé se recalcule une fois par minute)
+    // (les flaques se placent une fois par île, les ronds avec les eaux dégagées ; le mouillé se recalcule une fois par
+    // minute)
     const rainK = rainFelt(phase.weather.rain, t);
     if (wet > 0.04 || rainK > 0.03) {
-      if (!this.rainSpots || this.rainSpots.fresh !== this.fresh) {
-        const puddles = puddlesOf(this.M);
-        this.rainSpots = { fresh: this.fresh, puddles, spots: rippleSpotsOf(this.fresh.cells, this.sea.shallow[0]) };
-      }
+      if (!this.rainSpots || this.rainSpots.fresh !== this.fresh) this.rainSpots = { fresh: this.fresh, puddles: puddlesOf(this.M) };
+      if (this.rainSpots.water !== water) Object.assign(this.rainSpots, { water, spots: rippleSpotsOf(water.fresh.cells, water.shallow[0]) });
       // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js)
       drawWetGround(ctx, this.M, view, wet, t, visible);
       // l'hiver, la neige tombée reste au sol, puis fond case après case ; de près, ses dessins sous le décor
@@ -340,11 +342,11 @@ export default {
       if (!gel) drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
-    drawWaves(ctx, this.live.shore, view, t, true, agite);
-    drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
+    drawWaves(ctx, water.live.shore, view, t, true, agite);
+    drawLace(ctx, shoreEdges(water.live.shore, view, t), t);
     // Les embruns quand la vague frappe la côte : rares et petits par calme, partout et hauts dans l'orage (pas en
     // mouvement réduit)
-    if (!this.reduced()) drawEmbruns(ctx, this.live.shore, view, t, 0.15 + 0.85 * agite);
+    if (!this.reduced()) drawEmbruns(ctx, water.live.shore, view, t, 0.15 + 0.85 * agite);
     const life = this.seaLife(t, view, phase);
     // (le Géant et le Kraken se touchent aussi : ils entrent au Bestiaire)
     if (geant || kraken) this.seaHits.push(...this.legendHits(geant, kraken));
@@ -684,7 +686,7 @@ export default {
     // La nuit, le plancton s'allume dans l'écume, les méduses et les bancs luisent
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    drawPlankton(ctx, this.live.shore, view, t, phase.night);
+    drawPlankton(ctx, water.live.shore, view, t, phase.night);
     if (life.jellies) drawJellies(ctx, life.jellies, view, t, phase.night);
     drawLueursBancs(ctx, bancs, phase.night);
     // (et la jungle de la zone de départ : ses plantes, draw/nature.js ; sa mousse, ses lucioles et ses spores,
