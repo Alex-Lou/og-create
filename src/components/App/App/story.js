@@ -346,6 +346,12 @@ export default {
       }
       this.prologueScene = null;
       this.savePrologue({ seen: [...new Set([...this.prologue.seen, scene])] });
+      // Le Brasier écrit, l'épave vue : droit sur l'île, sans repasser par le Grimoire (choix de l'auteur, 19 oct.) ;
+      // Brume y dit sa réplique, sans bouton (runPrologue retire alors celle qui invitait à y aller)
+      if (scene === 'epave' && this.discoveredElements.includes('Brasier')) {
+        this.handleModeSelect('world');
+        guide.say({ id: 'prologue-greve-feu', text: PROLOGUE_LINES['greve-feu'] });
+      }
       this.runPrologue();
       this.runIsland();
     },
