@@ -5,7 +5,8 @@
 import { hash } from '@/world/scene';
 import { P } from '@/world/iso';
 import { campPerches } from '@/world/campArt';
-import { drawSprite } from '@/world/spriteCache';
+import { drawSprite, readyImage } from '@/world/spriteCache';
+import { lisereOf, graineOf, marquerLisere, BUSTE } from '@/world/lumiere';
 import { drawSpout, seaGuests, DOLPHIN_EVERY, DOLPHIN_FOR, podAt, WHALE_EVERY, WHALE_FOR, whaleAt, jelliesAt, circling, crossing, nearestOpen, spread } from '@/world/sea';
 import { FLOATING_ZONE, COLONY_ZONE, ferryPose } from '@/world/islets';
 import { SEA_Z, HS, worldOf } from '@/world/terrain';
@@ -221,7 +222,19 @@ export default {
     const [key, make] = art;
     // (sa dernière image le temps que la suivante se lise : son identité, sinon une autre image de son espèce)
     drawSprite(ctx, key, make, 0, 0, repaint, critter.id ?? `${critter.kind}:${critter.species || ''}`);
+    // (un habitant, maître ou venu d'ailleurs, reçoit le liseré vivant de la lumière qui domine là où il se tient ;
+    // qui nage, non : seule sa tête dépasse de l'eau)
+    if (this.liseres && critter.kind === 'villager' && !critter.swim) this.lisereDe(ctx, critter, key, c);
     ctx.restore();
+  },
+  // Le liseré vivant d'un habitant qu'on vient de dessiner, dans sa transformation (lumiere/lisere.js) ; rien tant que
+  // son image n'est pas prête
+  lisereDe(ctx, critter, key, c) {
+    const ready = readyImage(key);
+    if (!ready) return;
+    const L = this.liseres;
+    const l = lisereOf({ phase: L.phase, lune: L.lune, lumieres: L.lumieres, at: { x: c.x, y: c.y - critter.z - BUSTE }, flip: critter.flip, t: L.t, still: L.still, graine: graineOf(critter.id) });
+    if (l) marquerLisere(ctx, ready.img, ready.box, l, L.liste);
   },
   // Barque du passeur et son ponton (Îlot aux Mouettes à soi) : elle fait la navette une fois l'île flottante à soi
   ferryItems(t) {
