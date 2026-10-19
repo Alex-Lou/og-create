@@ -7,15 +7,17 @@
 import { librarySprite, portraitOf, textsOf } from './library';
 
 const FILES = textsOf(import.meta.glob([
-  '/design/bibliotheque/svg/vivants/anya/anya_{face,avant,dos}_{repos,marche,apparaitre,disparaitre,murmure1,murmure2,murmure3}_*.svg',
+  '/design/bibliotheque/svg/vivants/anya/anya_{face,avant,dos}_{repos,marche,apparaitre,disparaitre,murmure1,murmure2,murmure3,foudre}_*.svg',
   '/design/bibliotheque/svg/vivants/cerf-blanc/cerf-blanc_{face,avant,dos}_{debout,marche}_[0-9].svg'
 ], { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/vivants/';
 const SCALE = 1.25;
 
 // Leurs animations : [images, ms par image, ou la durée de chacune] (la cadence de la bibliothèque : noms_personnages.js) ;
-// son repos respire et cligne à la 4e image ; son éveil (la Révélation : PrologueArt.vue) ouvre les bras
-export const ANYA_POSES = { repos: [4, [1100, 900, 1100, 180]], marche: [8, 130], apparaitre: [6, 260], disparaitre: [6, 260], murmure: [4, 420], eveil: [2, [700, 900]] };
+// son repos respire et cligne à la 4e image ; son éveil (la Révélation : PrologueArt.vue) ouvre les bras ; la foudre de
+// son orage la frappe, annoncée et en fondu : ses étincelles se resserrent, une lueur pâle, son visage terrible qui
+// paraît, reste, s'en va (design/atelier/anya.js : anyaFoudre)
+export const ANYA_POSES = { repos: [4, [1100, 900, 1100, 180]], marche: [8, 130], apparaitre: [6, 260], disparaitre: [6, 260], murmure: [4, 420], eveil: [2, [700, 900]], foudre: [5, [300, 160, 180, 700, 320]] };
 export const CERF_POSES = { debout: [4, 420], marche: [8, 120] };
 // Le nombre de phrases de son murmure (son écriture de lune : anya_anims.js, BULLES)
 export const PHRASES = 3;
@@ -30,6 +32,10 @@ export const durationOf = anim => timesOf(anim).reduce((a, b) => a + b, 0) / 100
 const CERF_SIZE = 0.8;
 const boxOf = (w, h, [ax, ay], k = 1) => ({ x: (-ax / SCALE) * k, y: (-ay / SCALE) * k, w: (w / SCALE) * k, h: (h / SCALE) * k });
 const ANYA_BOX = boxOf(80, 128, [40, 125]);
+// (frappée par la foudre, elle paraît plus grande le temps de son visage terrible, en douceur, image après image : son
+// dessin ne le pouvait pas sans sortir de son cadre)
+export const FOUDRE_TAILLE = [1, 1, 1.04, 1.08, 1.04];
+const FOUDRE_BOXES = FOUDRE_TAILLE.map(k => boxOf(80, 128, [40, 125], k));
 const CERF_BOX = boxOf(120, 144, [60, 141], CERF_SIZE);
 
 // L'image d'une animation à s secondes de son début (once : jouée une fois, elle reste sur sa dernière image), de 1 à n
@@ -51,12 +57,12 @@ function spriteOf(path, box) {
   return { key: `lib-${path.split('/').pop().replace(/\.svg$/, '')}`, make: makes.get(path) };
 }
 
-// Anya : pose (repos, marche, apparaitre, disparaitre, murmure), vue (face, avant, dos), image n ; sa saison (son manteau
+// Anya : pose (repos, marche, apparaitre, disparaitre, murmure, foudre), vue (face, avant, dos), image n ; sa saison (son manteau
 // d'été sinon) ; phrase : celle du murmure (0 à 2). { key, make }, ou null si la bibliothèque ne l'a pas
 export function anyaArt(pose, view, n, { season = 'ete', phrase = 0 } = {}) {
   const name = pose === 'murmure' ? `murmure${(phrase % PHRASES) + 1}` : pose;
   const at = suffix => `${ROOT}anya/anya_${view}_${name}${suffix}_${n}.svg`;
-  return spriteOf(season !== 'ete' && FILES[at(`_${season}`)] ? at(`_${season}`) : at(''), ANYA_BOX);
+  return spriteOf(season !== 'ete' && FILES[at(`_${season}`)] ? at(`_${season}`) : at(''), pose === 'foudre' ? FOUDRE_BOXES[n - 1] : ANYA_BOX);
 }
 
 // Le cerf de lune : pose (debout, marche), vue (face, avant, dos), image n. { key, make }, ou null
