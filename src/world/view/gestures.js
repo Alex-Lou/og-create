@@ -269,37 +269,7 @@ export default {
     return first(this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile });
   },
   tap(px, py) {
-    // Une bulle de texte est là (Brume, un personnage, une consigne) : rien de l'île ne se touche tant qu'elle n'est pas
-    // lue (la caméra, si ; choix de l'auteur, 13 oct.)
-    if (guide.current) return;
-    // Mode chemin : un toucher pose ou retire une case, il ne touche rien d'autre (roads.js)
-    if (this.roadMode) {
-      this.roadTap(px, py);
-      return;
-    }
-    // Pose ou déplacement d'une annexe ou d'une création : seule compte la case, dorée ou non
-    if (this.annexPlacing) {
-      this.tapAnnexSpot(px, py);
-      return;
-    }
-    if (this.craftPlacing) {
-      this.tapCraftSpot(px, py);
-      return;
-    }
-    if (this.siteMoving) {
-      this.tapSiteSpot(px, py);
-      return;
-    }
-    // Une étoile filante (ou son reflet) touchée du doigt éclate en paillettes (world/lumiere/filantes.js), sans rien
-    // toucher d'autre
-    const star = (this.filanteHit || []).find(h => Math.hypot(px - h.x, py - h.y) < FILANTE_TOUCHE);
-    if (star) {
-      this.paillettes = { x: star.wx, y: star.wy, at: performance.now() };
-      this.filanteCaught = star.cycle;
-      this.filanteHit = null;
-      vibrate(6);
-      return;
-    }
+    if (this.tapMode(px, py)) return;
     let hit = this.hitAt(px, py);
     // Au tutoriel, seul ce que montre l'étape se touche (et Brume) : rien en avance, rien en retard (choix de l'auteur,
     // 13 oct.) ; la mer et les cases vides ne font que des ronds. Quelque chose devant la cible (une clôture, une
@@ -313,50 +283,7 @@ export default {
     // Une créature touchée (une bête, un familier, un égaré qu'on repousse…) : la première fois, elle entre au Bestiaire
     // (WorldView, bestiary.js)
     if (hit && hit.animal) this.meetCreature(hit.animal);
-    // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Lorena qui mène à la Récolte, sa caisse…
-    const acted = this.actOf(hit);
-    if (acted === 'poule') {
-      // (une poule échappée : la chasse aux poules s'ouvre, hens.js ; touchée par son « ! », celle qu'il marque)
-      this.dropPick();
-      this.tapHen(hit.animal ? hit.animal.who.beast : (this.coachWorld('poule') || {}).id);
-      return;
-    }
-    if (acted) {
-      this.dropPick();
-      this.$emit('act', acted);
-      vibrate(6);
-      return;
-    }
-    // Un « ! » sur un bâtiment ou sur Brume : comme les toucher eux-mêmes
-    if (hit && hit.mark) {
-      this.tapMark(hit.mark, px, py);
-      return;
-    }
-    // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume)
-    if (hit && hit.animal && hit.animal.stray) {
-      this.dropPick();
-      this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
-      return;
-    }
-    // La barque du Passeur : elle réagit tout de suite (phare.js, tapFerry)
-    if (hit && hit.ferry) {
-      this.dropPick();
-      this.tapFerry();
-      return;
-    }
-    // La bulle d'un besoin (faim, soif… ; la faim d'une poule) : un toucher le comble (folk.js, tapNeed)
-    if (hit && hit.asking && !hit.asking.visitor) {
-      this.dropPick();
-      this.tapNeed(hit.asking, px, py);
-      return;
-    }
-    // Une bête de ferme qui a faim, touchée elle-même et non sa bulle : on la nourrit tout autant
-    const hungry = hit && hit.animal && hit.animal.who && hit.animal.who.beast && this.needBubbles.find(b => b.beast === hit.animal.who.beast && !b.ready);
-    if (hungry) {
-      this.dropPick();
-      this.tapNeed(hungry, px, py);
-      return;
-    }
+    if (this.tapAtOnce(hit, px, py)) return;
     // Toucher en deux temps : ce qui ouvre une fiche ou agit sur le serveur se choisit d'abord (contour doré, bulle et
     // bouton) ; un second toucher dessus, ou le bouton, l'ouvre. Ce qui ne fait que réagir réagit tout de suite.
     const pick = hit ? this.pickOf(hit, px, py) : null;
@@ -376,6 +303,95 @@ export default {
       this.drawSoon();
       return;
     }
+    this.tapReact(hit, pick, px, py);
+  },
+  // Ce qui prend le toucher avant l'île (une bulle à lire, un mode chemin, une pose, une étoile filante) : true s'il est
+  // pris
+  tapMode(px, py) {
+    // Une bulle de texte est là (Brume, un personnage, une consigne) : rien de l'île ne se touche tant qu'elle n'est pas
+    // lue (la caméra, si ; choix de l'auteur, 13 oct.)
+    if (guide.current) return true;
+    // Mode chemin : un toucher pose ou retire une case, il ne touche rien d'autre (roads.js)
+    if (this.roadMode) {
+      this.roadTap(px, py);
+      return true;
+    }
+    // Pose ou déplacement d'une annexe ou d'une création : seule compte la case, dorée ou non
+    if (this.annexPlacing) {
+      this.tapAnnexSpot(px, py);
+      return true;
+    }
+    if (this.craftPlacing) {
+      this.tapCraftSpot(px, py);
+      return true;
+    }
+    if (this.siteMoving) {
+      this.tapSiteSpot(px, py);
+      return true;
+    }
+    // Une étoile filante (ou son reflet) touchée du doigt éclate en paillettes (world/lumiere/filantes.js), sans rien
+    // toucher d'autre
+    const star = (this.filanteHit || []).find(h => Math.hypot(px - h.x, py - h.y) < FILANTE_TOUCHE);
+    if (star) {
+      this.paillettes = { x: star.wx, y: star.wy, at: performance.now() };
+      this.filanteCaught = star.cycle;
+      this.filanteHit = null;
+      vibrate(6);
+      return true;
+    }
+    return false;
+  },
+  // Ce qui réagit dès le premier toucher (le tutoriel, une poule, un « ! », un égaré, la barque, un besoin) : true si
+  // c'est fait
+  tapAtOnce(hit, px, py) {
+    // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Lorena qui mène à la Récolte, sa caisse…
+    const acted = this.actOf(hit);
+    if (acted === 'poule') {
+      // (une poule échappée : la chasse aux poules s'ouvre, hens.js ; touchée par son « ! », celle qu'il marque)
+      this.dropPick();
+      this.tapHen(hit.animal ? hit.animal.who.beast : (this.coachWorld('poule') || {}).id);
+      return true;
+    }
+    if (acted) {
+      this.dropPick();
+      this.$emit('act', acted);
+      vibrate(6);
+      return true;
+    }
+    // Un « ! » sur un bâtiment ou sur Brume : comme les toucher eux-mêmes
+    if (hit && hit.mark) {
+      this.tapMark(hit.mark, px, py);
+      return true;
+    }
+    // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume)
+    if (hit && hit.animal && hit.animal.stray) {
+      this.dropPick();
+      this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
+      return true;
+    }
+    // La barque du Passeur : elle réagit tout de suite (phare.js, tapFerry)
+    if (hit && hit.ferry) {
+      this.dropPick();
+      this.tapFerry();
+      return true;
+    }
+    // La bulle d'un besoin (faim, soif… ; la faim d'une poule) : un toucher le comble (folk.js, tapNeed)
+    if (hit && hit.asking && !hit.asking.visitor) {
+      this.dropPick();
+      this.tapNeed(hit.asking, px, py);
+      return true;
+    }
+    // Une bête de ferme qui a faim, touchée elle-même et non sa bulle : on la nourrit tout autant
+    const hungry = hit && hit.animal && hit.animal.who && hit.animal.who.beast && this.needBubbles.find(b => b.beast === hit.animal.who.beast && !b.ready);
+    if (hungry) {
+      this.dropPick();
+      this.tapNeed(hungry, px, py);
+      return true;
+    }
+    return false;
+  },
+  // Un toucher sur l'île qui n'a rien fait d'autre : la chose choisie (pick), ou ce qui ne fait que réagir
+  tapReact(hit, pick, px, py) {
     if (pick) {
       // Le visiteur sursaute quand même : on l'a touché
       if (hit.animal && hit.animal.who) this.scare(hit.animal);
