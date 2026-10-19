@@ -127,8 +127,9 @@
 .splash.is-ready .splash__progress { height: 0; opacity: 0; overflow: hidden; transform: translateY(-8px); transition: opacity .4s ease, transform .4s ease, height .4s ease; }
 .splash.is-ready .splash__subtitle { opacity: .6; transition: opacity .4s ease; }
 
-/* « Entrée » : cachée pendant le chargement, elle paraît quand tout est prêt, et c'est elle qui ouvre le jeu */
-.splash__enter { display: none; position: relative; z-index: 4; min-width: min(280px, 74vw); padding: 15px 44px 16px; border: 0; border-radius: 999px;
+/* « Entrée » : cachée pendant le chargement, elle paraît quand tout est prêt, et c'est elle qui ouvre le jeu ; sur son propre
+   calque (will-change), son halo ne clignote plus sur un téléphone sous les calques de l'orage (retour de l'auteur, 19 oct.) */
+.splash__enter { display: none; position: relative; z-index: 4; will-change: transform; min-width: min(280px, 74vw); padding: 15px 44px 16px; border: 0; border-radius: 999px;
   background: linear-gradient(180deg, var(--sp-lune-clair), var(--sp-lune) 48%, var(--sp-lune-fonce)); color: var(--sp-encre);
   box-shadow: 0 6px 0 var(--sp-lune-ombre), 0 14px 30px rgba(0, 8, 26, .5), inset 0 0 0 1px var(--sp-lune-lisere);
   font: 900 19px var(--sp-police); letter-spacing: .18em; cursor: pointer; touch-action: manipulation; }
