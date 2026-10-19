@@ -115,16 +115,11 @@ export default {
     async namePeople() {
       const name = this.peopleName.trim();
       if (this.busy || name.length < 2) return;
-      this.busy = true;
-      try {
-        this.apply(await playService.worldPeople(name));
-        this.peopleName = '';
-        this.$emit('show-alert', BRUME_ALERTS.people(this.state.people));
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, BRUME_ERRORS.people), 'error');
-      } finally {
-        this.busy = false;
-      }
+      await this.runAction(BRUME_ERRORS.people, async () => {
+          this.apply(await playService.worldPeople(name));
+          this.peopleName = '';
+          this.$emit('show-alert', BRUME_ALERTS.people(this.state.people));
+      });
     },
     // La quête demande une Récolte : la fiche se ferme, la Récolte commence
     questHarvest() {

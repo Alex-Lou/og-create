@@ -266,19 +266,14 @@ export default {
     // en éclats
     async buildShelter(who) {
       if (this.busy) return;
-      this.busy = true;
-      try {
-        const { coins, world } = await playService.shelter(who);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        const corner = (this.state.camp || []).find(c => c.id === who);
-        if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
-        vibrate([12, 40, 18]);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.shelter), 'error');
-      } finally {
-        this.busy = false;
-      }
+      await this.runAction(FAILED.shelter, async () => {
+          const { coins, world } = await playService.shelter(who);
+          this.apply(world);
+          if (coins !== undefined) this.$emit('coins-updated', coins);
+          const corner = (this.state.camp || []).find(c => c.id === who);
+          if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
+          vibrate([12, 40, 18]);
+      });
     },
     /* ---------- Pose d'un trait (clôture, muret) : l'appui long puis le glisser, comme un chemin (roads.js) ---------- */
     // L'appui long sur l'île : le doigt trace. gesture : le geste en cours (gestures.js)
@@ -382,18 +377,13 @@ export default {
     async unposeLast() {
       if (this.busy) return;
       const cell = this.lessonPosed.cells[this.lessonPosed.cells.length - 1];
-      this.busy = true;
-      try {
-        const { coins, world } = await playService.craftUnpose(cell.x, cell.y);
-        this.lessonPosed.cells.pop();
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        vibrate(4);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.craftStore), 'error');
-      } finally {
-        this.busy = false;
-      }
+      await this.runAction(FAILED.craftStore, async () => {
+          const { coins, world } = await playService.craftUnpose(cell.x, cell.y);
+          this.lessonPosed.cells.pop();
+          this.apply(world);
+          if (coins !== undefined) this.$emit('coins-updated', coins);
+          vibrate(4);
+      });
     },
     undoKey(event) {
       if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'z' || !this.lineCraft) return;
@@ -525,19 +515,14 @@ export default {
     async turnFromMenu() {
       if (!this.craftMenu || this.busy) return;
       const { x, y } = this.craftMenu;
-      this.busy = true;
-      try {
-        const { coins, world } = await playService.craftTurn(x, y, !this.placedAt({ x, y }).flip);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        // (le tutoriel apprend à pivoter : App, islandStory.js)
-        this.$emit('turned', this.craftMenu && this.craftMenu.craft);
-        vibrate(8);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.craftTurn), 'error');
-      } finally {
-        this.busy = false;
-      }
+      await this.runAction(FAILED.craftTurn, async () => {
+          const { coins, world } = await playService.craftTurn(x, y, !this.placedAt({ x, y }).flip);
+          this.apply(world);
+          if (coins !== undefined) this.$emit('coins-updated', coins);
+          // (le tutoriel apprend à pivoter : App, islandStory.js)
+          this.$emit('turned', this.craftMenu && this.craftMenu.craft);
+          vibrate(8);
+      });
     },
     // Menu d'une création posée (appui long) : déplacer, pivoter, ranger
     openCraftMenu(craft) {
@@ -564,17 +549,12 @@ export default {
         this.$emit('show-alert', keepText);
         return;
       }
-      this.busy = true;
-      try {
-        const { coins, world } = await playService.craftStore(x, y);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.$emit('show-alert', TOASTS.craftStored(this.craftName(craft)));
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.craftStore), 'error');
-      } finally {
-        this.busy = false;
-      }
+      await this.runAction(FAILED.craftStore, async () => {
+          const { coins, world } = await playService.craftStore(x, y);
+          this.apply(world);
+          if (coins !== undefined) this.$emit('coins-updated', coins);
+          this.$emit('show-alert', TOASTS.craftStored(this.craftName(craft)));
+      });
     }
   }
 };

@@ -8,7 +8,6 @@
 // l'auteur, 16 oct. : la Carrière bâtie) : l'outil « Pavé » pave d'un toucher ou d'un trait les chemins, dépave les
 // pavés (3 pierres la case, rendues) ; ses pierres se posent sous les yeux. Mixin de WorldView.vue.
 
-import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { roadBlock, roadCost, stepCells, joined, ringOf, routeTo, pathGround } from '@/game/roads';
@@ -357,25 +356,20 @@ export default {
     async confirmRoad() {
       const mode = this.roadMode;
       if (!mode || !this.roadReady || this.busy) return;
-      this.busy = true;
-      try {
-        const cells = list => list.map(c => [c.x, c.y]);
-        const { world } = await playService.worldPaths(cells(mode.lay), cells(mode.erase), cells(mode.pave), cells(mode.unpave));
-        const now = performance.now();
-        this.roadMode = null;
-        this.apply(world);
-        // Les cases tracées se creusent, l'une après l'autre ; les pierres des cases pavées se posent (pas en mouvement
-        // réduit)
-        if (!this.reduced()) {
-          this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
-          this.roadSets = mode.pave.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
-        }
-        vibrate([10, 30, 14]);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.road), 'error');
-      } finally {
-        this.busy = false;
-      }
+      await this.runAction(FAILED.road, async () => {
+          const cells = list => list.map(c => [c.x, c.y]);
+          const { world } = await playService.worldPaths(cells(mode.lay), cells(mode.erase), cells(mode.pave), cells(mode.unpave));
+          const now = performance.now();
+          this.roadMode = null;
+          this.apply(world);
+          // Les cases tracées se creusent, l'une après l'autre ; les pierres des cases pavées se posent (pas en mouvement
+          // réduit)
+          if (!this.reduced()) {
+            this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
+            this.roadSets = mode.pave.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
+          }
+          vibrate([10, 30, 14]);
+      });
     },
     // L'aperçu du tracé (au-dessus du sol) : cases en attente en terre claire, cases à effacer barrées, case refusée
     // en rouge un instant ; puis le creusement des cases tracées

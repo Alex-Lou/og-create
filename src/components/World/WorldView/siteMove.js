@@ -35,25 +35,20 @@ export default {
     async startSiteMove(siteId) {
       if (this.busy) return;
       this.site = null;
-      this.busy = true;
-      try {
-        const corners = await playService.siteSpots(siteId);
-        if (!corners.length) {
-          this.$emit('show-alert', TOASTS.siteNoRoom);
-          return;
-        }
-        this.siteMoving = { site: siteId, spots: corners.map(c => ({ x: c.x + MID, y: c.y + MID })) };
-        this.siteMoveConfirm = null;
-        // (un seul niveau de cases dorées : celui où il se tient, poseLevel.js)
-        const site = this.state.sites.find(s => s.id === siteId);
-        if (site) this.beginPoseLevel(site.x + Math.floor(site.w / 2), site.y + Math.floor(site.h / 2), this.siteMoving.spots);
-        vibrate(8);
-        this.draw(performance.now());
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, FAILED.siteMoveStart), 'error');
-      } finally {
-        this.busy = false;
-      }
+      await this.runAction(FAILED.siteMoveStart, async () => {
+          const corners = await playService.siteSpots(siteId);
+          if (!corners.length) {
+            this.$emit('show-alert', TOASTS.siteNoRoom);
+            return;
+          }
+          this.siteMoving = { site: siteId, spots: corners.map(c => ({ x: c.x + MID, y: c.y + MID })) };
+          this.siteMoveConfirm = null;
+          // (un seul niveau de cases dorées : celui où il se tient, poseLevel.js)
+          const site = this.state.sites.find(s => s.id === siteId);
+          if (site) this.beginPoseLevel(site.x + Math.floor(site.w / 2), site.y + Math.floor(site.h / 2), this.siteMoving.spots);
+          vibrate(8);
+          this.draw(performance.now());
+      });
     },
     cancelSiteMove() {
       this.siteMoving = null;

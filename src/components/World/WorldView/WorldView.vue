@@ -583,6 +583,7 @@ import BinocularView from '../BinocularView/BinocularView.vue';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { clearDrawings } from '@/book/painter';
 import { reducedMotion } from '@/utils/fx';
+import { messageOf } from '@/utils/errors';
 import { clearSprites } from '@/world/spriteCache';
 import { onPathsLoaded } from '@/world/pathArt';
 import { stageOf as civilizationOf } from '@/game/vigils';
@@ -863,6 +864,18 @@ export default {
   methods: {
     reduced() {
       return reducedMotion();
+    },
+    // Une action envoyée au serveur, depuis les sujets de l'île (mixins) : busy le temps de l'appel ; un échec s'annonce,
+    // avec la raison du serveur, sinon fallback. « Une action à la fois » reste la garde de chaque action
+    async runAction(fallback, run) {
+      this.busy = true;
+      try {
+        await run();
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, fallback), 'error');
+      } finally {
+        this.busy = false;
+      }
     },
 
     /* ---------- Plein écran ---------- */
