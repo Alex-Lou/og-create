@@ -26,6 +26,8 @@ const POSES = [
   ['marche', ['avant', 'dos'], IMAGES.marche, (vue, n, saison) => A.anyaFrame(VUE[vue], 'marche', n, 'neutre', saison)],
   ['benediction', ['face'], IMAGES.salut, (vue, n, saison) => A.anyaFrame(VUE[vue], 'salut', n, 'content', saison)],
   ['eveil', ['face'], IMAGES.action, (vue, n, saison) => A.anyaFrame(VUE[vue], 'action', n, 'content', saison)],
+  // (la foudre de son orage : l'éclair la frappe, une image de lumière, puis son visage terrible : anya.js, anyaFoudre)
+  ['foudre', ['face', 'avant', 'dos'], 3, (vue, n, saison) => A.anyaFoudre(VUE[vue], n, saison)],
   ['apparaitre', ['face', 'avant', 'dos'], 6, (vue, n, saison) => apparitionSur(() => repos(vue, 0, saison), n)],
   ['disparaitre', ['face', 'avant', 'dos'], 6, (vue, n, saison) => apparitionSur(() => repos(vue, 0, saison), 5 - n)],
   // (elle dit les glyphes l'un après l'autre ; elle ne cligne pas en parlant : les trois premières images du repos)

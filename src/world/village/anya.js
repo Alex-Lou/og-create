@@ -38,16 +38,32 @@ export function anyaPath(t, center, seed = 0) {
   const p = smooth((s - PAUSE) / (LEG - PAUSE));
   return { x: a.x + (b.x - a.x) * p, y: a.y + (b.y - a.y) * p, dx: b.x - a.x, dy: b.y - a.y, moving: true };
 }
+// La foudre de son orage (choix de l'auteur, 19 oct.) : de temps en temps, un éclair la frappe, et une seconde elle
+// montre son visage terrible (anyaArt.js : foudre). Une fois toutes les FOUDRE secondes à peu près (de 15 à 45 s), plus
+// souvent sous un vrai orage (FOUDRE_ORAGE) ; au même instant sur tous les appareils pour une même graine ; en mouvement
+// réduit (t immobile), jamais
+const FOUDRE = 30;
+const FOUDRE_ORAGE = 12;
+// Depuis combien de secondes la foudre l'a frappée (0 à la durée de la foudre), ou null ; storm : l'orage du ciel (0 à 1)
+export function foudreAt(t, seed = 0, storm = 0) {
+  const every = storm >= 0.5 ? FOUDRE_ORAGE : FOUDRE;
+  const k = Math.floor(t / every);
+  const s = t - (k + 0.25 + 0.5 * hash(k, seed + 3.1)) * every;
+  return s >= 0 && s < durationOf(AP.foudre) ? s : null;
+}
 // La vue d'un pas (vers le bas de l'écran : de trois quarts avant ; vers le haut : de dos) et le miroir (vers la gauche)
 const facing = (dx, dy) => ({ view: dx + dy > 0 ? 'avant' : 'dos', flip: dx - dy < 0 });
 
 // Ce qu'Anya joue à l'instant t : { pose, view, flip, n, phrase } ; clock : son passage (anyaVisitClock) ; path : où elle
 // est ; touch : depuis quand on l'a touchée (s), ou null. Elle apparaît au début de son passage et disparaît à la fin
-// (de face) ; touchée, rarement, elle murmure ; sinon elle flotte, ou se repose de face
-export function anyaPose(t, { clock, path, touch, seed = 0 }) {
+// (de face) ; frappée par la foudre de son orage, son visage terrible ; touchée, rarement, elle murmure ; sinon elle
+// flotte, ou se repose de face. storm : l'orage du ciel
+export function anyaPose(t, { clock, path, touch, seed = 0, storm = 0 }) {
   if (clock && clock.until < durationOf(AP.disparaitre)) return { pose: 'disparaitre', view: 'face', flip: false, n: frameOf(AP.disparaitre, durationOf(AP.disparaitre) - clock.until, true) };
   if (clock && clock.since < durationOf(AP.apparaitre)) return { pose: 'apparaitre', view: 'face', flip: false, n: frameOf(AP.apparaitre, clock.since, true) };
   const way = path.moving ? facing(path.dx, path.dy) : { view: 'face', flip: false };
+  const struck = foudreAt(t, seed, storm);
+  if (struck !== null) return { pose: 'foudre', ...way, n: frameOf(AP.foudre, struck, true) };
   if (touch !== null) {
     const at = Math.round((t - touch) * 10);
     if (hash(at, seed) * MURMURE_ODDS < 1) return { pose: 'murmure', ...way, n: frameOf(AP.murmure, touch, true), phrase: Math.floor(hash(seed, at) * PHRASES) };
@@ -71,9 +87,11 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
     const hop = tapped('anya:dame', 0.8);
     const z = hop === null ? 0 : Math.sin(hop * Math.PI) * 3;
     const touched = tapped('anya:dame', MURMURE_S);
-    const look = anyaPose(t, { clock: anyaVisitClock(h, phase.rise, phase.set, visit.slot), path, touch: touched === null ? null : touched * MURMURE_S, seed });
+    const look = anyaPose(t, { clock: anyaVisitClock(h, phase.rise, phase.set, visit.slot), path, touch: touched === null ? null : touched * MURMURE_S, seed, storm: phase.weather.storm });
     const art = anyaArt(look.pose, look.view, look.n, { season: SEASON, phrase: look.phrase || 0 });
     if (art) out.push({ id: 'anya:dame', kind: 'beast', species: 'anya', x: path.x, y: path.y, z, flip: look.flip, sprite: [art.key, art.make] });
+    // (l'éclair qui la frappe éclaire l'île autour d'elle, le temps de son image de lumière)
+    if (look.pose === 'foudre' && look.n === 1) f.lights.push({ x: path.x, y: path.y, dx: 0, dy: -40, r: 70, color: '220,232,255', a: 1 });
     // son cerf, derrière elle, à côté : il marche quand elle flotte, sinon il se tient debout, tourné vers elle
     const trail = anyaPath(t - TRAIL, center, seed);
     const cx = trail.x + CERF_SIDE[0];

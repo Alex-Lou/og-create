@@ -12025,7 +12025,7 @@ var require_noms_personnages = __commonJS({
       return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
     }
     __name(miroir, "miroir");
-    var ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260 };
+    var ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260, foudre: [120, 500, 500] };
     function vitessePersonnage(id, pose) {
       const [top, a] = id.split("/");
       if (top === "vivants") {

@@ -58,6 +58,15 @@ const feather = (x, y, rot, fill) => `<g transform="translate(${r2(x)} ${r2(y)})
 const butterfly = (x, y, open, fill) => `<g transform="translate(${r2(x)} ${r2(y)})">${P(`M0,0 Q${r2(-3.2 * open)},-3.4 ${r2(-3.4 * open)},-0.4 Q${r2(-2.6 * open)},1.6 0,0.6 Z`, fill, 0.5)}${P(`M0,0 Q${r2(3.2 * open)},-3.4 ${r2(3.4 * open)},-0.4 Q${r2(2.6 * open)},1.6 0,0.6 Z`, fill, 0.5)}${L([0, -1.2], [0, 1.4], OUT, 0.6)}</g>`;
 const bird = (x, y, m = 1) => `<g transform="translate(${x} ${y}) scale(${m} 1)">` + E(0, 0, 2.6, 2.1, C.bird, 0.7) + E(0.6, 0.8, 1.4, 1, C.white, 0) + P('M2.4,-0.6 L4,-0.2 L2.4,0.4 Z', C.heart, 0.4) + E(1.1, -0.8, 0.4, 0.4, OUT, 0) + P('M-2.2,-0.4 L-4.2,-1.2 L-3.6,0.6 Z', C.bird, 0.5) + '</g>';
 
+// Une étincelle de son orage : un petit arc brisé, bleu pâle, sa lueur derrière
+const etincelle = (x, y, s) => {
+  const pts = [[0, 0], [2, -3], [4, 1], [6, -2], [9, 0]].map(([a, b]) => `${r2(x + a * s)},${r2(y + b * s)}`).join(' ');
+  return `<polyline points="${pts}" fill="none" stroke="#7FB4FF" stroke-width="${r2(2.2 * s)}" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>`
+    + `<polyline points="${pts}" fill="none" stroke="#E4F2FF" stroke-width="${r2(0.8 * s)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+};
+// Où elles courent (dans le cadre, autour d'elle, jamais sur son visage)
+const ETINCELLES = [[10, 40, 0.8], [62, 50, 0.7], [12, 84, 0.9], [60, 96, 0.8], [26, 4, 0.6], [50, 110, 0.7], [64, 72, 0.6], [8, 62, 0.7], [18, 108, 0.6]];
+
 // Couronne de bois de cerf fleuris (mirror 1/-1 pour le côté), un oiseau sur la droite
 function antlers(k, birdSide = 1) {
   let s = '<g transform="translate(40 19.4) scale(0.86) translate(-40 -19.4)">';
@@ -73,7 +82,7 @@ function antlers(k, birdSide = 1) {
 // Une image d'Anya. view : front | se | ne ; pose : repos (4 images : elle respire, son manteau et ses lucioles
 // dérivent, un clignement à la 4e) | marche (8 : un cycle continu) | salut (bénédiction, 4 : la main se lève et
 // redescend) | action (éveil, 2) ; n ; expr. Tout suit la même phase t (de 0 à 1 sur le cycle).
-function anyaFrame(view, pose, n, expr, saison = 'ete') {
+function anyaFrame(view, pose, n, expr, saison = 'ete', o = {}) {
   const M = MANTEAUX[saison];
   const walk = pose === 'marche';
   const N = IMAGES[pose] || 2, t = (n % N) / N;
@@ -83,12 +92,15 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
   const kh = pose === 'salut' ? [0, 0.5, 1, 0.5][n % 4] : n % 2; // la main qui bénit monte et redescend
   const glowK = pose === 'action' ? (n ? 1.25 : 1.1) : pose === 'repos' ? r2(1 + 0.05 * Math.sin(t * Math.PI * 2)) : 1;
   const k = view === 'se' ? -2.4 : 0;
-  const uid = `an${view}${pose}${n}${saison === 'ete' ? '' : saison}`;
+  const uid = `an${view}${pose}${n}${saison === 'ete' ? '' : saison}${o.terrible ? 't' : ''}`;
   let s = '';
   // halo doré
   s += `<defs><radialGradient id="${uid}g"><stop offset="0" stop-color="rgb(${C.glow})" stop-opacity="${r2(0.6 * glowK)}"/><stop offset="1" stop-color="rgb(${C.glow})" stop-opacity="0"/></radialGradient></defs>`
     // (son halo reste dans le cadre : plus fort, il s'avive sans grandir ; plus grand, son bord net se voyait)
     + `<ellipse cx="40" cy="62" rx="${r2(40 * Math.min(1, glowK))}" ry="${r2(62 * Math.min(1, glowK))}" fill="url(#${uid}g)"/>`;
+  // son orage à elle (choix de l'auteur, 19 oct.) : une aura froide autour du halo doré
+  s += `<defs><radialGradient id="${uid}o"><stop offset="0.35" stop-color="#7FB4FF" stop-opacity="0"/><stop offset="0.8" stop-color="#6A5ED8" stop-opacity="0.22"/><stop offset="1" stop-color="#6A5ED8" stop-opacity="0"/></radialGradient></defs>`
+    + `<ellipse cx="40" cy="62" rx="40" ry="62" fill="url(#${uid}o)"/>`;
   // lucioles : moitié arrière
   const flies = [0, 1, 2, 3, 4].map(i => {
     const a = (t + i / 5) * Math.PI * 2;
@@ -196,17 +208,59 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
       ...TRAITS.femme,
       mouth: [40 + k + (view === 'se' ? 0.4 : 0), 38.4], mw: 1.8, mouthC: C.mouth, tongue: C.tongue,
       neutral: (mx, my) => `M${r2(mx - 1.4)},${r2(my + 0.3)} Q${mx},${r2(my + 1.2)} ${r2(mx + 1.4)},${r2(my + 0.3)}`,
-      cheeks: [[31.8 + k, 2.2], [48.2 + k, 2.2]], cheekY: 37, temple: [26.4 + k, 30], anger: [60, 18], zz: [56, 14]
+      cheeks: [[31.8 + k, 2.2], [48.2 + k, 2.2]], cheekY: 37, temple: [26.4 + k, 30],
+      // (terrible, sa colère n'a pas de marque : elle part hors du cadre)
+      anger: o.terrible ? [-40, -40] : [60, 18], zz: [56, 14]
     }, { expr, n, id: uid, blink: pose === 'repos' && n % 4 === 3, open: false });
   }
   s += `<g transform="translate(0 ${bob})">${g}${over}</g>`;
   s += flies.filter(f => !f.back).map(f => firefly(f.x, f.y)).join('');
+  // et ses étincelles : de petits arcs bleus qui courent autour d'elle, ailleurs à chaque image
+  s += [0, 1, 2].map(j => etincelle(...ETINCELLES[(n * 3 + j * 3 + (pose === 'marche' ? 1 : 0)) % ETINCELLES.length])).join('');
   // la lumière de la troupe, à l'échelle de son cadre : peau, chevelure, manteau, robe, col
   const { defs, table } = lumiere({ skin: C.skin, hair: C.hair, teintes: [M.fur, C.dress, M.collar, C.collar] }, uid, 80 / 48);
   return enPersonnage(defs + peindre(s, table));
 }
 
+// La foudre (choix de l'auteur, 19 oct. : « un sacré effet orage… plus démoniaque pendant une seconde ») : l'éclair de
+// son orage la frappe. n = 0 : elle n'est que lumière ; n = 1, 2 : son visage terrible, une seconde, fort mais beau,
+// jamais effrayant pour un enfant : noir et argent, les yeux deux lumières blanches, une ombre qui creuse ses traits, la
+// chevelure soulevée (de dos, sans visage). Le jeu l'agrandit un peu le temps de la frappe (dessinée plus grande, elle
+// sortirait de son cadre). Vues face, trois quarts avant, dos ; repos, sa première image
+const NOIR = [7, 6, 15], ARGENT = [176, 186, 208];
+const versHex = c => `#${c.map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase()}`;
+// une couleur, passée au noir et argent (claire, elle va à l'argent ; sombre, au noir)
+function argentDe(r, g, b) {
+  const l = Math.pow((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255, 2.4);
+  return versHex(NOIR.map((v, i) => v + (ARGENT[i] - v) * l));
+}
+const enArgent = svg => svg
+  .replace(/#([0-9A-Fa-f]{6})\b/g, (m, h) => argentDe(...[0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16))))
+  .replace(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g, (m, r, g, b) => argentDe(+r, +g, +b))
+  .replace(/(stop-color|fill|stroke)="(\d+),(\d+),(\d+)"/g, (m, a, r, g, b) => `${a}="${argentDe(+r, +g, +b)}"`);
+// tout en lumière (les teintes à plat ; les opacités restent : sa silhouette, son halo)
+const enLumiere = svg => svg.replace(/#[0-9A-Fa-f]{6}\b/g, '#F4FAFF').replace(/rgb\(\d+,\s*\d+,\s*\d+\)/g, '#F4FAFF');
+// la chevelure soulevée par le souffle de l'éclair : des mèches qui montent du haut de la tête (sous la couronne)
+function soulevee(k, n) {
+  const ondule = n === 2 ? 6 : 0;
+  return [-68, -44, -20, 20, 44, 68].map((a, i) => {
+    const rad = (a * Math.PI) / 180;
+    return leaf(40 + k + Math.sin(rad) * 10, 27 - Math.cos(rad) * 10, 12 + (i % 2) * 3, 2.6, 180 + a + (i % 2 ? ondule : -ondule), i % 2 ? C.hairH : C.hair);
+  }).join('');
+}
+function anyaFoudre(view, n, saison = 'ete') {
+  const k = view === 'se' ? -2.4 : 0, uid = `anf${view}${n}${saison}`;
+  const corps = anyaFrame(view, 'repos', 0, 'fache', saison, { terrible: true });
+  // (la lumière a ses propres identifiants : ses dégradés blancs ne se mêlent jamais à ceux de l'argent)
+  if (n === 0) return enLumiere(soulevee(k, 1) + corps).replace(/id="([^"]+)"/g, 'id="$1l"').replace(/url\(#([^)]+)\)/g, 'url(#$1l)');
+  const yeux = view === 'ne' ? [] : view === 'se' ? [[33.4, 32.4], [41.8, 32.4]] : [[35, 32.4], [45, 32.4]];
+  const ombre = view === 'ne' ? '' : `<defs><radialGradient id="${uid}s" cx=".5" cy=".15" r=".8"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".75" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>`
+    + `<ellipse cx="${40 + k}" cy="29" rx="12" ry="10" fill="url(#${uid}s)"/>`;
+  const lumieres = yeux.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.2" fill="#F4FAFF" opacity="0.35"/>` + E(x, y, 1.9, 1.15, '#F4FAFF', 0)).join('');
+  return enArgent(soulevee(k, n) + corps) + ombre + lumieres;
+}
+
 const POSES_A = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_benediction', 'front', 'salut', IMAGES.salut], ['face_eveil', 'front', 'action', 2]];
 const EXPR_OF = { repos: 'neutre', marche: 'neutre', salut: 'content', action: 'content' };
 const svgA = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`;
-module.exports = { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A };
+module.exports = { anyaFrame, anyaFoudre, POSES_A, EXPR_OF, svgA, SAISONS_A };
