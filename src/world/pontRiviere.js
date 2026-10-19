@@ -5,7 +5,7 @@
 // et ceux qui passent montent et descendent avec elle (WorldView : liftAt). Un pont de deux cases de large ne garde
 // ses garde-corps que sur ses bords. Calculs purs (mis de côté par carte : la carte d'une île ne change pas), dessin
 // Canvas 2D en unités du monde.
-import { worldOf, lampGlowOf } from './terrain';
+import { worldOf, lampGlowOf } from './terrain/geo';
 
 // Le tablier au-dessus de l'eau du pont (paliers) : posé au bord, sa bosse au milieu (selon la longueur)
 const LIFT = 0.08;
