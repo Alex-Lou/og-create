@@ -13,6 +13,7 @@ import { paperNoise as noise, PAPER_BACK } from './painter';
 import { reducedMotion } from '@/utils/fx';
 import { spreadOf, pagesOf, sideOf, spreadCount, spreadSpots } from './spread';
 import { VERT, FRAG } from './curlShaders';
+import { sheetMesh, curlOf, easeOut, easeBack, gestureOf, commits } from './curlGeometry';
 
 export function createBook(opts) {
   const { stage, rig, wrap, hot, count, paint, onChange, onRest } = opts;
@@ -109,15 +110,7 @@ export function createBook(opts) {
     for (const name of ['uPage', 'uOrigin', 'uCanvas', 'uL', 'uDir', 'uR', 'uCurl', 'uDepth', 'uFront', 'uBack', 'uMode', 'uCorner', 'uAlpha', 'uPageF', 'uCurlF', 'uRF', 'uMirror', 'uBackPage']) loc[name] = gl.getUniformLocation(prog, name);
     loc.aUV = gl.getAttribLocation(prog, 'aUV');
     // Grille de la feuille
-    const verts = new Float32Array((COLS + 1) * (ROWS + 1) * 2);
-    let k = 0;
-    for (let r = 0; r <= ROWS; r++) for (let c = 0; c <= COLS; c++) { verts[k++] = c / COLS; verts[k++] = r / ROWS; }
-    const idx = new Uint16Array(COLS * ROWS * 6);
-    k = 0;
-    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-      const a = r * (COLS + 1) + c, b = a + 1, d = a + COLS + 1, e = d + 1;
-      idx[k++] = a; idx[k++] = d; idx[k++] = b; idx[k++] = b; idx[k++] = d; idx[k++] = e;
-    }
+    const { verts, idx } = sheetMesh(COLS, ROWS);
     indexCount = idx.length;
     buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -220,19 +213,7 @@ export function createBook(opts) {
     return e;
   }
 
-  function curl() {
-    const w = W();
-    const dx = P0.x - F.x, dy = P0.y - F.y;
-    const length = Math.hypot(dx, dy);
-    const progress = Math.min(1, Math.max(0, dx / (P0.x - Fend.x)));
-    let angle = length > 1 ? Math.atan2(dy, dx) : 0;
-    if (dx <= 0) angle = 0;
-    const tilt = .55 * (1 - progress);
-    angle = Math.max(-tilt, Math.min(tilt, angle));
-    // Le rayon du pli s'efface en fin de tour, pour que la feuille retombe à plat sur la gauche
-    const r = w * Math.max(.002, .1 * (1 - progress));
-    return { lx: (P0.x + F.x) / 2, ly: (P0.y + F.y) / 2, ux: Math.cos(angle), uy: Math.sin(angle), r, progress };
-  }
+  const curl = () => curlOf(P0, F, Fend, W());
 
   // x : bord gauche de la feuille (px CSS) ; mirror : page de gauche à plat ; back : page imprimée au verso
   function drawSheet(e, mode, c, a, { x = page.x, mirror = false, back = null } = {}) {
@@ -441,8 +422,6 @@ export function createBook(opts) {
     rest();
   }
 
-  const easeOut = t => 1 - Math.pow(1 - t, 3);
-  const easeBack = t => { const s = 1.4; return 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2); };
   function animateTo(tx, ty, duration, ease, lift, done) {
     const fx = F.x, fy = F.y, t0 = performance.now();
     anim = { tx, ty, done };
@@ -567,8 +546,8 @@ export function createBook(opts) {
     if (event.pointerId !== pointer) return;
     if (phase === 'press') {
       const dx = event.clientX - sx, dy = event.clientY - sy;
-      // Un geste en diagonale (coin tiré) tourne aussi la page ; seul un geste nettement vertical fait défiler
-      if (Math.abs(dx) > 9 && Math.abs(dx) > Math.abs(dy) * .8) {
+      const gesture = gestureOf(dx, dy);
+      if (gesture === 'turn') {
         const d = dx < 0 ? 1 : -1;
         const tgt = at + d;
         suppressClick = true;
@@ -580,7 +559,7 @@ export function createBook(opts) {
         sx = event.clientX;
         sy = event.clientY;
         phase = 'drag';
-      } else if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 1.25) {
+      } else if (gesture === 'scroll') {
         phase = 'blocked';
       }
       return;
@@ -613,7 +592,7 @@ export function createBook(opts) {
       const velocity = dt > 0 && event.timeStamp - tLast < 100 ? (xLast - xPrev) / dt : 0;
       const flick = dir > 0 ? -velocity : velocity;
       const progress = dir > 0 ? curl().progress : 1 - curl().progress;
-      const commit = event.type === 'pointerup' && (flick > .45 || (flick > -.45 && progress > .3));
+      const commit = event.type === 'pointerup' && commits(flick, progress);
       settle(commit, 1, null);
     } else if (phase === 'swipe') {
       phase = 'idle';
