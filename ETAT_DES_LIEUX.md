@@ -1,4 +1,4 @@
-# État des lieux — Brumelune, 8 octobre 2026 (soir)
+# État des lieux — Brumelune, 8 octobre 2026 (soir), complété le 20 octobre (grand nettoyage, § 3 et § 4)
 
 Ce document est pour l'agent qui reprend le jeu (dépôt `Alex-Lou/og-create`) et son serveur
 (`Alex-Lou/Og-create-backend`). Il dit ce qui est fait, ce qui est en cours, ce qui reste à faire et comment le faire
@@ -75,7 +75,7 @@ textes ou d'ordre du tutoriel : ceux-là se demandent.
 - Jeu : `npm run lint` (`eslint --max-warnings 0 src tests`), `npm test` (vitest), `npm run build`. La CI lance les
   trois.
 - Serveur : `npm test` avec les variables ci-dessous et Postgres lancé (`service postgresql start`).
-- CI : 415 tests côté jeu et 215 côté serveur au dernier passage (travail en cours compris).
+- CI : 1196 tests côté jeu et 302 côté serveur au 20 octobre.
 
 ```
 DATABASE_URL=postgres://origins:origins@localhost:5432/origins_test
@@ -152,6 +152,48 @@ Les captures vont dans `outils/banc/shots/`, ignoré par git. Pour lire l'état 
 - `src/config/db.js` : `db.cached`, une mémoire de lecture pendant une requête.
 - `src/middleware/compress.js` : réponses JSON compressées en gzip.
 
+**Depuis le grand nettoyage (19-20 octobre)**
+
+Jeu : les gros fichiers sont découpés. L'ancien fichier reste une façade qui ré-exporte les mêmes noms : les imports
+existants marchent toujours.
+- `src/world/terrain.js` → `src/world/terrain/` (`geo`, `paint`, `details`, `faces`, `seaBridge`, `paths`, `cell`,
+  `veil`, `cache`, `live`).
+- `src/book/painter.js` → `src/book/painter/` (un sujet par fichier : papier, ornements, pages d'éléments, de
+  chapitres…).
+- `shopSprites.js`, `annexSprites.js`, `craftSprites.js` → `src/world/spriteKit.js` (le kit commun) et un fichier par
+  objet dans `src/world/shopItems/`, `annexItems/`, `craftItems/`.
+- Le dessin de l'île :
+  - `draw()` (`src/world/view/draw/loop.js`) n'est plus qu'un chef d'orchestre ;
+  - les passes sont dans `src/world/view/draw/passes/` (`frame`, `sea`, `ground`, `standing`, `sky`, `overlay`) ;
+  - les bêtes et la vie de la mer sont dans `draw/critters.js` et `draw/seaLife.js`.
+- `src/world/view/gestures.js` :
+  - `tap` est en quatre temps (`tapMode`, `tapAtOnce`, `tapReact`) ;
+  - `pickOf` est en trois familles (`pickBeing`, `pickThing`, `pickPlace`).
+- Le Livre : les shaders sont dans `src/book/curlShaders.js` ; les calculs purs de la page qui tourne (grille, pli,
+  seuils du geste) sont dans `src/book/curlGeometry.js`. `createBook` garde l'état ; décision de l'auteur : on s'arrête
+  là.
+- Couches :
+  - `world`, `game` et `book` n'appellent jamais le serveur et n'importent aucun composant (test :
+    `tests/couches.test.js`) ;
+  - les appels au serveur passent par `src/services/` (ex. `contactService.js`) ;
+  - la mémoire de l'appareil passe par `src/utils/storage.js` (`load`/`save`, `loadText`/`saveText`) ;
+  - une action de l'île vers le serveur passe par `runAction` (`WorldView.vue`).
+- Tests nouveaux sur des règles jamais testées : `tests/tap.test.js`, `tests/pickOf.test.js`,
+  `tests/curlGeometry.test.js`.
+
+Serveur :
+- **Express 5** : l'erreur d'une route `async` remonte d'elle-même au dernier middleware.
+- **Journal** : tout passe par `src/utils/logger.js` (niveaux `debug` < `info` < `warn` < `error`, réglés par
+  `LOG_LEVEL`). Aucun `console.*` ailleurs. Les requêtes SQL ne s'affichent qu'en `debug`, sans leurs paramètres
+  (`DB_LOG_LEVEL` n'existe plus).
+- **Erreurs** (`src/utils/failure.js`) :
+  - une route déclare son message de panne par `failsWith(T.XXX)`, sans `try/catch` ;
+  - le dernier recours (`lastResort`) journalise la pile et répond avec ce message ;
+  - `HttpError(status, message)` sert seulement quand une erreur doit interrompre depuis le fond d'une chaîne d'appels
+    (ex. l'adresse déjà prise, code 23505) ;
+  - ailleurs, les services gardent leurs refus `{ status, message }` (décision de l'auteur, 20 oct.).
+- **Tests** : le serveur de test est prêt quand `/api/health` répond (cette route passe avant les limites de requêtes).
+
 ---
 
 ## 4. Ce qui est fait et fusionné (cette série de sessions)
@@ -163,6 +205,16 @@ Les captures vont dans `outils/banc/shots/`, ignoré par git. Pour lire l'état 
 | serveur #126, jeu #476 | **Socle des jeux à grille** : 30 niveaux, 3 saisons de 10, objectifs, 1 à 3 étoiles selon la marge (≥ 25 % donne 2, ≥ 50 % donne 3), bonus de 5 / 5 / 10 écus la première fois (dans le plafond), 1 étoile ouvre le niveau suivant, 20 étoiles la saison suivante. Étoiles dans `world_items` (`etoile:<jeu>:<n>:<k>`), sans migration. « Recommencer l'île » les efface. | `minijeux_grille.md`, § 2 et § 8. |
 | serveur #127 | **Fluidité serveur** : vue de l'île en 50 requêtes au lieu de 79, en parallèle, avec mémoire de lecture (223 ms au lieu de 894 ms avec 10 ms de latence simulée par requête). Gzip. Recommencer à volonté (`ISLAND_RESTART_ONCE=1` remet la règle « une seule fois » ; deux demandes en moins de 10 s n'en font qu'une). 2 premières parties de chaque jeu courtes (Récolte 8 coups, Filon 12, Cueillette 20 s, Pêche 25 s). | « Horrible latence », « les premiers essais des mini-jeux doivent être beaucoup plus courts ». |
 | jeu #479 | **Fluidité jeu**, détaillée ci-dessous. | Retours de l'auteur sur la latence, le tutoriel trop rapide, le tracé au tactile et les arbres. |
+| jeu #711 à #714 | **Santé du code** : les couches (aucun appel serveur ni composant dans `world`/`game`/`book`), les utilitaires communs (`storage`), `runAction`, le code mort retiré. | « y a des fichiers impossibles à maintenir, redondances, pas clean code ni archi » (19 oct.). |
+| jeu #715 à #719 | **Découpage** : `shopSprites`, `terrain`, `painter`, `annexSprites`, `craftSprites` en modules d'un sujet chacun (façades conservées). | « des fichiers qui font plus de 5000 lignes ou 6000 lignes. Il faut réparer ça. » |
+| jeu #720 à #724 | **WorldView par petites étapes** : `draw` en passes, `critters`/`seaLife`, `drawRoads`, `pickOf`, `tap` (+ leurs tests). | Idem ; « Vas-y attaque WorldView par petites étapes ». |
+| jeu #725, #726 | **Le Livre** : shaders et calculs purs de la page qui tourne sortis de `createBook` (+ tests). | Idem. |
+| serveur #143 à #145 | **Journal propre et erreurs** : une seule voie de journal, Express 5, un seul dernier recours (`failsWith`, `HttpError`). | « un système de warning propre et sans effusions nulles, une gestion des erreurs propre » ; laisser les erreurs remonter d'elles-mêmes (20 oct.). |
+
+Toutes ces PR sont des **refactorisations sans changement de comportement**, prouvées par des comparaisons avant/après
+(empreintes de dessin, journaux d'appels, 80 000 entrées tirées au hasard pour le Livre). Elles n'ont **pas été
+rejouées en jeu** : une partie de contrôle reste à faire (toucher l'île, tracer un chemin, tourner les pages du
+Livre, s'inscrire et se connecter).
 
 **Ce que contient #479 :**
 - **Gestes :** un seul dessin par image ; fuites colmatées (calque du coach, carrés de sol, enseigne, portraits, fond
