@@ -56952,7 +56952,7 @@
    "calques": {}
   },
   "05_cercle": {
-   "nom": "Scène 5 : Le vieux cercle de pierres en haut de la plage ; ceux d’avant reviennent un instant",
+   "nom": "Scène 5 : Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant",
    "etape": "5",
    "cadre": [
     0,
@@ -57079,6 +57079,12 @@
       600,
       60
      ]
+    },
+    {
+     "id": "herbe",
+     "fichier": "05_cercle/05_cercle_plan-herbe_1.svg",
+     "profondeur": 0.58,
+     "marge": 40
     },
     {
      "id": "nuit",
@@ -59819,6 +59825,12 @@
      ]
     },
     {
+     "id": "herbe",
+     "fichier": "05_promesse/05_promesse_plan-herbe_1.svg",
+     "profondeur": 0.58,
+     "marge": 40
+    },
+    {
      "id": "nuit",
      "fichier": "05_promesse/05_promesse_plan-nuit_1.svg",
      "profondeur": 0,
@@ -61348,7 +61360,7 @@
    "calques": {}
   },
   "05_feu": {
-   "nom": "Scène 5d : Le feu prend",
+   "nom": "Scène 5d : Le feu prend au vieux cercle ; près de lui, Brume n’a plus froid",
    "etape": "5d",
    "cadre": [
     0,
@@ -61359,41 +61371,2499 @@
    "images": 1,
    "ms_par_image": 900,
    "avatar": {
-    "x": 118,
-    "y": 368,
-    "echelle": 3.3,
+    "x": 126,
+    "y": 384,
+    "echelle": 3.1,
     "vue": "avant",
     "pose": "repos",
-    "naufrage": true,
-    "neon": true,
+    "naufrage": true
+   },
+   "plans": [
+    {
+     "id": "ciel",
+     "fichier": "05_feu/05_feu_plan-ciel_1.svg",
+     "profondeur": 0.1,
+     "marge": 40,
+     "flou": 0.2
+    },
+    {
+     "id": "soleil",
+     "fichier": "05_feu/05_feu_plan-soleil_1.svg",
+     "profondeur": 0.12,
+     "pivot": [
+      236,
+      186
+     ],
+     "cadre": [
+      36,
+      -14,
+      400,
+      400
+     ]
+    },
+    {
+     "id": "nuage0",
+     "fichier": "05_feu/05_feu_plan-nuage0_1.svg",
+     "profondeur": 0.14,
+     "cadre": [
+      -140,
+      36,
+      680,
+      34
+     ]
+    },
+    {
+     "id": "nuage1",
+     "fichier": "05_feu/05_feu_plan-nuage1_1.svg",
+     "profondeur": 0.18,
+     "cadre": [
+      -140,
+      110,
+      680,
+      34
+     ]
+    },
+    {
+     "id": "etoiles",
+     "fichier": "05_feu/05_feu_plan-etoiles_1.svg",
+     "profondeur": 0.1,
+     "marge": 40
+    },
+    {
+     "id": "filante",
+     "fichier": "05_feu/05_feu_plan-filante_1.svg",
+     "profondeur": 0.1,
+     "pivot": [
+      268,
+      22
+     ],
+     "cadre": [
+      130,
+      0,
+      160,
+      70
+     ]
+    },
+    {
+     "id": "lune",
+     "fichier": "05_feu/05_feu_plan-lune_1.svg",
+     "profondeur": 0.12,
+     "cadre": [
+      10,
+      0,
+      150,
+      140
+     ]
+    },
+    {
+     "id": "mer-soir",
+     "fichier": "05_feu/05_feu_plan-mer-soir_1.svg",
+     "profondeur": 0.3,
+     "marge": 40
+    },
+    {
+     "id": "mer",
+     "fichier": "05_feu/05_feu_plan-mer_1.svg",
+     "profondeur": 0.3,
+     "marge": 40
+    },
+    {
+     "id": "plage",
+     "fichier": "05_feu/05_feu_plan-plage_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
+     "id": "lechee",
+     "fichier": "05_feu/05_feu_plan-lechee_1.svg",
+     "profondeur": 0.55,
+     "marge": 40
+    },
+    {
+     "id": "crepuscule",
+     "fichier": "05_feu/05_feu_plan-crepuscule_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "voile0",
+     "fichier": "05_feu/05_feu_plan-voile0_1.svg",
+     "profondeur": 0.32,
+     "marge": 40,
+     "flou": 0.2
+    },
+    {
+     "id": "filets0",
+     "fichier": "05_feu/05_feu_plan-filets0_1.svg",
+     "profondeur": 0.36,
+     "cadre": [
+      -100,
+      162,
+      600,
+      60
+     ]
+    },
+    {
+     "id": "herbe",
+     "fichier": "05_feu/05_feu_plan-herbe_1.svg",
+     "profondeur": 0.58,
+     "marge": 40
+    },
+    {
+     "id": "nuit",
+     "fichier": "05_feu/05_feu_plan-nuit_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "flaque",
+     "fichier": "05_feu/05_feu_plan-flaque_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      290,
+      212,
+      60
+     ]
+    },
+    {
+     "id": "pierres-fond",
+     "fichier": "05_feu/05_feu_plan-pierres-fond_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      270,
+      212,
+      70
+     ]
+    },
+    {
+     "id": "feu",
+     "fichier": "05_feu/05_feu_plan-feu_1.svg",
+     "profondeur": 0.62,
+     "pivot": [
+      236,
+      318
+     ],
+     "cadre": [
+      176,
+      222,
+      120,
+      104
+     ]
+    },
+    {
+     "id": "pierres-devant",
+     "fichier": "05_feu/05_feu_plan-pierres-devant_1.svg",
+     "profondeur": 0.62,
+     "cadre": [
+      130,
+      300,
+      212,
+      70
+     ]
+    },
+    {
+     "id": "brume",
+     "fichier": "05_feu/05_feu_plan-brume_1.svg",
+     "images": {
+      "flotte|face|content|0": "05_feu/05_feu_plan-brume--0_1.svg",
+      "flotte|face|content|1": "05_feu/05_feu_plan-brume--1_1.svg",
+      "flotte|face|content|2": "05_feu/05_feu_plan-brume--2_1.svg",
+      "flotte|face|triste|0": "05_feu/05_feu_plan-brume--3_1.svg",
+      "flotte|face|triste|1": "05_feu/05_feu_plan-brume--4_1.svg",
+      "flotte|face|triste|2": "05_feu/05_feu_plan-brume--5_1.svg",
+      "flotte|face|gene|0": "05_feu/05_feu_plan-brume--6_1.svg",
+      "flotte|face|gene|1": "05_feu/05_feu_plan-brume--7_1.svg",
+      "flotte|face|gene|2": "05_feu/05_feu_plan-brume--8_1.svg"
+     },
+     "anims": {
+      "flotte": {
+       "images": 3,
+       "dt": 0.28
+      }
+     },
+     "profondeur": 0.68,
+     "pivot": [
+      262,
+      268
+     ],
+     "cadre": [
+      194,
+      180,
+      136,
+      112
+     ]
+    },
+    {
+     "id": "avatar",
+     "profondeur": 0.7,
+     "pivot": [
+      126,
+      384
+     ]
+    },
+    {
+     "id": "lumiere",
+     "fichier": "05_feu/05_feu_plan-lumiere_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "chaleur",
+     "fichier": "05_feu/05_feu_plan-chaleur_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    },
+    {
+     "id": "teinte",
+     "fichier": "05_feu/05_feu_plan-teinte_1.svg",
+     "profondeur": 0,
+     "marge": 40
+    }
+   ],
+   "partition": {
     "lumiere": {
+     "cote": -1,
      "ambiance": "#1A0A40",
      "eclat": "#FF9A40",
      "lisere": "#FFB070",
      "force": 1.15,
-     "cote": -1
+     "neon": true
+    },
+    "temps": [
+     {
+      "duree": 4600,
+      "camera": [
+       [
+        0,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ],
+       [
+        4600,
+        {
+         "x": 30,
+         "y": 26,
+         "z": 1.2
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "o": 0.85,
+          "x": 14
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "feu": [
+        [
+         0,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         190,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         380,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         570,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         760,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         950,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1140,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1330,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1520,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1710,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1900,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2090,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2280,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2470,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2660,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2850,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3040,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3230,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3420,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3610,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3800,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3990,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4180,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4370,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4560,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4600,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "chaleur": [
+        [
+         0,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         260,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         520,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         780,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1040,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1300,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1560,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1820,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2080,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2340,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2600,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2860,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3120,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3380,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3640,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3900,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4160,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4420,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "filante": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "content"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 4600,
+      "camera": [
+       [
+        0,
+        {
+         "x": 30,
+         "y": 26,
+         "z": 1.2
+        }
+       ],
+       [
+        900,
+        {
+         "x": -20,
+         "y": 24,
+         "z": 1.24
+        }
+       ],
+       [
+        4600,
+        {
+         "x": -20,
+         "y": 24,
+         "z": 1.24
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "feu": [
+        [
+         0,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         190,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         380,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         570,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         760,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         950,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1140,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1330,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1520,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1710,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1900,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2090,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2280,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2470,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2660,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2850,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3040,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3230,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3420,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3610,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3800,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3990,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4180,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4370,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4560,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "chaleur": [
+        [
+         0,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         260,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         520,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         780,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1040,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1300,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1560,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1820,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2080,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2340,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2600,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2860,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3120,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3380,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3640,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3900,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4160,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4420,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "filante": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         4600,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ],
+        [
+         4600,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         1840,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3680,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4600,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "content"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 5000,
+      "camera": [
+       [
+        0,
+        {
+         "x": -20,
+         "y": 24,
+         "z": 1.24
+        }
+       ],
+       [
+        900,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ],
+       [
+        5000,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         5000,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         5000,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "feu": [
+        [
+         0,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         190,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         380,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         570,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         760,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         950,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1140,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1330,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1520,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1710,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1900,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2090,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2280,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2470,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2660,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2850,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3040,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3230,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3420,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3610,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3800,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3990,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4180,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4370,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4560,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4750,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4940,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "chaleur": [
+        [
+         0,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         260,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         520,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         780,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1040,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1300,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1560,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1820,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2080,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2340,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2600,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2860,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3120,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3380,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3640,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3900,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4160,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4420,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4680,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4940,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "filante": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         5000,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ],
+        [
+         5000,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ],
+        [
+         5000,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         2000,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         4000,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         5000,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "content"
+         }
+        ],
+        [
+         2600,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "triste"
+         }
+        ]
+       ]
+      }
+     },
+     {
+      "duree": 3000,
+      "camera": [
+       [
+        0,
+        {
+         "x": 40,
+         "y": 10,
+         "z": 1.28
+        }
+       ],
+       [
+        900,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ],
+       [
+        3000,
+        {
+         "x": 6,
+         "y": 6,
+         "z": 1.06
+        }
+       ]
+      ],
+      "pistes": {
+       "soleil": [
+        [
+         0,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 70,
+          "r": 40
+         }
+        ]
+       ],
+       "mer": [
+        [
+         0,
+         {
+          "o": 0
+         }
+        ],
+        [
+         3000,
+         {
+          "o": 0
+         }
+        ]
+       ],
+       "crepuscule": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         3000,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "voile0": [
+        [
+         0,
+         {
+          "o": 0.78
+         }
+        ],
+        [
+         3000,
+         {
+          "o": 0.78
+         }
+        ]
+       ],
+       "filets0": [
+        [
+         0,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ],
+        [
+         3000,
+         {
+          "x": 14,
+          "o": 0.85
+         }
+        ]
+       ],
+       "nuit": [
+        [
+         0,
+         {
+          "o": 0.4
+         }
+        ],
+        [
+         3000,
+         {
+          "o": 0.4
+         }
+        ]
+       ],
+       "etoiles": [
+        [
+         0,
+         {
+          "o": 1
+         }
+        ],
+        [
+         3000,
+         {
+          "o": 1
+         }
+        ]
+       ],
+       "feu": [
+        [
+         0,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         190,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         380,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         570,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         760,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         950,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1140,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1330,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1520,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1710,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1900,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2090,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2280,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2470,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2660,
+         {
+          "s": 0.97,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2850,
+         {
+          "s": 1.05,
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "chaleur": [
+        [
+         0,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         260,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         520,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         780,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1040,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1300,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1560,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         1820,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2080,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2340,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2600,
+         {
+          "o": 0.8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2860,
+         {
+          "o": 1,
+          "e": "ease-in-out"
+         }
+        ]
+       ],
+       "filante": [
+        [
+         0,
+         {
+          "x": 60,
+          "y": -16,
+          "o": 0
+         }
+        ],
+        [
+         500,
+         {
+          "x": 60,
+          "y": -16,
+          "o": 0,
+          "e": "linear"
+         }
+        ],
+        [
+         600,
+         {
+          "x": 52,
+          "y": -14,
+          "o": 1,
+          "e": "linear"
+         }
+        ],
+        [
+         1600,
+         {
+          "x": -40,
+          "y": 12,
+          "o": 1
+         }
+        ],
+        [
+         2000,
+         {
+          "x": -56,
+          "y": 16,
+          "o": 0
+         }
+        ],
+        [
+         3000,
+         {
+          "x": -56,
+          "y": 16,
+          "o": 0
+         }
+        ]
+       ],
+       "brume": [
+        [
+         0,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ],
+        [
+         3000,
+         {
+          "x": 44,
+          "y": 22,
+          "s": 1
+         }
+        ]
+       ],
+       "avatar": [
+        [
+         0,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ],
+        [
+         3000,
+         {
+          "x": 26,
+          "y": -6,
+          "s": 0.98
+         }
+        ]
+       ],
+       "lechee": [
+        [
+         0,
+         {
+          "y": -10
+         }
+        ],
+        [
+         1200,
+         {
+          "y": 8,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         2400,
+         {
+          "y": -6,
+          "e": "ease-in-out"
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 2
+         }
+        ]
+       ]
+      },
+      "acteur": [
+       [
+        0,
+        {
+         "anim": "repos",
+         "dir": "bas_droite",
+         "expr": "neutre"
+        }
+       ]
+      ],
+      "jeux": {
+       "brume": [
+        [
+         0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "triste"
+         }
+        ],
+        [
+         1300,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "gene"
+         }
+        ]
+       ]
+      }
+     }
+    ],
+    "repos": {
+     "duree": 10000,
+     "camera": {
+      "x": 3,
+      "y": -2,
+      "z": 0.02
+     },
+     "pistes": {
+      "filets0": [
+       12000,
+       {
+        "x": 14
+       }
+      ],
+      "lechee": [
+       2600,
+       {
+        "y": 12
+       }
+      ],
+      "brume": [
+       3000,
+       {
+        "y": -4
+       }
+      ]
+     }
     }
    },
-   "calques": {
-    "fond": {
-     "nom": "Scène 5d : Le feu prend (fond)",
-     "fichiers": [
-      "05_feu/05_feu_fond_1.svg"
-     ]
-    },
-    "anime": {
-     "nom": "Scène 5d : Le feu prend (ce qui vit sur le fond figé)",
-     "fichiers": [
-      "05_feu/05_feu_anime_1.svg"
-     ]
-    },
-    "devant": {
-     "nom": "Scène 5d : Le feu prend (devant l'avatar)",
-     "fichiers": [
-      "05_feu/05_feu_devant_1.svg"
-     ]
-    }
-   }
+   "calques": {}
   },
   "06_silhouette": {
    "nom": "Scène 6h : Une silhouette sur les rochers",

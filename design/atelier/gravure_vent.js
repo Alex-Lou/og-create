@@ -377,4 +377,4 @@ function nuit03() {
   return fin(plans, temps, NUIT, { brume: [3000, { y: -4 }], eclat: [3000, { y: -4 }] });
 }
 
-module.exports = { livre03, vent03, ciel03, trouee03, nuit03, decorApres, B, brumeFigurant, repliques, fin, NUIT };
+module.exports = { livre03, vent03, ciel03, trouee03, nuit03, decorApres, B, brumeFigurant, repliques, fin, filante, NUIT };

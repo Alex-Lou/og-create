@@ -98,8 +98,8 @@ export const SCENES = {
   ],
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée ; quelqu'un regarde le feu (Agathe)
   nuit: [
-    { scene: '05_feu', still: true, who: 'Brume', text: 'Je n’ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n’ai pas froid.' },
-    { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, cette plage suffira.' },
+    { scene: '05_feu', who: 'Brume', text: 'Je n’ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n’ai pas froid.' },
+    { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, ce cercle suffira.' },
     { scene: '05_feu', who: 'Brume', text: 'Brumelune. C’est ainsi qu’ils appelaient l’île, ceux d’avant. Je n’avais plus dit ce nom depuis longtemps.' },
     // (le premier indice de l'étoile tombée, le Voile : HISTOIRE.md, § 7.2 ; ce qu'on voit, une légende)
     { scene: '05_feu', caption: 'Une étoile file. Brume détourne les yeux.' },

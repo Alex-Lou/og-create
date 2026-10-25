@@ -21213,9 +21213,6 @@ var require_scenes7 = __commonJS({
           return s + [0, 1, 2].map((i) => `<g>${defile("-200 0", "460 0", 2.2, i * 0.7)}${trait2(`M0,${110 + i * 60} q60,-16 120,0 q30,8 60,-6`, "rgb(230,240,250)", 3, 'opacity=".55"')}</g>`).join("");
         }, "fond")
       };
-      S["05_feu"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("feC", NUIT.ciel, 240) + etoiles(40, 170, 9, true) + lune("feL", 70, 64) + mer("feM", 176, 242, NUIT.mer) + reflet(70, 184) + epave(330, 202, 0.6, 0.55) + sable("feS", 240) + `<g>${uneFois("scale", "1 1;1.12 1", "0;1", 2.4)}${nappe(232, 0.22, 16, 34)}${nappe(302, 0.16, 21, 26)}</g>` + feu("feF", 222, 334, 1.8, true) + brume("feB", 270, 300, 1.8, "content"), "fond")
-      };
       S["06_silhouette"] = {
         fond: /* @__PURE__ */ __name(() => ciel("siC", NUIT.ciel, 230) + etoiles(30, 160, 161, true) + mer("siM", 170, 230, NUIT.mer) + nappe(200, 0.2, 16) + sable("siS", 230) + rocher2("siR", 270, 236, 120, 70) + `<g>${vaVient("translate", "0 0", "0 -0.8", 4)}${P2("M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z", "#0C101C", 0)}${E(340, 124, 5.6, 6.2, "#0C101C", 0)}</g>` + vif(`<g>${palpite("opacity", "0.4;0.8;0.5;0.75;0.4", 1.3)}${trait2("M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4", "rgb(255,190,120)", 1.2)}</g>`) + feu("siF", 176, 336, 1.6) + brume("siB", 226, 300, 1.5, "surpris"), "fond")
       };
@@ -23388,7 +23385,7 @@ var require_gravure_vent = __commonJS({
       return fin(plans, temps, NUIT, { brume: [3e3, { y: -4 }], eclat: [3e3, { y: -4 }] });
     }
     __name(nuit03, "nuit03");
-    module.exports = { livre03, vent03, ciel03, trouee03, nuit03, decorApres, B, brumeFigurant, repliques, fin, NUIT };
+    module.exports = { livre03, vent03, ciel03, trouee03, nuit03, decorApres, B, brumeFigurant, repliques, fin, filante, NUIT };
   }
 });
 
@@ -24282,6 +24279,7 @@ var require_neon_reveil = __commonJS({
 var require_gravure_cercle = __commonJS({
   "atelier/gravure_cercle.js"(exports, module) {
     var { hash, f } = require_ouverture();
+    var { courbe } = require_papier();
     var { atelier, gravure, trait: trait2, ovale, ENCRE } = require_gravure();
     var { balance, teinte, navire, MARGE, G, D_ } = require_theatre_pont();
     var { unTemps } = require_gravure_plage();
@@ -24289,6 +24287,29 @@ var require_gravure_cercle = __commonJS({
     var R = require_gravure_rencontre();
     var V = require_gravure_vent();
     var C0 = [236, 318];
+    var LISIERE = 262;
+    function herbe(p) {
+      const A = atelier(`${p}h`);
+      const bord = courbe((t) => [G + (D_ - G) * t, LISIERE + 5 * Math.sin(t * 9 + 1) + 3 * Math.sin(t * 23)], 50);
+      let s = gravure(A, [...bord, [D_, D_ + 20], [G, D_ + 20]], A.lin([[0, "#5A7A4A"], [0.4, "#3E5E36"], [1, "#1E3420"]], 0, LISIERE, 0, D_), { seed: 760, amp: 0.4, angle: 16, pas: 2.6, ombre: 0.3, tailles: 2, tailleP: 4, trait: 2.2, portee: 0, lumiere: [0.3, -1] });
+      const touffes = [];
+      for (let i = 0; i < 40; i++) {
+        const x = G + 10 + hash(i, 71) * (D_ - G - 20), y = LISIERE + 12 + hash(i, 73) ** 0.85 * (D_ - LISIERE - 10);
+        if (Math.hypot((x - C0[0]) / 104, (y - C0[1]) / 34) < 1) continue;
+        touffes.push([x, y, 0.5 + (y - LISIERE) / 140]);
+      }
+      for (const [x, y, k] of touffes.sort((a, b) => a[1] - b[1])) {
+        const pts5 = [[x - 7 * k, y], [x - 11 * k, y - 11 * k], [x - 3 * k, y - 4 * k], [x - 1 * k, y - 17 * k], [x + 2.5 * k, y - 4 * k], [x + 10 * k, y - 13 * k], [x + 7 * k, y]];
+        s += gravure(A, pts5, "#6E9A56", { seed: 780 + Math.round(x), amp: 0.2, angle: 70, pas: 1.8, ombre: 0.45, tailles: 0, trait: 1.3, portee: 0.3, dy: 2, lumiere: [0.3, -1] });
+      }
+      for (let i = 0; i < 14; i++) {
+        const x = G + 20 + hash(i, 75) * (D_ - G - 40), y = LISIERE + 16 + hash(i, 77) * (D_ - LISIERE - 30);
+        if (Math.hypot((x - C0[0]) / 110, (y - C0[1]) / 38) < 1) continue;
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.6 + hash(i, 79))}" fill="${i % 3 ? "#E6DCB0" : "#C8B4D8"}" stroke="${ENCRE}" stroke-width="0.7"/>`;
+      }
+      return A.out(s);
+    }
+    __name(herbe, "herbe");
     var PIERRES = Array.from({ length: 11 }, (_, i) => {
       const a = i / 11 * Math.PI * 2 + 0.3;
       return [C0[0] + 84 * Math.cos(a), C0[1] + 26 * Math.sin(a), 8 + 4 * hash(i, 81), a];
@@ -24338,6 +24359,7 @@ var require_gravure_cercle = __commonJS({
     function decorCercle(p, souvenirs, auLarge = []) {
       const base = V.decorApres(p, { livre: null, nuitee: true, anime: /* @__PURE__ */ __name(() => "", "anime") }).filter((q) => !["rocher", "anime"].includes(q.id));
       base.splice(base.findIndex((q) => q.id === "voile0"), 0, ...auLarge);
+      base.splice(base.findIndex((q) => q.id === "nuit"), 0, { id: "herbe", profondeur: 0.58, marge: MARGE, dessin: /* @__PURE__ */ __name(() => herbe(p), "dessin") });
       return [
         ...base,
         { id: "flaque", profondeur: 0.62, cadre: [130, 290, 212, 60], dessin: /* @__PURE__ */ __name(() => {
@@ -24426,7 +24448,45 @@ var require_gravure_cercle = __commonJS({
       return V.fin(plans, temps, V.NUIT, { brume: [3e3, { y: -4 }], navire: [2600, { y: -1, r: 2 }] });
     }
     __name(promesse05, "promesse05");
-    module.exports = { cercle05, promesse05 };
+    var FEU_CADRE = [176, 222, 120, 104];
+    function feuPris(p) {
+      const A = atelier(`${p}f`), [x, y] = C0;
+      let s = [[-26, 4, 22, -6], [-20, 6, 24, 2], [-4, 8, 4, -2]].map(([x0, y0, x1, y1]) => trait2(`M${x + x0},${y + y0} L${x + x1},${y + y1}`, 7, ENCRE) + trait2(`M${x + x0},${y + y0} L${x + x1},${y + y1}`, 4.4, "#6E4026")).join("");
+      const ext = A.lin([[0, "#FFD860"], [0.5, "#FF9A30"], [1, "#E0501E"]], 0, y - 90, 0, y);
+      for (const [dx, r, sway] of [[-20, 15, -5], [18, 14, 6], [0, 24, 2]]) s += `<path d="${flamePath(x + dx, y - r, r, sway)}" fill="${ext}" stroke="${ENCRE}" stroke-width="2.2" stroke-linejoin="round"/><path d="${flamePath(x + dx, y - r * 0.7, r * 0.5, sway * 0.6)}" fill="#FFF2B8" stroke="${ENCRE}" stroke-width="1" stroke-linejoin="round"/>`;
+      s += [[-12, -2], [10, 0], [2, 4], [-24, 6], [22, 5]].map(([dx, dy], k) => `<circle cx="${x + dx}" cy="${y + dy}" r="${1.6 + k % 2}" fill="#FFB040" stroke="${ENCRE}" stroke-width="0.6"/>`).join("");
+      return A.out(s);
+    }
+    __name(feuPris, "feuPris");
+    var chaleur = /* @__PURE__ */ __name((p) => {
+      const A = atelier(`${p}h`), [x, y] = C0;
+      return A.out(`<ellipse cx="${x}" cy="${y - 24}" rx="210" ry="170" fill="${A.rad([[0, "#FFB060", 0.42], [0.4, "#FF8A40", 0.16], [1, "#FF8A40", 0]], x, y - 24, 210)}"/><ellipse cx="${x}" cy="${y + 6}" rx="120" ry="34" fill="${A.rad([[0, "#FFC070", 0.5], [1, "#FFC070", 0]], x, y + 6, 120)}"/>`);
+    }, "chaleur");
+    var FEU = { teinte: "#2A140A", force: 0.24, cote: -1 };
+    var PRES_DU_FEU = { x: 44, y: 22, s: 1 };
+    var PRES_DU_CERCLE = { x: 26, y: -6, s: 0.98 };
+    function feu05() {
+      const p = "fe", D0 = 4600;
+      const plans = decorCercle(p, [{ id: "feu", profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: /* @__PURE__ */ __name(() => feuPris(p), "dessin") }]);
+      plans.splice(plans.findIndex((q) => q && q.id === "teinte"), 0, { id: "chaleur", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => chaleur(p), "dessin") });
+      plans.splice(plans.findIndex((q) => q && q.id === "etoiles") + 1, 0, { id: "filante", profondeur: 0.1, cadre: [130, 0, 160, 70], pivot: [268, 22], dessin: /* @__PURE__ */ __name(() => V.filante(p), "dessin") });
+      const vivant = /* @__PURE__ */ __name((D) => ({ feu: balance(0, D, 380, (k) => ({ s: k % 2 ? 1.05 : 0.97, o: 1 })), chaleur: balance(0, D, 520, (k) => ({ o: k % 2 ? 1 : 0.8 })), filante: [[0, { o: 0 }], [D, { o: 0 }]] }), "vivant");
+      const ici = /* @__PURE__ */ __name((D) => ({ brume: [[0, PRES_DU_FEU], [D, PRES_DU_FEU]], avatar: [[0, PRES_DU_CERCLE], [D, PRES_DU_CERCLE]] }), "ici");
+      const REPOS = R.joue([0, "repos", "bas_droite"]);
+      const t0 = { ...unTemps(D0, [[0, LARGE], [D0, { ...SUR_CERCLE, e: "ease-in-out" }]], { ...nuitFixe(plans.filter(Boolean), D0), ...vivant(D0), ...ici(D0) }), acteur: REPOS, jeux: { brume: V.B([0, "content"]) } };
+      const temps = V.repliques(t0, [
+        // « Le feu tient. Pour cette nuit, ce cercle suffira. »
+        [4600, SUR_AVATAR, REPOS, V.B([0, "content"]), { ...vivant(4600), ...ici(4600) }],
+        // « Brumelune. C'est ainsi qu'ils appelaient l'île, ceux d'avant. »
+        [5e3, SUR_BRUME, REPOS, V.B([0, "content"], [2600, "triste"]), { ...vivant(5e3), ...ici(5e3) }],
+        // une étoile file ; Brume détourne les yeux
+        [3e3, LARGE, REPOS, V.B([0, "triste"], [1300, "gene"]), { ...vivant(3e3), ...ici(3e3), filante: [[0, { x: 60, y: -16, o: 0 }], [500, { x: 60, y: -16, o: 0, e: "linear" }], [600, { x: 52, y: -14, o: 1, e: "linear" }], [1600, { x: -40, y: 12, o: 1 }], [2e3, { x: -56, y: 16, o: 0 }], [3e3, { x: -56, y: 16, o: 0 }]] }]
+      ]);
+      plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
+      return V.fin(plans, temps, FEU, { brume: [3e3, { y: -4 }] });
+    }
+    __name(feu05, "feu05");
+    module.exports = { cercle05, promesse05, feu05 };
   }
 });
 
@@ -24438,6 +24498,7 @@ var require_neon_jeu = __commonJS({
     var GC = require_gravure_cercle();
     var GL = require_gravure_lorena();
     var { enNeonScene } = require_neon_reveil();
+    var { melange } = require_neon_naufrage();
     var CINEMATIQUES = [
       ["02_plage", GR.plage02, "n2p"],
       ["02_lueur", GR.lueur02, "n2l", true, "brume"],
@@ -24450,10 +24511,23 @@ var require_neon_jeu = __commonJS({
       ["03_nuit", GV.nuit03, "n3n", true, "nuit"],
       ["05_cercle", GC.cercle05, "n5c", true, "nuit"],
       ["05_promesse", GC.promesse05, "n5p", true, "nuit"],
+      ["05_feu", GC.feu05, "n5f", true, "feu"],
       ["10_epave", GL.epave10, "nae", false, "matin"],
       ["10_aster", GL.aster10, "naa", false, "matin"]
     ];
-    var cinematiques = CINEMATIQUES.map(([id2, scene2, p, decor = true, lumiere = "couchant"]) => [id2, () => enNeonScene(scene2, p, {}, false, decor, lumiere)]);
+    var NUIT = "#0A0420";
+    var SOMBRES = /* @__PURE__ */ new Set(["herbe"]);
+    var assombrit = /* @__PURE__ */ __name((svg) => svg.replace(/(?<!url\()(?<!href=")#[0-9a-fA-F]{6}\b/g, (c) => melange(c, NUIT, 0.45)), "assombrit");
+    function cinematique(scene2, p, decor, lumiere) {
+      const sc = enNeonScene(scene2, p, {}, false, decor, lumiere);
+      for (const pl of sc.plans) if (SOMBRES.has(pl.id)) {
+        const d = pl.dessin;
+        pl.dessin = () => assombrit(d());
+      }
+      return sc;
+    }
+    __name(cinematique, "cinematique");
+    var cinematiques = CINEMATIQUES.map(([id2, scene2, p, decor = true, lumiere = "couchant"]) => [id2, () => cinematique(scene2, p, decor, lumiere)]);
     module.exports = { cinematiques };
   }
 });
@@ -24837,14 +24911,6 @@ var require_scenes6 = __commonJS({
       }, "fond"),
       avatar: { x: 200, y: 364, echelle: 3, vue: "dos", pose: "repos", naufrage: true }
     });
-    S("05_feu", {
-      titre: "Le feu prend",
-      etapes: ["5d"],
-      images: 4,
-      ms: 300,
-      fond: /* @__PURE__ */ __name((f) => ciel("fe", NUIT, 240) + mer(180, 240, f) + epave(330, 204, 0.6, 0.6) + sable(240) + nappe(234, 0.28 - f * 0.06, f) + nappe(304, 0.24 - f * 0.06, -f, 1.2) + feu(222, 334, 1.8, f, [0, 1, 2, 2][f]) + brume(270 - f * 4, 300, 1.8, f, f > 1 ? "content" : "neutre"), "fond"),
-      avatar: { x: 118, y: 368, echelle: 3.3, vue: "avant", pose: "repos", naufrage: true }
-    });
     S("06_silhouette", {
       titre: "Une silhouette sur les rochers",
       etapes: ["6h"],
@@ -25075,7 +25141,7 @@ var require_scenes6 = __commonJS({
       SCENES2[id2] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1e3, fond: a.fond, devant: a.devant };
       if (!a.devant) delete SCENES2[id2].devant;
     }
-    for (const [id2, feu2] of [["05_feu", [222, 334]], ["06_silhouette", [176, 336]]]) SCENES2[id2].devant = () => devantAvatar(`${id2.slice(3, 6)}a`, SCENES2[id2].avatar, feu2);
+    for (const [id2, feu2] of [["06_silhouette", [176, 336]]]) SCENES2[id2].devant = () => devantAvatar(`${id2.slice(3, 6)}a`, SCENES2[id2].avatar, feu2);
     var O = require_ouverture();
     var R = require_rencontre();
     var APRES_VENT = { x: 182, y: 348, echelle: 3.25, vue: "avant", pose: "repos", naufrage: true };
@@ -25087,8 +25153,9 @@ var require_scenes6 = __commonJS({
       ["03_trouee", "03_vent", "La brume ouverte autour d’eux, les étoiles : ceux d’avant", ["3"], null, APRES_VENT],
       ["03_ciel", "03_vent", "Brume lève les yeux vers le ciel", ["3"], null, null],
       ["03_nuit", "03_vent", "La nuit tombe, froide ; Brume l’emmène vers le vieux cercle", ["3"], null, APRES_VENT],
-      ["05_cercle", "03_vent", "Le vieux cercle de pierres en haut de la plage ; ceux d’avant reviennent un instant", ["5"], null, AU_CERCLE],
+      ["05_cercle", "03_vent", "Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant", ["5"], null, AU_CERCLE],
       ["05_promesse", "03_vent", "Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume", ["5"], null, AU_CERCLE],
+      ["05_feu", "03_vent", "Le feu prend au vieux cercle ; près de lui, Brume n’a plus froid", ["5d"], null, AU_CERCLE],
       ["10_epave", "09_rivet", "Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage", ["10"], null, null]
     ];
     {
@@ -25115,7 +25182,7 @@ var require_scenes6 = __commonJS({
     var NR = require_neon_reveil();
     var NJ = require_neon_jeu();
     var GC = require_gravure_cercle();
-    for (const [id2, scene2] of [["00_tampon", NR.tampon00], ["01_pont", NN.naufrage], ["01_paupieres", NR.paupieres01], ["01_greve", NR.greve01], ["01_carte", NR.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
+    for (const [id2, scene2] of [["00_tampon", NR.tampon00], ["01_pont", NN.naufrage], ["01_paupieres", NR.paupieres01], ["01_greve", NR.greve01], ["01_carte", NR.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["05_feu", GC.feu05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }
@@ -25125,7 +25192,6 @@ var require_scenes6 = __commonJS({
       "30_phare_porte": Infinity,
       "12_veillee": Infinity,
       "12_habits": Infinity,
-      "05_feu": Infinity,
       "06_silhouette": Infinity
     };
     for (const [id2, sc] of Object.entries(SCENES2)) {
@@ -25147,7 +25213,7 @@ var require_scenes6 = __commonJS({
       sc.fond = (n) => part(n).fond;
       sc.anime = (n) => part(n).anime;
     }
-    var NEON_FIXES = { "05_feu": ["feu", -1], "06_silhouette": ["nuit", 1], "07_cannelle": ["jour", 1], "07_souvenir": ["jour", 1], "09_rivet": ["jour", 1], "11_ondin": ["jour", 1], "11_reveil": ["jour", 1], "12_veillee": ["feu", -1], "12_habits": ["feu", -1], "30_phare_porte": ["nuit", 1] };
+    var NEON_FIXES = { "06_silhouette": ["nuit", 1], "07_cannelle": ["jour", 1], "07_souvenir": ["jour", 1], "09_rivet": ["jour", 1], "11_ondin": ["jour", 1], "11_reveil": ["jour", 1], "12_veillee": ["feu", -1], "12_habits": ["feu", -1], "30_phare_porte": ["nuit", 1] };
     for (const [id2, [lumiere, cote]] of Object.entries(NEON_FIXES)) {
       const sc = SCENES2[id2], { fond, anime, devant } = sc, n0 = `nf${id2.replace(/\W/g, "")}`;
       sc.fond = (n) => NR.ravivee(fond(n)) + NN.vignette(`${n0}${n}`);
