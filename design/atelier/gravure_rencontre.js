@@ -132,8 +132,9 @@ const lecheeVa = D => [[0, { y: -10 }], [D * 0.4, { y: 8, e: 'ease-in-out' }], [
 // poses gardent la leur)
 const NEUTRES = new Set(['repos', 'marche', 'arret']);
 const joue = (...clips) => clips.map(([t, anim, dir, expr = NEUTRES.has(anim) ? 'neutre' : undefined]) => [t, expr ? { anim, dir, expr } : { anim, dir }]);
-// (la lumière qui le grave : le contre-jour du couchant ; puis la lumière froide de Brume, à droite)
-const COUCHANT = { teinte: '#2A140A', force: 0.24, cote: 1 }, FROIDE = { teinte: '#1C2242', force: 0.26, cote: -1 };
+// (la lumière qui le grave : le contre-jour du couchant, du côté du soleil, à droite de lui (gravure_plage.js : SOLEIL) ;
+// puis la lumière froide de Brume, à droite)
+const COUCHANT = { teinte: '#2A140A', force: 0.24, cote: -1 }, FROIDE = { teinte: '#1C2242', force: 0.26, cote: -1 };
 // un temps qui tient tout où le précédent l'a laissé (la caméra, chaque piste), le temps que l'avatar joue
 const derniere = cles => { const { e, ...c } = cles[cles.length - 1][1]; return c; };
 const tenir = (prec, D, acteur, pistes = {}) => ({

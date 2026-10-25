@@ -148,8 +148,11 @@ export default {
     // page au-dessus, l'énigme et l'Encre ; retour de l'auteur, 18 oct.) : { x, w }, ou null (alors au-dessus)
     side() {
       const h = this.hole;
-      // (pas pour une cible prise dans ce qui est fixé en bas, un onglet : la bulle n'y serait pas à sa hauteur)
-      if (!h || this.below || h.y + h.h / 2 + this.sayH / 2 > (this.edge || this.view.h - 70)) return null;
+      // (pas pour une cible prise dans ce qui est fixé en bas, un onglet : la bulle n'y serait pas à sa hauteur. Sa propre
+      // hauteur n'entre pas dans ce choix : plus étroite à côté, elle s'allonge, et ne tenait plus ; revenue au-dessus,
+      // elle tenait de nouveau : elle sautait de l'une à l'autre à chaque image, au Brasier ; sayStyle la garde au-dessus
+      // du bord)
+      if (!h || this.below || h.y + h.h / 2 > (this.edge || this.view.h - 70)) return null;
       const right = this.view.w - (h.x + h.w) - SIDE_GAP - 12;
       const left = h.x - SIDE_GAP - 12;
       if (right >= SIDE_MIN && right >= left) return { x: h.x + h.w + SIDE_GAP, w: Math.min(340, right) };

@@ -102,8 +102,10 @@ function livre03() {
   const brume = [[0, { x: 212 - bx, y: 170 - by, s: 0.9, o: 0, e: 'ease-out' }], [250, { x: 212 - bx, y: 160 - by, s: 0.92, o: 1, e: 'cubic-bezier(.3,0,.4,1)' }], [800, { x: 0, y: 0, s: 0.95 }],
     [1100, { x: -6, y: 2, s: 0.95, r: -8 }], [1400, { x: 0, y: 0, s: 0.95, r: 0 }], [1700, { x: -9, y: 3, s: 0.95, r: -10 }], [2000, { x: -1, y: 0, s: 0.95, r: 0 }], [2300, { x: -12, y: 4, s: 0.95, r: -12 }], [2600, { x: -2, y: 0, s: 0.95, r: 2, e: 'cubic-bezier(.2,.8,.4,1)' }],
     [OUT, { x: -34, y: 12, s: 0.95, r: -22 }], [TOMBE, { x: -38, y: 30, s: 0.95, r: -8, e: 'ease-out' }], [3800, FIN], [D0, FIN]];
-  // (ses trois visages suivent les mêmes clés ; seule leur opacité change, d'un coup, à 800 et à la chute)
-  const visages = [...brume, [799, valeurA(brume, 799)], [TOMBE - 1, valeurA(brume, TOMBE - 1)]].sort((u, v) => u[0] - v[0]);
+  // (ses trois visages suivent les mêmes clés ; seule leur opacité change, d'un coup, à 800 et à la chute ; à D0, la
+  // Brume vivante du calque anime (livreVif) prend le relais du dernier : elles ne se montrent jamais ensemble, sinon
+  // on en voyait deux, l'une figée, l'autre qui flotte à peine décalée : retour de l'auteur, 25 oct.)
+  const visages = [...brume, [799, valeurA(brume, 799)], [TOMBE - 1, valeurA(brume, TOMBE - 1)], [D0 - 1, valeurA(brume, D0 - 1)]].sort((u, v) => u[0] - v[0]);
   const visage = (de, a) => visages.map(([t, c]) => [t, { ...c, o: t >= de && t < a ? c.o ?? 1 : 0 }]);
   const [lx, ly] = LIVRE, [cx, cy] = CREUX, dedans = { x: cx - lx, y: cy - ly + 4, s: 0.44, r: 0 };
   const livre = [[0, { ...dedans, o: 0 }], [600, { ...dedans, o: 0 }], [900, dedans], [1400, { ...dedans, x: dedans.x - 2, r: -4 }], [2000, { ...dedans, x: dedans.x - 3, r: -6 }], [2600, { ...dedans, x: dedans.x - 5, s: 0.5, r: -8, e: 'cubic-bezier(.2,.8,.4,1)' }],
@@ -112,7 +114,7 @@ function livre03() {
   const livres = [...livre, [OUT + 1, valeurA(livre, OUT + 1)]].sort((u, v) => u[0] - v[0]);
   const P = {
     ...R.soirDe(plans, D0, 1, 1),
-    'brume-c': visage(0, 800), 'brume-g': visage(800, TOMBE), 'brume-j': visage(TOMBE, D0 + 1),
+    'brume-c': visage(0, 800), 'brume-g': visage(800, TOMBE), 'brume-j': visage(TOMBE, D0),
     livre: livres.map(([t, c]) => [t, { ...c, o: t <= OUT ? c.o ?? 1 : 0 }]),
     'livre-dehors': livres.map(([t, c]) => [t, { ...c, o: t > OUT ? 1 : 0 }]),
     poussiere: [[0, { s: 0.6, o: 0 }], [TOMBE, { s: 0.6, o: 0, e: 'linear' }], [TOMBE + 60, { s: 0.8, o: 0.9, e: 'ease-out' }], [TOMBE + 700, { s: 1.5, o: 0 }], [D0, { s: 1.5, o: 0 }]],

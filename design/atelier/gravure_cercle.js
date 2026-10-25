@@ -1,9 +1,10 @@
-// Le vieux cercle de pierres, dans l'herbe, la première nuit (choix de l'auteur, 17 oct. : en gravure découpée, comme
+// Le vieux cercle de pierres, en haut de la plage, la première nuit (choix de l'auteur, 17 oct. : en gravure découpée, comme
 // le reste de l'ouverture) : Brume y raconte ceux d'avant, qui parlaient, dansaient, chantaient autour des flammes ;
 // leurs silhouettes de papier pâle reviennent un instant, puis s'effacent (05_cercle) ; au même endroit, le Brasier écrit,
-// l'épave promise, et Brume qui ne retient plus sa brume (05_promesse). La même nuit que 03_nuit (gravure_vent.js).
+// l'épave promise, et Brume qui ne retient plus sa brume (05_promesse). La même nuit que 03_nuit (gravure_vent.js), sur
+// le même sable que le feu qu'on y allume (05_feu : « cette plage suffira » ; ecriture/lots/01_ouverture.md : « à moitié
+// enfoui dans le sable, en haut de la plage » ; il était dans l'herbe : retour de l'auteur, 25 oct.).
 const { hash, f } = require('./ouverture');
-const { courbe } = require('./papier');
 const { atelier, gravure, trait, ovale, ENCRE } = require('./gravure');
 const { balance, teinte, navire, MARGE, G, D_ } = require('./theatre_pont');
 const { unTemps } = require('./gravure_plage');
@@ -11,31 +12,8 @@ const { flamePath } = require('./brume');
 const R = require('./gravure_rencontre');
 const V = require('./gravure_vent');
 
-// ——— l'herbe, le cercle ———
-const C0 = [236, 318], LISIERE = 262;
-// la lisière de l'herbe, au-dessus de la plage : une prairie gravée, plus sombre vers nous, ses touffes de papier à
-// trois brins, quelques fleurettes ; rien dans le cercle
-function herbe(p) {
-  const A = atelier(`${p}h`);
-  const bord = courbe(t => [G + (D_ - G) * t, LISIERE + 5 * Math.sin(t * 9 + 1) + 3 * Math.sin(t * 23)], 50);
-  let s = gravure(A, [...bord, [D_, D_ + 20], [G, D_ + 20]], A.lin([[0, '#5A7A4A'], [0.4, '#3E5E36'], [1, '#1E3420']], 0, LISIERE, 0, D_), { seed: 760, amp: 0.4, angle: 16, pas: 2.6, ombre: 0.3, tailles: 2, tailleP: 4, trait: 2.2, portee: 0, lumiere: [0.3, -1] });
-  const touffes = [];
-  for (let i = 0; i < 40; i++) {
-    const x = G + 10 + hash(i, 71) * (D_ - G - 20), y = LISIERE + 12 + hash(i, 73) ** 0.85 * (D_ - LISIERE - 10);
-    if (Math.hypot((x - C0[0]) / 104, (y - C0[1]) / 34) < 1) continue;
-    touffes.push([x, y, 0.5 + (y - LISIERE) / 140]);
-  }
-  for (const [x, y, k] of touffes.sort((a, b) => a[1] - b[1])) {
-    const pts = [[x - 7 * k, y], [x - 11 * k, y - 11 * k], [x - 3 * k, y - 4 * k], [x - 1 * k, y - 17 * k], [x + 2.5 * k, y - 4 * k], [x + 10 * k, y - 13 * k], [x + 7 * k, y]];
-    s += gravure(A, pts, '#6E9A56', { seed: 780 + Math.round(x), amp: 0.2, angle: 70, pas: 1.8, ombre: 0.45, tailles: 0, trait: 1.3, portee: 0.3, dy: 2, lumiere: [0.3, -1] });
-  }
-  for (let i = 0; i < 14; i++) {
-    const x = G + 20 + hash(i, 75) * (D_ - G - 40), y = LISIERE + 16 + hash(i, 77) * (D_ - LISIERE - 30);
-    if (Math.hypot((x - C0[0]) / 110, (y - C0[1]) / 38) < 1) continue;
-    s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.6 + hash(i, 79))}" fill="${i % 3 ? '#E6DCB0' : '#C8B4D8'}" stroke="${ENCRE}" stroke-width="0.7"/>`;
-  }
-  return A.out(s);
-}
+// ——— le cercle ———
+const C0 = [236, 318];
 // les pierres noircies du vieux cercle, en anneau ; celles du fond, celles de devant (les souvenirs passent entre)
 const PIERRES = Array.from({ length: 11 }, (_, i) => { const a = (i / 11) * Math.PI * 2 + 0.3; return [C0[0] + 84 * Math.cos(a), C0[1] + 26 * Math.sin(a), 8 + 4 * hash(i, 81), a]; });
 function pierres(p, devant) {
@@ -81,13 +59,12 @@ const navireLoin = p => `<g transform="translate(${NAVIRE[0]} ${NAVIRE[1]}) rota
 // sa brume qui lui échappe (05_promesse : « j'ai oublié comment la retenir ») : des filets autour d'elle
 const sienne = p => R.filets(`${p}s`, 6, [[BCE[0] - 70, BCE[1] - 10, 90, 3, 6], [BCE[0] + 6, BCE[1] + 6, 80, 3, 6]]);
 
-// les plans communs : la nuit, la mer et le banc de brume au loin, la plage, l'herbe, le cercle ; les souvenirs entre
+// les plans communs : la nuit, la mer et le banc de brume au loin, la plage, le cercle ; les souvenirs entre
 // les pierres du fond et celles de devant ; Brume ; l'avatar ; la lumière froide
 const PIEDS_CERCLE = [126, 384];
 function decorCercle(p, souvenirs, auLarge = []) {
   const base = V.decorApres(p, { livre: null, nuitee: true, anime: () => '' }).filter(q => !['rocher', 'anime'].includes(q.id));
   base.splice(base.findIndex(q => q.id === 'voile0'), 0, ...auLarge);
-  base.splice(base.findIndex(q => q.id === 'nuit'), 0, { id: 'herbe', profondeur: 0.58, marge: MARGE, dessin: () => herbe(p) });
   return [
     ...base,
     { id: 'flaque', profondeur: 0.62, cadre: [130, 290, 212, 60], dessin: () => { const A = atelier(`${p}q`); return A.out(R.flaque(`${p}q`, [C0[0], C0[1] + 4], 100)); } },

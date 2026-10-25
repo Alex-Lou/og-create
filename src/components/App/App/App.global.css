@@ -47,9 +47,19 @@
    consigne du geste, sans couvrir le livre ; retour de l'auteur, 18 oct. : la page était trop basse, coupée) */
 .oc-app--bare { --oc-tabbar-h: env(safe-area-inset-bottom, 0px); }
 @media (max-width: 859px) {
-  /* (sous l'étagère, toujours la place de la consigne : 380 px de hauteur gardés hors du livre ; un petit écran a un
-     livre un peu plus petit, jamais sous 200 px de large) */
-  .oc-app.oc-app--bare .book-view__stage.is-single { --book-w: max(min(200px, calc(100cqw - 60px)), min(calc(100cqw - 60px), calc((100dvh - 380px) * .75), 460px)); }
+  /* (sous l'étagère, toujours la place de la consigne : 470 px de hauteur gardés hors du livre, et de l'air de chaque
+     côté pour sa reliure et son fermoir ; un petit écran a un livre un peu plus petit, jamais sous 200 px de large) */
+  .oc-app.oc-app--bare .book-view__stage.is-single { --book-w: max(min(200px, calc(100cqw - 60px)), min(calc(100cqw - 96px), calc((100dvh - 470px) * .75), 340px)); }
+  /* (la page, sa reliure entière, la tuile et la place de la consigne, au milieu de l'écran entre le haut et
+     l'Athanor ; la tuile au milieu, sous le livre : retour de l'auteur, 25 oct. : tout était serré en haut, la reliure
+     rognée) */
+  .oc-app--bare .book-view {
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: calc(100dvh - var(--oc-overlay, var(--oc-dock-height)) - var(--oc-tabbar-h) - 24px);
+    padding: max(12px, env(safe-area-inset-top)) 0 88px;
+    box-sizing: border-box;
+  }
+  .oc-app--bare .book-view__shelf { display: flex; justify-content: center; }
 }
 /* (pendant que Brume parle en haut, le mot de la page s'efface : jamais deux textes l'un sur l'autre) */
 .oc-app--bare .book-view__hint { transition: opacity .3s ease; }
