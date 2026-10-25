@@ -162,11 +162,13 @@ function plage02() {
   const SOIR = [[0, 0.06, 6000], [0.06, 0.16, 5000], [0.16, 0.3, 5000], [0.3, 0.44, 5000], [0.44, 0.6, 5000]];
   // (la caméra : le plan large, puis on se rapproche de lui quand il se retourne et grelotte, puis on le laisse partir)
   const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -40, y: 22, z: 1.22 }, { x: -34, y: 18, z: 1.2 }, { x: -6, y: 2, z: 1.1 }];
-  // (son jeu, une pensée après l'autre : il regarde la mer ; le long de la plage, puis la mer ; il se retourne et
-  // grelotte ; il scrute le rivage, la main en visière ; il se décide et marche vers le rocher, au loin)
+  // (son jeu, une pensée après l'autre : il regarde la mer, deux pensées durant ; il se retourne et grelotte ; il scrute
+  // le rivage, la main en visière ; il se décide et marche vers le rocher, au loin. De dos, il ne regarde pas le long de
+  // la plage : sa vue de gauche est celle de droite en miroir, et sans visage, on n'y voyait que ses habits passer
+  // d'un côté à l'autre : choix de l'auteur, 25 oct.)
   const ACTEUR = [
     joue([0, 'repos', 'haut_droite']),
-    joue([0, 'repos', 'haut_droite'], [1400, 'repos', 'haut_gauche'], [3400, 'repos', 'haut_droite']),
+    joue([0, 'repos', 'haut_droite']),
     joue([0, 'repos', 'haut_droite'], [500, 'repos', 'bas_droite'], [900, 'pose_frisson', 'bas_droite']),
     joue([0, 'pose_frisson', 'bas_droite'], [600, 'repos', 'bas_droite'], [1000, 'pose_visiere', 'bas_droite']),
     joue([0, 'repos', 'bas_droite'], [600, 'repos', 'haut_droite'], [1000, 'marche', 'haut_droite'], [3000, 'repos', 'haut_droite'])

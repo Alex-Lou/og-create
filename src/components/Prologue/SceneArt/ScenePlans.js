@@ -3,7 +3,8 @@
 // la caméra ne découvre jamais ses bords ; plus petite si elle est floue : agrandie, elle se fond), dans deux cadres : la
 // caméra (selon sa profondeur), puis son mouvement propre. Une pièce attachée à une autre (dans : un bras au corps, une
 // mâchoire à la tête) se pose dans son cadre, devant elle ou derrière (derriere), et suit tous ses mouvements. L'avatar
-// et le calque « anime » de SceneArt prennent leur place dans la pile (fentes avatar, anime). Quand la scène s'en va,
+// et le calque « anime » de SceneArt prennent leur place dans la pile (fentes avatar, anime), la photo et le nom du
+// joueur sur une carte aussi (fente photo). Quand la scène s'en va,
 // ses pièces jouent leur sortie (partition.sortie : le démontage), par-dessus là où elles en sont. Un figurant (Lorena,
 // Brume…) est une pièce à plusieurs images (images : une par animation, direction, expression, image) : chaque temps dit
 // ce qu'il joue (temps.jeux : ses clips, comme la piste « acteur » de l'avatar, game/acteur.js)
@@ -99,6 +100,7 @@ export default {
     contenu(plan) {
       if (plan.id === 'avatar') return this.$slots.avatar && this.$slots.avatar();
       if (plan.id === 'anime') return this.$slots.anime && this.$slots.anime();
+      if (plan.id === 'photo') return this.$slots.photo && this.$slots.photo();
       return [h('canvas', { class: 'sp__plan', style: { position: 'absolute', display: 'block', ...this.planStyle(plan) }, ref: el => { this.canvases[plan.id] = el; } })];
     },
     piste(plan) {

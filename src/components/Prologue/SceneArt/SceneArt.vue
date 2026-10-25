@@ -22,6 +22,16 @@
             <template #anime>
               <img v-for="(href, k) in data.live" :key="`l${k}`" class="sa__paint" :src="href" alt="" />
             </template>
+            <!-- la photo et le nom du joueur sur la carte que le vent emporte (game/sceneArt.js : CARTES) -->
+            <template v-if="data.carte" #photo>
+              <canvas ref="photo" class="sa__paint" />
+              <svg v-if="name" class="sa__paint" viewBox="0 0 400 400">
+                <text
+                  class="sa__carte-nom" :transform="cardPlace" :x="data.carte.nom[0]" :y="data.carte.nom[1]"
+                  :textLength="name.length > 14 ? 124 : null" lengthAdjust="spacingAndGlyphs"
+                >{{ name }}</text>
+              </svg>
+            </template>
           </ScenePlans>
           <div v-else :class="['sa__art', { 'sa__art--breathing': data.still }]">
             <canvas ref="under" class="sa__paint" />
@@ -42,7 +52,7 @@
 </template>
 
 <script>
-import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
+import { sceneOf, avatarFrames, avatarBox, photoBox, NAME_LINE } from '@/game/sceneArt';
 import { acteurImages, mouvementsKit } from '@/game/avatarKit';
 import { clipA, imageA, prochain } from '@/game/acteur';
 import { reducedMotion } from '@/utils/fx';
@@ -110,6 +120,18 @@ export default {
       const spot = { ...this.data.avatar, ...this.pose };
       return { ...avatarBox(spot), frames: avatarFrames(this.look, spot), axis: spot.miroir ? spot.x : null };
     },
+    // La photo du joueur sur la carte : prise à bord, en tenue de croisière, de face (la première image : une photo ne
+    // bouge pas, comme sur sa carte : BoardingCard), ou null
+    photo() {
+      const carte = this.data && this.data.carte;
+      const href = carte && avatarFrames(this.look, { vue: 'face', pose: 'repos', naufrage: false })[0];
+      return href ? { href, ...photoBox(carte.photo) } : null;
+    },
+    // (la place de la carte dans le carré, pour son nom)
+    cardPlace() {
+      const c = this.data && this.data.carte;
+      return c ? `translate(${c.x} ${c.y}) rotate(${c.angle}) translate(${-c.coin[0]} ${-c.coin[1]})` : null;
+    },
     // (une scène plus haute que large : la veillée du conseil, qui remplit un téléphone)
     squareStyle() {
       return this.data && this.data.h !== ART ? { '--sa-ratio': ART / this.data.h } : null;
@@ -124,6 +146,10 @@ export default {
     },
     body() {
       this.paint();
+    },
+    // (la photo de la carte paraît quand l'avatar du joueur est dessiné)
+    photo() {
+      this.paintPhoto();
     },
     // (la pluie se relance quand elle se met à tomber : sa boucle s'arrête tant qu'il ne pleut pas)
     meteo(now) {
@@ -154,7 +180,7 @@ export default {
     // La taille du carré à l'écran : son image s'y accorde (et se repeint) quand elle change
     // (une scène en plans n'a au plus que le canvas de l'avatar : ScenePlans peint ses plans)
     measure() {
-      const { square, under, over } = this.$refs;
+      const { square, under, over, photo } = this.$refs;
       if (!square || (!this.data.plans && (!under || !over))) return;
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
       const css = square.getBoundingClientRect().width;
@@ -162,7 +188,7 @@ export default {
       if (!px || px === this.px) return;
       this.px = px;
       this.cssWidth = css;
-      for (const canvas of [under, over].filter(Boolean)) {
+      for (const canvas of [under, over, photo].filter(Boolean)) {
         canvas.width = px;
         canvas.height = Math.round((px * this.data.h) / ART);
       }
@@ -172,6 +198,29 @@ export default {
         [...below, ...above].forEach(layer => this.rasterOf(layer));
       }
       this.paint();
+      this.paintPhoto();
+    },
+    // La photo sur la carte (data.carte) : lue à la taille de l'écran, posée dans son tirage, penchée avec la carte
+    async paintPhoto() {
+      const canvas = this.$refs.photo, carte = this.data && this.data.carte, photo = this.photo;
+      if (!canvas || !carte || !photo || !this.px) return;
+      const k = this.px / ART;
+      const image = await rasterOf(photo.href, Math.max(1, Math.round(photo.w * k)), Math.max(1, Math.round(photo.h * k)));
+      if (!image || canvas !== this.$refs.photo || photo !== this.photo) return;
+      const ctx = canvas.getContext('2d');
+      const [x, y, w, h] = carte.photo;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.imageSmoothingQuality = 'high';
+      ctx.save();
+      ctx.scale(k, k);
+      ctx.translate(carte.x, carte.y);
+      ctx.rotate((carte.angle * Math.PI) / 180);
+      ctx.translate(-carte.coin[0], -carte.coin[1]);
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      ctx.drawImage(image, photo.x, photo.y, photo.w, photo.h);
+      ctx.restore();
     },
     // Les calques peints d'une image de la scène, en unités du carré : dessous le fond ; dessus l'avatar (sa place, son
     // miroir, sa photo), puis le devant

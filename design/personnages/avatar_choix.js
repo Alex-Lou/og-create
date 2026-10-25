@@ -115,7 +115,9 @@ const FORMES = {
   formeChaussures: { souliers: 'Souliers', baskets: 'Baskets', bottines: 'Bottines', bottes: 'Bottes', sandales: 'Sandales', ballerines: 'Ballerines', sabots: 'Sabots' },
   // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
   motifHaut: { uni: 'Uni', degrade: 'Dégradé', raye: 'Rayé', pois: 'À pois' },
-  motifBas: { uni: 'Uni', degrade: 'Dégradé', raye: 'Rayé', pois: 'À pois' }
+  motifBas: { uni: 'Uni', degrade: 'Dégradé', raye: 'Rayé', pois: 'À pois' },
+  // l'algue du naufragé dans ses cheveux (avatar_naufrage.js ; choix de l'auteur, 25 oct.) : mise par défaut, on peut l'enlever
+  algue: { oui: 'Avec', non: 'Sans' }
 };
 
 // ---- les accessoires : un par emplacement ----
@@ -260,12 +262,12 @@ const CHOIX = {
   genre: 'formes', menton: 'formes', age: 'formes', cicatrice: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
   sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', expression: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
   coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus', motifHaut: 'formes', couleurHaut2: 'tissus',
-  bas: 'formes', couleurBas: 'tissus', motifBas: 'formes', couleurBas2: 'tissus', chaussures: 'tissus', formeChaussures: 'formes'
+  bas: 'formes', couleurBas: 'tissus', motifBas: 'formes', couleurBas2: 'tissus', chaussures: 'tissus', formeChaussures: 'formes', algue: 'formes'
 };
 const DEFAUT = {
   genre: 'femme', menton: 'doux', age: 'adulte', cicatrice: 'sans', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
   barbe: 'sans', moustache: 'sans', bouche: 'douce', expression: 'neutre', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'milongue', cheveux: 'brun', meches: 'sans',
-  couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', motifHaut: 'uni', couleurHaut2: 'soleil', bas: 'pantalon', couleurBas: 'jean', motifBas: 'uni', couleurBas2: 'marine', chaussures: 'cuir', formeChaussures: 'souliers', accessoires: {}
+  couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', motifHaut: 'uni', couleurHaut2: 'soleil', bas: 'pantalon', couleurBas: 'jean', motifBas: 'uni', couleurBas2: 'marine', chaussures: 'cuir', formeChaussures: 'souliers', algue: 'oui', accessoires: {}
 };
 // Les nuanciers d'une zone de couleur : les tissus et les cheveux acceptent aussi les teintures rares
 const accepte = (nom, cle) => (NUANCIERS[nom] && cle in NUANCIERS[nom]) || ((nom === 'tissus' || nom === 'cheveux') && cle in NUANCIERS.teintures);

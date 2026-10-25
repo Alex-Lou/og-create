@@ -6,7 +6,7 @@
 // La règle :
 // 1. Une manche est une surface de tissu, pleine, jamais un trait épais posé sur le corps.
 // 2. Elle naît de l'épaule : son haut est l'arrondi de l'épaule (une calotte), à fleur de la ligne du buste, qui la
-//    prolonge ; côté buste, la couture est un fil de l'ombre du tissu, pas un trait d'encre.
+//    prolonge ; côté buste, un trait d'encre plus fin (bras levé : l'emmanchure, un fil de l'ombre du tissu).
 // 3. Elle tombe le long du bras, un peu plus large que lui (l'aisance du tissu) ; une manche courte s'évase un peu.
 // 4. Tout bord est une coupe du cylindre du bras : un arc bombé vers la main, jamais une ligne droite ni un anneau
 //    (l'ourlet, le poignet, le revers roulé, la déchirure).
@@ -144,7 +144,7 @@ function bras(c, a, b, elbow, main, partie = 'tout') {
   const gDehors = (G[0][0] - s0[0]) * sgn > 0;
   const Dh = gDehors ? G : D, Dd = gDehors ? D : G; // dehors, dedans
   const ligne = list => 'M' + list.map(pt).join(' L');
-  // le sommet de la calotte (à l'opposé du bras), pour couper son contour en deux : dehors à l'encre, dedans en couture
+  // le sommet de la calotte (à l'opposé du bras), pour couper son contour en deux : dehors à l'encre, dedans plus fin
   const u0 = unit(brut[0], brut[1]), sommet = add(s0, u0, -ht);
   const tissu = nu ? c.skin : c.sleeve, ombre = ton(tissu, 0.8);
   let s = '';
@@ -172,8 +172,9 @@ function bras(c, a, b, elbow, main, partie = 'tout') {
       const ue = unit(s0, elbow), uf = unit(elbow, b), dedans = unit([0, 0], [uf[0] - ue[0], uf[1] - ue[1]]);
       s += trait(`M${pt(add(add(elbow, ue, -1.4), dedans, w * 0.22))} Q${pt(add(elbow, dedans, w * 0.42))} ${pt(add(add(elbow, uf, 1.4), dedans, w * 0.22))}`, ombre, 0.55, ' opacity=".85"');
     }
-    // les contours : dehors (la silhouette, de la calotte au bord) à l'encre ; la moitié de la calotte côté buste en
-    // couture ; dedans (contre le buste) à l'encre, sous l'aisselle
+    // les contours : dehors (la silhouette, de la calotte au bord) à l'encre ; la moitié de la calotte côté buste à
+    // l'encre aussi, un peu plus fine (en couture, l'épaule paraissait ouverte sur un tissu clair : choix de l'auteur,
+    // 25 oct.) ; dedans (contre le buste) à l'encre, sous l'aisselle
     const arcDehors = `M${pt(sommet)} A${r2(ht)} ${r2(ht)} 0 0 ${gDehors ? 0 : 1} ${pt(Dh[0])}`;
     const arcDedans = `M${pt(sommet)} A${r2(ht)} ${r2(ht)} 0 0 ${gDehors ? 1 : 0} ${pt(Dd[0])}`;
     if (lev) {
@@ -183,7 +184,7 @@ function bras(c, a, b, elbow, main, partie = 'tout') {
       s += trait(lev.emmanchure, ombre, 0.55, ' opacity=".85"');
     } else {
       s += trait(arcDehors + ' ' + ligne(Dh).replace('M', 'L'), OUT, W);
-      s += trait(arcDedans, ombre, 0.5, ' opacity=".8"');
+      s += trait(arcDedans, OUT, W * 0.7);
     }
     // (le bord du dedans, le bras devant le flanc, part du bas de la couture de la calotte)
     if (!lev) s += trait(ligne([add(Dd[0], u0, 0.6), ...Dd.slice(1)]), OUT, W);

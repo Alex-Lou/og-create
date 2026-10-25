@@ -5,7 +5,7 @@
        un toucher pendant que l'image ou la bulle paraît les mène au bout, la réplique entière ; le suivant avance -->
   <div ref="root" :class="['ps', { 'ps--instant': instant }]" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="tap" @keydown.enter.prevent="press" @keydown.space.prevent="press">
     <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
-      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" :beat="beat" />
+      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" :beat="beat" :name="cardName" />
       <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
     </transition>
     <transition name="ps-caption" appear>
@@ -82,6 +82,11 @@ export default {
     // Le rang de la bulle dans sa scène (game/scenePlans.js) : une scène en plans y joue son temps
     beat() {
       return this.list[this.k] ? rangBulle(this.list, this.k) : 0;
+    },
+    // Le nom du joueur, écrit sur une carte d'embarquement de la scène (game/sceneArt.js : CARTES)
+    cardName() {
+      const data = this.frame.scene && sceneOf(this.frame.scene);
+      return data && data.carte ? player.name || '' : '';
     },
     // Qui parle (game/speakers.js) : sa couleur, son motif ; une pensée garde son habit. Le joueur (who : 'joueur')
     // parle sous son nom (game/accord.js), sans couleur
