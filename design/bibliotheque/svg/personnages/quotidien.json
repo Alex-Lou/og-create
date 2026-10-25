@@ -4964,6 +4964,7 @@
     "couleurBas2": "marine",
     "chaussures": "creme",
     "formeChaussures": "bottes",
+    "algue": "oui",
     "accessoires": {
      "oreilles": {
       "id": "anneaux",
@@ -5331,6 +5332,7 @@
     "couleurBas2": "marine",
     "chaussures": "blanc",
     "formeChaussures": "sandales",
+    "algue": "oui",
     "accessoires": {
      "joues": {
       "id": "etoiles",
@@ -5698,6 +5700,7 @@
     "couleurBas2": "marine",
     "chaussures": "rose",
     "formeChaussures": "sabots",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "bonnet",
@@ -6066,6 +6069,7 @@
     "couleurBas2": "marine",
     "chaussures": "rose",
     "formeChaussures": "sandales",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "paille",
@@ -6427,6 +6431,7 @@
     "couleurBas2": "marine",
     "chaussures": "jean",
     "formeChaussures": "baskets",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "casquette",
@@ -6788,6 +6793,7 @@
     "couleurBas2": "marine",
     "chaussures": "caramel",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "beret",
@@ -7155,6 +7161,7 @@
     "couleurBas2": "marine",
     "chaussures": "rose",
     "formeChaussures": "bottes",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "bonnet",
@@ -7517,6 +7524,7 @@
     "couleurBas2": "marine",
     "chaussures": "creme",
     "formeChaussures": "sabots",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "casquette",

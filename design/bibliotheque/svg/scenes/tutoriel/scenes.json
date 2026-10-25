@@ -43066,22 +43066,6 @@
          "dir": "haut_droite",
          "expr": "neutre"
         }
-       ],
-       [
-        1400,
-        {
-         "anim": "repos",
-         "dir": "haut_gauche",
-         "expr": "neutre"
-        }
-       ],
-       [
-        3400,
-        {
-         "anim": "repos",
-         "dir": "haut_droite",
-         "expr": "neutre"
-        }
        ]
       ]
      },
