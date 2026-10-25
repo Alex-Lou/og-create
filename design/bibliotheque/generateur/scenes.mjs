@@ -22527,7 +22527,7 @@ var require_gravure_rencontre = __commonJS({
     var lecheeVa = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [D * 0.4, { y: 8, e: "ease-in-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "lecheeVa");
     var NEUTRES = /* @__PURE__ */ new Set(["repos", "marche", "arret"]);
     var joue = /* @__PURE__ */ __name((...clips) => clips.map(([t, anim, dir, expr = NEUTRES.has(anim) ? "neutre" : void 0]) => [t, expr ? { anim, dir, expr } : { anim, dir }]), "joue");
-    var COUCHANT = { teinte: "#2A140A", force: 0.24, cote: 1 };
+    var COUCHANT = { teinte: "#2A140A", force: 0.24, cote: -1 };
     var FROIDE = { teinte: "#1C2242", force: 0.26, cote: -1 };
     var derniere = /* @__PURE__ */ __name((cles) => {
       const { e, ...c } = cles[cles.length - 1][1];
@@ -23072,7 +23072,7 @@ var require_gravure_vent = __commonJS({
         [3800, FIN],
         [D0, FIN]
       ];
-      const visages = [...brume, [799, valeurA(brume, 799)], [TOMBE - 1, valeurA(brume, TOMBE - 1)]].sort((u, v) => u[0] - v[0]);
+      const visages = [...brume, [799, valeurA(brume, 799)], [TOMBE - 1, valeurA(brume, TOMBE - 1)], [D0 - 1, valeurA(brume, D0 - 1)]].sort((u, v) => u[0] - v[0]);
       const visage = /* @__PURE__ */ __name((de, a) => visages.map(([t, c]) => [t, { ...c, o: t >= de && t < a ? c.o ?? 1 : 0 }]), "visage");
       const [lx, ly] = LIVRE, [cx, cy] = CREUX, dedans = { x: cx - lx, y: cy - ly + 4, s: 0.44, r: 0 };
       const livre = [
@@ -23093,7 +23093,7 @@ var require_gravure_vent = __commonJS({
         ...R.soirDe(plans, D0, 1, 1),
         "brume-c": visage(0, 800),
         "brume-g": visage(800, TOMBE),
-        "brume-j": visage(TOMBE, D0 + 1),
+        "brume-j": visage(TOMBE, D0),
         livre: livres.map(([t, c]) => [t, { ...c, o: t <= OUT4 ? c.o ?? 1 : 0 }]),
         "livre-dehors": livres.map(([t, c]) => [t, { ...c, o: t > OUT4 ? 1 : 0 }]),
         poussiere: [[0, { s: 0.6, o: 0 }], [TOMBE, { s: 0.6, o: 0, e: "linear" }], [TOMBE + 60, { s: 0.8, o: 0.9, e: "ease-out" }], [TOMBE + 700, { s: 1.5, o: 0 }], [D0, { s: 1.5, o: 0 }]],
@@ -24210,6 +24210,8 @@ var require_neon_reveil = __commonJS({
     var LUMIERES = {
       couchant: { ambiance: "#2A0A5A", eclat: "#FF7AB0", lisere: "#FFA8D0", force: 1.1 },
       nuit: { ambiance: "#140A48", eclat: "#7AB8FF", lisere: "#7AF8EE", force: 1.3 },
+      // (Brume, froide et pâle : la rencontre, le livre, le Vent ; choix de l'auteur, 25 oct.)
+      brume: { ambiance: "#1A1050", eclat: "#B8F4FF", lisere: "#C8FFF8", force: 1 },
       matin: { ambiance: "#3A1A6A", eclat: "#FFC8D8", lisere: "#FFD8E8" },
       feu: { ambiance: "#1A0A40", eclat: "#FF9A40", lisere: "#FFB070", force: 1.15 },
       jour: { ambiance: "#3A2A7A", eclat: "#FFE8F4", lisere: "#B8FFF4", force: 0.7 }
@@ -24280,7 +24282,6 @@ var require_neon_reveil = __commonJS({
 var require_gravure_cercle = __commonJS({
   "atelier/gravure_cercle.js"(exports, module) {
     var { hash, f } = require_ouverture();
-    var { courbe } = require_papier();
     var { atelier, gravure, trait: trait2, ovale, ENCRE } = require_gravure();
     var { balance, teinte, navire, MARGE, G, D_ } = require_theatre_pont();
     var { unTemps } = require_gravure_plage();
@@ -24288,29 +24289,6 @@ var require_gravure_cercle = __commonJS({
     var R = require_gravure_rencontre();
     var V = require_gravure_vent();
     var C0 = [236, 318];
-    var LISIERE = 262;
-    function herbe(p) {
-      const A = atelier(`${p}h`);
-      const bord = courbe((t) => [G + (D_ - G) * t, LISIERE + 5 * Math.sin(t * 9 + 1) + 3 * Math.sin(t * 23)], 50);
-      let s = gravure(A, [...bord, [D_, D_ + 20], [G, D_ + 20]], A.lin([[0, "#5A7A4A"], [0.4, "#3E5E36"], [1, "#1E3420"]], 0, LISIERE, 0, D_), { seed: 760, amp: 0.4, angle: 16, pas: 2.6, ombre: 0.3, tailles: 2, tailleP: 4, trait: 2.2, portee: 0, lumiere: [0.3, -1] });
-      const touffes = [];
-      for (let i = 0; i < 40; i++) {
-        const x = G + 10 + hash(i, 71) * (D_ - G - 20), y = LISIERE + 12 + hash(i, 73) ** 0.85 * (D_ - LISIERE - 10);
-        if (Math.hypot((x - C0[0]) / 104, (y - C0[1]) / 34) < 1) continue;
-        touffes.push([x, y, 0.5 + (y - LISIERE) / 140]);
-      }
-      for (const [x, y, k] of touffes.sort((a, b) => a[1] - b[1])) {
-        const pts5 = [[x - 7 * k, y], [x - 11 * k, y - 11 * k], [x - 3 * k, y - 4 * k], [x - 1 * k, y - 17 * k], [x + 2.5 * k, y - 4 * k], [x + 10 * k, y - 13 * k], [x + 7 * k, y]];
-        s += gravure(A, pts5, "#6E9A56", { seed: 780 + Math.round(x), amp: 0.2, angle: 70, pas: 1.8, ombre: 0.45, tailles: 0, trait: 1.3, portee: 0.3, dy: 2, lumiere: [0.3, -1] });
-      }
-      for (let i = 0; i < 14; i++) {
-        const x = G + 20 + hash(i, 75) * (D_ - G - 40), y = LISIERE + 16 + hash(i, 77) * (D_ - LISIERE - 30);
-        if (Math.hypot((x - C0[0]) / 110, (y - C0[1]) / 38) < 1) continue;
-        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.6 + hash(i, 79))}" fill="${i % 3 ? "#E6DCB0" : "#C8B4D8"}" stroke="${ENCRE}" stroke-width="0.7"/>`;
-      }
-      return A.out(s);
-    }
-    __name(herbe, "herbe");
     var PIERRES = Array.from({ length: 11 }, (_, i) => {
       const a = i / 11 * Math.PI * 2 + 0.3;
       return [C0[0] + 84 * Math.cos(a), C0[1] + 26 * Math.sin(a), 8 + 4 * hash(i, 81), a];
@@ -24360,7 +24338,6 @@ var require_gravure_cercle = __commonJS({
     function decorCercle(p, souvenirs, auLarge = []) {
       const base = V.decorApres(p, { livre: null, nuitee: true, anime: /* @__PURE__ */ __name(() => "", "anime") }).filter((q) => !["rocher", "anime"].includes(q.id));
       base.splice(base.findIndex((q) => q.id === "voile0"), 0, ...auLarge);
-      base.splice(base.findIndex((q) => q.id === "nuit"), 0, { id: "herbe", profondeur: 0.58, marge: MARGE, dessin: /* @__PURE__ */ __name(() => herbe(p), "dessin") });
       return [
         ...base,
         { id: "flaque", profondeur: 0.62, cadre: [130, 290, 212, 60], dessin: /* @__PURE__ */ __name(() => {
@@ -24461,14 +24438,13 @@ var require_neon_jeu = __commonJS({
     var GC = require_gravure_cercle();
     var GL = require_gravure_lorena();
     var { enNeonScene } = require_neon_reveil();
-    var { melange } = require_neon_naufrage();
     var CINEMATIQUES = [
       ["02_plage", GR.plage02, "n2p"],
-      ["02_lueur", GR.lueur02, "n2l"],
-      ["02_approche", GR.approche02, "n2a"],
-      ["02_rocher", GR.rocher02, "n2r"],
-      ["03_livre", GV.livre03, "n3l"],
-      ["03_vent", GV.vent03, "n3v"],
+      ["02_lueur", GR.lueur02, "n2l", true, "brume"],
+      ["02_approche", GR.approche02, "n2a", true, "brume"],
+      ["02_rocher", GR.rocher02, "n2r", true, "brume"],
+      ["03_livre", GV.livre03, "n3l", true, "brume"],
+      ["03_vent", GV.vent03, "n3v", true, "brume"],
       ["03_trouee", GV.trouee03, "n3t", true, "nuit"],
       ["03_ciel", GV.ciel03, "n3c", true, "nuit"],
       ["03_nuit", GV.nuit03, "n3n", true, "nuit"],
@@ -24477,19 +24453,7 @@ var require_neon_jeu = __commonJS({
       ["10_epave", GL.epave10, "nae", false, "matin"],
       ["10_aster", GL.aster10, "naa", false, "matin"]
     ];
-    var NUIT = "#0A0420";
-    var SOMBRES = /* @__PURE__ */ new Set(["herbe"]);
-    var assombrit = /* @__PURE__ */ __name((svg) => svg.replace(/(?<!url\()(?<!href=")#[0-9a-fA-F]{6}\b/g, (c) => melange(c, NUIT, 0.45)), "assombrit");
-    function cinematique(scene2, p, decor, lumiere) {
-      const sc = enNeonScene(scene2, p, {}, false, decor, lumiere);
-      for (const pl of sc.plans) if (SOMBRES.has(pl.id)) {
-        const d = pl.dessin;
-        pl.dessin = () => assombrit(d());
-      }
-      return sc;
-    }
-    __name(cinematique, "cinematique");
-    var cinematiques = CINEMATIQUES.map(([id2, scene2, p, decor = true, lumiere = "couchant"]) => [id2, () => cinematique(scene2, p, decor, lumiere)]);
+    var cinematiques = CINEMATIQUES.map(([id2, scene2, p, decor = true, lumiere = "couchant"]) => [id2, () => enNeonScene(scene2, p, {}, false, decor, lumiere)]);
     module.exports = { cinematiques };
   }
 });
@@ -25123,7 +25087,7 @@ var require_scenes6 = __commonJS({
       ["03_trouee", "03_vent", "La brume ouverte autour d’eux, les étoiles : ceux d’avant", ["3"], null, APRES_VENT],
       ["03_ciel", "03_vent", "Brume lève les yeux vers le ciel", ["3"], null, null],
       ["03_nuit", "03_vent", "La nuit tombe, froide ; Brume l’emmène vers le vieux cercle", ["3"], null, APRES_VENT],
-      ["05_cercle", "03_vent", "Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant", ["5"], null, AU_CERCLE],
+      ["05_cercle", "03_vent", "Le vieux cercle de pierres en haut de la plage ; ceux d’avant reviennent un instant", ["5"], null, AU_CERCLE],
       ["05_promesse", "03_vent", "Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume", ["5"], null, AU_CERCLE],
       ["10_epave", "09_rivet", "Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage", ["10"], null, null]
     ];

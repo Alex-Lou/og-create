@@ -32,13 +32,15 @@ describe('le jeu de l\'avatar dans une scène en plans', () => {
     expect(svg.match(/<path d="M1,1 L9,9" fill="red"\/>/g)).toHaveLength(3);
     expect(svg).not.toMatch(/<filter|filter=/);
   });
-  it('en néon : ses couleurs ravivées, le cerne indigo, le liseré cyan du côté de la lumière, sans hachures', () => {
+  it('en néon : ses couleurs ravivées, le cerne indigo, le liseré cyan fin du côté de la lumière, sans halo ni hachures', () => {
     const svg = gravee('<path d="M1,1 L9,9" fill="#B08060" stroke="#3C2819"/><use href="#abc"/>', 'x', { cote: -1, neon: true });
     expect(svg).toMatch(/^<svg [^>]*viewBox="0 0 48 64"/);
     expect(svg).toContain(`fill="${neonCouleur('#B08060')}"`);
     expect(svg).toContain('#0A0418');
     expect(svg).toMatch(/\.lx \*\{fill:#7AF8EE/);
-    expect(svg).toContain('translate(1.3 -0.5)');
+    // (un liseré d'un demi-trait, sans son halo : une lumière juste, pas un projecteur ; retour de l'auteur, 25 oct.)
+    expect(svg).toContain('translate(0.5 -0.2)');
+    expect(svg).not.toMatch(/stroke-width:5px/);
     expect(svg).not.toMatch(/l36,-76/);
     expect(svg).toContain('href="#abc"');
     expect(svg).not.toMatch(/<filter|filter=/);

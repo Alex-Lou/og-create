@@ -42461,7 +42461,7 @@
    ],
    "partition": {
     "lumiere": {
-     "cote": 1,
+     "cote": -1,
      "ambiance": "#2A0A5A",
      "eclat": "#FF7AB0",
      "lisere": "#FFA8D0",
@@ -44316,10 +44316,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "ambiance": "#2A0A5A",
-     "eclat": "#FF7AB0",
-     "lisere": "#FFA8D0",
-     "force": 1.1,
+     "ambiance": "#1A1050",
+     "eclat": "#B8F4FF",
+     "lisere": "#C8FFF8",
+     "force": 1,
      "neon": true
     },
     "temps": [
@@ -45508,10 +45508,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "ambiance": "#2A0A5A",
-     "eclat": "#FF7AB0",
-     "lisere": "#FFA8D0",
-     "force": 1.1,
+     "ambiance": "#1A1050",
+     "eclat": "#B8F4FF",
+     "lisere": "#C8FFF8",
+     "force": 1,
      "neon": true
     },
     "temps": [
@@ -46273,10 +46273,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "ambiance": "#2A0A5A",
-     "eclat": "#FF7AB0",
-     "lisere": "#FFA8D0",
-     "force": 1.1,
+     "ambiance": "#1A1050",
+     "eclat": "#B8F4FF",
+     "lisere": "#C8FFF8",
+     "force": 1,
      "neon": true
     },
     "temps": [
@@ -49416,10 +49416,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "ambiance": "#2A0A5A",
-     "eclat": "#FF7AB0",
-     "lisere": "#FFA8D0",
-     "force": 1.1,
+     "ambiance": "#1A1050",
+     "eclat": "#B8F4FF",
+     "lisere": "#C8FFF8",
+     "force": 1,
      "neon": true
     },
     "temps": [
@@ -49816,6 +49816,16 @@
          }
         ],
         [
+         4399,
+         {
+          "x": -12,
+          "y": 42,
+          "s": 1.05,
+          "r": 0,
+          "o": 0
+         }
+        ],
+        [
          4400,
          {
           "x": -12,
@@ -49959,6 +49969,16 @@
         ],
         [
          3800,
+         {
+          "x": -12,
+          "y": 42,
+          "s": 1.05,
+          "r": 0,
+          "o": 0
+         }
+        ],
+        [
+         4399,
          {
           "x": -12,
           "y": 42,
@@ -50120,13 +50140,23 @@
          }
         ],
         [
-         4400,
+         4399,
          {
           "x": -12,
           "y": 42,
           "s": 1.05,
           "r": 0,
           "o": 1
+         }
+        ],
+        [
+         4400,
+         {
+          "x": -12,
+          "y": 42,
+          "s": 1.05,
+          "r": 0,
+          "o": 0
          }
         ]
        ],
@@ -50829,7 +50859,7 @@
           "y": 42,
           "s": 1.05,
           "r": 0,
-          "o": 1
+          "o": 0
          }
         ],
         [
@@ -50839,7 +50869,7 @@
           "y": 42,
           "s": 1.05,
           "r": 0,
-          "o": 1
+          "o": 0
          }
         ]
        ],
@@ -51387,10 +51417,10 @@
    "partition": {
     "lumiere": {
      "cote": -1,
-     "ambiance": "#2A0A5A",
-     "eclat": "#FF7AB0",
-     "lisere": "#FFA8D0",
-     "force": 1.1,
+     "ambiance": "#1A1050",
+     "eclat": "#B8F4FF",
+     "lisere": "#C8FFF8",
+     "force": 1,
      "neon": true
     },
     "temps": [
@@ -56922,7 +56952,7 @@
    "calques": {}
   },
   "05_cercle": {
-   "nom": "Scène 5 : Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant",
+   "nom": "Scène 5 : Le vieux cercle de pierres en haut de la plage ; ceux d’avant reviennent un instant",
    "etape": "5",
    "cadre": [
     0,
@@ -57049,12 +57079,6 @@
       600,
       60
      ]
-    },
-    {
-     "id": "herbe",
-     "fichier": "05_cercle/05_cercle_plan-herbe_1.svg",
-     "profondeur": 0.58,
-     "marge": 40
     },
     {
      "id": "nuit",
@@ -59793,12 +59817,6 @@
       600,
       60
      ]
-    },
-    {
-     "id": "herbe",
-     "fichier": "05_promesse/05_promesse_plan-herbe_1.svg",
-     "profondeur": 0.58,
-     "marge": 40
     },
     {
      "id": "nuit",

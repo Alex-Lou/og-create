@@ -546,7 +546,7 @@ const OUVERTURE = [
   ['03_trouee', '03_vent', 'La brume ouverte autour d’eux, les étoiles : ceux d’avant', ['3'], null, APRES_VENT],
   ['03_ciel', '03_vent', 'Brume lève les yeux vers le ciel', ['3'], null, null],
   ['03_nuit', '03_vent', 'La nuit tombe, froide ; Brume l’emmène vers le vieux cercle', ['3'], null, APRES_VENT],
-  ['05_cercle', '03_vent', 'Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant', ['5'], null, AU_CERCLE],
+  ['05_cercle', '03_vent', 'Le vieux cercle de pierres en haut de la plage ; ceux d’avant reviennent un instant', ['5'], null, AU_CERCLE],
   ['05_promesse', '03_vent', 'Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume', ['5'], null, AU_CERCLE],
   ['10_epave', '09_rivet', 'Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage', ['10'], null, null]
 ];
