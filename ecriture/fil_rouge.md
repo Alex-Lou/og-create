@@ -165,7 +165,7 @@ jours de l'île ; le joueur avance à son rythme.
 | # | Quête | Ce qu'on fait | Mécanique | Ce qu'elle sert ensuite |
 |---|---|---|---|---|
 | 7 | **Préparer la traversée** | Le bras de mer, lui, se traverse : l'îlot fait partie de l'île. On choisit qui part (Lorena à la barre, un guerrier), et ce qu'on emporte (vivres, torches). | **préparer une expédition** : qui, et avec quoi | le risque des expéditions lointaines |
-| 8 | **La porte antique** (rebondissement C) | Sur l'îlot, le phare. Une étrange porte antique, verrouillée, une serrure de pierre. À côté, gravé ou caché dans une niche, le journal des Anciens : « Nous aussi, nous voulions partir. » | — | le fil du chapitre 2 |
+| 8 | **La porte antique** (rebondissement C) | Sur l'îlot, le phare. Une étrange porte antique, verrouillée, une serrure de pierre. À côté, gravé dans la pierre près de la porte, le journal des Anciens : « Nous aussi, nous voulions partir. » | — | le fil du chapitre 2 |
 | 9 | **La veillée : on reste** | Retour au feu. On ne partira pas. Alors on tient, et on cherchera la clé. Le compteur de jours commence. | — | le chapitre 2, la survie |
 
 **La progression** : 3 pages au Grimoire en tout (Bois, Bateau, et aucune dans la partie 3), deux évolutions, deux
@@ -234,13 +234,13 @@ couvre déjà : les matières (jour 2), la nourriture (jour 3), la défense (jou
 - **Tout le reste repart à zéro** en recommençant, le Grimoire et ses pages écrites compris.
 - **Les alertes du délai de grâce** : un PNJ affaibli, un PNJ blessé, une réserve de ressources vide.
 
+- **Quand la survie commence** : la consommation de vivres compte dès le chapitre 1 (on l'a apprise au jour 8) ;
+  personne ne peut mourir avant la veillée de la fin du chapitre 1, quand le compteur de jours commence.
+- **Le journal des Anciens** : gravé dans la pierre, près de la porte verrouillée du phare.
+
 ### Encore ouvert
 
 - **La durée du délai de grâce** : à fixer à l'équilibrage.
-- **Quand la survie commence** : proposition, la consommation de vivres compte dès le chapitre 1 (on l'a apprise au
-  jour 8), mais personne ne peut mourir avant la veillée de la fin du chapitre 1, quand le compteur de jours commence.
-- **Le journal des Anciens** : la porte étant verrouillée, il ne peut pas être « dans le phare ». Proposition : gravé
-  près de la porte, ou dans une niche à côté.
 
 ## 8. Écarts avec le code actuel (relevés, rien touché)
 
