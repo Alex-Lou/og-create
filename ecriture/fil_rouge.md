@@ -138,6 +138,47 @@ ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
 - **La fin du chapitre** : on ne partira pas. Alors on reste, et on tient. **Le phare n'est pas rallumé** : il est
   verrouillé par une étrange porte antique. Il faudra trouver la clé (le fil du chapitre 2).
 
+## 5 bis. Le chapitre 1, quête par quête (proposition, 26 oct.)
+
+Le gabarit change : plus un PNJ par jour, mais **trois parties**, chacune avec un but que le joueur comprend sans
+explication. Chaque quête apprend ou fait servir une mécanique dont la survie aura besoin. Le chapitre dure plusieurs
+jours de l'île ; le joueur avance à son rythme.
+
+### Partie 1, « Tenir » : on ne part pas ce soir
+
+| # | Quête | Ce qu'on fait | Mécanique | Ce qu'elle sert ensuite |
+|---|---|---|---|---|
+| 1 | **Le Bois** | Écrire le Bois (Arbre + Métal) : les deux pages viennent des jours 6 et 7. | le Grimoire, sans aide | l'Abri, le Bateau |
+| 2 | **L'Abri** | Le Foyer passe au palier II (20 bois, 10 pierres). | faire évoluer (le jour 7, de nouveau) | tenir les nuits plus dures |
+| 3 | **Les Hauteurs** | Ouvrir le quartier le plus haut du cœur ; de là, on voit l'îlot, le phare, et le bras de mer qui les sépare. | explorer | savoir où l'on va |
+
+### Partie 2, « La mer » : Lorena veut partir
+
+| # | Quête | Ce qu'on fait | Mécanique | Ce qu'elle sert ensuite |
+|---|---|---|---|---|
+| 4 | **Le souvenir de Lorena : le Bateau** | Écrire le Bateau (Bois + Eau) ; ses mains ne tremblent plus. | un souvenir | la mer |
+| 5 | **Le Ponton II** | Le Ponton passe au palier II (plan Bateau). | faire évoluer | les traversées |
+| 6 | **La traversée de Lorena** (rebondissement B) | Elle part seule au large, à l'aube, avec des vivres. Le soir, elle accoste… sur la plage de Brumelune, de l'autre côté. « J'ai tenu le cap. Tout le temps. » | **envoyer un PNJ en expédition** : il part, il est absent, il revient | les expéditions de la survie |
+
+### Partie 3, « Le phare » : la dernière chance
+
+| # | Quête | Ce qu'on fait | Mécanique | Ce qu'elle sert ensuite |
+|---|---|---|---|---|
+| 7 | **Préparer la traversée** | Le bras de mer, lui, se traverse : l'îlot fait partie de l'île. On choisit qui part (Lorena à la barre, un guerrier), et ce qu'on emporte (vivres, torches). | **préparer une expédition** : qui, et avec quoi | le risque des expéditions lointaines |
+| 8 | **La porte antique** (rebondissement C) | Sur l'îlot, le phare. Une étrange porte antique, verrouillée, une serrure de pierre. À côté, gravé ou caché dans une niche, le journal des Anciens : « Nous aussi, nous voulions partir. » | — | le fil du chapitre 2 |
+| 9 | **La veillée : on reste** | Retour au feu. On ne partira pas. Alors on tient, et on cherchera la clé. Le compteur de jours commence. | — | le chapitre 2, la survie |
+
+**La progression** : 3 pages au Grimoire en tout (Bois, Bateau, et aucune dans la partie 3), deux évolutions, deux
+expéditions. La partie 3 n'apprend rien de neuf au Grimoire : elle fait servir ce qu'on sait.
+
+### Ce que le chapitre 1 demande au code (constat)
+
+- **Les expéditions existent**, mais pour explorer un quartier, une à la fois (`WorldView/explore.js`). Envoyer un PNJ
+  précis, choisir ce qu'il emporte, et le voir absent puis revenir, c'est nouveau.
+- **Les quartiers** : aujourd'hui, l'Îlot aux Mouettes s'ouvre avec le chapitre V du Grimoire (25 découvertes) et
+  coûte 300 écus. Il faudra l'ouvrir par la quête 7, pas par le Grimoire.
+- **Les quêtes et leur ordre** : sur le serveur.
+
 ## 6. Les rôles (idée de l'auteur, 26 oct.)
 
 Chaque PNJ reçoit un rôle, parmi trois familles : **récolteur**, **artisan**, **guerrier**. Les rôles s'apprennent au
@@ -196,6 +237,10 @@ couvre déjà : les matières (jour 2), la nourriture (jour 3), la défense (jou
 ### Encore ouvert
 
 - **La durée du délai de grâce** : à fixer à l'équilibrage.
+- **Quand la survie commence** : proposition, la consommation de vivres compte dès le chapitre 1 (on l'a apprise au
+  jour 8), mais personne ne peut mourir avant la veillée de la fin du chapitre 1, quand le compteur de jours commence.
+- **Le journal des Anciens** : la porte étant verrouillée, il ne peut pas être « dans le phare ». Proposition : gravé
+  près de la porte, ou dans une niche à côté.
 
 ## 8. Écarts avec le code actuel (relevés, rien touché)
 
