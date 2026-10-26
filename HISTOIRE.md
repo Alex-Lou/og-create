@@ -1,5 +1,10 @@
 # Brumelune — Les Naufragés de la Brume
 
+> **Mis de côté (26 octobre 2026, choix de l'auteur).** Le jeu est recentré : le fil rouge est dans
+> `ecriture/fil_rouge.md`, et il passe avant ce document. Tout ce qui suit le chapitre 1 (le phare) est archivé ici,
+> pas supprimé : les anciens actes II à VII, Anya, les sceaux, le Grand Œuvre. Ce document reste la référence de ce
+> qui est déjà codé.
+
 > **Bible narrative et plan de game design** (v6, 6 octobre 2026, sur la base de la v5 du 5 octobre). Elle remplace toutes les versions précédentes. Pour commencer à construire : § 19.
 > - Rien de ce document n'était codé à sa rédaction. L'état du jeu décrit ici est celui d'après le lot 9e (12 bêtes des climats) et le compteur `?perf`.
 > - Chaque fait sur le jeu actuel est vérifié dans le code ou dans la base de test (`B/` = serveur, `F/` = front).
