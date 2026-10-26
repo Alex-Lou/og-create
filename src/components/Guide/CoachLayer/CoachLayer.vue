@@ -74,7 +74,7 @@ const LOST_MS = 1200;
 const HAND_MS = 1500;
 const NEXT_HAND_MS = 600;
 const VEIL_MS = 5000;
-const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock, .island-loader';
+const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock, .island-loader, .world__wreck';
 // Ce que la bulle ne recouvre jamais (on doit pouvoir le toucher) : le bouton Récolte de l'île, le bandeau d'un mode
 // (chemin, déplacer, poser) et le menu d'une pose ; l'écart gardé avec eux (px)
 const DODGE = '.world__play--fab, .world__banner, .world__menu';
