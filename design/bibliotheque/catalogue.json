@@ -56761,10 +56761,10 @@
     "svg/scenes/tutoriel/06_silhouette/06_silhouette_plan-veilleur_1.svg"
    ],
    "cadre": [
-    320,
-    196,
-    28,
-    34
+    318,
+    172,
+    32,
+    52
    ],
    "parcours": "tuto-1",
    "statut": "ok"

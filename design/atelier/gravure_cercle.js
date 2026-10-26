@@ -190,9 +190,9 @@ const chaleur = p => { const A = atelier(`${p}h`), [x, y] = C0; return A.out(`<e
 const FEU = { teinte: '#2A140A', force: 0.24, cote: -1 };
 // (Brume, à droite du feu ; lui, là où 05_cercle l'a laissé)
 const PRES_DU_FEU = { x: 44, y: 22, s: 1 }, PRES_DU_CERCLE = { x: 26, y: -6, s: 0.98 };
-// (le cercle, son feu pris et sa chaleur ; au loin, ce que la scène y ajoute : auLarge)
-function autourDuFeu(p, auLarge = []) {
-  const plans = decorCercle(p, [{ id: 'feu', profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: () => feuPris(p) }], auLarge);
+// (le cercle, son feu pris et sa chaleur)
+function autourDuFeu(p) {
+  const plans = decorCercle(p, [{ id: 'feu', profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: () => feuPris(p) }]);
   plans.splice(plans.findIndex(q => q && q.id === 'teinte'), 0, { id: 'chaleur', profondeur: 0, marge: MARGE, dessin: () => chaleur(p) });
   return plans;
 }
@@ -227,16 +227,25 @@ function rochers(p) {
   const A = atelier(`${p}r`), [x, y] = ROCHERS;
   let s = gravure(A, [[x - 46, y], [x - 38, y - 16], [x - 18, y - 26], [x + 6, y - 30], [x + 30, y - 20], [x + 46, y - 4], [x + 50, y]], A.lin([[0, '#4A4656'], [1, '#1E1A26']], 0, y - 30, 0, y), { seed: 870, amp: 0.5, angle: 30, pas: 2.4, ombre: 0.4, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.3, dy: 3, lumiere: [-0.6, -0.8] });
   s += gravure(A, [[x - 64, y + 2], [x - 52, y - 8], [x - 40, y + 2]], '#2A2632', { seed: 871, amp: 0.4, tailles: 0, trait: 1.4, portee: 0 });
+  // (la lune effleure leur crête)
+  s += trait(`M${x - 36},${y - 17} L${x - 18},${y - 25} L${x + 6},${y - 29} L${x + 28},${y - 20}`, 1.2, '#B8C8F0', 0.7);
   return A.out(s);
 }
-const veilleur = p => { const A = atelier(`${p}v`), [x, y] = ROCHERS, t = y - 29; return A.out(`<path d="M${x - 3},${t} L${x - 2.4},${t - 13} Q${x - 2},${t - 16} ${x},${t - 16.4} Q${x + 2},${t - 16} ${x + 2.4},${t - 13} L${x + 3},${t} Z" fill="#0C0A14" stroke="${ENCRE}" stroke-width="0.8"/><circle cx="${x}" cy="${t - 19.4}" r="2.8" fill="#0C0A14" stroke="${ENCRE}" stroke-width="0.8"/><path d="M${x - 2.6},${t - 2} L${x - 2},${t - 13} M${x - 3.2},${t - 18.6} q0.6,-1.6 2,-2" stroke="#FFB870" stroke-width="0.7" fill="none" opacity="0.8"/>`); };
+const veilleur = p => {
+  const A = atelier(`${p}v`), [x, y] = ROCHERS, t = y - 29, k = 1.7;
+  const corps = `M${x - 4 * k},${t} L${x - 3.2 * k},${t - 14 * k} Q${x - 2.6 * k},${t - 17 * k} ${x},${t - 17.4 * k} Q${x + 2.6 * k},${t - 17 * k} ${x + 3.2 * k},${t - 14 * k} L${x + 4 * k},${t} Z`;
+  // (une ombre debout ; le feu lointain dore son côté tourné vers lui, à gauche ; la lune, le haut de sa tête)
+  return A.out(`<path d="${corps}" fill="#0C0A14" stroke="${ENCRE}" stroke-width="1"/><circle cx="${x}" cy="${t - 20.6 * k}" r="${3 * k}" fill="#0C0A14" stroke="${ENCRE}" stroke-width="1"/>`
+    + `<path d="M${x - 3.4 * k},${t - 1} L${x - 2.8 * k},${t - 14 * k} M${x - 3.2 * k},${t - 20 * k} q0.6,-2.2 2.6,-2.8" stroke="#FFB870" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.9"/>`);
+};
 function silhouette06() {
   const p = 'si', D0 = 4600, D1 = 5200;
-  const plans = autourDuFeu(p, [
+  const plans = autourDuFeu(p);
+  // (devant la brume du large, juste derrière l'herbe : on le voit nettement, là-bas)
+  plans.splice(plans.findIndex(q => q && q.id === 'herbe'), 0,
     { id: 'rochers', profondeur: 0.4, cadre: [260, 210, 130, 50], pivot: ROCHERS, dessin: () => rochers(p) },
-    { id: 'veilleur', profondeur: 0.4, cadre: [320, 196, 28, 34], pivot: [ROCHERS[0], ROCHERS[1] - 29], dessin: () => veilleur(p) }
-  ]);
-  const SUR_ROCHERS = { x: 54, y: -14, z: 1.3 };
+    { id: 'veilleur', profondeur: 0.4, cadre: [318, 172, 32, 52], pivot: [ROCHERS[0], ROCHERS[1] - 29], dessin: () => veilleur(p) });
+  const SUR_ROCHERS = { x: 80, y: -30, z: 1.45 };
   // (il se tient immobile ; à peine s'il bouge)
   const guette = D => ({ veilleur: balance(0, D, 2400, k => ({ x: k % 2 ? 0.6 : 0 })) });
   // « Là-bas, sur les rochers. Quelqu'un regarde ton feu. » : le regard va aux rochers ; lui se tourne vers eux
