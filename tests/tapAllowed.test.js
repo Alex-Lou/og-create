@@ -31,6 +31,12 @@ describe('au tutoriel, seul ce que montre l’étape se touche', () => {
     expect(allowed(island(), { brume: true })).toBe(true);
   });
 
+  it('le panneau du quartier que l’étape montre se touche (La Lisière, jour 6), pas celui d’un autre', () => {
+    coach.show({ id: 'quest-lisiere', steps: [{ target: 'île:quartier:lisiere', text: '' }] });
+    expect(allowed(island(), { zone: { id: 'lisiere' } })).toBe(true);
+    expect(allowed(island(), { zone: { id: 'colline' } })).toBe(false);
+  });
+
   it('hors du tutoriel, tout se touche', () => {
     expect(allowed(island(false), cannelle)).toBe(true);
   });

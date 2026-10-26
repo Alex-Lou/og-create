@@ -469,7 +469,8 @@ export default {
       beast && this.looseHens.has(beast) && 'poule', (hungry || (hit.asking && hit.asking.beast)) && 'faim',
       hit.asking && !hit.asking.beast && `besoin:${hit.asking.id}`,
       hit.campItem && hit.campItem.art === 'caisses' && 'caisse', hit.campItem && `coin:${hit.campItem.id}`, hit.cage && 'cage',
-      hit.site && `site:${hit.site.id}`, hit.deposit && `trouvaille:${hit.deposit.kind}`, hit.craft && `creation:${hit.craft.craft}`
+      hit.site && `site:${hit.site.id}`, hit.deposit && `trouvaille:${hit.deposit.kind}`, hit.craft && `creation:${hit.craft.craft}`,
+      hit.zone && `quartier:${hit.zone.id}`
     ].filter(Boolean);
   },
   // La cible du tutoriel que ce toucher lance (le nom que le coach lui donne, « habitant:ponton », « caisse », « cage »,
