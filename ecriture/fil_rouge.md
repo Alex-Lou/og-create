@@ -40,7 +40,7 @@ explications (règle déjà posée dans `HISTOIRE.md`, § 9).
 |---|---|---|---|---|---|---|
 | 1 (soir) | **Brume** | le froid | combiner au Grimoire (Vent, Brasier), ramasser, bâtir (le feu) | — | le guide ; le Grimoire donne tous les plans | codé |
 | 2 | **Lorena** | les matières | ouvrir un coffre, la Récolte, bâtir un bâtiment (Ponton), tracer un chemin | Récolte | la mer, plus tard le bateau | codé |
-| 3 | **Agathe** | la faim | cuisiner, attraper et nourrir des bêtes, loger un PNJ (son abri) | Marmite, Poules | la nourriture du groupe | codé, **trop chargé** |
+| 3 | **Agathe** | la faim | cuisiner, attraper et nourrir des bêtes, loger un PNJ (son abri) | Marmite, Poules | la nourriture du groupe | codé (la barrière passe au jour 4) |
 | 4 | **Nathan** | la nuit | l'établi (assembler), poser, déplacer, pivoter, acheter un outil, défendre (torches, barrière) | — | les outils, la défense | codé |
 | 5 | **Léo** | l'eau | réveiller un PNJ, un souvenir (suivre le ruban du Grimoire), un bâtiment qui produit (Puits) | — | l'eau | codé |
 | 6 | **Maerys** | le bois | explorer (ouvrir un quartier, la brume recule), apprivoiser (un cadeau, l'amitié) | Cueillette | la forêt, les bêtes | **à faire** |
@@ -53,10 +53,10 @@ Le soir du jour 8 : **le conseil**. Les sept et Brume autour du feu ; Léo voit 
 
 - **Jour 1, Brume** (quêtes : `pages`, `ramasser`, `feu`, `nuit`). La nuit est calme : Brume veille.
 - **Jour 2, Lorena** (`caisse`, `recolte`, `premier-ponton`, `chemin-aster`, `veille`).
-- **Jour 3, Agathe** (`soupe`, `cage`, `poules`, `poulailler`, `abri-cannelle`, `barriere`, `nuit-cannelle`) : 7
-  quêtes, c'est trop. **Proposition** : la barrière passe au jour 4, avec les torches ; le jour de Nathan devient
-  celui de la nuit et de la défense.
-- **Jour 4, Nathan** (`deco`, `torches-rivet`, `outil-rivet`, `nuit-rivet`, et la barrière si on la déplace).
+- **Jour 3, Agathe** (`soupe`, `cage`, `poules`, `poulailler`, `abri-cannelle`, `nuit-cannelle`) : 6 quêtes. La
+  barrière passe au jour 4 (choix de l'auteur, 26 oct.), pour alléger son jour.
+- **Jour 4, Nathan** (`deco`, `torches-rivet`, `barriere`, `outil-rivet`, `nuit-rivet`) : le jour de la nuit et des
+  défenses qu'on fabrique.
 - **Jour 5, Léo** (`eveil-ondin`, `souvenir-ondin`, `puits-ondin`, `chemin`).
 - **Jour 6, Maerys** (proposition) : suivre une lueur dans les arbres (explorer La Lisière) ; l'apprivoiser (elle a peur
   du feu : un cadeau) ; son souvenir, l'Arbre, au Grimoire ; son Bosquet ; la nuit.
@@ -131,16 +131,18 @@ couvre déjà : les matières (jour 2), la nourriture (jour 3), la défense (jou
 - **L'horloge** : l'île a sa propre heure (environ 1 h de jour et 15 min de nuit), au lieu de suivre l'heure du
   téléphone comme aujourd'hui après le tutoriel (`src/world/sky.js`).
 
+- **Tout le reste repart à zéro** en recommençant, le Grimoire et ses pages écrites compris.
+- **Les alertes du délai de grâce** : un PNJ affaibli, un PNJ blessé, une réserve de ressources vide.
+
 ### Encore ouvert
 
-1. **Recommencer, le reste** : tout repart-il à zéro, le Grimoire et ses pages écrites compris ?
-2. **Le délai de grâce dans le jeu** : à quoi il ressemble (un PNJ affaibli, puis à bout, puis mort ? Brume qui
-   prévient ?) et combien de temps il dure.
-3. **Le jour 3** : il compte 7 quêtes ; déplacer la barrière au jour 4 (avec les torches) l'allégerait.
+- **La durée du délai de grâce** : à fixer à l'équilibrage.
 
 ## 8. Écarts avec le code actuel (relevés, rien touché)
 
 - Le conseil se joue aujourd'hui après le jour de Léo (le Campement) ; il passe au soir du jour 8.
+- La barrière (`barriere`) est aujourd'hui une quête du jour 3 ; elle passe au jour 4 (`src/game/prologue.js`,
+  `src/world/tutoClock.js`, et l'ordre des quêtes côté serveur).
 - Les mini-jeux Pêche, Filon et Cueillette s'ouvrent au palier III de leur bâtiment, et leurs parties reviennent toutes
   les 2 h réelles (`src/game/minigames.js`) : à revoir pour les apprendre pendant le tutoriel.
 - Les rôles (récolteur, artisan, guerrier) n'existent pas : chacun travaille seul à son bâtiment
