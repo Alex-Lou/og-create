@@ -36,7 +36,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   let t0 = 0; let touches = 0; let shot = 0; let lastSay = '';
   const now = () => (t0 ? ((Date.now() - t0) / 1000).toFixed(1) : '0.0');
   const say = (kind, text = '') => { const line = `${now().padStart(6)} s · ${String(touches).padStart(3)} t · ${kind}${text ? ' · ' + text : ''}`; if (line.slice(16) === lastSay) return; lastSay = line.slice(16); console.log(line); log.write(line + '\n'); };
-  const snap = async name => { const f = `${String(++shot).padStart(3, '0')}-${name.replace(/[^a-z0-9-]+/gi, '_').slice(0, 40)}.png`; await p.screenshot({ path: `${OUT}/${f}` }).catch(() => {}); return f; };
+  const snap = async name => { const f = `${String(++shot).padStart(3, '0')}-${name.replace(/[^a-z0-9-]+/gi, '_').slice(0, 40)}.png`; await Promise.race([p.screenshot({ path: `${OUT}/${f}`, timeout: 8000 }).catch(() => {}), new Promise(r => setTimeout(r, 9000))]); return f; };
   const touch = async (x, y) => { touches++; await p.mouse.click(x, y); };
   // Appui long (déplacer une création) : le doigt reste posé
   const press = async (x, y) => { touches++; await p.mouse.move(x, y); await p.mouse.down(); await p.waitForTimeout(900); await p.mouse.up(); };

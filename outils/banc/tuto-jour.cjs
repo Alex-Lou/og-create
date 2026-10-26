@@ -13,6 +13,11 @@
 // (la soupe) l'est, comme un joueur : le seau tenu au-dessus, chaque ingrédient glissé, trois tours, la louche tenue au-dessus du bol ; ses images comptées
 // (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4. VUS="cannelle,rivet" : des
 // scènes déjà vues en plus (un départ après elles). Ex. : DEPART=nuit-rivet VUS="cannelle,cannelle-parle,rivet" FIN_AT=souvenir-ondin
+// COINS=<n> : les écus du compte ; ELEMS="Pluie,…" : des éléments écrits en plus du Vent et du Brasier ; BATIS="puits,…" :
+// des bâtiments au palier I en plus du Feu et du Ponton ; FIN_SCENE=<scène> : s'arrête quand elle se joue (conseil-suite :
+// le conseil joué jusqu'au bout) ; RELOAD_ON=<leçon> : ferme et rouvre l'appli quand cette leçon du coach paraît (la
+// reprise au milieu d'un geste). Ex. : DEPART=chemin BATIS=puits ELEMS=Pluie COINS=250 FIN_SCENE=conseil-suite ;
+// DEPART=torches-rivet RELOAD_ON=quest-torches-rivet:2 FIN_AT=outil-rivet. Bloqué, le banc écrit l'état interne du tutoriel.
 const { chromium } = require('playwright');
 const fs = require('fs');
 const motDePasseDuBanc = `Banc-${require('crypto').randomBytes(9).toString('base64url')}-Aa1!`;
@@ -44,7 +49,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   let t0 = 0; let touches = 0; let shot = 0; let lastSay = '';
   const now = () => (t0 ? ((Date.now() - t0) / 1000).toFixed(1) : '0.0');
   const say = (kind, text = '') => { const line = `${now().padStart(6)} s · ${String(touches).padStart(3)} t · ${kind}${text ? ' · ' + text : ''}`; if (line.slice(16) === lastSay) return; lastSay = line.slice(16); console.log(line); log.write(line + '\n'); };
-  const snap = async name => { const f = `${String(++shot).padStart(3, '0')}-${name.replace(/[^a-z0-9-]+/gi, '_').slice(0, 40)}.png`; await p.screenshot({ path: `${OUT}/${f}` }).catch(() => {}); return f; };
+  const snap = async name => { const f = `${String(++shot).padStart(3, '0')}-${name.replace(/[^a-z0-9-]+/gi, '_').slice(0, 40)}.png`; await Promise.race([p.screenshot({ path: `${OUT}/${f}`, timeout: 8000 }).catch(() => {}), new Promise(r => setTimeout(r, 9000))]); return f; };
   const touch = async (x, y) => { touches++; await p.mouse.click(x, y); };
   // Appui long (déplacer une création) : le doigt reste posé
   const press = async (x, y) => { touches++; await p.mouse.move(x, y); await p.mouse.down(); await p.waitForTimeout(900); await p.mouse.up(); };
@@ -60,14 +65,16 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   const H = { 'X-Requested-With': 'origins' };
   await p.goto(base + '/');
   const { userId } = await (await p.request.post(base + '/api/auth/register', { data: { email: `cannelle-${Date.now()}@local.test`, password: motDePasseDuBanc }, headers: H })).json();
+  if (!userId) throw new Error('Le compte de banc n’a pas pu être créé (l’API locale limite les requêtes après de nombreux bancs : la relancer, services.sh)');
   sql(`UPDATE users SET created_at = '2030-01-01' WHERE id = ${userId}`);
   await p.request.get(base + '/api/play/world', { headers: H });
-  sql(`UPDATE progress SET infinite_elements = jsonb_build_array('Eau', 'Feu', 'Terre', 'Air', 'Vent', 'Brasier') WHERE user_id = ${userId}`);
+  sql(`UPDATE progress SET infinite_elements = jsonb_build_array('Eau', 'Feu', 'Terre', 'Air', 'Vent', 'Brasier'${process.env.ELEMS ? ", '" + process.env.ELEMS.split(',').join("', '") + "'" : ''}) WHERE user_id = ${userId}`);
   const order = require('/home/user/og-create-backend/src/services/quests').QUESTS.map(q => q.id);
   const before = order.slice(0, order.indexOf(process.env.DEPART || 'soupe'));
   sql(`INSERT INTO world_quests (user_id, quest) SELECT ${userId}, unnest(ARRAY['${before.join("','")}'])`);
-  sql(`INSERT INTO world_buildings (user_id, site, level) VALUES (${userId}, 'foyer', 1), (${userId}, 'ponton', 1) ON CONFLICT (user_id, site) DO UPDATE SET level = 1`);
+  sql(`INSERT INTO world_buildings (user_id, site, level) VALUES (${userId}, 'foyer', 1), (${userId}, 'ponton', 1)${(process.env.BATIS || '').split(',').filter(Boolean).map(b => `, (${userId}, '${b}', 1)`).join('')} ON CONFLICT (user_id, site) DO UPDATE SET level = 1`);
   if (process.env.STOCK) sql(`UPDATE world_stock SET ${process.env.STOCK} WHERE user_id = ${userId}`);
+  if (process.env.COINS) sql(`UPDATE progress SET coins = ${Number(process.env.COINS)} WHERE user_id = ${userId}`);
   if (process.env.CAISSE) say('caisse', String((await p.request.post(base + '/api/play/world/chest', { data: { source: 'caisse:aster' }, headers: H })).status()));
   // (PIQUETS : posés plus bas, l'île chargée : l'anneau de l'enclos se calcule dans la page, game/prologue.js : enclosOf)
   say('compte préparé', `${before.length} quêtes faites, départ : ${process.env.DEPART || 'soupe'}`);
@@ -122,6 +129,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   console.log(JSON.stringify(r));
   await b.close(); return;
   }
+  let reloaded = false;
   let idleSince = Date.now(); let lastState = ''; let lastScene = ''; let lastFrame = -1; let lastGuide = ''; let lastCoach = ''; let harvestDone = 0; let coachTries = 0; let restarted = false;
   let frameShownAt = 0; let guideShownAt = 0; let coachShownAt = 0;
   const end = Date.now() + Number(maxS) * 1000;
@@ -142,11 +150,11 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
     const sline = JSON.stringify(st);
     if (sline !== lastState) { say('état', sline); lastState = sline; if (st && st.quest === 'veille' && st.breath) { await p.waitForTimeout(600); await snap('jour-passe'); } }
     // Une scène plein écran
-    const scene = await p.evaluate(() => { const s = window.__find('PrologueScene'); if (!s || !document.querySelector('.ps')) return null; const f = s.frame || {}; return { k: s.k !== undefined ? s.k : s.index, scene: f.scene || f.art, text: f.text || f.caption || '', auto: f.auto || 0, who: f.who || (f.thought ? 'pensée' : '') }; }).catch(() => null);
+    const scene = await p.evaluate(() => { const s = window.__find('PrologueScene'); if (!s || !document.querySelector('.ps')) return null; const f = s.frame || {}; return { k: s.k !== undefined ? s.k : s.index, scene: f.scene || f.art, text: f.text || f.caption || '', auto: f.auto || 0, who: f.who || (f.thought ? 'pensée' : ''), gesture: Boolean(f.gesture) }; }).catch(() => null);
     if (scene) {
       const key = `${scene.scene}#${scene.k}`;
       if (key !== lastFrame) { lastFrame = key; frameShownAt = Date.now(); say('scène', `${scene.scene} · ${scene.who ? scene.who + ' : ' : ''}${scene.text}${scene.auto ? ` (auto ${scene.auto} ms)` : ''}`); if (scene.scene !== lastScene) { lastScene = scene.scene; await snap(`scene-${scene.scene}`); } idleSince = Date.now(); }
-      if (!scene.auto && Date.now() - frameShownAt > reading(scene.text)) { await touch(195, 420); frameShownAt = Date.now() + 99999; }
+      if (!scene.auto && Date.now() - frameShownAt > reading(scene.text)) { if (scene.gesture) { touches++; await p.locator('.ps__gesture').click().catch(() => {}); } else await touch(195, 420); frameShownAt = Date.now() + 99999; }
       continue;
     }
     // La chasse aux poules : du grain près d'une poule, puis on touche celle qui picore (son « ! »)
@@ -259,6 +267,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
     const coach = await p.evaluate(() => { const c = window.__find('CoachLayer'); const say2 = document.querySelector('.coach__say, .coach__text'); const show = document.querySelector('.coach__show'); const w = window.__find('WorldView'); return { hole: c && c.hole && c.ready ? c.hole : null, text: (say2 ? say2.innerText : '(main seule)'), show: Boolean(show), lesson: c && c.lesson ? `${c.lesson.id}:${c.at}` : '', target: c && c.step ? c.step.target : '' }; }).catch(() => ({}));
     if (coach.hole || coach.show) {
       const key = `${coach.lesson}|${coach.text}`;
+      if (process.env.RELOAD_ON && !reloaded && coach.lesson.includes(process.env.RELOAD_ON)) { reloaded = true; await p.waitForTimeout(1500); say('FERMETURE DE L’APPLI', coach.lesson); await snap('avant-fermeture'); await p.reload(); say('appli rouverte'); lastCoach = ''; lastState = ''; continue; }
       if (key !== lastCoach) { lastCoach = key; coachTries = 0; coachShownAt = Date.now(); say('coach', `${coach.lesson} · ${coach.text}`); if (coach.lesson.startsWith('quest-rivet-brume')) { await p.waitForTimeout(1500); say('  caméra', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); const c = window.__find('CoachLayer'); return { cam: w && w.cam ? [Math.round(w.cam.x), Math.round(w.cam.y)] : null, hole: c && c.hole ? [Math.round(c.hole.x), Math.round(c.hole.y)] : null }; }))); } say('  défilement', JSON.stringify(await p.evaluate(() => { const se = document.scrollingElement; const m = document.querySelector('#main-content'); const sc = [...document.querySelectorAll('*')].filter(e => e.scrollHeight > e.clientHeight + 4 && /auto|scroll/.test(getComputedStyle(e).overflowY)).map(e => `${e.className || e.tagName}:${e.scrollTop}/${e.scrollHeight - e.clientHeight}`).slice(0, 4); return { y: Math.round(scrollY), max: se.scrollHeight - innerHeight, sc }; }))); await snap(`coach-${coach.lesson}`); await diffButtons(); idleSince = Date.now(); }
       if (Date.now() - coachShownAt > reading(coach.text)) {
         coachTries++;
@@ -267,7 +276,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
         if (coachTries > 3 && await fallback.count()) { const label = (await fallback.first().innerText()).trim().replace(/\s+/g, ' '); say('REPLI (le coach ne mène pas)', `toucher « ${label} »`); await snap('repli'); const bb = await fallback.first().boundingBox(); await touch(bb.x + bb.width / 2, bb.y + bb.height / 2); coachTries = 0; }
         else if (coach.hole && coach.target === 'île:trace') {
           // L'enclos d'un trait : appui long sur la première case, puis le doigt glisse sur chaque case de l'anneau
-          const pts = await p.evaluate(() => { const w = window.__find('WorldView'); const r = document.querySelector('canvas').getBoundingClientRect(); const cells = w.craftTrace ? w.craftTrace.cells : []; return w.enclos.filter(sp => !cells.some(c => c.x === sp.x && c.y === sp.y)).map(sp => { const g = w.ground(sp.x, sp.y); const s2 = w.toScreen(g.x, g.y); return { x: r.left + s2.x, y: r.top + s2.y }; }); });
+          const pts = await p.evaluate(() => { const w = window.__find('WorldView'); const r = document.querySelector('canvas').getBoundingClientRect(); const cells = w.craftTrace ? w.craftTrace.cells : []; return (w.barrier || w.enclos || []).filter(sp => !cells.some(c => c.x === sp.x && c.y === sp.y)).map(sp => { const g = w.ground(sp.x, sp.y); const s2 = w.toScreen(g.x, g.y); return { x: r.left + s2.x, y: r.top + s2.y }; }); });
           say('  trait', `${pts.length} cases`);
           touches++;
           await p.mouse.move(pts[0].x, pts[0].y); await p.mouse.down(); await p.waitForTimeout(800);
@@ -303,6 +312,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       await p.waitForTimeout(700); idleSince = Date.now();
       continue;
     }
+    if (process.env.FIN_SCENE && st && st.scene === process.env.FIN_SCENE) { say('fin', `scène ${process.env.FIN_SCENE}`); await snap('fin-scene'); break; }
     if (process.env.FIN_AT && st && st.quest.replace('✓', '') === process.env.FIN_AT) { say('fin', `quête ${process.env.FIN_AT}`); await snap('fin-quete'); say('enclos', sql(`SELECT count(*) FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' AND x IS NOT NULL`)); break; }
     // (sans FIN_AT : on s'arrête au matin de Rivet)
     if (st && !process.env.FIN_AT && (process.env.PLUS_LOIN ? st.scene === 'rivet' : (st.scene === 'rivet' || st.quest.startsWith('deco')))) { say('fin', process.env.PLUS_LOIN ? 'la scène de Rivet' : 'le matin de Rivet'); await snap('matin-rivet'); say('poulailler', sql(`SELECT annex || ' ' || x || ',' || y FROM world_annexes WHERE user_id = ${userId}`)); say('caméra', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); return w && w.cam ? { x: Math.round(w.cam.x), y: Math.round(w.cam.y), s: w.cam.s } : null; }))); break; }
@@ -314,6 +324,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       if (at) { say('REPLI (aucune main la nuit)', 'toucher Brume'); await snap('nuit-sans-main'); await touch(at.x, at.y); idleSince = Date.now(); await p.waitForTimeout(1500); continue; }
     }
     if (idle > 8 && idle < 8.3) { say('rien à toucher depuis 8 s', JSON.stringify(st)); await snap('attente-8s'); await diffButtons(); }
+    if (idle > 30) { say('ÉTAT INTERNE', JSON.stringify(await p.evaluate(() => { const a = document.querySelector('#app').__vue_app__._instance.proxy; return { prologue: a.prologue, arcScenes: a.arcScenes, arcPlayed: a.arcPlayed, arcFlight: a.arcFlight, arcWaiting: a.arcWaiting, vigilsSeen: a.vigilsSeen, prologueScene: a.prologueScene, breath: Boolean(a.breathTimer), veillee: a.veilleeOn, hold: a.islandHold, world: a.isWorldActive, tutorialState: a.tutorialState }; }).catch(e => String(e)))); }
     if (idle > 30) { say('BLOQUÉ', `30 s sans rien à toucher · ${JSON.stringify(st)}`); await snap('bloque'); await diffButtons(); break; }
   }
   // La scène d'Aster, si elle est là

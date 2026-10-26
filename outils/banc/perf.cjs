@@ -70,6 +70,7 @@ const [port = '8098', idle = '20'] = process.argv.slice(2);
   await p.evaluate(id => { localStorage.setItem('user', JSON.stringify({ userId: id, username: 'Banc' })); localStorage.setItem('oc_brume_born', '1'); localStorage.setItem('oc_prologue', JSON.stringify({ skipped: true })); }, userId);
   const t0 = Date.now();
   await p.goto(`${base}/?heure=jour&meteo=clair`);
+  await p.waitForSelector('#splash-enter', { state: 'visible', timeout: 60000 }); await p.locator('#splash-enter').click(); await p.waitForSelector('#splash', { state: 'detached', timeout: 60000 }).catch(() => {});
   await p.waitForSelector('.tabbar__item[data-tab="world"]');
   console.log('app prête en', Date.now() - t0, 'ms');
   await metrics('app (Grimoire)');
