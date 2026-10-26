@@ -100,7 +100,7 @@ de la survie.
   branches qui se rejoignent ;
 - l'évolution porte sur le bâtiment qu'on vient de bâtir : pas d'aller-retour sur l'île ;
 - l'Abri (Foyer II : Bois, 20 bois, 10 pierres) sort du tutoriel. Il devient un des premiers buts du chapitre 1,
-  quand il faut tenir.
+  quand il faut tenir (validé par l'auteur, 26 oct. ; § 5).
 
 ### Jour 8, Maggy : durer (5 quêtes, sans mini-jeu)
 
@@ -128,6 +128,8 @@ ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
 ## 5. Chapitre 1 : le phare
 
 - **Le but** (dit au conseil) : rallumer le phare, pour qu'un navire nous voie.
+- **Un des premiers buts du chapitre** : dresser l'Abri (le Foyer au palier II), pour tenir en attendant (choix de
+  l'auteur, 26 oct.).
 - **Le rebondissement, en deux temps** (choix de l'auteur) :
   - **B, on le vit** : Lorena ne tient plus et prend la mer. Elle ressort de la brume… sur la plage de Brumelune.
     L'île ne laisse sortir personne.
