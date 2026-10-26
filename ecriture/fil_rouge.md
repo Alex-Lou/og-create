@@ -44,7 +44,7 @@ explications (règle déjà posée dans `HISTOIRE.md`, § 9).
 | 4 | **Nathan** | la nuit | l'établi (assembler), poser, déplacer, pivoter, acheter un outil, défendre (torches, barrière) | — | les outils, la défense | codé |
 | 5 | **Léo** | l'eau | réveiller un PNJ, un souvenir (suivre le ruban du Grimoire), un bâtiment qui produit (Puits) | — | l'eau | codé |
 | 6 | **Maerys** | le bois | explorer (ouvrir un quartier, la brume recule), apprivoiser (un cadeau, l'amitié) | Cueillette | la forêt, les bêtes | **à faire** |
-| 7 | **Robby** | l'abri (l'orage) | faire évoluer un bâtiment (palier II) | Filon | la pierre, les évolutions | **à faire** |
+| 7 | **Robby** | la pierre (l'orage) | faire évoluer un bâtiment (palier II), monter la garde | Filon | la pierre, la défense | **à faire** |
 | 8 | **Maggy** | durer | cultiver, les rôles (récolteur, artisan, guerrier : § 6), les réserves pour la nuit | — | les cultures | **à faire** |
 
 Le soir du jour 8 : **le conseil**. Les sept et Brume autour du feu ; Léo voit le phare. Fin du chapitre 0.
@@ -68,7 +68,8 @@ Ce qui existe déjà est repris : les arrivées de Brume (`ecriture/lots/04_mait
 sont « à écrire » : seule leur intention est donnée ici.
 
 **La montée du Grimoire** : le jour 5 apprend le ruban sur une page (la Pluie) ; le jour 6 en demande trois, le jour 7
-quatre. Le jour 8 n'en demande aucune : c'est le jour des règles de la survie.
+trois aussi, mais en une seule chaîne (Lave, Pierre, Métal). Le jour 8 n'en demande aucune : c'est le jour des règles
+de la survie.
 
 ### Jour 6, Maerys : le bois (5 quêtes)
 
@@ -82,17 +83,24 @@ quatre. Le jour 8 n'en demande aucune : c'est le jour des règles de la survie.
 
 À préparer : quand quelqu'un parle de partir, Maerys se tait, ou elle rit. *(à écrire)*
 
-### Jour 7, Robby : l'abri avant l'orage (5 quêtes)
+### Jour 7, Robby : la pierre avant l'orage (5 quêtes, allégé)
 
 | # | Quête | Ce qu'on fait | Mécanique apprise | Ce qu'elle sert ensuite |
 |---|---|---|---|---|
 | 1 | **Le bruit de ciseau** | Brume l'entend du côté de la Colline ; on y va, on le trouve. Il dit « Hm. », Brume traduit. | bavarder (le minimum avec lui) | les Savoirs, les cœurs |
 | 2 | **Son souvenir : la Pierre** | Lave (Feu + Terre), puis Pierre (Air + Lave). | le ruban, sans aide | — |
 | 3 | **La Carrière** | La bâtir (plan Pierre, 5 bois), puis **une partie de Filon offerte et guidée**. | un deuxième mini-jeu de bâtiment | la pierre, en continu |
-| 4 | **L'Abri avant l'orage** | Le Foyer passe au palier II (l'Abri : plan Bois = Arbre + Métal, Métal = Feu + Pierre ; 20 bois, 10 pierres). | **faire évoluer** un bâtiment : un plan plus des ressources | toutes les évolutions du jeu |
+| 4 | **Plus de pierre avant l'orage** | La Carrière passe au palier II (plan Métal = Feu + Pierre). Il faudra de quoi réparer après l'orage. | **faire évoluer** un bâtiment : un plan plus des ressources, et il produit plus | toutes les évolutions du jeu ; le Métal sert ensuite (outils, Bois) |
 | 5 | **La nuit d'orage : la garde** | Les égarés sortent de la brume. Robby et Maerys tiennent le camp ; le joueur en repousse d'un toucher. | **la défense active** ; les guerriers | les nuits de la survie |
 
 À préparer : Robby, devant la mer, dit « Hm. » ; Brume ne traduit pas. *(à écrire)*
+
+**Pourquoi c'est plus léger** (choix de l'auteur, 26 oct. : « alléger, mais propre ») :
+- 3 pages au Grimoire au lieu de 4, et en une seule chaîne (Feu + Terre → Air + Lave → Feu + Pierre) au lieu de deux
+  branches qui se rejoignent ;
+- l'évolution porte sur le bâtiment qu'on vient de bâtir : pas d'aller-retour sur l'île ;
+- l'Abri (Foyer II : Bois, 20 bois, 10 pierres) sort du tutoriel. Il devient un des premiers buts du chapitre 1,
+  quand il faut tenir.
 
 ### Jour 8, Maggy : durer (5 quêtes, sans mini-jeu)
 
@@ -110,7 +118,9 @@ quatre. Le jour 8 n'en demande aucune : c'est le jour des règles de la survie.
   offerte de Cueillette et de Filon pendant le tutoriel (aujourd'hui, ces jeux s'ouvrent au palier III).
 - **Nouveau, à concevoir** : l'écran de la tribu (les rôles et leurs tâches), et la consommation de vivres par jour.
 - **À vérifier à l'équilibrage** : le prix de La Lisière (150 écus aujourd'hui) pendant le tutoriel ; assez de bois et
-  de pierres pour le Bosquet, la Carrière et l'Abri.
+  de pierres pour le Bosquet et la Carrière ; le coût de la Carrière II (il est sur le serveur, je ne l'ai pas lu).
+- **La tribu** (validé par l'auteur, 26 oct.) : les rôles des 7 étant fixes, on apprend à leur donner une tâche, pas à
+  choisir leur rôle.
 
 **Préparer le rebondissement** : Maerys et Robby vivent sur l'île depuis des années. Ils savent qu'on ne part pas, et
 ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
