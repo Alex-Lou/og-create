@@ -229,8 +229,11 @@ export default {
         const ahead = steps[k].target.startsWith('île:') ? null : coach.rectOf(steps[k].target);
         if (!ahead || this.covered(ahead.el)) continue;
         const key = `${this.lesson.id}#${k}`;
-        if (this.scrolledTo !== key) {
+        // (et une fois par élément : l'établi rouvert pour la torche suivante a un nouveau « Poser », plus bas ; sans
+        // quoi le joueur restait sans main)
+        if (this.scrolledTo !== key || this.scrolledEl !== ahead.el) {
           this.scrolledTo = key;
+          this.scrolledEl = ahead.el;
           coach.reveal(steps[k].target);
         }
         break;
