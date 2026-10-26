@@ -529,7 +529,6 @@ const OUVERTURE = [
   ['05_cercle', '03_vent', 'Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant', ['5'], null, AU_CERCLE],
   ['05_promesse', '03_vent', 'Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume', ['5'], null, AU_CERCLE],
   ['05_feu', '03_vent', 'Le feu prend au vieux cercle ; près de lui, Brume n’a plus froid', ['5d'], null, AU_CERCLE],
-  ['06_silhouette', '03_vent', 'La nuit autour du feu ; au loin, sur les rochers, une silhouette regarde la lueur', ['6h'], null, AU_CERCLE],
   ['10_epave', '09_rivet', 'Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage', ['10'], null, null]
 ];
 {
@@ -562,7 +561,7 @@ const NN = require('./neon_naufrage');
 const NR = require('./neon_reveil');
 const NJ = require('./neon_jeu');
 const GC = require('./gravure_cercle');
-for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['05_feu', GC.feu05], ['06_silhouette', GC.silhouette06], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
+for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['05_feu', GC.feu05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }

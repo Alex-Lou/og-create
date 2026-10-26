@@ -96,15 +96,15 @@ export const SCENES = {
     { scene: '05_promesse', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus forte aussi.' },
     { scene: '05_promesse', who: 'joueur', text: 'Euh… D’accord. Écoute, ce n’est pas grave. Déjà, installons-nous.' }
   ],
-  // Le feu est réellement bâti avant cette scène : elle ferme la première journée ; quelqu'un regarde le feu (Agathe)
+  // Le feu est réellement bâti avant cette scène : elle ferme la première journée, au feu (Agathe le regarde, cachée :
+  // on ne la voit pas ; choix de l'auteur, 25 oct.)
   nuit: [
     { scene: '05_feu', who: 'Brume', text: 'Je n’ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n’ai pas froid.' },
     { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, ce cercle suffira.' },
     { scene: '05_feu', who: 'Brume', text: 'Brumelune. C’est ainsi qu’ils appelaient l’île, ceux d’avant. Je n’avais plus dit ce nom depuis longtemps.' },
     // (le premier indice de l'étoile tombée, le Voile : HISTOIRE.md, § 7.2 ; ce qu'on voit, une légende)
     { scene: '05_feu', caption: 'Une étoile file. Brume détourne les yeux.' },
-    { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, sur les rochers. Quelqu’un regarde ton feu.' },
-    { scene: '06_silhouette', who: 'Brume', text: 'On lui fera une place demain, si le cœur lui en dit. En attendant, dors : je veille sur nous.' }
+    { scene: '05_feu', who: 'Brume', text: 'Dors : je veille sur nous.' }
   ],
   // Lorena atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
@@ -132,7 +132,7 @@ export const SCENES = {
     { scene: '10_aster', who: 'joueur', text: 'Euuh… Brume ? Ça va ? On devrait savoir quelque chose ?' },
     { scene: '10_aster', who: 'Brume', text: 'Oubliez ça. Je vous aiderai à bien tout comprendre.' }
   ],
-  // Agathe regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
+  // Agathe regarde le feu depuis la première nuit, cachée sur les rochers, sans oser venir : elle a peur des feux
   // follets ; son souvenir revient devant lui (son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)
   cannelle: [
     { scene: '07_cannelle', who: 'Agathe', text: 'Deux nuits que je regarde ton feu depuis les rochers. Je n’osais pas approcher… à cause de lui.' },

@@ -24440,20 +24440,15 @@ var require_gravure_cercle = __commonJS({
     var FEU = { teinte: "#2A140A", force: 0.24, cote: -1 };
     var PRES_DU_FEU = { x: 44, y: 22, s: 1 };
     var PRES_DU_CERCLE = { x: 26, y: -6, s: 0.98 };
-    function autourDuFeu(p) {
-      const plans = decorCercle(p, [{ id: "feu", profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: /* @__PURE__ */ __name(() => feuPris(p), "dessin") }]);
-      plans.splice(plans.findIndex((q) => q && q.id === "teinte"), 0, { id: "chaleur", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => chaleur(p), "dessin") });
-      return plans;
-    }
-    __name(autourDuFeu, "autourDuFeu");
-    var vivant = /* @__PURE__ */ __name((D) => ({ feu: balance(0, D, 380, (k) => ({ s: k % 2 ? 1.05 : 0.97, o: 1 })), chaleur: balance(0, D, 520, (k) => ({ o: k % 2 ? 1 : 0.8 })) }), "vivant");
-    var ici = /* @__PURE__ */ __name((D) => ({ brume: [[0, PRES_DU_FEU], [D, PRES_DU_FEU]], avatar: [[0, PRES_DU_CERCLE], [D, PRES_DU_CERCLE]] }), "ici");
-    var REPOS = R.joue([0, "repos", "bas_droite"]);
     function feu05() {
       const p = "fe", D0 = 4600;
-      const plans = autourDuFeu(p);
+      const plans = decorCercle(p, [{ id: "feu", profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: /* @__PURE__ */ __name(() => feuPris(p), "dessin") }]);
+      plans.splice(plans.findIndex((q) => q && q.id === "teinte"), 0, { id: "chaleur", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => chaleur(p), "dessin") });
       plans.splice(plans.findIndex((q) => q && q.id === "etoiles") + 1, 0, { id: "filante", profondeur: 0.1, cadre: [130, 0, 160, 70], pivot: [268, 22], dessin: /* @__PURE__ */ __name(() => V.filante(p), "dessin") });
+      const vivant = /* @__PURE__ */ __name((D) => ({ feu: balance(0, D, 380, (k) => ({ s: k % 2 ? 1.05 : 0.97, o: 1 })), chaleur: balance(0, D, 520, (k) => ({ o: k % 2 ? 1 : 0.8 })) }), "vivant");
       const cachee = /* @__PURE__ */ __name((D) => ({ filante: [[0, { o: 0 }], [D, { o: 0 }]] }), "cachee");
+      const ici = /* @__PURE__ */ __name((D) => ({ brume: [[0, PRES_DU_FEU], [D, PRES_DU_FEU]], avatar: [[0, PRES_DU_CERCLE], [D, PRES_DU_CERCLE]] }), "ici");
+      const REPOS = R.joue([0, "repos", "bas_droite"]);
       const t0 = { ...unTemps(D0, [[0, LARGE], [D0, { ...SUR_CERCLE, e: "ease-in-out" }]], { ...nuitFixe(plans.filter(Boolean), D0), ...vivant(D0), ...cachee(D0), ...ici(D0) }), acteur: REPOS, jeux: { brume: V.B([0, "content"]) } };
       const temps = V.repliques(t0, [
         // « Le feu tient. Pour cette nuit, ce cercle suffira. »
@@ -24461,47 +24456,15 @@ var require_gravure_cercle = __commonJS({
         // « Brumelune. C'est ainsi qu'ils appelaient l'île, ceux d'avant. »
         [5e3, SUR_BRUME, REPOS, V.B([0, "content"], [2600, "triste"]), { ...vivant(5e3), ...cachee(5e3), ...ici(5e3) }],
         // une étoile file ; Brume détourne les yeux
-        [3e3, LARGE, REPOS, V.B([0, "triste"], [1300, "gene"]), { ...vivant(3e3), ...ici(3e3), filante: [[0, { x: 60, y: -16, o: 0 }], [500, { x: 60, y: -16, o: 0, e: "linear" }], [600, { x: 52, y: -14, o: 1, e: "linear" }], [1600, { x: -40, y: 12, o: 1 }], [2e3, { x: -56, y: 16, o: 0 }], [3e3, { x: -56, y: 16, o: 0 }]] }]
+        [3e3, LARGE, REPOS, V.B([0, "triste"], [1300, "gene"]), { ...vivant(3e3), ...ici(3e3), filante: [[0, { x: 60, y: -16, o: 0 }], [500, { x: 60, y: -16, o: 0, e: "linear" }], [600, { x: 52, y: -14, o: 1, e: "linear" }], [1600, { x: -40, y: 12, o: 1 }], [2e3, { x: -56, y: 16, o: 0 }], [3e3, { x: -56, y: 16, o: 0 }]] }],
+        // « Dors : je veille sur nous. » : elle revient vers lui ; on s'approche du feu
+        [4200, SUR_CERCLE, REPOS, V.B([0, "gene"], [700, "content"]), { ...vivant(4200), ...cachee(4200), ...ici(4200) }]
       ]);
       plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
       return V.fin(plans, temps, FEU, { brume: [3e3, { y: -4 }] });
     }
     __name(feu05, "feu05");
-    var ROCHERS = [334, 250];
-    function rochers(p) {
-      const A = atelier(`${p}r`), [x, y] = ROCHERS;
-      let s = gravure(A, [[x - 46, y], [x - 38, y - 16], [x - 18, y - 26], [x + 6, y - 30], [x + 30, y - 20], [x + 46, y - 4], [x + 50, y]], A.lin([[0, "#4A4656"], [1, "#1E1A26"]], 0, y - 30, 0, y), { seed: 870, amp: 0.5, angle: 30, pas: 2.4, ombre: 0.4, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.3, dy: 3, lumiere: [-0.6, -0.8] });
-      s += gravure(A, [[x - 64, y + 2], [x - 52, y - 8], [x - 40, y + 2]], "#2A2632", { seed: 871, amp: 0.4, tailles: 0, trait: 1.4, portee: 0 });
-      s += trait2(`M${x - 36},${y - 17} L${x - 18},${y - 25} L${x + 6},${y - 29} L${x + 28},${y - 20}`, 1.2, "#B8C8F0", 0.7);
-      return A.out(s);
-    }
-    __name(rochers, "rochers");
-    var veilleur = /* @__PURE__ */ __name((p) => {
-      const A = atelier(`${p}v`), [x, y] = ROCHERS, t = y - 29, k = 1.7;
-      const corps = `M${x - 4 * k},${t} L${x - 3.2 * k},${t - 14 * k} Q${x - 2.6 * k},${t - 17 * k} ${x},${t - 17.4 * k} Q${x + 2.6 * k},${t - 17 * k} ${x + 3.2 * k},${t - 14 * k} L${x + 4 * k},${t} Z`;
-      return A.out(`<path d="${corps}" fill="#0C0A14" stroke="${ENCRE}" stroke-width="1"/><circle cx="${x}" cy="${t - 20.6 * k}" r="${3 * k}" fill="#0C0A14" stroke="${ENCRE}" stroke-width="1"/><path d="M${x - 3.4 * k},${t - 1} L${x - 2.8 * k},${t - 14 * k} M${x - 3.2 * k},${t - 20 * k} q0.6,-2.2 2.6,-2.8" stroke="#FFB870" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.9"/>`);
-    }, "veilleur");
-    function silhouette06() {
-      const p = "si", D0 = 4600, D1 = 5200;
-      const plans = autourDuFeu(p);
-      plans.splice(
-        plans.findIndex((q) => q && q.id === "herbe"),
-        0,
-        { id: "rochers", profondeur: 0.4, cadre: [260, 210, 130, 50], pivot: ROCHERS, dessin: /* @__PURE__ */ __name(() => rochers(p), "dessin") },
-        { id: "veilleur", profondeur: 0.4, cadre: [318, 172, 32, 52], pivot: [ROCHERS[0], ROCHERS[1] - 29], dessin: /* @__PURE__ */ __name(() => veilleur(p), "dessin") }
-      );
-      const SUR_ROCHERS = { x: 80, y: -30, z: 1.45 };
-      const guette = /* @__PURE__ */ __name((D) => ({ veilleur: balance(0, D, 2400, (k) => ({ x: k % 2 ? 0.6 : 0 })) }), "guette");
-      const t0 = { ...unTemps(D0, [[0, SUR_AVATAR], [1600, { ...SUR_ROCHERS, e: "ease-in-out" }], [D0, SUR_ROCHERS]], { ...nuitFixe(plans.filter(Boolean), D0), ...vivant(D0), ...guette(D0), ...ici(D0) }), acteur: R.joue([0, "repos", "bas_droite"], [900, "repos", "haut_droite"]), jeux: { brume: V.B([0, "surpris"]) } };
-      const temps = V.repliques(t0, [
-        // « On lui fera une place demain, si le cœur lui en dit. En attendant, dors : je veille sur nous. »
-        [D1, LARGE, R.joue([0, "repos", "haut_droite"], [1200, "repos", "bas_droite"]), V.B([0, "content"]), { ...vivant(D1), ...guette(D1), ...ici(D1) }]
-      ]);
-      plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
-      return V.fin(plans, temps, FEU, { brume: [3e3, { y: -4 }] });
-    }
-    __name(silhouette06, "silhouette06");
-    module.exports = { cercle05, promesse05, feu05, silhouette06 };
+    module.exports = { cercle05, promesse05, feu05 };
   }
 });
 
@@ -24527,7 +24490,6 @@ var require_neon_jeu = __commonJS({
       ["05_cercle", GC.cercle05, "n5c", true, "nuit"],
       ["05_promesse", GC.promesse05, "n5p", true, "nuit"],
       ["05_feu", GC.feu05, "n5f", true, "feu"],
-      ["06_silhouette", GC.silhouette06, "n6s", true, "feu"],
       ["10_epave", GL.epave10, "nae", false, "matin"],
       ["10_aster", GL.aster10, "naa", false, "matin"]
     ];
@@ -25163,7 +25125,6 @@ var require_scenes6 = __commonJS({
       ["05_cercle", "03_vent", "Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant", ["5"], null, AU_CERCLE],
       ["05_promesse", "03_vent", "Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume", ["5"], null, AU_CERCLE],
       ["05_feu", "03_vent", "Le feu prend au vieux cercle ; près de lui, Brume n’a plus froid", ["5d"], null, AU_CERCLE],
-      ["06_silhouette", "03_vent", "La nuit autour du feu ; au loin, sur les rochers, une silhouette regarde la lueur", ["6h"], null, AU_CERCLE],
       ["10_epave", "09_rivet", "Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage", ["10"], null, null]
     ];
     {
@@ -25190,7 +25151,7 @@ var require_scenes6 = __commonJS({
     var NR = require_neon_reveil();
     var NJ = require_neon_jeu();
     var GC = require_gravure_cercle();
-    for (const [id2, scene2] of [["00_tampon", NR.tampon00], ["01_pont", NN.naufrage], ["01_paupieres", NR.paupieres01], ["01_greve", NR.greve01], ["01_carte", NR.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["05_feu", GC.feu05], ["06_silhouette", GC.silhouette06], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
+    for (const [id2, scene2] of [["00_tampon", NR.tampon00], ["01_pont", NN.naufrage], ["01_paupieres", NR.paupieres01], ["01_greve", NR.greve01], ["01_carte", NR.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02], ["03_livre", GV.livre03], ["03_vent", GV.vent03], ["03_trouee", GV.trouee03], ["03_ciel", GV.ciel03], ["03_nuit", GV.nuit03], ["05_cercle", GC.cercle05], ["05_promesse", GC.promesse05], ["05_feu", GC.feu05], ["10_epave", GL.epave10], ["10_aster", GL.aster10]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }

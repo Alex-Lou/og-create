@@ -2,10 +2,10 @@
  "_lisez_moi": [
   "Les scènes plein écran du tutoriel v6 (HISTOIRE.md § 9), dans le carré 400 × 400 de PrologueArt (preserveAspectRatio=\"xMidYMid slice\" : le sujet reste au milieu). Chaque scène a un fond (derrière l'avatar) et parfois un devant (ce qui passe devant lui : pluie, brume, Brume quand elle s'approche) . Les scènes 00 à 06 sont en animation continue : une seule image par calque (images = 1), qui bouge d'elle-même (SMIL, dans le SVG : à afficher en <img> ou en <object>, jamais en dessin figé) ; ses mouvements d'entrée (le tampon, la vague, le gilet, Brume qui approche, le vent, le feu qui prend) se jouent une fois quand le SVG s'affiche. Les scènes 07 à 12 ont plusieurs images, qui tournent en boucle à ms_par_image. Les répliques, le nom du joueur et la légende ne sont pas dessinés : le jeu les écrit.",
   "L'avatar n'est pas dessiné : le jeu pose entre le fond et le devant l'avatar du joueur (design/bibliotheque/svg/personnages/avatar, ou son générateur), à la place notée dans « avatar » : ses pieds en (x, y) du carré, le cadre 48 × 64 de l'avatar agrandi « echelle » fois ; « vue » face, avant (trois quarts avant, regarde vers la droite) ou dos (trois quarts dos, regarde vers le haut à droite) ; « miroir » : retourné, il regarde vers la gauche ; « pose » repos, salut ou grelotter (le geste de face) ; « naufrage » : sa tenue naufragée (jusqu'au Campement) ou sa tenue de croisière ; « cadre » (la carte d'embarquement) : l'avatar n'est visible que dans ce rectangle, la photo. Quand la scène a plusieurs images, celles de l'avatar les suivent (image n de la scène → image n de l'avatar, en boucle). Quand elle n'en a qu'une (animation continue), l'avatar tourne seul ses images à ms_par_image (320 ms pour grelotter, 900 ms au repos : c'est la scène qui est fluide, l'avatar reste calme). « avatar » vaut null quand il n'est pas à l'écran.",
-  "Les scènes lourdes (demande de l'auteur du 16 oct. : 30_phare_porte, 12_veillee, 12_habits, 01_paupieres, 05_feu, 01_pont, 05_cercle, 03_livre, 06_silhouette, 01_carte, 02_rocher) : le jeu peint chaque scène une seule fois, figée et nette, pour qu'elle reste fluide sur téléphone. Leur fond n'a plus aucune animation : il est posé dans son état final (le feu pris, les yeux ouverts sur la plage, la carte de près, le livre sur le sable). Leur calque « anime », transparent, au même cadre 400 × 400, ne garde que l'essentiel vivant (la flamme, Brume et sa lueur, quelques lucioles, étincelles ou poussières de lumière), au plus 30 animations en boucle, sans filtre ; le jeu le joue tel quel entre le fond et l'avatar (design/atelier/figer.js).",
+  "Les scènes lourdes (demande de l'auteur du 16 oct. : 30_phare_porte, 12_veillee, 12_habits, 01_paupieres, 01_pont, 05_cercle, 03_livre, 01_carte, 02_rocher) : le jeu peint chaque scène une seule fois, figée et nette, pour qu'elle reste fluide sur téléphone. Leur fond n'a plus aucune animation : il est posé dans son état final (le feu pris, les yeux ouverts sur la plage, la carte de près, le livre sur le sable). Leur calque « anime », transparent, au même cadre 400 × 400, ne garde que l'essentiel vivant (la flamme, Brume et sa lueur, quelques lucioles, étincelles ou poussières de lumière), au plus 30 animations en boucle, sans filtre ; le jeu le joue tel quel entre le fond et l'avatar (design/atelier/figer.js).",
   "Les images de l'ouverture (demande de l'auteur du 15 oct. : ecriture/lots/01_ouverture.md § 2, 02_tutoriel.md § 1), en animation continue elles aussi, au niveau Final Fantasy Tactics / Pokémon HGSS : 01_paupieres (vue subjective : les paupières battent deux fois, le flou, puis la plage au couchant), 01_carte (vue subjective : une tache blanche au loin, puis la carte d'embarquement trempée ; elle remplace 01_gilet dans l'ouverture), 02_plage (l'avatar de dos face à la mer, au couchant ; du sable devant lui pour « Avancer »), 03_ciel (Brume lève les yeux ; la nuit tombe, sans étoile encore), 05_cercle (de nuit, le cercle de pierres noircies, Brume au-dessus ; au large, l'épave dans la brume), 10_epave (le premier matin, gris et doux : l'épave contre les rochers, Hermine qui nage vers la plage). Le sujet tient au milieu du carré : sur un téléphone en hauteur, le jeu n'en montre que la bande x ≈ 108 à 292.",
   "La rencontre (rencontre.js), refaite au même niveau : 02_lueur (une lueur pâle erre dans la brume, s'arrête, repart), 02_approche (elle fond sur l'avatar, la brume s'écarte ; tout près, elle penche la tête et l'examine), 02_rocher (elle bondit par-dessus un rocher, retombe derrière et passe la tête ; « T'approcher » vise ses yeux), 03_livre (elle tire par à-coups le livre aux sept sceaux d'un creux du rocher ; il tombe sur le sable, entre l'avatar et le rocher, et ses sceaux luisent tour à tour). L'heure suit le récit : le soleil vient de se coucher (02_plage), le ciel se refroidit d'une scène à l'autre jusqu'à l'heure bleue du vent (03_vent), puis la nuit tombe (03_ciel).",
-  "Étapes : 00_carte (0a-0b : l'écran d'avatar ; la photo se compose dans le cadre, le nom s'écrit sur la ligne « Nom »), 00_tampon (0c), 01 le naufrage, 02 Brume, 03 le Grimoire (3b à 3d sont dans le Grimoire lui-même), 05_feu (5d), 06_silhouette (6h, fin de la partie 1), 07 Cannelle, 09_rivet, 10_aster, 11 Ondin, 12 la veillée (12k, 12l : Cannelle tend à l'avatar ses habits recousus, le jeu passe ensuite l'avatar en tenue). Les autres temps du tutoriel se jouent sur l'île."
+  "Étapes : 00_carte (0a-0b : l'écran d'avatar ; la photo se compose dans le cadre, le nom s'écrit sur la ligne « Nom »), 00_tampon (0c), 01 le naufrage, 02 Brume, 03 le Grimoire (3b à 3d sont dans le Grimoire lui-même), 05_feu (5d, fin de la partie 1), 07 Cannelle, 09_rivet, 10_aster, 11 Ondin, 12 la veillée (12k, 12l : Cannelle tend à l'avatar ses habits recousus, le jeu passe ensuite l'avatar en tenue). Les autres temps du tutoriel se jouent sur l'île."
  ],
  "scenes": {
   "00_carte": {
@@ -63832,351 +63832,32 @@
         ]
        ]
       }
-     }
-    ],
-    "repos": {
-     "duree": 10000,
-     "camera": {
-      "x": 3,
-      "y": -2,
-      "z": 0.02
      },
-     "pistes": {
-      "filets0": [
-       12000,
-       {
-        "x": 14
-       }
-      ],
-      "lechee": [
-       2600,
-       {
-        "y": 12
-       }
-      ],
-      "brume": [
-       3000,
-       {
-        "y": -4
-       }
-      ]
-     }
-    }
-   },
-   "calques": {}
-  },
-  "06_silhouette": {
-   "nom": "Scène 6h : La nuit autour du feu ; au loin, sur les rochers, une silhouette regarde la lueur",
-   "etape": "6h",
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "images": 1,
-   "ms_par_image": 900,
-   "avatar": {
-    "x": 126,
-    "y": 384,
-    "echelle": 3.1,
-    "vue": "avant",
-    "pose": "repos",
-    "naufrage": true
-   },
-   "plans": [
-    {
-     "id": "ciel",
-     "fichier": "06_silhouette/06_silhouette_plan-ciel_1.svg",
-     "profondeur": 0.1,
-     "marge": 40,
-     "flou": 0.2
-    },
-    {
-     "id": "soleil",
-     "fichier": "06_silhouette/06_silhouette_plan-soleil_1.svg",
-     "profondeur": 0.12,
-     "pivot": [
-      236,
-      186
-     ],
-     "cadre": [
-      36,
-      -14,
-      400,
-      400
-     ]
-    },
-    {
-     "id": "nuage0",
-     "fichier": "06_silhouette/06_silhouette_plan-nuage0_1.svg",
-     "profondeur": 0.14,
-     "cadre": [
-      -140,
-      36,
-      680,
-      34
-     ]
-    },
-    {
-     "id": "nuage1",
-     "fichier": "06_silhouette/06_silhouette_plan-nuage1_1.svg",
-     "profondeur": 0.18,
-     "cadre": [
-      -140,
-      110,
-      680,
-      34
-     ]
-    },
-    {
-     "id": "etoiles",
-     "fichier": "06_silhouette/06_silhouette_plan-etoiles_1.svg",
-     "profondeur": 0.1,
-     "marge": 40
-    },
-    {
-     "id": "lune",
-     "fichier": "06_silhouette/06_silhouette_plan-lune_1.svg",
-     "profondeur": 0.12,
-     "cadre": [
-      10,
-      0,
-      150,
-      140
-     ]
-    },
-    {
-     "id": "mer-soir",
-     "fichier": "06_silhouette/06_silhouette_plan-mer-soir_1.svg",
-     "profondeur": 0.3,
-     "marge": 40
-    },
-    {
-     "id": "mer",
-     "fichier": "06_silhouette/06_silhouette_plan-mer_1.svg",
-     "profondeur": 0.3,
-     "marge": 40
-    },
-    {
-     "id": "plage",
-     "fichier": "06_silhouette/06_silhouette_plan-plage_1.svg",
-     "profondeur": 0.55,
-     "marge": 40
-    },
-    {
-     "id": "lechee",
-     "fichier": "06_silhouette/06_silhouette_plan-lechee_1.svg",
-     "profondeur": 0.55,
-     "marge": 40
-    },
-    {
-     "id": "crepuscule",
-     "fichier": "06_silhouette/06_silhouette_plan-crepuscule_1.svg",
-     "profondeur": 0,
-     "marge": 40
-    },
-    {
-     "id": "voile0",
-     "fichier": "06_silhouette/06_silhouette_plan-voile0_1.svg",
-     "profondeur": 0.32,
-     "marge": 40,
-     "flou": 0.2
-    },
-    {
-     "id": "filets0",
-     "fichier": "06_silhouette/06_silhouette_plan-filets0_1.svg",
-     "profondeur": 0.36,
-     "cadre": [
-      -100,
-      162,
-      600,
-      60
-     ]
-    },
-    {
-     "id": "rochers",
-     "fichier": "06_silhouette/06_silhouette_plan-rochers_1.svg",
-     "profondeur": 0.4,
-     "pivot": [
-      334,
-      250
-     ],
-     "cadre": [
-      260,
-      210,
-      130,
-      50
-     ]
-    },
-    {
-     "id": "veilleur",
-     "fichier": "06_silhouette/06_silhouette_plan-veilleur_1.svg",
-     "profondeur": 0.4,
-     "pivot": [
-      334,
-      221
-     ],
-     "cadre": [
-      318,
-      172,
-      32,
-      52
-     ]
-    },
-    {
-     "id": "herbe",
-     "fichier": "06_silhouette/06_silhouette_plan-herbe_1.svg",
-     "profondeur": 0.58,
-     "marge": 40
-    },
-    {
-     "id": "nuit",
-     "fichier": "06_silhouette/06_silhouette_plan-nuit_1.svg",
-     "profondeur": 0,
-     "marge": 40
-    },
-    {
-     "id": "flaque",
-     "fichier": "06_silhouette/06_silhouette_plan-flaque_1.svg",
-     "profondeur": 0.62,
-     "cadre": [
-      130,
-      290,
-      212,
-      60
-     ]
-    },
-    {
-     "id": "pierres-fond",
-     "fichier": "06_silhouette/06_silhouette_plan-pierres-fond_1.svg",
-     "profondeur": 0.62,
-     "cadre": [
-      130,
-      270,
-      212,
-      70
-     ]
-    },
-    {
-     "id": "feu",
-     "fichier": "06_silhouette/06_silhouette_plan-feu_1.svg",
-     "profondeur": 0.62,
-     "pivot": [
-      236,
-      318
-     ],
-     "cadre": [
-      176,
-      222,
-      120,
-      104
-     ]
-    },
-    {
-     "id": "pierres-devant",
-     "fichier": "06_silhouette/06_silhouette_plan-pierres-devant_1.svg",
-     "profondeur": 0.62,
-     "cadre": [
-      130,
-      300,
-      212,
-      70
-     ]
-    },
-    {
-     "id": "brume",
-     "fichier": "06_silhouette/06_silhouette_plan-brume_1.svg",
-     "images": {
-      "flotte|face|surpris|0": "06_silhouette/06_silhouette_plan-brume--0_1.svg",
-      "flotte|face|surpris|1": "06_silhouette/06_silhouette_plan-brume--1_1.svg",
-      "flotte|face|surpris|2": "06_silhouette/06_silhouette_plan-brume--2_1.svg",
-      "flotte|face|content|0": "06_silhouette/06_silhouette_plan-brume--3_1.svg",
-      "flotte|face|content|1": "06_silhouette/06_silhouette_plan-brume--4_1.svg",
-      "flotte|face|content|2": "06_silhouette/06_silhouette_plan-brume--5_1.svg"
-     },
-     "anims": {
-      "flotte": {
-       "images": 3,
-       "dt": 0.28
-      }
-     },
-     "profondeur": 0.68,
-     "pivot": [
-      262,
-      268
-     ],
-     "cadre": [
-      194,
-      180,
-      136,
-      112
-     ]
-    },
-    {
-     "id": "avatar",
-     "profondeur": 0.7,
-     "pivot": [
-      126,
-      384
-     ]
-    },
-    {
-     "id": "lumiere",
-     "fichier": "06_silhouette/06_silhouette_plan-lumiere_1.svg",
-     "profondeur": 0,
-     "marge": 40
-    },
-    {
-     "id": "chaleur",
-     "fichier": "06_silhouette/06_silhouette_plan-chaleur_1.svg",
-     "profondeur": 0,
-     "marge": 40
-    },
-    {
-     "id": "teinte",
-     "fichier": "06_silhouette/06_silhouette_plan-teinte_1.svg",
-     "profondeur": 0,
-     "marge": 40
-    }
-   ],
-   "partition": {
-    "lumiere": {
-     "cote": -1,
-     "ambiance": "#1A0A40",
-     "eclat": "#FF9A40",
-     "lisere": "#FFB070",
-     "force": 1.15,
-     "neon": true
-    },
-    "temps": [
      {
-      "duree": 4600,
+      "duree": 4200,
       "camera": [
        [
         0,
         {
-         "x": -20,
-         "y": 24,
-         "z": 1.24
+         "x": 6,
+         "y": 6,
+         "z": 1.06
         }
        ],
        [
-        1600,
+        900,
         {
-         "x": 80,
-         "y": -30,
-         "z": 1.45,
-         "e": "ease-in-out"
+         "x": 30,
+         "y": 26,
+         "z": 1.2
         }
        ],
        [
-        4600,
+        4200,
         {
-         "x": 80,
-         "y": -30,
-         "z": 1.45,
-         "e": "ease-in-out"
+         "x": 30,
+         "y": 26,
+         "z": 1.2
         }
        ]
       ],
@@ -64190,7 +63871,7 @@
          }
         ],
         [
-         4600,
+         4200,
          {
           "y": 70,
           "r": 40
@@ -64205,7 +63886,7 @@
          }
         ],
         [
-         4600,
+         4200,
          {
           "o": 0
          }
@@ -64219,7 +63900,7 @@
          }
         ],
         [
-         4600,
+         4200,
          {
           "o": 1
          }
@@ -64233,7 +63914,7 @@
          }
         ],
         [
-         4600,
+         4200,
          {
           "o": 0.78
          }
@@ -64243,12 +63924,12 @@
         [
          0,
          {
-          "o": 0.85,
-          "x": 14
+          "x": 14,
+          "o": 0.85
          }
         ],
         [
-         4600,
+         4200,
          {
           "x": 14,
           "o": 0.85
@@ -64263,7 +63944,7 @@
          }
         ],
         [
-         4600,
+         4200,
          {
           "o": 0.4
          }
@@ -64277,7 +63958,7 @@
          }
         ],
         [
-         4600,
+         4200,
          {
           "o": 1
          }
@@ -64467,30 +64148,6 @@
           "o": 1,
           "e": "ease-in-out"
          }
-        ],
-        [
-         4370,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4560,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4600,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
         ]
        ],
        "chaleur": [
@@ -64612,56 +64269,19 @@
           "o": 0.8,
           "e": "ease-in-out"
          }
-        ],
-        [
-         4420,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4600,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
         ]
        ],
-       "veilleur": [
+       "filante": [
         [
          0,
          {
-          "x": 0,
-          "e": "ease-in-out"
+          "o": 0
          }
         ],
         [
-         1200,
+         4200,
          {
-          "x": 0.6,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2400,
-         {
-          "x": 0,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3600,
-         {
-          "x": 0.6,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4600,
-         {
-          "x": 0.6,
-          "e": "ease-in-out"
+          "o": 0
          }
         ]
        ],
@@ -64675,7 +64295,7 @@
          }
         ],
         [
-         4600,
+         4200,
          {
           "x": 44,
           "y": 22,
@@ -64693,618 +64313,7 @@
          }
         ],
         [
-         4600,
-         {
-          "x": 26,
-          "y": -6,
-          "s": 0.98
-         }
-        ]
-       ]
-      },
-      "acteur": [
-       [
-        0,
-        {
-         "anim": "repos",
-         "dir": "bas_droite",
-         "expr": "neutre"
-        }
-       ],
-       [
-        900,
-        {
-         "anim": "repos",
-         "dir": "haut_droite",
-         "expr": "neutre"
-        }
-       ]
-      ],
-      "jeux": {
-       "brume": [
-        [
-         0,
-         {
-          "anim": "flotte",
-          "dir": "face",
-          "expr": "surpris"
-         }
-        ]
-       ]
-      }
-     },
-     {
-      "duree": 5200,
-      "camera": [
-       [
-        0,
-        {
-         "x": 80,
-         "y": -30,
-         "z": 1.45
-        }
-       ],
-       [
-        900,
-        {
-         "x": 6,
-         "y": 6,
-         "z": 1.06
-        }
-       ],
-       [
-        5200,
-        {
-         "x": 6,
-         "y": 6,
-         "z": 1.06
-        }
-       ]
-      ],
-      "pistes": {
-       "soleil": [
-        [
-         0,
-         {
-          "y": 70,
-          "r": 40
-         }
-        ],
-        [
-         5200,
-         {
-          "y": 70,
-          "r": 40
-         }
-        ]
-       ],
-       "mer": [
-        [
-         0,
-         {
-          "o": 0
-         }
-        ],
-        [
-         5200,
-         {
-          "o": 0
-         }
-        ]
-       ],
-       "crepuscule": [
-        [
-         0,
-         {
-          "o": 1
-         }
-        ],
-        [
-         5200,
-         {
-          "o": 1
-         }
-        ]
-       ],
-       "voile0": [
-        [
-         0,
-         {
-          "o": 0.78
-         }
-        ],
-        [
-         5200,
-         {
-          "o": 0.78
-         }
-        ]
-       ],
-       "filets0": [
-        [
-         0,
-         {
-          "x": 14,
-          "o": 0.85
-         }
-        ],
-        [
-         5200,
-         {
-          "x": 14,
-          "o": 0.85
-         }
-        ]
-       ],
-       "nuit": [
-        [
-         0,
-         {
-          "o": 0.4
-         }
-        ],
-        [
-         5200,
-         {
-          "o": 0.4
-         }
-        ]
-       ],
-       "etoiles": [
-        [
-         0,
-         {
-          "o": 1
-         }
-        ],
-        [
-         5200,
-         {
-          "o": 1
-         }
-        ]
-       ],
-       "feu": [
-        [
-         0,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         190,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         380,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         570,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         760,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         950,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1140,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1330,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1520,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1710,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1900,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2090,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2280,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2470,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2660,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2850,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3040,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3230,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3420,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3610,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3800,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3990,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4180,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4370,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4560,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4750,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4940,
-         {
-          "s": 0.97,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         5130,
-         {
-          "s": 1.05,
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ]
-       ],
-       "chaleur": [
-        [
-         0,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         260,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         520,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         780,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1040,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1300,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1560,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1820,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2080,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2340,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2600,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2860,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3120,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3380,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3640,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3900,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4160,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4420,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4680,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4940,
-         {
-          "o": 1,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         5200,
-         {
-          "o": 0.8,
-          "e": "ease-in-out"
-         }
-        ]
-       ],
-       "veilleur": [
-        [
-         0,
-         {
-          "x": 0,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         1200,
-         {
-          "x": 0.6,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         2400,
-         {
-          "x": 0,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         3600,
-         {
-          "x": 0.6,
-          "e": "ease-in-out"
-         }
-        ],
-        [
-         4800,
-         {
-          "x": 0,
-          "e": "ease-in-out"
-         }
-        ]
-       ],
-       "brume": [
-        [
-         0,
-         {
-          "x": 44,
-          "y": 22,
-          "s": 1
-         }
-        ],
-        [
-         5200,
-         {
-          "x": 44,
-          "y": 22,
-          "s": 1
-         }
-        ]
-       ],
-       "avatar": [
-        [
-         0,
-         {
-          "x": 26,
-          "y": -6,
-          "s": 0.98
-         }
-        ],
-        [
-         5200,
+         4200,
          {
           "x": 26,
           "y": -6,
@@ -65320,21 +64329,21 @@
          }
         ],
         [
-         2080,
+         1680,
          {
           "y": 8,
           "e": "ease-in-out"
          }
         ],
         [
-         4160,
+         3360,
          {
           "y": -6,
           "e": "ease-in-out"
          }
         ],
         [
-         5200,
+         4200,
          {
           "y": 2
          }
@@ -65346,14 +64355,6 @@
         0,
         {
          "anim": "repos",
-         "dir": "haut_droite",
-         "expr": "neutre"
-        }
-       ],
-       [
-        1200,
-        {
-         "anim": "repos",
          "dir": "bas_droite",
          "expr": "neutre"
         }
@@ -65363,6 +64364,14 @@
        "brume": [
         [
          0,
+         {
+          "anim": "flotte",
+          "dir": "face",
+          "expr": "gene"
+         }
+        ],
+        [
+         700,
          {
           "anim": "flotte",
           "dir": "face",

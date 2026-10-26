@@ -8,7 +8,7 @@ import DATA from '../design/bibliotheque/svg/scenes/tutoriel/scenes.json';
 // 400 × 400, ne garde que l'essentiel vivant : au plus 30 animations, sans filtre
 const read = file => readFileSync(fileURLToPath(new URL(`../design/bibliotheque/svg/scenes/tutoriel/${file}`, import.meta.url)), 'utf8');
 const ANIMATIONS = /<(animate|animateTransform|animateMotion|set)\b/g;
-// (05_feu et 06_silhouette, redessinées au cercle dans l'herbe, sont des scènes en plans : plus bas)
+// (05_feu, redessinée au cercle dans l'herbe, est une scène en plans : plus bas)
 const LOURDES = ['30_phare_porte', '12_veillee', '12_habits'];
 
 describe('les scènes lourdes : un fond figé, un calque anime léger', () => {
