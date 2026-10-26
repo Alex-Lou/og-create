@@ -17,7 +17,7 @@ comme on peut.** Faussement choupi : mignon en surface, grave en dessous. Des ch
 |---|---|---|
 | **Chapitre 0 : le tutoriel** | 8 jours : Brume le premier soir, puis un PNJ principal par jour (7). Chaque jour apprend une vraie mécanique, qui sert tout le reste du jeu. Le soir du dernier jour, le conseil : on voit le phare. | accéléré, tenu par nous (`src/world/tutoClock.js`) |
 | **Chapitre 1 : le phare** | Les PNJ croient que c'est la sortie : rallumer le phare, être vus, partir. Rebondissement : on ne peut pas partir. | à décider (§ 7) |
-| **Ensuite : survivre et rebâtir** | Un compteur total de jours. Si le joueur perd, son score est gardé ; il recommence, en sautant le tutoriel s'il le veut. | idée de l'auteur : environ 1 h de jour et 15 min de nuit (§ 7) |
+| **Chapitre 2 et la suite : survivre et rebâtir** | Le premier habitant arrive : l'accueillir, l'installer, lui donner un rôle. Il faut aussi trouver la clé du phare. Un compteur total de jours ; si le joueur perd, son score est gardé et il recommence (§ 7). | l'horloge de l'île : environ 1 h de jour et 15 min de nuit |
 
 ## 3. La règle d'un jour du tutoriel
 
@@ -45,7 +45,7 @@ explications (règle déjà posée dans `HISTOIRE.md`, § 9).
 | 5 | **Léo** | l'eau | réveiller un PNJ, un souvenir (suivre le ruban du Grimoire), un bâtiment qui produit (Puits) | — | l'eau | codé |
 | 6 | **Maerys** | le bois | explorer (ouvrir un quartier, la brume recule), apprivoiser (un cadeau, l'amitié) | Cueillette | la forêt, les bêtes | **à faire** |
 | 7 | **Robby** | l'abri (l'orage) | faire évoluer un bâtiment (palier II) | Filon | la pierre, les évolutions | **à faire** |
-| 8 | **Maggy** | durer | cultiver, le travail (chacun à son poste), les réserves pour la nuit | Moisson | les cultures | **à faire** |
+| 8 | **Maggy** | durer | cultiver, les rôles (récolteur, artisan, guerrier : § 6), les réserves pour la nuit | Moisson | les cultures | **à faire** |
 
 Le soir du jour 8 : **le conseil**. Les sept et Brume autour du feu ; Léo voit le phare. Fin du chapitre 0.
 
@@ -62,8 +62,8 @@ Le soir du jour 8 : **le conseil**. Les sept et Brume autour du feu ; Léo voit 
   du feu : un cadeau) ; son souvenir, l'Arbre, au Grimoire ; son Bosquet ; la nuit.
 - **Jour 7, Robby** (proposition) : un bruit de ciseau du côté de la Colline, on le trouve ; son souvenir, la Pierre ;
   la Carrière ; faire évoluer l'abri pour tenir l'orage ; la nuit d'orage.
-- **Jour 8, Maggy** (proposition) : une barque de graines s'échoue, on la réveille ; le Potager ; mettre chacun à son
-  poste pour la nuit ; les réserves ; le conseil.
+- **Jour 8, Maggy** (proposition) : une barque de graines s'échoue, on la réveille ; le Potager ; donner un rôle à
+  chacun pour la nuit ; les réserves ; le conseil.
 
 **Préparer le rebondissement** : Maerys et Robby vivent sur l'île depuis des années. Ils savent qu'on ne part pas, et
 ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
@@ -76,9 +76,15 @@ ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
     L'île ne laisse sortir personne.
   - **C, on le comprend** : dans le phare, le journal des Anciens : « Nous aussi, nous voulions partir. » Ils sont
     tous restés, et pas par choix.
-- **La fin du chapitre** : on ne partira pas. Alors on reste, et on tient.
+- **La fin du chapitre** : on ne partira pas. Alors on reste, et on tient. **Le phare n'est pas rallumé** : il est
+  verrouillé par une étrange porte antique. Il faudra trouver la clé (le fil du chapitre 2).
 
-## 6. Ce qui vient plus tard (pas dans le chapitre 0)
+## 6. Les rôles (idée de l'auteur, 26 oct.)
+
+Chaque PNJ reçoit un rôle, parmi trois familles : **récolteur**, **artisan**, **guerrier**. Les rôles s'apprennent au
+jour 8 ; au chapitre 2, le premier habitant reçoit le sien en arrivant.
+
+## 6 bis. Ce qui vient plus tard (pas dans le chapitre 0)
 
 Les armes, améliorer les personnages, les boutiques avancées : après le chapitre 1, une fois les bases en place.
 
@@ -98,25 +104,30 @@ Les armes, améliorer les personnages, les boutiques avancées : après le chapi
 couvre déjà : les matières (jour 2), la nourriture (jour 3), la défense (jour 4), la production (jour 5), l'exploration
 (jour 6), les réserves et le travail (jour 8).
 
+- **Le serveur calcule le temps écoulé** quand le joueur revient (le téléphone n'est pas cru).
+- **Prévenir, puis un délai de grâce**, qui fait partie du jeu (pas un simple minuteur).
+- **Les 7 PNJ principaux peuvent mourir**, plus difficilement que les autres : c'est la négligence qui les achève. Le
+  délai de grâce existe surtout pour eux.
+- **Recommencer** : on garde son look si on veut ; on saute le tutoriel si on veut, et l'on reçoit une caisse de
+  ressources de son choix.
+- **L'horloge** : l'île a sa propre heure (environ 1 h de jour et 15 min de nuit), au lieu de suivre l'heure du
+  téléphone comme aujourd'hui après le tutoriel (`src/world/sky.js`).
+
 ### Encore ouvert
 
-1. **Que garde-t-on en recommençant ?** Le score seul ? Le Grimoire ? Les écus ? Les achats (surtout s'ils sont
-   payants) ?
-2. **L'horloge** : 1 h de jour et 15 min de nuit remplacent-elles l'heure réelle de l'île (le soleil suit aujourd'hui
-   la vraie date, `src/world/sky.js`) ?
-3. **Le phare à la fin du chapitre 1** : est-il rallumé (une lumière qui ne sert pas à partir), ou reste-t-il éteint ?
-4. **Le jour 3** : la barrière passe-t-elle au jour 4 ?
-5. **Prévenir avant de perdre** : comme le temps passe application fermée, le joueur peut revenir sur une partie
-   perdue. Faut-il des alertes (notification « il ne reste qu'un jour de vivres »), ou un délai de grâce avant une
-   mort ?
-6. **Un PNJ mort** : les 7 PNJ principaux peuvent-ils mourir, ou seulement les habitants venus ensuite ?
+1. **Recommencer, le reste** : tout repart-il à zéro, le Grimoire et ses pages écrites compris ?
+2. **Le délai de grâce dans le jeu** : à quoi il ressemble (un PNJ affaibli, puis à bout, puis mort ? Brume qui
+   prévient ?) et combien de temps il dure.
+3. **Les rôles** : le joueur choisit-il librement le rôle de chacun, ou chaque PNJ a-t-il le sien ? Un PNJ est-il
+   meilleur dans un rôle (Nathan artisan, par exemple) ? Change-t-on de rôle ?
+4. **Le jour 3** : il compte 7 quêtes ; déplacer la barrière au jour 4 (avec les torches) l'allégerait.
 
 ## 8. Écarts avec le code actuel (relevés, rien touché)
 
 - Le conseil se joue aujourd'hui après le jour de Léo (le Campement) ; il passe au soir du jour 8.
 - Les mini-jeux Pêche, Filon et Cueillette s'ouvrent au palier III de leur bâtiment, et leurs parties reviennent toutes
   les 2 h réelles (`src/game/minigames.js`) : à revoir pour les apprendre pendant le tutoriel.
-- Le travail (mettre un PNJ à un poste) n'existe pas : chacun travaille seul à son bâtiment
+- Les rôles (récolteur, artisan, guerrier) n'existent pas : chacun travaille seul à son bâtiment
   (`src/world/village/residents.js`).
 - Il n'y a aucune défaite ; les besoins des PNJ (manger, outils, déco) ont des minuteurs de plusieurs heures, côté
   serveur.
