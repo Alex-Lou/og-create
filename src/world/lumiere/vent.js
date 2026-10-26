@@ -47,11 +47,29 @@ export function gustAt(x, y, t) {
   if (band <= 0) return 0;
   return band ** 3 * (0.35 + 0.65 * forceAt(x, y, t));
 }
+// Le souffle qui fait vivre les plantes (choix de l'auteur, 26 oct. : « pas en permanence, mais de temps en temps, très
+// smooth ») : un coup de vent doux toutes les 30 s environ (son départ varie d'un coup à l'autre), qui traverse l'île vers
+// la droite de l'écran en quelques secondes ; chaque plante se couche à peine, puis se redresse ; entre deux, rien ne
+// bouge. 0 à 1 ; 0 au temps 0 (le mouvement réduit fige le temps à 0)
+const SOUFFLE_PERIODE = 30;
+const SOUFFLE_DEPART = 9;
+const SOUFFLE_JEU = 10;
+const SOUFFLE_DUREE = 4;
+// (le temps qu'il met à passer d'une case à la suivante, en travers de l'île : s)
+const SOUFFLE_TRAVERSEE = 0.05;
+const hasard = k => { const s = Math.sin(k * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+export function souffleAt(x, y, t) {
+  const ici = t - (x - y) * SOUFFLE_TRAVERSEE;
+  const k = Math.floor(ici / SOUFFLE_PERIODE);
+  const u = (ici - k * SOUFFLE_PERIODE - SOUFFLE_DEPART - SOUFFLE_JEU * hasard(k)) / SOUFFLE_DUREE;
+  if (u <= 0 || u >= 1) return 0;
+  return Math.sin(Math.PI * u) ** 2 * (0.75 + 0.25 * forceAt(x, y, t));
+}
 // La force du vent selon le temps : il forcit sous la pluie, plus encore dans l'orage (au plus le double)
 export const windStrength = weather => Math.min(2, 1 + 0.5 * ((weather && weather.rain) || 0) + 1.1 * ((weather && weather.storm) || 0));
 
-// Les feuilles qu'une rafale arrache à un arbre (de près seulement) : quelques-unes, chacune née au passage d'une
-// rafale, qui file avec le vent en tombant et en tournoyant. (wx, wy) : le pied de l'arbre dans le monde, (x, y) sa
+// Les feuilles qu'un souffle arrache à un arbre (de près seulement) : quelques-unes, chacune née au passage d'un
+// souffle (souffleAt), qui file avec le vent en tombant et en tournoyant. (wx, wy) : le pied de l'arbre dans le monde, (x, y) sa
 // case, t le temps, h la hauteur de sa ramure ; [{ x, y, a, rot, tone }] en unités du monde. Rien entre deux rafales
 const LEAF_LIFE = 2.6;
 export function leavesOf(wx, wy, x, y, t, h = 46, count = 4) {
@@ -63,7 +81,7 @@ export function leavesOf(wx, wy, x, y, t, h = 46, count = 4) {
     const age = clock - Math.floor(clock);
     // (une feuille ne part que si la rafale soufflait fort quand elle est née)
     const born = t - age * LEAF_LIFE;
-    const push = gustAt(x, y, born);
+    const push = souffleAt(x, y, born);
     if (push < 0.35) continue;
     const run = (26 + 18 * r(2)) * age * (0.6 + push);
     const fall = (h * 0.8) * age * age + Math.sin(age * Math.PI * 3 + r(3) * 6) * 3;

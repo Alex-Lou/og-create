@@ -1,7 +1,7 @@
 // Éclairage de l'île, seul point d'entrée du dossier. Dans l'ordre où la scène s'en sert (view/draw/loop.js) :
 // vent sur l'herbe, ombres portées, carte de lumière, heure dorée, éclair et tonnerre, arc-en-ciel, pluie, étalonnage, ambiance (rayons, éclats),
 // halos ; les ciels rares (l'aurore sur les sommets, le halo de lune sur la mer).
-export { drawSheen, sheenAt, herbMask, gustAt, windStrength, leavesOf, leafTones, drawLeaves, LEAFY } from './vent';
+export { drawSheen, sheenAt, herbMask, gustAt, souffleAt, windStrength, leavesOf, leafTones, drawLeaves, LEAFY } from './vent';
 export { shadowLight, drawShadows, shadowTint, moonOf, PLACE_LUNE } from './ombres';
 export { drawLightmap, ambientOf, flashTint } from './carte';
 export { eclairAt, drawEclair, eclairRimOf, foudreAt } from './eclairs';

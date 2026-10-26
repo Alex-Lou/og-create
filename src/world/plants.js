@@ -32,6 +32,9 @@ export const JUNGLE_FX = new Set(['ravenala', 'alocasia']);
 // Ce qui luit la nuit : la jungle (ses nervures, ses fleurs) ; ses lueurs sont le dessin « <variante>_nuit », que le
 // jeu allume à mesure que la nuit tombe (draw/nature.js, drawLueursJungle)
 export const JUNGLE_KINDS = new Set(['banana', 'monstera', 'treefern', 'heliconia', 'croton', 'caladium', 'kapok', 'bromelia', 'fiddlehead', 'orchid', 'ravenala', 'alocasia']);
+// Les grandes plantes de la jungle : dessinées à part, elles plient au souffle qui passe (choix de l'auteur, 26 oct. :
+// « faire vivre un peu le jeu ») ; les petites, si nombreuses, restent cuites dans le sol (WorldView/serve.js : still)
+export const JUNGLE_GRANDES = new Set(['banana', 'kapok', 'ravenala']);
 const GLOWS = JUNGLE_KINDS;
 // Les dessins de nuit (« champignons_bruns_nuit ») sont d'un autre moment, pas des variantes : ils ne se tirent pas
 const NIGHT = /(^|_)nuit(_|$)/;
