@@ -82,19 +82,34 @@ ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
 
 Les armes, améliorer les personnages, les boutiques avancées : après le chapitre 1, une fois les bases en place.
 
-## 7. Questions ouvertes (à trancher par l'auteur avant tout code)
+## 7. La survie : décisions et questions ouvertes
 
-1. **Qu'est-ce qui fait perdre ?** La faim du groupe, le feu éteint, le camp envahi la nuit, des PNJ qui partent ou
-   meurent ? Avec le ton faussement choupi, montre-t-on la mort ? (La bible disait « jamais punitif, rien n'est
-   perdu » : cette règle tombe-t-elle ?)
-2. **Le temps passe-t-il quand l'application est fermée ?** Si oui, on peut perdre sans jouer. Si non, la survie
-   attend le joueur.
-3. **Que garde-t-on en recommençant ?** Le score seul ? Le Grimoire ? Les écus ? Les achats (surtout s'ils sont
+### Décidé (choix de l'auteur, 26 oct.) : pour la fin du jeu, pas pour le tutoriel
+
+- **On perd** quand :
+  - les ressources manquent et plus rien ne produit ;
+  - **plus de 3 PNJ sont morts**.
+- **Le temps passe quand l'application est fermée** : le joueur laisse une vie tourner. Les PNJ vivent, doivent
+  manger (il faut de quoi), et le camp doit avoir de quoi se défendre.
+- **Les expéditions sont un risque** : envoyer des PNJ trop loin sans assez de ressources ni d'armes peut mal finir.
+- La règle de la bible « jamais punitif, rien n'est perdu » ne vaut plus pour cette partie du jeu.
+
+**Ce que ça veut dire pour le tutoriel** : il doit avoir appris tout ce qui garde en vie. Le tableau du § 4 le
+couvre déjà : les matières (jour 2), la nourriture (jour 3), la défense (jour 4), la production (jour 5), l'exploration
+(jour 6), les réserves et le travail (jour 8).
+
+### Encore ouvert
+
+1. **Que garde-t-on en recommençant ?** Le score seul ? Le Grimoire ? Les écus ? Les achats (surtout s'ils sont
    payants) ?
-4. **L'horloge** : 1 h de jour et 15 min de nuit remplacent-elles l'heure réelle de l'île (le soleil suit aujourd'hui
+2. **L'horloge** : 1 h de jour et 15 min de nuit remplacent-elles l'heure réelle de l'île (le soleil suit aujourd'hui
    la vraie date, `src/world/sky.js`) ?
-5. **Le phare à la fin du chapitre 1** : est-il rallumé (une lumière qui ne sert pas à partir), ou reste-t-il éteint ?
-6. **Le jour 3** : la barrière passe-t-elle au jour 4 ?
+3. **Le phare à la fin du chapitre 1** : est-il rallumé (une lumière qui ne sert pas à partir), ou reste-t-il éteint ?
+4. **Le jour 3** : la barrière passe-t-elle au jour 4 ?
+5. **Prévenir avant de perdre** : comme le temps passe application fermée, le joueur peut revenir sur une partie
+   perdue. Faut-il des alertes (notification « il ne reste qu'un jour de vivres »), ou un délai de grâce avant une
+   mort ?
+6. **Un PNJ mort** : les 7 PNJ principaux peuvent-ils mourir, ou seulement les habitants venus ensuite ?
 
 ## 8. Écarts avec le code actuel (relevés, rien touché)
 
