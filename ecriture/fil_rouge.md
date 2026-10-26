@@ -86,8 +86,8 @@ jour 8 ; au chapitre 2, le premier habitant reçoit le sien en arrivant.
 
 - **Les habitants** (dès le chapitre 2) : le joueur choisit librement leur rôle ; chacun a un bonus dans son rôle
   naturel (choix de l'auteur).
-- **Les 7 PNJ principaux** ont déjà leur rôle, varié, qui suit ce qu'ils enseignent au tutoriel. Proposition (3
-  récolteurs, 2 artisans, 2 guerriers), à valider :
+- **Les 7 PNJ principaux** ont déjà leur rôle, varié, qui suit ce qu'ils enseignent au tutoriel, et **fixe pour toute
+  la partie** (3 récolteurs, 2 artisans, 2 guerriers ; validé par l'auteur, 26 oct.) :
 
 | PNJ | Rôle | Pourquoi (son jour du tutoriel) |
 |---|---|---|
@@ -136,8 +136,7 @@ couvre déjà : les matières (jour 2), la nourriture (jour 3), la défense (jou
 1. **Recommencer, le reste** : tout repart-il à zéro, le Grimoire et ses pages écrites compris ?
 2. **Le délai de grâce dans le jeu** : à quoi il ressemble (un PNJ affaibli, puis à bout, puis mort ? Brume qui
    prévient ?) et combien de temps il dure.
-3. **Les rôles des 7 PNJ principaux** : valider le tableau du § 6. Leur rôle est-il fixe pour toute la partie ?
-4. **Le jour 3** : il compte 7 quêtes ; déplacer la barrière au jour 4 (avec les torches) l'allégerait.
+3. **Le jour 3** : il compte 7 quêtes ; déplacer la barrière au jour 4 (avec les torches) l'allégerait.
 
 ## 8. Écarts avec le code actuel (relevés, rien touché)
 
