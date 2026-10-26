@@ -94,6 +94,8 @@ const ravivee = svg => svg.replace(/(?<!url\()(?<!href=")#(?:[0-9a-fA-F]{6}|[0-9
 const LUMIERES = {
   couchant: { ambiance: '#2A0A5A', eclat: '#FF7AB0', lisere: '#FFA8D0', force: 1.1 },
   nuit: { ambiance: '#140A48', eclat: '#7AB8FF', lisere: '#7AF8EE', force: 1.3 },
+  // (Brume, froide et pâle : la rencontre, le livre, le Vent ; choix de l'auteur, 25 oct.)
+  brume: { ambiance: '#1A1050', eclat: '#B8F4FF', lisere: '#C8FFF8', force: 1 },
   matin: { ambiance: '#3A1A6A', eclat: '#FFC8D8', lisere: '#FFD8E8' },
   feu: { ambiance: '#1A0A40', eclat: '#FF9A40', lisere: '#FFB070', force: 1.15 },
   jour: { ambiance: '#3A2A7A', eclat: '#FFE8F4', lisere: '#B8FFF4', force: 0.7 }

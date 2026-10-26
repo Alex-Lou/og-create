@@ -241,23 +241,6 @@ S('03_vent', {
   },
   avatar: { x: 200, y: 364, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true }
 });
-// Étape 5d — Brume souffle, le feu prend, la brume recule d'un cercle ; l'avatar tend les mains vers les flammes
-S('05_feu', {
-  titre: 'Le feu prend', etapes: ['5d'], images: 4, ms: 300,
-  fond: f => ciel('fe', NUIT, 240) + mer(180, 240, f) + epave(330, 204, 0.6, 0.6) + sable(240)
-    + nappe(234, 0.28 - f * 0.06, f) + nappe(304, 0.24 - f * 0.06, -f, 1.2)
-    + feu(222, 334, 1.8, f, [0, 1, 2, 2][f]) + brume(270 - f * 4, 300, 1.8, f, f > 1 ? 'content' : 'neutre'),
-  avatar: { x: 118, y: 368, echelle: 3.3, vue: 'avant', pose: 'repos', naufrage: true }
-});
-// Étape 6h — la nuit autour du feu ; au loin, sur les rochers, une silhouette regarde la lueur
-S('06_silhouette', {
-  titre: 'Une silhouette sur les rochers', etapes: ['6h'], images: 3, ms: 300,
-  fond: f => ciel('si', NUIT, 230) + etoiles(ETOILES.slice(0, 6), f) + mer(170, 230, f) + nappe(200, 0.2, f) + sable(230) + rocher(270, 236, 120, 70)
-    + P('M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z', '#0C101C', 0) + E(340, 124, 5.6, 6.2, '#0C101C', 0)
-    + trait('M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4', 'rgba(255,190,120,.6)', 1.2)
-    + feu(176, 336, 1.6, f) + brume(226, 300, 1.5, f, 'surpris'),
-  avatar: { x: 96, y: 388, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true }
-});
 // Étape 7a — l'aube ; Cannelle (naufragée, la couverture de pont sur les épaules) sort de la brume
 S('07_cannelle', {
   titre: 'Cannelle sort de la brume', etapes: ['7a'], images: 4, ms: 260,
@@ -526,9 +509,6 @@ for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, t
   SCENES[id] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1000, fond: a.fond, devant: a.devant };
   if (!a.devant) delete SCENES[id].devant;
 }
-// La première nuit sur la plage (audit ambiance, 15 oct.) : l'avatar, posé par le jeu, prend la lumière du feu et la
-// nuit par un calque devant, comme à la veillée
-for (const [id, feu] of [['05_feu', [222, 334]], ['06_silhouette', [176, 336]]]) SCENES[id].devant = () => devantAvatar(`${id.slice(3, 6)}a`, SCENES[id].avatar, feu);
 
 // Les images nouvelles de l'ouverture (ouverture.js ; demande de l'auteur du 15 oct.), en animation continue, chacune
 // rangée à sa place dans l'ordre du récit : [identifiant, après quelle scène, titre, étapes, dessin, avatar] (sans
@@ -548,6 +528,7 @@ const OUVERTURE = [
   ['03_nuit', '03_vent', 'La nuit tombe, froide ; Brume l’emmène vers le vieux cercle', ['3'], null, APRES_VENT],
   ['05_cercle', '03_vent', 'Le vieux cercle de pierres dans l’herbe ; ceux d’avant reviennent un instant', ['5'], null, AU_CERCLE],
   ['05_promesse', '03_vent', 'Au cercle, le Brasier écrit : l’épave promise ; Brume ne retient plus sa brume', ['5'], null, AU_CERCLE],
+  ['05_feu', '03_vent', 'Le feu prend au vieux cercle ; près de lui, Brume n’a plus froid', ['5d'], null, AU_CERCLE],
   ['10_epave', '09_rivet', 'Le premier matin : l’épave contre les rochers ; au loin, quelqu’un nage', ['10'], null, null]
 ];
 {
@@ -580,7 +561,7 @@ const NN = require('./neon_naufrage');
 const NR = require('./neon_reveil');
 const NJ = require('./neon_jeu');
 const GC = require('./gravure_cercle');
-for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
+for (const [id, scene] of [['00_tampon', NR.tampon00], ['01_pont', NN.naufrage], ['01_paupieres', NR.paupieres01], ['01_greve', NR.greve01], ['01_carte', NR.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02], ['03_livre', GV.livre03], ['03_vent', GV.vent03], ['03_trouee', GV.trouee03], ['03_ciel', GV.ciel03], ['03_nuit', GV.nuit03], ['05_cercle', GC.cercle05], ['05_promesse', GC.promesse05], ['05_feu', GC.feu05], ['10_epave', GL.epave10], ['10_aster', GL.aster10]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }
@@ -599,8 +580,7 @@ S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme 
 // (Infinity : le feu pris, le livre sur le sable…).
 // Ailleurs, les marques s'effacent : ces scènes ne changent pas d'un octet
 const FIGEES = {
-  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity,
-  '05_feu': Infinity, '06_silhouette': Infinity
+  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity
 };
 for (const [id, sc] of Object.entries(SCENES)) {
   // (une scène en plans n'a ni fond ni devant : ses plans sont déjà séparés, figés, et son calque anime à part)
@@ -618,7 +598,7 @@ for (const [id, sc] of Object.entries(SCENES)) {
 // néon sous l'avatar, l'avatar rendu en néon (game/acteur.js : gravee)
 // (leurs personnages y sont dessinés avec le décor : leurs couleurs gardent leur teinte, ravivées, comme celles de l'avatar)
 // (la lumière sur l'avatar : [laquelle, d'où elle vient (1 : de la gauche, -1 : de la droite, le feu)])
-const NEON_FIXES = { '05_feu': ['feu', -1], '06_silhouette': ['nuit', 1], '07_cannelle': ['jour', 1], '07_souvenir': ['jour', 1], '09_rivet': ['jour', 1], '11_ondin': ['jour', 1], '11_reveil': ['jour', 1], '12_veillee': ['feu', -1], '12_habits': ['feu', -1], '30_phare_porte': ['nuit', 1] };
+const NEON_FIXES = { '07_cannelle': ['jour', 1], '07_souvenir': ['jour', 1], '09_rivet': ['jour', 1], '11_ondin': ['jour', 1], '11_reveil': ['jour', 1], '12_veillee': ['feu', -1], '12_habits': ['feu', -1], '30_phare_porte': ['nuit', 1] };
 for (const [id, [lumiere, cote]] of Object.entries(NEON_FIXES)) {
   const sc = SCENES[id], { fond, anime, devant } = sc, n0 = `nf${id.replace(/\W/g, '')}`;
   sc.fond = n => NR.ravivee(fond(n)) + NN.vignette(`${n0}${n}`);

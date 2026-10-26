@@ -357,18 +357,6 @@ module.exports = function scenesAnimees(H) {
       return s + [0, 1, 2].map(i => `<g>${defile('-200 0', '460 0', 2.2, i * 0.7)}${trait(`M0,${110 + i * 60} q60,-16 120,0 q30,8 60,-6`, 'rgb(230,240,250)', 3, 'opacity=".55"')}</g>`).join('');
     }
   };
-  // ===== 5d — le feu prend ; la brume recule ; l'avatar tend les mains =====
-  S['05_feu'] = {
-    fond: () => ciel('feC', NUIT.ciel, 240) + etoiles(40, 170, 9, true) + lune('feL', 70, 64) + mer('feM', 176, 242, NUIT.mer) + reflet(70, 184) + epave(330, 202, 0.6, 0.55) + sable('feS', 240)
-      + `<g>${uneFois('scale', '1 1;1.12 1', '0;1', 2.4)}${nappe(232, 0.22, 16, 34)}${nappe(302, 0.16, 21, 26)}</g>` + feu('feF', 222, 334, 1.8, true) + brume('feB', 270, 300, 1.8, 'content')
-  };
-  // ===== 6h — la nuit autour du feu ; au loin, sur les rochers, une silhouette regarde la lueur =====
-  S['06_silhouette'] = {
-    fond: () => ciel('siC', NUIT.ciel, 230) + etoiles(30, 160, 161, true) + mer('siM', 170, 230, NUIT.mer) + nappe(200, 0.2, 16) + sable('siS', 230) + rocher('siR', 270, 236, 120, 70)
-      + `<g>${vaVient('translate', '0 0', '0 -0.8', 4)}${P('M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z', '#0C101C', 0)}${E(340, 124, 5.6, 6.2, '#0C101C', 0)}</g>`
-      + vif(`<g>${palpite('opacity', '0.4;0.8;0.5;0.75;0.4', 1.3)}${trait('M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4', 'rgb(255,190,120)', 1.2)}</g>`)
-      + feu('siF', 176, 336, 1.6) + brume('siB', 226, 300, 1.5, 'surpris')
-  };
   return S;
 };
 

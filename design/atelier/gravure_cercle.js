@@ -171,4 +171,49 @@ function promesse05() {
   return V.fin(plans, temps, V.NUIT, { brume: [3000, { y: -4 }], navire: [2600, { y: -1, r: 2 }] });
 }
 
-module.exports = { cercle05, promesse05 };
+// ——— 05_feu : le feu prend au vieux cercle, dans l'herbe ; Brume, tout près, n'a plus froid ; « Brumelune » ; une étoile
+// file, Brume détourne les yeux. Au même endroit que 05_cercle et 05_promesse (il était sur la plage : retour de
+// l'auteur, 25 oct.) ———
+// (le feu pris : trois bûches croisées, de hautes flammes orange, des braises ; sa chaleur : une lueur qui bat autour de
+// lui, et sur l'herbe)
+const FEU_CADRE = [176, 222, 120, 104];
+function feuPris(p) {
+  const A = atelier(`${p}f`), [x, y] = C0;
+  let s = [[-26, 4, 22, -6], [-20, 6, 24, 2], [-4, 8, 4, -2]].map(([x0, y0, x1, y1]) => trait(`M${x + x0},${y + y0} L${x + x1},${y + y1}`, 7, ENCRE) + trait(`M${x + x0},${y + y0} L${x + x1},${y + y1}`, 4.4, '#6E4026')).join('');
+  const ext = A.lin([[0, '#FFD860'], [0.5, '#FF9A30'], [1, '#E0501E']], 0, y - 90, 0, y);
+  for (const [dx, r, sway] of [[-20, 15, -5], [18, 14, 6], [0, 24, 2]]) s += `<path d="${flamePath(x + dx, y - r, r, sway)}" fill="${ext}" stroke="${ENCRE}" stroke-width="2.2" stroke-linejoin="round"/><path d="${flamePath(x + dx, y - r * 0.7, r * 0.5, sway * 0.6)}" fill="#FFF2B8" stroke="${ENCRE}" stroke-width="1" stroke-linejoin="round"/>`;
+  s += [[-12, -2], [10, 0], [2, 4], [-24, 6], [22, 5]].map(([dx, dy], k) => `<circle cx="${x + dx}" cy="${y + dy}" r="${1.6 + (k % 2)}" fill="#FFB040" stroke="${ENCRE}" stroke-width="0.6"/>`).join('');
+  return A.out(s);
+}
+const chaleur = p => { const A = atelier(`${p}h`), [x, y] = C0; return A.out(`<ellipse cx="${x}" cy="${y - 24}" rx="210" ry="170" fill="${A.rad([[0, '#FFB060', 0.42], [0.4, '#FF8A40', 0.16], [1, '#FF8A40', 0]], x, y - 24, 210)}"/><ellipse cx="${x}" cy="${y + 6}" rx="120" ry="34" fill="${A.rad([[0, '#FFC070', 0.5], [1, '#FFC070', 0]], x, y + 6, 120)}"/>`); };
+// (la lumière qui le grave : le feu, à sa droite)
+const FEU = { teinte: '#2A140A', force: 0.24, cote: -1 };
+// (Brume, à droite du feu ; lui, là où 05_cercle l'a laissé)
+const PRES_DU_FEU = { x: 44, y: 22, s: 1 }, PRES_DU_CERCLE = { x: 26, y: -6, s: 0.98 };
+function feu05() {
+  const p = 'fe', D0 = 4600;
+  const plans = decorCercle(p, [{ id: 'feu', profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: () => feuPris(p) }]);
+  plans.splice(plans.findIndex(q => q && q.id === 'teinte'), 0, { id: 'chaleur', profondeur: 0, marge: MARGE, dessin: () => chaleur(p) });
+  plans.splice(plans.findIndex(q => q && q.id === 'etoiles') + 1, 0, { id: 'filante', profondeur: 0.1, cadre: [130, 0, 160, 70], pivot: [268, 22], dessin: () => V.filante(p) });
+  // (le feu danse, sa lueur bat, à leur rythme ; l'étoile attend la légende ; Brume et lui, près du feu)
+  const vivant = D => ({ feu: balance(0, D, 380, k => ({ s: k % 2 ? 1.05 : 0.97, o: 1 })), chaleur: balance(0, D, 520, k => ({ o: k % 2 ? 1 : 0.8 })) });
+  const cachee = D => ({ filante: [[0, { o: 0 }], [D, { o: 0 }]] });
+  const ici = D => ({ brume: [[0, PRES_DU_FEU], [D, PRES_DU_FEU]], avatar: [[0, PRES_DU_CERCLE], [D, PRES_DU_CERCLE]] });
+  const REPOS = R.joue([0, 'repos', 'bas_droite']);
+  // « Je n'ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n'ai pas froid. »
+  const t0 = { ...unTemps(D0, [[0, LARGE], [D0, { ...SUR_CERCLE, e: 'ease-in-out' }]], { ...nuitFixe(plans.filter(Boolean), D0), ...vivant(D0), ...cachee(D0), ...ici(D0) }), acteur: REPOS, jeux: { brume: V.B([0, 'content']) } };
+  const temps = V.repliques(t0, [
+    // « Le feu tient. Pour cette nuit, ce cercle suffira. »
+    [4600, SUR_AVATAR, REPOS, V.B([0, 'content']), { ...vivant(4600), ...cachee(4600), ...ici(4600) }],
+    // « Brumelune. C'est ainsi qu'ils appelaient l'île, ceux d'avant. »
+    [5000, SUR_BRUME, REPOS, V.B([0, 'content'], [2600, 'triste']), { ...vivant(5000), ...cachee(5000), ...ici(5000) }],
+    // une étoile file ; Brume détourne les yeux
+    [3000, LARGE, REPOS, V.B([0, 'triste'], [1300, 'gene']), { ...vivant(3000), ...ici(3000), filante: [[0, { x: 60, y: -16, o: 0 }], [500, { x: 60, y: -16, o: 0, e: 'linear' }], [600, { x: 52, y: -14, o: 1, e: 'linear' }], [1600, { x: -40, y: 12, o: 1 }], [2000, { x: -56, y: 16, o: 0 }], [3000, { x: -56, y: 16, o: 0 }]] }],
+    // « Dors : je veille sur nous. » : elle revient vers lui ; on s'approche du feu
+    [4200, SUR_CERCLE, REPOS, V.B([0, 'gene'], [700, 'content']), { ...vivant(4200), ...cachee(4200), ...ici(4200) }]
+  ]);
+  plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
+  return V.fin(plans, temps, FEU, { brume: [3000, { y: -4 }] });
+}
+
+module.exports = { cercle05, promesse05, feu05 };

@@ -45,8 +45,10 @@ export function prochain(acteur, t, anims) {
 // En néon (choix de l'auteur, 18 oct. : tout le jeu en papier néon, l'avatar du joueur aussi, quel qu'il soit ; puis
 // « davantage de fondu et d'harmonie entre l'avatar et l'environnement ») : ses propres couleurs ravivées, le cerne
 // indigo, et la lumière de la scène posée sur lui comme sur le décor : son côté ombre plonge dans l'ambiance (ambiance),
-// son côté éclairé prend la couleur de la source (eclat : le couchant, la lune, le feu), ses pieds s'enfoncent dans
-// l'ambiance ; un liseré de lumière (lisere), son halo, du côté éclairé ; pas de hachures (force : l'intensité, 1)
+// son côté éclairé prend la couleur de la source (eclat : le couchant, la lune, Brume, le feu), ses pieds s'enfoncent
+// dans l'ambiance ; un liseré de lumière fin (lisere), du côté éclairé ; pas de hachures (force : l'intensité, 1).
+// Une lumière juste et égale, sans projecteur (retour de l'auteur, 25 oct. : un liseré épais et son halo d'un côté, le
+// corps éteint de l'autre) : une ombre légère, un liseré d'un demi-trait, sans halo
 export function gravee(corps, uid, { teinte = '#2A2448', force = 0.2, cote = 1, neon = false, ambiance = '#2A0A5A', eclat = '#FF8AC0', lisere = NEON_LISERE } = {}) {
   if (neon) return graveeNeon(corps, uid, { cote, force, ambiance, eclat, lisere });
   const hach = Array.from({ length: 34 }, (_, k) => `M${-16 + k * 2},68 l36,-76`).join(' ');
@@ -60,19 +62,20 @@ export function gravee(corps, uid, { teinte = '#2A2448', force = 0.2, cote = 1, 
     + `<g mask="url(#k${uid})"><rect width="48" height="64" fill="${teinte}" opacity="${force}"/><g mask="url(#h${uid})"><path d="${hach}" fill="none" stroke="${ENCRE}" stroke-width="0.45" opacity="0.8"/></g></g></svg>`;
 }
 function graveeNeon(corps, uid, { cote, force, ambiance, eclat, lisere }) {
-  const f = Math.max(0, force), dx = -Math.sign(cote || 1) * 1.3;
-  // (du côté éclairé au côté ombre, en travers et un peu vers le bas)
-  const [x1, x2] = cote > 0 ? [0, 1] : [1, 0];
+  const f = Math.max(0, force), dx = -Math.sign(cote || 1) * 0.5;
+  // (du côté éclairé au côté ombre, en travers du corps, pas du cadre : sinon la bascule tombait au milieu de lui, une
+  // moitié éclairée, l'autre éteinte)
+  const [x1, x2] = cote > 0 ? [12, 36] : [36, 12];
   const op = v => Math.min(1, v * f).toFixed(3);
   return '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">'
     + `<style>.c${uid} *{fill:${NEON_ENCRE}!important;stroke:${NEON_ENCRE}!important;stroke-width:2.4px!important}.m${uid} *{fill:#fff!important;stroke:#fff!important}`
-    + `.l${uid} *{fill:${lisere}!important;stroke:${lisere}!important;stroke-width:2.4px!important}.h${uid} *{fill:${lisere}!important;stroke:${lisere}!important;stroke-width:5px!important}</style>`
+    + `.l${uid} *{fill:${lisere}!important;stroke:${lisere}!important;stroke-width:2.4px!important}</style>`
     + `<defs><mask id="k${uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="64"><g class="m${uid}">${corps}</g></mask>`
-    + `<linearGradient id="t${uid}" x1="${x1}" y1="0.1" x2="${x2}" y2="0.5"><stop offset="0" stop-color="${eclat}" stop-opacity="${op(0.32)}"/><stop offset="0.42" stop-color="${eclat}" stop-opacity="0"/><stop offset="0.52" stop-color="${ambiance}" stop-opacity="${op(0.12)}"/><stop offset="1" stop-color="${ambiance}" stop-opacity="${op(0.62)}"/></linearGradient>`
-    + `<linearGradient id="b${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0.55" stop-color="${ambiance}" stop-opacity="0"/><stop offset="1" stop-color="${ambiance}" stop-opacity="${op(0.5)}"/></linearGradient></defs>`
-    + `<g class="h${uid}" opacity="0.28" transform="translate(${dx} -0.5)">${corps}</g><g class="l${uid}" transform="translate(${dx} -0.5)">${corps}</g>`
+    + `<linearGradient id="t${uid}" gradientUnits="userSpaceOnUse" x1="${x1}" y1="20" x2="${x2}" y2="34"><stop offset="0" stop-color="${eclat}" stop-opacity="${op(0.16)}"/><stop offset="0.5" stop-color="${eclat}" stop-opacity="0"/><stop offset="0.5" stop-color="${ambiance}" stop-opacity="0"/><stop offset="1" stop-color="${ambiance}" stop-opacity="${op(0.26)}"/></linearGradient>`
+    + `<linearGradient id="b${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0.7" stop-color="${ambiance}" stop-opacity="0"/><stop offset="1" stop-color="${ambiance}" stop-opacity="${op(0.3)}"/></linearGradient></defs>`
+    + `<g class="l${uid}" opacity="0.8" transform="translate(${dx} -0.2)">${corps}</g>`
     + `<g class="c${uid}">${corps}</g>${enNeon(corps)}`
-    + `<g mask="url(#k${uid})"><rect width="48" height="64" fill="${ambiance}" opacity="${op(0.18)}"/><rect width="48" height="64" fill="url(#t${uid})"/><rect width="48" height="64" fill="url(#b${uid})"/></g></svg>`;
+    + `<g mask="url(#k${uid})"><rect width="48" height="64" fill="${ambiance}" opacity="${op(0.08)}"/><rect width="48" height="64" fill="url(#t${uid})"/><rect width="48" height="64" fill="url(#b${uid})"/></g></svg>`;
 }
 
 // ——— le néon ———
