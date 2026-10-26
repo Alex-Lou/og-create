@@ -45,7 +45,7 @@ explications (règle déjà posée dans `HISTOIRE.md`, § 9).
 | 5 | **Léo** | l'eau | réveiller un PNJ, un souvenir (suivre le ruban du Grimoire), un bâtiment qui produit (Puits) | — | l'eau | codé |
 | 6 | **Maerys** | le bois | explorer (ouvrir un quartier, la brume recule), apprivoiser (un cadeau, l'amitié) | Cueillette | la forêt, les bêtes | **à faire** |
 | 7 | **Robby** | l'abri (l'orage) | faire évoluer un bâtiment (palier II) | Filon | la pierre, les évolutions | **à faire** |
-| 8 | **Maggy** | durer | cultiver, les rôles (récolteur, artisan, guerrier : § 6), les réserves pour la nuit | Moisson | les cultures | **à faire** |
+| 8 | **Maggy** | durer | cultiver, les rôles (récolteur, artisan, guerrier : § 6), les réserves pour la nuit | — | les cultures | **à faire** |
 
 Le soir du jour 8 : **le conseil**. Les sept et Brume autour du feu ; Léo voit le phare. Fin du chapitre 0.
 
@@ -58,12 +58,59 @@ Le soir du jour 8 : **le conseil**. Les sept et Brume autour du feu ; Léo voit 
 - **Jour 4, Nathan** (`deco`, `torches-rivet`, `barriere`, `outil-rivet`, `nuit-rivet`) : le jour de la nuit et des
   défenses qu'on fabrique.
 - **Jour 5, Léo** (`eveil-ondin`, `souvenir-ondin`, `puits-ondin`, `chemin`).
-- **Jour 6, Maerys** (proposition) : suivre une lueur dans les arbres (explorer La Lisière) ; l'apprivoiser (elle a peur
-  du feu : un cadeau) ; son souvenir, l'Arbre, au Grimoire ; son Bosquet ; la nuit.
-- **Jour 7, Robby** (proposition) : un bruit de ciseau du côté de la Colline, on le trouve ; son souvenir, la Pierre ;
-  la Carrière ; faire évoluer l'abri pour tenir l'orage ; la nuit d'orage.
-- **Jour 8, Maggy** (proposition) : une barque de graines s'échoue, on la réveille ; le Potager ; donner un rôle à
-  chacun pour la nuit ; les réserves ; le conseil.
+- **Jours 6 à 8** : le détail, quête par quête, est au § 4 bis.
+
+## 4 bis. Les jours 6 à 8, quête par quête (proposition, 26 oct.)
+
+Ce qui existe déjà est repris : les arrivées de Brume (`ecriture/lots/04_maitres.md`, § 1), les souvenirs
+`souvenir-sylve`, `souvenir-galet` et `eveil-melisse` (`src/texts/story.js`), les plans et les prix des bâtiments
+(`HISTOIRE.md`, § 1.3), les nuits et le toucher qui repousse un égaré (`WorldView/nights.js`). Les répliques nouvelles
+sont « à écrire » : seule leur intention est donnée ici.
+
+**La montée du Grimoire** : le jour 5 apprend le ruban sur une page (la Pluie) ; le jour 6 en demande trois, le jour 7
+quatre. Le jour 8 n'en demande aucune : c'est le jour des règles de la survie.
+
+### Jour 6, Maerys : le bois (5 quêtes)
+
+| # | Quête | Ce qu'on fait | Mécanique apprise | Ce qu'elle sert ensuite |
+|---|---|---|---|---|
+| 1 | **La lueur** | Brume voit une lueur entre les arbres ; la queue rousse de Mousse guide jusqu'à La Lisière, qu'on ouvre. | explorer : ouvrir un quartier, la brume recule | agrandir l'île ; plus tard, les expéditions |
+| 2 | **Apprivoiser Maerys** | Elle se cache, elle a peur du feu. On lui offre ce qu'elle aime. Elle s'approche : l'Athanor gagne sa 4e place (règle existante). | les cadeaux, l'amitié | le moral des PNJ, donc leur production et leur résistance |
+| 3 | **Son souvenir : l'Arbre** | Vie (Air + Eau + Feu + Terre, la 4e place sert tout de suite), Plante, Arbre. | suivre le ruban sur plusieurs pages ; une recette à 4 éléments | toutes les longues chaînes du Grimoire |
+| 4 | **Le Bosquet** | Le bâtir (plan Arbre, 5 pierres), puis **une partie de Cueillette offerte et guidée**. | un bâtiment de récolteur ; un mini-jeu de bâtiment | le bois, en continu |
+| 5 | **La nuit** | Maerys dort à la lisière, pas au feu. | — | — |
+
+À préparer : quand quelqu'un parle de partir, Maerys se tait, ou elle rit. *(à écrire)*
+
+### Jour 7, Robby : l'abri avant l'orage (5 quêtes)
+
+| # | Quête | Ce qu'on fait | Mécanique apprise | Ce qu'elle sert ensuite |
+|---|---|---|---|---|
+| 1 | **Le bruit de ciseau** | Brume l'entend du côté de la Colline ; on y va, on le trouve. Il dit « Hm. », Brume traduit. | bavarder (le minimum avec lui) | les Savoirs, les cœurs |
+| 2 | **Son souvenir : la Pierre** | Lave (Feu + Terre), puis Pierre (Air + Lave). | le ruban, sans aide | — |
+| 3 | **La Carrière** | La bâtir (plan Pierre, 5 bois), puis **une partie de Filon offerte et guidée**. | un deuxième mini-jeu de bâtiment | la pierre, en continu |
+| 4 | **L'Abri avant l'orage** | Le Foyer passe au palier II (l'Abri : plan Bois = Arbre + Métal, Métal = Feu + Pierre ; 20 bois, 10 pierres). | **faire évoluer** un bâtiment : un plan plus des ressources | toutes les évolutions du jeu |
+| 5 | **La nuit d'orage : la garde** | Les égarés sortent de la brume. Robby et Maerys tiennent le camp ; le joueur en repousse d'un toucher. | **la défense active** ; les guerriers | les nuits de la survie |
+
+À préparer : Robby, devant la mer, dit « Hm. » ; Brume ne traduit pas. *(à écrire)*
+
+### Jour 8, Maggy : durer (5 quêtes, sans mini-jeu)
+
+| # | Quête | Ce qu'on fait | Mécanique apprise | Ce qu'elle sert ensuite |
+|---|---|---|---|---|
+| 1 | **La barque de graines** | Une barque s'est brisée au nord ; Maggy dort sur sa boîte en fer. On la réveille : la Plante est déjà écrite, elle se souvient tout de suite (`eveil-melisse`). | réveiller ; un souvenir déjà écrit | — |
+| 2 | **Le Potager** | Le bâtir (plan Plante, 8 seaux d'eau, du Puits de Léo). | un bâtiment qui dépend d'un autre | la nourriture, en continu |
+| 3 | **La tribu** | Un écran montre les sept et leur rôle. On donne une tâche à chacun pour la nuit : les récolteurs rapportent, les artisans fabriquent, les guerriers veillent. | **les rôles** | tout le reste du jeu |
+| 4 | **Les réserves** | Brume compte : huit bouches, combien de jours de vivres ? On remplit pour deux jours. | **la consommation** de chaque jour | la survie ; l'alerte « réserve vide » |
+| 5 | **Le conseil** | Les sept et Brume autour du feu ; Léo voit le phare. Fin du chapitre 0. | — | le chapitre 1 |
+
+### Ce que ces trois jours demandent au code (constat)
+
+- **Le serveur** : les quêtes nouvelles (la lueur, la garde, la tribu, les réserves), l'ordre des quêtes, une partie
+  offerte de Cueillette et de Filon pendant le tutoriel (aujourd'hui, ces jeux s'ouvrent au palier III).
+- **Nouveau, à concevoir** : l'écran de la tribu (les rôles et leurs tâches), et la consommation de vivres par jour.
+- **À vérifier à l'équilibrage** : le prix de La Lisière (150 écus aujourd'hui) pendant le tutoriel ; assez de bois et
+  de pierres pour le Bosquet, la Carrière et l'Abri.
 
 **Préparer le rebondissement** : Maerys et Robby vivent sur l'île depuis des années. Ils savent qu'on ne part pas, et
 ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
