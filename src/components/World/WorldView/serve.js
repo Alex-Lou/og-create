@@ -11,7 +11,7 @@ import { bubbleFace, builtOf } from '@/world/faces';
 import { islandOf, liveOf, TerrainCache, FEATHER, pavedAt } from '@/world/terrain';
 import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
-import { JUNGLE_ZONE, JUNGLE_FX, JUNGLE_KINDS } from '@/world/plants';
+import { JUNGLE_ZONE, JUNGLE_FX, JUNGLE_KINDS, JUNGLE_GRANDES } from '@/world/plants';
 import { inJungle } from '@/world/jungleLayout';
 import { riverLampsOf } from '@/world/pontRiviere';
 import { seaOf } from '@/world/sea';
@@ -237,8 +237,9 @@ export default {
       // (liveProps), pour passer devant dans l'ordre du relief. Si le décor cuit a changé, ses carrés seront refaits
       const live = this.liveCellsOf(state);
       this.liveProps = this.props.filter(prop => live.has(prop.y * state.size + prop.x));
-      // (de près, la jungle loin de ce qui se tient debout est cuite dans le sol, elle aussi : still ; terrain.js, NEAR_BAKE)
-      for (const prop of this.props) prop.still = JUNGLE_KINDS.has(prop.kind) && !live.has(prop.y * state.size + prop.x);
+      // (de près, la petite jungle loin de ce qui se tient debout est cuite dans le sol, elle aussi : still ; terrain.js,
+      // NEAR_BAKE ; ses grandes plantes non : elles plient au souffle, world/plants.js : JUNGLE_GRANDES)
+      for (const prop of this.props) prop.still = JUNGLE_KINDS.has(prop.kind) && !JUNGLE_GRANDES.has(prop.kind) && !live.has(prop.y * state.size + prop.x);
       this.nearProps = this.props.filter(prop => !prop.still);
       this.propsAt = new Map();
       for (const prop of this.props) {
