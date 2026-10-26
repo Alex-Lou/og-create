@@ -153,7 +153,10 @@ export const COACH = {
     deco: 'Il manque de quoi bâtir l’abri de Nathan : lance une Récolte, l’île en donne.',
     'torches-rivet': 'Il manque du bois pour les torches : lance une Récolte, l’île en donne.',
     'premier-ponton': 'Il manque du bois pour le Ponton : touche Lorena, une autre Récolte en donnera.',
-    'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.'
+    'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
+    bosquet: 'Il manque de quoi bâtir le Bosquet : lance une Récolte, l’île en donne.',
+    carriere: 'Il manque de quoi bâtir la Carrière : lance une Récolte, l’île en donne.',
+    potager: 'Il manque de quoi bâtir le Potager : lance une Récolte, l’île en donne.'
   },
   // L'abri d’Agathe (choix de l'auteur, 13 oct.)
   'abri-cannelle': {
@@ -168,6 +171,21 @@ export const COACH = {
   // (les torches de Nathan plantées : en déplacer une, puis la pivoter ; choix de l'auteur, 18 oct., textes validés)
   move: 'Appui long sur une torche : « Déplacer », puis une autre case dorée.',
   pivoter: 'Appui long sur ta torche : « Pivoter ».',
+  // Le tutoriel en huit jours (choix de l'auteur, 26 oct., textes validés) : les quartiers, ceux qui y vivent, leurs
+  // souvenirs, leurs bâtiments
+  zoneBuy: 'Touche « Acheter » : la brume recule.',
+  lisiere: { zone: 'Une lueur entre les arbres de La Lisière : touche le quartier.' },
+  'eveil-sylve': { who: 'Quelqu’un se cache à la lisière : va la voir, sans bruit.' },
+  vie: { ariane: 'Le ruban mène à la page qui manque : la Vie. Quatre places, quatre éléments.' },
+  'souvenir-sylve': { ariane: 'Le ruban mène à la page qui manque : l’Arbre.' },
+  bosquet: { site: 'Le chantier du Bosquet : touche-le.', build: 'Tout est réuni : bâtis le Bosquet.' },
+  colline: { zone: 'Du côté de La Colline, quelqu’un taille la pierre : touche le quartier.' },
+  'eveil-galet': { who: 'Un vieil homme, contre la pierre : va le voir.' },
+  'souvenir-galet': { ariane: 'Le ruban mène à la page qui manque : la Pierre.' },
+  carriere: { site: 'Le chantier de la Carrière : touche-le.', build: 'Tout est réuni : bâtis la Carrière.' },
+  jardins: { zone: 'Au nord, une barque de graines s’est brisée : touche Les Jardins.' },
+  'eveil-melisse': { who: 'Une femme dort sur une boîte en fer : va la réveiller doucement.' },
+  potager: { site: 'Le chantier du Potager : touche-le.', build: 'Tout est réuni : bâtis le Potager.' },
   'souvenir-ondin': {
     ariane: 'Le ruban mène à la page qui manque : la Pluie.',
     why: 'pendant que tu aides Léo',

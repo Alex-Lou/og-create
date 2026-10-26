@@ -107,10 +107,18 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour de Lorena (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'nuit-cannelle', 'deco', 'barriere', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
-export const inPrologue = id => PROLOGUE.includes(id);
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'nuit-cannelle', 'deco', 'barriere', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin',
+  // Le tutoriel en huit jours (choix de l'auteur, 26 oct.) : le Campement et la cinquième nuit ; le jour de Maerys, celui
+  // de Robby, celui de Maggy (le conseil, le soir). Un compte qui avait fini l'ancien tutoriel s'arrête au chemin : le
+  // serveur dit où finit le sien (brume.tutorialLast)
+  'nuit-ondin', 'lisiere', 'eveil-sylve', 'vie', 'souvenir-sylve', 'bosquet', 'nuit-sylve', 'colline', 'eveil-galet', 'souvenir-galet',
+  'carriere', 'nuit-galet', 'jardins', 'eveil-melisse', 'potager'];
+// La dernière quête du tutoriel d'un compte, faute de mieux (un serveur d'avant le tutoriel en huit jours)
+export const TUTORIAL_LAST = 'chemin';
+// La quête est-elle dans le tutoriel du compte (last : sa dernière quête, brume.tutorialLast) ?
+export const inPrologue = (id, last = TUTORIAL_LAST) => PROLOGUE.includes(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(last);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
-export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
+export const upTo = (id, ref) => PROLOGUE.includes(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
 
 // Les commandes de l'île pendant le tutoriel (choix de l'auteur, 10 oct. : grisées, pas masquées) : seules celles qu'une
 // leçon a déjà montrées répondent ; la Récolte avec la sienne (Lorena), le tracé des chemins avec le sien. Rend null
@@ -125,7 +133,7 @@ export function islandTaught({ tutorial, quest }) {
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
 // La première nuit se passe seul avec Brume ; Lorena arrive au matin et ouvre son propre tutoriel par la Récolte ; les
 // autres personnages viendront ensuite, chacun avec sa séquence.
-const SCENE_AT = { nuit: 'nuit', recolte: 'caisse', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
+const SCENE_AT = { nuit: 'nuit', recolte: 'caisse', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin', campement: 'nuit-ondin' };
 const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle', 'jour', 'cercle', 'epave'];
 // Le tutoriel repris par le compte, sur un appareil qui n'en a rien retenu (game : App, story.js) : les scènes des
 // étapes déjà passées comptent comme vues (on ne les rejoue pas), celle de l'étape en cours se joue
@@ -335,6 +343,29 @@ const LESSONS = {
     { target: tipOf('site:puits'), text: COACH.build },
     { target: BUILD, text: COACH['puits-ondin'].build }
   ],
+  // Le tutoriel en huit jours (choix de l'auteur, 26 oct., textes validés) : le quartier de chaque jour (le toucher, « Voir
+  // le quartier », l'acheter), qui y vit (le réveiller, comme Léo), son souvenir au Grimoire (le ruban, comme celui de
+  // Léo, sans Encre offerte), son bâtiment (comme le Puits) ; les nuits, comme celles d'avant
+  'nuit-ondin': [{ target: 'île:brume', text: COACH.sleep }],
+  'nuit-sylve': [{ target: 'île:brume', text: COACH.sleep }],
+  'nuit-galet': [{ target: 'île:brume', text: COACH.sleep }],
+  ...Object.fromEntries([['lisiere', 'bosquet'], ['colline', 'carriere'], ['jardins', 'potager']].flatMap(([zone, site]) => [
+    [zone, [
+      { target: `île:quartier:${zone}`, text: COACH[zone].zone },
+      { target: tipOf(`zone:${zone}`), text: COACH['outil-rivet'].sheet },
+      { target: '[data-coach="zone-buy"]:not(:disabled)', text: COACH.zoneBuy }
+    ]],
+    [site, [
+      { target: `île:site:${site}`, text: COACH[site].site },
+      { target: tipOf(`site:${site}`), text: COACH.build },
+      { target: BUILD, text: COACH[site].build }
+    ]]
+  ])),
+  ...Object.fromEntries([['eveil-sylve', 'bosquet'], ['eveil-galet', 'carriere'], ['eveil-melisse', 'potager']].map(([id, site]) => [id, [
+    { target: `île:habitant:${site}`, text: COACH[id].who },
+    { target: tipOf(`vil:${site}`), text: COACH['eveil-ondin'].wake }
+  ]])),
+  ...Object.fromEntries(['vie', 'souvenir-sylve', 'souvenir-galet'].map(id => [id, bookSteps(COACH[id].ariane, null)])),
   // Le premier chemin : le bouton des chemins, les cases à toucher une à une du Puits au sentier du Feu (la main suit
   // les pointillés ; rien n'est bloqué : l'île doit pouvoir bouger), puis « Tracer » quand le tracé les relie
   // (roads.js : roadGuide, data-linked)
@@ -353,12 +384,15 @@ const SHORT = {
   deco: { target: '.world__play', text: COACH.short.deco },
   'torches-rivet': { target: '.world__play', text: COACH.short['torches-rivet'] },
   'premier-ponton': { target: 'île:habitant:ponton', text: COACH.short['premier-ponton'] },
-  'abri-cannelle': { target: '.world__play', text: COACH.short['abri-cannelle'] }
+  'abri-cannelle': { target: '.world__play', text: COACH.short['abri-cannelle'] },
+  bosquet: { target: '.world__play', text: COACH.short.bosquet },
+  carriere: { target: '.world__play', text: COACH.short.carriere },
+  potager: { target: '.world__play', text: COACH.short.potager }
 };
 // Le coin dont chaque quête bâtit l'abri (serveur : world/shelters.js)
 const SHELTER_OF = { 'abri-cannelle': 'cannelle', deco: 'rivet' };
 // Le chantier de chaque quête qui en bâtit un
-const SITE_OF = { feu: 'foyer', 'puits-ondin': 'puits', 'premier-ponton': 'ponton' };
+const SITE_OF = { feu: 'foyer', 'puits-ondin': 'puits', 'premier-ponton': 'ponton', bosquet: 'bosquet', carriere: 'carriere', potager: 'potager' };
 // La quête active demande de payer (le feu, la soupe, une poule, le Puits) et le stock n'y suffit pas encore (ce qui
 // attend dans les bâtiments compte : stock, celui que montrent les fiches). state : la vue de l'île
 export function questShort(quest, state, stock) {
@@ -489,7 +523,7 @@ const COUNTED = new Set(['ramasser', 'barriere', 'torches-rivet']);
 // Les piquets de la barrière posés un à un, à la main, avant le trait
 const BY_HAND = 2;
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
-const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
+const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin', 'vie', 'souvenir-sylve', 'souvenir-galet']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
 // revenir sur l'île (jamais « Niveau 2 » pendant le tutoriel). Brume la dit déjà : sur l'île, la main seule (hush ; la
 // consigne reste pour la bulle « Me montrer », quand Brume est hors de vue ; choix de l'auteur, 13 oct.)
@@ -522,12 +556,13 @@ export function islandLesson(quest) {
 
 // Étapes 2 (sur l'île) à 5 : la quête active de Brume ({ id, done }, vue de l'île) dit où l'on en est. Rend une scène,
 // la main sur la Récolte, des répliques (ids du guide : chacune n'est dite qu'une fois), la fin ; ou null
-export function islandStep({ state, quest }) {
+export function islandStep({ state, quest, last = TUTORIAL_LAST }) {
   if (state.skipped || state.finished || !state.registered || !state.named || !quest) return null;
   const seen = new Set(state.seen);
   const at = PROLOGUE.indexOf(quest.id);
-  // Après la chaîne guidée existante, l'étape « Le Campement » clôt encore le tutoriel global.
-  if (at < 0) return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
+  // Après le tutoriel du compte (last : le chemin du Puits, ou le Potager de Maggy), le Campement s'il n'a pas été joué
+  // (un compte qui avait fini l'ancien tutoriel : il le clôt), puis la fin
+  if (at < 0 || at > PROLOGUE.indexOf(last)) return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
   const lines = [];
   // Une quête accomplie : la première se réclame auprès de Brume (dit une fois) ; ensuite, ses répliques lues, la
   // récompense arrive seule (choix de l'auteur, 11 oct. : App, story.js, autoClaim)
@@ -620,5 +655,9 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'relier', 'relier-abri', 'communaute', 'produit', 'merci-puits', 'trois-fois-rien', ...lines] : [] };
   // Léo glisse dans l'herbe mouillée avec ses seaux : le premier chemin
   if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pieds-agathe', 'pierres'] };
+  // Le tutoriel en huit jours : le soir du chemin, le Campement (cinq visages et Brume), puis la cinquième nuit ; les
+  // nuits de Maerys et de Robby (le compte du soir de Brume, serveur : texts/quests.js)
+  if (quest.id === 'nuit-ondin') return seen.has('campement') ? { phase: 'sleep' } : { phase: 'scene', scene: 'campement' };
+  if (quest.id === 'nuit-sylve' || quest.id === 'nuit-galet') return { phase: 'sleep' };
   return { phase: 'lines', lines };
 }

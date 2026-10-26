@@ -3,7 +3,7 @@
 // récompenses qui arrivent seules. Mixin d'App.vue (story.js : le tutoriel).
 
 import { guide } from '@/game/guide';
-import { islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE, LUMIERES } from '@/game/prologue';
+import { islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE, LUMIERES, TUTORIAL_LAST } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { stageOf } from '@/game/stages';
 import { LINES as PROLOGUE_LINES, SCENES } from '@/texts/tutorial/scenes';
@@ -65,6 +65,8 @@ export default {
       // La quête active de Brume sur l'île ({ id, done }), pour les étapes 2 à 5 ; les actes finis et le nom du peuple
       // (veillées, étape de civilisation)
       islandQuest: null,
+      // La dernière quête du tutoriel du compte (serveur : brume.tutorialLast) : le chemin du Puits, ou le Potager
+      tutorialLast: TUTORIAL_LAST,
       islandActs: [],
       // Les actes finis sont connus (le serveur a répondu) : Brume peut réagir à Feu follet écrit tôt
       actsKnown: false,
@@ -111,9 +113,9 @@ export default {
     // ensuite, la quête faite et ses répliques lues (rien ne parle, rien n'est ouvert), Brume la remet d'elle-même
     autoClaimDue() {
       const quest = this.islandQuest;
-      if (!this.prologueRunning || !this.isWorldActive || !quest || !quest.id || !quest.done || quest.id === CLAIM_TAUGHT || !inPrologue(quest.id)) return false;
+      if (!this.prologueRunning || !this.isWorldActive || !quest || !quest.id || !quest.done || quest.id === CLAIM_TAUGHT || !inPrologue(quest.id, this.tutorialLast)) return false;
       if (this.claimFailed === quest.id || this.breathing || this.prologueScene || this.islandHold || this.islandPlaying || guide.current || guide.state.resting) return false;
-      const step = islandStep({ state: this.tutorialState, quest });
+      const step = islandStep({ state: this.tutorialState, quest, last: this.tutorialLast });
       return Boolean(step && step.phase !== 'scene' && !step.hold);
     }
   },
@@ -171,6 +173,7 @@ export default {
         this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;
         this.actsKnown = true;
         if (brume.scenes) this.arcScenes = brume.scenes;
+        if (brume.tutorialLast) this.tutorialLast = brume.tutorialLast;
         this.checkEarlyWisp();
       }
       this.runIsland();
@@ -210,7 +213,7 @@ export default {
       // d'avant l'île, qui se joue au Grimoire : l'île ne dit rien entre deux de ses scènes, story.js : runPrologue)
       if (this.prologueReplay || this.prologueScene || this.islandHold || this.offIslandStep()) return;
       const quest = this.islandQuest?.id ? this.islandQuest : null;
-      const step = islandStep({ state: this.tutorialState, quest });
+      const step = islandStep({ state: this.tutorialState, quest, last: this.tutorialLast });
       // Le geste de l'étape (game/coach.js) : montré après les répliques, jamais pendant une scène ; une récompense qui
       // arrive seule n'a pas de geste (sauf si elle n'a pas pu arriver : toucher Brume)
       const handed = quest && quest.done && quest.id !== CLAIM_TAUGHT && this.claimFailed !== quest.id;
@@ -257,7 +260,7 @@ export default {
       // (le Grimoire avant l'île : le prologue mène, la page du Vent puis celle du Brasier)
       if (this.offIslandStep()) return;
       const quest = this.islandQuest?.id ? this.islandQuest : null;
-      const step = this.prologueRunning ? islandStep({ state: this.tutorialState, quest }) : null;
+      const step = this.prologueRunning ? islandStep({ state: this.tutorialState, quest, last: this.tutorialLast }) : null;
       if (!step || step.phase === 'finish') return;
       // La première quête, au Grimoire : sa consigne (dite une fois), puis l'Air, deux fois
       if (quest && quest.id === 'pages' && !quest.done && this.currentMode === 'infinite') {

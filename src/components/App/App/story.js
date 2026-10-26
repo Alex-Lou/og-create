@@ -64,7 +64,7 @@ export default {
       const account = this.accountTutorial;
       const quest = this.islandQuest && this.islandQuest.id;
       if (!this.isLoggedIn || !account || !account.tutorial || account.skipped || !quest) return false;
-      return inPrologue(quest) || this.guidedVisit;
+      return inPrologue(quest, this.tutorialLast) || this.guidedVisit;
     },
     // Tout vient d'être recommencé (Mon compte) : l'ouverture (le naufrage, la carte, l'arrivée) se rejoue d'abord sur cet
     // appareil, l'île attend
@@ -173,7 +173,7 @@ export default {
     },
     // Suivi pendant cette visite : il le reste jusqu'au Campement, même quand la quête sort du prologue
     accountGuided(now) {
-      if (now && inPrologue(this.islandQuest.id)) this.guidedVisit = true;
+      if (now && inPrologue(this.islandQuest.id, this.tutorialLast)) this.guidedVisit = true;
     },
     // Un onglet s'ouvre : Brume le dit (une fois) ; jamais au chargement. (L'Île, sur l'appareil qui a suivi le
     // tutoriel depuis le naufrage : Brume l'annonce déjà, « Courir vers la plage »). Sur l'île, pendant le tutoriel, elle

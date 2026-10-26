@@ -92,7 +92,7 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'soupe', done: true }).id).toBe('claim');
     expect(first({ id: 'soupe', done: true })).toBe('île:brume');
     // Hors du prologue, rien
-    expect(islandLesson({ id: 'lisiere', done: false })).toBeNull();
+    expect(islandLesson({ id: 'lumiere', done: false })).toBeNull();
     // L'île d'abord : la première quête se joue au Grimoire (l'Air, puis « Transmuer »)
     const pages = islandLesson({ id: 'pages', done: false });
     expect([pages.id, pages.mode]).toEqual(['quest-pages', 'infinite']);
@@ -218,5 +218,22 @@ describe('les leçons de l’île', () => {
     expect(coach.blocks('quest-feu#1')).toBe(false);
     expect(coach.blocks('quest-feu')).toBe(true);
     coach.show(null);
+  });
+  it('le tutoriel en huit jours : le quartier de chaque jour, qui y vit, son souvenir, son bâtiment, ses nuits', () => {
+    const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
+    // (le quartier : le toucher, « Voir le quartier », l'acheter ; une phrase par geste)
+    expect(targets('lisiere')).toEqual(['île:quartier:lisiere', '.world__tip-btn[data-pick="zone:lisiere"]', '[data-coach="zone-buy"]:not(:disabled)']);
+    expect(targets('jardins')[0]).toBe('île:quartier:jardins');
+    // (qui y vit : le toucher, « Le réveiller », comme Léo)
+    expect(targets('eveil-galet')).toEqual(['île:habitant:carriere', '.world__tip-btn[data-pick="vil:carriere"]']);
+    // (son souvenir : au Grimoire, par le ruban, sans Encre offerte)
+    const vie = islandLesson({ id: 'vie', done: false });
+    expect([vie.mode, vie.steps[0].target, vie.steps.some(st => st.target.includes('data-spot="ink"'))]).toEqual(['infinite', '.book-view__ariane', false]);
+    // (son bâtiment, comme le Puits ; ce qu'il coûte manque : la Récolte d'abord)
+    expect(targets('potager')[0]).toBe('île:site:potager');
+    expect(islandLesson({ id: 'bosquet', done: false, short: true })).toMatchObject({ id: 'short-bosquet', steps: [{ target: '.world__play' }] });
+    expect(questShort({ id: 'carriere', done: false }, { sites: [{ id: 'carriere', level: 0, next: { cost: { wood: 5 } } }] }, { wood: 4 })).toBe(true);
+    // (ses nuits : toucher Brume)
+    expect(['nuit-ondin', 'nuit-sylve', 'nuit-galet'].map(id => targets(id)[0])).toEqual(['île:brume', 'île:brume', 'île:brume']);
   });
 });
