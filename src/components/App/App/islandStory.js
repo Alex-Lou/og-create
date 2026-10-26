@@ -236,12 +236,17 @@ export default {
       else if (step.phase === 'sleep') [...(step.lines || []), step.line || 'dormir'].forEach(line => this.sayPrologue(line));
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
+        // (la visite suivie s'arrête ici, le Campement joué : sans quoi le tutoriel restait en cours jusqu'à la visite
+        // suivante, et le conseil ne venait pas ; story.js : accountGuided)
+        this.guidedVisit = false;
         guide.setTutorial(false);
         // Si le chapitre II s'est ouvert pendant les leçons suivantes, sa réplique peut avoir été coupée par une scène.
         // Dite ici une fois ; guide.tip ne fait rien si elle a déjà été lue.
         guide.tip('chapter-II');
         // (les conseils de l'île, refusés pendant le tutoriel : WorldView, serve.js)
         this.$refs.world?.islandTips?.();
+        // (la chronique a sa première scène, le conseil, due dès la fin du tutoriel : chronicle.js)
+        this.$nextTick(() => this.runIsland());
       }
       // (un onglet ouvert pendant l'étape : après ses répliques, jamais pendant une scène)
       if (step.phase !== 'scene') this.sayTabsWaiting();

@@ -371,10 +371,13 @@ export function questShort(quest, state, stock) {
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
   }
-  // (les torches de Nathan : tant que la suivante n'est ni assemblée ni posée)
+  // (les torches de Nathan, aucune en réserve : toutes celles qui restent à planter, puisque « Ce qu'il faut » les
+  // assemble d'un coup ; une seule payée, le joueur en posait une puis repartait à la Récolte)
   if (quest.id === 'torches-rivet') {
     const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'torche');
-    return Boolean(made && !made.reserve && lacks(made.cost));
+    if (!made || made.reserve) return false;
+    const left = Math.max(1, (quest.need || 1) - (quest.have || 0));
+    return lacks(Object.fromEntries(Object.entries(made.cost || {}).map(([r, n]) => [r, n * left])));
   }
   // (l'abri d’Agathe, celui de Nathan)
   if (SHELTER_OF[quest.id]) {
