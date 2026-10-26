@@ -16,11 +16,12 @@ describe('l’horloge du tutoriel', () => {
     expect(tutorialDate('nuit', 0, today).getHours()).toBe(21);
     expect(hm(tutorialDate('caisse', 0, today))).toBe('7:30');
     // Le jour de Lorena : l'heure avance à chaque étape, jusqu'au soir autour du feu
-    expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille', 'barriere'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 19, 16]);
+    expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 19]);
     // Le jour d’Agathe de même, jusqu'à la troisième nuit ; Nathan au matin
-    expect(['soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 12, 14, 19, 8]);
-    // Le jour de Nathan finit par la quatrième nuit ; Léo au matin suivant, jamais le même jour (choix de l'auteur, 13 oct.)
-    expect(['deco', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 14, 19, 8, 10, 12, 15]);
+    expect(['soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'nuit-cannelle', 'deco'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 12, 14, 15, 19, 8]);
+    // Le jour de Nathan (la barrière du nord avant ses torches, 26 oct.) finit par la quatrième nuit ; Léo au matin
+    // suivant, jamais le même jour (choix de l'auteur, 13 oct.)
+    expect(['deco', 'barriere', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 10, 12, 14, 19, 8, 10, 12, 15]);
   });
   it('chaque quête du prologue a son moment (l’île ne retombe jamais sur l’heure réelle en plein tutoriel)', () => {
     for (const id of PROLOGUE) expect(MOMENTS[id], id).toBeTruthy();
@@ -49,7 +50,7 @@ describe('l’horloge du tutoriel', () => {
     expect(sunTimes(summer).set).toBeGreaterThan(20);
   });
   it('le jour de chaque étape (le compteur de jours) : un par personnage, un de plus à chaque matin', () => {
-    expect(['pages', 'nuit', 'caisse', 'veille', 'soupe', 'nuit-cannelle', 'deco', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'chemin'].map(tutorialDay)).toEqual([1, 1, 2, 2, 3, 3, 4, 4, 4, 5, 5]);
+    expect(['pages', 'nuit', 'caisse', 'veille', 'soupe', 'abri-cannelle', 'nuit-cannelle', 'deco', 'barriere', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'chemin'].map(tutorialDay)).toEqual([1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5]);
     expect(tutorialDay('acte-1')).toBe(null);
     expect(tutorialDay(null)).toBe(null);
   });

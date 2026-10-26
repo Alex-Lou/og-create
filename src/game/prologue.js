@@ -107,7 +107,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour de Lorena (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'barriere', 'nuit-cannelle', 'deco', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'nuit-cannelle', 'deco', 'barriere', 'torches-rivet', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -579,8 +579,8 @@ export function islandStep({ state, quest }) {
   }
   // Leur poulailler (posé, Lorena propose de démonter la cage vide) ; le soir à trois autour du feu, la troisième nuit
   if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', 'cage-agathe', ...lines] : ['un-toit'] };
-  // Son abri (choix de l'auteur, 13 oct.), puis la barrière du nord : ses poules filent, le Dormeur est venu jusqu'au feu
-  // (choix de l'auteur, 19 oct.)
+  // Son abri (choix de l'auteur, 13 oct.) ; la barrière du nord, au jour de Nathan avant ses torches (26 oct.) : les
+  // poules filent, le Dormeur est venu jusqu'au feu (choix de l'auteur, 19 oct.)
   if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint', 'entends'] };
   if (quest.id === 'barriere') return { phase: 'lines', lines: quest.done ? ['chez-nous', 'poules-restent'] : ['poules-filent', 'barriere-nord', 'barriere-brume'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };

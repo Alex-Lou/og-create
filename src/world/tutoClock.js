@@ -28,15 +28,15 @@ export const MOMENTS = {
   cage: [11, 12],
   poules: [12, 14],
   poulailler: [14, 15.5],
-  // (son abri, choix de l'auteur, 13 oct. ; puis la barrière du nord, 19 oct.)
-  'abri-cannelle': [15.5, 16.5],
-  barriere: [16.5, 18],
+  // (son abri, choix de l'auteur, 13 oct.)
+  'abri-cannelle': [15.5, 17.5],
   'nuit-cannelle': [19, 23.5],
   // Jour 4, Nathan (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin et s'installe
-  // dans son coin ; ses trois torches vers midi ; son premier outil l'après-midi (18 oct.) ; le soir à quatre, puis la
-  // quatrième nuit
+  // dans son coin ; la barrière du nord en fin de matinée (19 oct. ; à son jour depuis le 26 oct.) ; ses trois torches
+  // vers midi ; son premier outil l'après-midi (18 oct.) ; le soir à quatre, puis la quatrième nuit
   deco: [8, 10.5],
-  'torches-rivet': [11, 14],
+  barriere: [10.5, 12],
+  'torches-rivet': [12, 14.5],
   'outil-rivet': [14.5, 17.5],
   'nuit-rivet': [19, 23.5],
   // Jour 5, Léo : on le trouve endormi au matin, sa Pluie, son Puits, son chemin
