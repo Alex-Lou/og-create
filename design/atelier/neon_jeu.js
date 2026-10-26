@@ -14,7 +14,7 @@ const { melange } = require('./neon_naufrage');
 const CINEMATIQUES = [
   ['02_plage', GR.plage02, 'n2p'], ['02_lueur', GR.lueur02, 'n2l', true, 'brume'], ['02_approche', GR.approche02, 'n2a', true, 'brume'], ['02_rocher', GR.rocher02, 'n2r', true, 'brume'],
   ['03_livre', GV.livre03, 'n3l', true, 'brume'], ['03_vent', GV.vent03, 'n3v', true, 'brume'], ['03_trouee', GV.trouee03, 'n3t', true, 'nuit'], ['03_ciel', GV.ciel03, 'n3c', true, 'nuit'], ['03_nuit', GV.nuit03, 'n3n', true, 'nuit'],
-  ['05_cercle', GC.cercle05, 'n5c', true, 'nuit'], ['05_promesse', GC.promesse05, 'n5p', true, 'nuit'], ['05_feu', GC.feu05, 'n5f', true, 'feu'],
+  ['05_cercle', GC.cercle05, 'n5c', true, 'nuit'], ['05_promesse', GC.promesse05, 'n5p', true, 'nuit'], ['05_feu', GC.feu05, 'n5f', true, 'feu'], ['06_silhouette', GC.silhouette06, 'n6s', true, 'feu'],
   ['10_epave', GL.epave10, 'nae', false, 'matin'], ['10_aster', GL.aster10, 'naa', false, 'matin']
 ];
 // (l'herbe du cercle, trop vive une fois passée au néon : plongée dans la nuit)

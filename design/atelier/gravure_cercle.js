@@ -190,22 +190,28 @@ const chaleur = p => { const A = atelier(`${p}h`), [x, y] = C0; return A.out(`<e
 const FEU = { teinte: '#2A140A', force: 0.24, cote: -1 };
 // (Brume, à droite du feu ; lui, là où 05_cercle l'a laissé)
 const PRES_DU_FEU = { x: 44, y: 22, s: 1 }, PRES_DU_CERCLE = { x: 26, y: -6, s: 0.98 };
+// (le cercle, son feu pris et sa chaleur ; au loin, ce que la scène y ajoute : auLarge)
+function autourDuFeu(p, auLarge = []) {
+  const plans = decorCercle(p, [{ id: 'feu', profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: () => feuPris(p) }], auLarge);
+  plans.splice(plans.findIndex(q => q && q.id === 'teinte'), 0, { id: 'chaleur', profondeur: 0, marge: MARGE, dessin: () => chaleur(p) });
+  return plans;
+}
+// (le feu danse, sa lueur bat, à leur rythme ; Brume et lui, près du feu, là où ils sont)
+const vivant = D => ({ feu: balance(0, D, 380, k => ({ s: k % 2 ? 1.05 : 0.97, o: 1 })), chaleur: balance(0, D, 520, k => ({ o: k % 2 ? 1 : 0.8 })) });
+const ici = D => ({ brume: [[0, PRES_DU_FEU], [D, PRES_DU_FEU]], avatar: [[0, PRES_DU_CERCLE], [D, PRES_DU_CERCLE]] });
+const REPOS = R.joue([0, 'repos', 'bas_droite']);
 function feu05() {
   const p = 'fe', D0 = 4600;
-  const plans = decorCercle(p, [{ id: 'feu', profondeur: 0.62, cadre: FEU_CADRE, pivot: C0, dessin: () => feuPris(p) }]);
-  plans.splice(plans.findIndex(q => q && q.id === 'teinte'), 0, { id: 'chaleur', profondeur: 0, marge: MARGE, dessin: () => chaleur(p) });
+  const plans = autourDuFeu(p);
   plans.splice(plans.findIndex(q => q && q.id === 'etoiles') + 1, 0, { id: 'filante', profondeur: 0.1, cadre: [130, 0, 160, 70], pivot: [268, 22], dessin: () => V.filante(p) });
-  // (le feu danse, sa lueur bat, à leur rythme ; à chaque réplique)
-  const vivant = D => ({ feu: balance(0, D, 380, k => ({ s: k % 2 ? 1.05 : 0.97, o: 1 })), chaleur: balance(0, D, 520, k => ({ o: k % 2 ? 1 : 0.8 })), filante: [[0, { o: 0 }], [D, { o: 0 }]] });
-  const ici = D => ({ brume: [[0, PRES_DU_FEU], [D, PRES_DU_FEU]], avatar: [[0, PRES_DU_CERCLE], [D, PRES_DU_CERCLE]] });
-  const REPOS = R.joue([0, 'repos', 'bas_droite']);
+  const cachee = D => ({ filante: [[0, { o: 0 }], [D, { o: 0 }]] });
   // « Je n'ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n'ai pas froid. »
-  const t0 = { ...unTemps(D0, [[0, LARGE], [D0, { ...SUR_CERCLE, e: 'ease-in-out' }]], { ...nuitFixe(plans.filter(Boolean), D0), ...vivant(D0), ...ici(D0) }), acteur: REPOS, jeux: { brume: V.B([0, 'content']) } };
+  const t0 = { ...unTemps(D0, [[0, LARGE], [D0, { ...SUR_CERCLE, e: 'ease-in-out' }]], { ...nuitFixe(plans.filter(Boolean), D0), ...vivant(D0), ...cachee(D0), ...ici(D0) }), acteur: REPOS, jeux: { brume: V.B([0, 'content']) } };
   const temps = V.repliques(t0, [
     // « Le feu tient. Pour cette nuit, ce cercle suffira. »
-    [4600, SUR_AVATAR, REPOS, V.B([0, 'content']), { ...vivant(4600), ...ici(4600) }],
+    [4600, SUR_AVATAR, REPOS, V.B([0, 'content']), { ...vivant(4600), ...cachee(4600), ...ici(4600) }],
     // « Brumelune. C'est ainsi qu'ils appelaient l'île, ceux d'avant. »
-    [5000, SUR_BRUME, REPOS, V.B([0, 'content'], [2600, 'triste']), { ...vivant(5000), ...ici(5000) }],
+    [5000, SUR_BRUME, REPOS, V.B([0, 'content'], [2600, 'triste']), { ...vivant(5000), ...cachee(5000), ...ici(5000) }],
     // une étoile file ; Brume détourne les yeux
     [3000, LARGE, REPOS, V.B([0, 'triste'], [1300, 'gene']), { ...vivant(3000), ...ici(3000), filante: [[0, { x: 60, y: -16, o: 0 }], [500, { x: 60, y: -16, o: 0, e: 'linear' }], [600, { x: 52, y: -14, o: 1, e: 'linear' }], [1600, { x: -40, y: 12, o: 1 }], [2000, { x: -56, y: 16, o: 0 }], [3000, { x: -56, y: 16, o: 0 }]] }]
   ]);
@@ -213,4 +219,34 @@ function feu05() {
   return V.fin(plans, temps, FEU, { brume: [3000, { y: -4 }] });
 }
 
-module.exports = { cercle05, promesse05, feu05 };
+// ——— 06_silhouette : la nuit autour du feu ; au loin, en contrebas, sur les rochers du rivage, quelqu'un regarde la
+// lueur ; Brume le montre, puis promet de veiller. Au même cercle que 05_feu ———
+const ROCHERS = [334, 250];
+// (les rochers du rivage, sombres, et celui qui s'y tient debout ; le feu dore à peine son côté tourné vers nous)
+function rochers(p) {
+  const A = atelier(`${p}r`), [x, y] = ROCHERS;
+  let s = gravure(A, [[x - 46, y], [x - 38, y - 16], [x - 18, y - 26], [x + 6, y - 30], [x + 30, y - 20], [x + 46, y - 4], [x + 50, y]], A.lin([[0, '#4A4656'], [1, '#1E1A26']], 0, y - 30, 0, y), { seed: 870, amp: 0.5, angle: 30, pas: 2.4, ombre: 0.4, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.3, dy: 3, lumiere: [-0.6, -0.8] });
+  s += gravure(A, [[x - 64, y + 2], [x - 52, y - 8], [x - 40, y + 2]], '#2A2632', { seed: 871, amp: 0.4, tailles: 0, trait: 1.4, portee: 0 });
+  return A.out(s);
+}
+const veilleur = p => { const A = atelier(`${p}v`), [x, y] = ROCHERS, t = y - 29; return A.out(`<path d="M${x - 3},${t} L${x - 2.4},${t - 13} Q${x - 2},${t - 16} ${x},${t - 16.4} Q${x + 2},${t - 16} ${x + 2.4},${t - 13} L${x + 3},${t} Z" fill="#0C0A14" stroke="${ENCRE}" stroke-width="0.8"/><circle cx="${x}" cy="${t - 19.4}" r="2.8" fill="#0C0A14" stroke="${ENCRE}" stroke-width="0.8"/><path d="M${x - 2.6},${t - 2} L${x - 2},${t - 13} M${x - 3.2},${t - 18.6} q0.6,-1.6 2,-2" stroke="#FFB870" stroke-width="0.7" fill="none" opacity="0.8"/>`); };
+function silhouette06() {
+  const p = 'si', D0 = 4600, D1 = 5200;
+  const plans = autourDuFeu(p, [
+    { id: 'rochers', profondeur: 0.4, cadre: [260, 210, 130, 50], pivot: ROCHERS, dessin: () => rochers(p) },
+    { id: 'veilleur', profondeur: 0.4, cadre: [320, 196, 28, 34], pivot: [ROCHERS[0], ROCHERS[1] - 29], dessin: () => veilleur(p) }
+  ]);
+  const SUR_ROCHERS = { x: 54, y: -14, z: 1.3 };
+  // (il se tient immobile ; à peine s'il bouge)
+  const guette = D => ({ veilleur: balance(0, D, 2400, k => ({ x: k % 2 ? 0.6 : 0 })) });
+  // « Là-bas, sur les rochers. Quelqu'un regarde ton feu. » : le regard va aux rochers ; lui se tourne vers eux
+  const t0 = { ...unTemps(D0, [[0, SUR_AVATAR], [1600, { ...SUR_ROCHERS, e: 'ease-in-out' }], [D0, SUR_ROCHERS]], { ...nuitFixe(plans.filter(Boolean), D0), ...vivant(D0), ...guette(D0), ...ici(D0) }), acteur: R.joue([0, 'repos', 'bas_droite'], [900, 'repos', 'haut_droite']), jeux: { brume: V.B([0, 'surpris']) } };
+  const temps = V.repliques(t0, [
+    // « On lui fera une place demain, si le cœur lui en dit. En attendant, dors : je veille sur nous. »
+    [D1, LARGE, R.joue([0, 'repos', 'haut_droite'], [1200, 'repos', 'bas_droite']), V.B([0, 'content']), { ...vivant(D1), ...guette(D1), ...ici(D1) }]
+  ]);
+  plans.splice(plans.indexOf(null), 1, ...V.brumeFigurant(temps, BCE, S_BCE));
+  return V.fin(plans, temps, FEU, { brume: [3000, { y: -4 }] });
+}
+
+module.exports = { cercle05, promesse05, feu05, silhouette06 };
