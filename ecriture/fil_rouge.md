@@ -1,0 +1,110 @@
+# Brumelune — le fil rouge
+
+26 octobre 2026. **Choix de l'auteur** : le jeu est recentré. Ce document dit la structure du jeu ; il passe avant
+`HISTOIRE.md` pour tout ce qui suit le chapitre 1 (les anciens actes II à VII, Anya, les sceaux, le Grand Œuvre sont
+mis de côté, archivés, pas supprimés). Rien n'est codé de ce qui est nouveau ici.
+
+---
+
+## 1. Le jeu en une phrase
+
+**Un jeu mobile de survie : on échoue sur une île, on monte sa tribu puis son village, et on refait la civilisation
+comme on peut.** Faussement choupi : mignon en surface, grave en dessous. Des chapitres, comme une série.
+
+## 2. La structure
+
+| Partie | Ce qu'on y fait | Le temps |
+|---|---|---|
+| **Chapitre 0 : le tutoriel** | 8 jours : Brume le premier soir, puis un PNJ principal par jour (7). Chaque jour apprend une vraie mécanique, qui sert tout le reste du jeu. Le soir du dernier jour, le conseil : on voit le phare. | accéléré, tenu par nous (`src/world/tutoClock.js`) |
+| **Chapitre 1 : le phare** | Les PNJ croient que c'est la sortie : rallumer le phare, être vus, partir. Rebondissement : on ne peut pas partir. | à décider (§ 7) |
+| **Ensuite : survivre et rebâtir** | Un compteur total de jours. Si le joueur perd, son score est gardé ; il recommence, en sautant le tutoriel s'il le veut. | idée de l'auteur : environ 1 h de jour et 15 min de nuit (§ 7) |
+
+## 3. La règle d'un jour du tutoriel
+
+**Le principe** : le tutoriel enseigne exactement ce qui gardera le joueur en vie ensuite. Chaque PNJ arrive avec un
+besoin de survie, et repart avec un rôle permanent.
+
+Chaque jour suit le même gabarit :
+
+1. **Le matin, l'arrivée** : le PNJ, et le minimum à faire avec lui (le réveiller, l'aider, l'apprivoiser).
+2. **Son besoin** : un besoin de survie réel (le froid, la faim, l'eau…).
+3. **Une ou deux mécaniques vraies** pour y répondre, dont un mini-jeu quand il y en a un.
+4. **Le soir autour du feu**, puis **la nuit**.
+
+**La bonne dose** : 4 quêtes par jour, 5 au plus. Une seule notion neuve à la fois, une action réelle entre deux
+explications (règle déjà posée dans `HISTOIRE.md`, § 9).
+
+## 4. Les 8 jours du chapitre 0
+
+| Jour | PNJ | Besoin | Ce qu'on apprend (mécaniques réelles) | Mini-jeu | Son rôle ensuite | État |
+|---|---|---|---|---|---|---|
+| 1 (soir) | **Brume** | le froid | combiner au Grimoire (Vent, Brasier), ramasser, bâtir (le feu) | — | le guide ; le Grimoire donne tous les plans | codé |
+| 2 | **Lorena** | les matières | ouvrir un coffre, la Récolte, bâtir un bâtiment (Ponton), tracer un chemin | Récolte | la mer, plus tard le bateau | codé |
+| 3 | **Agathe** | la faim | cuisiner, attraper et nourrir des bêtes, loger un PNJ (son abri) | Marmite, Poules | la nourriture du groupe | codé, **trop chargé** |
+| 4 | **Nathan** | la nuit | l'établi (assembler), poser, déplacer, pivoter, acheter un outil, défendre (torches, barrière) | — | les outils, la défense | codé |
+| 5 | **Léo** | l'eau | réveiller un PNJ, un souvenir (suivre le ruban du Grimoire), un bâtiment qui produit (Puits) | — | l'eau | codé |
+| 6 | **Maerys** | le bois | explorer (ouvrir un quartier, la brume recule), apprivoiser (un cadeau, l'amitié) | Cueillette | la forêt, les bêtes | **à faire** |
+| 7 | **Robby** | l'abri (l'orage) | faire évoluer un bâtiment (palier II) | Filon | la pierre, les évolutions | **à faire** |
+| 8 | **Maggy** | durer | cultiver, le travail (chacun à son poste), les réserves pour la nuit | Moisson | les cultures | **à faire** |
+
+Le soir du jour 8 : **le conseil**. Les sept et Brume autour du feu ; Léo voit le phare. Fin du chapitre 0.
+
+### Le détail par jour
+
+- **Jour 1, Brume** (quêtes : `pages`, `ramasser`, `feu`, `nuit`). La nuit est calme : Brume veille.
+- **Jour 2, Lorena** (`caisse`, `recolte`, `premier-ponton`, `chemin-aster`, `veille`).
+- **Jour 3, Agathe** (`soupe`, `cage`, `poules`, `poulailler`, `abri-cannelle`, `barriere`, `nuit-cannelle`) : 7
+  quêtes, c'est trop. **Proposition** : la barrière passe au jour 4, avec les torches ; le jour de Nathan devient
+  celui de la nuit et de la défense.
+- **Jour 4, Nathan** (`deco`, `torches-rivet`, `outil-rivet`, `nuit-rivet`, et la barrière si on la déplace).
+- **Jour 5, Léo** (`eveil-ondin`, `souvenir-ondin`, `puits-ondin`, `chemin`).
+- **Jour 6, Maerys** (proposition) : suivre une lueur dans les arbres (explorer La Lisière) ; l'apprivoiser (elle a peur
+  du feu : un cadeau) ; son souvenir, l'Arbre, au Grimoire ; son Bosquet ; la nuit.
+- **Jour 7, Robby** (proposition) : un bruit de ciseau du côté de la Colline, on le trouve ; son souvenir, la Pierre ;
+  la Carrière ; faire évoluer l'abri pour tenir l'orage ; la nuit d'orage.
+- **Jour 8, Maggy** (proposition) : une barque de graines s'échoue, on la réveille ; le Potager ; mettre chacun à son
+  poste pour la nuit ; les réserves ; le conseil.
+
+**Préparer le rebondissement** : Maerys et Robby vivent sur l'île depuis des années. Ils savent qu'on ne part pas, et
+ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
+
+## 5. Chapitre 1 : le phare
+
+- **Le but** (dit au conseil) : rallumer le phare, pour qu'un navire nous voie.
+- **Le rebondissement, en deux temps** (choix de l'auteur) :
+  - **B, on le vit** : Lorena ne tient plus et prend la mer. Elle ressort de la brume… sur la plage de Brumelune.
+    L'île ne laisse sortir personne.
+  - **C, on le comprend** : dans le phare, le journal des Anciens : « Nous aussi, nous voulions partir. » Ils sont
+    tous restés, et pas par choix.
+- **La fin du chapitre** : on ne partira pas. Alors on reste, et on tient.
+
+## 6. Ce qui vient plus tard (pas dans le chapitre 0)
+
+Les armes, améliorer les personnages, les boutiques avancées : après le chapitre 1, une fois les bases en place.
+
+## 7. Questions ouvertes (à trancher par l'auteur avant tout code)
+
+1. **Qu'est-ce qui fait perdre ?** La faim du groupe, le feu éteint, le camp envahi la nuit, des PNJ qui partent ou
+   meurent ? Avec le ton faussement choupi, montre-t-on la mort ? (La bible disait « jamais punitif, rien n'est
+   perdu » : cette règle tombe-t-elle ?)
+2. **Le temps passe-t-il quand l'application est fermée ?** Si oui, on peut perdre sans jouer. Si non, la survie
+   attend le joueur.
+3. **Que garde-t-on en recommençant ?** Le score seul ? Le Grimoire ? Les écus ? Les achats (surtout s'ils sont
+   payants) ?
+4. **L'horloge** : 1 h de jour et 15 min de nuit remplacent-elles l'heure réelle de l'île (le soleil suit aujourd'hui
+   la vraie date, `src/world/sky.js`) ?
+5. **Le phare à la fin du chapitre 1** : est-il rallumé (une lumière qui ne sert pas à partir), ou reste-t-il éteint ?
+6. **Le jour 3** : la barrière passe-t-elle au jour 4 ?
+
+## 8. Écarts avec le code actuel (relevés, rien touché)
+
+- Le conseil se joue aujourd'hui après le jour de Léo (le Campement) ; il passe au soir du jour 8.
+- Les mini-jeux Pêche, Filon et Cueillette s'ouvrent au palier III de leur bâtiment, et leurs parties reviennent toutes
+  les 2 h réelles (`src/game/minigames.js`) : à revoir pour les apprendre pendant le tutoriel.
+- Le travail (mettre un PNJ à un poste) n'existe pas : chacun travaille seul à son bâtiment
+  (`src/world/village/residents.js`).
+- Il n'y a aucune défaite ; les besoins des PNJ (manger, outils, déco) ont des minuteurs de plusieurs heures, côté
+  serveur.
+- L'objectif de fond s'affiche par acte (« Objectif de fond · Acte N », `PhareGoal.vue`) : les actes deviennent des
+  chapitres.
+- Les quêtes vivent sur le serveur (`Og-create-backend`, `services/quests.js`), hors de ce dépôt.
