@@ -54934,57 +54934,6 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/05_feu/05_feu_anime",
-   "rubrique": "scenes",
-   "titre": "05 feu anime",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/05_feu/05_feu_anime_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/05_feu/05_feu_devant",
-   "rubrique": "scenes",
-   "titre": "05 feu devant",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/05_feu/05_feu_devant_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
-   "id": "scenes/tutoriel/05_feu/05_feu_fond",
-   "rubrique": "scenes",
-   "titre": "05 feu fond",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/05_feu/05_feu_fond_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/05_feu/05_feu_plan-brume",
    "rubrique": "scenes",
    "titre": "Scène 5d : Le feu prend au vieux cercle ; près de lui, Brume n’a plus froid (05 feu plan brume)",
