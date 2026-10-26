@@ -48,6 +48,11 @@
       </div>
 
       <div id="avm-panel" ref="panel" class="avm__panel" role="tabpanel" :aria-labelledby="`avm-tab-${tab}`">
+        <!-- l'algue du naufragé dans ses cheveux : mise ou non (vu échoué seulement : avant la vague, elle n'y était pas) -->
+        <label v-if="tab === 'objets' && castawayLook" class="avm__switch">
+          <span>{{ MAKER.algue }}</span>
+          <input type="checkbox" role="switch" :checked="modelValue.algue !== 'non'" @change="set('algue', $event.target.checked ? 'oui' : 'non')" />
+        </label>
         <!-- les rangées de l'onglet : une à la fois -->
         <div v-if="rows.length > 1" ref="rowBar" class="avm__rowbar">
           <button
@@ -160,7 +165,7 @@ const PAINT_MS = 8;
 // La région de chaque choix (sa hauteur sur le personnage, du haut) et son geste
 const REGION = { coiffure: '14%', tete: '24%', buste: '60%', jambes: '80%', pieds: '93%', pied: '52%' };
 const REGION_OF = {
-  cheveux: 'coiffure', couleurMeches: 'coiffure', yeux: 'tete', levres: 'tete', peau: 'pied',
+  cheveux: 'coiffure', couleurMeches: 'coiffure', algue: 'coiffure', yeux: 'tete', levres: 'tete', peau: 'pied',
   couleurHaut: 'buste', couleurHaut2: 'buste', couleurBas: 'jambes', couleurBas2: 'jambes', chaussures: 'pieds'
 };
 const NOD = new Set(['visage', 'cheveux']);

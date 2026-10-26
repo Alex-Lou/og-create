@@ -26,6 +26,8 @@
 @keyframes sa-breathe { from { transform: scale(1) translateY(0); } to { transform: scale(1.03) translateY(-0.6%); } }
 @media (prefers-reduced-motion: reduce) { .sa__art--breathing { animation: none; } }
 .sa__name { font-family: var(--font-fell); font-style: italic; font-size: 17px; fill: var(--sa-name-ink); }
+/* (le nom sur la carte que le vent emporte : l'encre bleue de la carte) */
+.sa__carte-nom { font-family: var(--font-fell); font-style: italic; font-size: 12px; fill: #0F2788; }
 /* Le temps qu'il fait sur la scène (le conseil) : le ciel s'assombrit, puis la pluie tombe sur toute la page */
 .sa__nuages { position: absolute; inset: 0; pointer-events: none; background: rgba(10, 16, 32, .6); transition: opacity 1.6s ease; }
 .sa__pluie { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }

@@ -35,6 +35,15 @@ async function asPlayer(request) {
   }
 }
 
+// Les choix d'un avatar tels qu'ils partent : l'algue du naufragé, mise par défaut, ne part pas (le serveur ne connaît
+// ce choix qu'à partir du 25 oct. ; sans lui, il rend le défaut, mise)
+function sansAlgue(look) {
+  if (!look || typeof look !== 'object') return look;
+  const choices = { ...look };
+  if (choices.algue === 'oui') delete choices.algue;
+  return choices;
+}
+
 export default {
   // { kind, elements, known: {nom: {emoji, family}}, families: {famille: total}, unexplored }
   state() {
@@ -216,7 +225,7 @@ export default {
   // (l'expression neutre, celle par défaut, ne part pas : le serveur ne connaît le choix « expression » qu'à partir de
   // son correctif du 15 oct. ; sans elle, il rend le défaut, neutre)
   worldAvatar(look) {
-    const choices = look && typeof look === 'object' ? { ...look } : null;
+    const choices = look && typeof look === 'object' ? sansAlgue(look) : null;
     if (choices && choices.expression === 'neutre') delete choices.expression;
     const body = choices ? { choices } : { look };
     return http.post('/play/world/avatar', body).then(response => response.data);
@@ -320,7 +329,7 @@ export default {
   // Accueillir l'arrivant qui attend au Ponton : son métier (site), son prénom, son allure (les choix de l'avatar)
   // → { settled, coins?, world }
   arrivalWelcome(id, { site, name, look }) {
-    return http.post('/play/world/arrival', { id, site, name, look }).then(response => response.data);
+    return http.post('/play/world/arrival', { id, site, name, look: sansAlgue(look) }).then(response => response.data);
   },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {

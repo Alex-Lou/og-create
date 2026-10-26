@@ -526,6 +526,13 @@
     "ballerines",
     "sabots"
    ]
+  },
+  "algue": {
+   "dans": "formes",
+   "options": [
+    "oui",
+    "non"
+   ]
   }
  },
  "formes": {
@@ -714,6 +721,10 @@
    "degrade": "Dégradé",
    "raye": "Rayé",
    "pois": "À pois"
+  },
+  "algue": {
+   "oui": "Avec",
+   "non": "Sans"
   }
  },
  "nuanciers": {
@@ -2018,6 +2029,7 @@
   "couleurBas2": "marine",
   "chaussures": "cuir",
   "formeChaussures": "souliers",
+  "algue": "oui",
   "accessoires": {}
  },
  "exemples": {
@@ -2058,6 +2070,7 @@
     "couleurBas2": "marine",
     "chaussures": "cuir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {}
    },
    "fichiers": {
@@ -2716,6 +2729,7 @@
     "couleurBas2": "marine",
     "chaussures": "blanc",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "joues": {
       "id": "coeurs",
@@ -3339,6 +3353,7 @@
     "couleurBas2": "marine",
     "chaussures": "cuir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "visage": {
       "id": "lunettesRondes",
@@ -3962,6 +3977,7 @@
     "couleurBas2": "marine",
     "chaussures": "cuir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "paille",
@@ -4585,6 +4601,7 @@
     "couleurBas2": "marine",
     "chaussures": "rouge",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "bandana",
@@ -5208,6 +5225,7 @@
     "couleurBas2": "marine",
     "chaussures": "cuir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "couronneFleurs",
@@ -5831,6 +5849,7 @@
     "couleurBas2": "marine",
     "chaussures": "cuir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "casquette",
@@ -6454,6 +6473,7 @@
     "couleurBas2": "marine",
     "chaussures": "jean",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "bonnet",
@@ -7079,6 +7099,7 @@
     "couleurBas2": "marine",
     "chaussures": "noir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "visage": {
       "id": "lunettesPapillon",
@@ -7702,6 +7723,7 @@
     "couleurBas2": "marine",
     "chaussures": "cuir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "tete": {
       "id": "oreillesChat",
@@ -8325,6 +8347,7 @@
     "couleurBas2": "marine",
     "chaussures": "creme",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "dos": {
       "id": "ailes",
@@ -8948,6 +8971,7 @@
     "couleurBas2": "marine",
     "chaussures": "cuir",
     "formeChaussures": "souliers",
+    "algue": "oui",
     "accessoires": {
      "main": {
       "id": "peluche",

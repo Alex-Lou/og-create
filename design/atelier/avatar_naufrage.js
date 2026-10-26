@@ -1,7 +1,7 @@
 // L'avatar en naufragé (HISTOIRE.md § 6.17) : le même dessin que l'avatar (design/personnages/avatar.js), passé par
 // la transformation des naufragés (naufrage.js) : habits délavés, lambeaux à l'ourlet, un trou, manches retroussées
 // ou arrachées, pantalon retroussé (ou jambes nues sous le short, la jupe, la robe), pieds nus, une algue dans les
-// cheveux, du sable sur la joue. Il garde tout ce qu'il a choisi (choix de l'auteur, 15 oct.), les tissus délavés
+// cheveux (sauf s'il l'a enlevée : choix algue), du sable sur la joue. Il garde tout ce qu'il a choisi (choix de l'auteur, 15 oct.), les tissus délavés
 // comme ses habits (naufrageChoix). L'avatar garde ce look
 // jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits.
 const { avatar, naufrageChoix, verifier, shortLeg, delave, ACCESSOIRES, familleHaut, familleBas } = require('../personnages/avatar');
@@ -69,7 +69,7 @@ function avatarNaufrage(choix = {}, opts = {}) {
     sleeveCut: haut === 'tshirt' || bas === 'robeEntiere' ? 6.4 : haut === 'mariniere' ? 4.4 : 5,
     holes,
     rips: { front: [[19.6, 43.2 + dy, 2.4]], se: [[18.8, 43.4 + dy, 2.2]], ne: [[28.4, 43 + dy, 2.2]] },
-    head: ({ view }) => shift(algue(view, c) + (view === 'se' ? smudge(27.4, 27.6, '#C4A2B8') : view === 'front' ? smudge(30.4, 27.6, '#C4A2B8') : ''))
+    head: ({ view }) => shift((c.o.algue === 'non' ? '' : algue(view, c)) + (view === 'se' ? smudge(27.4, 27.6, '#C4A2B8') : view === 'front' ? smudge(30.4, 27.6, '#C4A2B8') : ''))
   });
   // le short délavé, effiloché au bas, par-dessus la jambe nue (castaway ne connaît que le pied)
   if (bas === 'short') {

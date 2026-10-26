@@ -892,7 +892,9 @@ var require_avatar_choix = __commonJS({
       formeChaussures: { souliers: "Souliers", baskets: "Baskets", bottines: "Bottines", bottes: "Bottes", sandales: "Sandales", ballerines: "Ballerines", sabots: "Sabots" },
       // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
       motifHaut: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" },
-      motifBas: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" }
+      motifBas: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" },
+      // l'algue du naufragé dans ses cheveux (avatar_naufrage.js ; choix de l'auteur, 25 oct.) : mise par défaut, on peut l'enlever
+      algue: { oui: "Avec", non: "Sans" }
     };
     var EMPLACEMENTS2 = {
       tete: "Tête",
@@ -1096,7 +1098,8 @@ var require_avatar_choix = __commonJS({
       motifBas: "formes",
       couleurBas2: "tissus",
       chaussures: "tissus",
-      formeChaussures: "formes"
+      formeChaussures: "formes",
+      algue: "formes"
     };
     var DEFAUT2 = {
       genre: "femme",
@@ -1133,6 +1136,7 @@ var require_avatar_choix = __commonJS({
       couleurBas2: "marine",
       chaussures: "cuir",
       formeChaussures: "souliers",
+      algue: "oui",
       accessoires: {}
     };
     var accepte = /* @__PURE__ */ __name((nom, cle) => NUANCIERS2[nom] && cle in NUANCIERS2[nom] || (nom === "tissus" || nom === "cheveux") && cle in NUANCIERS2.teintures, "accepte");
@@ -2560,7 +2564,7 @@ var require_manche = __commonJS({
           s += trait(lev.emmanchure, ombre, 0.55, ' opacity=".85"');
         } else {
           s += trait(arcDehors + " " + ligne(Dh).replace("M", "L"), OUT, W);
-          s += trait(arcDedans, ombre, 0.5, ' opacity=".8"');
+          s += trait(arcDedans, OUT, W * 0.7);
         }
         if (!lev) s += trait(ligne([add(Dd[0], u0, 0.6), ...Dd.slice(1)]), OUT, W);
         if (genre === "torn") {
@@ -4720,7 +4724,7 @@ var require_avatar_naufrage = __commonJS({
         sleeveCut: haut === "tshirt" || bas === "robeEntiere" ? 6.4 : haut === "mariniere" ? 4.4 : 5,
         holes,
         rips: { front: [[19.6, 43.2 + dy, 2.4]], se: [[18.8, 43.4 + dy, 2.2]], ne: [[28.4, 43 + dy, 2.2]] },
-        head: /* @__PURE__ */ __name(({ view }) => shift(algue(view, c) + (view === "se" ? smudge(27.4, 27.6, "#C4A2B8") : view === "front" ? smudge(30.4, 27.6, "#C4A2B8") : "")), "head")
+        head: /* @__PURE__ */ __name(({ view }) => shift((c.o.algue === "non" ? "" : algue(view, c)) + (view === "se" ? smudge(27.4, 27.6, "#C4A2B8") : view === "front" ? smudge(30.4, 27.6, "#C4A2B8") : "")), "head")
       });
       if (bas === "short") {
         const worn = { bas: delave(c.bas), basS: delave(c.basS) };

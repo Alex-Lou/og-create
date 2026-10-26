@@ -24,7 +24,8 @@ export const SIGN = {
 export const MAKER = {
   figure: 'Ton personnage, en pied',
   wait: 'La photo se compose…',
-  vague: { echoue: 'Voir échoué', avant: 'Voir avant la vague' }
+  vague: { echoue: 'Voir échoué', avant: 'Voir avant la vague' },
+  algue: 'L’algue dans les cheveux'
 };
 
 // La carte d'embarquement (BoardingCard) : son nom accessible, avec ou sans le nom du joueur

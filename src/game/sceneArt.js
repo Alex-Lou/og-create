@@ -28,6 +28,15 @@ const FEET = [24, 62];
 // La ligne « Nom » de la carte d'embarquement (00_carte), où le jeu écrit le nom du joueur
 export const NAME_LINE = { x: 210, y: 217, w: 104 };
 
+// La carte d'embarquement que le tampon marque et que le vent emporte (00_tampon ; choix de l'auteur, 25 oct.) : la photo
+// et le nom du joueur y sont déjà, posés sur la pièce « photo », attachée à la carte (elle en suit tous les mouvements).
+// Sa place dans le carré (design/atelier/gravure_plage.js : CARTE, carteGravee) : son milieu (x, y), son angle, son coin
+// haut gauche depuis son milieu (coin) ; en unités de la carte, le tirage de la photo (x, y, largeur, hauteur) et le
+// début de la ligne « Nom »
+const CARTES = {
+  '00_tampon': { dans: 'carte', x: 200, y: 206, angle: -14, coin: [130, 84], photo: [22, 56, 51, 57], nom: [112, 82] }
+};
+
 // Les images d'une pose (fichiers _1, _2… dans l'ordre)
 function framesOf(dir, pose) {
   const out = [];
@@ -71,6 +80,14 @@ export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = tr
 // temps que son avatar composé se dessine
 export function playerFace(look) {
   return avatarFrames(look)[0] || avatarFrames(DEFAULT_LOOK)[0];
+}
+
+// La photo du joueur dans un tirage (x, y, largeur, hauteur) : cadrée comme sur la carte du prologue (00_carte : à
+// mi-corps), mise à l'échelle du tirage ; la place de son image
+export function photoBox([x, y, w]) {
+  const spot = DATA.scenes['00_carte'].avatar, box = avatarBox(spot);
+  const [cx, cy, cw] = spot.cadre, k = w / cw;
+  return { x: x + (box.x - cx) * k, y: y + (box.y - cy) * k, w: box.w * k, h: box.h * k };
 }
 
 // La place de l'avatar dans le carré : son cadre agrandi, posé sur ses pieds ; mirror : la transformation du miroir
@@ -130,7 +147,9 @@ export function sceneOf(id) {
       // (un figurant : ses images, par clé, et ses animations)
       ...(p.images ? { images: Object.fromEntries(Object.entries(p.images).map(([cle, f]) => [cle, url(f)])), anims: p.anims } : {}) }));
     const anime = scene.plans.find(p => p.id === 'anime');
-    return { frames: 1, ms: scene.ms_par_image, still: false, h: 400, plans, partition: scene.partition || null, back: [], live: anime && anime.fichier ? [url(anime.fichier)] : [], front: [], avatar: scene.avatar };
+    const carte = CARTES[shown] || null;
+    if (carte) plans.push({ id: 'photo', href: null, profondeur: 0, marge: 0, flou: 1, pivot: null, cadre: null, dans: carte.dans, derriere: false });
+    return { frames: 1, ms: scene.ms_par_image, still: false, h: 400, plans, partition: scene.partition || null, back: [], live: anime && anime.fichier ? [url(anime.fichier)] : [], front: [], avatar: scene.avatar, carte };
   }
   const kept = Object.hasOwn(STILL, shown) && scene.images > 1 ? STILL[shown] : null;
   const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);

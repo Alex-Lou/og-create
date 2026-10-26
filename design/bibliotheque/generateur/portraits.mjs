@@ -1286,7 +1286,9 @@ var require_avatar_choix = __commonJS({
       formeChaussures: { souliers: "Souliers", baskets: "Baskets", bottines: "Bottines", bottes: "Bottes", sandales: "Sandales", ballerines: "Ballerines", sabots: "Sabots" },
       // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
       motifHaut: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" },
-      motifBas: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" }
+      motifBas: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" },
+      // l'algue du naufragé dans ses cheveux (avatar_naufrage.js ; choix de l'auteur, 25 oct.) : mise par défaut, on peut l'enlever
+      algue: { oui: "Avec", non: "Sans" }
     };
     var EMPLACEMENTS = {
       tete: "Tête",
@@ -1490,7 +1492,8 @@ var require_avatar_choix = __commonJS({
       motifBas: "formes",
       couleurBas2: "tissus",
       chaussures: "tissus",
-      formeChaussures: "formes"
+      formeChaussures: "formes",
+      algue: "formes"
     };
     var DEFAUT = {
       genre: "femme",
@@ -1527,6 +1530,7 @@ var require_avatar_choix = __commonJS({
       couleurBas2: "marine",
       chaussures: "cuir",
       formeChaussures: "souliers",
+      algue: "oui",
       accessoires: {}
     };
     var accepte = /* @__PURE__ */ __name((nom, cle) => NUANCIERS[nom] && cle in NUANCIERS[nom] || (nom === "tissus" || nom === "cheveux") && cle in NUANCIERS.teintures, "accepte");
