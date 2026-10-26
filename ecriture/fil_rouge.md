@@ -84,6 +84,24 @@ ils se taisent. Une demi-phrase de chacun, les jours 6 et 7, suffit.
 Chaque PNJ reçoit un rôle, parmi trois familles : **récolteur**, **artisan**, **guerrier**. Les rôles s'apprennent au
 jour 8 ; au chapitre 2, le premier habitant reçoit le sien en arrivant.
 
+- **Les habitants** (dès le chapitre 2) : le joueur choisit librement leur rôle ; chacun a un bonus dans son rôle
+  naturel (choix de l'auteur).
+- **Les 7 PNJ principaux** ont déjà leur rôle, varié, qui suit ce qu'ils enseignent au tutoriel. Proposition (3
+  récolteurs, 2 artisans, 2 guerriers), à valider :
+
+| PNJ | Rôle | Pourquoi (son jour du tutoriel) |
+|---|---|---|
+| Lorena | récolteuse | jour 2 : la Récolte, les matières ; la mer, plus tard la pêche |
+| Agathe | artisane | jour 3 : la cuisine, transformer ce qu'on récolte en repas |
+| Nathan | artisan | jour 4 : l'établi, les outils, les défenses qu'on fabrique (torches, barrière) |
+| Léo | récolteur | jour 5 : l'eau, le Puits |
+| Maerys | guerrière | jour 6 : l'exploration ; des années seule dans la forêt, elle chasse et éclaire la route |
+| Robby | guerrier | jour 7 : la nuit d'orage ; des années seul près des pierres, il tient le camp avec son maillet |
+| Maggy | récolteuse | jour 8 : les cultures |
+
+Conséquence pour le jour 7 : Robby n'apprend plus seulement à faire évoluer l'abri, il apprend aussi à **monter la
+garde** pendant l'orage (la première défense active ; le jour 4 reste celui des défenses qu'on fabrique).
+
 ## 6 bis. Ce qui vient plus tard (pas dans le chapitre 0)
 
 Les armes, améliorer les personnages, les boutiques avancées : après le chapitre 1, une fois les bases en place.
@@ -118,8 +136,7 @@ couvre déjà : les matières (jour 2), la nourriture (jour 3), la défense (jou
 1. **Recommencer, le reste** : tout repart-il à zéro, le Grimoire et ses pages écrites compris ?
 2. **Le délai de grâce dans le jeu** : à quoi il ressemble (un PNJ affaibli, puis à bout, puis mort ? Brume qui
    prévient ?) et combien de temps il dure.
-3. **Les rôles** : le joueur choisit-il librement le rôle de chacun, ou chaque PNJ a-t-il le sien ? Un PNJ est-il
-   meilleur dans un rôle (Nathan artisan, par exemple) ? Change-t-on de rôle ?
+3. **Les rôles des 7 PNJ principaux** : valider le tableau du § 6. Leur rôle est-il fixe pour toute la partie ?
 4. **Le jour 3** : il compte 7 quêtes ; déplacer la barrière au jour 4 (avec les torches) l'allégerait.
 
 ## 8. Écarts avec le code actuel (relevés, rien touché)
