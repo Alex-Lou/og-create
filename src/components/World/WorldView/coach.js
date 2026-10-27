@@ -245,7 +245,8 @@ export default {
     coachRect(name) {
       const at = this.coachWorld(name);
       const canvas = this.$refs.canvas;
-      if (!at || !canvas || !this.geo) return null;
+      // (sous l'annonce d'un naufrage, rien à montrer : elle se ferme d'un toucher, puis la caméra va au quartier)
+      if (!at || !canvas || !this.geo || this.wreck) return null;
       const box = canvas.getBoundingClientRect();
       const p = this.toScreen(at.x, at.y);
       const r = Math.max(22, at.r * this.cam.s);

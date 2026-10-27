@@ -210,7 +210,9 @@ describe('le tutoriel', () => {
     expect(scenesBefore('soupe')).toEqual([...before, 'nuit', 'recolte']);
     expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet']);
     expect(scenesBefore('chemin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
-    expect(scenesBefore('lisiere')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
+    // (le tutoriel en huit jours : le Campement se joue le soir du chemin, avant la cinquième nuit)
+    expect(scenesBefore('nuit-ondin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
+    expect(scenesBefore('lisiere')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement']);
     // Un appareil qui n'a rien retenu, à l'étape de la soupe : la nuit et l'arrivée de Lorena comptent comme vues.
     const resumed = { started: true, registered: true, named: true, seen: scenesBefore('soupe') };
     expect(islandStep({ state: state(resumed), quest: { id: 'soupe', done: false } })).toEqual({ phase: 'scene', scene: 'cannelle' });
@@ -273,5 +275,21 @@ describe('les torches de Nathan (choix de l’auteur, 13 oct.)', () => {
     expect(fates[3].path[fates[3].step]).toEqual({ x: 97, y: 89 });
     // Sans torche ni clôture : tout droit sur le feu
     expect(lumieresOf(foyer, []).map(f => f.end)).toEqual(['arrive', 'arrive', 'arrive', 'arrive']);
+  });
+  it('le tutoriel en huit jours (choix de l’auteur, 26 oct.) : jusqu’au Potager de Maggy, pour un compte qui le suit seulement', () => {
+    const all = { started: true, registered: true, named: true, seen: scenesBefore('lumiere') };
+    const at = (id, last, seen = all.seen) => islandStep({ state: state({ ...all, seen }), quest: { id, done: false }, last });
+    // Le soir du chemin : le Campement, puis la cinquième nuit
+    expect(at('nuit-ondin', 'potager', scenesBefore('nuit-ondin'))).toEqual({ phase: 'scene', scene: 'campement' });
+    expect(at('nuit-ondin', 'potager')).toEqual({ phase: 'sleep' });
+    // Les jours de Maerys, Robby, Maggy : guidés ; leurs nuits, Brume
+    expect(at('lisiere', 'potager')).toEqual({ phase: 'lines', lines: [] });
+    expect([at('nuit-sylve', 'potager'), at('nuit-galet', 'potager')]).toEqual([{ phase: 'sleep' }, { phase: 'sleep' }]);
+    // Le Potager réclamé : la fin (le conseil suit, par la chronique)
+    expect(at('lumiere', 'potager')).toEqual({ phase: 'finish' });
+    // Un compte qui avait fini l'ancien tutoriel (le serveur dit : le chemin) : la Lisière n'est plus guidée
+    expect(at('lisiere', 'chemin')).toEqual({ phase: 'finish' });
+    expect(at('lisiere')).toEqual({ phase: 'finish' });
+    expect([inPrologue('jardins', 'potager'), inPrologue('jardins'), inPrologue('chemin'), inPrologue('lumiere', 'potager')]).toEqual([true, false, true, false]);
   });
 });

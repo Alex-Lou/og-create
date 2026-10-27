@@ -29,7 +29,7 @@ describe('le cercle doré d’une étape du tutoriel se touche tout entier', () 
       thickMist: () => true,
       coachWorld: name => (name === 'coin:cannelle' ? { x: 0, y: -20, r: 30 } : null),
       toScreen: (x, y) => ({ x, y }),
-      tapAllowed: hit => Boolean(hit.campItem),
+      onStep: hit => Boolean(hit.campItem),
       hitAt(...args) { return gestures.hitAt.apply(this, args); }
     });
     coach.state.lesson = { steps: [{ target: 'île:coin:cannelle' }, { target: '.world__tip-btn' }] };

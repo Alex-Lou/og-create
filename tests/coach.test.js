@@ -92,7 +92,7 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'soupe', done: true }).id).toBe('claim');
     expect(first({ id: 'soupe', done: true })).toBe('île:brume');
     // Hors du prologue, rien
-    expect(islandLesson({ id: 'lisiere', done: false })).toBeNull();
+    expect(islandLesson({ id: 'lumiere', done: false })).toBeNull();
     // L'île d'abord : la première quête se joue au Grimoire (l'Air, puis « Transmuer »)
     const pages = islandLesson({ id: 'pages', done: false });
     expect([pages.id, pages.mode]).toEqual(['quest-pages', 'infinite']);
@@ -108,11 +108,12 @@ describe('les leçons de l’île', () => {
     expect(claim[0].text).toBeTruthy();
     expect(claim.slice(1).some(st => st.hush)).toBe(false);
   });
-  it('la barrière du nord : deux piquets à la main, puis le reste d’un trait, « Valider » quand elle est complète', () => {
+  it('la barrière du nord : d’un trait dès le premier piquet, « Valider » quand elle est complète', () => {
     const targets = have => islandLesson({ id: 'barriere', done: false, have, need: 7 }).steps.map(st => st.target);
-    expect(targets(1)).toContain('île:pose');
-    expect(targets(2)).toContain('île:trace');
-    expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full="ligne"]:not(:disabled)');
+    expect(targets(0)).toContain('île:trace');
+    expect(targets(0)).not.toContain('île:pose');
+    expect(targets(3)).toEqual(targets(0));
+    expect(targets(0).at(-1)).toBe('[data-coach="line-go"][data-full="ligne"]:not(:disabled)');
     // (plus de leçon des portes ni de l'enclos d’Agathe : choix de l'auteur, 19 oct.)
     expect([islandLesson({ id: 'portes', done: false }), islandLesson({ id: 'enclos-cannelle', done: false })]).toEqual([null, null]);
   });
@@ -197,6 +198,16 @@ describe('les leçons de l’île', () => {
     expect(questShort({ id: 'poules', done: false }, { ...state, camp: [{ id: 'cage', art: 'cage_coincee' }] }, { food: 0 })).toBe(false);
     expect(short('ramasser', {})).toBe(false);
   });
+  it('les torches de Nathan : le bois de toutes celles qui restent, avant d’assembler', () => {
+    const torches = reserve => ({ crafts: { catalog: [{ id: 'torche', cost: { wood: 2 }, reserve }] } });
+    const short = (have, wood, reserve = 0) => questShort({ id: 'torches-rivet', done: false, have, need: 3 }, torches(reserve), { wood });
+    // (trois à planter, six bois : avec quatre, la Récolte d'abord, plutôt qu'une torche posée puis tout à refaire)
+    expect([short(0, 4), short(0, 6)]).toEqual([true, false]);
+    // (une plantée : deux restent, quatre bois)
+    expect([short(1, 3), short(1, 4)]).toEqual([true, false]);
+    // (une torche en réserve : elle se pose sans rien payer)
+    expect(short(0, 0, 1)).toBe(false);
+  });
   it('chaque geste d’une leçon est forcé la première fois, puis libre', () => {
     coach.state.seen.clear();
     coach.show(islandLesson({ id: 'feu', done: false }));
@@ -208,5 +219,22 @@ describe('les leçons de l’île', () => {
     expect(coach.blocks('quest-feu#1')).toBe(false);
     expect(coach.blocks('quest-feu')).toBe(true);
     coach.show(null);
+  });
+  it('le tutoriel en huit jours : le quartier de chaque jour, qui y vit, son souvenir, son bâtiment, ses nuits', () => {
+    const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
+    // (le quartier : le toucher, « Voir le quartier », l'acheter ; une phrase par geste)
+    expect(targets('lisiere')).toEqual(['île:quartier:lisiere', '.world__tip-btn[data-pick="zone:lisiere"]', '[data-coach="zone-buy"]:not(:disabled)']);
+    expect(targets('jardins')[0]).toBe('île:quartier:jardins');
+    // (qui y vit : le toucher, « Le réveiller », comme Léo)
+    expect(targets('eveil-galet')).toEqual(['île:habitant:carriere', '.world__tip-btn[data-pick="vil:carriere"]']);
+    // (son souvenir : au Grimoire, par le ruban, sans Encre offerte)
+    const vie = islandLesson({ id: 'vie', done: false });
+    expect([vie.mode, vie.steps[0].target, vie.steps.some(st => st.target.includes('data-spot="ink"'))]).toEqual(['infinite', '.book-view__ariane', false]);
+    // (son bâtiment, comme le Puits ; ce qu'il coûte manque : la Récolte d'abord)
+    expect(targets('potager')[0]).toBe('île:site:potager');
+    expect(islandLesson({ id: 'bosquet', done: false, short: true })).toMatchObject({ id: 'short-bosquet', steps: [{ target: '.world__play' }] });
+    expect(questShort({ id: 'carriere', done: false }, { sites: [{ id: 'carriere', level: 0, next: { cost: { wood: 5 } } }] }, { wood: 4 })).toBe(true);
+    // (ses nuits : toucher Brume)
+    expect(['nuit-ondin', 'nuit-sylve', 'nuit-galet'].map(id => targets(id)[0])).toEqual(['île:brume', 'île:brume', 'île:brume']);
   });
 });

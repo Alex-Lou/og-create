@@ -25,6 +25,8 @@ export function viewFields() {
     doorClock: null,
     // Bâtiments en train de s'élever : id → { at, from } ; décor naturel des cases libres
     raises: new Map(),
+    // Abris du camp en train de s'élever (celui d’Agathe, celui de Nathan) : id du coin → { at, from : son dessin d'avant }
+    campRaises: new Map(),
     props: [],
     // Ce décor rangé par case (y × taille + x → [prop]), refait avec lui (WorldView serve.js : apply ; draw/nature.js,
     // draw/loop.js le lisent)

@@ -42,11 +42,11 @@
       </svg>
     </div>
     <!-- (la main seule, sans bulle : la croix au coin de la cible) -->
-    <button v-if="ready && !(step.text && !quiet)" type="button" class="coach__close is-alone" :style="closeStyle" aria-label="Fermer" @click="close">×</button>
+    <button v-if="ready && !toClose && !(step.text && !quiet)" type="button" class="coach__close is-alone" :style="closeStyle" aria-label="Fermer" @click="close">×</button>
     <!-- Une quête qui compte (ramasser trois trouvailles, planter quatre piquets) : où l'on en est, près de la main -->
-    <span v-if="tally" class="coach__tally" :style="tallyStyle" role="status">{{ tally }}</span>
+    <span v-if="tally && !toClose" class="coach__tally" :style="tallyStyle" role="status">{{ tally }}</span>
     <transition name="coach-say" appear>
-      <p v-if="step.text && ready && !quiet" ref="say" :key="stepId" :class="['coach__say', { 'coach__say--side': side }]" :style="[sayStyle, speakerStyle]" role="status">
+      <p v-if="step.text && ready && !quiet && !toClose" ref="say" :key="stepId" :class="['coach__say', { 'coach__say--side': side }]" :style="[sayStyle, speakerStyle]" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
         <button type="button" class="coach__close" aria-label="Fermer" @click="close">×</button>
@@ -74,7 +74,7 @@ const LOST_MS = 1200;
 const HAND_MS = 1500;
 const NEXT_HAND_MS = 600;
 const VEIL_MS = 5000;
-const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock, .island-loader';
+const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock, .island-loader, .world__wreck';
 // Ce que la bulle ne recouvre jamais (on doit pouvoir le toucher) : le bouton Récolte de l'île, le bandeau d'un mode
 // (chemin, déplacer, poser) et le menu d'une pose ; l'écart gardé avec eux (px)
 const DODGE = '.world__play--fab, .world__banner, .world__menu';
@@ -92,7 +92,7 @@ export default {
   },
   data() {
     count += 1;
-    return { hole: null, view: { w: 0, h: 0 }, sayH: SAY_H, sayW: 0, dodge: [], edge: 0, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false, quiet: false };
+    return { hole: null, view: { w: 0, h: 0 }, sayH: SAY_H, sayW: 0, dodge: [], edge: 0, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false, quiet: false, toClose: false };
   },
   computed: {
     // Le geste montré (lesson.steps[at]) et son identifiant ; forcé tant qu'il n'a jamais été fait
@@ -203,7 +203,7 @@ export default {
     // Le toucher sur la cible elle-même : le geste est fait (il passe à la cible, rien n'est retenu)
     this.onDown = event => {
       const h = this.hole;
-      if (h && event.clientX >= h.x && event.clientX <= h.x + h.w && event.clientY >= h.y && event.clientY <= h.y + h.h) coach.done(this.stepId);
+      if (h && !this.toClose && event.clientX >= h.x && event.clientX <= h.x + h.w && event.clientY >= h.y && event.clientY <= h.y + h.h) coach.done(this.stepId);
       // (le joueur agit : le voile attend encore)
       this.touchedAt = performance.now();
     };
@@ -229,8 +229,11 @@ export default {
         const ahead = steps[k].target.startsWith('île:') ? null : coach.rectOf(steps[k].target);
         if (!ahead || this.covered(ahead.el)) continue;
         const key = `${this.lesson.id}#${k}`;
-        if (this.scrolledTo !== key) {
+        // (et une fois par élément : l'établi rouvert pour la torche suivante a un nouveau « Poser », plus bas ; sans
+        // quoi le joueur restait sans main)
+        if (this.scrolledTo !== key || this.scrolledEl !== ahead.el) {
           this.scrolledTo = key;
+          this.scrolledEl = ahead.el;
           coach.reveal(steps[k].target);
         }
         break;
@@ -244,12 +247,22 @@ export default {
           coach.reveal(steps[at].target);
         }
       }
-      if (r && at !== this.at) {
+      // Une fiche d'habitant ouverte par-dessus (au réveil, elle s'ouvre d'elle-même) : la main seule sur sa croix, sans
+      // consigne (choix de l'auteur, 27 oct.) ; le geste reprend quand elle se ferme
+      const cross = r ? null : this.sheetCross();
+      if (Boolean(cross) !== this.toClose) {
+        this.toClose = Boolean(cross);
         this.hole = null;
         this.shownAt = 0;
         this.ready = false;
       }
-      if (r) this.at = at;
+      if (cross) r = cross;
+      if (r && !cross && at !== this.at) {
+        this.hole = null;
+        this.shownAt = 0;
+        this.ready = false;
+      }
+      if (r && !cross) this.at = at;
       // (la bulle mesurée et le bord du bas, seulement quand ils changent : le calque ne se redessine pas pour rien)
       const sayH = this.$refs.say ? this.$refs.say.offsetHeight : 0;
       if (sayH && sayH !== this.sayH) this.sayH = sayH;
@@ -263,7 +276,7 @@ export default {
       this.measureDodge();
       // Dans une fiche ou une fenêtre : le coach passe par-dessus (sa bulle « Me montrer » aussi)
       this.high = Boolean(r && r.el && r.el.closest && r.el.closest('.g-modal-backdrop, .world__sheet-backdrop'));
-      if (r && !steps[at].target.startsWith('île:')) this.roomFor(r, `${this.lesson.id}#${at}${this.ready && sayH ? '#bulle' : ''}`);
+      if (r && !cross && !steps[at].target.startsWith('île:')) this.roomFor(r, `${this.lesson.id}#${at}${this.ready && sayH ? '#bulle' : ''}`);
       const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD, round: Boolean(r.round) } : null;
       // (la découpe glisse vers sa cible, sauf en mouvement réduit)
       if (!next || !this.hole || reducedMotion()) this.hole = next;
@@ -300,7 +313,7 @@ export default {
       }
       const wait = reducedMotion() ? 0 : this.at ? NEXT_HAND_MS : HAND_MS;
       const ready = now - this.shownAt >= wait;
-      const veiled = ready && this.blocked && now - Math.max(this.touchedAt, this.shownAt) >= VEIL_MS;
+      const veiled = ready && this.blocked && !this.toClose && now - Math.max(this.touchedAt, this.shownAt) >= VEIL_MS;
       if (ready !== this.ready) {
         this.ready = ready;
         if (ready && this.lesson.once && !this.quiet && this.step.text) coach.say(this.lesson.id, this.step.target);
@@ -359,6 +372,12 @@ export default {
     },
     // La cible est à l'écran et rien ne la recouvre (une fiche, une scène, une bulle de Brume : le coach attend) ; son
     // centre, ou son haut (la rangée d'éléments du Grimoire passe en partie sous le plateau de l'Athanor)
+    // La croix d'une fiche d'habitant ouverte (VillagerSheet, dans un GModal), à l'écran : son rectangle, ou null
+    sheetCross() {
+      const el = document.querySelector('.friend')?.closest('.g-modal-backdrop')?.querySelector('.g-modal__close');
+      const b = el && el.getBoundingClientRect();
+      return b && b.width > 0 ? { x: b.left, y: b.top, w: b.width, h: b.height, el } : null;
+    },
     visible(r) {
       return [r.y + r.h / 2, r.y + Math.min(r.h / 4, 24)].some(cy => this.shows(r, cy));
     },

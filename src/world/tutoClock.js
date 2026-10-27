@@ -43,7 +43,24 @@ export const MOMENTS = {
   'eveil-ondin': [8, 10],
   'souvenir-ondin': [10, 12],
   'puits-ondin': [12, 15],
-  chemin: [15, 17]
+  chemin: [15, 17],
+  // Le tutoriel en huit jours (choix de l'auteur, 26 oct.) : le soir du chemin, le Campement et la cinquième nuit ; puis
+  // un jour par personnage : son quartier au matin, sa rencontre, son souvenir, son bâtiment l'après-midi, la nuit
+  'nuit-ondin': [19, 23.5],
+  lisiere: [8, 9.5],
+  'eveil-sylve': [9.5, 11],
+  vie: [11, 12.5],
+  'souvenir-sylve': [12.5, 14],
+  bosquet: [14, 17],
+  'nuit-sylve': [19, 23.5],
+  colline: [8, 9.5],
+  'eveil-galet': [9.5, 11],
+  'souvenir-galet': [11, 13],
+  carriere: [13, 17],
+  'nuit-galet': [19, 23.5],
+  jardins: [8, 9.5],
+  'eveil-melisse': [9.5, 11],
+  potager: [11, 17]
 };
 
 // La date du ciel pour l'étape quest, elapsed ms après qu'elle a commencé (sur cet appareil), le jour de today ; null

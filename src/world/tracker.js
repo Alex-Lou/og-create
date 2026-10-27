@@ -17,7 +17,7 @@ export function mainOf(brume) {
   if (!brume) return null;
   const quest = brume.quest;
   if (!quest) return brume.rested ? { id: 'rested', tag: 'Île apaisée', label: brume.rested, rested: true, done: false } : null;
-  const tutorial = Boolean(brume.tutorial && !brume.skipped && inPrologue(quest.id));
+  const tutorial = Boolean(brume.tutorial && !brume.skipped && inPrologue(quest.id, brume.tutorialLast));
   return {
     id: quest.id,
     tag: tutorial || quest.act === 'T' ? 'Tutoriel' : `Acte ${quest.act}`,

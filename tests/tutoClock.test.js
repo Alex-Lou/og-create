@@ -26,7 +26,7 @@ describe('l’horloge du tutoriel', () => {
     for (const id of PROLOGUE) expect(MOMENTS[id], id).toBeTruthy();
   });
   it('hors du tutoriel : rien (l’heure réelle)', () => {
-    expect(tutorialDate('lisiere', 0, today)).toBeNull();
+    expect(tutorialDate('lumiere', 0, today)).toBeNull();
     expect(tutorialDate(undefined, 0, today)).toBeNull();
   });
   it('les moments se suivent dans la journée (aucun ne finit avant de commencer)', () => {
@@ -49,7 +49,9 @@ describe('l’horloge du tutoriel', () => {
     expect(sunTimes(summer).set).toBeGreaterThan(20);
   });
   it('le jour de chaque étape (le compteur de jours) : un par personnage, un de plus à chaque matin', () => {
-    expect(['pages', 'nuit', 'caisse', 'veille', 'soupe', 'nuit-cannelle', 'deco', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'chemin'].map(tutorialDay)).toEqual([1, 1, 2, 2, 3, 3, 4, 4, 4, 5, 5]);
+    expect(['pages', 'nuit', 'caisse', 'veille', 'soupe', 'abri-cannelle', 'barriere', 'nuit-cannelle', 'deco', 'outil-rivet', 'nuit-rivet', 'eveil-ondin', 'chemin'].map(tutorialDay)).toEqual([1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5]);
+    // (le tutoriel en huit jours : la cinquième nuit, puis un jour pour Maerys, Robby et Maggy)
+    expect(['chemin', 'nuit-ondin', 'lisiere', 'bosquet', 'nuit-sylve', 'colline', 'nuit-galet', 'jardins', 'potager'].map(tutorialDay)).toEqual([5, 5, 6, 6, 6, 7, 7, 8, 8]);
     expect(tutorialDay('acte-1')).toBe(null);
     expect(tutorialDay(null)).toBe(null);
   });

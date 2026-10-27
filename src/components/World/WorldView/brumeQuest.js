@@ -146,6 +146,8 @@ export default {
         this.$emit('show-alert', messageOf(error, BRUME_ERRORS.sleep), 'error');
       }
       this.veillee = null;
+      // (le matin : le Dormeur du tutoriel, endormi contre le feu ou la barrière, se réveille et rentre dans la brume)
+      this.tutoStrays = (this.tutoStrays || []).map(c => (c.end === 'dort' && !c.wakeAt ? { ...c, wakeAt: Date.now() } : c));
       this.nightFade = false;
       this.busy = false;
     },

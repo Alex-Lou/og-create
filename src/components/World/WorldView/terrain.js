@@ -161,7 +161,7 @@ export default {
     // prologue, ce qui n'est pas à soi disparaît presque sous la brume, et seul le panneau de la quête se montre
     thickMist(state = this.state) {
       const brume = state && state.brume;
-      return Boolean(brume && brume.tutorial && !brume.skipped && brume.quest && inPrologue(brume.quest.id));
+      return Boolean(brume && brume.tutorial && !brume.skipped && brume.quest && inPrologue(brume.quest.id, brume.tutorialLast));
     },
     // Les cases du cœur encore sous la brume (world/reveal.js : veiledCellsOf), pour cette vue de l'île
     veiledOf(state) {
