@@ -267,11 +267,15 @@ export default {
     async buildShelter(who) {
       if (this.busy) return;
       await this.runAction(FAILED.shelter, async () => {
+        const before = (this.state.camp || []).find(c => c.id === who);
+        const from = before && before.art;
         const { coins, world } = await playService.shelter(who);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         const corner = (this.state.camp || []).find(c => c.id === who);
         if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
+        // (il s'élève comme un bâtiment : draw/sites.js, raiseCamp ; pas en mouvement réduit)
+        if (corner && from && from !== corner.art && !this.reduced()) this.campRaises.set(who, { at: performance.now(), from });
         vibrate([12, 40, 18]);
       });
     },

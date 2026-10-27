@@ -500,7 +500,41 @@ export default {
     const layers = campLayers(item.art, this.reduced() ? 0 : t, this.campLook(item));
     if (!layers.length) return;
     const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
+    if (this.raiseCamp(ctx, item, c, t, repaint)) return;
     layers.forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, c.x, c.y, repaint, `camp:${item.id}${i ? `:${i}` : ''}`));
+  },
+  // Un abri qui vient d'être bâti s'élève comme un bâtiment (choix de l'auteur, 27 oct. ; paintSite) : l'échafaudage se
+  // monte, l'ancien coin tremble et se tasse, l'abri sort de terre derrière un rideau de poussière. false : rien à élever
+  raiseCamp(ctx, item, c, t, repaint) {
+    const raise = this.campRaises.get(item.id);
+    if (!raise) return false;
+    const ms = performance.now() - raise.at;
+    if (ms >= RAISE_END) {
+      this.campRaises.delete(item.id);
+      return false;
+    }
+    const shape = raiseShape(ms);
+    const w = item.w || 1;
+    const span = w / 2;
+    const hw = (TW * w) / 2 * 0.86;
+    const hh = (TH * (item.h || w)) / 2 * 0.86;
+    const top = Math.max(40, TW * w * 0.5);
+    drawScaffold(ctx, c.x, c.y, hw, hh, top, ms, 'back');
+    const layers = shape.old ? campLayers(raise.from, 0, {}) : campLayers(item.art, t, this.campLook(item));
+    ctx.save();
+    if (!shape.old) {
+      // (découpé au ras du sol, comme un bâtiment qui monte : paintSite)
+      ctx.beginPath();
+      ctx.rect(c.x - TW * (span + 0.4), c.y - TW * (2 * span + 1.6), TW * (2 * span + 0.8), TW * (2 * span + 1.6) + TH * (span + 0.05));
+      ctx.clip();
+    }
+    ctx.translate(c.x + shape.shake, c.y + shape.lift * 96 * span);
+    ctx.scale(shape.sx, shape.sy);
+    layers.forEach(layer => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint));
+    ctx.restore();
+    drawScaffold(ctx, c.x, c.y, hw, hh, top, ms, 'front');
+    drawBuildDust(ctx, c.x, c.y, hw, hh, ms, item.id.length * 13, 1);
+    return true;
   },
   // L'état d'un élément du camp qui a des calques, comme le reste de l'île (choix de l'auteur, 15 oct.) : la végétation
   // qui le gagne (stade, du serveur), la neige l'hiver et la pluie (comme le phare : phareLook), la lanterne de Lorena
