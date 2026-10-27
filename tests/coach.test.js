@@ -108,11 +108,12 @@ describe('les leçons de l’île', () => {
     expect(claim[0].text).toBeTruthy();
     expect(claim.slice(1).some(st => st.hush)).toBe(false);
   });
-  it('la barrière du nord : deux piquets à la main, puis le reste d’un trait, « Valider » quand elle est complète', () => {
+  it('la barrière du nord : d’un trait dès le premier piquet, « Valider » quand elle est complète', () => {
     const targets = have => islandLesson({ id: 'barriere', done: false, have, need: 7 }).steps.map(st => st.target);
-    expect(targets(1)).toContain('île:pose');
-    expect(targets(2)).toContain('île:trace');
-    expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full="ligne"]:not(:disabled)');
+    expect(targets(0)).toContain('île:trace');
+    expect(targets(0)).not.toContain('île:pose');
+    expect(targets(3)).toEqual(targets(0));
+    expect(targets(0).at(-1)).toBe('[data-coach="line-go"][data-full="ligne"]:not(:disabled)');
     // (plus de leçon des portes ni de l'enclos d’Agathe : choix de l'auteur, 19 oct.)
     expect([islandLesson({ id: 'portes', done: false }), islandLesson({ id: 'enclos-cannelle', done: false })]).toEqual([null, null]);
   });

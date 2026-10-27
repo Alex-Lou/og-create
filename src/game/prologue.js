@@ -233,18 +233,12 @@ const LESSONS = {
     { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: COACH['chemin-aster'].trace }
   ],
   // La barrière du nord (choix de l'auteur, 19 oct. : au jour d’Agathe, une barrière, pas un enclos) : toucher Lorena
-  // ouvre l'établi sur la réserve (les piquets de sa caisse) ; une case dorée de la barrière (barrierOf), « Poser ici » ;
-  // la pose reprend tant qu'il en reste (WorldView, workshop.js : CHAIN_LESSONS)
-  barriere: [
-    { target: 'île:habitant:ponton', text: COACH.clotures.aster },
-    { target: '.bench__btn--place', text: COACH.clotures.reserve },
-    { target: 'île:pose', text: COACH.clotures.cells, free: true },
-    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
-  ],
-  // (les deux premiers piquets posés à la main : le reste de la barrière d'un trait, jusqu'au bout ; « Valider »
+  // ouvre l'établi sur la réserve (les piquets de sa caisse) ; la barrière d'un trait, dès le premier piquet (choix de
+  // l'auteur, 27 oct. : plus de piquets posés à la main d'abord), la main sur la case suivante du trait ; « Valider »
   // seulement quand le trait la complète : LineBar, full. Les gestes sur l'île restent libres : ↶ et « Annuler » se
-  // touchent, pour défaire un trait parti dans le mauvais sens, jusqu'au premier piquet ; choix de l'auteur, 15 oct.)
-  'barriere-trait': [
+  // touchent, pour défaire un trait parti dans le mauvais sens (choix de l'auteur, 15 oct.) ; la pose reprend tant qu'il
+  // en reste (WorldView, workshop.js : CHAIN_LESSONS)
+  barriere: [
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
     { target: '.bench__btn--place', text: COACH.clotures.reserve },
     { target: 'île:trace', text: COACH.clotures.trace, free: true },
@@ -520,8 +514,6 @@ export const LUMIERES = ['lumieres-regarde', 'lumieres-bord', 'lumieres-brule', 
 // Les leçons qui se répètent (trois trouvailles, les piquets de la barrière ; choix de l'auteur, 13 oct.) : chaque consigne
 // dite une fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
 const COUNTED = new Set(['ramasser', 'barriere', 'torches-rivet']);
-// Les piquets de la barrière posés un à un, à la main, avant le trait
-const BY_HAND = 2;
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin', 'vie', 'souvenir-sylve', 'souvenir-galet']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
@@ -548,9 +540,7 @@ export function islandLesson(quest) {
     return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, quest.id in PLAN_WHY ? PLAN_WHY[quest.id] : PLAN_WHY.default) };
   }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [SHORT[quest.id]] };
-  // (la barrière : deux piquets à la main, puis le reste d'un trait)
-  const steps = quest.id === 'barriere' && (quest.have || 0) >= BY_HAND ? LESSONS['barriere-trait'] : LESSONS[quest.id];
-  const lesson = { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps };
+  const lesson = { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
   return COUNTED.has(quest.id) ? { ...lesson, once: true, tally: quest.need ? { have: quest.have || 0, need: quest.need } : null } : lesson;
 }
 
