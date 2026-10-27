@@ -1156,8 +1156,9 @@ var require_deco = __commonJS({
 // atelier/port/src/world/iso.js
 var TW = 64;
 var TH = 32;
+var HAUTEUR = 1;
 function P(u, v, z = 0) {
-  return [(u - v) * TW / 2, (u + v) * TH / 2 - z];
+  return [(u - v) * TW / 2, (u + v) * TH / 2 - z * HAUTEUR];
 }
 __name(P, "P");
 var fmt = /* @__PURE__ */ __name((n) => (Math.round(n * 100) / 100).toString(), "fmt");

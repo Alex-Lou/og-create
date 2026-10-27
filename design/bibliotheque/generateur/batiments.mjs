@@ -5,8 +5,19 @@ var __name = (target, value) => __defProp(target, "name", { value, configurable:
 // atelier/port/src/world/iso.js
 var TW = 64;
 var TH = 32;
+var HAUTEUR = 1;
+function avecHauteur(k, draw) {
+  const was = HAUTEUR;
+  HAUTEUR = k;
+  try {
+    return draw();
+  } finally {
+    HAUTEUR = was;
+  }
+}
+__name(avecHauteur, "avecHauteur");
 function P(u, v, z = 0) {
-  return [(u - v) * TW / 2, (u + v) * TH / 2 - z];
+  return [(u - v) * TW / 2, (u + v) * TH / 2 - z * HAUTEUR];
 }
 __name(P, "P");
 var fmt = /* @__PURE__ */ __name((n) => (Math.round(n * 100) / 100).toString(), "fmt");
@@ -1867,16 +1878,18 @@ function alchemistHouse(skin2, rect) {
 __name(alchemistHouse, "alchemistHouse");
 var vaporOf = /* @__PURE__ */ __name((rect) => {
   const [cu, cv] = chimneyOf(rect);
-  const [x, y] = P(cu, cv, 98);
-  return (f) => sprite([0, 1, 2].map((k) => {
-    const t = (f / 4 + k / 3) % 1;
-    return dot(
-      x + Math.sin((t + k) * 5) * 3 + t * 6,
-      y - t * 26,
-      2.4 + t * 4,
-      ["rgba(160,220,200,", "rgba(190,160,240,", "rgba(250,180,220,"][k] + f2(0.75 * (1 - t)) + ")"
-    );
-  }).join(""), { x: x - 20, y: y - 44, w: 44, h: 50 });
+  return (f) => {
+    const [x, y] = P(cu, cv, 98);
+    return sprite([0, 1, 2].map((k) => {
+      const t = (f / 4 + k / 3) % 1;
+      return dot(
+        x + Math.sin((t + k) * 5) * 3 + t * 6,
+        y - t * 26,
+        2.4 + t * 4,
+        ["rgba(160,220,200,", "rgba(190,160,240,", "rgba(250,180,220,"][k] + f2(0.75 * (1 - t)) + ")"
+      );
+    }).join(""), { x: x - 20, y: y - 44, w: 44, h: 50 });
+  };
 }, "vaporOf");
 var PIERRE = { top: "#EFE6D2", left: "#DCCFB2", right: "#B3A386" };
 var CREPI = { top: "#FFF8EA", left: "#FBEFD6", right: "#E3CFA9" };
@@ -3622,7 +3635,7 @@ __name(tintOf, "tintOf");
 
 // atelier/port/src/world/rareSprites.js
 var CRESTS = {
-  foyer: [[-34, -11], [-9, -56], [18, -61], [23, -106], [41, -124], [63, -161], [30, -169]],
+  foyer: [[-34, -11], [-9, -74], [18, -91], [23, -154], [41, -170], [63, -217], [30, -237]],
   carriere: [[-2, -68], [0, -67], [19, -74], [0, -116], [0, -116], [1, -107], [14, -136]],
   bosquet: [[-2, -63], [0, -67], [0, -69], [2, -123], [3, -119], [3, -119], [10, -143]],
   puits: [[-15, -60], [0, -41], [-19, -57], [0, -57], [-3, -105], [0, -119], [0, -57]],
@@ -5382,7 +5395,16 @@ var withTints = /* @__PURE__ */ __name((look) => ({
   boatMake: look.boatMake ? tinted(look.boatMake) : null,
   anims: (look.anims || []).map((anim) => anim.tint ? { ...anim, skinned: true, frame: /* @__PURE__ */ __name((f, skin2) => tinted((s) => anim.frame(f, s))(skin2), "frame") } : anim)
 }), "withTints");
-var LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id, list]) => [id, [...list, ...TIERS[id] || []].map(withTints)]));
+var FOYER_HAUTEUR = 1.5;
+var plusHaut = /* @__PURE__ */ __name((look, k) => ({
+  ...look,
+  make: /* @__PURE__ */ __name((skin2) => avecHauteur(k, () => look.make(skin2)), "make"),
+  lights: look.fire ? look.lights : (look.lights || []).map(([u, v, z, r]) => [u, v, z * k, r]),
+  smoke: look.fire ? look.smoke : (look.smoke || []).map(([u, v, z]) => [u, v, z * k]),
+  anims: (look.anims || []).map((anim) => anim.key === "flame" ? anim : { ...anim, frame: /* @__PURE__ */ __name((f, skin2) => avecHauteur(k, () => anim.frame(f, skin2)), "frame") })
+}), "plusHaut");
+var hauteurOf = /* @__PURE__ */ __name((id, level) => id === "foyer" && level >= 2 ? FOYER_HAUTEUR : 1, "hauteurOf");
+var LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id, list]) => [id, [...list, ...TIERS[id] || []].map((look, i) => hauteurOf(id, i + 1) === 1 ? look : plusHaut(look, hauteurOf(id, i + 1))).map(withTints)]));
 var boatOf = tinted(boatSprite);
 function lookAt(siteId, level) {
   const list = LOOKS[siteId];
@@ -5522,7 +5544,7 @@ var batiments_default = {
         {
           u: 0.55,
           v: -0.07,
-          z: 17.5,
+          z: 26.25,
           rayon: 27.5
         }
       ],
@@ -5530,7 +5552,7 @@ var batiments_default = {
         {
           u: 0.3,
           v: -0.27,
-          z: 77.5
+          z: 116.25
         }
       ]
     },
@@ -5557,37 +5579,37 @@ var batiments_default = {
         {
           u: -0.81,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.79,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.17,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.42,
           v: -0.56,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.19,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: 0.78,
           v: 0.06,
-          z: 7.5,
+          z: 11.25,
           rayon: 22.5
         }
       ]
@@ -5602,9 +5624,9 @@ var batiments_default = {
       ],
       cadre: [
         -140,
-        -250,
+        -262,
         280,
-        330
+        342
       ],
       emprise: "3 × 3",
       ms_par_image: 333,
@@ -5615,43 +5637,43 @@ var batiments_default = {
         {
           u: -0.84,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.82,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.03,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.22,
           v: -0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.01,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: 0.9,
           v: -0.38,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.9,
           v: -0.38,
-          z: 76.25,
+          z: 114.38,
           rayon: 17.5
         }
       ]
@@ -5666,9 +5688,9 @@ var batiments_default = {
       ],
       cadre: [
         -140,
-        -250,
+        -276,
         280,
-        330
+        356
       ],
       emprise: "3 × 3",
       ms_par_image: 333,
@@ -5679,43 +5701,43 @@ var batiments_default = {
         {
           u: -0.87,
           v: 0.5,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.85,
           v: 0.5,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.27,
           v: 0.5,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.02,
           v: -0.1,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.74,
           v: -0.3,
-          z: 52.5,
+          z: 78.75,
           rayon: 17.5
         },
         {
           u: 0.74,
           v: -0.3,
-          z: 118.75,
+          z: 178.13,
           rayon: 17.5
         },
         {
           u: -0.2,
           v: 0.75,
-          z: 31.25,
+          z: 46.88,
           rayon: 20
         }
       ]
@@ -5734,9 +5756,9 @@ var batiments_default = {
       ],
       cadre: [
         -140,
-        -250,
+        -319.5,
         282.5,
-        330
+        399.5
       ],
       emprise: "3 × 3",
       ms_par_image: 250,
@@ -5748,37 +5770,37 @@ var batiments_default = {
         {
           u: -0.87,
           v: 0.48,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.85,
           v: 0.48,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.29,
           v: 0.48,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.04,
           v: -0.12,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.42,
           v: -0.5,
-          z: 180,
+          z: 270,
           rayon: 42.5
         },
         {
           u: -0.24,
           v: 0.76,
-          z: 31.25,
+          z: 46.88,
           rayon: 20
         }
       ]
@@ -7183,7 +7205,7 @@ var batiments_default = {
         {
           u: 0.55,
           v: -0.07,
-          z: 17.5,
+          z: 26.25,
           rayon: 27.5
         }
       ],
@@ -7191,7 +7213,7 @@ var batiments_default = {
         {
           u: 0.3,
           v: -0.27,
-          z: 77.5
+          z: 116.25
         }
       ]
     },
@@ -7219,37 +7241,37 @@ var batiments_default = {
         {
           u: -0.81,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.79,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.17,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.42,
           v: -0.56,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.19,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: 0.78,
           v: 0.06,
-          z: 7.5,
+          z: 11.25,
           rayon: 22.5
         }
       ]
@@ -7265,9 +7287,9 @@ var batiments_default = {
       ],
       cadre: [
         -140,
-        -250,
+        -262,
         280,
-        330
+        342
       ],
       emprise: "3 × 3",
       ms_par_image: 333,
@@ -7278,43 +7300,43 @@ var batiments_default = {
         {
           u: -0.84,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.82,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.03,
           v: 0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.22,
           v: -0.42,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.01,
           v: 0.42,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: 0.9,
           v: -0.38,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.9,
           v: -0.38,
-          z: 76.25,
+          z: 114.38,
           rayon: 17.5
         }
       ]
@@ -7330,9 +7352,9 @@ var batiments_default = {
       ],
       cadre: [
         -140,
-        -250,
+        -276,
         280,
-        330
+        356
       ],
       emprise: "3 × 3",
       ms_par_image: 333,
@@ -7343,43 +7365,43 @@ var batiments_default = {
         {
           u: -0.87,
           v: 0.5,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.85,
           v: 0.5,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.27,
           v: 0.5,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.02,
           v: -0.1,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.74,
           v: -0.3,
-          z: 52.5,
+          z: 78.75,
           rayon: 17.5
         },
         {
           u: 0.74,
           v: -0.3,
-          z: 118.75,
+          z: 178.13,
           rayon: 17.5
         },
         {
           u: -0.2,
           v: 0.75,
-          z: 31.25,
+          z: 46.88,
           rayon: 20
         }
       ]
@@ -7399,9 +7421,9 @@ var batiments_default = {
       ],
       cadre: [
         -140,
-        -250,
+        -319.5,
         282.5,
-        330
+        399.5
       ],
       emprise: "3 × 3",
       ms_par_image: 250,
@@ -7413,37 +7435,37 @@ var batiments_default = {
         {
           u: -0.87,
           v: 0.48,
-          z: 16.25,
+          z: 24.38,
           rayon: 17.5
         },
         {
           u: -0.85,
           v: 0.48,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.29,
           v: 0.48,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: -0.04,
           v: -0.12,
-          z: 40,
+          z: 60,
           rayon: 17.5
         },
         {
           u: 0.42,
           v: -0.5,
-          z: 180,
+          z: 270,
           rayon: 42.5
         },
         {
           u: -0.24,
           v: 0.76,
-          z: 31.25,
+          z: 46.88,
           rayon: 20
         }
       ]
@@ -8856,21 +8878,21 @@ var batiments_default = {
         ],
         [
           -140,
-          -250,
+          -262,
           280,
-          330
+          342
         ],
         [
           -140,
-          -250,
+          -276,
           280,
-          330
+          356
         ],
         [
           -140,
-          -250,
+          -304.5,
           282.5,
-          330
+          384.5
         ]
       ]
     },
@@ -8913,21 +8935,21 @@ var batiments_default = {
         ],
         [
           -140,
-          -250,
+          -262,
           280,
-          330
+          342
         ],
         [
           -140,
-          -250,
+          -276,
           280,
-          330
+          356
         ],
         [
           -140,
-          -250,
+          -304.5,
           282.5,
-          330
+          384.5
         ]
       ]
     },
@@ -8970,21 +8992,21 @@ var batiments_default = {
         ],
         [
           -140,
-          -250,
+          -262,
           280,
-          330
+          342
         ],
         [
           -140,
-          -250,
+          -276,
           280,
-          330
+          356
         ],
         [
           -140,
-          -250,
+          -304.5,
           282.5,
-          330
+          384.5
         ]
       ]
     },
@@ -13671,21 +13693,21 @@ var batiments_default = {
         ],
         [
           -140,
-          -250,
+          -262,
           280,
-          330
+          342
         ],
         [
           -140,
-          -250,
+          -281.25,
           280,
-          330
+          361.25
         ],
         [
           -140,
-          -250,
+          -306.25,
           282.5,
-          330
+          386.25
         ]
       ],
       note: "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
@@ -13729,21 +13751,21 @@ var batiments_default = {
         ],
         [
           -140,
-          -250,
+          -262,
           280,
-          330
+          342
         ],
         [
           -140,
-          -250,
+          -276,
           280,
-          330
+          356
         ],
         [
           -140,
-          -250,
+          -304.5,
           282.5,
-          330
+          384.5
         ]
       ],
       note: "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
