@@ -197,6 +197,16 @@ describe('les leçons de l’île', () => {
     expect(questShort({ id: 'poules', done: false }, { ...state, camp: [{ id: 'cage', art: 'cage_coincee' }] }, { food: 0 })).toBe(false);
     expect(short('ramasser', {})).toBe(false);
   });
+  it('les torches de Nathan : le bois de toutes celles qui restent, avant d’assembler', () => {
+    const torches = reserve => ({ crafts: { catalog: [{ id: 'torche', cost: { wood: 2 }, reserve }] } });
+    const short = (have, wood, reserve = 0) => questShort({ id: 'torches-rivet', done: false, have, need: 3 }, torches(reserve), { wood });
+    // (trois à planter, six bois : avec quatre, la Récolte d'abord, plutôt qu'une torche posée puis tout à refaire)
+    expect([short(0, 4), short(0, 6)]).toEqual([true, false]);
+    // (une plantée : deux restent, quatre bois)
+    expect([short(1, 3), short(1, 4)]).toEqual([true, false]);
+    // (une torche en réserve : elle se pose sans rien payer)
+    expect(short(0, 0, 1)).toBe(false);
+  });
   it('chaque geste d’une leçon est forcé la première fois, puis libre', () => {
     coach.state.seen.clear();
     coach.show(islandLesson({ id: 'feu', done: false }));
