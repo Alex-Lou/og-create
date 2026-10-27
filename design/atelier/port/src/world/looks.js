@@ -8,7 +8,7 @@ import { TIERS } from './tiers/index.js';
 import { tintOf, tintSvg } from './tints.js';
 import { RARE_SPRITES } from './rareSprites.js';
 import { itemLayers } from './shopSprites.js';
-import { sprite } from './iso.js';
+import { sprite, avecHauteur } from './iso.js';
 
 const FLAMES = flameFrames(0, 0, 1, true);
 const SHELTER_FLAMES = flameFrames(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.75, true);
@@ -55,7 +55,22 @@ const withTints = look => ({
   boatMake: look.boatMake ? tinted(look.boatMake) : null,
   anims: (look.anims || []).map(anim => (anim.tint ? { ...anim, skinned: true, frame: (f, skin) => tinted(s => anim.frame(f, s))(skin) } : anim))
 });
-export const LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id, list]) => [id, [...list, ...(TIERS[id] || [])].map(withTints)]));
+// Le Foyer monte ses paliers II à VII d'une fois et demie (murs, portes, toits, leurs lumières, fumées et animations),
+// sur la même emprise au sol : ses portes à la taille des personnages (choix de l'auteur, 27 oct.). Le feu de camp du
+// palier I garde sa hauteur (ses bûches sont à la hauteur d'assise), et le feu de l'abri (palier II) aussi : ses
+// flammes, sa lueur et sa fumée
+const FOYER_HAUTEUR = 1.5;
+const plusHaut = (look, k) => ({
+  ...look,
+  make: skin => avecHauteur(k, () => look.make(skin)),
+  lights: look.fire ? look.lights : (look.lights || []).map(([u, v, z, r]) => [u, v, z * k, r]),
+  smoke: look.fire ? look.smoke : (look.smoke || []).map(([u, v, z]) => [u, v, z * k]),
+  anims: (look.anims || []).map(anim => (anim.key === 'flame' ? anim : { ...anim, frame: (f, skin) => avecHauteur(k, () => anim.frame(f, skin)) }))
+});
+const hauteurOf = (id, level) => (id === 'foyer' && level >= 2 ? FOYER_HAUTEUR : 1);
+export const LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id, list]) => [id, [...list, ...(TIERS[id] || [])]
+  .map((look, i) => (hauteurOf(id, i + 1) === 1 ? look : plusHaut(look, hauteurOf(id, i + 1))))
+  .map(withTints)]));
 // Voilier du Ponton, teinté comme son bâtiment
 export const boatOf = tinted(boatSprite);
 

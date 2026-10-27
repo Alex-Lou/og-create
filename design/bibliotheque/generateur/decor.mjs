@@ -5660,8 +5660,9 @@ var require_noms_betes = __commonJS({
 // atelier/port/src/world/iso.js
 var TW = 64;
 var TH = 32;
+var HAUTEUR = 1;
 function P(u, v, z = 0) {
-  return [(u - v) * TW / 2, (u + v) * TH / 2 - z];
+  return [(u - v) * TW / 2, (u + v) * TH / 2 - z * HAUTEUR];
 }
 __name(P, "P");
 var fmt = /* @__PURE__ */ __name((n) => (Math.round(n * 100) / 100).toString(), "fmt");
@@ -5831,7 +5832,7 @@ var dot = /* @__PURE__ */ __name((x, y, r, fill) => `<circle cx="${f2(x)}" cy="$
 
 // atelier/port/src/world/rareSprites.js
 var CRESTS = {
-  foyer: [[-34, -11], [-9, -56], [18, -61], [23, -106], [41, -124], [63, -161], [30, -169]],
+  foyer: [[-34, -11], [-9, -74], [18, -91], [23, -154], [41, -170], [63, -217], [30, -237]],
   carriere: [[-2, -68], [0, -67], [19, -74], [0, -116], [0, -116], [1, -107], [14, -136]],
   bosquet: [[-2, -63], [0, -67], [0, -69], [2, -123], [3, -119], [3, -119], [10, -143]],
   puits: [[-15, -60], [0, -41], [-19, -57], [0, -57], [-3, -105], [0, -119], [0, -57]],

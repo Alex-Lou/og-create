@@ -71,12 +71,15 @@ function alchemistHouse(skin, rect) {
 // Vapeurs colorées de la cheminée (4 images)
 const vaporOf = rect => {
   const [cu, cv] = chimneyOf(rect);
-  const [x, y] = P(cu, cv, 98);
-  return f => sprite([0, 1, 2].map(k => {
-    const t = ((f / 4) + k / 3) % 1;
-    return dot(x + Math.sin((t + k) * 5) * 3 + t * 6, y - t * 26, 2.4 + t * 4,
-      ['rgba(160,220,200,', 'rgba(190,160,240,', 'rgba(250,180,220,'][k] + f2(0.75 * (1 - t)) + ')');
-  }).join(''), { x: x - 20, y: y - 44, w: 44, h: 50 });
+  return f => {
+    // (la bouche de la cheminée lue à chaque image : elle suit la hauteur du dessin, iso.js : avecHauteur)
+    const [x, y] = P(cu, cv, 98);
+    return sprite([0, 1, 2].map(k => {
+      const t = ((f / 4) + k / 3) % 1;
+      return dot(x + Math.sin((t + k) * 5) * 3 + t * 6, y - t * 26, 2.4 + t * 4,
+        ['rgba(160,220,200,', 'rgba(190,160,240,', 'rgba(250,180,220,'][k] + f2(0.75 * (1 - t)) + ')');
+    }).join(''), { x: x - 20, y: y - 44, w: 44, h: 50 });
+  };
 };
 
 // Palier IV, style chibi : même maison, même rectangle, mêmes fenêtres (donc mêmes lumières), même toit (même crête)

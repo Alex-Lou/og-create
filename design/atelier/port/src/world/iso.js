@@ -8,9 +8,22 @@
 export const TW = 64;
 export const TH = 32;
 
+// Hauteur des dessins : les z sont multipliés par HAUTEUR le temps d'un dessin (avecHauteur), l'emprise au sol ne
+// change pas (le Foyer monte ainsi ses paliers II à VII : looks.js)
+let HAUTEUR = 1;
+export function avecHauteur(k, draw) {
+  const was = HAUTEUR;
+  HAUTEUR = k;
+  try {
+    return draw();
+  } finally {
+    HAUTEUR = was;
+  }
+}
+
 // Point du repère → écran
 export function P(u, v, z = 0) {
-  return [((u - v) * TW) / 2, ((u + v) * TH) / 2 - z];
+  return [((u - v) * TW) / 2, ((u + v) * TH) / 2 - z * HAUTEUR];
 }
 
 const fmt = n => (Math.round(n * 100) / 100).toString();

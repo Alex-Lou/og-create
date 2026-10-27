@@ -10761,8 +10761,17 @@ var require_assis = __commonJS({
 });
 
 // atelier/port/src/world/iso.js
+function avecHauteur(k, draw) {
+  const was = HAUTEUR;
+  HAUTEUR = k;
+  try {
+    return draw();
+  } finally {
+    HAUTEUR = was;
+  }
+}
 function P(u, v, z = 0) {
-  return [(u - v) * TW / 2, (u + v) * TH / 2 - z];
+  return [(u - v) * TW / 2, (u + v) * TH / 2 - z * HAUTEUR];
 }
 function face(points, fill, extra = "") {
   return `<polygon points="${pts(points.map((p) => P(...p)))}" fill="${fill}"${extra}/>`;
@@ -10885,11 +10894,13 @@ function sprite(body, box2) {
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}" width="${w}" height="${h}">${body}</svg>`
   };
 }
-var TW, TH, fmt, pts, EDGE, HIVER, NEIGE, lerp, OUT_ICE, snowCap;
+var TW, TH, HAUTEUR, fmt, pts, EDGE, HIVER, NEIGE, lerp, OUT_ICE, snowCap;
 var init_iso = __esm({
   "atelier/port/src/world/iso.js"() {
     TW = 64;
     TH = 32;
+    HAUTEUR = 1;
+    __name(avecHauteur, "avecHauteur");
     __name(P, "P");
     fmt = /* @__PURE__ */ __name((n) => (Math.round(n * 100) / 100).toString(), "fmt");
     pts = /* @__PURE__ */ __name((list) => list.map(([x, y]) => `${fmt(x)},${fmt(y)}`).join(" "), "pts");
@@ -15664,16 +15675,18 @@ var init_foyer = __esm({
     __name(alchemistHouse, "alchemistHouse");
     vaporOf = /* @__PURE__ */ __name((rect) => {
       const [cu, cv] = chimneyOf(rect);
-      const [x, y] = P(cu, cv, 98);
-      return (f) => sprite([0, 1, 2].map((k) => {
-        const t = (f / 4 + k / 3) % 1;
-        return dot(
-          x + Math.sin((t + k) * 5) * 3 + t * 6,
-          y - t * 26,
-          2.4 + t * 4,
-          ["rgba(160,220,200,", "rgba(190,160,240,", "rgba(250,180,220,"][k] + f2(0.75 * (1 - t)) + ")"
-        );
-      }).join(""), { x: x - 20, y: y - 44, w: 44, h: 50 });
+      return (f) => {
+        const [x, y] = P(cu, cv, 98);
+        return sprite([0, 1, 2].map((k) => {
+          const t = (f / 4 + k / 3) % 1;
+          return dot(
+            x + Math.sin((t + k) * 5) * 3 + t * 6,
+            y - t * 26,
+            2.4 + t * 4,
+            ["rgba(160,220,200,", "rgba(190,160,240,", "rgba(250,180,220,"][k] + f2(0.75 * (1 - t)) + ")"
+          );
+        }).join(""), { x: x - 20, y: y - 44, w: 44, h: 50 });
+      };
     }, "vaporOf");
     PIERRE = { top: "#EFE6D2", left: "#DCCFB2", right: "#B3A386" };
     CREPI = { top: "#FFF8EA", left: "#FBEFD6", right: "#E3CFA9" };
@@ -17456,7 +17469,7 @@ var init_rareSprites = __esm({
     init_kit();
     init_palette();
     CRESTS = {
-      foyer: [[-34, -11], [-9, -56], [18, -61], [23, -106], [41, -124], [63, -161], [30, -169]],
+      foyer: [[-34, -11], [-9, -74], [18, -91], [23, -154], [41, -170], [63, -217], [30, -237]],
       carriere: [[-2, -68], [0, -67], [19, -74], [0, -116], [0, -116], [1, -107], [14, -136]],
       bosquet: [[-2, -63], [0, -67], [0, -69], [2, -123], [3, -119], [3, -119], [10, -143]],
       puits: [[-15, -60], [0, -41], [-19, -57], [0, -57], [-3, -105], [0, -119], [0, -57]],
@@ -19100,7 +19113,7 @@ function artMake(siteId, level, skin) {
     return sprite(placed(true) + inner2(building) + extra + placed(false), box2);
   };
 }
-var FLAMES, SHELTER_FLAMES, FOUNTAIN, KIOSK_SKINS, BOAT_AT, FIRST, DEFAULTS, withTints, LOOKS, boatOf;
+var FLAMES, SHELTER_FLAMES, FOUNTAIN, KIOSK_SKINS, BOAT_AT, FIRST, DEFAULTS, withTints, FOYER_HAUTEUR, plusHaut, hauteurOf, LOOKS, boatOf;
 var init_looks = __esm({
   "atelier/port/src/world/looks.js"() {
     init_sprites();
@@ -19144,7 +19157,16 @@ var init_looks = __esm({
       boatMake: look.boatMake ? tinted(look.boatMake) : null,
       anims: (look.anims || []).map((anim) => anim.tint ? { ...anim, skinned: true, frame: /* @__PURE__ */ __name((f, skin) => tinted((s) => anim.frame(f, s))(skin), "frame") } : anim)
     }), "withTints");
-    LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id2, list]) => [id2, [...list, ...TIERS[id2] || []].map(withTints)]));
+    FOYER_HAUTEUR = 1.5;
+    plusHaut = /* @__PURE__ */ __name((look, k) => ({
+      ...look,
+      make: /* @__PURE__ */ __name((skin) => avecHauteur(k, () => look.make(skin)), "make"),
+      lights: look.fire ? look.lights : (look.lights || []).map(([u, v, z, r]) => [u, v, z * k, r]),
+      smoke: look.fire ? look.smoke : (look.smoke || []).map(([u, v, z]) => [u, v, z * k]),
+      anims: (look.anims || []).map((anim) => anim.key === "flame" ? anim : { ...anim, frame: /* @__PURE__ */ __name((f, skin) => avecHauteur(k, () => anim.frame(f, skin)), "frame") })
+    }), "plusHaut");
+    hauteurOf = /* @__PURE__ */ __name((id2, level) => id2 === "foyer" && level >= 2 ? FOYER_HAUTEUR : 1, "hauteurOf");
+    LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id2, list]) => [id2, [...list, ...TIERS[id2] || []].map((look, i) => hauteurOf(id2, i + 1) === 1 ? look : plusHaut(look, hauteurOf(id2, i + 1))).map(withTints)]));
     boatOf = tinted(boatSprite);
     __name(lookAt, "lookAt");
     __name(boatOffset, "boatOffset");
