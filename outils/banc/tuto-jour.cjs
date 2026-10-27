@@ -18,6 +18,8 @@
 // le conseil joué jusqu'au bout) ; RELOAD_ON=<leçon> : ferme et rouvre l'appli quand cette leçon du coach paraît (la
 // reprise au milieu d'un geste). Ex. : DEPART=chemin BATIS=puits ELEMS=Pluie COINS=250 FIN_SCENE=conseil-suite ;
 // DEPART=torches-rivet RELOAD_ON=quest-torches-rivet:2 FIN_AT=outil-rivet. Bloqué, le banc écrit l'état interne du tutoriel.
+// SNAP_AFTER=<leçon> : six captures rapprochées après le toucher de cette leçon (une animation : l'abri qui s'élève). Ex. :
+// DEPART=abri-cannelle CAISSE=1 SNAP_AFTER=quest-abri-cannelle:1 FIN_AT=barriere.
 const { chromium } = require('playwright');
 const fs = require('fs');
 const motDePasseDuBanc = `Banc-${require('crypto').randomBytes(9).toString('base64url')}-Aa1!`;
@@ -58,7 +60,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   const visibleButtons = () => p.evaluate(() => [...document.querySelectorAll('button, [role="button"], .tabbar__item')].filter(el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 4 && r.height > 4 && r.bottom > 0 && r.top < innerHeight && s.visibility !== 'hidden' && s.opacity !== '0' && !el.closest('[hidden]'); }).map(el => ((el.getAttribute('aria-label') || el.innerText || el.className || '').trim().replace(/\s+/g, ' ').slice(0, 40) + (el.disabled ? ' (grisé)' : ''))).filter(Boolean));
   let seenButtons = new Set();
   const diffButtons = async () => { const now2 = await visibleButtons(); const fresh = now2.filter(x => !seenButtons.has(x)); const gone = [...seenButtons].filter(x => !now2.includes(x)); seenButtons = new Set(now2); if (fresh.length) say('  + boutons', fresh.join(' | ')); if (gone.length) say('  - boutons', gone.join(' | ')); };
-  const app = () => p.evaluate(() => { const el = document.querySelector('#app'); const a = el && el.__vue_app__ && el.__vue_app__._instance && el.__vue_app__._instance.proxy; if (!a) return null; return { mode: a.currentMode, quest: a.islandQuest ? `${a.islandQuest.id}${a.islandQuest.done ? '✓' : ''}` : '-', scene: a.prologueScene, locked: (a.lockedTabs || []).join(','), hold: a.islandHold, breath: Boolean(a.breathTimer), troupe: ((window.__find('WorldView') || {}).state || {}).villagers?.map(v => v.id).join(',') || '' }; }).catch(() => null);
+  const app = () => p.evaluate(() => { const el = document.querySelector('#app'); const a = el && el.__vue_app__ && el.__vue_app__._instance && el.__vue_app__._instance.proxy; if (!a) return null; return { mode: a.currentMode, quest: a.islandQuest ? `${a.islandQuest.id}${a.islandQuest.done ? '✓' : ''}` : '-', scene: a.prologueScene, locked: (a.lockedTabs || []).join(','), hold: a.islandHold, breath: Boolean(a.breathTimer), troupe: ((window.__find('WorldView') || {}).state || {}).villagers?.map(v => v.id).join(',') || '', dort: ((window.__find('WorldView') || {}).tutoStrays || []).filter(c => c.end === 'dort').map(c => (c.wakeAt ? 'réveillé' : 'endormi')).join(',') }; }).catch(() => null);
 
   const { execSync } = require('child_process');
   const sql = q => execSync(`psql postgres://origins:origins@localhost:5432/origins_test -Atc "${q}"`).toString().trim();
@@ -252,6 +254,14 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       idleSince = Date.now();
       // (la suite : le bilan, par les boutons ci-dessous)
     }
+    // L'annonce d'un naufrage (jours 6 à 8) : lue, puis un toucher n'importe où
+    const wreckText = await p.evaluate(() => { const w = document.querySelector('.world__wreck-text'); return w ? w.innerText : null; }).catch(() => null);
+    if (wreckText) {
+      if (lastGuide !== `wreck-${wreckText}`) { lastGuide = `wreck-${wreckText}`; guideShownAt = Date.now(); say('naufrage', wreckText); await snap('naufrage'); await diffButtons(); }
+      if (Date.now() - guideShownAt > reading(wreckText)) { const bb = await p.locator('.world__wreck').boundingBox(); if (bb) await touch(bb.x + bb.width / 2, bb.y + bb.height / 3); guideShownAt = Date.now() + 99999; await p.waitForTimeout(1200); }
+      idleSince = Date.now();
+      continue;
+    }
     // La bulle de Brume (ou d'un personnage)
     const guide = await p.evaluate(() => { const g = document.querySelector('.guide'); if (!g) return null; return { who: (g.querySelector('.guide__name') || {}).innerText, text: (g.querySelector('.guide__text') || {}).innerText, action: (g.querySelector('.guide__btn:not(.guide__btn--quiet)') || {}).innerText || '' }; }).catch(() => null);
     if (guide && guide.text) {
@@ -295,6 +305,9 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
             const probe = await p.evaluate(([x, y]) => { const w = window.__find('WorldView'); if (!w || !w.$refs) return null; const cv = document.querySelector('canvas'); const r = cv ? cv.getBoundingClientRect() : { left: 0, top: 0 }; try { const hit = w.hitAt(x - r.left, y - r.top); const a = window.__find('App'); const ap = a ? { run: a.prologueRunning, acts: Object.keys(a.islandTaps || {}).join(','), lesson: a.$options && (window.__coachLesson || '') } : null; return { app: ap, hit: hit ? Object.keys(hit).join(',') + (hit.campItem ? ':' + hit.campItem.art : '') + (hit.mark ? ':' + hit.mark : '') + (hit.animal && hit.animal.who ? ':' + hit.animal.who.id : '') : null, acts: Object.keys(w.acts || {}).join(','), busy: w.busy }; } catch (e) { return { err: e.message }; } }, [h.x + h.w / 2, h.y + h.h / 2]).catch(e => ({ err: e.message }));
             if (coach.lesson.startsWith('quest-')) say('  sous le doigt', JSON.stringify(probe));
             await touch(h.x + h.w / 2, h.y + h.h / 2);
+            if (process.env.SNAP_AFTER && coach.lesson.startsWith(process.env.SNAP_AFTER)) { for (let k = 0; k < 6; k++) { await p.waitForTimeout(350); await snap(`rafale-${k}`); } }
+            // (ce que le toucher a fait : la bulle d'un choix, la fiche d'un quartier et son achat, le geste du coach)
+            if (coach.lesson.startsWith('quest-')) { await p.waitForTimeout(700); say('  après le toucher', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); const tip = document.querySelector('.world__tip-btn'); const buy = document.querySelector('[data-coach="zone-buy"]'); const c = window.__find('CoachLayer'); return { tip: tip ? `${tip.dataset.pick}:${tip.innerText}` : null, picked: w && w.picked ? w.picked.key : null, zone: w && w.zone ? w.zone.id : null, buy: buy ? { disabled: buy.disabled, text: buy.innerText } : null, at: c ? c.at : null }; }).catch(e => String(e)))); }
           }
         }
         else { const bb = await p.locator('.coach__show').boundingBox(); if (bb) await touch(bb.x + bb.width / 2, bb.y + bb.height / 2); }
@@ -313,7 +326,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       continue;
     }
     if (process.env.FIN_SCENE && st && st.scene === process.env.FIN_SCENE) { say('fin', `scène ${process.env.FIN_SCENE}`); await snap('fin-scene'); break; }
-    if (process.env.FIN_AT && st && st.quest.replace('✓', '') === process.env.FIN_AT) { say('fin', `quête ${process.env.FIN_AT}`); await snap('fin-quete'); say('enclos', sql(`SELECT count(*) FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' AND x IS NOT NULL`)); break; }
+    if (process.env.FIN_AT && st && st.quest.replace('✓', '') === process.env.FIN_AT) { say('fin', `quête ${process.env.FIN_AT}`); say('égarés du tuto', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); return (w.tutoStrays || []).map(c => `${c.kind}:${c.end}${c.wakeAt ? ':réveillé' : ''}`); }))); await snap('fin-quete'); say('enclos', sql(`SELECT count(*) FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' AND x IS NOT NULL`)); break; }
     // (sans FIN_AT : on s'arrête au matin de Rivet)
     if (st && !process.env.FIN_AT && (process.env.PLUS_LOIN ? st.scene === 'rivet' : (st.scene === 'rivet' || st.quest.startsWith('deco')))) { say('fin', process.env.PLUS_LOIN ? 'la scène de Rivet' : 'le matin de Rivet'); await snap('matin-rivet'); say('poulailler', sql(`SELECT annex || ' ' || x || ',' || y FROM world_annexes WHERE user_id = ${userId}`)); say('caméra', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); return w && w.cam ? { x: Math.round(w.cam.x), y: Math.round(w.cam.y), s: w.cam.s } : null; }))); break; }
     // Rien à faire : on attend, puis on note le blocage
@@ -322,6 +335,11 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
     if (idle > 10 && st && ['nuit', 'veille', 'nuit-cannelle', 'nuit-rivet'].includes(st.quest.replace('✓', ''))) {
       const at = await p.evaluate(() => { const w = window.__find('WorldView'); const h = w && w.brumeHit; if (!h) return null; const s = w.toScreen(h.x, h.y); const c = w.canvasPoint(s.x, s.y); return { x: c.x, y: c.y }; }).catch(() => null);
       if (at) { say('REPLI (aucune main la nuit)', 'toucher Brume'); await snap('nuit-sans-main'); await touch(at.x, at.y); idleSince = Date.now(); await p.waitForTimeout(1500); continue; }
+    }
+    // Une fiche restée ouverte, que rien ne guide : un joueur finit par toucher sa croix (pas celle du coach)
+    if (idle > 20) {
+      const cross = p.locator('.g-modal__close:visible');
+      if (await cross.count()) { say('REPLI (fiche ouverte, rien ne guide)', 'toucher la croix'); await snap('repli-croix'); const bb = await cross.first().boundingBox(); if (bb) await touch(bb.x + bb.width / 2, bb.y + bb.height / 2); idleSince = Date.now(); await p.waitForTimeout(1200); continue; }
     }
     if (idle > 8 && idle < 8.3) { say('rien à toucher depuis 8 s', JSON.stringify(st)); await snap('attente-8s'); await diffButtons(); }
     if (idle > 30) { say('ÉTAT INTERNE', JSON.stringify(await p.evaluate(() => { const a = document.querySelector('#app').__vue_app__._instance.proxy; return { prologue: a.prologue, arcScenes: a.arcScenes, arcPlayed: a.arcPlayed, arcFlight: a.arcFlight, arcWaiting: a.arcWaiting, vigilsSeen: a.vigilsSeen, prologueScene: a.prologueScene, breath: Boolean(a.breathTimer), veillee: a.veilleeOn, hold: a.islandHold, world: a.isWorldActive, tutorialState: a.tutorialState }; }).catch(e => String(e)))); }
