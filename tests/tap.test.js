@@ -24,11 +24,11 @@ const foyer = { id: 'foyer', level: 1, w: 2, h: 2 };
 describe('un toucher sur l’île', () => {
   afterEach(() => vi.restoreAllMocks());
 
-  it('une bulle à lire : rien de l’île ne se touche ; en mode chemin ou en pose, seule compte la case', () => {
+  it('une bulle à lire : l’île se touche quand même (choix de l’auteur, 27 oct.) ; en mode chemin ou en pose, seule compte la case', () => {
     vi.spyOn(guide, 'current', 'get').mockReturnValue({ id: 'bulle' });
     const read = island({ site: foyer });
     read.tap(0, 0);
-    expect(read.done).toEqual([]);
+    expect(read.picked.key).toBe('site:foyer');
     vi.restoreAllMocks();
     for (const [mode, does] of [['roadMode', 'roadTap'], ['annexPlacing', 'tapAnnexSpot']]) {
       const placing = island({ site: foyer }, { [mode]: {} });
@@ -66,10 +66,9 @@ describe('un toucher sur l’île', () => {
     expect(ctx.site).toBe(foyer);
   });
 
-  it('au tutoriel, une chose hors de l’étape, sans cible de l’étape autour : le toucher ne fait rien', () => {
+  it('au tutoriel, une chose hors de l’étape se touche aussi (choix de l’auteur, 27 oct.)', () => {
     const ctx = island({ site: foyer }, { thickMist: () => true });
     ctx.tap(0, 0);
-    expect(ctx.done).toEqual([]);
-    expect(ctx.picked).toBe(null);
+    expect(ctx.picked.key).toBe('site:foyer');
   });
 });

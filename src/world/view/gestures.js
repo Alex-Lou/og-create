@@ -13,7 +13,6 @@ import { buildingThumb } from '@/world/buildingArt';
 import { campInfo, campScale, siteLook } from '@/world/campArt';
 import { WALL_LOOKS } from '@/world/wallSprites';
 import { coach } from '@/game/coach';
-import { guide } from '@/game/guide';
 import { TW, TH, DEPOSIT_SCALE, ROAD_HOLD_MS } from './constants';
 import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
@@ -270,15 +269,11 @@ export default {
   },
   tap(px, py) {
     if (this.tapMode(px, py)) return;
-    let hit = this.hitAt(px, py);
-    // Au tutoriel, seul ce que montre l'étape se touche (et Brume) : rien en avance, rien en retard (choix de l'auteur,
-    // 13 oct.) ; la mer et les cases vides ne font que des ronds. Quelque chose devant la cible (une clôture, une
-    // trouvaille, une mouette, un passant) : on touche la cible qu'il cache (retour de l'auteur, 18 oct. : plus d'un
-    // toucher sur deux se perdait sur le coin d’Agathe)
-    if (hit && !this.tapAllowed(hit)) {
-      hit = this.hitAt(px, py, h => this.tapAllowed(h)) || this.ringHit(px, py);
-      if (!hit) return;
-    } else if (!hit) hit = this.ringHit(px, py);
+    // Tout se touche, au tutoriel aussi (choix de l'auteur, 27 oct.). La cible de l'étape d'abord : quelque chose devant
+    // elle (une clôture, une trouvaille, une mouette, un passant), on touche la cible qu'il cache (retour de l'auteur,
+    // 18 oct. : plus d'un toucher sur deux se perdait sur le coin d’Agathe) ; un doigt dans son cercle doré aussi
+    const step = this.thickMist() ? this.hitAt(px, py, h => this.onStep(h)) || this.ringHit(px, py) : null;
+    const hit = step || this.hitAt(px, py);
     this.craftMenu = null;
     // Une créature touchée (une bête, un familier, un égaré qu'on repousse…) : la première fois, elle entre au Bestiaire
     // (WorldView, bestiary.js)
@@ -308,9 +303,8 @@ export default {
   // Ce qui prend le toucher avant l'île (une bulle à lire, un mode chemin, une pose, une étoile filante) : true s'il est
   // pris
   tapMode(px, py) {
-    // Une bulle de texte est là (Brume, un personnage, une consigne) : rien de l'île ne se touche tant qu'elle n'est pas
-    // lue (la caméra, si ; choix de l'auteur, 13 oct.)
-    if (guide.current) return true;
+    // (une bulle de texte à lire ne prend plus le toucher : l'île se touche pendant qu'ils parlent, choix de l'auteur,
+    // 27 oct.)
     // Mode chemin : un toucher pose ou retire une case, il ne touche rien d'autre (roads.js)
     if (this.roadMode) {
       this.roadTap(px, py);
@@ -442,15 +436,13 @@ export default {
       const at = this.coachWorld(step.target.slice(4));
       if (!at || Math.hypot(w.x - at.x, w.y - at.y) > (Math.max(MIN_TOUCH, at.r * this.cam.s) + RING_PAD) / this.cam.s) continue;
       const c = this.toScreen(at.x, at.y);
-      const hit = this.hitAt(c.x, c.y, h => this.tapAllowed(h));
+      const hit = this.hitAt(c.x, c.y, h => this.onStep(h));
       if (hit) return hit;
     }
     return null;
   },
-  // Ce toucher vise-t-il une cible de l'étape du tutoriel (game/coach.js : les « île:… » de la leçon) ? Toujours hors du
-  // tutoriel ; Brume, toujours
-  tapAllowed(hit) {
-    if (!this.thickMist()) return true;
+  // Ce toucher vise-t-il une cible de l'étape du tutoriel (game/coach.js : les « île:… » de la leçon) ? Brume, toujours
+  onStep(hit) {
     const names = this.tapNames(hit);
     if (names.includes('brume')) return true;
     const lesson = coach.state.lesson;
